@@ -19,10 +19,56 @@ namespace GTA
 		{
 			Handle = handle;
 		}
-
+		[Obsolete("The Scaleform construtor with a string parameter is obsolete. Use Scaleform.RequestMovie instead.")]
 		public Scaleform(string scaleformID)
 		{
 			Handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
+		}
+
+		/// <summary>
+		/// Requests a scaleform movie that is streamed in.
+		/// </summary>
+		/// <returns>A <see cref="Scaleform"/> instance if successfully created; otherwise, <see langword="null"/>.</returns>
+		/// <remarks>
+		/// Only allows 1 instance of a movie active at one time, so you cannot create multiple instances for the same movie.
+		/// </remarks>
+		public static Scaleform RequestMovie(string fileName)
+		{
+			// Note: REQUEST_SCALEFORM_MOVIE_INSTANCE is an alias of REQUEST_SCALEFORM_MOVIE and both have the same handler address,
+			// so both behave exactly the same
+			int handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, fileName);
+			return handle != 0 ? new Scaleform(handle) : null;
+		}
+		/// <summary>
+		/// Requests a scaleform movie that is streamed in and that is set to ignore super widescreen adjustments.
+		/// Not available in v1.0.335.2 or v1.0.350.1.
+		/// </summary>
+		/// <returns>A <see cref="Scaleform"/> instance if successfully created; otherwise, <see langword="null"/>.</returns>
+		/// <remarks>
+		/// Only allows 1 instance of a movie active at one time, so you cannot create multiple instances for the same movie.
+		/// </remarks>
+		public static Scaleform RequestMovieIgnoreSuperWidescreenAdjustment(string fileName)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(
+				GameVersion.v1_0_372_2_Steam,
+				nameof(Scaleform),
+				nameof(RequestMovieIgnoreSuperWidescreenAdjustment)
+				);
+
+			int handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE_WITH_IGNORE_SUPER_WIDESCREEN, fileName);
+			return handle != 0 ? new Scaleform(handle) : null;
+		}
+		/// <summary>
+		/// Requests a scaleform movie that is streamed in and that will not render when the game is paused.
+		/// </summary>
+		/// <returns>A <see cref="Scaleform"/> instance if successfully created; otherwise, <see langword="null"/>.</returns>
+		/// <remarks>
+		/// Only allows 1 instance of a movie active at one time, so you cannot create multiple instances for the same movie.
+		/// </remarks>
+		public static Scaleform RequestMovieSkipRenderWhilePaused(string fileName)
+		{
+			int handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE_SKIP_RENDER_WHILE_PAUSED, fileName);
+			return handle != 0 ? new Scaleform(handle) : null;
 		}
 
 		public void Dispose()
@@ -127,6 +173,24 @@ namespace GTA
 		{
 			Function.Call(Hash.DRAW_SCALEFORM_MOVIE_3D, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 2.0f, 2.0f, 1.0f, scale.X, scale.Y, scale.Z, 2);
 		}
+
+		/// <summary>
+		/// Gets a <see cref="Scaleform"/> instance for the passed handle if it is valid.
+		/// </summary>
+		/// <param name="handle">
+		/// The handle value.
+		/// Should be between 1 and 20 since native functions for scaleform only accepts the values between 1 and 20
+		/// as scaleform handles (hardcoded limit).
+		/// </param>
+		/// <returns>
+		/// A <see cref="Scaleform"/> instance if the passed handle is valid; otherwise, <see langword="null"/>.
+		/// </returns>
+		/// <remarks>
+		/// Strictly, this method returns a <see cref="Scaleform"/> instance
+		/// if the <c>CGameScriptHandler</c> for the SHVDN runtime has a <c>CScriptResource_ScaleformMovie</c> for the passed handle.
+		/// </remarks>
+		public static Scaleform FromHandle(int handle)
+			=> SHVDN.NativeMemory.IsScaleformMovieHandleValid((uint)handle) ? new Scaleform(handle) : null;
 
 		public static implicit operator InputArgument(Scaleform value)
 		{

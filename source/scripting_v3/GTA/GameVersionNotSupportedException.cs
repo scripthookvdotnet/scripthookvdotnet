@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (C) 2015 crosire & kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
@@ -40,6 +40,14 @@ namespace GTA
 			string maximumNotSupportedGameVersionWithoutPlatformName = Regex.Match(maximumNotSupportedGameVersionEnumStr, versionRegexPattern).Value;
 
 			return $"{className}.{propertyOrMethodName} is not supported in from v1.0.335.2 to {maximumNotSupportedGameVersionWithoutPlatformName}, inclusive.";
+		}
+
+		internal static void ThrowIfNotSupported(GameVersion minSupportedVersion, string className, string propertyOrMethodName)
+		{
+			if (Game.Version < minSupportedVersion)
+			{
+				throw new GameVersionNotSupportedException(minSupportedVersion, className, propertyOrMethodName);
+			}
 		}
 	}
 }
