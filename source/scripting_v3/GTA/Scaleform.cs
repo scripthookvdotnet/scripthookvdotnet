@@ -19,7 +19,7 @@ namespace GTA
 		{
 			Handle = handle;
 		}
-		[Obsolete("The Scaleform construtor with the string parameter is obsolete. Use Scaleform.RequestMovie instead.")]
+		[Obsolete("The Scaleform construtor with a string parameter is obsolete. Use Scaleform.RequestMovie instead.")]
 		public Scaleform(string scaleformID)
 		{
 			Handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
@@ -177,6 +177,11 @@ namespace GTA
 		/// <summary>
 		/// Gets a <see cref="Scaleform"/> instance for the passed handle if it is valid.
 		/// </summary>
+		/// <param name="handle">
+		/// The handle value.
+		/// Should be between 1 and 20 since native functions for scaleform only accepts the values between 1 and 20
+		/// as scaleform handles (hardcoded limit).
+		/// </param>
 		/// <returns>
 		/// A <see cref="Scaleform"/> instance if the passed handle is valid; otherwise, <see langword="null"/>.
 		/// </returns>
