@@ -9,7 +9,6 @@ namespace GTA
 	{
 		ExitTask,
 		NeverLoseTarget,
-		SearchForTarget,
-		VeryFar
+		SearchForTarget
 	}
 }
