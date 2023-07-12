@@ -12,7 +12,7 @@ namespace GTA
 	public static class PathFind
 	{
 		/// <summary>
-		/// Gets an <c>array</c> of all the <see cref="PathNode"/>s that meet <paramref name="predicate"/>.
+		/// Gets an array of all the vehicle <see cref="PathNode"/>s that meet <paramref name="predicate"/>.
 		/// Without <paramref name="predicate"/> set to filter vehicle nodes, the array contains can be more than 20000 vehicle nodes and manually filtering the array may cost significant time.
 		/// Therefore, you should set pass some predicate as <paramref name="predicate"/> to filter vehicle nodes unless you need to retrieve all loaded vehicle parameters without testing.
 		/// </summary>
@@ -24,10 +24,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the position where the closest vehicle node is located among the ones that meet <paramref name="predicate"/>.
+		/// Gets an array of nearby vehicle <see cref="PathNode"/>s that meet <paramref name="predicate"/>.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
-		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="PathNode"/>s.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="PathNode"/>s.</param>
 		/// <param name="predicate">The predicate the node must meet to consider.</param>
 		public static PathNode[] GetNearbyVehicleNodes(Vector3 position, float radius, Func<VehiclePathNodePropertyFlags, bool> predicate = null)
 		{
@@ -36,7 +36,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the position where the closest vehicle node is located among the ones that meet <paramref name="predicate"/>.
+		/// Gets the vehicle <see cref="PathNode"/>s in the specified area that meet <paramref name="predicate"/>.
 		/// </summary>
 		/// <param name="min">The minimum bound of the area.</param>
 		/// <param name="max">The maximum bound of the area.</param>
@@ -48,7 +48,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the closest vehicle node is located among the ones that meet <paramref name="predicate"/>.
+		/// Gets the closest vehicle <see cref="PathNode"/> among the ones and that meet <paramref name="predicate"/>.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Ped"/> against.</param>
 		/// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="PathNode"/>s.</param>
@@ -88,7 +88,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="PathNode"/> where the closest vehicle node is located.
+		/// Gets the Nth closest <see cref="PathNode"/>.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="PathNode"/>s against.</param>
 		/// <param name="nthClosest">
@@ -114,7 +114,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the position where the closest vehicle node is located.
+		/// Gets the position where the Nth closest vehicle <see cref="PathNode"/> is located.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="PathNode"/>s against.</param>
 		/// <param name="nthClosest">
@@ -144,7 +144,8 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the position where the closest vehicle node is located.
+		/// Gets the Nth closest <see cref="PathNode"/>.
+		/// Also retrieves the heading and number of the lanes of the <see cref="PathNode"/>.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="PathNode"/>s against.</param>
 		/// <param name="nthClosest">
@@ -152,12 +153,13 @@ namespace GTA
 		/// If this is set to 1 then the closest node will be returned. If this is set to 2 then the second closest node will be returned and so on.
 		/// </param>
 		/// <param name="heading">
-		/// The heading the first node link that has forward lanes is heading to among the array of node links of the found vehicle path node.
-		/// If no node links of the path node have forward lanes, <c>0f</c> will be returned.
+		/// The heading of the first node link that has forward lanes among the array of node links of the found vehicle path node.
+		/// If none of the node links have forward lanes, <c>0f</c> will be returned.
 		/// </param>
 		/// <param name="numLanes">
-		/// The number of forward and backward lanes the first node link that has forward lanes has.
-		/// If no node links of the path node have forward lanes, <c>1</c> will be returned.
+		/// The number of forward and backward lanes of the first node link that has forward lanes among the array of node links
+		/// of the found vehicle path node.
+		/// If none of the node links have forward lanes, <c>1</c> will be returned.
 		/// </param>
 		/// <param name="flags">The flags to consider for the search.</param>
 		/// <param name="zMeasureMult">The factor how strongly should the difference in Z direction be weighted if the Z coords is more than <paramref name="zTolerance"/>.</param>
@@ -183,7 +185,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the <see cref="PathNode"/> where the closest vehicle node is located.
+		/// Gets the position, heading, and number of lanes of the Nth closest vehicle <see cref="PathNode"/>.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="PathNode"/>s against.</param>
 		/// <param name="nthClosest">
@@ -192,12 +194,13 @@ namespace GTA
 		/// </param>
 		/// <param name="closestNodePosition">The position where the closest node is.</param>
 		/// <param name="heading">
-		/// The heading the first node link that has forward lanes is heading to among the array of node links of the found vehicle path node.
-		/// If no node links of the path node have forward lanes, <c>0f</c> will be returned.
+		/// The heading of the first node link that has forward lanes among the array of node links of the found vehicle path node.
+		/// If none of the node links have forward lanes, <c>0f</c> will be returned.
 		/// </param>
 		/// <param name="numLanes">
-		/// The number of forward and backward lanes the first node link that has forward lanes has.
-		/// If no node links of the path node have forward lanes, <c>1</c> will be returned.
+		/// The number of forward and backward lanes of the first node link that has forward lanes among the array of node links
+		/// of the found vehicle path node.
+		/// If none of the node links have forward lanes, <c>1</c> will be returned.
 		/// </param>
 		/// <param name="flags">The flags to consider for the search.</param>
 		/// <param name="zMeasureMult">The factor how strongly should the difference in Z direction be weighted if the Z coords is more than <paramref name="zTolerance"/>.</param>
