@@ -638,6 +638,31 @@ namespace GTA
 			=> Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, Handle, (int)attribute, activeSkill);
 
 		/// <summary>
+		/// Activates or deactivates the flee attributes.
+		/// </summary>
+		public void SetFleeAttributes(FleeAttributes attributes, bool activeSkill)
+			=> Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, Handle, (int)attributes, activeSkill);
+
+		public CombatMovement CombatMovement
+		{
+			get => Function.Call<CombatMovement>(Hash.GET_PED_COMBAT_MOVEMENT, Handle);
+			set => Function.Call(Hash.SET_PED_COMBAT_MOVEMENT, Handle, (int)value);
+		}
+		public CombatAbility CombatAbility
+		{
+			set => Function.Call(Hash.SET_PED_COMBAT_ABILITY, Handle, (int)value);
+		}
+		public CombatRange CombatRange
+		{
+			get => Function.Call<CombatRange>(Hash.GET_PED_COMBAT_RANGE, Handle);
+			set => Function.Call(Hash.SET_PED_COMBAT_RANGE, Handle, (int)value);
+		}
+		public TargetLossResponse TargetLossResponse
+		{
+			set => Function.Call(Hash.SET_PED_TARGET_LOSS_RESPONSE, Handle, (int)value);
+		}
+
+		/// <summary>
 		/// Sets a value indicating whether this <see cref="Entity"/> is persistent.
 		/// Unlike <see cref="Entity.IsPersistent"/>, calling this method does not affect assigned tasks.
 		/// </summary>
