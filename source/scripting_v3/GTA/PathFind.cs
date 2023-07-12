@@ -230,12 +230,12 @@ namespace GTA
 		/// <summary>
 		/// Gets a value indicating whether <see cref="PathNode"/>s are loaded for the region specified.
 		/// </summary>
-		/// <param name="min">The minimum position of the region. The z value will be ignored.</param>
-		/// <param name="max">The maximum position of the region. The z value will be ignored.</param>
+		/// <param name="min">The minimum position of the region.</param>
+		/// <param name="max">The maximum position of the region.</param>
 		/// <returns>
 		///   <see langword="true"/> if <see cref="PathNode"/>s are loaded for the region specified; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool ArePathNodesLoadedForArea(Vector3 min, Vector3 max) => Function.Call<bool>(Hash.ARE_NODES_LOADED_FOR_AREA, min.X, min.Y, max.X, max.Y);
+		public static bool ArePathNodesLoadedForArea(Vector2 min, Vector2 max) => Function.Call<bool>(Hash.ARE_NODES_LOADED_FOR_AREA, min.X, min.Y, max.X, max.Y);
 		/// <summary>
 		/// <para>
 		/// Requests the path nodes in the given region to stream this frame.
@@ -246,12 +246,12 @@ namespace GTA
 		/// If you stop calling this method, the nodes may be streamed out again at any time.
 		/// </para>
 		/// </summary>
-		/// <param name="min">The minimum position of the region. The z value will be ignored.</param>
-		/// <param name="max">The maximum position of the region. The z value will be ignored.</param>
+		/// <param name="min">The minimum position of the region.</param>
+		/// <param name="max">The maximum position of the region.</param>
 		/// <returns>
 		///   <see langword="true"/> if <see cref="PathNode"/>s are loaded for the region specified; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool RequestPathNodesInAreaThisFrame(Vector3 min, Vector3 max) => Function.Call<bool>(Hash.REQUEST_PATH_NODES_IN_AREA_THIS_FRAME, min.X, min.Y, max.X, max.Y);
+		public static bool RequestPathNodesInAreaThisFrame(Vector2 min, Vector2 max) => Function.Call<bool>(Hash.REQUEST_PATH_NODES_IN_AREA_THIS_FRAME, min.X, min.Y, max.X, max.Y);
 
 		/// <summary>
 		///  Switches vehicle nodes an angled area. <see cref="Vehicle"/>s will drive on to roads that are switched on and new <see cref="Vehicle"/>s will be generated on them.
