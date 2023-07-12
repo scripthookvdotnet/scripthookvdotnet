@@ -16,8 +16,11 @@ namespace GTA.Graphics
 		public Txd(string name)
 		{
 			Name = name;
-		}	
+		}
 
+		/// <summary>
+		/// Gets the name of this texture dictionary.
+		/// </summary>
 		public string Name
 		{
 			get;
@@ -27,7 +30,8 @@ namespace GTA.Graphics
 		/// Computes the hash of <see cref="Name"/> in the same way as how the game calculates hashes for texture
 		/// dictionaries to store in the global <c>rage::fwTxdStore</c> and as how <see cref="Game.GenerateHash(string)"/>
 		/// calculates.
-		/// May be useful when you investigate game memory to see how textures are stored in texture dictionaries
+		/// May be useful when you want to get the identifier in the same way as how the game handles texture
+		/// dictionaries or when you investigate game memory to see how textures are stored in texture dictionaries
 		/// (should be in a <c>rage::pgDictionary&lt;rage::grcTexturePC&gt;</c> instance).
 		/// </summary>
 		/// <returns>The hash value calculated from <see cref="Name"/>.</returns>
@@ -50,18 +54,26 @@ namespace GTA.Graphics
 
 		/// <summary>
 		/// Attempts to load the textures of this <see cref="Txd"/> into memory.
-		/// You do not need to call this method if this <see cref="Txd"/> is loaded by another way.
+		/// You do not need to call this method if this <see cref="Txd"/> is loaded by another way,
+		/// such as <see cref="PedHeadshot"/>.
 		/// </summary>
+		/// <remarks>
+		/// Allocates a <c>CScriptResource_TextureDictionary</c> instance for the SHVDN runtime.
+		/// </remarks>
 		public void Request()
 		{
 			Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, Name);
 		}
 		/// <summary>
 		/// Attempts to load the textures of this <see cref="Txd"/> into memory for a given period of time.
-		/// You do not need to call this method if this <see cref="Txd"/> is loaded by another way.
+		/// You do not need to call this method if this <see cref="Txd"/> is loaded by another way,
+		/// such as <see cref="PedHeadshot"/>.
 		/// </summary>
 		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="Txd"/>.</param>
-		/// <returns><see langword="true" /> if this <see cref="Txd"/> is loaded; otherwise, <see langword="false" />.</returns>
+		/// <returns><see langword="true"/> if this <see cref="Txd"/> is loaded; otherwise, <see langword="false"/>.</returns>
+		/// <remarks>
+		/// Allocates a <c>CScriptResource_TextureDictionary</c> instance for the SHVDN runtime.
+		/// </remarks>
 		public bool Request(int timeout)
 		{
 			Request();
@@ -86,8 +98,12 @@ namespace GTA.Graphics
 		/// <summary>
 		/// Tells the game we have finished using this <see cref="Txd"/> and it can be freed from memory.
 		/// You do not need to call this method if this <see cref="Txd"/> was loaded by another way before your script
-		/// used this <see cref="Txd"/>.
+		/// used this <see cref="Txd"/>, such as <see cref="PedHeadshot"/>.
 		/// </summary>
+		/// <remarks>
+		/// Releases a <c>CScriptResource_TextureDictionary</c> instance from the <c>CGameScriptHandler</c> for
+		/// the SHVDN runtime.
+		/// </remarks>
 		public void MarkAsNoLongerNeeded()
 		{
 			Function.Call(Hash.SET_STREAMED_TEXTURE_DICT_AS_NO_LONGER_NEEDED, Name);
