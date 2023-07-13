@@ -100,7 +100,7 @@ namespace GTA
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero)
 				{
-					return null;
+					return default;
 				}
 
 				return new Model(SHVDN.NativeMemory.ReadInt32(address + 0xE4));
