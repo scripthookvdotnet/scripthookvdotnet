@@ -1972,6 +1972,35 @@ namespace GTA
 		#endregion
 
 		/// <summary>
+		/// Gets the current <see cref="InteriorProxy"/> associated with this <see cref="Entity"/>.
+		/// </summary>
+		/// <returns>
+		/// The current <see cref="InteriorProxy"/> associated with this <see cref="Entity"/> if they are in an interior;
+		/// otherwise, <see langword="null"/>
+		/// </returns>
+		public InteriorProxy CurrentInteriorProxy
+		{
+			get
+			{
+				int handle = Function.Call<int>(Hash.GET_INTERIOR_FROM_ENTITY, Handle);
+				return handle != 0 ? new InteriorProxy(handle) : null;
+			}
+		}
+		/// <summary>
+		/// Gets a room key (name hash) from this <see cref="Entity"/> in that room.
+		/// </summary>
+		/// <returns>
+		/// The name hash key of the room the <see cref="Entity"/> is in if it is in a <see cref="InteriorProxy"/>;
+		/// otherwise, zero.
+		/// </returns>
+		/// <remarks>
+		/// This method gets the name hash from the <see cref="InteriorInstance"/> of <see cref="InteriorProxy"/>
+		/// associated with the <see cref="Entity"/>. The list of rooms are defined in a <c>CMloRoomDef</c> in a corresponding
+		/// ytyp file, and this methods hashes the raw name before returning a value.
+		/// </remarks>
+		public int CurrentInteriorRoomKey => Function.Call<int>(Hash.GET_ROOM_KEY_FROM_ENTITY, Handle);
+
+		/// <summary>
 		/// Marks this <see cref="Entity"/> as a mission entity.
 		/// </summary>
 		/// <param name="grabFromOtherScript">
