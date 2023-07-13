@@ -93,10 +93,18 @@ namespace GTA
 		/// </summary>
 		/// <param name="handle"></param>
 		/// <returns>Null if not found or the entity is not a <see cref="Prop"/>, otherwise, a <see cref="Projectile"/></returns>
-		public new static Projectile FromHandle(int handle)
+		public static new Projectile FromHandle(int handle)
 		{
 			IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
 			if (address == IntPtr.Zero || SHVDN.NativeMemory.ReadByte(address + 0x28) != 5)
+			{
+				return null;
+			}
+
+			// We can use some of Rockstar's RTTI info to ensure if this CObject is CProjectile or one of its subclasses 
+			// CProjectileRocket and CProjectileThrown also return the hash of CProjectile in this class id function
+			const uint CProjectileNameHash = 0x49DC4195;
+			if (SHVDN.NativeMemory.GetRageClassId(address) != CProjectileNameHash)
 			{
 				return null;
 			}

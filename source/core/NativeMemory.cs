@@ -396,7 +396,7 @@ namespace SHVDN
 			if (address != null)
 			{
 				s_isDecoratorLocked = (byte*)(*(int*)(address + 2) + address + 7);
-			}			
+			}
 
 			address = FindPatternBmh("\xF3\x0F\x10\x5C\x24\x20\xF3\x0F\x10\x54\x24\x24\xF3\x0F\x59\xD9\xF3\x0F\x59\xD1\xF3\x0F\x10\x44\x24\x28\xF3\x0F\x11\x1F", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			if (address != null)
@@ -1605,6 +1605,36 @@ namespace SHVDN
 
 			return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
 		}
+
+		#region -- fwExtensibleBase RTTI Sytem --
+
+		/// <summary>
+		/// Calls rage::fwExtensibleBase::GetClassId on a GTA class that is a subclass of rage::fwExtensibleBase.
+		/// </summary>
+		public static uint GetRageClassId(IntPtr addr)
+		{
+			ulong* vTable = *(ulong**)addr;
+
+			// In the b2802 or a later exe, the function returns a hash value (not a pointer value)
+			if (GetGameVersion() >= 80)
+			{
+				// The function is for the game version b2802 or later ones.
+				// This one directly returns a hash value (not a pointer value) unlike the previous function.
+				var getClassNameHashFunc = (delegate* unmanaged[Stdcall]<uint>)(vTable[2]);
+				return getClassNameHashFunc();
+			}
+
+			// The function is for game versions prior to b2802.
+			// The function uses rax and rdx registers in newer versions prior to b2802 (probably since b2189), and it uses only rax register in older versions.
+			// The function returns the address where the class name hash is in all versions prior to (the address will be the outVal address in newer versions).
+			var getClassNameAddressHashFunc = (delegate* unmanaged[Stdcall]<ulong, uint*, uint*>)(vTable[2]);
+
+			uint outVal = 0;
+			uint* returnValueAddress = getClassNameAddressHashFunc(0, &outVal);
+			return *returnValueAddress;
+		}
+
+		#endregion
 
 		#region -- Cameras --
 
