@@ -962,9 +962,9 @@ namespace GTA
 		#region Euphoria & Ragdoll
 
 		/// <inheritdoc cref="Ragdoll(int, RagdollType, bool)"/>
-		public void Ragdoll(int duration = -1, RagdollType ragdollType = RagdollType.Relax)
+		public bool Ragdoll(int duration = -1, RagdollType ragdollType = RagdollType.Relax)
 		{
-			Ragdoll(duration, ragdollType, false);
+			return Ragdoll(duration, ragdollType, false);
 		}
 		/// <summary>
 		/// Switches this <see cref="Ped"/> to a ragdoll by starting a ragdoll task and applying to this <see cref="Ped"/>.
@@ -976,11 +976,12 @@ namespace GTA
 		/// Specifies whether this <see cref="Ped"/> will not get injured or killed by being lower health than <see cref="InjuryHealthThreshold"/> or <see cref="FatalInjuryHealthThreshold"/>.
 		/// If ped's health goes lower than <see cref="InjuryHealthThreshold"/>, the ragdoll task will keep their health to <see cref="InjuryHealthThreshold"/> plus 5.0 until the task ends.
 		/// </param>
-		public void Ragdoll(int duration, RagdollType ragdollType, bool forceScriptControl = false)
+		/// <returns><see langword="true"/> if this <see cref="Ped"/> has successfully ragdolled; otherwise, <see langword="false"/></returns>
+		public bool Ragdoll(int duration, RagdollType ragdollType, bool forceScriptControl = false)
 		{
 			CanRagdoll = true;
 			// Looks like 4th and 5th parameter are completely unused
-			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, (int)ragdollType, false, false, forceScriptControl);
+			return Function.Call<bool>(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, (int)ragdollType, false, false, forceScriptControl);
 		}
 
 		/// <summary>Stops this <see cref="Ped"/> ragdolling.</summary>

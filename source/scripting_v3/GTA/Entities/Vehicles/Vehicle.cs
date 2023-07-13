@@ -2111,9 +2111,10 @@ namespace GTA
 		/// Detaches specified vehicle from any tow truck it might be attached through, loops through all vehicles so could be expensive.
 		/// If you know the tow truck <see cref="Vehicle"/> that tows this <see cref="Vehicle"/>, you should call <see cref="DetachTowedVehicle"/> on the tow truck.
 		/// </summary>
-		public void DetachFromTowTruck()
+		/// <returns><see langword="true"/> if this <see cref="Vehicle"/> has been detached from a tow truck; otherwise, <see langword="false"/></returns>
+		public bool DetachFromTowTruck()
 		{
-			Function.Call(Hash.DETACH_VEHICLE_FROM_ANY_TOW_TRUCK, Handle);
+			return Function.Call<bool>(Hash.DETACH_VEHICLE_FROM_ANY_TOW_TRUCK, Handle);
 		}
 
 		/// <summary>

@@ -261,7 +261,7 @@ namespace GTA
 		/// <param name="min">The minimum position of the region.</param>
 		/// <param name="max">The maximum position of the region.</param>
 		/// <param name="active">Specifies wheter vehicle nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
-		public static void SwitchVehicleNodesInArea(Vector3 min, Vector3 max, bool active) => Function.Call<bool>(Hash.SET_ROADS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, false);
+		public static void SwitchVehicleNodesInArea(Vector3 min, Vector3 max, bool active) => Function.Call(Hash.SET_ROADS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, false);
 		/// <summary>
 		/// <para>
 		/// Switches vehicle nodes an angled area. <see cref="Vehicle"/>s will drive on to roads that are switched on and new <see cref="Vehicle"/>s will be generated on them.
@@ -277,13 +277,13 @@ namespace GTA
 		/// <param name="areaWidth">The width of these sides that defines <paramref name="position1"/> and <paramref name="position2"/>.</param>
 		/// <param name="active">Specifies wheter vehicle nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
 		public static void SwitchVehicleNodesInAngledArea(Vector3 position1, Vector3 position2, float areaWidth, bool active)
-			=> Function.Call<bool>(Hash.SET_ROADS_IN_ANGLED_AREA, position1.X, position1.Y, position1.Z, position2.X, position2.Y, position2.Z, areaWidth, false, active, false);
+			=> Function.Call(Hash.SET_ROADS_IN_ANGLED_AREA, position1.X, position1.Y, position1.Z, position2.X, position2.Y, position2.Z, areaWidth, false, active, false);
 		/// <summary>
 		/// Sets all vehicle nodes in area back to their original state as per area a ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
 		/// </summary>
 		/// <param name="min">The minimum position of the region.</param>
 		/// <param name="max">The maximum position of the region.</param>
-		public static void SetVehicleNodesBackToOriginal(Vector3 min, Vector3 max) => Function.Call<bool>(Hash.SET_ROADS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, false);
+		public static void SetVehicleNodesBackToOriginal(Vector3 min, Vector3 max) => Function.Call(Hash.SET_ROADS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, false);
 		/// <summary>
 		/// <para>
 		/// Sets all vehicle nodes in area back to their original state as per area a ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
@@ -296,6 +296,6 @@ namespace GTA
 		/// <param name="position2">One of the midpoints of two parallel sides, which should be different from <paramref name="position1"/>.</param>
 		/// <param name="areaWidth">The width of these sides that defines <paramref name="position1"/> and <paramref name="position2"/>.</param>
 		public static void SetVehicleNodesBackToOriginalInAngledArea(Vector3 position1, Vector3 position2, float areaWidth)
-			=> Function.Call<bool>(Hash.SET_ROADS_BACK_TO_ORIGINAL_IN_ANGLED_AREA, position1.X, position1.Y, position1.Z, position2.X, position2.Y, position2.Z, areaWidth, false);
+			=> Function.Call(Hash.SET_ROADS_BACK_TO_ORIGINAL_IN_ANGLED_AREA, position1.X, position1.Y, position1.Z, position2.X, position2.Y, position2.Z, areaWidth, false);
 	}
 }

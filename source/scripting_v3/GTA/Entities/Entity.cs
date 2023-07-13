@@ -1875,25 +1875,27 @@ namespace GTA
 		/// <param name="startPhase">The start phase between 0f to 1f.</param>
 		/// <param name="animFlags">The animation flags.</param>
 		/// <remarks>For <see cref="Ped"/>, use <see cref="TaskInvoker.PlayAnimation(ClipDictionary, string)"/>.</remarks>
-		public void PlayAnimation(string animName, ClipDictionary clipDictName, AnimationBlendDelta blendDelta, bool loop, bool holdLastFrame, bool driveToPose = false, float startPhase = 0f, AnimationFlags animFlags = AnimationFlags.None)
+		/// <returns><see langword="true"/> if the animation has successfully started playing; otherwise, <see langword="false"/></returns>
+		public bool PlayAnimation(string animName, ClipDictionary clipDictName, AnimationBlendDelta blendDelta, bool loop, bool holdLastFrame, bool driveToPose = false, float startPhase = 0f, AnimationFlags animFlags = AnimationFlags.None)
 		{
-			Function.Call(Hash.PLAY_ENTITY_ANIM, Handle, animName, clipDictName, blendDelta.Value, loop, holdLastFrame, driveToPose, startPhase, (int)animFlags);
+			return Function.Call<bool>(Hash.PLAY_ENTITY_ANIM, Handle, animName, clipDictName, blendDelta.Value, loop, holdLastFrame, driveToPose, startPhase, (int)animFlags);
 		}
 
 		/// <summary>
 		/// Stops an <see cref="Entity"/> animation.
 		/// </summary>
-		public void StopAnimation(string animName, ClipDictionary clipDictName, AnimationBlendDelta blendDelta)
+		/// <returns><see langword="true"/> if the animation has successfully stopped playing; otherwise, <see langword="false"/></returns>
+		public bool StopAnimation(string animName, ClipDictionary clipDictName, AnimationBlendDelta blendDelta)
 		{
-			Function.Call(Hash.STOP_ENTITY_ANIM, Handle, animName, clipDictName, blendDelta.Value);
+			return Function.Call<bool>(Hash.STOP_ENTITY_ANIM, Handle, animName, clipDictName, blendDelta.Value);
 		}
 
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Entity"/> is playing the animation.
 		/// </summary>
-		public void IsPlayingAnimation(ClipDictionary clipDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
+		public bool IsPlayingAnimation(ClipDictionary clipDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			Function.Call(Hash.IS_ENTITY_PLAYING_ANIM, Handle, clipDictName, animName, type);
+			return Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, Handle, clipDictName, animName, type);
 		}
 
 		/// <summary>
@@ -1902,9 +1904,9 @@ namespace GTA
 		/// <remarks>
 		/// Will only ever return <see langword="true"/> for anims that hold at the end (i.e. anims that loop or end automatically will always return <see langword="false"/>).
 		/// </remarks>
-		public void HasFinishedAnimation(ClipDictionary clipDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
+		public bool HasFinishedAnimation(ClipDictionary clipDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			Function.Call(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, clipDictName, animName, type);
+			return Function.Call<bool>(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, clipDictName, animName, type);
 		}
 
 		/// <summary>
@@ -1920,7 +1922,7 @@ namespace GTA
 		/// The event must have been tagged with the <c>VisibleToScript</c> attribute (joaat hash: <c>0xF301E135</c>) in the ycd animation file to make it detectable with this method.
 		/// Events can include one or more attributes of different types that can be used to get data from the animation.
 		/// </remarks>
-		public void HasAnimationEventFired(int eventHash) => Function.Call(Hash.HAS_ANIM_EVENT_FIRED, Handle, eventHash);
+		public bool HasAnimationEventFired(int eventHash) => Function.Call<bool>(Hash.HAS_ANIM_EVENT_FIRED, Handle, eventHash);
 
 		/// <summary>
 		/// Gets a float value representing animation's current playtime with respect to its total playtime.
