@@ -92,6 +92,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets the MLO model this <see cref="InteriorProxy"/> will load.
+		/// Return value has the hashed value of <c>archetypeName</c> in a ymap file.
 		/// </summary>
 		public Model Model
 		{
@@ -174,6 +175,44 @@ namespace GTA
 		public void UnpinFromMemory()
 		{
 			Function.Call(Hash.UNPIN_INTERIOR, Handle);
+		}
+
+		/// <summary>
+		/// Mark the entity set with the given name in this <see cref="InteriorProxy"/> as being active.
+		/// You need to call <see cref="Refresh"/> to apply the changes.
+		/// </summary>
+		public void ActivateEntitySet(string entitySetName)
+			=> Function.Call(Hash.ACTIVATE_INTERIOR_ENTITY_SET, Handle, entitySetName);
+
+		/// <summary>
+		/// Mark the entity set with the given name in this <see cref="InteriorProxy"/> as being inactive.
+		/// You need to call <see cref="Refresh"/> to apply the changes.
+		/// </summary>
+		public void DeactivateEntitySet(string entitySetName)
+			=> Function.Call(Hash.DEACTIVATE_INTERIOR_ENTITY_SET, Handle, entitySetName);
+		/// <summary>
+		/// Return <cref langword="true"/> if the entity set with the given name in this interior is marked as active.
+		/// </summary>
+		public bool IsEntitySetActive(string entitySetName)
+			=> Function.Call<bool>(Hash.IS_INTERIOR_ENTITY_SET_ACTIVE, Handle, entitySetName);
+		/// <summary>
+		/// <para>
+		/// Sets tint index for given entity set.
+		/// You need to call <see cref="Refresh"/> to apply the changes.
+		/// </para>
+		/// <para>
+		/// Not available in the game versions prior to v1.0.877.1.
+		/// </para>
+		/// </summary>
+		/// <param name="entitySetName">The entity set name.</param>
+		/// <param name="index">The tint index. Must be positive.</param>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if the method is called in one of the game versions prior to v1.0.877.1.
+		/// </exception>
+		public void SetEntitySetTintIndex(string entitySetName, int index)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_877_1_Steam, nameof(InteriorProxy), nameof(SetEntitySetTintIndex));
+			Function.Call(Hash.SET_INTERIOR_ENTITY_SET_TINT_INDEX, Handle, entitySetName, index);
 		}
 
 		static public InteriorProxy GetInteriorProxyAt(Vector3 position)
