@@ -25,7 +25,7 @@ namespace GTA
 		/// <param name="handle">The interior proxy handle.</param>
 		/// <returns>
 		/// Returns a <see cref="InteriorProxy"/> if this handle corresponds to a <see cref="InteriorProxy"/>.
-		/// Returns <see langword="null" /> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/>
+		/// Returns <see langword="null" /> if no <see cref="InteriorProxy"/> exists this the specified <paramref name="handle"/>
 		/// </returns>
 		public static InteriorProxy FromHandle(int handle) => SHVDN.NativeMemory.InteriorProxyHandleExists(handle) ? new InteriorProxy(handle) : null;
 
@@ -201,43 +201,43 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if an <see cref="object"/> refers to the same entity as this <see cref="InteriorProxy"/>.
+		/// Determines if an <see cref="object"/> refers to the same interior proxy as this <see cref="InteriorProxy"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
-		/// <returns><see langword="true" /> if the <paramref name="obj"/> is the same entity as this <see cref="InteriorProxy"/>; otherwise, <see langword="false" />.</returns>
+		/// <returns><see langword="true"/> if the <paramref name="obj"/> is the same interior proxy as this <see cref="InteriorProxy"/>; otherwise, <see langword="false"/>.</returns>
 		public override bool Equals(object obj)
 		{
-			if (obj is Entity entity)
+			if (obj is InteriorProxy interior)
 			{
-				return Handle == entity.Handle;
+				return Handle == interior.Handle;
 			}
 
 			return false;
 		}
 
 		/// <summary>
-		/// Determines if two <see cref="InteriorProxy"/>s refer to the same entity.
+		/// Determines if two <see cref="InteriorProxy"/>s refer to the same interior proxy.
 		/// </summary>
 		/// <param name="left">The left <see cref="InteriorProxy"/>.</param>
 		/// <param name="right">The right <see cref="InteriorProxy"/>.</param>
-		/// <returns><see langword="true" /> if <paramref name="left"/> is the same entity as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
+		/// <returns><see langword="true"/> if <paramref name="left"/> is the same interior proxy as <paramref name="right"/>; otherwise, <see langword="false"/>.</returns>
 		public static bool operator ==(InteriorProxy left, InteriorProxy right)
 		{
 			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
-		/// Determines if two <see cref="Entity"/>s don't refer to the same entity.
+		/// Determines if two <see cref="InteriorProxy"/>s don't refer to the same interior proxy.
 		/// </summary>
-		/// <param name="left">The left <see cref="Entity"/>.</param>
-		/// <param name="right">The right <see cref="Entity"/>.</param>
-		/// <returns><see langword="true" /> if <paramref name="left"/> is not the same entity as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
+		/// <param name="left">The left <see cref="InteriorProxy"/>.</param>
+		/// <param name="right">The right <see cref="InteriorProxy"/>.</param>
+		/// <returns><see langword="true"/> if <paramref name="left"/> is not the same interior proxy as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator !=(InteriorProxy left, InteriorProxy right)
 		{
 			return !(left == right);
 		}
 
 		/// <summary>
-		/// Converts an <see cref="Entity"/> to a native input argument.
+		/// Converts an <see cref="InteriorProxy"/> to a native input argument.
 		/// </summary>
 		public static implicit operator InputArgument(InteriorProxy value)
 		{
