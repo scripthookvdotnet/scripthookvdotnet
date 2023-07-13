@@ -8,6 +8,9 @@ using GTA.Native;
 
 namespace GTA
 {
+	/// <summary>
+	/// Represents a pickup placement, not pickup object.
+	/// </summary>
 	public sealed class Pickup : PoolObject
 	{
 		public Pickup(int handle) : base(handle)
@@ -15,17 +18,31 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// The position of this <see cref="Pickup"/>.
+		/// The position of this <see cref="Pickup"/> placement.
 		/// </summary>
 		public Vector3 Position => Function.Call<Vector3>(Hash.GET_PICKUP_COORDS, Handle);
 
 		/// <summary>
-		/// Gets if this <see cref="Pickup"/> has been collected.
+		/// Gets if this <see cref="Pickup"/> placement has been collected.
 		/// </summary>
 		public bool IsCollected => Function.Call<bool>(Hash.HAS_PICKUP_BEEN_COLLECTED, Handle);
 
 		/// <summary>
-		/// Determines if the object of this <see cref="Pickup"/> exists.
+		/// Gets the <see cref="PickupObject"/> of this <see cref="Pickup"/> placement.
+		/// </summary>
+		/// <returns></returns>
+		public PickupObject Object
+		{
+			get
+			{
+				// GET_PICKUP_OBJECT returns -1 (not 0) if the pickup placement has no object or is invalid
+				int objHandle = Function.Call<int>(Hash.GET_PICKUP_OBJECT, Handle);
+				return objHandle == -1 ? new PickupObject(objHandle) : null;
+			}
+		}
+
+		/// <summary>
+		/// Determines if the object of this <see cref="Pickup"/> placement exists.
 		/// </summary>
 		/// <returns></returns>
 		public bool ObjectExists()
@@ -34,7 +51,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Destroys this <see cref="Pickup"/>.
+		/// Destroys this <see cref="Pickup"/> placement.
 		/// </summary>
 		public override void Delete()
 		{
@@ -42,7 +59,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if this <see cref="Pickup"/> exists.
+		/// Determines if this <see cref="Pickup"/> placement exists.
 		/// </summary>
 		/// <returns><see langword="true" /> if this <see cref="Pickup"/> exists; otherwise, <see langword="false" />.</returns>
 		public override bool Exists()
@@ -51,7 +68,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if an <see cref="object"/> refers to the same pickup as this <see cref="Pickup"/>.
+		/// Determines if an <see cref="object"/> refers to the same pickup placement as this <see cref="Pickup"/>.
 		/// </summary>
 		/// <param name="obj">The <see cref="object"/> to check.</param>
 		/// <returns><see langword="true" /> if the <paramref name="obj"/> is the same pickup as this <see cref="Pickup"/>; otherwise, <see langword="false" />.</returns>
@@ -66,17 +83,17 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Determines if two <see cref="Pickup"/>s refer to the same pickup.
+		/// Determines if two <see cref="Pickup"/>s refer to the same pickup placement.
 		/// </summary>
 		/// <param name="left">The left <see cref="Pickup"/>.</param>
 		/// <param name="right">The right <see cref="Pickup"/>.</param>
-		/// <returns><see langword="true" /> if <paramref name="left"/> is the same pickup as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
+		/// <returns><see langword="true" /> if <paramref name="left"/> is the same pickup placement as <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
 		public static bool operator ==(Pickup left, Pickup right)
 		{
 			return left?.Equals(right) ?? right is null;
 		}
 		/// <summary>
-		/// Determines if two <see cref="Pickup"/>s don't refer to the same pickup.
+		/// Determines if two <see cref="Pickup"/>s don't refer to the same pickup placement.
 		/// </summary>
 		/// <param name="left">The left <see cref="Pickup"/>.</param>
 		/// <param name="right">The right <see cref="Pickup"/>.</param>

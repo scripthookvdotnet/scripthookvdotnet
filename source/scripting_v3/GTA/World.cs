@@ -603,31 +603,52 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the closest <see cref="Prop"/> to a given position in the World associated with a <see cref="Pickup"/>.
+		/// Gets the closest <see cref="PickupObject"/> to a given position in the World associated with a <see cref="Pickup"/>.
 		/// </summary>
-		/// <param name="position">The position to find the nearest <see cref="Prop"/>.</param>
-		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
-		/// <remarks>Returns <see langword="null" /> if no <see cref="Prop"/> was in the given region.</remarks>
+		/// <param name="position">The position to find the nearest <see cref="PickupObject"/>.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="PickupObject"/>s.</param>
+		/// <remarks>
+		/// <para>
+		/// Returns <see langword="null" /> if no <see cref="PickupObject"/> was in the given region.
+		/// </para>
+		/// <para>
+		/// Although this method returns a <see cref="PickupObject"/> instance, it specifies the base class
+		/// <see cref="Prop"/> type as the return type for compatibility for scripts built against v3.6.0 or earlier
+		/// versions of SHVDN. If you need to use the return value as <see cref="PickupObject"/>, you can cast it
+		/// into <see cref="PickupObject"/>.
+		/// </para>
+		/// </remarks>
 		public static Prop GetClosestPickupObject(Vector3 position, float radius)
 		{
 			return GetClosest(position, GetNearbyPickupObjects(position, radius));
 		}
-
 		/// <summary>
-		/// Gets an <c>array</c> of all <see cref="Prop"/>s in the World associated with a <see cref="Pickup"/>.
+		/// Gets an <c>array</c> of all <see cref="PickupObject"/>s in the World associated with a <see cref="Pickup"/>.
 		/// </summary>
+		/// <remarks>
+		/// Although this method returns an array of <see cref="PickupObject"/> instances, it specifies an array of
+		/// the base class <see cref="Prop"/> type as the return type for compatibility for scripts built against
+		/// v3.6.0 or earlier versions of SHVDN. If you need to use the return value as an array of
+		/// <see cref="PickupObject"/>, you can cast it into an array of <see cref="PickupObject"/>.
+		/// </remarks>
 		public static Prop[] GetAllPickupObjects()
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(), handle => new Prop(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(), handle => new PickupObject(handle));
 		}
 		/// <summary>
-		/// Gets an <c>array</c> of all <see cref="Prop"/>s in a given region in the World associated with a <see cref="Pickup"/>.
+		/// Gets an <c>array</c> of all <see cref="PickupObject"/>s in a given region in the World associated with a <see cref="Pickup"/>.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
 		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
+		/// <remarks>
+		/// Although this method returns an array of <see cref="PickupObject"/> instances, it specifies an array of
+		/// the base class <see cref="Prop"/> type as the return type for compatibility for scripts built against
+		/// v3.6.0 or earlier versions of SHVDN. If you need to use the return value as an array of
+		/// <see cref="PickupObject"/>, you can cast it into an array of <see cref="PickupObject"/>.
+		/// </remarks>
 		public static Prop[] GetNearbyPickupObjects(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToInternalFVector3(), radius), handle => new Prop(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToInternalFVector3(), radius), handle => new PickupObject(handle));
 		}
 		/// <summary>
 		/// Gets the closest <see cref="Projectile"/> to a given position in the World.
