@@ -632,37 +632,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Activates or deactivates the combat attributes.
-		/// </summary>
-		public void SetCombatAttribute(CombatAttributes attribute, bool activeSkill)
-			=> Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, Handle, (int)attribute, activeSkill);
-
-		/// <summary>
-		/// Activates or deactivates the flee attributes.
-		/// </summary>
-		public void SetFleeAttributes(FleeAttributes attributes, bool activeSkill)
-			=> Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, Handle, (int)attributes, activeSkill);
-
-		public CombatMovement CombatMovement
-		{
-			get => Function.Call<CombatMovement>(Hash.GET_PED_COMBAT_MOVEMENT, Handle);
-			set => Function.Call(Hash.SET_PED_COMBAT_MOVEMENT, Handle, (int)value);
-		}
-		public CombatAbility CombatAbility
-		{
-			set => Function.Call(Hash.SET_PED_COMBAT_ABILITY, Handle, (int)value);
-		}
-		public CombatRange CombatRange
-		{
-			get => Function.Call<CombatRange>(Hash.GET_PED_COMBAT_RANGE, Handle);
-			set => Function.Call(Hash.SET_PED_COMBAT_RANGE, Handle, (int)value);
-		}
-		public TargetLossResponse TargetLossResponse
-		{
-			set => Function.Call(Hash.SET_PED_TARGET_LOSS_RESPONSE, Handle, (int)value);
-		}
-
-		/// <summary>
 		/// Sets a value indicating whether this <see cref="Entity"/> is persistent.
 		/// Unlike <see cref="Entity.IsPersistent"/>, calling this method does not affect assigned tasks.
 		/// </summary>
@@ -1056,7 +1025,7 @@ namespace GTA
 
 		#endregion
 
-		#region Weapon Interaction
+		#region Combat Configs
 
 		/// <summary>
 		/// Gets or sets how accurate this <see cref="Ped"/>s shooting ability is.
@@ -1066,6 +1035,12 @@ namespace GTA
 		/// The accuracy from 0 to 100, 0 being very inaccurate, which means this <see cref="Ped"/> cannot shoot at exactly where they are aiming at,
 		/// 100 being perfectly accurate.
 		/// </value>
+		/// <remarks>
+		/// The ped accuracy is internally stored as a <see cref="float"/>. To read/write the exact value, use
+		/// <see cref="SetCombatFloatAttribute(CombatFloatAttributes, float)"/> or
+		/// <see cref="GetCombatFloatAttribute(CombatFloatAttributes)"/> with
+		/// <see cref="CombatFloatAttributes.WeaponAccuracy"/>.
+		/// </remarks>
 		public int Accuracy
 		{
 			get => Function.Call<int>(Hash.GET_PED_ACCURACY, Handle);
@@ -1076,8 +1051,13 @@ namespace GTA
 		/// Sets the rate this <see cref="Ped"/> will shoot at.
 		/// </summary>
 		/// <value>
-		/// The shoot rate from 0.0f to 1000.0f, 100.0f is the default value.
+		/// The shoot rate from 0 to 1000, 100 is the default value.
 		/// </value>
+		/// <remarks>
+		/// The value will be internally stored as a <see cref="float"/>.
+		/// This property internally sets the value divided by 100 (so the value will be internally 1.0 if you set 100
+		/// to this property).
+		/// </remarks>
 		public int ShootRate
 		{
 			set => Function.Call(Hash.SET_PED_SHOOT_RATE, Handle, value);
@@ -1105,6 +1085,56 @@ namespace GTA
 			}
 			set => Function.Call(Hash.SET_PED_FIRING_PATTERN, Handle, (uint)value);
 		}
+
+		/// <summary>
+		/// Activates or deactivates the combat attributes.
+		/// </summary>
+		public void SetCombatAttribute(CombatAttributes attribute, bool activeSkill)
+			=> Function.Call(Hash.SET_PED_COMBAT_ATTRIBUTES, Handle, (int)attribute, activeSkill);
+		/// <summary>
+		/// Sets a combat float attributes.
+		/// </summary>
+		/// <remarks>
+		/// To write the shoot rate, use <see cref="ShootRate"/>.
+		/// </remarks>
+		public void SetCombatFloatAttribute(CombatFloatAttributes attribute, float newValue)
+			=> Function.Call(Hash.SET_COMBAT_FLOAT, Handle, (int)attribute, newValue);
+		/// <summary>
+		/// Gets a combat float attributes.
+		/// </summary>
+		/// <remarks>
+		/// To read the shoot rate, use <see cref="ShootRate"/>.
+		/// </remarks>
+		public float GetCombatFloatAttribute(CombatFloatAttributes attribute)
+			=> Function.Call<float>(Hash.GET_COMBAT_FLOAT, Handle, (int)attribute);
+		/// <summary>
+		/// Activates or deactivates the flee attributes.
+		/// </summary>
+		public void SetFleeAttributes(FleeAttributes attributes, bool activeSkill)
+			=> Function.Call(Hash.SET_PED_FLEE_ATTRIBUTES, Handle, (int)attributes, activeSkill);
+
+		public CombatMovement CombatMovement
+		{
+			get => Function.Call<CombatMovement>(Hash.GET_PED_COMBAT_MOVEMENT, Handle);
+			set => Function.Call(Hash.SET_PED_COMBAT_MOVEMENT, Handle, (int)value);
+		}
+		public CombatAbility CombatAbility
+		{
+			set => Function.Call(Hash.SET_PED_COMBAT_ABILITY, Handle, (int)value);
+		}
+		public CombatRange CombatRange
+		{
+			get => Function.Call<CombatRange>(Hash.GET_PED_COMBAT_RANGE, Handle);
+			set => Function.Call(Hash.SET_PED_COMBAT_RANGE, Handle, (int)value);
+		}
+		public TargetLossResponse TargetLossResponse
+		{
+			set => Function.Call(Hash.SET_PED_TARGET_LOSS_RESPONSE, Handle, (int)value);
+		}
+
+		#endregion
+
+		#region Weapon Interaction
 
 		/// <summary>
 		/// Gets a collection of all this <see cref="Ped"/>s <see cref="Weapon"/>s.
