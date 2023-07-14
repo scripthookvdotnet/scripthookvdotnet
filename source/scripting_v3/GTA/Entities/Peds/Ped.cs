@@ -1010,6 +1010,53 @@ namespace GTA
 			return Function.Call<bool>(Hash.SET_PED_TO_RAGDOLL, Handle, minTime, maxTime, (int)ragdollType, false, false, forceScriptControl);
 		}
 
+		/// <summary>
+		/// Gives this <see cref="Ped"/> to a specific NaturalMotion (NM) ragdoll task for fall down,
+		/// which controls them to fall off a high place, fall down stairs etc.
+		/// </summary>
+		/// <param name="minTime">
+		/// The duration at least how long the ragdoll task will run in milliseconds.
+		/// After the NM task executed for longer than this value, it may end itself if the <see cref="Ped"/> is fallen down.
+		/// </param>
+		/// <param name="maxTime">
+		/// The duration at most how long the ragdoll task will run in milliseconds.
+		/// The task will be forced to stop if it has been executed for longer this value,
+		/// even if the <see cref="Ped"/> is still not fallen down.
+		/// </param>
+		/// <param name="fallType">The ragdoll fall type.</param>
+		/// <param name="direction">The direction to which the ped should stagger and fall.</param>
+		/// <param name="groundHeight">The height the <see cref="Ped"/> is expected to fall down to.</param>
+		/// <returns>
+		/// <see langword="true"/> if this <see cref="Ped"/> has successfully started a new ragdoll task; otherwise, <see langword="false"/>.
+		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// This method can start a new NaturalMotion (NM) ragdoll task even if some NM task is already running on
+		/// the <see cref="Ped"/>.
+		/// </para>
+		/// </remarks>
+		public bool SetToRagdollWithFall(int minTime, int maxTime, RagdollFallType fallType, Vector3 direction, float groundHeight)
+		{
+			// Looks like 9th to 14th parameter are supposed to be grab points, but are they unused? (not confirmed)
+			return Function.Call<bool>(
+				Hash.SET_PED_TO_RAGDOLL_WITH_FALL,
+				Handle,
+				minTime,
+				maxTime,
+				(int)fallType,
+				direction.X,
+				direction.Y,
+				direction.Z,
+				groundHeight,
+				0f,
+				0f,
+				0f,
+				0f,
+				0f,
+				0f
+				);
+		}
+
 		/// <summary>Stops this <see cref="Ped"/> ragdolling.</summary>
 		public void CancelRagdoll()
 		{
