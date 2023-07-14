@@ -961,27 +961,53 @@ namespace GTA
 
 		#region Euphoria & Ragdoll
 
-		/// <inheritdoc cref="Ragdoll(int, RagdollType, bool)"/>
+		/// <summary>
+		/// Switches this <see cref="Ped"/> to a ragdoll by starting a ragdoll task and applying to this <see cref="Ped"/>.
+		/// If <paramref name="ragdollType"/> is not set to <see cref="RagdollType.Relax"/> or <see cref="RagdollType.ScriptControl"/>, the ragdoll behavior for <see cref="RagdollType.Balance"/> will be used.
+		/// </summary>
+		/// <param name="duration">
+		/// The duration how long the ragdoll task will run in milliseconds.
+		/// </param>
+		/// <param name="ragdollType">The ragdoll type.</param>
 		public void Ragdoll(int duration = -1, RagdollType ragdollType = RagdollType.Relax)
 		{
-			Ragdoll(duration, ragdollType, false);
+			CanRagdoll = true;
+			SetToRagdoll(duration, duration, ragdollType, false);
 		}
 		/// <summary>
 		/// Switches this <see cref="Ped"/> to a ragdoll by starting a ragdoll task and applying to this <see cref="Ped"/>.
 		/// If <paramref name="ragdollType"/> is not set to <see cref="RagdollType.Relax"/> or <see cref="RagdollType.ScriptControl"/>, the ragdoll behavior for <see cref="RagdollType.Balance"/> will be used.
 		/// </summary>
-		/// <param name="duration">The duration how long the ragdoll task will run in milliseconds.</param>
+		/// <param name="minTime">
+		/// The duration at least how long the ragdoll task will run in milliseconds.
+		/// Not used for <see cref="RagdollType.ScriptControl"/>.
+		/// </param>
+		/// <param name="maxTime">
+		/// The duration at most how long the ragdoll task will run in milliseconds.
+		/// Not used for <see cref="RagdollType.Balance"/>.
+		/// </param>
 		/// <param name="ragdollType">The ragdoll type.</param>
 		/// <param name="forceScriptControl">
 		/// Specifies whether this <see cref="Ped"/> will not get injured or killed by being lower health than <see cref="InjuryHealthThreshold"/> or <see cref="FatalInjuryHealthThreshold"/>.
 		/// If ped's health goes lower than <see cref="InjuryHealthThreshold"/>, the ragdoll task will keep their health to <see cref="InjuryHealthThreshold"/> plus 5.0 until the task ends.
 		/// </param>
-		/// <returns><see langword="true"/> if this <see cref="Ped"/> has successfully ragdolled; otherwise, <see langword="false"/></returns>
-		public bool Ragdoll(int duration, RagdollType ragdollType, bool forceScriptControl = false)
+		/// <returns>
+		/// <see langword="true"/> if this <see cref="Ped"/> has successfully started a new ragdoll task; otherwise, <see langword="false"/>.
+		/// </returns>
+		/// <remarks>
+		/// <para>
+		/// This method will not start a new NaturalMotion(NM) ragdoll task if some NM task is already running on the <see cref="Ped"/>
+		/// (except for <see cref="RagdollType.ScriptControl"/>).
+		/// </para>
+		/// <para>
+		/// Unlike <see cref="Ragdoll(int, RagdollType)"/>, this method does not automatically set <see cref="CanRagdoll"/> to <see langword="true"/>.
+		/// Set the property on your own if necessary.
+		/// </para>
+		/// </remarks>
+		public bool SetToRagdoll(int minTime, int maxTime, RagdollType ragdollType, bool forceScriptControl = false)
 		{
-			CanRagdoll = true;
 			// Looks like 4th and 5th parameter are completely unused
-			return Function.Call<bool>(Hash.SET_PED_TO_RAGDOLL, Handle, duration, duration, (int)ragdollType, false, false, forceScriptControl);
+			return Function.Call<bool>(Hash.SET_PED_TO_RAGDOLL, Handle, minTime, maxTime, (int)ragdollType, false, false, forceScriptControl);
 		}
 
 		/// <summary>Stops this <see cref="Ped"/> ragdolling.</summary>
