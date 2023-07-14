@@ -962,9 +962,9 @@ namespace GTA
 		#region Euphoria & Ragdoll
 
 		/// <inheritdoc cref="Ragdoll(int, RagdollType, bool)"/>
-		public bool Ragdoll(int duration = -1, RagdollType ragdollType = RagdollType.Relax)
+		public void Ragdoll(int duration = -1, RagdollType ragdollType = RagdollType.Relax)
 		{
-			return Ragdoll(duration, ragdollType, false);
+			Ragdoll(duration, ragdollType, false);
 		}
 		/// <summary>
 		/// Switches this <see cref="Ped"/> to a ragdoll by starting a ragdoll task and applying to this <see cref="Ped"/>.
