@@ -66,7 +66,7 @@ namespace GTA
 		/// <value>
 		/// The current date and time.
 		/// </value>
-		[Obsolete("World.CurrentDate is obsolete because DateTime cannot represent 31 days for all the months and the game does not store a millisecond or nanosecond based tick." +
+		[Obsolete("World.CurrentDate is obsolete because DateTime can represent the years only in the range of 1 to 9999, while the game supports wider range of years." +
 			"Use properties or methods of GTA.Clock instead.")]
 		public static DateTime CurrentDate
 		{
