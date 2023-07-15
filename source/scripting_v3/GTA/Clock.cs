@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015 kagikn & contributors
+// Copyright (C) 2023 kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
@@ -38,8 +38,8 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the day of month starting from 1 to 31.
-		/// The max value is guaranteed to be 31 regardless of the month.
+		/// Gets or sets the day of month.
+		/// The max value varies depending on the current month.
 		/// </summary>
 		public static int Day
 		{
@@ -70,11 +70,14 @@ namespace GTA
 			set => SetDateZeroBasedMonth(Day, value, Year);
 		}
 		/// <summary>
-		/// Gets or sets the year number from 1 to 9999.
+		/// Gets or sets the year number (no range limitation).
 		/// </summary>
 		/// <value>
 		/// The current year number.
 		/// </value>
+		/// <remarks>
+		/// The game may get considerably heavier if you set the value to a very large value such as 1e+7.
+		/// </remarks>
 		public static int Year
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_YEAR);
@@ -82,14 +85,13 @@ namespace GTA
 		}
 
 		/// <param name="day">
-		/// The day number from 1 to 31.
-		/// The max value is the same regardless of <paramref name="month"/>.
+		/// The day (1 through the number of days in <paramref name="month"/>).
 		/// </param>
 		/// <param name="month">
-		/// The month number from 1 to 12.
+		/// The month (1 through 12).
 		/// </param>
 		/// <param name="year">
-		/// The year number from 1 to 9999.
+		/// The year (no range limitation).
 		/// </param>
 		/// <inheritdoc cref="SetDateZeroBasedMonth(int, int, int)"/>
 		public static void SetDate(int day, int month, int year) => SetDateZeroBasedMonth(day, month - 1, year);
@@ -98,14 +100,13 @@ namespace GTA
 		/// Sets the current date in the GTA world.
 		/// </summary>
 		/// <param name="day">
-		/// The day number from 1 to 31.
-		/// The max value is the same regardless of <paramref name="month"/>.
+		/// The day (1 through the number of days in <paramref name="month"/>).
 		/// </param>
 		/// <param name="month">
-		/// The month number from 0 to 11.
+		/// The month (1 through 12).
 		/// </param>
 		/// <param name="year">
-		/// The year number from 1 to 9999.
+		/// The year (no range limitation).
 		/// </param>
 		/// <remarks>
 		/// If you set to a date that the game cannot handle properly, the <see cref="Day"/> will be set to 1985.
@@ -197,14 +198,13 @@ namespace GTA
 		}
 
 		/// <param name="day">
-		/// The day number from 1 to 31.
-		/// The max value is the same regardless of <paramref name="month"/>.
+		/// The day (1 through the number of days in <paramref name="month"/>).
 		/// </param>
 		/// <param name="month">
-		/// The month number from 1 to 12.
+		/// The month (1 through 12).
 		/// </param>
 		/// <param name="year">
-		/// The year number from 1 to 9999.
+		/// The year (no range limitation).
 		/// </param>
 		/// <inheritdoc cref="GetDayOfWeekZeroBasedMonth(int, int, int)"/>
 		public static DayOfWeek GetDayOfWeek(int day, int month, int year) => GetDayOfWeekZeroBasedMonth(day, month - 1, year);
@@ -214,34 +214,16 @@ namespace GTA
 		/// Calculates in the same way as the game does.
 		/// </summary>
 		/// <param name="day">
-		/// The day number from 1 to 31.
-		/// The max value is the same regardless of <paramref name="month"/>.
+		/// The day (1 through the number of days in <paramref name="month"/>).
 		/// </param>
 		/// <param name="month">
-		/// The month number from 0 to 11.
+		/// The month (1 through 12).
 		/// </param>
 		/// <param name="year">
-		/// The year number from 1 to 9999.
+		/// The year (no range limitation).
 		/// </param>
-		/// <returns></returns>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// Throws when one of the arguments is out of the range.
-		/// </exception>
 		public static DayOfWeek GetDayOfWeekZeroBasedMonth(int day, int month, int year)
 		{
-			if (day < 1 || day > 31)
-			{
-				throw new ArgumentOutOfRangeException(nameof(day));
-			}
-			if (month < 0 || month > 11)
-			{
-				throw new ArgumentOutOfRangeException(nameof(month));
-			}
-			if (year < 1 || year > 9999)
-			{
-				throw new ArgumentOutOfRangeException(nameof(year));
-			}
-
 			int century = year % 100;
 			int firstDayOfWeek = s_firstDaysOfWeekForNonLeapYear[month];
 			int unk1 = 2 * (3 - (year - century) / 100 % 4);
