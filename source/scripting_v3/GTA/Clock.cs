@@ -39,8 +39,13 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the day of month.
-		/// The max value varies depending on the current month.
+		/// The max value varies depending on the current month, but may return a value in the range
+		/// of 1 to the max value if not normalized yet.
 		/// </summary>
+		/// <remarks>
+		/// If you set a value not in the range of 1 to the max value depending on the current month,
+		/// the game will normalize the date time when the game updates the clock minute.
+		/// </remarks>
 		public static int Day
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH);
@@ -51,8 +56,15 @@ namespace GTA
 		/// Gets or sets the day of month starting from 1.
 		/// </summary>
 		/// <remarks>
+		/// <para>
+		/// You should not set a value not in the range of 1 to 12 to this property.
+		/// Doing so may result in an unexpected date time, since the game uses an array of days in months
+		/// without array bound checking.
+		/// </para>
+		/// <para>
 		/// When you do not plan to use this value to draw on the screen,
 		/// consider using <see cref="MonthZero"/> since the game internally uses the zero-based month representation.
+		/// </para>
 		/// </remarks>
 		public static int Month
 		{
@@ -64,6 +76,11 @@ namespace GTA
 		/// Gets or sets the day of month starting from 0.
 		/// The representation is the same as the game uses for the month.
 		/// </summary>
+		/// <remarks>
+		/// You should not set a value not in the range of 0 to 11 to this property.
+		/// Doing so may result in an unexpected date time, since the game uses an array of days in months
+		/// without array bound checking.
+		/// </remarks>
 		public static int MonthZero
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_MONTH);
@@ -84,23 +101,13 @@ namespace GTA
 			set => SetDateZeroBasedMonth(Day, MonthZero, value);
 		}
 
-		/// <param name="day">
-		/// The day (1 through the number of days in <paramref name="month"/>).
-		/// </param>
-		/// <param name="month">
-		/// The month (1 through 12).
-		/// </param>
-		/// <param name="year">
-		/// The year (no range limitation).
-		/// </param>
-		/// <inheritdoc cref="SetDateZeroBasedMonth(int, int, int)"/>
-		public static void SetDate(int day, int month, int year) => SetDateZeroBasedMonth(day, month - 1, year);
-
 		/// <summary>
 		/// Sets the current date in the GTA world.
 		/// </summary>
 		/// <param name="day">
 		/// The day (1 through the number of days in <paramref name="month"/>).
+		/// If you set another value, the game will normalize the date time when the game updates
+		/// the clock minute.
 		/// </param>
 		/// <param name="month">
 		/// The month (1 through 12).
@@ -109,7 +116,34 @@ namespace GTA
 		/// The year (no range limitation).
 		/// </param>
 		/// <remarks>
-		/// If you set to a date that the game cannot handle properly, the <see cref="Day"/> will be set to 1985.
+		/// You should not set a value not in the range of 1 to 12 to this property.
+		/// Doing so may result in an unexpected date time, since the game uses an array of days in months
+		/// without array bound checking.
+		/// On the other hands, you can safely set an arbitrary day value as the game normalizes the day value as a result
+		/// when the game updates the clock minute.
+		/// </remarks>
+		public static void SetDate(int day, int month, int year) => SetDateZeroBasedMonth(day, month - 1, year);
+
+		/// <summary>
+		/// Sets the current date in the GTA world.
+		/// </summary>
+		/// <param name="day">
+		/// The day (1 through the number of days in <paramref name="month"/>).
+		/// If you set another value, the game will normalize the date time when the game updates
+		/// the clock minute.
+		/// </param>
+		/// <param name="month">
+		/// The month (0 through 11).
+		/// </param>
+		/// <param name="year">
+		/// The year (no range limitation).
+		/// </param>
+		/// <remarks>
+		/// You should not set a value not in the range of 0 to 11 to this property.
+		/// Doing so may result in an unexpected date time, since the game uses an array of days in months
+		/// without array bound checking.
+		/// On the other hands, you can safely set an arbitrary day value as the game normalizes the day value as a result
+		/// when the game updates the clock minute.
 		/// </remarks>
 		public static void SetDateZeroBasedMonth(int day, int month, int year) => Function.Call(Hash.SET_CLOCK_DATE, day, month, year);
 
