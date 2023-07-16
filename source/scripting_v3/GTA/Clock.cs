@@ -39,7 +39,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the day of month.
-		/// The max value varies depending on the current month, but may return a value in the range
+		/// The max value varies depending on the current month, but may return a value outside the range
 		/// of 1 to the max value if not normalized yet.
 		/// </summary>
 		/// <remarks>
