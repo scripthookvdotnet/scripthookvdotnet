@@ -628,7 +628,7 @@ namespace GTA
 		/// </remarks>
 		public static Prop[] GetAllPickupObjects()
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(), handle => new PickupObject(handle));
+			return Array.ConvertAll<int, Prop>(SHVDN.NativeMemory.GetPickupObjectHandles(), handle => new PickupObject(handle));
 		}
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="PickupObject"/>s in a given region in the World associated with a <see cref="Pickup"/>.
@@ -643,7 +643,7 @@ namespace GTA
 		/// </remarks>
 		public static Prop[] GetNearbyPickupObjects(Vector3 position, float radius)
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToInternalFVector3(), radius), handle => new PickupObject(handle));
+			return Array.ConvertAll<int, Prop>(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToInternalFVector3(), radius), handle => new PickupObject(handle));
 		}
 		/// <summary>
 		/// Gets the closest <see cref="Projectile"/> to a given position in the World.
