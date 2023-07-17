@@ -7,6 +7,7 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace GTA
@@ -1575,12 +1576,38 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Returns <see langword="true"/> if there are any bang or scuff decals on this <see cref="Vehicle"/>.
+		/// </summary>
+		public bool HasDamageDecals => Function.Call<bool>(Hash.GET_DOES_VEHICLE_HAVE_DAMAGE_DECALS, Handle);
+		[Obsolete("Use Vehicle.HasDamageDecals instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public bool IsDamaged => Function.Call<bool>(Hash.GET_DOES_VEHICLE_HAVE_DAMAGE_DECALS, Handle);
 
+		/// <summary>
+		/// Gets the value that indicates whether this <see cref="Vehicle"/> is driveable.
+		/// For the setter, it behaves in the same way as <see cref="IsUndriveable"/> except that this setter negates the value.
+		/// </summary>
+		/// <returns>
+		/// <see langword="true"/> if the <see cref="Vehicle"/> is not destoryed (<see cref="IsConsideredDestroyed"/>
+		/// returns <see langword="false"/>) and both <see cref="PetrolTankHealth"/> and <see cref="EngineHealth"/> is
+		/// greater than 0.0f; otherwise, <see langword="false"/>.
+		/// </returns>
 		public bool IsDriveable
 		{
 			get => Function.Call<bool>(Hash.IS_VEHICLE_DRIVEABLE, Handle, 0);
+			[Obsolete("The setter of Vehicle.IsDriveable is obsolete because SET_VEHICLE_UNDRIVEABLE sets a value to" +
+				"an dedicated flag that IS_VEHICLE_DRIVEABLE does not access. Use Vehicle.IsUndriveable instead.")
+				, EditorBrowsable(EditorBrowsableState.Never)]
 			set => Function.Call(Hash.SET_VEHICLE_UNDRIVEABLE, Handle, !value);
+		}
+
+		/// <summary>
+		/// Sets the value that indicates whether this <see cref="Vehicle"/> is forced to be undriveable
+		/// (but still enterable).
+		/// </summary>
+		public bool IsUndriveable
+		{
+			set => Function.Call(Hash.SET_VEHICLE_UNDRIVEABLE, Handle, value);
 		}
 
 		public bool IsLeftHeadLightBroken
