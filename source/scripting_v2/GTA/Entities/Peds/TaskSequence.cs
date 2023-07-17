@@ -17,7 +17,7 @@ namespace GTA
 	{
 		#region Fields
 
-		private static Ped nullPed = null;
+		private static Ped s_nullPed;
 		#endregion
 
 		public TaskSequence()
@@ -29,18 +29,18 @@ namespace GTA
 			}
 			Handle = handle;
 
-			if (nullPed == null)
+			if (s_nullPed == null)
 			{
-				nullPed = new Ped(0);
+				s_nullPed = new Ped(0);
 			}
 		}
 		public TaskSequence(int handle)
 		{
 			Handle = handle;
 
-			if (nullPed == null)
+			if (s_nullPed == null)
 			{
-				nullPed = new Ped(0);
+				s_nullPed = new Ped(0);
 			}
 		}
 
@@ -101,7 +101,7 @@ namespace GTA
 				}
 
 				Count++;
-				return nullPed.Task;
+				return s_nullPed.Task;
 			}
 		}
 

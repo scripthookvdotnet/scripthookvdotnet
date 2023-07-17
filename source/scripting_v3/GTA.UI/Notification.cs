@@ -13,7 +13,7 @@ namespace GTA.UI
 	public static class Notification
 	{
 		#region Fields
-		static readonly string[] iconNames = new string[] {
+		static readonly string[] s_iconNames = new string[] {
 			"CHAR_ABIGAIL", "CHAR_ALL_PLAYERS_CONF", "CHAR_AMANDA", "CHAR_AMMUNATION", "CHAR_ANDREAS",
 			"CHAR_ANTONIA", "CHAR_ARTHUR", "CHAR_ASHLEY", "CHAR_BANK_BOL", "CHAR_BANK_FLEECA", "CHAR_BANK_MAZE",
 			"CHAR_BARRY", "CHAR_BEVERLY", "CHAR_BIKESITE", "CHAR_BLANK_ENTRY", "CHAR_BLIMP", "CHAR_BLOCKED", "CHAR_BOATSITE",
@@ -81,7 +81,7 @@ namespace GTA.UI
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide(int)"/>.</returns>
 		public static int Show(NotificationIcon icon, string sender, string subject, string message, bool fadeIn = false, bool blinking = false)
 		{
-			string iconName = iconNames[(int)icon];
+			string iconName = s_iconNames[(int)icon];
 
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(message);

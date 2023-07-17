@@ -273,7 +273,7 @@ namespace GTA
 
 				return (VehicleColor)color2;
 			}
-			set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, (int)PrimaryColor, value);
+			set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, (int)PrimaryColor, (int)value);
 		}
 
 		public VehicleColor RimColor
@@ -302,7 +302,7 @@ namespace GTA
 
 				return (VehicleColor)color1;
 			}
-			set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, value, (int)RimColor);
+			set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, (int)value, (int)RimColor);
 		}
 		public VehicleColor TrimColor
 		{
@@ -328,7 +328,7 @@ namespace GTA
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_505_2_Steam, nameof(VehicleModCollection), nameof(TrimColor));
 				}
 
-				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_5, _owner.Handle, value);
+				Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_5, _owner.Handle, (int)value);
 			}
 		}
 		public VehicleColor DashboardColor

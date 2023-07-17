@@ -44,7 +44,7 @@ namespace GTA
 
 				return (BlipDisplayType)SHVDN.NativeMemory.ReadByte(address + offset);
 			}
-			set => Function.Call<int>(Hash.SET_BLIP_DISPLAY, Handle, value);
+			set => Function.Call<int>(Hash.SET_BLIP_DISPLAY, Handle, (int)value);
 		}
 
 		/// <summary>

@@ -11,10 +11,10 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MenuEnumScroller : IMenuItem
 	{
-		private UIText text = null;
-		private UIRectangle button = null;
-		private int selectedIndex;
-		private string[] entries;
+		private UIText _text;
+		private UIRectangle _button;
+		private int _selectedIndex;
+		private string[] _entries;
 
 		public MenuEnumScroller(string caption, string description, string[] entries) : this(caption, description, entries, 0)
 		{
@@ -23,8 +23,8 @@ namespace GTA
 		{
 			Caption = caption;
 			Description = description;
-			this.entries = entries;
-			this.selectedIndex = selectedIndex;
+			this._entries = entries;
+			this._selectedIndex = selectedIndex;
 		}
 
 		public virtual void Draw()
@@ -33,34 +33,34 @@ namespace GTA
 		}
 		public virtual void Draw(Size offset)
 		{
-			if (button == null || text == null)
+			if (_button == null || _text == null)
 			{
 				return;
 			}
 
-			button.Draw(offset);
-			text.Draw(offset);
+			_button.Draw(offset);
+			_text.Draw(offset);
 		}
 
 		public virtual void Select()
 		{
-			if (button == null)
+			if (_button == null)
 			{
 				return;
 			}
 
-			button.Color = Parent.SelectedItemColor;
-			text.Color = Parent.SelectedTextColor;
+			_button.Color = Parent.SelectedItemColor;
+			_text.Color = Parent.SelectedTextColor;
 		}
 		public virtual void Deselect()
 		{
-			if (button == null)
+			if (_button == null)
 			{
 				return;
 			}
 
-			button.Color = Parent.UnselectedItemColor;
-			text.Color = Parent.UnselectedTextColor;
+			_button.Color = Parent.UnselectedItemColor;
+			_text.Color = Parent.UnselectedTextColor;
 		}
 		public virtual void Activate()
 		{
@@ -71,7 +71,7 @@ namespace GTA
 		{
 			if (right)
 			{
-				if (Index + 1 > entries.Length - 1)
+				if (Index + 1 > _entries.Length - 1)
 				{
 					Index = 0;
 				}
@@ -84,7 +84,7 @@ namespace GTA
 			{
 				if (Index - 1 < 0)
 				{
-					Index = entries.Length - 1;
+					Index = _entries.Length - 1;
 				}
 				else
 				{
@@ -97,14 +97,14 @@ namespace GTA
 
 		public virtual void SetOriginAndSize(Point origin, Size size)
 		{
-			text = new UIText(
+			_text = new UIText(
 				string.Empty,
 				Parent.ItemTextCentered ? new Point(origin.X + size.Width / 2 + Parent.TextOffset.X, origin.Y + Parent.TextOffset.Y) : new Point(origin.X + Parent.TextOffset.X, origin.Y + Parent.TextOffset.Y),
 				Parent.ItemTextScale,
 				Parent.UnselectedTextColor,
 				Parent.ItemFont,
 				Parent.ItemTextCentered);
-			button = new UIRectangle(
+			_button = new UIRectangle(
 				origin,
 				size,
 				Parent.UnselectedItemColor);
@@ -114,7 +114,7 @@ namespace GTA
 
 		private void UpdateText()
 		{
-			text.Caption = Caption + " <" + entries[selectedIndex] + ">";
+			_text.Caption = Caption + " <" + _entries[_selectedIndex] + ">";
 		}
 
 		public event EventHandler<MenuItemIndexArgs> Changed;
@@ -122,15 +122,15 @@ namespace GTA
 
 		public virtual int Index
 		{
-			get => selectedIndex;
+			get => _selectedIndex;
 			set
 			{
-				selectedIndex = value;
+				_selectedIndex = value;
 				UpdateText();
 			}
 		}
 
-		public virtual string Value => entries[Index];
+		public virtual string Value => _entries[Index];
 		public virtual string Caption
 		{
 			get; set;

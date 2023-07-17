@@ -3,7 +3,6 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using System;
 using GTA.Native;
 using System.Linq;
 
@@ -12,8 +11,8 @@ namespace GTA
 	public sealed class Weapon
 	{
 		#region Fields
-		readonly Ped owner;
-		WeaponComponentCollection components;
+		readonly Ped _owner;
+		WeaponComponentCollection _components;
 		#endregion
 
 		internal Weapon()
@@ -22,7 +21,7 @@ namespace GTA
 		}
 		internal Weapon(Ped owner, WeaponHash hash)
 		{
-			this.owner = owner;
+			this._owner = owner;
 			Hash = hash;
 		}
 
@@ -52,14 +51,14 @@ namespace GTA
 		/// </summary>
 		public string LocalizedName => Game.GetLocalizedString((int)SHVDN.NativeMemory.GetHumanNameHashOfWeaponInfo((uint)Hash));
 
-		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)Hash);
+		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, _owner.Handle, (uint)Hash);
 
 		public Model Model => new(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, (uint)Hash));
 
 		public WeaponTint Tint
 		{
-			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, owner.Handle, (uint)Hash);
-			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, owner.Handle, (uint)Hash, value);
+			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, _owner.Handle, (uint)Hash);
+			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, _owner.Handle, (uint)Hash, (int)value);
 		}
 
 		/// <summary>
@@ -90,7 +89,7 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, owner.Handle, (uint)Hash);
+				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, _owner.Handle, (uint)Hash);
 			}
 			set
 			{
@@ -101,11 +100,11 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_PED_AMMO, owner.Handle, (uint)Hash, value);
+					Function.Call(Native.Hash.SET_PED_AMMO, _owner.Handle, (uint)Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, (uint)Hash, value, false, true);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, (uint)Hash, value, false, true);
 				}
 			}
 		}
@@ -132,7 +131,7 @@ namespace GTA
 				int ammoInClip;
 				unsafe
 				{
-					Function.Call(Native.Hash.GET_AMMO_IN_CLIP, owner.Handle, (uint)Hash, &ammoInClip);
+					Function.Call(Native.Hash.GET_AMMO_IN_CLIP, _owner.Handle, (uint)Hash, &ammoInClip);
 				}
 				return ammoInClip;
 			}
@@ -145,11 +144,11 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, owner.Handle, (uint)Hash, value);
+					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, _owner.Handle, (uint)Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, (uint)Hash, value, true, false);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, (uint)Hash, value, true, false);
 				}
 			}
 		}
@@ -172,7 +171,7 @@ namespace GTA
 				int maxAmmo;
 				unsafe
 				{
-					Function.Call(Native.Hash.GET_MAX_AMMO, owner.Handle, (uint)Hash, &maxAmmo);
+					Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, (uint)Hash, &maxAmmo);
 				}
 				return maxAmmo;
 			}
@@ -197,7 +196,7 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, owner.Handle, (uint)Hash, true);
+				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, _owner.Handle, (uint)Hash, true);
 			}
 		}
 
@@ -220,7 +219,7 @@ namespace GTA
 					return;
 				}
 
-				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, owner.Handle, value, (uint)Hash);
+				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, _owner.Handle, value, (uint)Hash);
 			}
 		}
 		/// <summary>
@@ -231,12 +230,12 @@ namespace GTA
 		/// </remarks>
 		public bool InfiniteAmmoClip
 		{
-			set => Function.Call(Native.Hash.SET_PED_INFINITE_AMMO_CLIP, owner.Handle, value);
+			set => Function.Call(Native.Hash.SET_PED_INFINITE_AMMO_CLIP, _owner.Handle, value);
 		}
 
 		public bool CanUseOnParachute => Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, (uint)Hash);
 
-		public WeaponComponentCollection Components => components ?? (components = new WeaponComponentCollection(owner, this));
+		public WeaponComponentCollection Components => _components ?? (_components = new WeaponComponentCollection(_owner, this));
 
 		public static implicit operator WeaponHash(Weapon weapon)
 		{

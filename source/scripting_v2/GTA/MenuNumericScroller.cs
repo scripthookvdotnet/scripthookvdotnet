@@ -11,9 +11,9 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MenuNumericScroller : IMenuItem
 	{
-		private UIText text = null;
-		private UIRectangle button = null;
-		private int timesIncremented;
+		private UIText _text;
+		private UIRectangle _button;
+		private int _timesIncremented;
 
 		public MenuNumericScroller(string caption, string description, double min, double max, double inc) : this(caption, description, min, max, inc, 0)
 		{
@@ -26,7 +26,7 @@ namespace GTA
 			Max = max;
 			Increment = inc;
 			DecimalFigures = -1;
-			this.timesIncremented = timesIncremented;
+			this._timesIncremented = timesIncremented;
 		}
 
 		public virtual void Draw()
@@ -35,34 +35,34 @@ namespace GTA
 		}
 		public virtual void Draw(Size offset)
 		{
-			if (button == null || text == null)
+			if (_button == null || _text == null)
 			{
 				return;
 			}
 
-			button.Draw(offset);
-			text.Draw(offset);
+			_button.Draw(offset);
+			_text.Draw(offset);
 		}
 
 		public virtual void Select()
 		{
-			if (button == null)
+			if (_button == null)
 			{
 				return;
 			}
 
-			button.Color = Parent.SelectedItemColor;
-			text.Color = Parent.SelectedTextColor;
+			_button.Color = Parent.SelectedItemColor;
+			_text.Color = Parent.SelectedTextColor;
 		}
 		public virtual void Deselect()
 		{
-			if (button == null)
+			if (_button == null)
 			{
 				return;
 			}
 
-			button.Color = Parent.UnselectedItemColor;
-			text.Color = Parent.UnselectedTextColor;
+			_button.Color = Parent.UnselectedItemColor;
+			_text.Color = Parent.UnselectedTextColor;
 		}
 		public virtual void Activate()
 		{
@@ -99,14 +99,14 @@ namespace GTA
 
 		public virtual void SetOriginAndSize(Point origin, Size size)
 		{
-			text = new UIText(
+			_text = new UIText(
 				string.Empty,
 				Parent.ItemTextCentered ? new Point(origin.X + size.Width / 2 + Parent.TextOffset.X, origin.Y + Parent.TextOffset.Y) : new Point(origin.X + Parent.TextOffset.X, origin.Y + Parent.TextOffset.Y),
 				Parent.ItemTextScale,
 				Parent.UnselectedTextColor,
 				Parent.ItemFont,
 				Parent.ItemTextCentered);
-			button = new UIRectangle(
+			_button = new UIRectangle(
 				origin,
 				size,
 				Parent.UnselectedItemColor);
@@ -132,7 +132,7 @@ namespace GTA
 					break;
 			}
 
-			text.Caption = $"{Caption} <{numberString}>";
+			_text.Caption = $"{Caption} <{numberString}>";
 		}
 
 		public event EventHandler<MenuItemDoubleValueArgs> Changed;
@@ -146,10 +146,10 @@ namespace GTA
 
 		public int TimesIncremented
 		{
-			get => timesIncremented;
+			get => _timesIncremented;
 			set
 			{
-				timesIncremented = value;
+				_timesIncremented = value;
 				UpdateText();
 			}
 		}
@@ -165,7 +165,7 @@ namespace GTA
 			set;
 		}
 
-		public double Value => timesIncremented * Increment;
+		public double Value => _timesIncremented * Increment;
 
 		public double Increment
 		{

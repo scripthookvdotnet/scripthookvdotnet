@@ -16,14 +16,14 @@ namespace GTA.Graphics
 	public enum UIAlignment : byte
 	{
 		/// <summary>
-		/// The left alignment value, which can be used for the horizonal alignment.
+		/// The left alignment value, which can be used for the horizontal alignment.
 		/// </summary>
 		/// <remarks>
 		/// Represents 'L' out of the  ASCII characters.
 		/// </remarks>
 		Left = 76,
 		/// <summary>
-		/// The right alignment value, which can be used for the horizonal alignment.
+		/// The right alignment value, which can be used for the horizontal alignment.
 		/// </summary>
 		/// <remarks>
 		/// Represents 'R' out of the ASCII characters.
@@ -40,11 +40,11 @@ namespace GTA.Graphics
 		/// The bottom alignment value, which can be used for the vertical alignment.
 		/// </summary>
 		/// <remarks>
-		/// Rrepresents 'B' out of the ASCII characters.
+		/// Represents 'B' out of the ASCII characters.
 		/// </remarks>
 		Bottom = 66,
 		/// <summary>
-		/// The center alignment value, which can be used for both horizonal and vertical alignment.
+		/// The center alignment value, which can be used for both horizontal and vertical alignment.
 		/// </summary>
 		/// <remarks>
 		/// Represents 'C' out of the ASCII characters.

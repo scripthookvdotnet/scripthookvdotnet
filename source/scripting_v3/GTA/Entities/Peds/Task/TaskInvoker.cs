@@ -168,7 +168,7 @@ namespace GTA
 
 		public void EnterAnyVehicle(VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 1f, EnterVehicleFlags flag = EnterVehicleFlags.None)
 		{
-			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, timeout, seat, speed, (int)flag, 0);
+			Function.Call(Hash.TASK_ENTER_VEHICLE, _ped.Handle, 0, timeout, (int)seat, speed, (int)flag, 0);
 		}
 
 		public void EnterVehicle(Vehicle vehicle, VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 1f, EnterVehicleFlags flag = EnterVehicleFlags.None)

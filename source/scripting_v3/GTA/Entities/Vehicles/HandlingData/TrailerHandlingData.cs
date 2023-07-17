@@ -3,7 +3,6 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using GTA.Math;
 using System;
 
 namespace GTA

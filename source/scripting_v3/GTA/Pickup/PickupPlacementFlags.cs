@@ -4,6 +4,7 @@
 //
 
 using System;
+using GTA.Math;
 
 namespace GTA
 {
@@ -24,7 +25,7 @@ namespace GTA
 		/// Sets the pickup as regenerating.
 		/// </summary>
 		/// <remarks>
-		/// Cannot be used in <see cref="World.CreateAmbientPickup(PickupType, Math.Vector3, PickupPlacementFlags, int, Model, bool)"/>.
+		/// Cannot be used in <see cref="World.CreateAmbientPickup(PickupType, Vector3, PickupPlacementFlags, int, Model, bool)"/>.
 		/// </remarks>
 		Regenerates = 4,
 		/// <summary>
@@ -57,7 +58,7 @@ namespace GTA
 		/// Pickup will rotate.
 		/// </summary>
 		/// <remarks>
-		/// Cannot be used in <see cref="World.CreateAmbientPickup(PickupType, Math.Vector3, PickupPlacementFlags, int, Model, bool)"/>.
+		/// Cannot be used in <see cref="World.CreateAmbientPickup(PickupType, Vector3, PickupPlacementFlags, int, Model, bool)"/>.
 		/// </remarks>
 		Rotate = 512,
 		/// <summary>

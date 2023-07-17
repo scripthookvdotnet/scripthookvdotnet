@@ -14,15 +14,15 @@ namespace GTA
 	// [Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class Menu : MenuBase
 	{
-		private UIRectangle rectHeader = null;
-		private UIRectangle rectFooter = null;
-		private UIText textHeader = null;
-		private UIText textFooter = null;
-		private int selectedIndex = -1;
-		private int maxDrawLimit = 10;
-		private int startScrollOffset = 2;
-		private int scrollOffset = 0;
-		private string footerDescription = "footer description";
+		private UIRectangle _rectHeader;
+		private UIRectangle _rectFooter;
+		private UIText _textHeader;
+		private UIText _textFooter;
+		private int _selectedIndex = -1;
+		private int _maxDrawLimit = 10;
+		private int _startScrollOffset = 2;
+		private int _scrollOffset;
+		private string _footerDescription = "footer description";
 
 		public Menu(string headerCaption, IMenuItem[] items) : this(headerCaption, items, 10)
 		{
@@ -77,19 +77,19 @@ namespace GTA
 		}
 		public override void Draw(Size offset)
 		{
-			if (rectHeader == null || textHeader == null || (HasFooter && (rectFooter == null || textFooter == null)))
+			if (_rectHeader == null || _textHeader == null || (HasFooter && (_rectFooter == null || _textFooter == null)))
 			{
 				return;
 			}
 
 			if (HasFooter)
 			{
-				rectFooter.Draw(offset);
-				textFooter.Draw(offset);
+				_rectFooter.Draw(offset);
+				_textFooter.Draw(offset);
 			}
 
-			rectHeader.Draw(offset);
-			textHeader.Draw(offset);
+			_rectHeader.Draw(offset);
+			_textHeader.Draw(offset);
 
 			for (int i = 0; i < ItemDrawCount; i++)
 			{
@@ -145,18 +145,18 @@ namespace GTA
 				currentY += ItemHeight;
 			}
 
-			selectedIndex = 0;
-			footerDescription = Items[selectedIndex].Description;
-			Items[selectedIndex].Select();
+			_selectedIndex = 0;
+			_footerDescription = Items[_selectedIndex].Description;
+			Items[_selectedIndex].Select();
 
 			int itemsHeight = ItemDrawCount * ItemHeight;
-			rectHeader = new UIRectangle(default, new Size(Width, HeaderHeight), HeaderColor);
+			_rectHeader = new UIRectangle(default, new Size(Width, HeaderHeight), HeaderColor);
 			if (HasFooter)
 			{
-				rectFooter = new UIRectangle(new Point(0, HeaderHeight + itemsHeight), new Size(Width, FooterHeight), FooterColor);
+				_rectFooter = new UIRectangle(new Point(0, HeaderHeight + itemsHeight), new Size(Width, FooterHeight), FooterColor);
 			}
 
-			textHeader = new UIText(Caption,
+			_textHeader = new UIText(Caption,
 				HeaderCentered ? new Point(Width / 2, 0) : default,
 				HeaderTextScale,
 				HeaderTextColor,
@@ -165,7 +165,7 @@ namespace GTA
 
 			if (HasFooter)
 			{
-				textFooter = new UIText(footerDescription, FooterCentered ? new Point(Width / 2, HeaderHeight + itemsHeight) : new Point(0, HeaderHeight + itemsHeight), FooterTextScale, FooterTextColor, FooterFont, FooterCentered);
+				_textFooter = new UIText(_footerDescription, FooterCentered ? new Point(Width / 2, HeaderHeight + itemsHeight) : new Point(0, HeaderHeight + itemsHeight), FooterTextScale, FooterTextColor, FooterFont, FooterCentered);
 			}
 		}
 
@@ -177,51 +177,51 @@ namespace GTA
 		}
 		public override void OnActivate()
 		{
-			if (selectedIndex < 0 || selectedIndex >= Items.Count)
+			if (_selectedIndex < 0 || _selectedIndex >= Items.Count)
 			{
 				return;
 			}
 
-			Items[selectedIndex].Activate();
+			Items[_selectedIndex].Activate();
 		}
 
 		public void OnChangeSelection(int newIndex)
 		{
 			if (newIndex < CurrentScrollOffset)
 			{
-				CurrentScrollOffset = newIndex - startScrollOffset - 1;
+				CurrentScrollOffset = newIndex - _startScrollOffset - 1;
 			}
 			else if (newIndex > CurrentScrollOffset + ItemDrawCount)
 			{
-				CurrentScrollOffset = newIndex + startScrollOffset + 1 - ItemDrawCount;
+				CurrentScrollOffset = newIndex + _startScrollOffset + 1 - ItemDrawCount;
 			}
 
-			Items[selectedIndex].Deselect();
-			selectedIndex = newIndex;
-			footerDescription = Items[selectedIndex].Description;
-			Items[selectedIndex].Select();
+			Items[_selectedIndex].Deselect();
+			_selectedIndex = newIndex;
+			_footerDescription = Items[_selectedIndex].Description;
+			Items[_selectedIndex].Select();
 
 			// Update footer
 			if (HasFooter)
 			{
 				int itemsHeight = Items.Count * ItemHeight;
-				textFooter = new UIText(footerDescription, FooterCentered ? new Point(Width / 2, HeaderHeight + itemsHeight) : new Point(0, HeaderHeight + itemsHeight), FooterTextScale, FooterTextColor, FooterFont, FooterCentered);
+				_textFooter = new UIText(_footerDescription, FooterCentered ? new Point(Width / 2, HeaderHeight + itemsHeight) : new Point(0, HeaderHeight + itemsHeight), FooterTextScale, FooterTextColor, FooterFont, FooterCentered);
 			}
 
-			SelectedIndexChanged(this, new SelectedIndexChangedArgs(selectedIndex));
+			SelectedIndexChanged(this, new SelectedIndexChangedArgs(_selectedIndex));
 		}
 		public override void OnChangeItem(bool right)
 		{
-			if (selectedIndex < 0 || selectedIndex >= Items.Count)
+			if (_selectedIndex < 0 || _selectedIndex >= Items.Count)
 			{
 				return;
 			}
 
-			Items[selectedIndex].Change(right);
+			Items[_selectedIndex].Change(right);
 		}
 		public override void OnChangeSelection(bool down)
 		{
-			int newIndex = down ? selectedIndex + 1 : selectedIndex - 1;
+			int newIndex = down ? _selectedIndex + 1 : _selectedIndex - 1;
 			if (newIndex >= Items.Count)
 			{
 				newIndex = 0;
@@ -234,14 +234,14 @@ namespace GTA
 
 			if (down)
 			{
-				if (newIndex - CurrentScrollOffset > ItemDrawCount - startScrollOffset - 1)
+				if (newIndex - CurrentScrollOffset > ItemDrawCount - _startScrollOffset - 1)
 				{
 					CurrentScrollOffset++;
 				}
 			}
 			else
 			{
-				if (newIndex - CurrentScrollOffset < startScrollOffset)
+				if (newIndex - CurrentScrollOffset < _startScrollOffset)
 				{
 					CurrentScrollOffset--;
 				}
@@ -258,11 +258,11 @@ namespace GTA
 			}
 			if (SelectedIndex < CurrentScrollOffset)
 			{
-				CurrentScrollOffset = SelectedIndex - startScrollOffset - 1;
+				CurrentScrollOffset = SelectedIndex - _startScrollOffset - 1;
 			}
 			else if (SelectedIndex > CurrentScrollOffset + ItemDrawCount)
 			{
-				CurrentScrollOffset = SelectedIndex + startScrollOffset + 1 - ItemDrawCount;
+				CurrentScrollOffset = SelectedIndex + _startScrollOffset + 1 - ItemDrawCount;
 			}
 
 			UpdateItemPositions();
@@ -304,7 +304,7 @@ namespace GTA
 
 		public int MaxDrawLimit
 		{
-			get => maxDrawLimit;
+			get => _maxDrawLimit;
 			set
 			{
 				if (value < 6 || value > 20)
@@ -312,7 +312,7 @@ namespace GTA
 					throw new ArgumentOutOfRangeException(nameof(MaxDrawLimit), "MaxDrawLimit must be between 6 and 20");
 				}
 
-				maxDrawLimit = value;
+				_maxDrawLimit = value;
 				StartScrollOffset = StartScrollOffset; // Make sure value still falls in correct range
 				OnChangeDrawLimit();
 			}
@@ -320,51 +320,51 @@ namespace GTA
 
 		public int SelectedIndex
 		{
-			get => selectedIndex;
+			get => _selectedIndex;
 			set => OnChangeSelection(value);
 		}
 
 		public int StartScrollOffset
 		{
-			get => startScrollOffset;
+			get => _startScrollOffset;
 			set
 			{
 				if (value < 0)
 				{
-					startScrollOffset = 0;
+					_startScrollOffset = 0;
 				}
 				else if (value > MaxDrawLimit / 2 - 1)
 				{
-					startScrollOffset = MaxDrawLimit / 2 - 1;
+					_startScrollOffset = MaxDrawLimit / 2 - 1;
 				}
 				else
 				{
-					startScrollOffset = value;
+					_startScrollOffset = value;
 				}
 			}
 		}
 
 		public event EventHandler<SelectedIndexChangedArgs> SelectedIndexChanged;
 
-		private int ItemDrawCount => Items.Count < maxDrawLimit ? Items.Count : maxDrawLimit;
+		private int ItemDrawCount => Items.Count < _maxDrawLimit ? Items.Count : _maxDrawLimit;
 		private int MaxScrollOffset => Items.Count < ItemDrawCount ? 0 : Items.Count - ItemDrawCount;
 
 		private int CurrentScrollOffset
 		{
-			get => scrollOffset;
+			get => _scrollOffset;
 			set
 			{
 				if (value > MaxScrollOffset)
 				{
-					scrollOffset = MaxScrollOffset;
+					_scrollOffset = MaxScrollOffset;
 				}
 				else if (value < 0)
 				{
-					scrollOffset = 0;
+					_scrollOffset = 0;
 				}
 				else
 				{
-					scrollOffset = value;
+					_scrollOffset = value;
 				}
 
 				UpdateItemPositions();

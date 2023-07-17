@@ -11,7 +11,7 @@ namespace GTA
 {
 	public sealed class Camera : IEquatable<Camera>, IHandleable, ISpatial
 	{
-		internal static readonly string[] shakeNames = {
+		internal static readonly string[] s_shakeNames = {
 			"HAND_SHAKE",
 			"SMALL_EXPLOSION_SHAKE",
 			"MEDIUM_EXPLOSION_SHAKE",
@@ -77,11 +77,11 @@ namespace GTA
 		public Vector3 GetOffsetInWorldCoords(Vector3 offset)
 		{
 			Vector3 forward = Direction;
-			const double D2R = 0.01745329251994329576923690768489;
-			double num1 = System.Math.Cos(Rotation.Y * D2R);
-			double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
-			double y = num1 * System.Math.Sin(Rotation.Z * D2R);
-			double z = System.Math.Sin(-Rotation.Y * D2R);
+			const double d2R = 0.01745329251994329576923690768489;
+			double num1 = System.Math.Cos(Rotation.Y * d2R);
+			double x = num1 * System.Math.Cos(-Rotation.Z * d2R);
+			double y = num1 * System.Math.Sin(Rotation.Z * d2R);
+			double z = System.Math.Sin(-Rotation.Y * d2R);
 			var right = new Vector3((float)x, (float)y, (float)z);
 			var up = Vector3.Cross(right, forward);
 			return Position + (right * offset.X) + (forward * offset.Y) + (up * offset.Z);
@@ -90,11 +90,11 @@ namespace GTA
 		public Vector3 GetOffsetFromWorldCoords(Vector3 worldCoords)
 		{
 			Vector3 forward = Direction;
-			const double D2R = 0.01745329251994329576923690768489;
-			double num1 = System.Math.Cos(Rotation.Y * D2R);
-			double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
-			double y = num1 * System.Math.Sin(Rotation.Z * D2R);
-			double z = System.Math.Sin(-Rotation.Y * D2R);
+			const double d2R = 0.01745329251994329576923690768489;
+			double num1 = System.Math.Cos(Rotation.Y * d2R);
+			double x = num1 * System.Math.Cos(-Rotation.Z * d2R);
+			double y = num1 * System.Math.Sin(Rotation.Z * d2R);
+			double z = System.Math.Sin(-Rotation.Y * d2R);
 			var right = new Vector3((float)x, (float)y, (float)z);
 			var up = Vector3.Cross(right, forward);
 			Vector3 delta = worldCoords - Position;
@@ -142,7 +142,7 @@ namespace GTA
 
 		public void Shake(CameraShake shakeType, float amplitude)
 		{
-			Function.Call(Hash.SHAKE_CAM, Handle, shakeNames[(int)shakeType], amplitude);
+			Function.Call(Hash.SHAKE_CAM, Handle, s_shakeNames[(int)shakeType], amplitude);
 		}
 
 		public void StopShaking()
@@ -242,7 +242,7 @@ namespace GTA
 			return !(left == right);
 		}
 
-		public sealed override int GetHashCode()
+		public override int GetHashCode()
 		{
 			return Handle.GetHashCode();
 		}

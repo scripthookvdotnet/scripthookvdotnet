@@ -8,7 +8,6 @@ using GTA.Native;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace GTA
 {
@@ -501,7 +500,7 @@ namespace GTA
 				}
 				else if (Enum.IsDefined(typeof(RadioStation), value))
 				{
-					Function.Call(Hash.SET_VEH_RADIO_STATION, Game.radioNames[(int)value]);
+					Function.Call(Hash.SET_VEH_RADIO_STATION, Game.s_radioNames[(int)value]);
 				}
 			}
 		}
@@ -1337,7 +1336,7 @@ namespace GTA
 		/// Returns a <see cref="Vehicle"/> instance with zero handle where <see cref="Entity.Exists()"/> will not return <see langword="true"/> if the <see cref="Vehicle"/> has another <see cref="Ped"/> on the seat.
 		/// </remarks>
 
-		public Ped CreatePedOnSeat(VehicleSeat seat, GTA.Model model)
+		public Ped CreatePedOnSeat(VehicleSeat seat, Model model)
 		{
 			if (!model.IsPed || !model.Request(1000))
 			{

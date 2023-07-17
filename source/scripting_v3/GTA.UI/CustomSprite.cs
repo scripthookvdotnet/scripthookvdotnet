@@ -69,23 +69,23 @@ namespace GTA.UI
 				throw new FileNotFoundException(filename);
 			}
 
-			if (_textures.TryGetValue(filename, out int texture))
+			if (s_textures.TryGetValue(filename, out int texture))
 			{
 				_id = texture;
 			}
 			else
 			{
 				_id = SHVDN.NativeMemory.CreateTexture(filename);
-				_textures.Add(filename, _id);
+				s_textures.Add(filename, _id);
 			}
 
-			if (!_indexes.ContainsKey(_id))
+			if (!s_indexes.ContainsKey(_id))
 			{
-				_indexes.Add(_id, 0);
+				s_indexes.Add(_id, 0);
 			}
-			if (!_lastDraw.ContainsKey(_id))
+			if (!s_lastDraw.ContainsKey(_id))
 			{
-				_lastDraw.Add(_id, 0);
+				s_lastDraw.Add(_id, 0);
 			}
 
 			Enabled = true;
@@ -98,10 +98,10 @@ namespace GTA.UI
 
 		#region Fields
 		int _id;
-		static int _globalLevel = 0, _globalLastDrawFrame = 0;
-		static Dictionary<string, int> _textures = new();
-		static Dictionary<int, int> _lastDraw = new();
-		static Dictionary<int, int> _indexes = new();
+		static int s_globalLevel, s_globalLastDrawFrame;
+		static Dictionary<string, int> s_textures = new();
+		static Dictionary<int, int> s_lastDraw = new();
+		static Dictionary<int, int> s_indexes = new();
 		#endregion
 
 		/// <summary>
@@ -258,15 +258,15 @@ namespace GTA.UI
 
 			int frameCount = Function.Call<int>(Hash.GET_FRAME_COUNT);
 
-			if (_lastDraw[_id] != frameCount)
+			if (s_lastDraw[_id] != frameCount)
 			{
-				_indexes[_id] = 0;
-				_lastDraw[_id] = frameCount;
+				s_indexes[_id] = 0;
+				s_lastDraw[_id] = frameCount;
 			}
-			if (_globalLastDrawFrame != frameCount)
+			if (s_globalLastDrawFrame != frameCount)
 			{
-				_globalLevel = 0;
-				_globalLastDrawFrame = frameCount;
+				s_globalLevel = 0;
+				s_globalLastDrawFrame = frameCount;
 			}
 
 			float scaleX = Size.Width / screenWidth;
@@ -281,7 +281,7 @@ namespace GTA.UI
 				positionY += scaleY * 0.5f;
 			}
 
-			SHVDN.NativeMemory.DrawTexture(_id, _indexes[_id]++, _globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation * 0.00277777778f, aspectRatio, Color.R / 255f, Color.G / 255f, Color.B / 255f, Color.A / 255f);
+			SHVDN.NativeMemory.DrawTexture(_id, s_indexes[_id]++, s_globalLevel++, 100, scaleX, scaleY / aspectRatio, 0.5f, 0.5f, positionX, positionY, Rotation * 0.00277777778f, aspectRatio, Color.R / 255f, Color.G / 255f, Color.B / 255f, Color.A / 255f);
 		}
 	}
 }

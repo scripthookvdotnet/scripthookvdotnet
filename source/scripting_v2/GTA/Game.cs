@@ -14,9 +14,9 @@ namespace GTA
 	{
 		#region Fields
 
-		private static Player cachedPlayer = null;
+		private static Player s_cachedPlayer;
 
-		internal static readonly string[] radioNames = {
+		internal static readonly string[] s_radioNames = {
 			"RADIO_01_CLASS_ROCK",
 			"RADIO_02_POP",
 			"RADIO_03_HIPHOP_NEW",
@@ -79,12 +79,12 @@ namespace GTA
 			{
 				int handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
 
-				if (cachedPlayer == null || handle != cachedPlayer.Handle)
+				if (s_cachedPlayer == null || handle != s_cachedPlayer.Handle)
 				{
-					cachedPlayer = new Player(handle);
+					s_cachedPlayer = new Player(handle);
 				}
 
-				return cachedPlayer;
+				return s_cachedPlayer;
 			}
 		}
 
@@ -215,13 +215,13 @@ namespace GTA
 					return RadioStation.RadioOff;
 				}
 
-				return (RadioStation)Array.IndexOf(radioNames, radioName);
+				return (RadioStation)Array.IndexOf(s_radioNames, radioName);
 			}
 			set
 			{
 				if (Enum.IsDefined(typeof(RadioStation), value) && value != RadioStation.RadioOff)
 				{
-					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, radioNames[(int)value]);
+					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, s_radioNames[(int)value]);
 				}
 				else
 				{
@@ -548,7 +548,7 @@ namespace GTA
 		{
 			return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, index, (int)control);
 		}
-		/// <inheritdoc cref="EnableControlThisFrame(int, Control)"/> 
+		/// <inheritdoc cref="EnableControlThisFrame(int, Control)"/>
 		[Obsolete("The Game.EnableControl is obsolete, use Game.EnableControlThisFrame instead.")]
 		public static void EnableControl(int index, Control control)
 		{
@@ -566,7 +566,7 @@ namespace GTA
 		{
 			Function.Call(Hash.ENABLE_CONTROL_ACTION, index, (int)control, true);
 		}
-		/// <inheritdoc cref="DisableControlThisFrame(int, Control)"/> 
+		/// <inheritdoc cref="DisableControlThisFrame(int, Control)"/>
 		[Obsolete("The Game.DisableControl is obsolete, use Game.DisableControlThisFrame instead.")]
 		public static void DisableControl(int index, Control control)
 		{

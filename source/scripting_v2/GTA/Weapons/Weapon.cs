@@ -12,7 +12,7 @@ namespace GTA
 	{
 		#region Fields
 
-		private readonly Ped owner;
+		private readonly Ped _owner;
 		#endregion
 
 		internal Weapon()
@@ -21,7 +21,7 @@ namespace GTA
 		}
 		internal Weapon(Ped owner, WeaponHash hash)
 		{
-			this.owner = owner;
+			this._owner = owner;
 			Hash = hash;
 		}
 
@@ -41,14 +41,14 @@ namespace GTA
 			return Game.GetGXTEntry(GetComponentDisplayNameFromHash(Hash, component));
 		}
 
-		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, owner.Handle, (uint)Hash);
+		public bool IsPresent => Hash == WeaponHash.Unarmed || Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON, _owner.Handle, (uint)Hash);
 
 		public Model Model => new Model(Function.Call<int>(Native.Hash.GET_WEAPONTYPE_MODEL, (uint)Hash));
 
 		public WeaponTint Tint
 		{
-			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, owner.Handle, (uint)Hash);
-			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, owner.Handle, (uint)Hash, (int)value);
+			get => Function.Call<WeaponTint>(Native.Hash.GET_PED_WEAPON_TINT_INDEX, _owner.Handle, (uint)Hash);
+			set => Function.Call(Native.Hash.SET_PED_WEAPON_TINT_INDEX, _owner.Handle, (uint)Hash, (int)value);
 		}
 
 		public WeaponGroup Group => Function.Call<WeaponGroup>(Native.Hash.GET_WEAPONTYPE_GROUP, (uint)Hash);
@@ -67,7 +67,7 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, owner.Handle, (uint)Hash);
+				return Function.Call<int>(Native.Hash.GET_AMMO_IN_PED_WEAPON, _owner.Handle, (uint)Hash);
 			}
 			set
 			{
@@ -78,11 +78,11 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_PED_AMMO, owner.Handle, (uint)Hash, value);
+					Function.Call(Native.Hash.SET_PED_AMMO, _owner.Handle, (uint)Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, (uint)Hash, value, false, true);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, (uint)Hash, value, false, true);
 				}
 			}
 		}
@@ -103,7 +103,7 @@ namespace GTA
 				int ammoInClip;
 				unsafe
 				{
-					Function.Call(Native.Hash.GET_AMMO_IN_CLIP, owner.Handle, (uint)Hash, &ammoInClip);
+					Function.Call(Native.Hash.GET_AMMO_IN_CLIP, _owner.Handle, (uint)Hash, &ammoInClip);
 				}
 				return ammoInClip;
 			}
@@ -116,11 +116,11 @@ namespace GTA
 
 				if (IsPresent)
 				{
-					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, owner.Handle, (uint)Hash, value);
+					Function.Call(Native.Hash.SET_AMMO_IN_CLIP, _owner.Handle, (uint)Hash, value);
 				}
 				else
 				{
-					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, owner.Handle, (uint)Hash, value, true, false);
+					Function.Call(Native.Hash.GIVE_WEAPON_TO_PED, _owner.Handle, (uint)Hash, value, true, false);
 				}
 			}
 		}
@@ -137,7 +137,7 @@ namespace GTA
 				int maxAmmo;
 				unsafe
 				{
-					Function.Call(Native.Hash.GET_MAX_AMMO, owner.Handle, (uint)Hash, &maxAmmo);
+					Function.Call(Native.Hash.GET_MAX_AMMO, _owner.Handle, (uint)Hash, &maxAmmo);
 				}
 				return maxAmmo;
 			}
@@ -156,7 +156,7 @@ namespace GTA
 					return 0;
 				}
 
-				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, owner.Handle, (uint)Hash, true);
+				return Function.Call<int>(Native.Hash.GET_MAX_AMMO_IN_CLIP, _owner.Handle, (uint)Hash, true);
 			}
 		}
 
@@ -173,12 +173,12 @@ namespace GTA
 					return;
 				}
 
-				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, owner.Handle, value, (uint)Hash);
+				Function.Call(Native.Hash.SET_PED_INFINITE_AMMO, _owner.Handle, value, (uint)Hash);
 			}
 		}
 		public bool InfiniteAmmoClip
 		{
-			set => Function.Call(Native.Hash.SET_PED_INFINITE_AMMO_CLIP, owner.Handle, value);
+			set => Function.Call(Native.Hash.SET_PED_INFINITE_AMMO_CLIP, _owner.Handle, value);
 		}
 
 		public bool CanUseOnParachute => Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, (uint)Hash);
@@ -197,17 +197,17 @@ namespace GTA
 		{
 			if (on)
 			{
-				Function.Call(Native.Hash.GIVE_WEAPON_COMPONENT_TO_PED, owner, (uint)Hash, (uint)component);
+				Function.Call(Native.Hash.GIVE_WEAPON_COMPONENT_TO_PED, _owner, (uint)Hash, (uint)component);
 			}
 			else
 			{
-				Function.Call(Native.Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, owner, (uint)Hash, (uint)component);
+				Function.Call(Native.Hash.REMOVE_WEAPON_COMPONENT_FROM_PED, _owner, (uint)Hash, (uint)component);
 			}
 		}
 
 		public bool IsComponentActive(WeaponComponent component)
 		{
-			return Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON_COMPONENT, owner, (uint)Hash, (uint)component);
+			return Function.Call<bool>(Native.Hash.HAS_PED_GOT_WEAPON_COMPONENT, _owner, (uint)Hash, (uint)component);
 		}
 
 		public static string GetDisplayNameFromHash(WeaponHash hash)
@@ -341,7 +341,7 @@ namespace GTA
 			{
 				unsafe
 				{
-					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, (int*)(void*)&data))
+					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, (int*)&data))
 					{
 						continue;
 					}
@@ -477,7 +477,7 @@ namespace GTA
 			{
 				unsafe
 				{
-					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, (int*)(void*)&data))
+					if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, (int*)&data))
 					{
 						continue;
 					}

@@ -19,7 +19,7 @@ namespace GTA.NaturalMotion
 		private string _message;
 		private Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
 		private Dictionary<string, object> _stringVector3ArrayArguments;
-		private static readonly Dictionary<string, (int value, Type type)> _stopArgument = new() { { "start", (0, typeof(bool)) } };
+		private static readonly Dictionary<string, (int value, Type type)> s_stopArgument = new() { { "start", (0, typeof(bool)) } };
 		#endregion
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace GTA.NaturalMotion
 				return;
 			}
 
-			SHVDN.NativeMemory.SendNmMessage(target.Handle, _message, _stopArgument, null);
+			SHVDN.NativeMemory.SendNmMessage(target.Handle, _message, s_stopArgument, null);
 		}
 
 		/// <summary>

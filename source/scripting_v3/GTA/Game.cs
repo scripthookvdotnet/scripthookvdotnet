@@ -14,10 +14,10 @@ namespace GTA
 	public static class Game
 	{
 		#region Fields
-		static Player cachedPlayer = null;
-		static Ped cachedLocalPlayerPed = null;
+		static Player s_cachedPlayer = null;
+		static Ped s_cachedLocalPlayerPed = null;
 
-		internal static readonly string[] radioNames = {
+		internal static readonly string[] s_radioNames = {
 			"RADIO_01_CLASS_ROCK",
 			"RADIO_02_POP",
 			"RADIO_03_HIPHOP_NEW",
@@ -47,7 +47,7 @@ namespace GTA
 			"RADIO_37_MOTOMAMI",
 			"RADIO_OFF"
 		};
-		internal static readonly string[] windowTitles = {
+		internal static readonly string[] s_windowTitles = {
 			"CELL_EMAIL_BOD",
 			"CELL_EMAIL_BODE",
 			"CELL_EMAIL_BODF",
@@ -77,12 +77,12 @@ namespace GTA
 			{
 				int handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
 
-				if (cachedPlayer == null || handle != cachedPlayer.Handle)
+				if (s_cachedPlayer == null || handle != s_cachedPlayer.Handle)
 				{
-					cachedPlayer = new Player(handle);
+					s_cachedPlayer = new Player(handle);
 				}
 
-				return cachedPlayer;
+				return s_cachedPlayer;
 			}
 		}
 
@@ -97,12 +97,12 @@ namespace GTA
 			{
 				int handle = SHVDN.NativeMemory.GetLocalPlayerPedHandle();
 
-				if (cachedLocalPlayerPed == null || handle != cachedLocalPlayerPed.Handle)
+				if (s_cachedLocalPlayerPed == null || handle != s_cachedLocalPlayerPed.Handle)
 				{
-					cachedLocalPlayerPed = new Ped(handle);
+					s_cachedLocalPlayerPed = new Ped(handle);
 				}
 
-				return cachedLocalPlayerPed;
+				return s_cachedLocalPlayerPed;
 			}
 		}
 
@@ -200,13 +200,13 @@ namespace GTA
 					return RadioStation.RadioOff;
 				}
 
-				return (RadioStation)Array.IndexOf(radioNames, radioName);
+				return (RadioStation)Array.IndexOf(s_radioNames, radioName);
 			}
 			set
 			{
 				if (Enum.IsDefined(typeof(RadioStation), value) && value != RadioStation.RadioOff)
 				{
-					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, radioNames[(int)value]);
+					Function.Call(Hash.SET_RADIO_TO_STATION_NAME, s_radioNames[(int)value]);
 				}
 				else
 				{
@@ -222,7 +222,7 @@ namespace GTA
 		{
 			if (Enum.IsDefined(typeof(RadioStation), station) && station != RadioStation.RadioOff)
 			{
-				Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], false);
+				Function.Call(Hash.LOCK_RADIO_STATION, s_radioNames[(int)station], false);
 			}
 		}
 		/// <summary>
@@ -233,7 +233,7 @@ namespace GTA
 		{
 			if (Enum.IsDefined(typeof(RadioStation), station) && station != RadioStation.RadioOff)
 			{
-				Function.Call(Hash.LOCK_RADIO_STATION, radioNames[(int)station], true);
+				Function.Call(Hash.LOCK_RADIO_STATION, s_radioNames[(int)station], true);
 			}
 		}
 		/// <summary>
@@ -241,7 +241,7 @@ namespace GTA
 		/// </summary>
 		public static void UnlockAllRadioStations()
 		{
-			foreach (string station in radioNames)
+			foreach (string station in s_radioNames)
 			{
 				Function.Call(Hash.LOCK_RADIO_STATION, station, false);
 			}
@@ -347,7 +347,7 @@ namespace GTA
 		{
 			SHVDN.ScriptDomain.CurrentDomain.PauseKeyEvents(true);
 
-			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, windowTitles[(int)windowTitle], SHVDN.NativeMemory.NullString, defaultText, SHVDN.NativeMemory.NullString, SHVDN.NativeMemory.NullString, SHVDN.NativeMemory.NullString, maxLength + 1);
+			Function.Call(Hash.DISPLAY_ONSCREEN_KEYBOARD, true, s_windowTitles[(int)windowTitle], SHVDN.NativeMemory.NullString, defaultText, SHVDN.NativeMemory.NullString, SHVDN.NativeMemory.NullString, SHVDN.NativeMemory.NullString, maxLength + 1);
 
 			while (Function.Call<int>(Hash.UPDATE_ONSCREEN_KEYBOARD) == 0)
 			{
@@ -381,7 +381,7 @@ namespace GTA
 		{
 			if (buttons.Length < 6 || buttons.Length > 29)
 			{
-				throw new ArgumentException("The amount of buttons must be between 6 and 29", "buttons");
+				throw new ArgumentException("The amount of buttons must be between 6 and 29", nameof(buttons));
 			}
 
 			uint hash = 0;

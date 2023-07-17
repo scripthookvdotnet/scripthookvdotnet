@@ -81,8 +81,6 @@ namespace GTA
 					Function.Call(Hash.SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED, &handle);
 				}
 			}
-
-			GC.SuppressFinalize(this);
 		}
 
 		public int Handle
@@ -131,7 +129,7 @@ namespace GTA
 						Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL, (bool)argBool);
 						break;
 					case ScaleformArgumentTXD argTxd:
-						Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_TEXTURE_NAME_STRING, argTxd.txd);
+						Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_TEXTURE_NAME_STRING, argTxd._txd);
 						break;
 					default:
 						throw new ArgumentException(

@@ -154,6 +154,6 @@ namespace GTA.Graphics
 			return Name.GetHashCode();
 		}
 
-		public override string ToString() => Name.ToString();
+		public override string ToString() => Name;
 	}
 }

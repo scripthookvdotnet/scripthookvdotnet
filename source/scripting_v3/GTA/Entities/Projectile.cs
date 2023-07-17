@@ -101,10 +101,10 @@ namespace GTA
 				return null;
 			}
 
-			// We can use some of Rockstar's RTTI info to ensure if this CObject is CProjectile or one of its subclasses 
+			// We can use some of Rockstar's RTTI info to ensure if this CObject is CProjectile or one of its subclasses
 			// CProjectileRocket and CProjectileThrown also return the hash of CProjectile in this class id function
-			const uint CProjectileNameHash = 0x49DC4195;
-			if (SHVDN.NativeMemory.GetRageClassId(address) != CProjectileNameHash)
+			const uint cProjectileNameHash = 0x49DC4195;
+			if (SHVDN.NativeMemory.GetRageClassId(address) != cProjectileNameHash)
 			{
 				return null;
 			}

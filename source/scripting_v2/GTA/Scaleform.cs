@@ -12,7 +12,7 @@ namespace GTA
 {
 	public sealed class Scaleform : IDisposable
 	{
-		private string _scaleformID;
+		private string _scaleformId;
 
 		[Obsolete("Scaleform(int handle) is obsolete, Please Use Scaleform(string scaleformID) instead")]
 		public Scaleform(int handle)
@@ -21,7 +21,7 @@ namespace GTA
 		}
 		public Scaleform(string scaleformID)
 		{
-			this._scaleformID = scaleformID;
+			this._scaleformId = scaleformID;
 
 			Handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
 		}
@@ -50,7 +50,7 @@ namespace GTA
 			}
 
 			Handle = handle;
-			this._scaleformID = scaleformID;
+			this._scaleformId = scaleformID;
 
 			return true;
 		}
@@ -100,7 +100,7 @@ namespace GTA
 						Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_BOOL, argBool);
 						break;
 					case ScaleformArgumentTXD argTxd:
-						Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING, argTxd.txd);
+						Function.Call(Hash._PUSH_SCALEFORM_MOVIE_FUNCTION_PARAMETER_STRING, argTxd._txd);
 						break;
 					default:
 						throw new ArgumentException(

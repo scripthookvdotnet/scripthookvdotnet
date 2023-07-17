@@ -11,59 +11,59 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MenuButton : IMenuItem
 	{
-		private UIText text = null;
-		private UIRectangle button = null;
-		private string caption;
+		private UIText _text;
+		private UIRectangle _button;
+		private string _caption;
 
 		public MenuButton(string caption) : this(caption, string.Empty)
 		{
 		}
 		public MenuButton(string caption, string description)
 		{
-			this.caption = caption;
+			this._caption = caption;
 			Description = description;
 		}
 
 		public virtual void Draw()
 		{
-			if (button == null || text == null)
+			if (_button == null || _text == null)
 			{
 				return;
 			}
 
-			button.Draw();
-			text.Draw();
+			_button.Draw();
+			_text.Draw();
 		}
 		public virtual void Draw(Size offset)
 		{
-			if (button == null || text == null)
+			if (_button == null || _text == null)
 			{
 				return;
 			}
 
-			button.Draw(offset);
-			text.Draw(offset);
+			_button.Draw(offset);
+			_text.Draw(offset);
 		}
 
 		public virtual void Select()
 		{
-			if (button == null)
+			if (_button == null)
 			{
 				return;
 			}
 
-			button.Color = Parent.SelectedItemColor;
-			text.Color = Parent.SelectedTextColor;
+			_button.Color = Parent.SelectedItemColor;
+			_text.Color = Parent.SelectedTextColor;
 		}
 		public virtual void Deselect()
 		{
-			if (button == null)
+			if (_button == null)
 			{
 				return;
 			}
 
-			button.Color = Parent.UnselectedItemColor;
-			text.Color = Parent.UnselectedTextColor;
+			_button.Color = Parent.UnselectedItemColor;
+			_text.Color = Parent.UnselectedTextColor;
 		}
 		public virtual void Activate()
 		{
@@ -77,14 +77,14 @@ namespace GTA
 
 		public virtual void SetOriginAndSize(Point origin, Size size)
 		{
-			text = new UIText(
+			_text = new UIText(
 				Caption,
 				Parent.ItemTextCentered ? new Point(origin.X + size.Width / 2 + Parent.TextOffset.X, origin.Y + Parent.TextOffset.Y) : new Point(origin.X + Parent.TextOffset.X, origin.Y + Parent.TextOffset.Y),
 				Parent.ItemTextScale,
 				Parent.UnselectedTextColor,
 				Parent.ItemFont,
 				Parent.ItemTextCentered);
-			button = new UIRectangle(
+			_button = new UIRectangle(
 				origin,
 				size,
 				Parent.UnselectedItemColor);
@@ -92,17 +92,17 @@ namespace GTA
 
 		private void UpdateText()
 		{
-			text.Caption = Caption;
+			_text.Caption = Caption;
 		}
 
 		public event EventHandler<EventArgs> Activated;
 
 		public string Caption
 		{
-			get => caption;
+			get => _caption;
 			set
 			{
-				caption = value;
+				_caption = value;
 				UpdateText();
 			}
 		}

@@ -48,7 +48,7 @@ namespace GTA
 		{
 			return obj is not null && Handle == obj.Handle;
 		}
-		public sealed override bool Equals(object obj)
+		public override bool Equals(object obj)
 		{
 			return obj is not null && obj.GetType() == GetType() && Equals((Pickup)obj);
 		}
@@ -62,7 +62,7 @@ namespace GTA
 			return !(left == right);
 		}
 
-		public sealed override int GetHashCode()
+		public override int GetHashCode()
 		{
 			return Handle.GetHashCode();
 		}

@@ -88,7 +88,7 @@ namespace GTA
 
 		public static void Shake(CameraShake shakeType, float amplitude)
 		{
-			Function.Call(Hash.SHAKE_GAMEPLAY_CAM, Camera.shakeNames[(int)shakeType], amplitude);
+			Function.Call(Hash.SHAKE_GAMEPLAY_CAM, Camera.s_shakeNames[(int)shakeType], amplitude);
 		}
 		public static void StopShaking()
 		{

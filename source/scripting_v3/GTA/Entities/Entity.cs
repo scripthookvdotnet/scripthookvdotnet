@@ -1895,7 +1895,7 @@ namespace GTA
 		/// </summary>
 		public bool IsPlayingAnimation(ClipDictionary clipDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			return Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, Handle, clipDictName, animName, type);
+			return Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, Handle, clipDictName, animName, (int)type);
 		}
 
 		/// <summary>
@@ -1906,7 +1906,7 @@ namespace GTA
 		/// </remarks>
 		public bool HasFinishedAnimation(ClipDictionary clipDictName, string animName, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			return Function.Call<bool>(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, clipDictName, animName, type);
+			return Function.Call<bool>(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, clipDictName, animName, (int)type);
 		}
 
 		/// <summary>

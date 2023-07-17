@@ -15,7 +15,7 @@ namespace GTA
 		#region Fields
 
 		private Tasks _tasks;
-		private NaturalMotion.Euphoria _euphoria;
+		private Euphoria _euphoria;
 		private WeaponCollection _weapons;
 
 		internal static readonly string[] _speechModifierNames = {

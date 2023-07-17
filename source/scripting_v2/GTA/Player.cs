@@ -14,7 +14,7 @@ namespace GTA
 	{
 		#region Fields
 
-		private Ped ped;
+		private Ped _ped;
 		#endregion
 
 		public Player(int handle)
@@ -36,12 +36,12 @@ namespace GTA
 			{
 				int handle = SHVDN.NativeMemory.GetPlayerPedHandle(Handle);
 
-				if (ped == null || handle != ped.Handle)
+				if (_ped == null || handle != _ped.Handle)
 				{
-					ped = new Ped(handle);
+					_ped = new Ped(handle);
 				}
 
-				return ped;
+				return _ped;
 			}
 		}
 
@@ -535,7 +535,7 @@ namespace GTA
 			return !(left == right);
 		}
 
-		public sealed override int GetHashCode()
+		public override int GetHashCode()
 		{
 			return Handle.GetHashCode();
 		}

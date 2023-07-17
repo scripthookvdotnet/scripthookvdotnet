@@ -242,7 +242,7 @@ namespace GTA
 			return !(left == right);
 		}
 
-		public sealed override int GetHashCode()
+		public override int GetHashCode()
 		{
 			return Handle.GetHashCode();
 		}

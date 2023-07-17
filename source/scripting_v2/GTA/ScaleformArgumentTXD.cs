@@ -7,11 +7,11 @@ namespace GTA
 {
 	public sealed class ScaleformArgumentTXD
 	{
-		internal string txd;
+		internal string _txd;
 
 		public ScaleformArgumentTXD(string s)
 		{
-			txd = s;
+			_txd = s;
 		}
 	}
 }

@@ -2,7 +2,7 @@
 // Copyright (C) 2015 crosire & kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
-using GTA.Native;
+
 using SHVDN;
 
 namespace GTA

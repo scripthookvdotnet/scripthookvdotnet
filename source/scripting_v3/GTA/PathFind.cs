@@ -80,7 +80,14 @@ namespace GTA
 			unsafe
 			{
 				NativeVector3 outPos;
-				bool foundNode = Function.Call<bool>(Hash.GET_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, &outPos, flags, zMeasureMult, zTolerance);
+				bool foundNode = Function.Call<bool>(Hash.GET_CLOSEST_VEHICLE_NODE,
+					position.X,
+					position.Y,
+					position.Z,
+					&outPos,
+					(int)flags,
+					zMeasureMult,
+					zTolerance);
 
 				closestNodePosition = outPos;
 				return foundNode;
@@ -106,11 +113,15 @@ namespace GTA
 		/// </returns>
 		public static PathNode GetNthClosestVehicleNode(Vector3 position, int nthClosest, GetClosestVehicleNodeFlags flags = GetClosestVehicleNodeFlags.None, float zMeasureMult = 3f, float zTolerance = 0f)
 		{
-			unsafe
-			{
-				int outNodeHandle = Function.Call<int>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_ID, position.X, position.Y, position.Z, nthClosest, flags, zMeasureMult, zTolerance);
-				return outNodeHandle != 0 ? new PathNode(outNodeHandle) : null;
-			}
+			int outNodeHandle = Function.Call<int>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_ID,
+				position.X,
+				position.Y,
+				position.Z,
+				nthClosest,
+				(int)flags,
+				zMeasureMult,
+				zTolerance);
+			return outNodeHandle != 0 ? new PathNode(outNodeHandle) : null;
 		}
 
 		/// <summary>
@@ -136,7 +147,15 @@ namespace GTA
 			unsafe
 			{
 				NativeVector3 outPos;
-				bool foundNode = Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE, position.X, position.Y, position.Z, nthClosest, &outPos, flags, zMeasureMult, zTolerance);
+				bool foundNode = Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE,
+					position.X,
+					position.Y,
+					position.Z,
+					nthClosest,
+					&outPos,
+					(int)flags,
+					zMeasureMult,
+					zTolerance);
 
 				closestNodePosition = outPos;
 				return foundNode;
@@ -176,7 +195,16 @@ namespace GTA
 			{
 				float outHeading;
 				int outNumLanes;
-				int outNodeHandle = Function.Call<int>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_ID_WITH_HEADING, position.X, position.Y, position.Z, nthClosest, &outHeading, &outNumLanes, flags, zMeasureMult, zTolerance);
+				int outNodeHandle = Function.Call<int>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_ID_WITH_HEADING,
+					position.X,
+					position.Y,
+					position.Z,
+					nthClosest,
+					&outHeading,
+					&outNumLanes,
+					(int)flags,
+					zMeasureMult,
+					zTolerance);
 
 				heading = outHeading;
 				numLanes = outNumLanes;
@@ -218,7 +246,17 @@ namespace GTA
 				NativeVector3 outPos;
 				float outHeading;
 				int outNumLanes;
-				bool foundNode = Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, position.X, position.Y, position.Z, nthClosest, &outPos, &outHeading, &outNumLanes, flags, zMeasureMult, zTolerance);
+				bool foundNode = Function.Call<bool>(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING,
+					position.X,
+					position.Y,
+					position.Z,
+					nthClosest,
+					&outPos,
+					&outHeading,
+					&outNumLanes,
+					(int)flags,
+					zMeasureMult,
+					zTolerance);
 
 				closestNodePosition = outPos;
 				heading = outHeading;

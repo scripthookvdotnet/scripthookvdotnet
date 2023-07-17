@@ -11,13 +11,13 @@ namespace GTA
 	[Obsolete("The built-in menu implementation is obsolete. Please consider using external alternatives instead.")]
 	public class MessageBox : MenuBase
 	{
-		private UIRectangle rectNo = null;
-		private UIRectangle rectYes = null;
-		private UIRectangle rectBody = null;
-		private UIText text = null;
-		private UIText textNo = null;
-		private UIText textYes = null;
-		private bool selection = true;
+		private UIRectangle _rectNo;
+		private UIRectangle _rectYes;
+		private UIRectangle _rectBody;
+		private UIText _text;
+		private UIText _textNo;
+		private UIText _textYes;
+		private bool _selection = true;
 
 		public MessageBox(string headerCaption)
 		{
@@ -46,42 +46,42 @@ namespace GTA
 		}
 		public override void Draw(Size offset)
 		{
-			rectBody.Draw(offset);
-			text.Draw(offset);
-			rectYes.Draw(offset);
-			rectNo.Draw(offset);
-			textYes.Draw(offset);
-			textNo.Draw(offset);
+			_rectBody.Draw(offset);
+			_text.Draw(offset);
+			_rectYes.Draw(offset);
+			_rectNo.Draw(offset);
+			_textYes.Draw(offset);
+			_textNo.Draw(offset);
 		}
 
 		public override void Initialize()
 		{
-			rectNo = new UIRectangle(
+			_rectNo = new UIRectangle(
 				new Point(Width / 2, Height),
 				new Size(Width / 2, ButtonHeight),
 				UnselectedItemColor);
-			rectYes = new UIRectangle(
+			_rectYes = new UIRectangle(
 				new Point(0, Height),
 				new Size(Width / 2, ButtonHeight),
 				UnselectedItemColor);
-			rectBody = new UIRectangle(
+			_rectBody = new UIRectangle(
 				default,
 				new Size(Width, Height), HeaderColor);
-			text = new UIText(
+			_text = new UIText(
 				Caption,
 				HeaderCentered ? new Point(Width / 2, 0) : default,
 				HeaderTextScale,
 				HeaderTextColor,
 				HeaderFont,
 				HeaderCentered);
-			textNo = new UIText(
+			_textNo = new UIText(
 				OkCancel ? "Cancel" : "No",
 				new Point(Width / 4 * 3, Height),
 				ItemTextScale,
 				UnselectedTextColor,
 				ItemFont,
 				ItemTextCentered);
-			textYes = new UIText(
+			_textYes = new UIText(
 				OkCancel ? "OK" : "Yes",
 				new Point(Width / 4, Height),
 				ItemTextScale,
@@ -100,7 +100,7 @@ namespace GTA
 		}
 		public override void OnActivate()
 		{
-			if (!selection)
+			if (!_selection)
 			{
 				No(this, EventArgs.Empty);
 			}
@@ -114,21 +114,21 @@ namespace GTA
 
 		public override void OnChangeItem(bool right)
 		{
-			selection = !selection;
+			_selection = !_selection;
 
-			if (selection)
+			if (_selection)
 			{
-				rectNo.Color = UnselectedItemColor;
-				rectYes.Color = SelectedItemColor;
-				textNo.Color = UnselectedTextColor;
-				textYes.Color = SelectedTextColor;
+				_rectNo.Color = UnselectedItemColor;
+				_rectYes.Color = SelectedItemColor;
+				_textNo.Color = UnselectedTextColor;
+				_textYes.Color = SelectedTextColor;
 			}
 			else
 			{
-				rectNo.Color = SelectedItemColor;
-				rectYes.Color = UnselectedItemColor;
-				textNo.Color = SelectedTextColor;
-				textYes.Color = UnselectedTextColor;
+				_rectNo.Color = SelectedItemColor;
+				_rectYes.Color = UnselectedItemColor;
+				_textNo.Color = SelectedTextColor;
+				_textYes.Color = UnselectedTextColor;
 			}
 		}
 		public override void OnChangeSelection(bool down)

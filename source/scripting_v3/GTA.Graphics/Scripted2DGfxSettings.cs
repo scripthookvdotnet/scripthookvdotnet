@@ -82,7 +82,7 @@ namespace GTA.Graphics
 		/// Resets all the alignment parameters to unaligned with no offsets.
 		/// </summary>
 		/// <remarks>
-		/// Calling this method has the same effect as calling <see cref="SetAlignmentType"/> with both paramters
+		/// Calling this method has the same effect as calling <see cref="SetAlignmentType"/> with both parameters
 		/// assigned to <see cref="UIAlignment.Ignore"/> and calling <see cref="SetAlignmentOffsetAndSize(PointF, SizeF)"/>
 		/// with the zero offset and the zero size.
 		/// </remarks>

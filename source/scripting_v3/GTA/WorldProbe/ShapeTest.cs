@@ -24,7 +24,18 @@ namespace GTA
 		/// </value>
 		public static ShapeTestHandle StartTestLOSProbe(Vector3 startPosition, Vector3 endPosition, IntersectFlags intersectFlags = IntersectFlags.Map, Entity excludeEntity = null, ShapeTestOptions options = ShapeTestOptions.Default)
 		{
-			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_LOS_PROBE, startPosition.X, startPosition.Y, startPosition.Z, endPosition.X, endPosition.Y, endPosition.Z, intersectFlags, excludeEntity == null ? 0 : excludeEntity.Handle, options));
+			return new ShapeTestHandle(Function.Call<int>(Hash.START_SHAPE_TEST_LOS_PROBE,
+				startPosition.X,
+				startPosition.Y,
+				startPosition.Z,
+				endPosition.X,
+				endPosition.Y,
+				endPosition.Z,
+				(int)intersectFlags,
+				excludeEntity == null
+					? 0
+					: excludeEntity.Handle,
+				(int)options));
 		}
 
 		/// <summary>
@@ -42,7 +53,18 @@ namespace GTA
 		/// </value>
 		public static ShapeTestHandle StartExpensiveSyncTestLOSProbe(Vector3 startPosition, Vector3 endPosition, IntersectFlags intersectFlags = IntersectFlags.Map, Entity excludeEntity = null, ShapeTestOptions options = ShapeTestOptions.Default)
 		{
-			return new ShapeTestHandle(Function.Call<int>(Hash.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE, startPosition.X, startPosition.Y, startPosition.Z, endPosition.X, endPosition.Y, endPosition.Z, intersectFlags, excludeEntity == null ? 0 : excludeEntity.Handle, options));
+			return new ShapeTestHandle(Function.Call<int>(Hash.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE,
+				startPosition.X,
+				startPosition.Y,
+				startPosition.Z,
+				endPosition.X,
+				endPosition.Y,
+				endPosition.Z,
+				(int)intersectFlags,
+				excludeEntity == null
+					? 0
+					: excludeEntity.Handle,
+				(int)options));
 		}
 
 		/// <summary>

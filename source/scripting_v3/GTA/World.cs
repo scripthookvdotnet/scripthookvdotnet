@@ -17,7 +17,7 @@ namespace GTA
 	public static class World
 	{
 		#region Fields
-		static readonly string[] weatherNames = {
+		static readonly string[] s_weatherNames = {
 			"EXTRASUNNY",
 			"CLEAR",
 			"CLOUDS",
@@ -35,10 +35,10 @@ namespace GTA
 			"HALLOWEEN"
 		};
 
-		static readonly GregorianCalendar calendar = new();
+		static readonly GregorianCalendar s_calendar = new();
 
 		// removes gang and animal ped models just like CREATE_RANDOM_PED does
-		static readonly Func<Model, bool> defaultPredicateForCreateRandomPed = (x => x.IsHumanPed && !x.IsGangPed);
+		static readonly Func<Model, bool> s_defaultPredicateForCreateRandomPed = (x => x.IsHumanPed && !x.IsGangPed);
 		#endregion
 
 		#region Time & Day
@@ -74,7 +74,7 @@ namespace GTA
 			{
 				int year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
 				int month = Function.Call<int>(Hash.GET_CLOCK_MONTH) + 1;
-				int day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), calendar.GetDaysInMonth(year, month));
+				int day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), s_calendar.GetDaysInMonth(year, month));
 				int hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
 				int minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
 				int second = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
@@ -134,9 +134,9 @@ namespace GTA
 		{
 			get
 			{
-				for (int i = 0; i < weatherNames.Length; i++)
+				for (int i = 0; i < s_weatherNames.Length; i++)
 				{
-					if (Function.Call<int>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == Game.GenerateHash(weatherNames[i]))
+					if (Function.Call<int>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == Game.GenerateHash(s_weatherNames[i]))
 					{
 						return (Weather)i;
 					}
@@ -148,7 +148,7 @@ namespace GTA
 			{
 				if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
 				{
-					Function.Call(Hash.SET_WEATHER_TYPE_NOW, weatherNames[(int)value]);
+					Function.Call(Hash.SET_WEATHER_TYPE_NOW, s_weatherNames[(int)value]);
 				}
 			}
 		}
@@ -162,9 +162,9 @@ namespace GTA
 		{
 			get
 			{
-				for (int i = 0; i < weatherNames.Length; i++)
+				for (int i = 0; i < s_weatherNames.Length; i++)
 				{
-					if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, weatherNames[i]))
+					if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, s_weatherNames[i]))
 					{
 						return (Weather)i;
 					}
@@ -185,7 +185,7 @@ namespace GTA
 				{
 					Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
 				}
-				Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, Game.GenerateHash(weatherNames[(int)value]), 0.0f);
+				Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, Game.GenerateHash(s_weatherNames[(int)value]), 0.0f);
 			}
 		}
 
@@ -198,7 +198,7 @@ namespace GTA
 		{
 			if (Enum.IsDefined(typeof(Weather), weather) && weather != Weather.Unknown)
 			{
-				Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, weatherNames[(int)weather], duration);
+				Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, s_weatherNames[(int)weather], duration);
 			}
 		}
 
@@ -267,12 +267,7 @@ namespace GTA
 			{
 				int handle = SHVDN.NativeMemory.GetWaypointBlip();
 
-				if (handle != 0)
-				{
-					return new Blip(handle);
-				}
-
-				return null;
+				return handle != 0 ? new Blip(handle) : null;
 			}
 		}
 
@@ -769,7 +764,7 @@ namespace GTA
 				closest = spatial;
 				closestDistance = distance;
 			}
-			return (T)closest;
+			return closest;
 		}
 		/// <summary>
 		/// Gets the closest <see cref="ISpatial"/> to a given position in the World ignoring height.
@@ -795,7 +790,7 @@ namespace GTA
 				closest = spatial;
 				closestDistance = distance;
 			}
-			return (T)closest;
+			return closest;
 		}
 		/// <summary>
 		/// Gets the closest <see cref="Building"/> to a given position in the World.
@@ -1042,7 +1037,7 @@ namespace GTA
 			IEnumerable<Model> loadedAppropriatePedModels = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
 			Model[] filteredPedModels = predicate != null
 				? loadedAppropriatePedModels.Where(predicate).ToArray()
-				: loadedAppropriatePedModels.Where(defaultPredicateForCreateRandomPed).ToArray();
+				: loadedAppropriatePedModels.Where(s_defaultPredicateForCreateRandomPed).ToArray();
 			int filteredModelCount = filteredPedModels.Length;
 			if (filteredModelCount == 0)
 			{
@@ -1208,7 +1203,16 @@ namespace GTA
 				return null;
 			}
 
-			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP, type, position.X, position.Y, position.Z, (int)placementFlags, amount, customModel.Hash, createAsScriptObject, true);
+			int handle = Function.Call<int>(Hash.CREATE_AMBIENT_PICKUP,
+				(int)type,
+				position.X,
+				position.Y,
+				position.Z,
+				(int)placementFlags,
+				amount,
+				customModel.Hash,
+				createAsScriptObject,
+				true);
 
 			return handle == 0 ? null : new Prop(handle);
 		}
@@ -1236,7 +1240,15 @@ namespace GTA
 			}
 
 			// The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP, type, position.X, position.Y, position.Z, (int)placementFlags, amount, true, customModel.Hash);
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP,
+				(int)type,
+				position.X,
+				position.Y,
+				position.Z,
+				(int)placementFlags,
+				amount,
+				true,
+				customModel.Hash);
 
 			return handle == 0 ? null : new Pickup(handle);
 		}
@@ -1273,7 +1285,19 @@ namespace GTA
 			}
 
 			// The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
-			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE, type, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, (int)placementFlags, amount, (int)rotOrder, true, customModel.Hash);
+			int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE,
+				(int)type,
+				position.X,
+				position.Y,
+				position.Z,
+				rotation.X,
+				rotation.Y,
+				rotation.Z,
+				(int)placementFlags,
+				amount,
+				(int)rotOrder,
+				true,
+				customModel.Hash);
 
 			return handle == 0 ? null : new Pickup(handle);
 		}
@@ -1314,9 +1338,22 @@ namespace GTA
 		/// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
 		/// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
 		/// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
-		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
+		public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
 		{
-			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, icon, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, 0);
+			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
+				(int)icon,
+				position.X,
+				position.Y,
+				position.Z,
+				pointTo.X,
+				pointTo.Y,
+				pointTo.Z,
+				radius,
+				color.R,
+				color.G,
+				color.B,
+				color.A,
+				0);
 			return handle != 0 ? new Checkpoint(handle) : null;
 		}
 		/// <summary>
@@ -1328,9 +1365,22 @@ namespace GTA
 		/// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
 		/// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
 		/// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
-		public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, System.Drawing.Color color)
+		public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
 		{
-			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT, 44, position.X, position.Y, position.Z, pointTo.X, pointTo.Y, pointTo.Z, radius, color.R, color.G, color.B, color.A, icon);
+			int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
+				44,
+				position.X,
+				position.Y,
+				position.Z,
+				pointTo.X,
+				pointTo.Y,
+				pointTo.Z,
+				radius,
+				color.R,
+				color.G,
+				color.B,
+				color.A,
+				icon);
 			return handle != 0 ? new Checkpoint(handle) : null;
 		}
 
@@ -1504,7 +1554,7 @@ namespace GTA
 		/// <param name="radius">The radius for area clearance.</param>
 		/// <param name="flags">The flags for area clearance.</param>
 		public static void ClearAreaOfProps(Vector3 position, float radius, ClearPropsFlags flags)
-			=> Function.Call(Hash.CLEAR_AREA_OF_OBJECTS, position.X, position.Y, position.Z, radius, flags);
+			=> Function.Call(Hash.CLEAR_AREA_OF_OBJECTS, position.X, position.Y, position.Z, radius, (int)flags);
 
 		/// <summary>
 		/// Clears non-mission <see cref="Ped"/>s within the defined sphere.
@@ -1700,7 +1750,24 @@ namespace GTA
 		{
 			Function.Call(Hash.ROPE_LOAD_TEXTURES);
 
-			return new Rope(Function.Call<int>(Hash.ADD_ROPE, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, length, type, length, minLength, 0.5f, false, false, true, 1.0f, breakable, 0));
+			return new Rope(Function.Call<int>(Hash.ADD_ROPE,
+				position.X,
+				position.Y,
+				position.Z,
+				rotation.X,
+				rotation.Y,
+				rotation.Z,
+				length,
+				(int)type,
+				length,
+				minLength,
+				0.5f,
+				false,
+				false,
+				true,
+				1.0f,
+				breakable,
+				0));
 		}
 
 		/// <summary>
@@ -1731,11 +1798,28 @@ namespace GTA
 		{
 			if (owner?.Exists() == true)
 			{
-				Function.Call(Hash.ADD_OWNED_EXPLOSION, owner.Handle, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
+				Function.Call(Hash.ADD_OWNED_EXPLOSION,
+					owner.Handle,
+					position.X,
+					position.Y,
+					position.Z,
+					(int)type,
+					radius,
+					aubidble,
+					invisible,
+					cameraShake);
 			}
 			else
 			{
-				Function.Call(Hash.ADD_EXPLOSION, position.X, position.Y, position.Z, type, radius, aubidble, invisible, cameraShake);
+				Function.Call(Hash.ADD_EXPLOSION,
+					position.X,
+					position.Y,
+					position.Z,
+					(int)type,
+					radius,
+					aubidble,
+					invisible,
+					cameraShake);
 			}
 		}
 
@@ -1899,7 +1983,18 @@ namespace GTA
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
 		public static RaycastResult Raycast(Vector3 source, Vector3 target, IntersectFlags options, Entity ignoreEntity = null)
 		{
-			return new RaycastResult(Function.Call<int>(Hash.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+			return new RaycastResult(Function.Call<int>(Hash.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE,
+				source.X,
+				source.Y,
+				source.Z,
+				target.X,
+				target.Y,
+				target.Z,
+				(int)options,
+				ignoreEntity == null
+					? 0
+					: ignoreEntity.Handle,
+				7));
 		}
 		/// <summary>
 		/// Creates a raycast between 2 points.
@@ -1913,7 +2008,18 @@ namespace GTA
 		{
 			Vector3 target = source + direction * maxDistance;
 
-			return new RaycastResult(Function.Call<int>(Hash.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+			return new RaycastResult(Function.Call<int>(Hash.START_EXPENSIVE_SYNCHRONOUS_SHAPE_TEST_LOS_PROBE,
+				source.X,
+				source.Y,
+				source.Z,
+				target.X,
+				target.Y,
+				target.Z,
+				(int)options,
+				ignoreEntity == null
+					? 0
+					: ignoreEntity.Handle,
+				7));
 		}
 
 		/// <summary>
@@ -1927,7 +2033,19 @@ namespace GTA
 		[Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. Use ShapeTest.StartTestCapsule instead.")]
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectFlags options, Entity ignoreEntity = null)
 		{
-			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE,
+				source.X,
+				source.Y,
+				source.Z,
+				target.X,
+				target.Y,
+				target.Z,
+				radius,
+				(int)options,
+				ignoreEntity == null
+					? 0
+					: ignoreEntity.Handle,
+				7));
 		}
 		/// <summary>
 		/// Creates a 3D raycast between 2 points.
@@ -1943,7 +2061,19 @@ namespace GTA
 		{
 			Vector3 target = source + direction * maxDistance;
 
-			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE, source.X, source.Y, source.Z, target.X, target.Y, target.Z, radius, options, ignoreEntity == null ? 0 : ignoreEntity.Handle, 7));
+			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE,
+				source.X,
+				source.Y,
+				source.Z,
+				target.X,
+				target.Y,
+				target.Z,
+				radius,
+				(int)options,
+				ignoreEntity == null
+					? 0
+					: ignoreEntity.Handle,
+				7));
 		}
 
 		/// <summary>
@@ -2267,7 +2397,13 @@ namespace GTA
 			{
 				// the 4th position sets the internal initial bitflag value to 3 instead of 2 if set,
 				// making it like the 1nd bit flag of 6th parameter is always set
-				bool foundSafePos = Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, flags);
+				bool foundSafePos = Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED,
+					position.X,
+					position.Y,
+					position.Z,
+					false,
+					&outPos,
+					(int)flags);
 				safePosition = outPos;
 				return foundSafePos;
 			}

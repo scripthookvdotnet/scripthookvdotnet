@@ -21,12 +21,12 @@ namespace GTA
 
 		class InstantiateScriptTask : SHVDN.IScriptTask
 		{
-			internal Type type;
-			internal SHVDN.Script script;
+			internal Type _type;
+			internal SHVDN.Script _script;
 
 			public void Run()
 			{
-				script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(type);
+				_script = SHVDN.ScriptDomain.CurrentDomain.InstantiateScript(_type);
 			}
 		}
 
@@ -279,17 +279,17 @@ namespace GTA
 		/// </summary>
 		public static T InstantiateScript<T>() where T : Script
 		{
-			var task = new InstantiateScriptTask { type = typeof(T) };
+			var task = new InstantiateScriptTask { _type = typeof(T) };
 			SHVDN.ScriptDomain.CurrentDomain.ExecuteTask(task, true);
 
-			if (task.script == null)
+			if (task._script == null)
 			{
 				return null;
 			}
 
-			task.script.Start();
+			task._script.Start();
 
-			return (T)task.script.ScriptInstance;
+			return (T)task._script.ScriptInstance;
 		}
 	}
 }

@@ -12,49 +12,49 @@ namespace GTA
 {
 	public unsafe struct Global
 	{
-		private readonly IntPtr address;
+		private readonly IntPtr _address;
 
 		internal Global(int index)
 		{
-			address = SHVDN.NativeMemory.GetGlobalPtr(index);
+			_address = SHVDN.NativeMemory.GetGlobalPtr(index);
 		}
 
-		public unsafe ulong* MemoryAddress => (ulong*)address.ToPointer();
+		public ulong* MemoryAddress => (ulong*)_address.ToPointer();
 
-		public unsafe void SetInt(int value)
+		public void SetInt(int value)
 		{
-			SHVDN.NativeMemory.WriteInt32(address, value);
+			SHVDN.NativeMemory.WriteInt32(_address, value);
 		}
-		public unsafe void SetFloat(float value)
+		public void SetFloat(float value)
 		{
-			SHVDN.NativeMemory.WriteFloat(address, value);
+			SHVDN.NativeMemory.WriteFloat(_address, value);
 		}
-		public unsafe void SetString(string value)
+		public void SetString(string value)
 		{
 			int size = Encoding.UTF8.GetByteCount(value);
-			Marshal.Copy(Encoding.UTF8.GetBytes(value), 0, address, size);
+			Marshal.Copy(Encoding.UTF8.GetBytes(value), 0, _address, size);
 			*((byte*)MemoryAddress + size) = 0;
 		}
-		public unsafe void SetVector3(Vector3 value)
+		public void SetVector3(Vector3 value)
 		{
-			SHVDN.NativeMemory.WriteVector3(address, value.ToInternalFVector3());
+			SHVDN.NativeMemory.WriteVector3(_address, value.ToInternalFVector3());
 		}
 
-		public unsafe int GetInt()
+		public int GetInt()
 		{
-			return SHVDN.NativeMemory.ReadInt32(address);
+			return SHVDN.NativeMemory.ReadInt32(_address);
 		}
-		public unsafe float GetFloat()
+		public float GetFloat()
 		{
-			return SHVDN.NativeMemory.ReadFloat(address);
+			return SHVDN.NativeMemory.ReadFloat(_address);
 		}
-		public unsafe string GetString()
+		public string GetString()
 		{
-			return SHVDN.NativeMemory.PtrToStringUtf8(address);
+			return SHVDN.NativeMemory.PtrToStringUtf8(_address);
 		}
-		public unsafe Vector3 GetVector3()
+		public Vector3 GetVector3()
 		{
-			return new Vector3(SHVDN.NativeMemory.ReadVector3(address));
+			return new Vector3(SHVDN.NativeMemory.ReadVector3(_address));
 		}
 	}
 }

@@ -3,11 +3,7 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using GTA.Math;
 using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
 
 namespace GTA
 {
@@ -25,9 +21,9 @@ namespace GTA
 	/// </remarks>
 	public sealed class VehicleWeaponHandlingData : BaseSubHandlingData
 	{
-		static readonly int _elemCountForWeaponPropertyArrays;
+		static readonly int s_elemCountForWeaponPropertyArrays;
 		// Vehicle turret arrays can have up to 12 elements since b1180, but it looks like only 6 element can be actually used
-		static readonly int _elemCountActuallyUsedForTurretPropertyArrays;
+		static readonly int s_elemCountActuallyUsedForTurretPropertyArrays;
 
 		static VehicleWeaponHandlingData()
 		{
@@ -35,13 +31,13 @@ namespace GTA
 			// it won't worth it because only one update changed max element count of array members of CVehicleWeaponHandlingData as of b2845
 			if (Game.Version >= GameVersion.v1_0_1180_2_Steam)
 			{
-				_elemCountForWeaponPropertyArrays = 6;
-				_elemCountActuallyUsedForTurretPropertyArrays = 6;
+				s_elemCountForWeaponPropertyArrays = 6;
+				s_elemCountActuallyUsedForTurretPropertyArrays = 6;
 			}
 			else
 			{
-				_elemCountForWeaponPropertyArrays = 4;
-				_elemCountActuallyUsedForTurretPropertyArrays = 3;
+				s_elemCountForWeaponPropertyArrays = 4;
+				s_elemCountActuallyUsedForTurretPropertyArrays = 3;
 			}
 		}
 
@@ -61,7 +57,7 @@ namespace GTA
 					return Array.Empty<VehicleWeaponHash>();
 				}
 
-				var result = new VehicleWeaponHash[_elemCountForWeaponPropertyArrays];
+				var result = new VehicleWeaponHash[s_elemCountForWeaponPropertyArrays];
 
 				const int memberOffset = 0x8;
 				for (int i = 0; i < result.Length; i++)
@@ -73,16 +69,16 @@ namespace GTA
 			}
 			set
 			{
-				if (value.Length > _elemCountForWeaponPropertyArrays)
+				if (value.Length > s_elemCountForWeaponPropertyArrays)
 				{
-					throw new ArgumentException($"The amount of {nameof(WeaponHash)} values values must be between 0 and {_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
+					throw new ArgumentException($"The amount of {nameof(WeaponHash)} values values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
 					return;
 				}
 
-				int[] arrayToFill = new int[_elemCountForWeaponPropertyArrays];
+				int[] arrayToFill = new int[s_elemCountForWeaponPropertyArrays];
 				for (int i = 0; i < value.Length; i++)
 				{
 					// VehicleWeaponHash.Invalid should have been zero since the game always treats zero as a invalid weapon hash but not necessarily for 0xFFFFFFFF
@@ -119,7 +115,7 @@ namespace GTA
 					return Array.Empty<VehicleSeat>();
 				}
 
-				var result = new VehicleSeat[_elemCountForWeaponPropertyArrays];
+				var result = new VehicleSeat[s_elemCountForWeaponPropertyArrays];
 
 				int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
 				for (int i = 0; i < result.Length; i++)
@@ -137,16 +133,16 @@ namespace GTA
 			}
 			set
 			{
-				if (value.Length > _elemCountForWeaponPropertyArrays)
+				if (value.Length > s_elemCountForWeaponPropertyArrays)
 				{
-					throw new ArgumentException($"The amount of {nameof(VehicleSeat)} values must be between 0 and {_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
+					throw new ArgumentException($"The amount of {nameof(VehicleSeat)} values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
 					return;
 				}
 
-				int[] arrayToFill = new int[_elemCountForWeaponPropertyArrays];
+				int[] arrayToFill = new int[s_elemCountForWeaponPropertyArrays];
 				for (int i = 0; i < value.Length; i++)
 				{
 					// Make values match what game code uses outside native functions
@@ -186,7 +182,7 @@ namespace GTA
 					return Array.Empty<VehicleModType>();
 				}
 
-				var result = new VehicleModType[_elemCountForWeaponPropertyArrays];
+				var result = new VehicleModType[s_elemCountForWeaponPropertyArrays];
 				int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
 				for (int i = 0; i < result.Length; i++)
 				{
@@ -208,16 +204,16 @@ namespace GTA
 				{
 					throw new GameVersionNotSupportedException(GameVersion.v1_0_1103_2_Steam, nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
 				}
-				if (value.Length > _elemCountForWeaponPropertyArrays)
+				if (value.Length > s_elemCountForWeaponPropertyArrays)
 				{
-					throw new ArgumentException($"The amount of {nameof(VehicleModType)} values values must be between 0 and {_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
+					throw new ArgumentException($"The amount of {nameof(VehicleModType)} values values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
 					return;
 				}
 
-				int[] arrayToFill = new int[_elemCountForWeaponPropertyArrays];
+				int[] arrayToFill = new int[s_elemCountForWeaponPropertyArrays];
 				for (int i = 0; i < value.Length; i++)
 				{
 					VehicleModType currentValue = value[i];
@@ -264,7 +260,7 @@ namespace GTA
 					memberOffset = 0x28;
 				}
 
-				float[] result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				float[] result = new float[s_elemCountActuallyUsedForTurretPropertyArrays];
 				for (int i = 0; i < result.Length; i++)
 				{
 					result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
@@ -274,9 +270,9 @@ namespace GTA
 			}
 			set
 			{
-				if (value.Length > _elemCountActuallyUsedForTurretPropertyArrays)
+				if (value.Length > s_elemCountActuallyUsedForTurretPropertyArrays)
 				{
-					throw new ArgumentException($"The amount of turret speed values must be between 0 and {_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
+					throw new ArgumentException($"The amount of turret speed values must be between 0 and {s_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
@@ -297,7 +293,7 @@ namespace GTA
 					memberOffset = 0x28;
 				}
 
-				float[] arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				float[] arrayToFill = new float[s_elemCountActuallyUsedForTurretPropertyArrays];
 				for (int i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
@@ -336,7 +332,7 @@ namespace GTA
 					memberOffset = 0x34;
 				}
 
-				float[] result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				float[] result = new float[s_elemCountActuallyUsedForTurretPropertyArrays];
 				for (int i = 0; i < result.Length; i++)
 				{
 					result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
@@ -346,9 +342,9 @@ namespace GTA
 			}
 			set
 			{
-				if (value.Length > _elemCountActuallyUsedForTurretPropertyArrays)
+				if (value.Length > s_elemCountActuallyUsedForTurretPropertyArrays)
 				{
-					throw new ArgumentException($"The amount of minimum turret pitch values must be between 0 and {_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
+					throw new ArgumentException($"The amount of minimum turret pitch values must be between 0 and {s_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
@@ -369,7 +365,7 @@ namespace GTA
 					memberOffset = 0x34;
 				}
 
-				float[] arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				float[] arrayToFill = new float[s_elemCountActuallyUsedForTurretPropertyArrays];
 				for (int i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];
@@ -408,7 +404,7 @@ namespace GTA
 					memberOffset = 0x40;
 				}
 
-				float[] result = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				float[] result = new float[s_elemCountActuallyUsedForTurretPropertyArrays];
 				for (int i = 0; i < result.Length; i++)
 				{
 					result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
@@ -418,9 +414,9 @@ namespace GTA
 			}
 			set
 			{
-				if (value.Length > _elemCountActuallyUsedForTurretPropertyArrays)
+				if (value.Length > s_elemCountActuallyUsedForTurretPropertyArrays)
 				{
-					throw new ArgumentException($"The amount of maximum turret pitch values must be between 0 and {_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
+					throw new ArgumentException($"The amount of maximum turret pitch values must be between 0 and {s_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
 				}
 				if (!IsValid)
 				{
@@ -441,7 +437,7 @@ namespace GTA
 					memberOffset = 0x40;
 				}
 
-				float[] arrayToFill = new float[_elemCountActuallyUsedForTurretPropertyArrays];
+				float[] arrayToFill = new float[s_elemCountActuallyUsedForTurretPropertyArrays];
 				for (int i = 0; i < value.Length; i++)
 				{
 					arrayToFill[i] = value[i];

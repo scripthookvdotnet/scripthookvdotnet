@@ -34,8 +34,8 @@ namespace GTA
 			// Native functions that take a pickup object handle verify this in the same way
 			// (fetches an address from the associated handle then tests if the class id hash
 			// is the same as 0xAD2BCC1A (the joaat hash of the name "CPickup")
-			const uint CPickupNameHash = 0xAD2BCC1A;
-			if (SHVDN.NativeMemory.GetRageClassId(address) != CPickupNameHash)
+			const uint cPickupNameHash = 0xAD2BCC1A;
+			if (SHVDN.NativeMemory.GetRageClassId(address) != cPickupNameHash)
 			{
 				return null;
 			}

@@ -5,7 +5,6 @@
 
 using GTA.Native;
 using System;
-using System.Security.Policy;
 
 namespace GTA
 {

@@ -9,16 +9,16 @@ namespace GTA
 {
 	public sealed class Notification
 	{
-		private readonly int handle;
+		private readonly int _handle;
 
 		internal Notification(int handle)
 		{
-			this.handle = handle;
+			this._handle = handle;
 		}
 
 		public void Hide()
 		{
-			Function.Call(Hash._REMOVE_NOTIFICATION, handle);
+			Function.Call(Hash._REMOVE_NOTIFICATION, _handle);
 		}
 	}
 }

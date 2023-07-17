@@ -13,7 +13,7 @@ namespace GTA
 	public sealed class Player : INativeValue
 	{
 		#region Fields
-		Ped ped;
+		Ped _ped;
 		#endregion
 
 		internal Player(int handle)
@@ -51,12 +51,12 @@ namespace GTA
 			{
 				int handle = SHVDN.NativeMemory.GetPlayerPedHandle(Handle);
 
-				if (ped == null || handle != ped.Handle)
+				if (_ped == null || handle != _ped.Handle)
 				{
-					ped = new Ped(handle);
+					_ped = new Ped(handle);
 				}
 
-				return ped;
+				return _ped;
 			}
 		}
 
@@ -696,7 +696,7 @@ namespace GTA
 		/// <remarks>
 		/// Clearing the wanted level will disable to increase the crime value for commiting crimes for 2 seconds.
 		/// </remarks>
-		public void ReportCrime(CrimeType crimeToReport, int crimeValue = 0) => Function.Call(Hash.REPORT_CRIME, Handle, crimeToReport, crimeValue);
+		public void ReportCrime(CrimeType crimeToReport, int crimeValue = 0) => Function.Call(Hash.REPORT_CRIME, Handle, (int)crimeToReport, crimeValue);
 
 		/// <summary>
 		/// Forces this <see cref="Player"/> to get spotted by police.
@@ -1118,7 +1118,7 @@ namespace GTA
 		/// </param>
 		public void SetControlState(bool setControlOn, SetPlayerControlFlags flags = SetPlayerControlFlags.None)
 		{
-			Function.Call(Hash.SET_PLAYER_CONTROL, Handle, setControlOn, flags);
+			Function.Call(Hash.SET_PLAYER_CONTROL, Handle, setControlOn, (int)flags);
 		}
 
 		/// <summary>
