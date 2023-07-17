@@ -975,6 +975,25 @@ namespace GTA
 			Function.Call(Hash.CLEAR_PED_SECONDARY_TASK, _ped.Handle);
 		}
 
+		/// <summary>
+		/// Attempts to stop a play anim task initiated by <see cref="PlayAnimation(ClipDictionary, string)"/>.
+		/// Does not stop non-scripted animation tasks.
+		/// </summary>
+		/// <param name="clipDict">The clip dictionary.</param>
+		/// <param name="animName">The animation name.</param>
+		/// <param name="blendOutDelta">
+		/// The blend out delta. if set to <see langword="null"/>, <see cref="AnimationBlendDelta.Normal"/> will be used.
+		/// </param>
+		public void StopScriptedAnimationTask(ClipDictionary clipDict, string animName, AnimationBlendDelta? blendOutDelta = null)
+		{
+			float deltaArg = blendOutDelta.HasValue
+				? -(float)(blendOutDelta.Value)
+				: -(AnimationBlendDelta.Normal.Value);
+
+			Function.Call(Hash.STOP_ANIM_TASK, _ped.Handle, clipDict, animName, deltaArg);
+		}
+
+		[Obsolete("Use StopScriptedAnimationTask instead.")]
 		public void ClearAnimation(string animSet, string animName)
 		{
 			Function.Call(Hash.STOP_ANIM_TASK, _ped.Handle, animSet, animName, -4f);
