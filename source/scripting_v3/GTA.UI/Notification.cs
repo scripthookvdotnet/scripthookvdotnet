@@ -80,9 +80,7 @@ namespace GTA.UI
 
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, SHVDN.NativeMemory.CellEmailBcon);
 			SHVDN.NativeFunc.PushLongString(message);
-			Function.Call(Hash.END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT, iconName, iconName, fadeIn, 1, sender, subject);
-
-			return Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER, blinking, true);
+			return Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT, iconName, iconName, fadeIn, 1, sender, subject);
 		}
 
 		/// <summary>
