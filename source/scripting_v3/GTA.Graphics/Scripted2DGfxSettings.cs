@@ -49,7 +49,7 @@ namespace GTA.Graphics
 		/// <see cref="UIAlignment.Top"/>, <see cref="UIAlignment.Bottom"/>, and <see cref="UIAlignment.Center"/>.
 		/// </param>
 		public static void SetAlignmentType(UIAlignment alignX, UIAlignment alignY)
-			=> Function.Call(Hash.SET_SCRIPT_GFX_ALIGN_PARAMS, (byte)alignX, (byte)alignY);
+			=> Function.Call(Hash.SET_SCRIPT_GFX_ALIGN, (byte)alignX, (byte)alignY);
 
 		/// <summary>
 		/// Sets the alignment offset and size.
