@@ -67,7 +67,12 @@ namespace GTA.UI
 		/// <summary>
 		/// Creates a more advanced (SMS-alike) <see cref="Notification"/> above the minimap showing a sender icon, subject and the message.
 		/// </summary>
-		/// <param name="icon">The notification icon.</param>
+		/// <param name="icon">
+		/// The notification icon.
+		/// Although you can use any pair of a texture dictionary (txd) and a texture as long as the txd is loaded
+		/// and the txd contains the texture in <c>END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT</c>, you can only specify
+		/// the textures chosen for <see cref="NotificationIcon"/> in this overload.
+		/// </param>
 		/// <param name="sender">The sender name.</param>
 		/// <param name="subject">The subject line.</param>
 		/// <param name="message">The message itself.</param>

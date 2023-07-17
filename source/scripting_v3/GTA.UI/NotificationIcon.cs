@@ -5,6 +5,15 @@
 
 namespace GTA.UI
 {
+	/// <summary>
+	/// An enumeration of selected notification icons for
+	/// <see cref="Notification.Show(NotificationIcon, string, string, string, bool, bool)"/>.
+	/// </summary>
+	/// <remarks>
+	/// Although you can use any pair of a texture dictionary (txd) and a texture as long as the txd is loaded
+	/// and the txd contains the texture in native functions for creating feed posts, you can only specify
+	/// one of the defined values of this enum in <see cref="Notification.Show(NotificationIcon, string, string, string, bool, bool)"/>.
+	/// </remarks>
 	public enum NotificationIcon
 	{
 		Abigail,
