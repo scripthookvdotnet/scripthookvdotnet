@@ -585,6 +585,9 @@ namespace GTA
 				return null;
 			}
 
+			// The first parameter "PedType" does not have actual effect, the function always eventually uses the "Pedtype"
+			// value for the model (in peds.ymt or peds.meta) instead
+			// Actually the value is read when the function is called but eventually overwritten before getting used in a meaningful way
 			return Function.Call<Ped>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false);
 		}
 		/// <summary>
