@@ -40,13 +40,13 @@ namespace GTA.Graphics
 		/// </summary>
 		/// <param name="alignX">
 		/// The x alignment type.
-		/// The following is the acceptable values that make the game aligns 2D graphic elements differently:
-		/// <see cref="UIAlignment.Left"/>, <see cref="UIAlignment.Right"/>, and <see cref="UIAlignment.Center"/>.
+		/// The following is the list of acceptable values that make the game aligns 2D graphic elements differently:
+		/// <see cref="UIAlignment.Left"/> or <see cref="UIAlignment.Right"/>.
 		/// </param>
 		/// <param name="alignY">
 		///	The y alignment type.
-		/// The following is the acceptable values that make the game aligns 2D graphic elements differently:
-		/// <see cref="UIAlignment.Top"/>, <see cref="UIAlignment.Bottom"/>, and <see cref="UIAlignment.Center"/>.
+		/// The following is the list of acceptable values that make the game aligns 2D graphic elements differently:
+		/// <see cref="UIAlignment.Top"/> or <see cref="UIAlignment.Bottom"/>.
 		/// </param>
 		public static void SetAlignmentType(UIAlignment alignX, UIAlignment alignY)
 			=> Function.Call(Hash.SET_SCRIPT_GFX_ALIGN, (byte)alignX, (byte)alignY);

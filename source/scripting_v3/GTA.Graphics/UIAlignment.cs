@@ -44,13 +44,6 @@ namespace GTA.Graphics
 		/// </remarks>
 		Bottom = 66,
 		/// <summary>
-		/// The center alignment value, which can be used for both horizontal and vertical alignment.
-		/// </summary>
-		/// <remarks>
-		/// Represents 'C' out of the ASCII characters.
-		/// </remarks>
-		Center = 67,
-		/// <summary>
 		/// The canonical value of the ignore value (represents 'I' in ASCII characters),
 		/// where script 2d draw commands skips the UI alignment.
 		/// </summary>
