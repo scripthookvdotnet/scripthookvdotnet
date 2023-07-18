@@ -1067,7 +1067,7 @@ namespace SHVDN
 
 		internal static void HandleUnhandledException(object sender, UnhandledExceptionEventArgs args)
 		{
-			Log.Message(Log.Level.Error, args.IsTerminating ? "Caught fatal unhandled exception:" : "Caught unhandled exception:", Environment.NewLine, args.ExceptionObject.ToString());
+			Log.Message(Log.Level.Error, $"Caught unhandled exception:", Environment.NewLine, args.ExceptionObject.ToString());
 
 			if (sender is not Script script)
 			{
@@ -1083,7 +1083,7 @@ namespace SHVDN
 
 			// Show a notification with the script crash information
 			ScriptDomain domain = ScriptDomain.CurrentDomain;
-			if (domain != null && domain._executingScript != null && !args.IsTerminating)
+			if (domain != null && domain._executingScript != null)
 			{
 				unsafe
 				{
