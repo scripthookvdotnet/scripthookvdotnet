@@ -30,6 +30,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Script"/> class.
+		/// This constructor is called from the script domain of ScriptHookVDotNet and is
+		/// not intended to be used directly from your code.
+		/// To instantiate scripts from a running script instance, use <see cref="InstantiateScript{T}"/>.
+		/// </summary>
 		public Script()
 		{
 			Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this)?.Name ?? string.Empty;
@@ -107,7 +113,7 @@ namespace GTA
 			}
 		}
 		/// <summary>
-		/// An event that is raised when a key is first pressed.
+		/// An event that is raised when a key is first pressed or being pressed for more than about half a second.
 		/// The <see cref="System.Windows.Forms.KeyEventArgs"/> contains the key that was pressed.
 		/// </summary>
 		public event WinForms.KeyEventHandler KeyDown
@@ -167,7 +173,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets an INI file associated with this <see cref="Script"/>.
-		/// The File will be in the same location as this <see cref="Script"/> but with an extension of ".ini".
+		/// The file will be in the same location as this <see cref="Script"/> but with an extension of ".ini".
 		/// Use this to save and load settings for this <see cref="Script"/>.
 		/// </summary>
 		public ScriptSettings Settings
@@ -188,7 +194,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the interval in ms between <see cref="Tick"/> for this <see cref="Script"/>.
+		/// Gets or sets the minumum interval in ms between <see cref="Tick"/> for this <see cref="Script"/>.
 		/// Default value is 0 meaning the event will execute once each frame.
 		/// </summary>
 		protected int Interval
@@ -277,6 +283,9 @@ namespace GTA
 		/// <summary>
 		/// Spawns a new <see cref="Script"/> instance of the specified type.
 		/// </summary>
+		/// <remarks>
+		/// You need to call this method on the main script thread so instantiation can suceeed.
+		/// </remarks>
 		public static T InstantiateScript<T>() where T : Script
 		{
 			var task = new InstantiateScriptTask { _type = typeof(T) };
