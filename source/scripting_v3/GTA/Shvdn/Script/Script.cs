@@ -285,6 +285,8 @@ namespace GTA
 		/// </summary>
 		/// <remarks>
 		/// You need to call this method on the main script thread so instantiation can suceeed.
+		/// Do not call this method in field initializers or your script constructor, and doing so
+		/// will result in failure to instantiate a new script instance.
 		/// </remarks>
 		public static T InstantiateScript<T>() where T : Script
 		{
