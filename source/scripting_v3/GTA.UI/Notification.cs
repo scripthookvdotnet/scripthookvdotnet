@@ -3,6 +3,9 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
+using System.ComponentModel;
+using GTA.Graphics;
 using GTA.Native;
 
 namespace GTA.UI
@@ -52,15 +55,185 @@ namespace GTA.UI
 		#endregion
 
 		/// <summary>
+		/// Displays the ticker message string in the top left of the HUD.
+		/// </summary>
+		/// <param name="message">
+		/// The message body.
+		/// </param>
+		/// <param name="isImportant">
+		/// If set to <see langword="true"/>, the message will flash and may have a custom background color
+		/// or vibrate the controller.
+		/// </param>
+		/// <param name="cacheMessage">
+		/// If set to <see langword="true"/>, the message will be cached in the pause menu.
+		/// </param>
+		/// <returns>
+		/// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+		/// </returns>
+		public static FeedItem PostTicker(string message, bool isImportant, bool cacheMessage = true)
+		{
+			BeginTextCommandForFeedPostAndPushLongString(message);
+
+			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER, isImportant, cacheMessage);
+			return handle != -1 ? new FeedItem(handle) : null;
+		}
+		/// <summary>
+		/// Displays the ticker message string in the top left of the HUD even if feed is paused.
+		/// </summary>
+		/// <inheritdoc cref="PostTicker(string, bool, bool)"/>
+		public static FeedItem PostTickerForced(string message, bool isImportant, bool cacheMessage = true)
+		{
+			BeginTextCommandForFeedPostAndPushLongString(message);
+
+			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER_FORCED, isImportant, cacheMessage);
+			return handle != -1 ? new FeedItem(handle) : null;
+		}
+		/// <summary>
+		/// Displays the ticker message string in the top left of the HUD
+		/// containing tokens (i.e. <c>~BLIP_INFO_ICON~</c>).
+		/// </summary>
+		/// <inheritdoc cref="PostTicker(string, bool, bool)"/>
+		public static FeedItem PostTickerWithTokens(string message, bool isImportant, bool cacheMessage = true)
+		{
+			BeginTextCommandForFeedPostAndPushLongString(message);
+
+			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER_WITH_TOKENS, isImportant, cacheMessage);
+			return handle != -1 ? new FeedItem(handle) : null;
+		}
+		/// <summary>
+		/// Displays the text message contact image and localised text message string in the top left of the HUD.
+		/// </summary>
+		/// <param name="message">
+		/// The message body.
+		/// </param>
+		/// <param name="txd">
+		/// The texture dictionary for the contact image used in the text message.
+		/// </param>
+		/// <param name="textureName">
+		/// The texture name string for the contact image used in the text message
+		/// </param>
+		/// <param name="isImportant">
+		/// If set to <see langword="true"/>, the message will flash and may have a custom background color
+		/// or vibrate the controller.
+		/// </param>
+		/// <param name="icon">
+		/// The icon type.
+		/// </param>
+		/// <param name="characterName">
+		/// The character name, that is to say the sender.
+		/// </param>
+		/// <param name="subtitle">
+		/// The subtitle (subject) of the text message.
+		/// </param>
+		/// <returns>
+		/// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+		/// </returns>
+		public static FeedItem PostMessageText(string message, Txd txd, string textureName, bool isImportant, FeedTextIcon icon,
+			string characterName, string subtitle = null)
+		{
+			BeginTextCommandForFeedPostAndPushLongString(message);
+
+			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT, txd, textureName,
+				isImportant, (int)icon, characterName, subtitle);
+			return handle != -1 ? new FeedItem(handle) : null;
+		}
+		/// <inheritdoc cref="PostUnlockTitleUpdateWithColor(string, string, FeedUnlockIcon, bool, HudColor, bool)"/>
+		public static FeedItem PostUnlock(string message, string title, FeedUnlockIcon iconType)
+		{
+			BeginTextCommandForFeedPostAndPushLongString(message);
+
+			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK, title, (int)iconType, null);
+			return handle != -1 ? new FeedItem(handle) : null;
+		}
+		/// <inheritdoc cref="PostUnlockTitleUpdateWithColor(string, string, FeedUnlockIcon, bool, HudColor, bool)"/>
+		public static FeedItem PostUnlockTitleUpdate(string message, string title, FeedUnlockIcon iconType, bool isImportant = true)
+		{
+			BeginTextCommandForFeedPostAndPushLongString(message);
+
+			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK, title, (int)iconType, null, isImportant);
+			return handle != -1 ? new FeedItem(handle) : null;
+		}
+		/// <summary>
+		/// Displays the unlock component.
+		/// </summary>
+		/// <param name="message">
+		/// The message body.
+		/// </param>
+		/// <param name="title">
+		/// The unlock title.
+		/// </param>
+		/// <param name="iconType">
+		/// The icon type.
+		/// </param>
+		/// <param name="isImportant">
+		/// If set to <see langword="true"/>, the message will flash and may have a custom background color
+		/// or vibrate the controller.
+		/// </param>
+		/// <param name="titleColor">
+		/// The text color of <paramref name="title"/>.
+		/// </param>
+		/// <param name="titleIsLiteral">
+		/// If set to <see langword="true"/>, the title string will be marked as the literal string,
+		/// which is the same as in <see cref="PostUnlock(string, string, FeedUnlockIcon)"/> and
+		/// <see cref="PostUnlockTitleUpdate(string, string, FeedUnlockIcon, bool)"/>.
+		/// </param>
+		/// <returns>
+		/// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+		/// </returns>
+		public static FeedItem PostUnlockTitleUpdateWithColor(string message, string title, FeedUnlockIcon iconType, bool isImportant = true, HudColor titleColor = HudColor.PureWhite, bool titleIsLiteral = true)
+		{
+			BeginTextCommandForFeedPostAndPushLongString(message);
+
+			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK, title, (int)iconType, null, isImportant,
+				(int)titleColor, titleIsLiteral);
+			return handle != -1 ? new FeedItem(handle) : null;
+		}
+		/// <summary>
+		/// Displays the MP Versus feed component used when you die in multiplayer.
+		/// </summary>
+		/// <param name="char1Txd">The texture dictionary for the character 1 (left side).</param>
+		/// <param name="char1TextureName">The texture name for the character 1 (left side).</param>
+		/// <param name="val1">The integral value for the character 1 (left side).</param>
+		/// <param name="char2Txd">The texture dictionary for the character 2 (right side).</param>
+		/// <param name="char2TextureName">The texture name for the character 2 (right side).</param>
+		/// <param name="val2">The integral value for the character 2 (right side).</param>
+		/// <param name="customColor1">
+		/// The custom color for the character 1 (left side) if set to a valid HUD color.
+		/// </param>
+		/// <param name="customColor2">
+		/// The custom color for the character 2 (right side) if set to a valid HUD color.
+		/// </param>
+		/// <returns>
+		/// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+		/// </returns>
+		public static FeedItem PostVersusTitleUpdate(Txd char1Txd, string char1TextureName, int val1, Txd char2Txd,
+			string char2TextureName, int val2, HudColor customColor1 = HudColor.Invalid,
+			HudColor customColor2 = HudColor.Invalid)
+		{
+			// We can't use a custom string for versus feed, so just use the empty string
+			// In the exe, it is hardcoded to insert the string for VERSUS_SHORT at the center of the versus feed string template
+			Function.Call(Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, SHVDN.NativeMemory.NullString);
+			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_VERSUS_TU, char1Txd, char1TextureName,
+				val1, char2Txd, char2TextureName, val2, (int)customColor1, (int)customColor2);
+			return handle != -1 ? new FeedItem(handle) : null;
+		}
+
+		private static void BeginTextCommandForFeedPostAndPushLongString(string message)
+		{
+			Function.Call(Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, SHVDN.NativeMemory.CellEmailBcon);
+			SHVDN.NativeFunc.PushLongString(message);
+		}
+
+		/// <summary>
 		/// Creates a <see cref="Notification"/> above the minimap with the given message.
 		/// </summary>
 		/// <param name="message">The message in the notification.</param>
 		/// <param name="blinking">if set to <see langword="true" /> the notification will blink.</param>
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide(int)"/>.</returns>
+		[Obsolete("Use Notification.PostMessageText instead.")]
 		public static int Show(string message, bool blinking = false)
 		{
-			Function.Call(Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, SHVDN.NativeMemory.CellEmailBcon);
-			SHVDN.NativeFunc.PushLongString(message);
+			BeginTextCommandForFeedPostAndPushLongString(message);
 			return Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER, blinking, true);
 		}
 
@@ -79,12 +252,13 @@ namespace GTA.UI
 		/// <param name="fadeIn">If <see langword="true" /> the message will fade in.</param>
 		/// <param name="blinking">if set to <see langword="true" /> the notification will blink.</param>
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide(int)"/>.</returns>
+		[Obsolete("Notification.Show is obsolete since it may fail to draw a texture icon for a text message." +
+			"Use Notification.PostMessageText instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static int Show(NotificationIcon icon, string sender, string subject, string message, bool fadeIn = false, bool blinking = false)
 		{
 			string iconName = s_iconNames[(int)icon];
 
-			Function.Call(Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, SHVDN.NativeMemory.CellEmailBcon);
-			SHVDN.NativeFunc.PushLongString(message);
+			BeginTextCommandForFeedPostAndPushLongString(message);
 			return Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT, iconName, iconName, fadeIn, 1, sender, subject);
 		}
 
