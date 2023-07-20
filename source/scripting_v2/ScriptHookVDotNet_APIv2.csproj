@@ -19,6 +19,7 @@
     <DocumentationFile>..\..\bin\Release\ScriptHookVDotNet2.xml</DocumentationFile>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <PathMap>$(MSBuildProjectDirectory)=$(AssemblyName)</PathMap>
   </PropertyGroup>
   <PropertyGroup>
     <Version>2.11.6.0</Version>
