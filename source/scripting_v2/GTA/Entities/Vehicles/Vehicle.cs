@@ -1072,7 +1072,7 @@ namespace GTA
 
 		public void ApplyDamage(Vector3 loc, float damageAmount, float radius)
 		{
-			Function.Call(Hash.SET_VEHICLE_DAMAGE, loc.X, loc.Y, loc.Z, damageAmount, radius, true);
+			Function.Call(Hash.SET_VEHICLE_DAMAGE, Handle, loc.X, loc.Y, loc.Z, damageAmount, radius, true);
 		}
 
 		#endregion
