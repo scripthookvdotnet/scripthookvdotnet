@@ -1481,20 +1481,8 @@ namespace GTA
 
 		public bool HasBombBay => HasBone("door_hatch_l") && HasBone("door_hatch_r");
 
-		public void OpenBombBay()
-		{
-			if (HasBombBay)
-			{
-				Function.Call(Hash._OPEN_VEHICLE_BOMB_BAY, Handle);
-			}
-		}
-		public void CloseBombBay()
-		{
-			if (HasBombBay)
-			{
-				Function.Call(Hash._0x3556041742A0DC74, Handle);
-			}
-		}
+		public void OpenBombBay() => Function.Call(Hash._OPEN_VEHICLE_BOMB_BAY, Handle);
+		public void CloseBombBay() => Function.Call(Hash._0x3556041742A0DC74, Handle);
 
 		public void SetHeliYawPitchRollMult(float mult)
 		{
@@ -1516,38 +1504,14 @@ namespace GTA
 			}
 		}
 
-		public void DropCargobobHook(CargobobHook hookType)
-		{
-			if (Model.IsCargobob)
-			{
-				Function.Call(Hash._0x7BEB0C7A235F6F3B, Handle, (int)(hookType));
-			}
-		}
+		public void DropCargobobHook(CargobobHook hookType) => Function.Call(Hash._0x7BEB0C7A235F6F3B, Handle, (int)(hookType));
 
-		public void RemoveCargobobHook()
-		{
-			if (Model.IsCargobob)
-			{
-				Function.Call(Hash._0x9768CF648F54C804, Handle);
-			}
-		}
+		public void RemoveCargobobHook() => Function.Call(Hash._0x9768CF648F54C804, Handle);
 
 		public bool IsCargobobHookActive()
-		{
-			if (Model.IsCargobob)
-			{
-				return Function.Call<bool>(Hash._0x1821D91AD4B56108, Handle) || Function.Call<bool>(Hash._0x6E08BF5B3722BAC9, Handle);
-			}
-
-			return false;
-		}
+			=> Function.Call<bool>(Hash._0x1821D91AD4B56108, Handle) || Function.Call<bool>(Hash._0x6E08BF5B3722BAC9, Handle);
 		public bool IsCargobobHookActive(CargobobHook hookType)
 		{
-			if (!Model.IsCargobob)
-			{
-				return false;
-			}
-
 			switch (hookType)
 			{
 				case CargobobHook.Hook:
