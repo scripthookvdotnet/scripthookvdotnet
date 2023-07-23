@@ -667,6 +667,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets the value indicating whether the aircraft engine of this <see cref="Vehicle"/> can degrade.
+		/// </summary>
 		public bool CanEngineDegrade
 		{
 			set => Function.Call(Hash.SET_VEHICLE_ENGINE_CAN_DEGRADE, Handle, value);
@@ -821,7 +824,10 @@ namespace GTA
 
 		/// <summary>
 		/// Gets or sets the high gear value of this <see cref="Vehicle"/>.
+		/// The highest acceptable value is 10 since v1.0.1604.0 and is 7 in earlier game versions, so you cannot
+		/// corrupt the memory region for this <see cref="Vehicle"/>.
 		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the passed value is too high.</exception>
 		public int HighGear
 		{
 			get
@@ -1043,7 +1049,8 @@ namespace GTA
 		public float MaxTraction => Function.Call<float>(Hash.GET_VEHICLE_MAX_TRACTION, Handle);
 
 		/// <summary>
-		/// Gets the speed the drive wheels are turning at, This is the value used for the dashboard speedometers(after being converted to mph).
+		/// Gets the speed the drive wheels are turning at.
+		/// This is the value used for the dashboard speedometers (after being converted to mph).
 		/// </summary>
 		public float WheelSpeed
 		{
@@ -1246,7 +1253,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets time left before this <see cref="Vehicle"/> alarm stops.
 		/// If greater than zero, the vehicle alarm will be sounding.
-		/// the value is up to 65534.
+		/// The highest acceptable value is 65534.
 		/// </summary>
 		/// <value>
 		/// The time left before this <see cref="Vehicle"/> alarm stops.
@@ -1644,6 +1651,10 @@ namespace GTA
 
 		public bool IsFrontBumperBrokenOff => Function.Call<bool>(Hash.IS_VEHICLE_BUMPER_BROKEN_OFF, Handle, true);
 
+		/// <summary>
+		/// Sets the value that indicates whether this <see cref="Vehicle"/> has strong axles
+		/// so that its axles dont break easily.
+		/// </summary>
 		public bool IsAxlesStrong
 		{
 			set => Function.Call<bool>(Hash.SET_VEHICLE_HAS_STRONG_AXLES, Handle, value);
@@ -2119,6 +2130,12 @@ namespace GTA
 		/// </value>
 		public bool HasForks => Bones.Contains("forks");
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> has tow arms.
+		/// </summary>
+		/// <value>
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has tow arms; otherwise, <see langword="false" />.
+		/// </value>
 		public bool HasTowArm => Bones.Contains("tow_arm");
 
 		/// <summary>
@@ -2138,6 +2155,11 @@ namespace GTA
 		/// Detaches specified vehicle from any tow truck it might be attached through, loops through all vehicles so could be expensive.
 		/// If you know the tow truck <see cref="Vehicle"/> that tows this <see cref="Vehicle"/>, you should call <see cref="DetachTowedVehicle"/> on the tow truck.
 		/// </summary>
+		/// <remarks>
+		/// Although <c>DETACH_VEHICLE_FROM_ANY_TOW_TRUCK</c> returns a bool value that indicates whether the <see cref="Vehicle"/>
+		/// has been detached from a tow truck, this method returns nothing in favor of the compatibility for scripts
+		/// built against v3.6.0 or earlier versions.
+		/// </remarks>
 		public void DetachFromTowTruck()
 		{
 			Function.Call(Hash.DETACH_VEHICLE_FROM_ANY_TOW_TRUCK, Handle);
@@ -2156,6 +2178,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the <see cref="Vehicle"/> this tow truck <see cref="Vehicle"/> is towing.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="Vehicle"/> if this <see cref="Vehicle"/> is towing one; otherwise, <see langword="null"/>.
+		/// </returns>
 		public Vehicle TowedVehicle
 		{
 			get
@@ -2169,8 +2197,17 @@ namespace GTA
 
 		#region Carbobob
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> has a bomb bay.
+		/// </summary>
+		/// <returns>
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has a bomb bay; otherwise, <see langword="false" />.
+		/// </returns>
 		public bool HasBombBay => Bones.Contains("door_hatch_l") && Bones.Contains("door_hatch_r");
 
+		/// <summary>
+		/// Opens the bomb bay of this <see cref="Vehicle"/>.
+		/// </summary>
 		public void OpenBombBay()
 		{
 			if (HasBombBay)
@@ -2179,6 +2216,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Closes the bomb bay of this <see cref="Vehicle"/>.
+		/// </summary>
 		public void CloseBombBay()
 		{
 			if (HasBombBay)
@@ -2187,6 +2227,13 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Sets the heli control lagging scalar.
+		/// The control lags more with smaller value.
+		/// </summary>
+		/// <remarks>
+		/// Does nothing if <paramref name="mult"/> is smaller than 0.0f or greater than 1.0f.
+		/// </remarks>
 		public void SetHeliYawPitchRollMult(float mult)
 		{
 			if (IsHeliOrBlimp && mult >= 0.0f && mult <= 1.0f)
@@ -2195,6 +2242,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Generates the pick up rope for cargobob.
+		/// </summary>
 		public void DropCargobobHook(CargobobHook hook)
 		{
 			if (Model.IsCargobob)
@@ -2203,6 +2253,9 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Removes the pick up rope for cargobob.
+		/// </summary>
 		public void RetractCargobobHook()
 		{
 			if (Model.IsCargobob)
@@ -2211,6 +2264,10 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
+		/// pick-up magent gadget.
+		/// </summary>
 		public bool IsCargobobHookActive()
 		{
 			if (Model.IsCargobob)
@@ -2220,6 +2277,10 @@ namespace GTA
 
 			return false;
 		}
+		/// <summary>
+		/// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
+		/// pick-up magent gadget.
+		/// </summary>
 		public bool IsCargobobHookActive(CargobobHook hook)
 		{
 			if (Model.IsCargobob)
