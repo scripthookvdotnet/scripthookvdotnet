@@ -2284,16 +2284,8 @@ namespace GTA
 		/// Sets the heli control lagging scalar.
 		/// The control lags more with smaller value.
 		/// </summary>
-		/// <remarks>
-		/// Does nothing if <paramref name="mult"/> is smaller than 0.0f or greater than 1.0f.
-		/// </remarks>
 		public void SetHeliYawPitchRollMult(float mult)
-		{
-			if (IsHeliOrBlimp && mult >= 0.0f && mult <= 1.0f)
-			{
-				Function.Call(Hash.SET_HELI_CONTROL_LAGGING_RATE_SCALAR, Handle, mult);
-			}
-		}
+			=> Function.Call(Hash.SET_HELI_CONTROL_LAGGING_RATE_SCALAR, Handle, mult);
 
 		/// <summary>
 		/// Generates the pick up rope for cargobob.

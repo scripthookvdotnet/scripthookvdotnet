@@ -1485,24 +1485,7 @@ namespace GTA
 		public void CloseBombBay() => Function.Call(Hash._0x3556041742A0DC74, Handle);
 
 		public void SetHeliYawPitchRollMult(float mult)
-		{
-			if (IsVehicleHeliOrBlimp(Handle) && mult >= 0.0f && mult <= 1.0f)
-			{
-				Function.Call(Hash._0x6E0859B530A365CC, Handle, mult);
-			}
-
-			bool IsVehicleHeliOrBlimp(int handle)
-			{
-				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle == 0)
-				{
-					return false;
-				}
-
-				uint vehicleTypeValue = (uint)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.VehicleTypeOffsetInCVehicle);
-				return (vehicleTypeValue - 8) <= 1;
-			}
-		}
+			=> Function.Call(Hash._0x6E0859B530A365CC, Handle, mult);
 
 		public void DropCargobobHook(CargobobHook hookType) => Function.Call(Hash._0x7BEB0C7A235F6F3B, Handle, (int)(hookType));
 
