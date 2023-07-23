@@ -1714,6 +1714,35 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_DROPS_MONEY_WHEN_BLOWN_UP, Handle, value);
 		}
 
+		/// <summary>
+		/// Applies damage deformation to this <see cref="Vehicle"/>.
+		/// You might want to pass <paramref name="damage"/> and <paramref name="deformation"/> where the product is
+		/// larger than 5000 to see a observable result.
+		/// </summary>
+		/// <param name="position">The coordinates where the damage is applied to the <see cref="Vehicle"/>.</param>
+		/// <param name="damage">
+		/// Scales how much damage is applied to the <see cref="Vehicle"/>.
+		/// Not known whether the outcome will be exactly the same if this parameter and <paramref name="deformation"/>
+		/// are passed in the reversed order.
+		/// </param>
+		/// <param name="deformation">
+		/// Sets how much the vehicle is deformed by (not exactly a radius parameter).
+		/// Not known whether the outcome will be exactly the same if this parameter and <paramref name="deformation"/>
+		/// are passed in the reversed order.
+		/// </param>
+		/// <param name="localDamage">
+		/// If <see langword="true"/>, this method will apply the damage local to the <see cref="Vehicle"/>'s space.
+		/// If <see langword="false"/>, this method will apply the damage in the world space.
+		/// You would likely set this parameter to <see langword="true"/> in most cases.
+		/// </param>
+		/// <remarks>
+		/// Does not deal damage to any health values.
+		/// </remarks>
+		public void ApplyDamageDeformation(Vector3 position, float damage, float deformation, bool localDamage)
+		{
+			Function.Call(Hash.SET_VEHICLE_DAMAGE, Handle, position.X, position.Y, position.Z, damage, deformation, localDamage);
+		}
+		[Obsolete("Use ApplyDamageDeformation instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public void ApplyDamage(Vector3 position, float damageAmount, float radius)
 		{
 			Function.Call(Hash.SET_VEHICLE_DAMAGE, Handle, position.X, position.Y, position.Z, damageAmount, radius);
@@ -2146,6 +2175,42 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_TOW_TRUCK_ARM_POSITION, Handle, value);
 		}
 
+		/// <summary>
+		/// Attaches a vehicle to this tow truck <see cref="Vehicle"/> if this <see cref="Vehicle"/> has
+		/// a tow arm gadget.
+		/// </summary>
+		/// <param name="vehicle">The <see cref="Vehicle"/> to tow.</param>
+		/// <param name="attachPointOffset">
+		/// The offset from the base position of <paramref name="vehicle"/>.
+		/// </param>
+		/// <remarks>
+		/// This method does not reposition the vehicles.
+		/// Try and position the vehicle around 0.5m behind the truck if necessary.
+		/// </remarks>
+		public void TowVehicle(Vehicle vehicle, Vector3 attachPointOffset)
+		{
+			Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicle, -1,
+				attachPointOffset.X, attachPointOffset.Y, attachPointOffset.Z);
+		}
+		/// <summary>
+		/// Attaches a vehicle to this tow truck <see cref="Vehicle"/> if this <see cref="Vehicle"/> has
+		/// a tow arm gadget.
+		/// </summary>
+		/// <param name="vehicleBone">The bone that belong to the <see cref="Vehicle"/> to tow.</param>
+		/// <param name="attachPointOffset">
+		/// The offset from the position of <paramref name="vehicleBone"/>.
+		/// </param>
+		/// <remarks>
+		/// This method does not reposition the vehicles.
+		/// Try and position the vehicle around 0.5m behind the truck if necessary.
+		/// </remarks>
+		public void TowVehicle(EntityBone vehicleBone, Vector3 attachPointOffset)
+		{
+			Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicleBone.Owner, vehicleBone.Index,
+				attachPointOffset.X, attachPointOffset.Y, attachPointOffset.Z);
+		}
+		[Obsolete("Vehicle.TowVehicle(Vehicle, bool) is obsolete because the bone index parameter is incorrectly used " +
+			"as a bool parameter. Use one of the other overload instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public void TowVehicle(Vehicle vehicle, bool rear)
 		{
 			Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicle.Handle, rear, 0f, 0f, 0f);
