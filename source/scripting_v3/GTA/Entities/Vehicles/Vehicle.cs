@@ -2273,24 +2273,12 @@ namespace GTA
 		/// <summary>
 		/// Opens the bomb bay of this <see cref="Vehicle"/>.
 		/// </summary>
-		public void OpenBombBay()
-		{
-			if (HasBombBay)
-			{
-				Function.Call(Hash.OPEN_BOMB_BAY_DOORS, Handle);
-			}
-		}
+		public void OpenBombBay() => Function.Call(Hash.OPEN_BOMB_BAY_DOORS, Handle);
 
 		/// <summary>
 		/// Closes the bomb bay of this <see cref="Vehicle"/>.
 		/// </summary>
-		public void CloseBombBay()
-		{
-			if (HasBombBay)
-			{
-				Function.Call(Hash.CLOSE_BOMB_BAY_DOORS, Handle);
-			}
-		}
+		public void CloseBombBay() => Function.Call(Hash.CLOSE_BOMB_BAY_DOORS, Handle);
 
 		/// <summary>
 		/// Sets the heli control lagging scalar.
@@ -2311,52 +2299,33 @@ namespace GTA
 		/// Generates the pick up rope for cargobob.
 		/// </summary>
 		public void DropCargobobHook(CargobobHook hook)
-		{
-			if (Model.IsCargobob)
-			{
-				Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, (int)hook);
-			}
-		}
+			=> Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, (int)hook);
 
 		/// <summary>
 		/// Removes the pick up rope for cargobob.
 		/// </summary>
 		public void RetractCargobobHook()
-		{
-			if (Model.IsCargobob)
-			{
-				Function.Call(Hash.REMOVE_PICK_UP_ROPE_FOR_CARGOBOB, Handle);
-			}
-		}
+			=> Function.Call(Hash.REMOVE_PICK_UP_ROPE_FOR_CARGOBOB, Handle);
 
 		/// <summary>
 		/// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
 		/// pick-up magent gadget.
 		/// </summary>
 		public bool IsCargobobHookActive()
-		{
-			if (Model.IsCargobob)
-			{
-				return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle) || Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
-			}
+			=> Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle) || Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
 
-			return false;
-		}
 		/// <summary>
 		/// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
 		/// pick-up magent gadget.
 		/// </summary>
 		public bool IsCargobobHookActive(CargobobHook hook)
 		{
-			if (Model.IsCargobob)
+			switch (hook)
 			{
-				switch (hook)
-				{
-					case CargobobHook.Hook:
-						return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle);
-					case CargobobHook.Magnet:
-						return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
-				}
+				case CargobobHook.Hook:
+					return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle);
+				case CargobobHook.Magnet:
+					return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
 			}
 
 			return false;
