@@ -1414,7 +1414,7 @@ namespace GTA
 		/// </param>
 		public void SetScriptedLightSetting(ScriptedVehicleLightSetting lightSetting)
 		{
-			Function.Call(Hash.SET_VEHICLE_LIGHTS, Handle,(int)lightSetting);
+			Function.Call(Hash.SET_VEHICLE_LIGHTS, Handle, (int)lightSetting);
 		}
 
 		/// <summary>
@@ -2149,7 +2149,7 @@ namespace GTA
 
 		#endregion
 
-		#region Towing
+		#region Vehicle Gadgets
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> has forks.
@@ -2158,6 +2158,89 @@ namespace GTA
 		///   <see langword="true" /> if this <see cref="Vehicle"/> has forks; otherwise, <see langword="false" />.
 		/// </value>
 		public bool HasForks => Bones.Contains("forks");
+
+		#region Carbobob
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> has a bomb bay.
+		/// </summary>
+		/// <returns>
+		///   <see langword="true" /> if this <see cref="Vehicle"/> has a bomb bay; otherwise, <see langword="false" />.
+		/// </returns>
+		public bool HasBombBay => Bones.Contains("door_hatch_l") && Bones.Contains("door_hatch_r");
+
+		/// <summary>
+		/// Opens the bomb bay of this <see cref="Vehicle"/>.
+		/// </summary>
+		public void OpenBombBay() => Function.Call(Hash.OPEN_BOMB_BAY_DOORS, Handle);
+
+		/// <summary>
+		/// Closes the bomb bay of this <see cref="Vehicle"/>.
+		/// </summary>
+		public void CloseBombBay() => Function.Call(Hash.CLOSE_BOMB_BAY_DOORS, Handle);
+
+		/// <summary>
+		/// Sets the heli control lagging scalar.
+		/// The control lags more with smaller value.
+		/// </summary>
+		public void SetHeliYawPitchRollMult(float mult)
+			=> Function.Call(Hash.SET_HELI_CONTROL_LAGGING_RATE_SCALAR, Handle, mult);
+
+		/// <summary>
+		/// Generates the pick up rope for cargobob.
+		/// </summary>
+		public void DropCargobobHook(CargobobHook hook)
+			=> Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, (int)hook);
+
+		/// <summary>
+		/// Removes the pick up rope for cargobob.
+		/// </summary>
+		public void RetractCargobobHook()
+			=> Function.Call(Hash.REMOVE_PICK_UP_ROPE_FOR_CARGOBOB, Handle);
+
+		/// <summary>
+		/// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
+		/// pick-up magent gadget.
+		/// </summary>
+		public bool IsCargobobHookActive()
+			=> Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle) || Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
+
+		/// <summary>
+		/// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
+		/// pick-up magent gadget.
+		/// </summary>
+		public bool IsCargobobHookActive(CargobobHook hook)
+		{
+			switch (hook)
+			{
+				case CargobobHook.Hook:
+					return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle);
+				case CargobobHook.Magnet:
+					return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
+			}
+
+			return false;
+		}
+
+		public void CargoBobMagnetGrabVehicle()
+		{
+			if (IsCargobobHookActive(CargobobHook.Magnet))
+			{
+				Function.Call(Hash.SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, true);
+			}
+		}
+
+		public void CargoBobMagnetReleaseVehicle()
+		{
+			if (IsCargobobHookActive(CargobobHook.Magnet))
+			{
+				Function.Call(Hash.SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, false);
+			}
+		}
+
+		#endregion
+
+		#region Towing
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> has tow arms.
@@ -2260,86 +2343,102 @@ namespace GTA
 
 		#endregion
 
-		#region Carbobob
+		#region Trailer Attach Point
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="Vehicle"/> has a bomb bay.
+		/// Gets a trailer vehicle if this <see cref="Vehicle"/> has trailer attach points and one of them has a trailer.
 		/// </summary>
 		/// <returns>
-		///   <see langword="true" /> if this <see cref="Vehicle"/> has a bomb bay; otherwise, <see langword="false" />.
+		/// A trailer <see cref="Vehicle"/> if this <see cref="Vehicle"/> has a trailer attach point (gadget) that has
+		/// a trailer <see cref="Vehicle"/>; otherwise, <see langword="null"/>.
 		/// </returns>
-		public bool HasBombBay => Bones.Contains("door_hatch_l") && Bones.Contains("door_hatch_r");
-
-		/// <summary>
-		/// Opens the bomb bay of this <see cref="Vehicle"/>.
-		/// </summary>
-		public void OpenBombBay() => Function.Call(Hash.OPEN_BOMB_BAY_DOORS, Handle);
-
-		/// <summary>
-		/// Closes the bomb bay of this <see cref="Vehicle"/>.
-		/// </summary>
-		public void CloseBombBay() => Function.Call(Hash.CLOSE_BOMB_BAY_DOORS, Handle);
-
-		/// <summary>
-		/// Sets the heli control lagging scalar.
-		/// The control lags more with smaller value.
-		/// </summary>
-		public void SetHeliYawPitchRollMult(float mult)
-			=> Function.Call(Hash.SET_HELI_CONTROL_LAGGING_RATE_SCALAR, Handle, mult);
-
-		/// <summary>
-		/// Generates the pick up rope for cargobob.
-		/// </summary>
-		public void DropCargobobHook(CargobobHook hook)
-			=> Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, (int)hook);
-
-		/// <summary>
-		/// Removes the pick up rope for cargobob.
-		/// </summary>
-		public void RetractCargobobHook()
-			=> Function.Call(Hash.REMOVE_PICK_UP_ROPE_FOR_CARGOBOB, Handle);
-
-		/// <summary>
-		/// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
-		/// pick-up magent gadget.
-		/// </summary>
-		public bool IsCargobobHookActive()
-			=> Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle) || Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
-
-		/// <summary>
-		/// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
-		/// pick-up magent gadget.
-		/// </summary>
-		public bool IsCargobobHookActive(CargobobHook hook)
+		public Vehicle TrailerVehicle
 		{
-			switch (hook)
+			get
 			{
-				case CargobobHook.Hook:
-					return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle);
-				case CargobobHook.Magnet:
-					return Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
-			}
-
-			return false;
-		}
-
-		public void CargoBobMagnetGrabVehicle()
-		{
-			if (IsCargobobHookActive(CargobobHook.Magnet))
-			{
-				Function.Call(Hash.SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, true);
+				unsafe
+				{
+					int trailerHandle;
+					return Function.Call<bool>(Hash.GET_VEHICLE_TRAILER_VEHICLE, Handle, &trailerHandle)
+						? new Vehicle(trailerHandle)
+						: null;
+				}
 			}
 		}
 
-		public void CargoBobMagnetReleaseVehicle()
+		/// <summary>
+		/// Attaches this <see cref="Vehicle"/> to a trailer using a trailer attach point instantly.
+		/// </summary>
+		/// <remarks>
+		/// Requires a <c>CVehicleTrailerAttachPoint</c> to sucessfully attach the <see cref="Vehicle"/> to a trailer.
+		/// </remarks>
+		public void AttachToTrailer(Vehicle trailer, float inverseMassScale = 1f)
+			=> Function.Call(Hash.ATTACH_VEHICLE_TO_TRAILER, Handle, trailer, inverseMassScale);
+
+		/// <summary>
+		/// Detaches this <see cref="Vehicle"/> from a trailer.
+		/// </summary>
+		public void DetachFromTrailer()
+			=> Function.Call(Hash.DETACH_VEHICLE_FROM_TRAILER, Handle);
+
+		/// <summary>
+		/// Checks if this (truck) <see cref="Vehicle"/> is attached to a trailer <see cref="Vehicle"/>.
+		/// </summary>
+		public bool IsAttachedToTrailer => Function.Call<bool>(Hash.IS_VEHICLE_ATTACHED_TO_TRAILER, Handle);
+
+		#endregion
+
+		#region Trailer Legs
+
+		/// <summary>
+		/// Instantly raises the trailers legs, useful when attaching a trailer in script to prevent popping.
+		/// </summary>
+		public void SetTrailerLegsRaised() => Function.Call(Hash.SET_TRAILER_LEGS_RAISED, Handle);
+
+		/// <summary>
+		/// <para>
+		/// Instantly lowers the trailers legs.
+		/// </para>
+		/// <para>
+		/// Currently not available in the game version earlier than v1.0.1103.2 (technically possible to backport the
+		/// feature for the earlier versions).
+		/// </para>
+		/// </summary>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown when called in one of the game version earlier than v1.0.1103.2.
+		/// </exception>
+		public void SetTrailerLegsLowered()
 		{
-			if (IsCargobobHookActive(CargobobHook.Magnet))
-			{
-				Function.Call(Hash.SET_CARGOBOB_PICKUP_MAGNET_ACTIVE, Handle, false);
-			}
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1103_2_Steam, nameof(Vehicle), nameof(SetTrailerLegsLowered));
+			Function.Call(Hash.SET_TRAILER_LEGS_LOWERED, Handle);
 		}
 
 		#endregion
+
+		#endregion
+
+		/// <summary>
+		/// Attaches this <see cref="Vehicle"/> on to the back of a trailer.
+		/// This limits the mass of the vehicle put onto the trailer to reduce physics issues.
+		/// </summary>
+		/// <param name="trailer">The trailer <see cref="Vehicle"/>.</param>
+		/// <param name="offset">
+		/// The offset of this <see cref="Vehicle"/>. Typically left as the same value as <see cref="Vector3.Zero"/>.
+		/// </param>
+		/// <param name="trailerOffset">
+		/// The offset of <paramref name="trailer"/>
+		/// </param>
+		/// <param name="rotation">
+		/// The rotation in <see cref="EulerRotationOrder.YXZ"/>.
+		/// </param>
+		/// <param name="physicalStrength">
+		/// The physical strength. Typically left as -1f.
+		/// </param>
+		public void AttachOnToTrailer(Vehicle trailer, Vector3 offset, Vector3 trailerOffset, Vector3 rotation, float physicalStrength)
+		{
+			Function.Call(Hash.ATTACH_VEHICLE_ON_TO_TRAILER, Handle, trailer, offset.X, offset.Y, offset.Z,
+				trailerOffset.X, trailerOffset.Y, trailerOffset.Z, rotation.X, rotation.Y, rotation.Z, physicalStrength);
+		}
 
 		#region Task
 
