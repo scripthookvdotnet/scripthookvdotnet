@@ -321,28 +321,30 @@ HANDLE hClrThread;
 HANDLE hClrWaitEvent;
 HANDLE hClrContinueEvent;
 
-// proper synchronization would cause a deadlock or timeout (for executing longer than 2 seconds) in DllMain,
-// so clean up stuff in a pseudo way
+// proper synchronization with event objects would cause a deadlock or timeout (for executing longer than 2 seconds)
+// in DllMain, so use a bool variable to tell procedures to the asi wants to get freed
 bool sClrThreadRequestedToExit = false;
 
 static DWORD CLRThreadProc(LPVOID lparam)
 {
+	// DllMain gets called before ScriptHookV starts script fibers, so wait until getting signaled by ScriptMain
+	WaitForSingleObject(hClrContinueEvent, INFINITE);
+
 	while (!sClrThreadRequestedToExit) {
-		// DllMain gets called before ScriptHookV starts script fibers, but this procedure will wait
-		// until getting signaled by ScriptMain
-		WaitForSingleObject(hClrContinueEvent, INFINITE);
 		ScriptHookVDotNet_ManagedInit();
 		sGameReloaded = false;
-		SetEvent(hClrWaitEvent);
 
-		// ScriptHookV's script fibers will be executed in the main thread,
-		// so we assume this code won't have trouble exiting the loop when the exe wants to exit
+		// ScriptHookV's script fibers will be executed in the main thread, so we assume this code won't have trouble
+		// exiting the loop after letting the main fiber execute
 		while (!sGameReloaded && !sClrThreadRequestedToExit) {
-			WaitForSingleObject(hClrContinueEvent, INFINITE);
 			ScriptHookVDotNet_ManagedTick();
 			SetEvent(hClrWaitEvent);
+			WaitForSingleObject(hClrContinueEvent, INFINITE);
 		}
 	}
+
+	// We want to safely let ScriptMain return when the asi is being freed
+	SetEvent(hClrWaitEvent);
 	return 0;
 }
 
@@ -351,14 +353,14 @@ static void ScriptMain()
 	// ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
 	sGameFiber = GetCurrentFiber();
 
-	// We need these info to swap the TLS context of the main thread when necessary to access
-	// a lot of game stuff such as a rage::SysMemAllocator instance
+	// We need these info to swap the TLS context of the main thread when necessary to access a lot of game stuff
+	// such as a rage::SysMemAllocator instance
 	sTlsContextAddrOfGameMainThread = GetTlsContext();
 	sGameMainThreadId = GetCurrentThreadId();
 
 	while (!sClrThreadRequestedToExit)
 	{
-		// Break from the loop if ScriptHookV reloads scripts after the game creates a new session after the initial session started
+		// Break from the loop if ScriptHookV reloads scripts when the game creates a new session (because the old fiber is being disposed)
 		// ScriptHookV creates a new fiber only right after a "Started thread" message is written to the log
 		const PVOID currentFiber = GetCurrentFiber();
 		if (currentFiber != sGameFiber)
@@ -369,8 +371,8 @@ static void ScriptMain()
 		}
 
 		SetEvent(hClrContinueEvent);
-		// This call blocks the main thread so GtaThread instances won't be executed except for one for the SHVDN runtime
-		// as long as it is executing
+		// This call blocks the main thread so GtaThread instances (which ysc or external scripts internally rely on)
+		// won't be executed except for one for the SHVDN runtime as long as it is executing
 		WaitForSingleObject(hClrWaitEvent, INFINITE);
 		scriptWait(0);
 	}
