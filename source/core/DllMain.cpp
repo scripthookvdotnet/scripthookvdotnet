@@ -322,7 +322,7 @@ HANDLE hClrWaitEvent;
 HANDLE hClrContinueEvent;
 
 // proper synchronization with event objects would cause a deadlock or timeout (for executing longer than 2 seconds)
-// in DllMain, so use a bool variable to tell procedures to the asi wants to get freed
+// in DllMain, so use a bool variable to tell procedures that the asi wants to get freed
 bool sClrThreadRequestedToExit = false;
 
 static DWORD CLRThreadProc(LPVOID lparam)
