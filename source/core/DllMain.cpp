@@ -128,11 +128,6 @@ internal:
 	}
 };
 
-static void ForceCLRInit()
-{
-	// Just a function that doesn't do anything, except for being compiled to MSIL
-}
-
 static void ScriptHookVDotNet_ManagedInit()
 {
 	SHVDN::Console^% console = ScriptHookVDotNet::console;
@@ -325,7 +320,9 @@ HANDLE hClrContinueEvent;
 // in DllMain, so use a bool variable to tell procedures that the asi wants to get freed
 bool sClrThreadRequestedToExit = false;
 
-static DWORD CLRThreadProc(LPVOID lparam)
+// A procedure that is supposed to be run in a dedicated thread for so a cached stack limit in .NET runtime won't panic for
+// (false) stack overflow that can be caused by running managed code in a custom fiber (with a custom fiber data in other words)
+static DWORD ClrThreadProc(LPVOID lparam)
 {
 	// DllMain gets called before ScriptHookV starts script fibers, so wait until getting signaled by ScriptMain
 	WaitForSingleObject(hClrContinueEvent, INFINITE);
@@ -399,11 +396,19 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 		scriptRegister(hModule, ScriptMain);
 		// Register handler for keyboard messages
 		keyboardHandlerRegister(ScriptKeyboardMessage);
-		// Create synchronization events for CLR thread
+
 		hClrContinueEvent = CreateEvent(NULL, false, false, NULL);
 		hClrWaitEvent = CreateEvent(NULL, false, false, NULL);
-		// Create a seperate thread to run CLR
-		hClrThread = CreateThread(NULL, NULL, CLRThreadProc, NULL, NULL, NULL);
+
+		// Create a seperate thread to run CLR so in .NET runtime won't panic for (false) stack overflow by a cached stack
+		// limit in .NET runtime
+		// ScriptHookV runs script fibers in the main thread, but our managed code needs to run in without a fiber data
+		// to avoid (false) stack overflow exceptions
+		// The issue that explains usage of fibers causes random .NET runtime crashes when the VEH of .NET runtime is called for
+		// .NET exceptions or regular C++ exceptions: https://github.com/scripthookvdotnet/scripthookvdotnet/issues/976
+		// The place that may cause the exception: https://github.com/dotnet/coreclr/blob/ef1e2ab328087c61a6878c1e84f4fc5d710aebce/src/vm/excep.cpp#L7763
+		// The code for stack space detection: https://github.com/dotnet/coreclr/blob/ef1e2ab328087c61a6878c1e84f4fc5d710aebce/src/vm/threads.cpp#L7912
+		hClrThread = CreateThread(NULL, NULL, ClrThreadProc, NULL, NULL, NULL);
 		break;
 	case DLL_PROCESS_DETACH:
 		sClrThreadRequestedToExit = true;
