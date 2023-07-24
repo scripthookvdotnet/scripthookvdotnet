@@ -87,7 +87,7 @@ namespace SHVDN
 			IntPtr strUtf8 = domain.PinString(str);
 
 			ulong strArg = (ulong)strUtf8.ToInt64();
-			domain.ExecuteTask(new NativeTaskPtrArgs
+			domain.ExecuteTaskWithGameThreadTlsContext(new NativeTaskPtrArgs
 			{
 				_hash = 0x6C188BE134E074AA /* ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME */,
 				_argumentPtr = &strArg,
@@ -251,7 +251,7 @@ namespace SHVDN
 			}
 
 			var task = new NativeTaskPtrArgs { _hash = hash, _argumentPtr = argPtr, _argumentCount = argCount };
-			domain.ExecuteTask(task);
+			domain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._result;
 		}
@@ -270,7 +270,7 @@ namespace SHVDN
 			}
 
 			var task = new NativeTask { _hash = hash, _arguments = args };
-			domain.ExecuteTask(task);
+			domain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._result;
 		}

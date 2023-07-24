@@ -7,6 +7,11 @@
 
 #include <Windows.h>
 
+LPVOID sTlsContextAddrOfGameMainThread = nullptr;
+DWORD sGameMainThreadId = 0;
+
+bool sGameReloaded = false;
+
 static void SetTlsContext(LPVOID context)
 {
 	__writegsqword(0x58, reinterpret_cast<DWORD64>(context));
@@ -17,9 +22,6 @@ static LPVOID GetTlsContext()
 }
 
 #pragma managed(pop)
-
-// Has to be a managed variable since C++ exceptions will be ruined if this is unmanaged one
-bool sGameReloaded = false;
 
 // Import C# code base
 #include <msclr\lock.h>
@@ -215,7 +217,9 @@ static void ScriptHookVDotNet_ManagedInit()
 		return;
 
 	// Set functions for Thread Local Storage (TLS), so scripts can do tasks that need variables in the TLS of the main thread in their script thread
-	domain->InitTlsContext(static_cast<IntPtr>(GetTlsContext), static_cast<IntPtr>(SetTlsContext));
+	domain->InitTlsFunctionPointers(static_cast<IntPtr>(GetTlsContext), static_cast<IntPtr>(SetTlsContext));
+	domain->SetTlsContextOfGameMainThread(static_cast<IntPtr>(sTlsContextAddrOfGameMainThread));
+	domain->SetGameMainThreadId(sGameMainThreadId);
 
 	domain->ScriptTimeoutThreshold = ScriptHookVDotNet::scriptTimeoutThreshold;
 	domain->ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker;
@@ -310,33 +314,65 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 
 #include <Main.h>
 
+// solely for detection for recreation of the game session
 PVOID sGameFiber = nullptr;
+
+HANDLE hClrThread;
+HANDLE hClrWaitEvent;
+HANDLE hClrContinueEvent;
+
+// proper synchronization would cause a deadlock or timeout (for executing longer than 2 seconds) in DllMain,
+// so clean up stuff in a pseudo way
+bool sClrThreadRequestedToExit = false;
+
+static DWORD CLRThreadProc(LPVOID lparam)
+{
+	while (!sClrThreadRequestedToExit) {
+		// DllMain gets called before ScriptHookV starts script fibers, but this procedure will wait
+		// until getting signaled by ScriptMain
+		WaitForSingleObject(hClrContinueEvent, INFINITE);
+		ScriptHookVDotNet_ManagedInit();
+		sGameReloaded = false;
+		SetEvent(hClrWaitEvent);
+
+		// ScriptHookV's script fibers will be executed in the main thread,
+		// so we assume this code won't have trouble exiting the loop when the exe wants to exit
+		while (!sGameReloaded && !sClrThreadRequestedToExit) {
+			WaitForSingleObject(hClrContinueEvent, INFINITE);
+			ScriptHookVDotNet_ManagedTick();
+			SetEvent(hClrWaitEvent);
+		}
+	}
+	return 0;
+}
 
 static void ScriptMain()
 {
 	// ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
 	sGameFiber = GetCurrentFiber();
 
-	while (true)
+	// We need these info to swap the TLS context of the main thread when necessary to access
+	// a lot of game stuff such as a rage::SysMemAllocator instance
+	sTlsContextAddrOfGameMainThread = GetTlsContext();
+	sGameMainThreadId = GetCurrentThreadId();
+
+	while (!sClrThreadRequestedToExit)
 	{
-		sGameReloaded = false;
-
-		ScriptHookVDotNet_ManagedInit();
-
-		while (!sGameReloaded)
+		// Break from the loop if ScriptHookV reloads scripts after the game creates a new session after the initial session started
+		// ScriptHookV creates a new fiber only right after a "Started thread" message is written to the log
+		const PVOID currentFiber = GetCurrentFiber();
+		if (currentFiber != sGameFiber)
 		{
-			// ScriptHookV creates a new fiber only right after a "Started thread" message is written to the log
-			const PVOID currentFiber = GetCurrentFiber();
-			if (currentFiber != sGameFiber)
-			{
-				sGameFiber = currentFiber;
-				sGameReloaded = true;
-				break;
-			}
-
-			ScriptHookVDotNet_ManagedTick();
-			scriptWait(0);
+			sGameFiber = currentFiber;
+			sGameReloaded = true;
+			break;
 		}
+
+		SetEvent(hClrContinueEvent);
+		// This call blocks the main thread so GtaThread instances won't be executed except for one for the SHVDN runtime
+		// as long as it is executing
+		WaitForSingleObject(hClrWaitEvent, INFINITE);
+		scriptWait(0);
 	}
 }
 
@@ -357,16 +393,22 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 	case DLL_PROCESS_ATTACH:
 		// Avoid unnecessary DLL_THREAD_ATTACH and DLL_THREAD_DETACH notifications
 		DisableThreadLibraryCalls(hModule);
-		// Call a managed function to force the CLR to initialize immediately
-		// This is technically a very bad idea (https://learn.microsoft.com/cpp/dotnet/initialization-of-mixed-assemblies), but fixes a crash that would otherwise occur when the CLR is initialized later on
-		if (!GetModuleHandle(TEXT("clr.dll")))
-			ForceCLRInit();
 		// Register ScriptHookVDotNet native script
 		scriptRegister(hModule, ScriptMain);
 		// Register handler for keyboard messages
 		keyboardHandlerRegister(ScriptKeyboardMessage);
+		// Create synchronization events for CLR thread
+		hClrContinueEvent = CreateEvent(NULL, false, false, NULL);
+		hClrWaitEvent = CreateEvent(NULL, false, false, NULL);
+		// Create a seperate thread to run CLR
+		hClrThread = CreateThread(NULL, NULL, CLRThreadProc, NULL, NULL, NULL);
 		break;
 	case DLL_PROCESS_DETACH:
+		sClrThreadRequestedToExit = true;
+		// Cleanup events and thread handles so the exe can exit
+		CloseHandle(hClrContinueEvent);
+		CloseHandle(hClrWaitEvent);
+		CloseHandle(hClrThread);
 		// Unregister ScriptHookVDotNet native script
 		scriptUnregister(hModule);
 		// Unregister handler for keyboard messages
