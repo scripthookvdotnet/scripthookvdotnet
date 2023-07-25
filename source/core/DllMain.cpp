@@ -10,7 +10,7 @@
 LPVOID sTlsContextAddrOfGameMainThread = nullptr;
 DWORD sGameMainThreadId = 0;
 
-bool sRequestedToReloadScriptDomain = false;
+volatile bool sRequestedToReloadScriptDomain = false;
 
 static void SetTlsContext(LPVOID context)
 {
@@ -318,9 +318,7 @@ HANDLE hClrContinueEvent;
 
 // proper synchronization with event objects would cause a deadlock or timeout (for executing longer than 2 seconds)
 // in DllMain, so use a bool variable to tell procedures that the asi wants to get freed
-bool sClrThreadRequestedToExit = false;
-
-bool sGameReloaded = false;
+volatile bool sClrThreadRequestedToExit = false;
 
 // A procedure that is supposed to be run in a dedicated thread for so a cached stack limit in .NET runtime won't panic for
 // (false) stack overflow that can be caused by running managed code in a custom fiber (with a custom fiber data in other words)
