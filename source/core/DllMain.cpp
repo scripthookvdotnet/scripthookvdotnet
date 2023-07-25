@@ -10,7 +10,7 @@
 LPVOID sTlsContextAddrOfGameMainThread = nullptr;
 DWORD sGameMainThreadId = 0;
 
-bool sGameReloaded = false;
+bool sRequestedToReloadScriptDomain = false;
 
 static void SetTlsContext(LPVOID context)
 {
@@ -63,7 +63,7 @@ public:
 		console->PrintInfo("~y~Reloading ...");
 
 		// Force a reload on next tick
-		sGameReloaded = true;
+		sRequestedToReloadScriptDomain = true;
 	}
 
 	[SHVDN::ConsoleCommand("Load scripts from a file")]
@@ -310,7 +310,7 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 #include <Main.h>
 
 // solely for detection for recreation of the game session
-PVOID sGameFiber = nullptr;
+PVOID sOldGameFiber = nullptr;
 
 HANDLE hClrThread;
 HANDLE hClrWaitEvent;
@@ -319,6 +319,8 @@ HANDLE hClrContinueEvent;
 // proper synchronization with event objects would cause a deadlock or timeout (for executing longer than 2 seconds)
 // in DllMain, so use a bool variable to tell procedures that the asi wants to get freed
 bool sClrThreadRequestedToExit = false;
+
+bool sGameReloaded = false;
 
 // A procedure that is supposed to be run in a dedicated thread for so a cached stack limit in .NET runtime won't panic for
 // (false) stack overflow that can be caused by running managed code in a custom fiber (with a custom fiber data in other words)
@@ -329,11 +331,11 @@ static DWORD ClrThreadProc(LPVOID lparam)
 
 	while (!sClrThreadRequestedToExit) {
 		ScriptHookVDotNet_ManagedInit();
-		sGameReloaded = false;
+		sRequestedToReloadScriptDomain = false;
 
 		// ScriptHookV's script fibers will be executed in the main thread, so we assume this code won't have trouble
 		// exiting the loop after letting the main fiber execute
-		while (!sGameReloaded && !sClrThreadRequestedToExit) {
+		while (!sRequestedToReloadScriptDomain && !sClrThreadRequestedToExit) {
 			ScriptHookVDotNet_ManagedTick();
 			SetEvent(hClrWaitEvent);
 			WaitForSingleObject(hClrContinueEvent, INFINITE);
@@ -347,23 +349,31 @@ static DWORD ClrThreadProc(LPVOID lparam)
 
 static void ScriptMain()
 {
-	// ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
-	sGameFiber = GetCurrentFiber();
-
 	// We need these info to swap the TLS context of the main thread when necessary to access a lot of game stuff
 	// such as a rage::SysMemAllocator instance
 	sTlsContextAddrOfGameMainThread = GetTlsContext();
 	sGameMainThreadId = GetCurrentThreadId();
 
-	while (!sClrThreadRequestedToExit)
+	// ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
+	const PVOID initialGameFiber = GetCurrentFiber();
+	if (sOldGameFiber != nullptr)
+	{
+		// The game session is reloaded, so tell our script domain to reload from this fiber
+		sRequestedToReloadScriptDomain = true;
+	}
+	sOldGameFiber = initialGameFiber;
+
+	bool gameReloaded = false;
+	while (!sClrThreadRequestedToExit && !gameReloaded)
 	{
 		// Break from the loop if ScriptHookV reloads scripts when the game creates a new session (because the old fiber is being disposed)
+		// Script fibers gets executed at least once after a scriptWait call even after the new game session is reloaded,
+		// so we should leave here without interfering anything in this fiber if the game is reloaded
 		// ScriptHookV creates a new fiber only right after a "Started thread" message is written to the log
 		const PVOID currentFiber = GetCurrentFiber();
-		if (currentFiber != sGameFiber)
+		if (currentFiber != initialGameFiber)
 		{
-			sGameFiber = currentFiber;
-			sGameReloaded = true;
+			gameReloaded = true;
 			break;
 		}
 
