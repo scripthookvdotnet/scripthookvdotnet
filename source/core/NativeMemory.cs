@@ -2147,7 +2147,7 @@ namespace SHVDN
 			var setEntityAngularVelocityDelegate = (delegate* unmanaged[Stdcall]<IntPtr, float*, void>)(vFuncAddr);
 
 			var task = new SetEntityAngularVelocityTask(entityAddress, setEntityAngularVelocityDelegate, x, y, z);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 		}
 
 
@@ -2766,13 +2766,13 @@ namespace SHVDN
 		public static void PunctureTire(IntPtr wheelAddress, float damage, IntPtr vehicleAddress)
 		{
 			var task = new VehicleWheelPunctureTask(wheelAddress, vehicleAddress, false, damage);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 		}
 
 		public static void BurstTireOnRim(IntPtr wheelAddress, IntPtr vehicleAddress)
 		{
 			var task = new VehicleWheelPunctureTask(wheelAddress, vehicleAddress, true);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 		}
 
 		// the function BurstVehicleTireOnRimNew(Old)Func calls must be called in the main thread or the game will crash
@@ -4043,7 +4043,7 @@ namespace SHVDN
 			var vehiclePool = new IntPtr(*(VehiclePool**)(*NativeMemory.s_vehiclePoolAddress));
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, vehiclePool, modelHashes);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._resultHandles;
 		}
@@ -4057,7 +4057,7 @@ namespace SHVDN
 			var vehiclePool = new IntPtr(*(VehiclePool**)(*NativeMemory.s_vehiclePoolAddress));
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, vehiclePool, position, radius * radius, modelHashes);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._resultHandles;
 		}
@@ -4078,7 +4078,7 @@ namespace SHVDN
 			}
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile, new IntPtr(NativeMemory.s_projectilePoolAddress));
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._resultHandles;
 		}
@@ -4090,7 +4090,7 @@ namespace SHVDN
 			}
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile, new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._resultHandles;
 		}
@@ -4105,7 +4105,7 @@ namespace SHVDN
 			}
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, genericPool);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._resultHandles;
 		}
@@ -4119,7 +4119,7 @@ namespace SHVDN
 			}
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, genericPool, modelHashes);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._resultHandles;
 		}
@@ -4133,7 +4133,7 @@ namespace SHVDN
 			}
 
 			var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, genericPool, position, radius * radius, modelHashes);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._resultHandles;
 		}
@@ -4467,7 +4467,7 @@ namespace SHVDN
 			}
 
 			var task = new ActivateSpecialAbilityTask(specialAbilityAddr);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 		}
 		public static IntPtr GetPrimarySpecialAbilityStructAddress(int playerIndex)
 		{
@@ -5535,7 +5535,7 @@ namespace SHVDN
 		{
 			var task = new GetAllCScriptResourceHandlesTask(CScriptResourceTypeNameIndex.Checkpoint);
 
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._returnHandles;
 		}
@@ -5544,7 +5544,7 @@ namespace SHVDN
 		{
 			var task = new GetCScriptResourceAddressTask(handle, s_checkpointPoolAddress, 0x60);
 
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._returnAddress;
 		}
@@ -5563,7 +5563,7 @@ namespace SHVDN
 
 			var task = new GetCScriptResourceByIndexTask(CScriptResourceTypeNameIndex.ScaleformMovie, handle);
 
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._result != null;
 		}
@@ -5673,7 +5673,7 @@ namespace SHVDN
 		public static void ExplodeProjectile(IntPtr projectileAddress)
 		{
 			var task = new ExplodeProjectileTask(projectileAddress);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 		}
 
 		internal sealed class ExplodeProjectileTask : IScriptTask
@@ -5762,7 +5762,7 @@ namespace SHVDN
 		{
 			var task = new GetEntityHandleTask(address);
 
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._returnEntityHandle;
 		}
@@ -6496,7 +6496,7 @@ namespace SHVDN
 			}
 
 			var task = new DetachFragmentPartByIndexTask(fragInst, fragmentGroupIndex);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
 			return task._wasNewFragInstCreated;
 		}
@@ -6785,7 +6785,7 @@ namespace SHVDN
 		public static void SendNmMessage(int targetHandle, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
 		{
 			var task = new NmMessageTask(targetHandle, messageName, boolIntFloatParameters, stringVector3ArrayParameters);
-			ScriptDomain.CurrentDomain.ExecuteTask(task);
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 		}
 
 		#endregion

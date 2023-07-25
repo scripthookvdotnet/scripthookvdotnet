@@ -32,6 +32,9 @@ namespace SHVDN
 		[DllImport("Kernel32.dll")]
 		internal static extern bool IsDebuggerPresent();
 
+		[DllImport("kernel32.dll")]
+		private static extern uint GetCurrentThreadId();
+
 		private int _executingThreadId = Thread.CurrentThread.ManagedThreadId;
 		private Script _executingScript = null;
 		private List<IntPtr> _pinnedStrings = new();
@@ -45,14 +48,24 @@ namespace SHVDN
 
 		private unsafe delegate* unmanaged[Cdecl]<IntPtr> _getTlsContext;
 		private unsafe delegate* unmanaged[Cdecl]<IntPtr, void> _setTlsContext;
-		private IntPtr _tlsContextOfMainThread;
 
-		internal unsafe void InitTlsContext(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
+		private IntPtr _tlsContextOfMainThread;
+		private uint _gameMainThreadIdUnmanaged;
+
+		internal unsafe void InitTlsFunctionPointers(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
 		{
 			_getTlsContext = (delegate* unmanaged[Cdecl]<IntPtr>)getTlsContextFunc;
 			_setTlsContext = (delegate* unmanaged[Cdecl]<IntPtr, void>)setTlsContextFunc;
+		}
 
-			_tlsContextOfMainThread = _getTlsContext();
+		internal unsafe void SetTlsContextOfGameMainThread(IntPtr tlsAddr)
+		{
+			_tlsContextOfMainThread = tlsAddr;
+		}
+
+		internal unsafe void SetGameMainThreadId(uint threadId)
+		{
+			_gameMainThreadIdUnmanaged = threadId;
 		}
 
 		/// <summary>
@@ -584,9 +597,9 @@ namespace SHVDN
 
 					unsafe
 					{
-						NativeFunc.InvokeInternal(0x202709F4C58A0424 /* BEGIN_TEXT_COMMAND_THEFEED_POST */, NativeMemory.CellEmailBcon);
+						NativeFunc.Invoke(0x202709F4C58A0424 /* BEGIN_TEXT_COMMAND_THEFEED_POST */, NativeMemory.CellEmailBcon);
 						NativeFunc.PushLongString($"~o~WARNING~s~: {scriptCountUsingDeprecatedApi} scripts are using the v2 API, which is deprecated and not actively supported. See the console outputs or the log file for more details.");
-						NativeFunc.InvokeInternal(0x2ED7843F8F801023 /* END_TEXT_COMMAND_THEFEED_POST_TICKER */, true, false);
+						NativeFunc.Invoke(0x2ED7843F8F801023 /* END_TEXT_COMMAND_THEFEED_POST_TICKER */, true, false);
 					}
 				}
 
@@ -662,44 +675,51 @@ namespace SHVDN
 		}
 
 		/// <summary>
-		/// Execute a script task in this script domain.
+		/// Execute a script task in this script domain with the tls context of the main thread of the exe.
+		/// You must use this method when you call native functions or functions that may access some
+		/// resources of the tls context of the main thread, such as a <c>rage::sysMemAllocator</c>.
 		/// </summary>
 		/// <param name="task">The task to execute.</param>
-		/// <param name="forceMainThread">Specifies whether to force to execute the task on the main thread.</param>
-		public void ExecuteTask(IScriptTask task, bool forceMainThread = false)
+		public void ExecuteTaskWithGameThreadTlsContext(IScriptTask task)
 		{
-			if (Thread.CurrentThread.ManagedThreadId == _executingThreadId)
+			if (_gameMainThreadIdUnmanaged == GetCurrentThreadId())
 			{
-				// Request came from the main thread, so can just execute it right away
+				// Request came from the main thread of the exe, so can just execute it right away
 				task.Run();
 			}
 			else
 			{
-				// Request came from the script thread
-				if (!forceMainThread)
+				unsafe
 				{
-					unsafe
-					{
-						if (_getTlsContext != null && _setTlsContext != null)
-						{
-							IntPtr tlsContextOfScriptThread = _getTlsContext();
-							_setTlsContext(_tlsContextOfMainThread);
+					IntPtr tlsContextOfScriptThread = _getTlsContext();
+					_setTlsContext(_tlsContextOfMainThread);
 
-							try
-							{
-								task.Run();
-							}
-							finally
-							{
-								// Need to revert TLS context to the real one of the script thread
-								_setTlsContext(tlsContextOfScriptThread);
-							}
-							return;
-						}
+					try
+					{
+						task.Run();
+					}
+					finally
+					{
+						// Need to revert TLS context to the real one of the script thread
+						_setTlsContext(tlsContextOfScriptThread);
 					}
 				}
+			}
+		}
 
-				// Need to pass the task to the domain thread and execute it there as a fallback
+		/// <summary>
+		/// Execute a script task in this script domain.
+		/// </summary>
+		/// <param name="task">The task to execute.</param>
+		public void ExecuteTaskInScriptDomainThread(IScriptTask task)
+		{
+			if (Thread.CurrentThread.ManagedThreadId == _executingThreadId)
+			{
+				// Request came from the script domain thread, so can just execute it right away
+				task.Run();
+			}
+			else
+			{
 				_taskQueue.Enqueue(task);
 				SignalAndWait(_executingScript._waitEvent, _executingScript._continueEvent);
 			}
