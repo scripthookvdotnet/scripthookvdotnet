@@ -6,11 +6,15 @@
 #pragma managed(push, off)
 
 #include <Windows.h>
+#include <atomic>
 
 LPVOID sTlsContextAddrOfGameMainThread = nullptr;
 DWORD sGameMainThreadId = 0;
 
-volatile bool sRequestedToReloadScriptDomain = false;
+// Use atomic to guarantee its visibility
+// Script domain should be reloaded as soon as getting requested to reload, so this should be used with std::memory_order_seq_cst
+// when storing a value so a xchg instruction will be issued for memory barrier
+std::atomic_bool sScriptDomainRequestedToReload(false);
 
 static void SetTlsContext(LPVOID context)
 {
@@ -19,6 +23,11 @@ static void SetTlsContext(LPVOID context)
 static LPVOID GetTlsContext()
 {
 	return reinterpret_cast<LPVOID>(__readgsqword(0x58));
+}
+
+static void RequestScriptDomainToReload()
+{
+	sScriptDomainRequestedToReload.store(true);
 }
 
 #pragma managed(pop)
@@ -63,7 +72,7 @@ public:
 		console->PrintInfo("~y~Reloading ...");
 
 		// Force a reload on next tick
-		sRequestedToReloadScriptDomain = true;
+		RequestScriptDomainToReload();
 	}
 
 	[SHVDN::ConsoleCommand("Load scripts from a file")]
@@ -318,7 +327,8 @@ HANDLE hClrContinueEvent;
 
 // proper synchronization with event objects would cause a deadlock or timeout (for executing longer than 2 seconds)
 // in DllMain, so use a bool variable to tell procedures that the asi wants to get freed
-volatile bool sClrThreadRequestedToExit = false;
+// use atomic_bool to avoid unnecessary optimization, with std::memory_order_seq_cst just in case for a xchg instruction
+std::atomic_bool sClrThreadRequestedToExit(false);
 
 // A procedure that is supposed to be run in a dedicated thread for so a cached stack limit in .NET runtime won't panic for
 // (false) stack overflow that can be caused by running managed code in a custom fiber (with a custom fiber data in other words)
@@ -329,19 +339,17 @@ static DWORD ClrThreadProc(LPVOID lparam)
 
 	while (!sClrThreadRequestedToExit) {
 		ScriptHookVDotNet_ManagedInit();
-		sRequestedToReloadScriptDomain = false;
+		sScriptDomainRequestedToReload.store(false);
 
 		// ScriptHookV's script fibers will be executed in the main thread, so we assume this code won't have trouble
 		// exiting the loop after letting the main fiber execute
-		while (!sRequestedToReloadScriptDomain && !sClrThreadRequestedToExit) {
+		while (!sScriptDomainRequestedToReload.load() && !sClrThreadRequestedToExit.load()) {
 			ScriptHookVDotNet_ManagedTick();
 			SetEvent(hClrWaitEvent);
 			WaitForSingleObject(hClrContinueEvent, INFINITE);
 		}
 	}
 
-	// We want to safely let ScriptMain return when the asi is being freed
-	SetEvent(hClrWaitEvent);
 	return 0;
 }
 
@@ -357,12 +365,12 @@ static void ScriptMain()
 	if (sOldGameFiber != nullptr)
 	{
 		// The game session is reloaded, so tell our script domain to reload from this fiber
-		sRequestedToReloadScriptDomain = true;
+		sScriptDomainRequestedToReload.store(true);
 	}
 	sOldGameFiber = initialGameFiber;
 
 	bool gameReloaded = false;
-	while (!sClrThreadRequestedToExit && !gameReloaded)
+	while (!sClrThreadRequestedToExit.load() && !gameReloaded)
 	{
 		// Break from the loop if ScriptHookV reloads scripts when the game creates a new session (because the old fiber is being disposed)
 		// Script fibers gets executed at least once after a scriptWait call even after the new game session is reloaded,
@@ -419,7 +427,13 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 		hClrThread = CreateThread(NULL, NULL, ClrThreadProc, NULL, NULL, NULL);
 		break;
 	case DLL_PROCESS_DETACH:
-		sClrThreadRequestedToExit = true;
+		sClrThreadRequestedToExit.store(true);
+
+		// Gracefully let the CLR thread procedure and the script fiber exit (CloseHandle does not set events)
+		// Probably these calls do not wake up ClrThreadProc however
+		SetEvent(hClrContinueEvent);
+		SetEvent(hClrWaitEvent);
+
 		// Cleanup events and thread handles so the exe can exit
 		CloseHandle(hClrContinueEvent);
 		CloseHandle(hClrWaitEvent);
