@@ -8,8 +8,8 @@
 #include <Windows.h>
 #include <atomic>
 
-LPVOID sTlsContextAddrOfGameMainThread = nullptr;
-DWORD sGameMainThreadId = 0;
+std::atomic<LPVOID> sTlsContextAddrOfGameMainThread(nullptr);
+std::atomic<DWORD> sGameMainThreadId(0);
 
 // Use atomic to guarantee its visibility
 // Script domain should be reloaded as soon as getting requested to reload, so this should be used with std::memory_order_seq_cst
@@ -23,6 +23,15 @@ static void SetTlsContext(LPVOID context)
 static LPVOID GetTlsContext()
 {
 	return reinterpret_cast<LPVOID>(__readgsqword(0x58));
+}
+
+static LPVOID GetTlsContextAddrOfGameMainThread()
+{
+	return sTlsContextAddrOfGameMainThread.load();
+}
+static DWORD GetGameMainThreadId()
+{
+	return sGameMainThreadId.load();
 }
 
 static void RequestScriptDomainToReload()
@@ -222,8 +231,8 @@ static void ScriptHookVDotNet_ManagedInit()
 
 	// Set functions for Thread Local Storage (TLS), so scripts can do tasks that need variables in the TLS of the main thread in their script thread
 	domain->InitTlsFunctionPointers(static_cast<IntPtr>(GetTlsContext), static_cast<IntPtr>(SetTlsContext));
-	domain->SetTlsContextOfGameMainThread(static_cast<IntPtr>(sTlsContextAddrOfGameMainThread));
-	domain->SetGameMainThreadId(sGameMainThreadId);
+	domain->SetTlsContextOfGameMainThread(static_cast<IntPtr>(GetTlsContextAddrOfGameMainThread()));
+	domain->SetGameMainThreadId(GetGameMainThreadId());
 
 	domain->ScriptTimeoutThreshold = ScriptHookVDotNet::scriptTimeoutThreshold;
 	domain->ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker;
@@ -357,8 +366,8 @@ static void ScriptMain()
 {
 	// We need these info to swap the TLS context of the main thread when necessary to access a lot of game stuff
 	// such as a rage::SysMemAllocator instance
-	sTlsContextAddrOfGameMainThread = GetTlsContext();
-	sGameMainThreadId = GetCurrentThreadId();
+	sTlsContextAddrOfGameMainThread.store(GetTlsContext());
+	sGameMainThreadId.store(GetCurrentThreadId());
 
 	// ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
 	const PVOID initialGameFiber = GetCurrentFiber();
