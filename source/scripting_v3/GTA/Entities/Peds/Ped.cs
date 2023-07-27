@@ -1063,6 +1063,20 @@ namespace GTA
 			Function.Call(Hash.SET_PED_TO_RAGDOLL, Handle, 1, 1, 1, false, false, false);
 		}
 
+		/// <summary>
+		/// Blocks ragdoll reactions from various forms of damage.
+		/// </summary>
+		public void SetRagdollBlockingFlags(RagdollBlockingFlags flags = RagdollBlockingFlags.BulletImpact)
+		{
+			Function.Call(Hash.SET_RAGDOLL_BLOCKING_FLAGS, Handle, (int)flags);
+		}
+		/// <summary>
+		/// Re-enables ragdoll reactions from various forms of damage.
+		/// </summary>
+		public void ClearRagdollBlockingFlags(RagdollBlockingFlags flags = RagdollBlockingFlags.BulletImpact)
+		{
+			Function.Call(Hash.CLEAR_RAGDOLL_BLOCKING_FLAGS, Handle, (int)flags);
+		}
 
 		/// <summary>
 		/// Gets or sets whether this <see cref="Ped"/> is ragdolling.
