@@ -466,6 +466,12 @@ namespace GTA
 		/// Will throw <see cref="GameVersionNotSupportedException"/> if the setter is called in earlier versions (the getter always returns <see langword="false"/> in earlier versions).
 		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// This property represents the wear rate property <c>SET_TYRE_WEAR_RATE</c> is supposed to change,
+		/// but Script Hook V does never call it and instead calls <c>SET_TYRE_WEAR_RATE_SCALE</c> in versions that
+		/// support up to v1.0.2944.0 or some earlier game version (you can actually call <c>SET_TYRE_WEAR_RATE</c>
+		/// in RAGE Plugin Hook and FiveM, and you can call <c>GET_TYRE_WEAR_RATE</c> in SHV scripts).
+		/// </remarks>
 		/// <exception cref="GameVersionNotSupportedException">
 		/// Thrown when called on a game version prior to v1.0.1868.0.
 		/// </exception>
@@ -506,6 +512,8 @@ namespace GTA
 		/// <summary>
 		/// <para>
 		/// Gets or sets the difference in tire grip.
+		/// The more this value is, the more traction the wheel loses of traction produced from <see cref="WearMultiplier"/>.
+		/// Should be between a wear rate of 1 and 0.
 		/// </para>
 		/// <para>
 		/// Only supported in v1.0.2060.0 and later versions.
@@ -515,7 +523,7 @@ namespace GTA
 		/// <exception cref="GameVersionNotSupportedException">
 		/// Thrown when called on a game version prior to v1.0.2060.0.
 		/// </exception>
-		public float MaxDifferenceDueToWearRate
+		public float MaxGripDifferenceDueToWearRate
 		{
 			get
 			{
@@ -555,6 +563,10 @@ namespace GTA
 		/// Will throw <see cref="GameVersionNotSupportedException"/> if the setter is called in earlier versions (the getter always returns <see langword="false"/> in earlier versions).
 		/// </para>
 		/// </summary>
+		/// <remarks>
+		/// This property represents the wear rate scale property, which <c>SET_TYRE_WEAR_RATE_SCALE</c> is supposed to
+		/// change, not the the wear rate property, which <c>SET_TYRE_WEAR_RATE</c> is supposed to change.
+		/// </remarks>
 		/// <exception cref="GameVersionNotSupportedException">
 		/// Thrown when called on a game version prior to v1.0.2060.0.
 		/// </exception>
