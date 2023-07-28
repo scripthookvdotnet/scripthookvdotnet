@@ -790,8 +790,14 @@ namespace SHVDN
 				address = FindPatternNaive("\x45\x84\xF6\x74\x08\xF3\x0F\x59\x0D\x00\x00\x00\x00\xF3\x0F\x10\x83", "xxxxxxxxx????xxxx");
 				if (address != null)
 				{
-					VehicleTireWearMultiplierOffset = *(int*)(address + 0x22);
-					// Note: The values for SET_TYRE_WEAR_RATE_SCALE and SET_TYRE_MAXIMUM_GRIP_DIFFERENCE_DUE_TO_WEAR_RATE are not present in b1868
+					VehicleTireWearRateOffset = *(int*)(address + 0x22);
+
+					// The values for SET_TYRE_WEAR_RATE_SCALE and SET_TYRE_MAXIMUM_GRIP_DIFFERENCE_DUE_TO_WEAR_RATE are not present in b1868
+					if (gameVersion >= 59)
+					{
+						VehicleWheelMaxGripDiffDueToWearRateOffset = VehicleTireWearRateOffset + 4;
+						VehicleTireWearRateScaleOffset = VehicleTireWearRateOffset + 8;
+					}
 				}
 			}
 
@@ -2703,7 +2709,13 @@ namespace SHVDN
 
 		public static int VehicleTireHealthOffset { get; }
 
-		public static int VehicleTireWearMultiplierOffset { get; }
+		public static int VehicleTireWearRateOffset { get; }
+		/// <summary>
+		/// This value only affects how fast a vehicle tire health decreases, which is different from
+		/// <see cref="VehicleTireWearRateOffset"/>.
+		/// </summary>
+		public static int VehicleWheelMaxGripDiffDueToWearRateOffset { get; }
+		public static int VehicleTireWearRateScaleOffset { get; }
 
 		// the on fire offset is the same as this offset
 		public static int VehicleWheelTouchingFlagsOffset { get; }
