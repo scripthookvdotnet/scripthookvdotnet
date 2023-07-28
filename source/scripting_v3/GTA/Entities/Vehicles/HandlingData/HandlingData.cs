@@ -1484,7 +1484,7 @@ namespace GTA
 				return IntPtr.Zero;
 			}
 
-			return SHVDN.NativeMemory.GetSubHandlingData(MemoryAddress, (int)type);
+			return SHVDN.NativeMemory.Vehicle.GetSubHandlingData(MemoryAddress, (int)type);
 		}
 
 		public static HandlingData GetByHash(int handlingNameHash)

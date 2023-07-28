@@ -387,7 +387,7 @@ namespace GTA
 				// SET_ENTITY_HEALTH ignores the float max health value of CPhysical and instead uses the max health value of CPlayerInfo for the player ped
 				// SET_ENTITY_MAX_HEALTH sets both values for player peds as thw health display on HUD uses the float max health value of CPhysical
 				#region Special Max Health Treatment for Player Ped
-				if (SHVDN.NativeMemory.UnkCPedStateOffset == 0 || SHVDN.NativeMemory.PedPlayerInfoOffset == 0)
+				if (SHVDN.NativeMemory.Ped.UnkCPedStateOffset == 0 || SHVDN.NativeMemory.PedPlayerInfoOffset == 0)
 				{
 					return;
 				}
@@ -398,7 +398,7 @@ namespace GTA
 					return;
 				}
 
-				byte unkPedState = SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.UnkCPedStateOffset);
+				byte unkPedState = SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Ped.UnkCPedStateOffset);
 				if (unkPedState != 2)
 				{
 					return;

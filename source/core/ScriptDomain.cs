@@ -14,6 +14,7 @@ using System.Security;
 using System.Threading;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace SHVDN
 {
@@ -66,6 +67,20 @@ namespace SHVDN
 		internal unsafe void SetGameMainThreadId(uint threadId)
 		{
 			_gameMainThreadIdUnmanaged = threadId;
+		}
+
+		internal void InitNativeNemoryMembers()
+		{
+			Log.Message(Log.Level.Debug, "Initializing NativeMemory members...");
+
+			// We have a lot of offset and function address data to initialize, so initialize them in parallel
+			// (except for path find data, which has a little amount of data)
+			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NativeMemory.PathFind).TypeHandle);
+			Parallel.Invoke(
+				() => { System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NativeMemory).TypeHandle); },
+				() => { System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NativeMemory.Vehicle).TypeHandle); },
+				() => { System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NativeMemory.Ped).TypeHandle); }
+			);
 		}
 
 		/// <summary>
@@ -121,10 +136,6 @@ namespace SHVDN
 			// Attach resolve handler to new domain
 			AppDomain.AssemblyResolve += HandleResolve;
 			AppDomain.UnhandledException += HandleUnhandledException;
-
-			// Initialize and scan memory at a predictable point
-			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NativeMemory).TypeHandle);
-			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(NativeMemory.PathFind).TypeHandle);
 
 			// Load API assemblies into this script domain
 			foreach (string apiPath in Directory.EnumerateFiles(apiBasePath, "ScriptHookVDotNet*.dll", SearchOption.TopDirectoryOnly))

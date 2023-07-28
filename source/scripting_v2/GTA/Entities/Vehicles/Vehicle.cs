@@ -387,12 +387,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.NeedsToBeHotwiredOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.NeedsToBeHotwiredOffset == 0)
 				{
 					return false;
 				}
 
-				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.NeedsToBeHotwiredOffset, 2);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.NeedsToBeHotwiredOffset, 2);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_NEEDS_TO_BE_HOTWIRED, Handle, value);
 		}
@@ -408,12 +408,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.PreviouslyOwnedByPlayerOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.PreviouslyOwnedByPlayerOffset == 0)
 				{
 					return false;
 				}
 
-				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PreviouslyOwnedByPlayerOffset, 1);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.PreviouslyOwnedByPlayerOffset, 1);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_HAS_BEEN_OWNED_BY_PLAYER, Handle, value);
 		}
@@ -544,22 +544,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.FuelLevelOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.FuelLevelOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.FuelLevelOffset);
 			}
 			set
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.FuelLevelOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.FuelLevelOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.FuelLevelOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.FuelLevelOffset, value);
 			}
 		}
 
@@ -575,17 +575,17 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.HighGearOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.HighGearOffset == 0)
 				{
 					return 0;
 				}
 
-				return SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.HighGearOffset);
+				return SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Vehicle.HighGearOffset);
 			}
 			set
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.HighGearOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.HighGearOffset == 0)
 				{
 					return;
 				}
@@ -602,7 +602,7 @@ namespace GTA
 					throw new ArgumentOutOfRangeException("value", "Values must be between 0 and 7, inclusive.");
 				}
 
-				SHVDN.NativeMemory.WriteByte(address + SHVDN.NativeMemory.HighGearOffset, (byte)value);
+				SHVDN.NativeMemory.WriteByte(address + SHVDN.NativeMemory.Vehicle.HighGearOffset, (byte)value);
 			}
 		}
 
@@ -614,12 +614,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.GearOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.GearOffset == 0)
 				{
 					return 0;
 				}
 
-				return SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.GearOffset);
+				return SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Vehicle.GearOffset);
 			}
 		}
 
@@ -658,12 +658,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.WheelSpeedOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSpeedOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.WheelSpeedOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelSpeedOffset);
 			}
 		}
 
@@ -678,22 +678,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.CurrentRpmOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CurrentRpmOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.CurrentRpmOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CurrentRpmOffset);
 			}
 			set
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.CurrentRpmOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CurrentRpmOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.CurrentRpmOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CurrentRpmOffset, value);
 			}
 		}
 
@@ -705,12 +705,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.AccelerationOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.AccelerationOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.AccelerationOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.AccelerationOffset);
 			}
 		}
 
@@ -728,22 +728,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.SteeringAngleOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SteeringAngleOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				return (float)(SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.SteeringAngleOffset) * (180.0 / System.Math.PI));
+				return (float)(SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SteeringAngleOffset) * (180.0 / System.Math.PI));
 			}
 			set
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.SteeringAngleOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SteeringAngleOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringAngleOffset, (float)(value * (System.Math.PI / 180.0)));
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.SteeringAngleOffset, (float)(value * (System.Math.PI / 180.0)));
 			}
 		}
 
@@ -755,22 +755,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.SteeringScaleOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SteeringScaleOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.SteeringScaleOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SteeringScaleOffset);
 			}
 			set
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.SteeringScaleOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SteeringScaleOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.SteeringScaleOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.SteeringScaleOffset, value);
 			}
 		}
 
@@ -815,7 +815,7 @@ namespace GTA
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Vehicle"/> has a siren; otherwise, <see langword="false" />.
 		/// </value>
-		public bool HasSiren => SHVDN.NativeMemory.VehicleHasSiren(Handle);
+		public bool HasSiren => SHVDN.NativeMemory.Vehicle.VehicleHasSiren(Handle);
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its siren turned on.
@@ -996,12 +996,12 @@ namespace GTA
 			set
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.IsHeadlightDamagedOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 0, value);
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset, 0, value);
 			}
 		}
 
@@ -1011,12 +1011,12 @@ namespace GTA
 			set
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.IsHeadlightDamagedOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.IsHeadlightDamagedOffset, 1, value);
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset, 1, value);
 			}
 		}
 

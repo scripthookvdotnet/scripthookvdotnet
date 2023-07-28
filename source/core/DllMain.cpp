@@ -239,6 +239,16 @@ static void ScriptHookVDotNet_ManagedInit()
 
 	try
 	{
+		// Initialize and scan memory at a predictable point
+		domain->InitNativeNemoryMembers();
+	}
+	catch (Exception^ ex)
+	{
+		SHVDN::Log::Message(SHVDN::Log::Level::Error, "Failed to initialize native memory members: ", ex->ToString());
+	}
+
+	try
+	{
 		// Instantiate console inside script domain, so that it can access the scripting API
 		console = (SHVDN::Console ^)domain->AppDomain->CreateInstanceFromAndUnwrap(
 			SHVDN::Console::typeid->Assembly->Location, SHVDN::Console::typeid->FullName);

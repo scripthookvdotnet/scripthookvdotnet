@@ -603,7 +603,7 @@ namespace GTA
 					// Intentionally always create a vehicle instance to avoid unintended NullReferenceException like in v3.6.0 or earlier versions
 					// GET_VEHICLE_PED_IS_IN isn't reliable at getting last vehicle since it returns 0 when the ped is going to a door of some vehicle or opening one.
 					// Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it (which is not the last vehicle), though the 2nd parameter name is supposed to be "ConsiderEnteringAsInVehicle" as a leaked header suggests.
-					return new Vehicle(SHVDN.NativeMemory.GetLastVehicleHandleOfPed(address));
+					return new Vehicle(SHVDN.NativeMemory.Ped.GetLastVehicleHandleOfPed(address));
 				}
 			}
 		}
@@ -625,7 +625,7 @@ namespace GTA
 						return null;
 					}
 
-					int vehicleHandle = SHVDN.NativeMemory.GetVehicleHandlePedIsIn(address);
+					int vehicleHandle = SHVDN.NativeMemory.Ped.GetVehicleHandlePedIsIn(address);
 					return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 				}
 			}
@@ -651,12 +651,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.SeatIndexOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.SeatIndexOffset == 0)
 				{
 					return VehicleSeat.None;
 				}
 
-				int seatIndex = (sbyte)SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.SeatIndexOffset);
+				int seatIndex = (sbyte)SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Ped.SeatIndexOffset);
 				return (seatIndex >= 0 && IsInVehicle()) ? (VehicleSeat)(seatIndex - 1) : VehicleSeat.None;
 			}
 		}
@@ -895,12 +895,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedSuffersCriticalHitOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedSuffersCriticalHitOffset == 0)
 				{
 					return false;
 				}
 
-				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedSuffersCriticalHitOffset, 2);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.PedSuffersCriticalHitOffset, 2);
 			}
 			set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
 		}
@@ -956,12 +956,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedDropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
 				}
 
-				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.PedDropsWeaponsWhenDeadOffset, 14);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.PedDropsWeaponsWhenDeadOffset, 14);
 			}
 			set => Function.Call(Hash.SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
 		}

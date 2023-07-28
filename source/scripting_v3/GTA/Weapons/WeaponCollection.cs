@@ -86,7 +86,7 @@ namespace GTA
 		{
 			get
 			{
-				IntPtr pedInventoryAddr = SHVDN.NativeMemory.GetCPedInventoryAddressFromPedHandle(owner.Handle);
+				IntPtr pedInventoryAddr = SHVDN.NativeMemory.Ped.GetCPedInventoryAddressFromPedHandle(owner.Handle);
 				if (pedInventoryAddr == IntPtr.Zero)
 				{
 					return 0;
@@ -122,7 +122,7 @@ namespace GTA
 		{
 			unsafe
 			{
-				IntPtr pedInventoryAddr = SHVDN.NativeMemory.GetCPedInventoryAddressFromPedHandle(owner.Handle);
+				IntPtr pedInventoryAddr = SHVDN.NativeMemory.Ped.GetCPedInventoryAddressFromPedHandle(owner.Handle);
 				if (pedInventoryAddr == IntPtr.Zero)
 				{
 					return null;
@@ -165,7 +165,7 @@ namespace GTA
 		/// </summary>
 		public WeaponHash[] GetAllWeaponHashes()
 		{
-			return Array.ConvertAll(SHVDN.NativeMemory.GetAllWeaponHashesOfPedInventory(owner.Handle), x => (WeaponHash)x);
+			return Array.ConvertAll(SHVDN.NativeMemory.Ped.GetAllWeaponHashesOfPedInventory(owner.Handle), x => (WeaponHash)x);
 		}
 
 		/// <summary>
@@ -181,7 +181,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if the <see cref="WeaponCollection"/> contains a <see cref="WeaponHash"/> with the specified slot hash; otherwise, <see langword="false"/>.</returns>
 		public bool TryGetWeaponHashBySlotHash(int slotHash, out WeaponHash weaponHash)
 		{
-			bool foundWeaponHash = SHVDN.NativeMemory.TryGetWeaponHashInPedInventoryBySlotHash(owner.Handle, (uint)slotHash, out uint weaponHashUInt);
+			bool foundWeaponHash = SHVDN.NativeMemory.Ped.TryGetWeaponHashInPedInventoryBySlotHash(owner.Handle, (uint)slotHash, out uint weaponHashUInt);
 
 			weaponHash = (WeaponHash)weaponHashUInt;
 			return foundWeaponHash;
