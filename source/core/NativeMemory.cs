@@ -5823,16 +5823,16 @@ namespace SHVDN
 		#region -- Weapon Info And Ammo Info --
 
 		[StructLayout(LayoutKind.Explicit, Size = 0xC)]
-		private struct RageAtArrayPtr
+		public struct RageAtArrayPtr
 		{
 			[FieldOffset(0x0)]
-			internal ulong* data;
+			public ulong* data;
 			[FieldOffset(0x8)]
-			internal ushort size;
+			public ushort size;
 			[FieldOffset(0xA)]
-			internal ushort capacity;
+			public ushort capacity;
 
-			internal ulong GetElementAddress(int i)
+			public ulong GetElementAddress(int i)
 			{
 				return data[i];
 			}
@@ -5862,20 +5862,20 @@ namespace SHVDN
 		private static int s_weaponInfoHumanNameHashOffset;
 
 		[StructLayout(LayoutKind.Explicit, Size = 0x20)]
-		private struct ItemInfo
+		public struct ItemInfo
 		{
 			[FieldOffset(0x0)]
-			internal ulong* vTable;
+			public ulong* vTable;
 			[FieldOffset(0x10)]
-			internal uint nameHash;
+			public uint nameHash;
 			[FieldOffset(0x14)]
-			internal uint modelHash;
+			public uint modelHash;
 			[FieldOffset(0x18)]
-			internal uint audioHash;
+			public uint audioHash;
 			[FieldOffset(0x1C)]
-			internal uint slot;
+			public uint slot;
 
-			internal uint GetClassNameHash()
+			public uint GetClassNameHash()
 			{
 				// In the b2802 or a later exe, the function returns a hash value (not a pointer value)
 				if (GetGameVersion() >= 80)

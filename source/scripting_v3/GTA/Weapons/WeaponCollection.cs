@@ -13,29 +13,6 @@ namespace GTA
 {
 	public sealed class WeaponCollection : IEnumerable<Weapon>, IEnumerable
 	{
-		[StructLayout(LayoutKind.Explicit, Size = 0xC)]
-		unsafe internal struct RageAtArrayPtr
-		{
-			[FieldOffset(0x0)]
-			internal ulong* data;
-			[FieldOffset(0x8)]
-			internal ushort size;
-			[FieldOffset(0xA)]
-			internal ushort capacity;
-
-			internal ulong GetElementAddress(int i)
-			{
-				return data[i];
-			}
-		}
-
-		[StructLayout(LayoutKind.Explicit, Size = 0x14)]
-		struct ItemInfo
-		{
-			[FieldOffset(0x10)]
-			internal uint nameHash;
-		}
-
 		#region Fields
 		readonly Ped owner;
 		readonly Dictionary<WeaponHash, Weapon> weapons = new();
@@ -94,7 +71,7 @@ namespace GTA
 
 				unsafe
 				{
-					return ((RageAtArrayPtr*)(pedInventoryAddr + 0x18))->size;
+					return ((SHVDN.NativeMemory.RageAtArrayPtr*)(pedInventoryAddr + 0x18))->size;
 				}
 			}
 		}
@@ -128,14 +105,14 @@ namespace GTA
 					return null;
 				}
 
-				var weaponInventoryArray = (RageAtArrayPtr*)(pedInventoryAddr + 0x18);
+				var weaponInventoryArray = (SHVDN.NativeMemory.RageAtArrayPtr*)(pedInventoryAddr + 0x18);
 				if (index >= weaponInventoryArray->size)
 				{
 					return null;
 				}
 
 				ulong itemAddress = weaponInventoryArray->GetElementAddress(index);
-				ItemInfo* weaponInfo = *(ItemInfo**)(itemAddress + 0x8);
+				SHVDN.NativeMemory.ItemInfo* weaponInfo = *(SHVDN.NativeMemory.ItemInfo**)(itemAddress + 0x8);
 				if (weaponInfo == null)
 				{
 					return null;
