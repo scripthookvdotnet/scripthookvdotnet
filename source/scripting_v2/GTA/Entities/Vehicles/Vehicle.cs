@@ -815,7 +815,7 @@ namespace GTA
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Vehicle"/> has a siren; otherwise, <see langword="false" />.
 		/// </value>
-		public bool HasSiren => SHVDN.NativeMemory.Vehicle.VehicleHasSiren(Handle);
+		public bool HasSiren => SHVDN.NativeMemory.Vehicle.HasSiren(Handle);
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its siren turned on.

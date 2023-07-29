@@ -603,7 +603,7 @@ namespace GTA
 					// Intentionally always create a vehicle instance to avoid unintended NullReferenceException like in v3.6.0 or earlier versions
 					// GET_VEHICLE_PED_IS_IN isn't reliable at getting last vehicle since it returns 0 when the ped is going to a door of some vehicle or opening one.
 					// Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it (which is not the last vehicle), though the 2nd parameter name is supposed to be "ConsiderEnteringAsInVehicle" as a leaked header suggests.
-					return new Vehicle(SHVDN.NativeMemory.Ped.GetLastVehicleHandleOfPed(address));
+					return new Vehicle(SHVDN.NativeMemory.Ped.GetLastVehicleHandle(address));
 				}
 			}
 		}
@@ -895,12 +895,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedSuffersCriticalHitOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset == 0)
 				{
 					return false;
 				}
 
-				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.PedSuffersCriticalHitOffset, 2);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset, 2);
 			}
 			set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
 		}
@@ -956,12 +956,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = SHVDN.NativeMemory.GetEntityAddress(Handle);
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedDropsWeaponsWhenDeadOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
 				}
 
-				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.PedDropsWeaponsWhenDeadOffset, 14);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 14);
 			}
 			set => Function.Call(Hash.SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
 		}

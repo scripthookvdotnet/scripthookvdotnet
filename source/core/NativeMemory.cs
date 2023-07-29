@@ -558,6 +558,12 @@ namespace SHVDN
 				s_pedPersonalitiesArrayAddr = (ulong*)(*(int*)(address + 0x49) + address + 0x4D);
 			}
 
+			address = FindPatternBmh("\x48\x85\xC0\x74\x7F\xF6\x80\x00\x00\x00\x00\x02\x75\x76", "xxxxxxx????xxx");
+			if (address != null)
+			{
+				int pedIntelligenceOffset = *(int*)(address + 0x11);
+				PedPlayerInfoOffset = pedIntelligenceOffset + 0x8;
+			}
 			address = FindPatternBmh("\x66\x0F\x6E\xF0\x0F\x5B\xF6\xE8\x00\x00\x00\x00\x0F\x28\xCE\x41\xB1\x01\x45\x33\xC0\x48\x8B\xC8\xE8", "xxxxxxxx????xxxxxxxxxxxxx");
 			if (address != null)
 			{
@@ -1975,7 +1981,7 @@ namespace SHVDN
 			public static int FuelLevelOffset { get; }
 			public static int OilLevelOffset { get; }
 
-			public static int VehicleTypeOffsetInCVehicle { get; }
+			public static int VehicleTypeOffset { get; }
 
 			public static int WheelPtrArrayOffset { get; }
 			public static int WheelCountOffset { get; }
@@ -1993,9 +1999,9 @@ namespace SHVDN
 
 			public static int DisablePretendOccupantOffset { get; }
 
-			public static int VehicleProvidesCoverOffset { get; }
+			public static int ProvidesCoverOffset { get; }
 
-			public static int VehicleLightsMultiplierOffset { get; }
+			public static int LightsMultiplierOffset { get; }
 
 			public static int IsInteriorLightOnOffset { get; }
 			public static int IsEngineStartingOffset { get; }
@@ -2009,15 +2015,15 @@ namespace SHVDN
 
 			public static int AlarmTimeOffset { get; }
 
-			public static int VehicleLodMultiplierOffset { get; }
+			public static int LodMultiplierOffset { get; }
 
 			public static int CanUseSirenOffset { get; }
 			public static int HasMutedSirensOffset { get; }
 			public static int HasMutedSirensBit { get; }
 
-			public static int VehicleSirenBufferOffset { get; }
+			public static int SirenBufferOffset { get; }
 
-			public static int VehicleDropsMoneyWhenBlownUpOffset { get; }
+			public static int DropsMoneyWhenBlownUpOffset { get; }
 
 			public static int HeliBladesSpeedOffset { get; }
 
@@ -2029,7 +2035,7 @@ namespace SHVDN
 
 			public static int SubHandlingDataArrayOffset { get; }
 
-			public static int VehicleModelSirenIdOffset { get; }
+			public static int ModelSirenIdOffset { get; }
 
 			public static int FirstVehicleFlagsOffset { get; }
 
@@ -2132,13 +2138,13 @@ namespace SHVDN
 				address = FindPatternBmh("\x48\x83\xEC\x20\x49\x8B\xF8\x48\x8B\xDA\x48\x85\xD2\x74\x4A\x80\x7A\x28\x03\x75\x44\xF6\x82", "xxxxxxxxxxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					VehicleProvidesCoverOffset = *(int*)(address + 23);
+					ProvidesCoverOffset = *(int*)(address + 23);
 				}
 
 				address = FindPatternBmh("\x74\x03\x41\x8A\xF4\xF3\x44\x0F\x59\x93\x00\x00\x00\x00\x48\x8B\xCB\xF3\x44\x0F\x59\x97\xFC\x00\x00\x00\xF3\x44\x0F\x59\xD6", "xxxxxxxxxx????xxxxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					VehicleLightsMultiplierOffset = *(int*)(address + 10);
+					LightsMultiplierOffset = *(int*)(address + 10);
 				}
 
 				address = FindPatternBmh("\xFD\x02\xDB\x08\x98\x00\x00\x00\x00\x48\x8B\x5C\x24\x30", "xxxxx????xxxxx");
@@ -2168,7 +2174,7 @@ namespace SHVDN
 				address = FindPatternBmh("\x8B\xCB\x89\x87\x90\x00\x00\x00\x8A\x86\xD8\x00\x00\x00\x24\x07\x41\x3A\xC6\x0F\x94\xC1\xC1\xE1\x12\x33\xCA\x81\xE1\x00\x00\x04\x00\x33\xCA", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					VehicleLodMultiplierOffset = *(int*)(address - 4);
+					LodMultiplierOffset = *(int*)(address - 4);
 				}
 
 				address = FindPatternBmh("\x8A\x96\x00\x00\x00\x00\x0F\xB6\xC8\x84\xD2\x41", "xx????xxxxxx");
@@ -2193,7 +2199,7 @@ namespace SHVDN
 				address = FindPatternBmh("\x8B\xCB\x89\x87\x90\x00\x00\x00\x8A\x86\xD8\x00\x00\x00\x24\x07\x41\x3A\xC6\x0F\x94\xC1\xC1\xE1\x12\x33\xCA\x81\xE1\x00\x00\x04\x00\x33\xCA", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					VehicleLodMultiplierOffset = *(int*)(address - 4);
+					LodMultiplierOffset = *(int*)(address - 4);
 				}
 
 				address = FindPatternNaive("\x48\x85\xC0\x74\x32\x8A\x88\x00\x00\x00\x00\xF6\xC1\x00\x75\x27", "xxxxxxx????xx?xx");
@@ -2206,20 +2212,20 @@ namespace SHVDN
 				address = FindPatternBmh("\xC1\xE9\x1C\xC0\xE1\x06\x32\xC8\x80\xE1\x40\x32\xC8\x88\x8E", "xxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					VehicleModelSirenIdOffset = *(int*)(address + 0x1F);
-					VehicleSirenBufferOffset = *(int*)(address + 0x26);
+					ModelSirenIdOffset = *(int*)(address + 0x1F);
+					SirenBufferOffset = *(int*)(address + 0x26);
 				}
 
 				address = FindPatternBmh("\x41\xBB\x07\x00\x00\x00\x8A\xC2\x41\x23\xCB\x41\x22\xC3\x3C\x03\x75\x16", "xxxxxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					VehicleTypeOffsetInCVehicle = *(int*)(address - 0x1C);
+					VehicleTypeOffset = *(int*)(address - 0x1C);
 				}
 
 				address = FindPatternBmh("\x83\xB8\x00\x00\x00\x00\x00\x77\x12\x80\xA0\x00\x00\x00\x00\xFD\x80\xE3\x01\x02\xDB\x08\x98", "xx?????xxxx????xxxxxxxx");
 				if (address != null)
 				{
-					VehicleDropsMoneyWhenBlownUpOffset = *(int*)(address + 11);
+					DropsMoneyWhenBlownUpOffset = *(int*)(address + 11);
 				}
 
 				address = FindPatternBmh("\x73\x1E\xF3\x41\x0F\x59\x86\x00\x00\x00\x00\xF3\x0F\x59\xC2\xF3\x0F\x59\xC7", "xxxxxxx????xxxxxxxx");
@@ -2257,21 +2263,21 @@ namespace SHVDN
 				address = FindPatternBmh("\xF3\x0F\x59\x05\x00\x00\x00\x00\xF3\x0F\x59\x83\x00\x00\x00\x00\xF3\x0F\x10\xC8\x0F\xC6\xC9\x00", "xxxx????xxxx????xxxxxxxx");
 				if (address != null)
 				{
-					VehicleWheelSteeringLimitMultiplierOffset = *(int*)(address + 12);
-					VehicleWheelSuspensionStrengthOffset = VehicleWheelSteeringLimitMultiplierOffset - 4;
+					WheelSteeringLimitMultiplierOffset = *(int*)(address + 12);
+					WheelSuspensionStrengthOffset = WheelSteeringLimitMultiplierOffset - 4;
 				}
 
 				address = FindPatternBmh("\xF3\x0F\x5C\xC8\x0F\x2F\xCB\xF3\x0F\x11\x89\x00\x00\x00\x00\x72\x10\xF3\x0F\x10\x1D", "xxxxxxxxxxx????xxxxxx");
 				if (address != null)
 				{
-					VehicleWheelTemperatureOffset = *(int*)(address + 11);
+					WheelTemperatureOffset = *(int*)(address + 11);
 				}
 
 				address = FindPatternBmh("\x74\x13\x0F\x57\xC0\x0F\x2E\x80", "xxxxxxxx");
 				if (address != null)
 				{
-					VehicleTireHealthOffset = *(int*)(address + 8);
-					VehicleWheelHealthOffset = VehicleTireHealthOffset - 4;
+					TireHealthOffset = *(int*)(address + 8);
+					WheelHealthOffset = TireHealthOffset - 4;
 				}
 
 				// the tire wear multipiler value for vehicle wheels is present only in b1868 or newer versions
@@ -2280,13 +2286,13 @@ namespace SHVDN
 					address = FindPatternNaive("\x45\x84\xF6\x74\x08\xF3\x0F\x59\x0D\x00\x00\x00\x00\xF3\x0F\x10\x83", "xxxxxxxxx????xxxx");
 					if (address != null)
 					{
-						VehicleTireWearRateOffset = *(int*)(address + 0x22);
+						TireWearRateOffset = *(int*)(address + 0x22);
 
 						// The values for SET_TYRE_WEAR_RATE_SCALE and SET_TYRE_MAXIMUM_GRIP_DIFFERENCE_DUE_TO_WEAR_RATE are not present in b1868
 						if (gameVersion >= 59)
 						{
-							VehicleWheelMaxGripDiffDueToWearRateOffset = VehicleTireWearRateOffset + 4;
-							VehicleTireWearRateScaleOffset = VehicleTireWearRateOffset + 8;
+							WheelMaxGripDiffDueToWearRateOffset = TireWearRateOffset + 4;
+							TireWearRateScaleOffset = TireWearRateOffset + 8;
 						}
 					}
 				}
@@ -2294,13 +2300,13 @@ namespace SHVDN
 				address = FindPatternBmh("\x0F\xBF\x88\x00\x00\x00\x00\x3B\xCA\x74\x17", "xxx????xxxx");
 				if (address != null)
 				{
-					VehicleWheelIdOffset = *(int*)(address + 3);
+					WheelIdOffset = *(int*)(address + 3);
 				}
 
 				address = FindPatternNaive("\xEB\x02\x33\xC9\xF6\x81\x00\x00\x00\x00\x01\x75\x43", "xxxxxx????xxx");
 				if (address != null)
 				{
-					VehicleWheelTouchingFlagsOffset = *(int*)(address + 6);
+					WheelTouchingFlagsOffset = *(int*)(address + 6);
 				}
 
 				address = FindPatternBmh("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8", "xxxxxxxx????xxxx");
@@ -2370,14 +2376,14 @@ namespace SHVDN
 				return IntPtr.Zero;
 			}
 
-			public static float GetVehicleTurbo(int vehicleHandle)
+			public static float GetTurbo(int handle)
 			{
 				if (CVehicleEngineTurboOffset == 0)
 				{
 					return 0f;
 				}
 
-				byte* vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
+				byte* vehEngineStructAddr = GetCVehicleEngine(handle);
 
 				if (vehEngineStructAddr == null)
 				{
@@ -2386,14 +2392,14 @@ namespace SHVDN
 
 				return *(float*)(vehEngineStructAddr + CVehicleEngineTurboOffset);
 			}
-			public static void SetVehicleTurbo(int vehicleHandle, float value)
+			public static void SetTurbo(int handle, float value)
 			{
 				if (CVehicleEngineTurboOffset == 0)
 				{
 					return;
 				}
 
-				byte* vehEngineStructAddr = GetCVehicleEngine(vehicleHandle);
+				byte* vehEngineStructAddr = GetCVehicleEngine(handle);
 
 				if (vehEngineStructAddr == null)
 				{
@@ -2403,9 +2409,9 @@ namespace SHVDN
 				*(float*)(vehEngineStructAddr + CVehicleEngineTurboOffset) = value;
 			}
 
-			private static byte* GetCVehicleEngine(int vehicleHandle)
+			private static byte* GetCVehicleEngine(int handle)
 			{
-				IntPtr address = GetEntityAddress(vehicleHandle);
+				IntPtr address = GetEntityAddress(handle);
 
 				if (address == IntPtr.Zero)
 				{
@@ -2432,7 +2438,7 @@ namespace SHVDN
 				return (*(byte*)(address + HasMutedSirensOffset) & HasMutedSirensBit) != 0;
 			}
 
-			public static bool VehicleHasSiren(int vehicleHandle)
+			public static bool HasSiren(int vehicleHandle)
 			{
 				IntPtr address = GetEntityAddress(vehicleHandle);
 
@@ -2449,7 +2455,7 @@ namespace SHVDN
 				}
 
 				// The siren id must not be zero to use the siren
-				return (*(ulong**)(address + VehicleSirenBufferOffset) != null) && GetByteSirenIdOfVehicleModel(modelAddress) != 0;
+				return (*(ulong**)(address + SirenBufferOffset) != null) && GetByteSirenIdOfVehicleModel(modelAddress) != 0;
 			}
 
 			public static int GetByteSirenIdOfVehicleModel(IntPtr vehicleModelAddress)
@@ -2458,7 +2464,7 @@ namespace SHVDN
 				// Raw carcols.meta and carvariations.meta files must be used for siren ID that exceeds 0xFF since carcols.ymt and carvariations.ymt can contain siren ID as uint8_t value
 				// (SirenSetting Limit Adjuster modifies the siren ID type to uint16_t type during runtime)
 				// Do not complain CodeWalker for carcols.ymt and carvariations.ymt not supporting siren ID that exceeds 0xFF, that is an expected behavior
-				return *(byte*)(vehicleModelAddress + VehicleModelSirenIdOffset);
+				return *(byte*)(vehicleModelAddress + ModelSirenIdOffset);
 			}
 
 			#endregion
@@ -2471,28 +2477,28 @@ namespace SHVDN
 			private static delegate* unmanaged[Stdcall]<IntPtr, void> s_burstVehicleTireOnRimNewFunc;
 			private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_burstVehicleTireOnRimOldFunc;
 
-			public static int VehicleWheelSteeringLimitMultiplierOffset { get; }
+			public static int WheelSteeringLimitMultiplierOffset { get; }
 
-			public static int VehicleWheelSuspensionStrengthOffset { get; }
+			public static int WheelSuspensionStrengthOffset { get; }
 
-			public static int VehicleWheelTemperatureOffset { get; }
+			public static int WheelTemperatureOffset { get; }
 
-			public static int VehicleWheelHealthOffset { get; }
+			public static int WheelHealthOffset { get; }
 
-			public static int VehicleTireHealthOffset { get; }
+			public static int TireHealthOffset { get; }
 
-			public static int VehicleTireWearRateOffset { get; }
+			public static int TireWearRateOffset { get; }
 			/// <summary>
 			/// This value only affects how fast a vehicle tire health decreases, which is different from
-			/// <see cref="VehicleTireWearRateOffset"/>.
+			/// <see cref="TireWearRateOffset"/>.
 			/// </summary>
-			public static int VehicleWheelMaxGripDiffDueToWearRateOffset { get; }
-			public static int VehicleTireWearRateScaleOffset { get; }
+			public static int WheelMaxGripDiffDueToWearRateOffset { get; }
+			public static int TireWearRateScaleOffset { get; }
 
 			// the on fire offset is the same as this offset
-			public static int VehicleWheelTouchingFlagsOffset { get; }
+			public static int WheelTouchingFlagsOffset { get; }
 
-			public static int VehicleWheelIdOffset { get; }
+			public static int WheelIdOffset { get; }
 
 			public static int ShouldShowOnlyVehicleTiresWithPositiveHealthOffset { get; }
 
@@ -2512,12 +2518,12 @@ namespace SHVDN
 
 			public static bool IsWheelTouchingSurface(IntPtr wheelAddress, IntPtr vehicleAddress)
 			{
-				if (VehicleWheelTouchingFlagsOffset == 0)
+				if (WheelTouchingFlagsOffset == 0)
 				{
 					return false;
 				}
 
-				uint wheelTouchingFlag = *(uint*)(wheelAddress + VehicleWheelTouchingFlagsOffset).ToPointer();
+				uint wheelTouchingFlag = *(uint*)(wheelAddress + WheelTouchingFlagsOffset).ToPointer();
 				if ((wheelTouchingFlag & 1) != 0)
 				{
 					return true;
@@ -2649,9 +2655,8 @@ namespace SHVDN
 					byte* setDecisionMakerHashFuncAddr = *(int*)(address + 0x18) + address + 0x1C;
 					PedIntelligenceDecisionMakerHashOffset = *(int*)(setDecisionMakerHashFuncAddr + 0x1C);
 
-					PedPlayerInfoOffset = PedIntelligenceOffset + 0x8;
-					CPedIntentoryOfCPedOffset = PedIntelligenceOffset + 0x10;
-					UnkCPedStateOffset = PedIntelligenceOffset - 0x10;
+					IntentoryOfCPedOffset = PedIntelligenceOffset + 0x10;
+					UnkStateOffset = PedIntelligenceOffset - 0x10;
 				}
 
 				address = FindPatternBmh("\x48\x8B\x88\x00\x00\x00\x00\x48\x85\xC9\x74\x43\x48\x85\xD2", "xxx????xxxxxxxx");
@@ -2681,19 +2686,19 @@ namespace SHVDN
 				if (address != null)
 				{
 					int fragInstNmGtaOffset = *(int*)(address + 16);
-					PedKnockOffVehicleTypeOffset = s_fragInstNmGtaOffset + 0xC;
+					KnockOffVehicleTypeOffset = s_fragInstNmGtaOffset + 0xC;
 				}
 
 				address = FindPatternBmh("\x76\x20\xEB\x17\x76\x1C\xF3\x0F\x59\xE1\xF3\x0F\x5C\xC4\x0F\x2F\xC2", "xxxxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					CPedLowerWetnessLevelOffset = *(int*)(address - 4);
-					CPedUpperWetnessLevelOffset = CPedLowerWetnessLevelOffset + 4;
-					CPedLowerWetnessHeightOffset = CPedLowerWetnessLevelOffset - 8;
-					CPedUpperWetnessHeightOffset = CPedLowerWetnessLevelOffset - 4;
+					LowerWetnessLevelOffset = *(int*)(address - 4);
+					UpperWetnessLevelOffset = LowerWetnessLevelOffset + 4;
+					LowerWetnessHeightOffset = LowerWetnessLevelOffset - 8;
+					UpperWetnessHeightOffset = LowerWetnessLevelOffset - 4;
 
 					// this may look too risky, but this offset fetching do work in b372, b2699, and b2845
-					CPedIsUsingWetEffectOffset = *(int*)(address + 0x85);
+					IsUsingWetEffectOffset = *(int*)(address + 0x85);
 				}
 
 				address = FindPatternBmh("\x0F\x93\xC0\x84\xC0\x74\x0F\xF3\x41\x0F\x58\xD1\x41\x0F\x2F\xD0\x72\x04\x41\x0F\x28\xD0", "xxxxxxxxxxxxxxxxxxxxxx");
@@ -2705,8 +2710,8 @@ namespace SHVDN
 				address = FindPatternBmh("\x8A\x41\x30\xC0\xE8\x03\xA8\x01\x74\x49\x8B\x82", "xxxxxxxxxxxx");
 				if (address != null)
 				{
-					PedIsInVehicleOffset = *(int*)(address + 12);
-					PedLastVehicleOffset = *(int*)(address + 0x1A);
+					IsInVehicleOffset = *(int*)(address + 12);
+					LastVehicleOffset = *(int*)(address + 0x1A);
 				}
 				address = FindPatternBmh("\x24\x3F\x0F\xB6\xC0\x66\x89\x87", "xxxxxxxx");
 				if (address != null)
@@ -2717,19 +2722,19 @@ namespace SHVDN
 				address = FindPatternBmh("\x84\xC0\x0F\x84\x2C\x01\x00\x00\x48\x8D\x9F\x00\x00\x00\x00\x48\x8B\x0B\x48\x3B\xCE\x74\x1B\x48\x85\xC9\x74\x08\x48\x8B\xD3\xE8", "xxxxxxxxxxx????xxxxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					CPedVehicleStandingOnOffset = *(int*)(address + 11);
+					VehicleStandingOnOffset = *(int*)(address + 11);
 				}
 
 				address = FindPatternBmh("\xC1\xE8\x11\xA8\x01\x75\x10\x48\x8B\xCB\xE8\x00\x00\x00\x00\x84\xC0\x0F\x84", "xxxxxxxxxxx????xxxx");
 				if (address != null)
 				{
-					PedDropsWeaponsWhenDeadOffset = *(int*)(address - 4);
+					DropsWeaponsWhenDeadOffset = *(int*)(address - 4);
 				}
 
 				address = FindPatternBmh("\x4D\x8B\xF1\x48\x8B\xFA\xC1\xE8\x02\x48\x8B\xF1\xA8\x01\x0F\x85\xEB\x00\x00\x00", "xxxxxxxxxxxxxxxxxxxx");
 				if (address != null)
 				{
-					PedSuffersCriticalHitOffset = *(int*)(address - 4);
+					SuffersCriticalHitOffset = *(int*)(address - 4);
 				}
 
 				int gameVersion = GetGameVersion();
@@ -2765,9 +2770,9 @@ namespace SHVDN
 				address = FindPatternBmh("\x8B\x83\x00\x00\x00\x00\x8B\x35\x00\x00\x00\x00\x3B\xF0\x76\x04", "xx????xx????xxxx");
 				if (address != null)
 				{
-					PedTimeOfDeathOffset = *(int*)(address + 2);
-					PedCauseOfDeathOffset = PedTimeOfDeathOffset - 4;
-					PedSourceOfDeathOffset = PedTimeOfDeathOffset - 12;
+					TimeOfDeathOffset = *(int*)(address + 2);
+					CauseOfDeathOffset = TimeOfDeathOffset - 4;
+					SourceOfDeathOffset = TimeOfDeathOffset - 12;
 				}
 
 				address = FindPatternNaive("\x74\x08\x8B\x81\x00\x00\x00\x00\xEB\x0D\x48\x8B\x87\x00\x00\x00\x00\x8B\x80", "xxxx????xxxxx????xx");
@@ -2808,14 +2813,14 @@ namespace SHVDN
 			/// Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it, which is different from the last vehicle this method returns and the native <c>RESET_PED_LAST_VEHICLE</c> changes.
 			/// </para>
 			/// </summary>
-			public static int GetLastVehicleHandleOfPed(IntPtr pedAddress)
+			public static int GetLastVehicleHandle(IntPtr pedAddress)
 			{
-				if (PedLastVehicleOffset == 0)
+				if (LastVehicleOffset == 0)
 				{
 					return 0;
 				}
 
-				var lastVehicleAddress = new IntPtr(*(long*)(pedAddress + PedLastVehicleOffset));
+				var lastVehicleAddress = new IntPtr(*(long*)(pedAddress + LastVehicleOffset));
 				return lastVehicleAddress != IntPtr.Zero ? GetEntityHandleFromAddress(lastVehicleAddress) : 0;
 			}
 
@@ -2827,19 +2832,19 @@ namespace SHVDN
 			/// </summary>
 			public static int GetVehicleHandlePedIsIn(IntPtr pedAddress)
 			{
-				if (PedIsInVehicleOffset == 0 || PedLastVehicleOffset == 0)
+				if (IsInVehicleOffset == 0 || LastVehicleOffset == 0)
 				{
 					return 0;
 				}
 
-				uint bitFlags = *(uint*)(pedAddress + PedIsInVehicleOffset);
+				uint bitFlags = *(uint*)(pedAddress + IsInVehicleOffset);
 				bool isPedInVehicle = ((bitFlags & (1 << 0x1E)) != 0);
 				if (!isPedInVehicle)
 				{
 					return 0;
 				}
 
-				var lastVehicleAddress = new IntPtr(*(long*)(pedAddress + PedLastVehicleOffset));
+				var lastVehicleAddress = new IntPtr(*(long*)(pedAddress + LastVehicleOffset));
 				return lastVehicleAddress != IntPtr.Zero ? GetEntityHandleFromAddress(lastVehicleAddress) : 0;
 			}
 
@@ -2848,12 +2853,12 @@ namespace SHVDN
 			/// </summary>
 			public static int GetVehicleHandlePedIsStandingOn(IntPtr pedAddress)
 			{
-				if (CPedVehicleStandingOnOffset == 0)
+				if (VehicleStandingOnOffset == 0)
 				{
 					return 0;
 				}
 
-				var vehicleStandingOnAddress = new IntPtr(*(long*)(pedAddress + CPedVehicleStandingOnOffset));
+				var vehicleStandingOnAddress = new IntPtr(*(long*)(pedAddress + VehicleStandingOnOffset));
 				return vehicleStandingOnAddress != IntPtr.Zero ? GetEntityHandleFromAddress(vehicleStandingOnAddress) : 0;
 			}
 
@@ -2861,43 +2866,43 @@ namespace SHVDN
 
 			#region -- Ped Offsets --
 
-			public static int CPedLowerWetnessHeightOffset { get; }
-			public static int CPedUpperWetnessHeightOffset { get; }
-			public static int CPedLowerWetnessLevelOffset { get; }
-			public static int CPedUpperWetnessLevelOffset { get; }
+			public static int LowerWetnessHeightOffset { get; }
+			public static int UpperWetnessHeightOffset { get; }
+			public static int LowerWetnessLevelOffset { get; }
+			public static int UpperWetnessLevelOffset { get; }
 
-			public static int CPedIsUsingWetEffectOffset { get; }
+			public static int IsUsingWetEffectOffset { get; }
 
 			public static int SweatOffset { get; }
 
 			/// <summary>
 			/// The value at this offset should be 2 if the ped is a player ped.
 			/// </summary>
-			public static int UnkCPedStateOffset { get; }
+			public static int UnkStateOffset { get; }
 
-			public static int CPedIntentoryOfCPedOffset { get; }
+			public static int IntentoryOfCPedOffset { get; }
 
 			// the same offset as the offset for SET_PED_CAN_BE_TARGETTED
-			public static int PedDropsWeaponsWhenDeadOffset { get; }
+			public static int DropsWeaponsWhenDeadOffset { get; }
 
-			public static int PedSuffersCriticalHitOffset { get; }
+			public static int SuffersCriticalHitOffset { get; }
 
 			public static int ArmorOffset { get; }
 
 			public static int InjuryHealthThresholdOffset { get; }
 			public static int FatalInjuryHealthThresholdOffset { get; }
 
-			public static int PedIsInVehicleOffset { get; }
-			public static int PedLastVehicleOffset { get; }
+			public static int IsInVehicleOffset { get; }
+			public static int LastVehicleOffset { get; }
 			public static int SeatIndexOffset { get; }
 
-			public static int CPedVehicleStandingOnOffset { get; }
+			public static int VehicleStandingOnOffset { get; }
 
-			public static int PedSourceOfDeathOffset { get; }
-			public static int PedCauseOfDeathOffset { get; }
-			public static int PedTimeOfDeathOffset { get; }
+			public static int SourceOfDeathOffset { get; }
+			public static int CauseOfDeathOffset { get; }
+			public static int TimeOfDeathOffset { get; }
 
-			public static int PedKnockOffVehicleTypeOffset { get; }
+			public static int KnockOffVehicleTypeOffset { get; }
 
 			#region -- Ped Intelligence Offsets --
 
@@ -3027,7 +3032,7 @@ namespace SHVDN
 
 			public static IntPtr GetCPedInventoryAddressFromPedHandle(int pedHandle)
 			{
-				if (CPedIntentoryOfCPedOffset == 0)
+				if (IntentoryOfCPedOffset == 0)
 				{
 					return IntPtr.Zero;
 				}
@@ -3038,7 +3043,7 @@ namespace SHVDN
 					return IntPtr.Zero;
 				}
 
-				return new IntPtr(*(long**)(cPedAddress + CPedIntentoryOfCPedOffset));
+				return new IntPtr(*(long**)(cPedAddress + IntentoryOfCPedOffset));
 			}
 
 			public static uint[] GetAllWeaponHashesOfPedInventory(int pedHandle)
@@ -3110,7 +3115,7 @@ namespace SHVDN
 
 			private static RageAtArrayPtr* GetWeaponInventoryArrayOfCPedInventory(int pedHandle)
 			{
-				if (CPedIntentoryOfCPedOffset == 0)
+				if (IntentoryOfCPedOffset == 0)
 				{
 					return null;
 				}
@@ -3121,7 +3126,7 @@ namespace SHVDN
 					return null;
 				}
 
-				ulong cPedInventoryAddress = *(ulong*)(cPedAddress + CPedIntentoryOfCPedOffset);
+				ulong cPedInventoryAddress = *(ulong*)(cPedAddress + IntentoryOfCPedOffset);
 				if (cPedInventoryAddress == 0)
 				{
 					return null;

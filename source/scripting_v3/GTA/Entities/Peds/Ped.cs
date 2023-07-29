@@ -288,22 +288,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CPedLowerWetnessHeightOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset == 0)
 				{
 					return -2f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.CPedLowerWetnessHeightOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CPedLowerWetnessHeightOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.CPedLowerWetnessHeightOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset, value);
 			}
 		}
 		/// <summary>
@@ -315,22 +315,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CPedUpperWetnessHeightOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset == 0)
 				{
 					return -2f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.CPedUpperWetnessHeightOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CPedUpperWetnessHeightOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.CPedUpperWetnessHeightOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset, value);
 			}
 		}
 		/// <summary>
@@ -358,22 +358,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CPedLowerWetnessLevelOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.CPedLowerWetnessLevelOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CPedLowerWetnessLevelOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.CPedLowerWetnessLevelOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset, value);
 			}
 		}
 		/// <summary>
@@ -399,22 +399,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CPedUpperWetnessLevelOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.CPedUpperWetnessLevelOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CPedUpperWetnessLevelOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.CPedUpperWetnessLevelOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset, value);
 			}
 		}
 
@@ -427,12 +427,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CPedIsUsingWetEffectOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.IsUsingWetEffectOffset == 0)
 				{
 					return false;
 				}
 
-				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.CPedIsUsingWetEffectOffset, 0);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.IsUsingWetEffectOffset, 0);
 			}
 		}
 
@@ -477,9 +477,9 @@ namespace GTA
 
 			Wet(height);
 
-			if (SHVDN.NativeMemory.Ped.CPedUpperWetnessLevelOffset != 0)
+			if (SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset != 0)
 			{
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.CPedUpperWetnessLevelOffset, wetLevel);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset, wetLevel);
 			}
 		}
 		/// <summary>
@@ -1314,7 +1314,7 @@ namespace GTA
 		{
 			get
 			{
-				if (SHVDN.NativeMemory.Ped.PedKnockOffVehicleTypeOffset == 0)
+				if (SHVDN.NativeMemory.Ped.KnockOffVehicleTypeOffset == 0)
 				{
 					return KnockOffVehicleType.Default;
 				}
@@ -1326,7 +1326,7 @@ namespace GTA
 				}
 
 				// The knock off vehicle type value uses the first 2 bits
-				return (KnockOffVehicleType)(SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Ped.PedKnockOffVehicleTypeOffset) & 3);
+				return (KnockOffVehicleType)(SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Ped.KnockOffVehicleTypeOffset) & 3);
 			}
 			set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, (int)value);
 		}
@@ -1426,7 +1426,7 @@ namespace GTA
 
 				// GET_VEHICLE_PED_IS_IN isn't reliable at getting last vehicle since it returns 0 when the ped is going to a door of some vehicle or opening one.
 				// Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it (which is not the last vehicle), though the 2nd parameter name is supposed to be "ConsiderEnteringAsInVehicle" as a leaked header suggests.
-				int vehicleHandle = SHVDN.NativeMemory.Ped.GetLastVehicleHandleOfPed(address);
+				int vehicleHandle = SHVDN.NativeMemory.Ped.GetLastVehicleHandle(address);
 				return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
 			}
 		}
@@ -1725,12 +1725,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedDropsWeaponsWhenDeadOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
 				}
 
-				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.PedDropsWeaponsWhenDeadOffset, 9);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 9);
 			}
 			set => Function.Call(Hash.SET_PED_CAN_BE_TARGETTED, Handle, value);
 		}
@@ -1811,12 +1811,12 @@ namespace GTA
 		public void ClearKillerRecord()
 		{
 			IntPtr address = MemoryAddress;
-			if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedSourceOfDeathOffset == 0)
+			if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.SourceOfDeathOffset == 0)
 			{
 				return;
 			}
 
-			SHVDN.NativeMemory.WriteAddress(address + SHVDN.NativeMemory.Ped.PedSourceOfDeathOffset, IntPtr.Zero);
+			SHVDN.NativeMemory.WriteAddress(address + SHVDN.NativeMemory.Ped.SourceOfDeathOffset, IntPtr.Zero);
 		}
 
 		/// <summary>
@@ -1826,12 +1826,12 @@ namespace GTA
 		public void ClearCauseOfDeathRecord()
 		{
 			IntPtr address = MemoryAddress;
-			if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedCauseOfDeathOffset == 0)
+			if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CauseOfDeathOffset == 0)
 			{
 				return;
 			}
 
-			SHVDN.NativeMemory.WriteInt32(address + SHVDN.NativeMemory.Ped.PedCauseOfDeathOffset, 0);
+			SHVDN.NativeMemory.WriteInt32(address + SHVDN.NativeMemory.Ped.CauseOfDeathOffset, 0);
 		}
 
 		/// <summary>
@@ -1841,12 +1841,12 @@ namespace GTA
 		public void ClearTimeOfDeathRecord()
 		{
 			IntPtr address = MemoryAddress;
-			if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedTimeOfDeathOffset == 0)
+			if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.TimeOfDeathOffset == 0)
 			{
 				return;
 			}
 
-			SHVDN.NativeMemory.WriteInt32(address + SHVDN.NativeMemory.Ped.PedTimeOfDeathOffset, 0);
+			SHVDN.NativeMemory.WriteInt32(address + SHVDN.NativeMemory.Ped.TimeOfDeathOffset, 0);
 		}
 
 		#endregion
@@ -1871,12 +1871,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedSuffersCriticalHitOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset == 0)
 				{
 					return false;
 				}
 
-				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.PedSuffersCriticalHitOffset, 2);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset, 2);
 			}
 			set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
 		}
@@ -1932,12 +1932,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.PedDropsWeaponsWhenDeadOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset == 0)
 				{
 					return false;
 				}
 
-				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.PedDropsWeaponsWhenDeadOffset, 14);
+				return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 14);
 			}
 			set => Function.Call(Hash.SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
 		}

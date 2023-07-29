@@ -94,7 +94,7 @@ namespace GTA
 				return null;
 			}
 
-			var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddr + SHVDN.NativeMemory.Vehicle.VehicleWheelIdOffset);
+			var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddr + SHVDN.NativeMemory.Vehicle.WheelIdOffset);
 			int boneIndexZeroBased = (int)boneId - 11;
 			return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(Vehicle, boneId, wheelAddr));
 		}
@@ -118,7 +118,7 @@ namespace GTA
 
 				IntPtr wheelAddress = SHVDN.NativeMemory.Vehicle.GetVehicleWheelAddressByIndexOfWheelArray(vehicleAddr, i);
 
-				var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.Vehicle.VehicleWheelIdOffset);
+				var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.Vehicle.WheelIdOffset);
 				int boneIndexZeroBased = (int)boneId - 11;
 				yield return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(Vehicle, boneId, wheelAddress));
 			}
@@ -173,7 +173,7 @@ namespace GTA
 			for (int i = 0; i < returnWheelArray.Length; i++)
 			{
 				IntPtr wheelAddress = SHVDN.NativeMemory.Vehicle.GetVehicleWheelAddressByIndexOfWheelArray(vehicleAddress, i);
-				var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.Vehicle.VehicleWheelIdOffset);
+				var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.Vehicle.WheelIdOffset);
 				var vehicleWheelInstance = new VehicleWheel(Vehicle, boneId, wheelAddress);
 				returnWheelArray[i] = vehicleWheelInstance;
 

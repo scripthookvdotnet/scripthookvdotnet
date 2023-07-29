@@ -193,22 +193,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelSteeringLimitMultiplierOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSteeringLimitMultiplierOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelSteeringLimitMultiplierOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelSteeringLimitMultiplierOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelSteeringLimitMultiplierOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSteeringLimitMultiplierOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelSteeringLimitMultiplierOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelSteeringLimitMultiplierOffset, value);
 			}
 		}
 
@@ -221,22 +221,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelSuspensionStrengthOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSuspensionStrengthOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelSuspensionStrengthOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelSuspensionStrengthOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelSuspensionStrengthOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSuspensionStrengthOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelSuspensionStrengthOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelSuspensionStrengthOffset, value);
 			}
 		}
 
@@ -249,22 +249,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelTemperatureOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTemperatureOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelTemperatureOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelTemperatureOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelTemperatureOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTemperatureOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelTemperatureOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelTemperatureOffset, value);
 			}
 		}
 
@@ -292,22 +292,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
 				{
 					return false;
 				}
 
-				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset, 3);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset, 3);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset, 3, value);
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset, 3, value);
 			}
 		}
 
@@ -319,22 +319,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
 				{
 					return false;
 				}
 
-				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset + 4, 3);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset + 4, 3);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset + 4, 3, value);
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset + 4, 3, value);
 			}
 		}
 
@@ -346,22 +346,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
 				{
 					return false;
 				}
 
-				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset + 4, 4);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset + 4, 4);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.VehicleWheelTouchingFlagsOffset + 4, 4, value);
+				SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset + 4, 4, value);
 			}
 		}
 
@@ -373,12 +373,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTireHealthOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireHealthOffset == 0)
 				{
 					return false;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelHealthOffset) < 1000f;
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelHealthOffset) < 1000f;
 			}
 		}
 		/// <summary>
@@ -389,12 +389,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTireHealthOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireHealthOffset == 0)
 				{
 					return false;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleTireHealthOffset) <= 0f;
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireHealthOffset) <= 0f;
 			}
 		}
 		/// <summary>
@@ -405,22 +405,22 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelHealthOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelHealthOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelHealthOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelHealthOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelHealthOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelHealthOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelHealthOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelHealthOffset, value);
 			}
 		}
 		/// <summary>
@@ -432,17 +432,17 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTireHealthOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireHealthOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleTireHealthOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireHealthOffset);
 			}
 			set
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTireHealthOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireHealthOffset == 0)
 				{
 					return;
 				}
@@ -453,7 +453,7 @@ namespace GTA
 					value = 0f;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.VehicleTireHealthOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.TireHealthOffset, value);
 			}
 		}
 		/// <summary>
@@ -489,24 +489,24 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTireWearRateOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireWearRateOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleTireWearRateOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireWearRateOffset);
 			}
 			set
 			{
 				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1868_0_Steam, nameof(VehicleWheel), nameof(WearMultiplier));
 
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTireWearRateOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireWearRateOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.VehicleTireWearRateOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.TireWearRateOffset, value);
 			}
 		}
 		/// <summary>
@@ -533,24 +533,24 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelMaxGripDiffDueToWearRateOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelMaxGripDiffDueToWearRateOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelMaxGripDiffDueToWearRateOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelMaxGripDiffDueToWearRateOffset);
 			}
 			set
 			{
 				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2060_0_Steam, nameof(VehicleWheel), nameof(WearMultiplier));
 
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleWheelMaxGripDiffDueToWearRateOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelMaxGripDiffDueToWearRateOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.VehicleWheelMaxGripDiffDueToWearRateOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelMaxGripDiffDueToWearRateOffset, value);
 			}
 		}
 		/// <summary>
@@ -580,24 +580,24 @@ namespace GTA
 				}
 
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTireWearRateScaleOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireWearRateScaleOffset == 0)
 				{
 					return 0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleTireWearRateScaleOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireWearRateScaleOffset);
 			}
 			set
 			{
 				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2060_0_Steam, nameof(VehicleWheel), nameof(WearMultiplier));
 
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTireWearRateScaleOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireWearRateScaleOffset == 0)
 				{
 					return;
 				}
 
-				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.VehicleTireWearRateScaleOffset, value);
+				SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.TireWearRateScaleOffset, value);
 			}
 		}
 

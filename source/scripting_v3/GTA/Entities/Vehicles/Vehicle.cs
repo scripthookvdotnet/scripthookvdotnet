@@ -427,12 +427,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTypeOffsetInCVehicle == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTypeOffset == 0)
 				{
 					return VehicleType.None;
 				}
 
-				int vehTypeInt = SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.Vehicle.VehicleTypeOffsetInCVehicle);
+				int vehTypeInt = SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.Vehicle.VehicleTypeOffset);
 				if (vehTypeInt >= 6 && Game.Version < GameVersion.v1_0_944_2_Steam)
 				{
 					vehTypeInt += 2;
@@ -454,12 +454,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleLodMultiplierOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.LodMultiplierOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleLodMultiplierOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.LodMultiplierOffset);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_LOD_MULTIPLIER, Handle, value);
 		}
@@ -926,8 +926,8 @@ namespace GTA
 		/// </remarks>
 		public float Turbo
 		{
-			get => SHVDN.NativeMemory.Vehicle.GetVehicleTurbo(Handle);
-			set => SHVDN.NativeMemory.Vehicle.SetVehicleTurbo(Handle, value);
+			get => SHVDN.NativeMemory.Vehicle.GetTurbo(Handle);
+			set => SHVDN.NativeMemory.Vehicle.SetTurbo(Handle, value);
 		}
 
 		/// <summary>
@@ -1301,7 +1301,7 @@ namespace GTA
 		/// <value>
 		///   <see langword="true" /> if this <see cref="Vehicle"/> has a siren; otherwise, <see langword="false" />.
 		/// </value>
-		public bool HasSiren => SHVDN.NativeMemory.Vehicle.VehicleHasSiren(Handle);
+		public bool HasSiren => SHVDN.NativeMemory.Vehicle.HasSiren(Handle);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> can use a siren.
@@ -1523,12 +1523,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleLightsMultiplierOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.LightsMultiplierOffset == 0)
 				{
 					return 0.0f;
 				}
 
-				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.VehicleLightsMultiplierOffset);
+				return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.LightsMultiplierOffset);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_LIGHT_MULTIPLIER, Handle, value);
 		}
@@ -1698,7 +1698,7 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleDropsMoneyWhenBlownUpOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.DropsMoneyWhenBlownUpOffset == 0)
 				{
 					return false;
 				}
@@ -1706,7 +1706,7 @@ namespace GTA
 				// Check if the vehicle class is CAutomobile or a subclass of it
 				if ((uint)Type <= 10)
 				{
-					return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.VehicleDropsMoneyWhenBlownUpOffset, 1);
+					return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.DropsMoneyWhenBlownUpOffset, 1);
 				}
 
 				return false;
@@ -2004,12 +2004,12 @@ namespace GTA
 			get
 			{
 				IntPtr address = MemoryAddress;
-				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleProvidesCoverOffset == 0)
+				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.ProvidesCoverOffset == 0)
 				{
 					return false;
 				}
 
-				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.VehicleProvidesCoverOffset, 2);
+				return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.ProvidesCoverOffset, 2);
 			}
 			set => Function.Call(Hash.SET_VEHICLE_PROVIDES_COVER, Handle, value);
 		}
