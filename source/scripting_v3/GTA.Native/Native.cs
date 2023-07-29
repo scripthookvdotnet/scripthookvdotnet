@@ -1960,7 +1960,7 @@ namespace GTA.Native
 		{
 			if (type == typeof(string))
 			{
-				return SHVDN.NativeMemory.PtrToStringUtf8(new IntPtr((char*)*value));
+				return SHVDN.StringMarshal.PtrToStringUtf8(new IntPtr((char*)*value));
 			}
 
 			if (type == typeof(Entity))
@@ -2028,7 +2028,7 @@ namespace GTA.Native
 		{
 			if (typeof(T) == typeof(string))
 			{
-				return (T)(object)SHVDN.NativeMemory.PtrToStringUtf8(MemoryAddress);
+				return (T)(object)SHVDN.StringMarshal.PtrToStringUtf8(MemoryAddress);
 			}
 			else
 			{

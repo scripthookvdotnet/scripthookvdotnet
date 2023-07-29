@@ -50,7 +50,7 @@ namespace GTA
 		}
 		public string GetString()
 		{
-			return SHVDN.NativeMemory.PtrToStringUtf8(_address);
+			return SHVDN.StringMarshal.PtrToStringUtf8(_address);
 		}
 		public Vector3 GetVector3()
 		{

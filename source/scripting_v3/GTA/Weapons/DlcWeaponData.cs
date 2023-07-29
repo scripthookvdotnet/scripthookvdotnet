@@ -33,7 +33,7 @@ namespace GTA
 			{
 				fixed (byte* ptr = name)
 				{
-					return SHVDN.NativeMemory.PtrToStringUtf8(new IntPtr(ptr));
+					return SHVDN.StringMarshal.PtrToStringUtf8(new IntPtr(ptr));
 				}
 			}
 		}
@@ -59,7 +59,7 @@ namespace GTA
 			{
 				fixed (byte* ptr = name)
 				{
-					return SHVDN.NativeMemory.PtrToStringUtf8(new IntPtr(ptr));
+					return SHVDN.StringMarshal.PtrToStringUtf8(new IntPtr(ptr));
 				}
 			}
 		}

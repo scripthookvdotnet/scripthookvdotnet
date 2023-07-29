@@ -15,6 +15,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace SHVDN
 {
@@ -52,6 +53,15 @@ namespace SHVDN
 
 		private IntPtr _tlsContextOfMainThread;
 		private uint _gameMainThreadIdUnmanaged;
+
+		/// <summary>
+		/// The byte array that contains "CELL_EMAIL_BCON", which is used when SHVDN logs unhandled exceptions
+		/// or old scripting SDK/API version warning via a feed ticker.
+		/// </summary>
+		/// <remarks>
+		/// This is not a unmanaged pointer to a pinned string since this member would not be frequently used.
+		/// </remarks>
+		private static byte[] s_cellEmailBconByteStr = Encoding.ASCII.GetBytes("CELL_EMAIL_BCON\0");
 
 		internal unsafe void InitTlsFunctionPointers(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
 		{
@@ -606,12 +616,11 @@ namespace SHVDN
 				{
 					int scriptCountUsingDeprecatedApi = DeprecatedScriptAssemblyNamesPerApiVersion.Values.Aggregate(0, (result, current) => result + current.Count);
 
-					unsafe
-					{
-						NativeFunc.Invoke(0x202709F4C58A0424 /* BEGIN_TEXT_COMMAND_THEFEED_POST */, NativeMemory.CellEmailBcon);
-						NativeFunc.PushLongString($"~o~WARNING~s~: {scriptCountUsingDeprecatedApi} scripts are using the v2 API, which is deprecated and not actively supported. See the console outputs or the log file for more details.");
-						NativeFunc.Invoke(0x2ED7843F8F801023 /* END_TEXT_COMMAND_THEFEED_POST_TICKER */, true, false);
-					}
+					PostTickerToFeed(
+						message: $"~o~WARNING~s~: {scriptCountUsingDeprecatedApi} scripts are using the v2 API, which is deprecated and not actively supported. See the console outputs or the log file for more details.",
+						isImportant: true,
+						cacheMessage: false
+					);
 				}
 
 				foreach (KeyValuePair<int, List<string>> apiVersionAndScriptNameDict in DeprecatedScriptAssemblyNamesPerApiVersion)
@@ -863,7 +872,7 @@ namespace SHVDN
 		/// <returns>A pointer to the pinned memory containing the string.</returns>
 		public IntPtr PinString(string str)
 		{
-			IntPtr handle = NativeMemory.StringToCoTaskMemUtf8(str);
+			IntPtr handle = StringMarshal.StringToCoTaskMemUtf8(str);
 
 			if (handle == IntPtr.Zero)
 			{
@@ -1116,11 +1125,23 @@ namespace SHVDN
 			ScriptDomain domain = ScriptDomain.CurrentDomain;
 			if (domain != null && domain._executingScript != null)
 			{
-				unsafe
+				PostTickerToFeed(
+					message: "~r~Unhandled exception~s~ in script \"~h~" + script.Name + "~h~\"!~n~~n~~r~" + args.ExceptionObject.GetType().Name + "~s~ " + ((Exception)args.ExceptionObject).StackTrace.Split('\n').FirstOrDefault().Trim(),
+					isImportant: true,
+					cacheMessage: false
+					);
+			}
+		}
+
+		private static void PostTickerToFeed(string message, bool isImportant, bool cacheMessage = true)
+		{
+			unsafe
+			{
+				fixed (byte* cellEmailBconStrPtr = s_cellEmailBconByteStr)
 				{
-					NativeFunc.Invoke(0x202709F4C58A0424 /* BEGIN_TEXT_COMMAND_THEFEED_POST */, NativeMemory.CellEmailBcon);
-					NativeFunc.PushLongString("~r~Unhandled exception~s~ in script \"~h~" + script.Name + "~h~\"!~n~~n~~r~" + args.ExceptionObject.GetType().Name + "~s~ " + ((Exception)args.ExceptionObject).StackTrace.Split('\n').FirstOrDefault().Trim());
-					NativeFunc.Invoke(0x2ED7843F8F801023 /* END_TEXT_COMMAND_THEFEED_POST_TICKER */, true, false);
+					NativeFunc.Invoke(0x202709F4C58A0424 /* BEGIN_TEXT_COMMAND_THEFEED_POST */, (ulong)cellEmailBconStrPtr);
+					NativeFunc.PushLongString(message);
+					NativeFunc.Invoke(0x2ED7843F8F801023 /* END_TEXT_COMMAND_THEFEED_POST_TICKER */, isImportant, cacheMessage);
 				}
 			}
 		}
