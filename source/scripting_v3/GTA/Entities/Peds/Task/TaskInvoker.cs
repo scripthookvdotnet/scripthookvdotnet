@@ -203,8 +203,11 @@ namespace GTA
 		/// <summary>
 		/// Tells a ped to combat another ped.
 		/// </summary>
-		public void Combat(Ped target, TaskCombatFlags combatFlags = TaskCombatFlags.None, TaskThreatResponseFlags taskThreatResponseFlags = TaskThreatResponseFlags.CanFightArmedPedsWhenNotArmed)
-			=> Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, (int)combatFlags, (int)taskThreatResponseFlags);
+		public void Combat(Ped target, TaskCombatFlags combatFlags = TaskCombatFlags.None,
+			TaskThreatResponseFlags taskThreatResponseFlags = TaskThreatResponseFlags.CanFightArmedPedsWhenNotArmed)
+			=> Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, (int)combatFlags,
+				(int)taskThreatResponseFlags);
+
 		/// <summary>
 		/// Tells a ped to combat another ped for a timed period.
 		/// </summary>
@@ -214,6 +217,7 @@ namespace GTA
 		/// </remarks>
 		public void CombatTimed(Ped target, int time, TaskCombatFlags combatFlags = TaskCombatFlags.None)
 			=> Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, time, (int)combatFlags);
+
 		/// <summary>
 		/// Tells the <see cref="Ped"/> to combat hated targets in the area.
 		/// </summary>
@@ -224,8 +228,11 @@ namespace GTA
 		/// There must be at least one <see cref="Ped"/> with one of the relationship settings, or the created
 		/// <c>CTaskCombatClosestTargetInArea</c> will stop executing immediately.
 		/// </remarks>
-		public void CombatHatedTargetsInArea(Vector3 position, float radius, TaskCombatFlags combatFlags = TaskCombatFlags.None)
-			=> Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_IN_AREA, _ped.Handle, position.X, position.Y, position.Z, radius, (int)combatFlags);
+		public void CombatHatedTargetsInArea(Vector3 position, float radius,
+			TaskCombatFlags combatFlags = TaskCombatFlags.None)
+			=> Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_IN_AREA, _ped.Handle, position.X, position.Y, position.Z,
+				radius, (int)combatFlags);
+
 		/// <summary>
 		/// Tells the <see cref="Ped"/> to combat hated targets in the radius about the <see cref="Ped"/>.
 		/// </summary>
@@ -238,6 +245,7 @@ namespace GTA
 		/// </remarks>
 		public void CombatHatedTargetsAroundPed(float radius, TaskCombatFlags combatFlags = TaskCombatFlags.None)
 			=> Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED, _ped.Handle, radius, (int)combatFlags);
+
 		/// <summary>
 		/// Tells the <see cref="Ped"/> to combat hated targets in the radius about the <see cref="Ped"/> for a time period.
 		/// </summary>
@@ -248,21 +256,27 @@ namespace GTA
 		/// There must be at least one <see cref="Ped"/> with one of the relationship settings, or the created
 		/// <c>CTaskCombatClosestTargetInArea</c> will stop executing immediately.
 		/// </remarks>
-		public void CombatHatedTargetsAroundPedTimed(float radius, int time, TaskCombatFlags combatFlags = TaskCombatFlags.None)
-			=> Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED_TIMED, _ped.Handle, radius, time, (int)combatFlags);
+		public void CombatHatedTargetsAroundPedTimed(float radius, int time,
+			TaskCombatFlags combatFlags = TaskCombatFlags.None)
+			=> Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED_TIMED, _ped.Handle, radius, time,
+				(int)combatFlags);
 
+		[Obsolete("Use TaskInvoker.Combat instead.")]
 		public void FightAgainst(Ped target)
 		{
 			Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, 0, 16);
 		}
+		[Obsolete("Use TaskInvoker.CombatTimed instead.")]
 		public void FightAgainst(Ped target, int duration)
 		{
 			Function.Call(Hash.TASK_COMBAT_PED_TIMED, _ped.Handle, target.Handle, duration, 0);
 		}
+		[Obsolete("Use TaskInvoker.CombatHatedTargetsAroundPed instead.")]
 		public void FightAgainstHatedTargets(float radius)
 		{
 			Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED, _ped.Handle, radius, 0);
 		}
+		[Obsolete("Use TaskInvoker.CombatHatedTargetsAroundPedTimed instead.")]
 		public void FightAgainstHatedTargets(float radius, int duration)
 		{
 			Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED_TIMED, _ped.Handle, radius, duration, 0);
@@ -554,9 +568,12 @@ namespace GTA
 				}
 			}
 
-			// The sign of blend delta doesn't make any difference in TASK_PLAY_ANIM and TASK_PLAY_ANIM_ADVANCED, but R* might add sign checks for blend delta values in the future so we'll have to check the signs of blend delta values as well.
+			// The sign of blend delta doesn't make any difference in TASK_PLAY_ANIM and TASK_PLAY_ANIM_ADVANCED,
+			// but R* might add sign checks for blend delta values in the future so we'll have to check the signs of
+			// blend delta values as well.
 			// The last argument is named bAllowOverrideCloneUpdate and will not be useful in the story mode.
-			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, clipDict, animName, blendInSpeed, blendOutSpeed, duration, (int)flags, startPhase, phaseControlled, (int)ikFlags, 0);
+			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, clipDict, animName, blendInSpeed, blendOutSpeed, duration,
+				(int)flags, startPhase, phaseControlled, (int)ikFlags, 0);
 		}
 
 		/// <summary>
