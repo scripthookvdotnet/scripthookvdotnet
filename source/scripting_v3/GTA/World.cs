@@ -7,6 +7,7 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -1782,9 +1783,191 @@ namespace GTA
 		/// <param name="weaponAsset">The weapon that the bullet is fired from.</param>
 		/// <param name="damage">The damage the bullet will cause.</param>
 		/// <param name="speed">The speed, only affects projectile weapons, leave -1 for default.</param>
+		[Obsolete("Use ShootSingleBullet instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, WeaponAsset weaponAsset, int damage, float speed = -1f)
 		{
 			Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, weaponAsset.Hash, (owner == null ? 0 : owner.Handle), 1, 0, speed);
+		}
+		/// <summary>
+		/// Fires an instant hit bullet between the two points or a projectile that goes toward
+		/// <paramref name="endPosition"/>.
+		/// </summary>
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew"/>
+		public static void ShootSingleBullet(Vector3 startPosition, Vector3 endPosition, int damage, WeaponAsset weapon,
+			Ped owner = null, bool perfectAccuracy = true, bool createTraceVfx = true, bool allowRumble = true,
+			float initialVelocity = -1f)
+		{
+			Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS, startPosition.X, startPosition.Y, startPosition.Z,
+				endPosition.X, endPosition.Y, endPosition.Z, damage, perfectAccuracy, weapon, owner, createTraceVfx,
+				allowRumble, initialVelocity);
+		}
+		/// <param name="startPosition">
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='startPosition']"/>
+		/// </param>
+		/// <param name="endPosition">
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='endPosition']"/>
+		/// </param>
+		/// <param name="damage">
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='damage']"/>
+		/// </param>
+		/// <param name="weapon">
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='weapon']"/>
+		/// </param>
+		/// <param name="owner">
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='owner']"/>
+		/// </param>
+		/// <param name="perfectAccuracy">
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='perfectAccurary']"/>
+		/// </param>
+		/// <param name="createTraceVfx">
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='createTraceVfx']"/>
+		/// </param>
+		/// <param name="allowRumble">
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='allowRumble']"/>
+		/// </param>
+		/// <param name="initialVelocity">
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='initialVelocity']"/>
+		/// </param>
+		/// <param name="ignoreEntity">
+		/// <para>
+		/// The <see cref="Entity"/> who the bullet or projectile disable damage against. Must not be the same as
+		/// <paramref name="owner"/>, as the bullet will not collide with the owner or the <see cref="Vehicle"/> the
+		/// owner is in.
+		/// </para>
+		/// <para>
+		/// To prevent created projectiles from colliding with this <see cref="Entity"/>, you will need to use
+		/// <see cref="ShootSingleBulletIgnoreEntityNew"/> and set the bool parameter <c>ignoreCollisionEntity</c>
+		/// to <see langword="true"/>.
+		/// </para>
+		/// </param>
+		/// <param name="targetEntity">
+		/// The <see cref="Ped"/> who the produced rocket will chase down.
+		/// Only used if <paramref name="weapon"/> is a rocket weapon (not used for <see cref="WeaponHash.HomingLauncher"/>).
+		/// </param>
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew"/>
+		public static void ShootSingleBulletIgnoreEntity(Vector3 startPosition, Vector3 endPosition, int damage,
+			WeaponAsset weapon, Ped owner = null, bool perfectAccuracy = true, bool createTraceVfx = true,
+			bool allowRumble = true, float initialVelocity = -1f, Entity ignoreEntity = null,
+			Entity targetEntity = null)
+		{
+			Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY, startPosition.X, startPosition.Y,
+				startPosition.Z, endPosition.X, endPosition.Y, endPosition.Z, damage, perfectAccuracy, weapon, owner,
+				createTraceVfx, allowRumble, initialVelocity, ignoreEntity, targetEntity);
+		}
+		/// <summary>
+		/// Fires an instant hit bullet between the two points or a projectile that goes toward
+		/// <paramref name="endPosition"/> taking into account an entity to ignore for damage.
+		/// </summary>
+		/// <param name="startPosition">
+		/// Where the bullet or projectile is fired from.
+		/// </param>
+		/// <param name="endPosition">
+		/// Where the bullet is fired to.
+		/// If the <paramref name="weapon"/> specifies a projectile weapon, the produced projectile will go
+		/// in the direction of this parameter from <paramref name="startPosition"/>.
+		/// </param>
+		/// <param name="damage">
+		/// The damage the bullet will cause.
+		/// Must not be negative; otherwise, this method will not fire a bullet.
+		/// </param>
+		/// <param name="weapon">
+		/// The weapon type to fire a bullet or projectile.
+		/// You might want to request the asset and keep in memory unless you know the weapon info is already streamed,
+		/// such as when <paramref name="owner"/> has a weapon of this parameter hash. If the weapon info is not
+		/// streamed, this method will not fire a bullet or projectile.
+		/// </param>
+		/// <param name="owner">
+		/// The owner <see cref="Ped"/> who fires the bullet or projectile.
+		/// Leaving <see langword="null" /> will result in absent of owner of the produced bullet or projectile.
+		/// </param>
+		/// <param name="perfectAccuracy">
+		/// If <see langword="true"/>, the bullet will go to the exact point where <paramref name="endPosition"/> is.
+		/// If <see langword="false"/>, the method will apply a spread to the bullet.
+		/// </param>
+		/// <param name="createTraceVfx">
+		/// If <see langword="true"/>, the bullet trace visual effect will not be prevented from being created for
+		/// not hitting an <see cref="Entity"/>.
+		/// Note that there are other conditions for where bullet comes from in both position and direction
+		/// before bullet trace can be created (this parameter has no effect in these conditions).
+		/// </param>
+		/// <param name="allowRumble">
+		/// If <see langword="true"/>, <paramref name="owner"/> is the player, and you are using a controller (pad),
+		/// the controller can rumble/vibrate due to the corresponding <c>CWeaponInfo</c> setting.
+		/// </param>
+		/// <param name="initialVelocity">
+		/// The initial velocity for the produced projectile, leave -1 (or some negative value) for the default speed.
+		/// Not used for bullets.
+		/// </param>
+		/// <param name="ignoreEntity">
+		/// <para>
+		/// The <see cref="Entity"/> who the bullet or projectile disable damage against. Must not be the same as
+		/// <paramref name="owner"/>, as the bullet will not collide with the owner or the <see cref="Vehicle"/> the
+		/// owner is in.
+		/// </para>
+		/// <para>
+		/// To prevent created projectiles from colliding with this <see cref="Entity"/>, you need to set
+		/// <paramref name="ignoreCollisionEntity"/> to <see langword="true"/> (the bool parameter has no effect
+		/// in the game versions earlier than v1.0.1103.2).
+		/// </para>
+		/// </param>
+		/// <param name="forceCreateNewProjectileObject">
+		/// If <see langword="true"/>, <paramref name="owner"/> is set, and <paramref name="weapon"/> is a projectile
+		/// weapon, this method will create a NEW projectile and don't use any equipped <see cref="Projectile"/>s from
+		/// a weapon <see cref="Prop"/> of <paramref name="owner"/>.
+		/// </param>
+		/// <param name="disablePlayerCoverStartAdjustment">
+		/// Although this parameter name follows the canonical one <c>bDisablePlayerCoverStartAdjustment</c>,
+		/// the actual effect is not known enough to describe (there is only one occurrence where this parameter is set
+		/// to true out of all ysc scripts in v1.0.2944.0).
+		/// </param>
+		/// <param name="targetEntity">
+		/// The <see cref="Entity"/> who the produced rocket will home in.
+		/// Must not be the same as <paramref name="owner"/> or <paramref name="ignoreEntity"/>.
+		/// Only used if <paramref name="weapon"/> is a rocket weapon and the homing flag is set in the corresponding
+		/// <c>CWeaponInfo</c> data. For example, <c>VEHICLE_WEAPON_SPACE_ROCKET</c> and <c>VEHICLE_WEAPON_PLANE_ROCKET</c>
+		/// can be used to home in. However, <see cref="WeaponHash.HomingLauncher"/> is not appropriate to home in
+		/// using this method even though <c>Homing</c> flag is set in the <c>CWeaponInfo</c> data.
+		/// </param>
+		/// <param name="freezeProjectileWaitingOnCollision">
+		/// If <see langword="true"/> and the game version is v1.0.1103.2 or later,
+		/// the created projectile will freeze waiting for collision if absent.
+		/// </param>
+		/// <param name="ignoreCollisionEntity">
+		/// <para>
+		/// If <see langword="true"/> and the game version is v1.0.1103.2 or later,
+		/// the created projectile will not collide with <paramref name="ignoreEntity"/>.
+		/// </para>
+		/// <para>
+		/// Cannot be used in conjunction with <paramref name="ignoreCollisionResetNoBB"/>
+		/// and <paramref name="ignoreCollisionResetNoBB"/> takes precedence if both are set to <see langword="true"/>
+		/// and the game version is v1.0.2189.0 or later.
+		/// </para>
+		/// </param>
+		/// <param name="ignoreCollisionResetNoBB">
+		/// <para>
+		/// If <see langword="true"/> and if <paramref name="startPosition"/> is inside the BoundingBox of
+		/// <paramref name="ignoreEntity"/>, the created projectile will ignore collision until it leaves the
+		/// BoundingBox.
+		/// </para>
+		/// <para>
+		///	Only available in the game version is v1.0.2189.0 or later.
+		/// Cannot be used in conjunction with <paramref name="ignoreCollisionEntity"/>
+		/// and this parameter takes precedence if both are set to <see langword="true"/>.
+		/// </para>
+		/// </param>
+		public static void ShootSingleBulletIgnoreEntityNew(Vector3 startPosition, Vector3 endPosition, int damage,
+			WeaponAsset weapon, Ped owner = null, bool perfectAccuracy = true, bool createTraceVfx = true,
+			bool allowRumble = true, float initialVelocity = -1f, Entity ignoreEntity = null,
+			bool forceCreateNewProjectileObject = false, bool disablePlayerCoverStartAdjustment = false,
+			Entity targetEntity = null, bool freezeProjectileWaitingOnCollision = false,
+			bool ignoreCollisionEntity = false, bool ignoreCollisionResetNoBB = false)
+		{
+			Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY_NEW, startPosition.X, startPosition.Y,
+				startPosition.Z, endPosition.X, endPosition.Y, endPosition.Z, damage, perfectAccuracy, weapon, owner,
+				createTraceVfx, allowRumble, initialVelocity, ignoreEntity, forceCreateNewProjectileObject,
+				disablePlayerCoverStartAdjustment, targetEntity,
+				true /* named bDoDeadCheck in the official header, which is not used in the internal function */,
+				freezeProjectileWaitingOnCollision, ignoreCollisionEntity, ignoreCollisionResetNoBB);
 		}
 
 		/// <summary>
