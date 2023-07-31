@@ -1792,7 +1792,7 @@ namespace GTA
 		/// Fires an instant hit bullet between the two points or a projectile that goes toward
 		/// <paramref name="endPosition"/>.
 		/// </summary>
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float, Entity, bool, bool, Entity, bool, bool, bool)"/>
 		public static void ShootSingleBullet(Vector3 startPosition, Vector3 endPosition, int damage, WeaponAsset weapon,
 			Ped owner = null, bool perfectAccuracy = true, bool createTraceVfx = true, bool allowRumble = true,
 			float initialVelocity = -1f)
@@ -1801,32 +1801,42 @@ namespace GTA
 				endPosition.X, endPosition.Y, endPosition.Z, damage, perfectAccuracy, weapon, owner, createTraceVfx,
 				allowRumble, initialVelocity);
 		}
+
 		/// <param name="startPosition">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='startPosition']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param"/>
 		/// </param>
 		/// <param name="endPosition">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='endPosition']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='endPosition']"/>
 		/// </param>
 		/// <param name="damage">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='damage']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='damage']"/>
 		/// </param>
 		/// <param name="weapon">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='weapon']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='weapon']"/>
 		/// </param>
 		/// <param name="owner">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='owner']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='owner']"/>
 		/// </param>
 		/// <param name="perfectAccuracy">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='perfectAccurary']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='perfectAccurary']"/>
 		/// </param>
 		/// <param name="createTraceVfx">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='createTraceVfx']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='createTraceVfx']"/>
 		/// </param>
 		/// <param name="allowRumble">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='allowRumble']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='allowRumble']"/>
 		/// </param>
 		/// <param name="initialVelocity">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='initialVelocity']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='initialVelocity']"/>
 		/// </param>
 		/// <param name="ignoreEntity">
 		/// <para>
@@ -1836,15 +1846,19 @@ namespace GTA
 		/// </para>
 		/// <para>
 		/// To prevent created projectiles from colliding with this <see cref="Entity"/>, you will need to use
-		/// <see cref="ShootSingleBulletIgnoreEntityNew"/> and set the bool parameter <c>ignoreCollisionEntity</c>
+		/// <see cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)"/> and set the bool parameter <c>ignoreCollisionEntity</c>
 		/// to <see langword="true"/>.
 		/// </para>
 		/// </param>
 		/// <param name="targetEntity">
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='targetEntity']"/>
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='targetEntity']"/>
 		/// </param>
-		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew"/>
-		public static void ShootSingleBulletIgnoreEntity(Vector3 startPosition, Vector3 endPosition, int damage,
+		/// 
+		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
+		/// Entity, bool, bool, Entity, bool, bool, bool)"/>
+		public static void ShootSingleBullet(Vector3 startPosition, Vector3 endPosition, int damage,
 			WeaponAsset weapon, Ped owner = null, bool perfectAccuracy = true, bool createTraceVfx = true,
 			bool allowRumble = true, float initialVelocity = -1f, Entity ignoreEntity = null,
 			Entity targetEntity = null)
@@ -1853,6 +1867,7 @@ namespace GTA
 				startPosition.Z, endPosition.X, endPosition.Y, endPosition.Z, damage, perfectAccuracy, weapon, owner,
 				createTraceVfx, allowRumble, initialVelocity, ignoreEntity, targetEntity);
 		}
+
 		/// <summary>
 		/// Fires an instant hit bullet between the two points or a projectile that goes toward
 		/// <paramref name="endPosition"/> taking into account an entity to ignore for damage.
@@ -1954,7 +1969,7 @@ namespace GTA
 		/// and this parameter takes precedence if both are set to <see langword="true"/>.
 		/// </para>
 		/// </param>
-		public static void ShootSingleBulletIgnoreEntityNew(Vector3 startPosition, Vector3 endPosition, int damage,
+		public static void ShootSingleBullet(Vector3 startPosition, Vector3 endPosition, int damage,
 			WeaponAsset weapon, Ped owner = null, bool perfectAccuracy = true, bool createTraceVfx = true,
 			bool allowRumble = true, float initialVelocity = -1f, Entity ignoreEntity = null,
 			bool forceCreateNewProjectileObject = false, bool disablePlayerCoverStartAdjustment = false,
