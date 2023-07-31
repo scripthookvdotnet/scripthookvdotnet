@@ -594,11 +594,17 @@ namespace GTA
 		/// <param name="rotOrder">The rotation order.</param>
 		/// <param name="ikFlags">The IK flags.</param>
 		/// <remarks>
+		/// <para>
 		/// Specifying the task flags both <see cref="AnimationFlags.ExtractInitialOffset"/> and
 		/// <see cref="AnimationFlags.OverridePhysics"/> will instruct the task to play the anim using an initial offset
 		/// specified by the animator (if one exists). Use this flag to playback synced anims on multiple peds (i.e.
 		/// give all peds the same Pos and Rot values and the animation flag
 		/// <see cref="AnimationFlags.ExtractInitialOffset"/> and <see cref="AnimationFlags.OverridePhysics"/>)
+		/// </para>
+		/// <para>
+		/// This method does not automatically request <paramref name="clipDict"/>, which is different from
+		/// <see cref="PlayAnimation(ClipDictionary,string)"/>, so you need to manually request it.
+		/// </para>
 		/// </remarks>
 		public void PlayAnimationAdvanced(ClipDictionary clipDict, string animName, Vector3 position, Vector3 rotation,
 			AnimationBlendDelta? blendInDelta = null, AnimationBlendDelta? blendOutDelta = null, int timeToPlay = -1,
