@@ -699,8 +699,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Plays an anim on the <see cref="Ped"/>, but provides the function to specify an initial position and rotation
-		/// to playback the anim from.
+		/// Plays an anim task on the <see cref="Ped"/> with a reposition and reorientation at the beginning.
 		/// </summary>
 		/// <param name="clipDict">The clip dictionary for animation.</param>
 		/// <param name="animName">The animation name.</param>
@@ -725,7 +724,7 @@ namespace GTA
 		/// </para>
 		/// <para>
 		/// This method does not automatically request <paramref name="clipDict"/>, which is different from
-		/// <see cref="PlayAnimation(ClipDictionary,string)"/>, so you need to manually request it.
+		/// <see cref="PlayAnimation(ClipDictionary, string)"/>, so you will need to manually request it.
 		/// </para>
 		/// </remarks>
 		public void PlayAnimationAdvanced(ClipDictionary clipDict, string animName, Vector3 position, Vector3 rotation,
