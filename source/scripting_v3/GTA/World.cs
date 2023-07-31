@@ -1841,8 +1841,7 @@ namespace GTA
 		/// </para>
 		/// </param>
 		/// <param name="targetEntity">
-		/// The <see cref="Ped"/> who the produced rocket will chase down.
-		/// Only used if <paramref name="weapon"/> is a rocket weapon (not used for <see cref="WeaponHash.HomingLauncher"/>).
+		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew" path="/param[@name='targetEntity']"/>
 		/// </param>
 		/// <inheritdoc cref="ShootSingleBulletIgnoreEntityNew"/>
 		public static void ShootSingleBulletIgnoreEntity(Vector3 startPosition, Vector3 endPosition, int damage,
