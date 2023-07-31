@@ -398,6 +398,128 @@ namespace GTA
 			Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatio.Value, timeBeforeWarp, finalHeading, targetRadius);
 		}
 
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed"/>
+		public void GoToPointAnyMeans(Vector3 target, PedMoveBlendRatio moveBlendRatio, Vehicle vehicle,
+			bool useLongRangeVehiclePathing = false,
+			VehicleDrivingFlags drivingFlags = VehicleDrivingFlags.DrivingModeStopForVehicles,
+			float maxRangeToShootTargets = -1f)
+			=> Function.Call(Hash.TASK_GO_TO_COORD_ANY_MEANS, _ped.Handle, target.X, target.Y, target.Z, moveBlendRatio,
+				vehicle, useLongRangeVehiclePathing, (int)drivingFlags, maxRangeToShootTargets);
+
+		/// <param name="target">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='target']"/>
+		/// </param>
+		/// <param name="moveBlendRatio">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='moveBlendRatio']"/>
+		/// </param>
+		/// <param name="vehicle">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='vehicle']"/>
+		/// </param>
+		/// <param name="useLongRangeVehiclePathing">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='useLongRangeVehiclePathing']"/>
+		/// </param>
+		/// <param name="drivingFlags">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='drivingFlags']"/>
+		/// </param>
+		/// <param name="maxRangeToShootTargets">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='maxRangeToShootTargets']"/>
+		/// </param>
+		/// <param name="extraVehToTargetDistToPreferVeh">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='extraVehToTargetDistToPreferVeh']"/>
+		/// </param>
+		/// <param name="driveStraightLineDistance">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='driveStraightLineDistance']"/>
+		/// </param>
+		/// <param name="extraFlags">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='extraFlags']"/>
+		/// </param>
+		/// <param name="warpTimerMs">
+		/// Warps ped to target position if ped gets stuck for this amount of time in milliseconds
+		/// (only if <paramref name="warpTimerMs"/> != -1.0).
+		/// Only works for <see cref="Ped"/>s on foot or in a car/bike (not aircraft/boats).
+		/// <see cref="Ped"/>s will be removed from <see cref="Vehicle"/> on warp.
+		/// </param>
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed"/>
+		///
+		public void GoToPointAnyMeansExtraParams(Vector3 target, PedMoveBlendRatio moveBlendRatio, Vehicle vehicle,
+			bool useLongRangeVehiclePathing = false,
+			VehicleDrivingFlags drivingFlags = VehicleDrivingFlags.DrivingModeStopForVehicles,
+			float maxRangeToShootTargets = -1f, float extraVehToTargetDistToPreferVeh = 0f,
+			float driveStraightLineDistance = 20f,
+			TaskGoToPointAnyMeansFlags extraFlags = TaskGoToPointAnyMeansFlags.Default, float warpTimerMs = -1f)
+			=> Function.Call(Hash.TASK_GO_TO_COORD_ANY_MEANS_EXTRA_PARAMS, _ped.Handle, target.X, target.Y, target.Z,
+				moveBlendRatio,
+				vehicle, useLongRangeVehiclePathing, (int)drivingFlags, maxRangeToShootTargets,
+				extraVehToTargetDistToPreferVeh, driveStraightLineDistance, (int)extraFlags, warpTimerMs);
+		
+
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to go to a point by any means.
+		/// </summary>
+		/// <param name="target">The target point.</param>
+		/// <param name="moveBlendRatio">The move blend ratio.</param>
+		/// <param name="vehicle">
+		/// The vehicle to get to the point.
+		/// Set <see langword="null"/> to let the <see cref="Ped"/> use any <see cref="Vehicle"/>s.
+		/// If a <see cref="Vehicle"/> instance is set that does not exist in the game, the method will silently fail
+		/// without even creating a <c>CTaskGoToPointAnyMeans</c>, which is supposed to be created.
+		/// </param>
+		/// <param name="useLongRangeVehiclePathing">
+		/// If <see langword="true"/>, the created task may use a <c>CTaskVehicleGotoLongRange</c>, which automatically
+		/// loads nodes in the background (may be useful to avoid the task not going to a point when you want to get
+		/// <see cref="Ped"/>s to a point far from where the player is).
+		/// If <see langword="false"/>, the created task will not use a <c>CTaskVehicleGotoLongRange</c>, which may
+		/// result in the task not going to a point if the specified point is too far from where the player is.
+		/// </param>
+		/// <param name="drivingFlags">The driving flags.</param>
+		/// <param name="maxRangeToShootTargets">
+		/// The max range to shoot targets in meters.
+		/// </param>
+		/// <param name="extraVehToTargetDistToPreferVeh">
+		/// <para>
+		/// The distance in meters that partially determines if the <see cref="Ped"/> stops considering when they are
+		/// not in a <see cref="Vehicle"/>. The high this value is, the further the <see cref="Ped"/> will stop
+		/// considering from <paramref name="target"/>. Roughly speaking, if this parameter is more than the square of
+		/// the distance between the <see cref="Ped"/> and <paramref name="target"/>, they will not basically take any
+		/// <see cref="Vehicle"/>s.
+		/// </para>
+		/// <para>
+		/// Strictly speaking, the distance between a <see cref="Vehicle"/> and
+		/// <paramref name="target"/> and this parameter is less than or equal to the sum of the distance between
+		/// the <see cref="Ped"/> and <paramref name="target"/> and the square root, the task will stop considering
+		/// the <see cref="Vehicle"/>.<br/>
+		/// You can confirm if it is correct that how exactly this parameter works that explained in this document by
+		/// searching for <c>"76 04 B0 01 EB 79 0F 28 9A ? ? ? ? F3 0F 59 ED"</c> and inspecting nearby instructions,
+		/// where rcx is the pointer to a <c>CTaskGoToPointAnyMeans</c>, rdx is the pointer to a considered
+		/// <c>CVehicle</c>, and r8 is the pointer to the <c>CPed</c> who is executing the rcx task.
+		/// </para>
+		/// </param>
+		/// <param name="driveStraightLineDistance">
+		/// The distance to target in meters at which the <see cref="Ped"/> will start driving straight instead of
+		/// following vehicle nodes.
+		/// </param>
+		/// <param name="extraFlags">
+		/// The extra flags for how the created task should be executed.
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// The cruise speed in m/s.
+		/// </param>
+		/// <param name="targetArriveDist">
+		/// The distance to target in meters at which a vehicle task will quit.
+		/// </param>
+		public void GoToPointAnyMeansExtraParamsWithCruiseSpeed(Vector3 target, PedMoveBlendRatio moveBlendRatio,
+			Vehicle vehicle, bool useLongRangeVehiclePathing = false,
+			VehicleDrivingFlags drivingFlags = VehicleDrivingFlags.DrivingModeStopForVehicles,
+			float maxRangeToShootTargets = -1f, float extraVehToTargetDistToPreferVeh = 0f,
+			float driveStraightLineDistance = 20f,
+			TaskGoToPointAnyMeansFlags extraFlags = TaskGoToPointAnyMeansFlags.Default, float cruiseSpeed = -1f,
+			float targetArriveDist = 4f)
+			=> Function.Call(Hash.TASK_GO_TO_COORD_ANY_MEANS_EXTRA_PARAMS_WITH_CRUISE_SPEED, _ped.Handle, target.X,
+				target.Y, target.Z, moveBlendRatio,
+				vehicle, useLongRangeVehiclePathing, (int)drivingFlags, maxRangeToShootTargets,
+				extraVehToTargetDistToPreferVeh, driveStraightLineDistance, (int)extraFlags, cruiseSpeed,
+				targetArriveDist);
+
 		public void GuardCurrentPosition()
 		{
 			Function.Call(Hash.TASK_GUARD_CURRENT_POSITION, _ped.Handle, 15f, 10f, true);
