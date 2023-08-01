@@ -200,21 +200,83 @@ namespace GTA
 			Function.Call(Hash.TASK_EVERYONE_LEAVE_VEHICLE, vehicle.Handle);
 		}
 
+		/// <summary>
+		/// Tells a ped to combat another ped.
+		/// </summary>
+		public void Combat(Ped target, TaskCombatFlags combatFlags = TaskCombatFlags.None,
+			TaskThreatResponseFlags taskThreatResponseFlags = TaskThreatResponseFlags.CanFightArmedPedsWhenNotArmed)
+			=> Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, (int)combatFlags,
+				(int)taskThreatResponseFlags);
+
+		/// <summary>
+		/// Tells a ped to combat another ped for a timed period.
+		/// </summary>
+		/// <remarks>
+		/// Implicitly specifies <see cref="TaskThreatResponseFlags.CanFightArmedPedsWhenNotArmed"/> for a new
+		/// <c>CTaskThreadResponse</c> task.
+		/// </remarks>
+		public void CombatTimed(Ped target, int time, TaskCombatFlags combatFlags = TaskCombatFlags.None)
+			=> Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, time, (int)combatFlags);
+
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to combat hated targets in the area.
+		/// </summary>
+		/// <remarks>
+		/// Hated targets means <see cref="Ped"/>s whose relationships/acquaintances are set to
+		/// <see cref="Relationship.Neutral"/>, <see cref="Relationship.Dislike"/> or <see cref="Relationship.Hate"/>
+		/// from the <see cref="Ped"/> who will execute the new task toward them.
+		/// There must be at least one <see cref="Ped"/> with one of the relationship settings, or the created
+		/// <c>CTaskCombatClosestTargetInArea</c> will stop executing immediately.
+		/// </remarks>
+		public void CombatHatedTargetsInArea(Vector3 position, float radius,
+			TaskCombatFlags combatFlags = TaskCombatFlags.None)
+			=> Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_IN_AREA, _ped.Handle, position.X, position.Y, position.Z,
+				radius, (int)combatFlags);
+
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to combat hated targets in the radius about the <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// Hated targets means <see cref="Ped"/>s whose relationships/acquaintances are set to
+		/// <see cref="Relationship.Neutral"/>, <see cref="Relationship.Dislike"/> or <see cref="Relationship.Hate"/>
+		/// from the <see cref="Ped"/> who will execute the new task toward them.
+		/// There must be at least one <see cref="Ped"/> with one of the relationship settings, or the created
+		/// <c>CTaskCombatClosestTargetInArea</c> will stop executing immediately.
+		/// </remarks>
+		public void CombatHatedTargetsAroundPed(float radius, TaskCombatFlags combatFlags = TaskCombatFlags.None)
+			=> Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED, _ped.Handle, radius, (int)combatFlags);
+
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to combat hated targets in the radius about the <see cref="Ped"/> for a time period.
+		/// </summary>
+		/// <remarks>
+		/// Hated targets means <see cref="Ped"/>s whose relationships/acquaintances are set to
+		/// <see cref="Relationship.Neutral"/>, <see cref="Relationship.Dislike"/> or <see cref="Relationship.Hate"/>
+		/// from the <see cref="Ped"/> who will execute the new task toward them.
+		/// There must be at least one <see cref="Ped"/> with one of the relationship settings, or the created
+		/// <c>CTaskCombatClosestTargetInArea</c> will stop executing immediately.
+		/// </remarks>
+		public void CombatHatedTargetsAroundPedTimed(float radius, int time,
+			TaskCombatFlags combatFlags = TaskCombatFlags.None)
+			=> Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED_TIMED, _ped.Handle, radius, time,
+				(int)combatFlags);
+
+		[Obsolete("Use TaskInvoker.Combat instead.")]
 		public void FightAgainst(Ped target)
 		{
 			Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, 0, 16);
 		}
-
+		[Obsolete("Use TaskInvoker.CombatTimed instead.")]
 		public void FightAgainst(Ped target, int duration)
 		{
 			Function.Call(Hash.TASK_COMBAT_PED_TIMED, _ped.Handle, target.Handle, duration, 0);
 		}
-
+		[Obsolete("Use TaskInvoker.CombatHatedTargetsAroundPed instead.")]
 		public void FightAgainstHatedTargets(float radius)
 		{
 			Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED, _ped.Handle, radius, 0);
 		}
-
+		[Obsolete("Use TaskInvoker.CombatHatedTargetsAroundPedTimed instead.")]
 		public void FightAgainstHatedTargets(float radius, int duration)
 		{
 			Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED_TIMED, _ped.Handle, radius, duration, 0);
@@ -335,6 +397,128 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_GO_STRAIGHT_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatio.Value, timeBeforeWarp, finalHeading, targetRadius);
 		}
+
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed"/>
+		public void GoToPointAnyMeans(Vector3 target, PedMoveBlendRatio moveBlendRatio, Vehicle vehicle,
+			bool useLongRangeVehiclePathing = false,
+			VehicleDrivingFlags drivingFlags = VehicleDrivingFlags.DrivingModeStopForVehicles,
+			float maxRangeToShootTargets = -1f)
+			=> Function.Call(Hash.TASK_GO_TO_COORD_ANY_MEANS, _ped.Handle, target.X, target.Y, target.Z, moveBlendRatio,
+				vehicle, useLongRangeVehiclePathing, (int)drivingFlags, maxRangeToShootTargets);
+
+		/// <param name="target">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='target']"/>
+		/// </param>
+		/// <param name="moveBlendRatio">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='moveBlendRatio']"/>
+		/// </param>
+		/// <param name="vehicle">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='vehicle']"/>
+		/// </param>
+		/// <param name="useLongRangeVehiclePathing">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='useLongRangeVehiclePathing']"/>
+		/// </param>
+		/// <param name="drivingFlags">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='drivingFlags']"/>
+		/// </param>
+		/// <param name="maxRangeToShootTargets">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='maxRangeToShootTargets']"/>
+		/// </param>
+		/// <param name="extraVehToTargetDistToPreferVeh">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='extraVehToTargetDistToPreferVeh']"/>
+		/// </param>
+		/// <param name="driveStraightLineDistance">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='driveStraightLineDistance']"/>
+		/// </param>
+		/// <param name="extraFlags">
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed" path="/param[@name='extraFlags']"/>
+		/// </param>
+		/// <param name="warpTimerMs">
+		/// Warps ped to target position if ped gets stuck for this amount of time in milliseconds
+		/// (only if <paramref name="warpTimerMs"/> != -1.0).
+		/// Only works for <see cref="Ped"/>s on foot or in a car/bike (not aircraft/boats).
+		/// <see cref="Ped"/>s will be removed from <see cref="Vehicle"/> on warp.
+		/// </param>
+		/// <inheritdoc cref="GoToPointAnyMeansExtraParamsWithCruiseSpeed"/>
+		///
+		public void GoToPointAnyMeansExtraParams(Vector3 target, PedMoveBlendRatio moveBlendRatio, Vehicle vehicle,
+			bool useLongRangeVehiclePathing = false,
+			VehicleDrivingFlags drivingFlags = VehicleDrivingFlags.DrivingModeStopForVehicles,
+			float maxRangeToShootTargets = -1f, float extraVehToTargetDistToPreferVeh = 0f,
+			float driveStraightLineDistance = 20f,
+			TaskGoToPointAnyMeansFlags extraFlags = TaskGoToPointAnyMeansFlags.Default, float warpTimerMs = -1f)
+			=> Function.Call(Hash.TASK_GO_TO_COORD_ANY_MEANS_EXTRA_PARAMS, _ped.Handle, target.X, target.Y, target.Z,
+				moveBlendRatio,
+				vehicle, useLongRangeVehiclePathing, (int)drivingFlags, maxRangeToShootTargets,
+				extraVehToTargetDistToPreferVeh, driveStraightLineDistance, (int)extraFlags, warpTimerMs);
+		
+
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to go to a point by any means.
+		/// </summary>
+		/// <param name="target">The target point.</param>
+		/// <param name="moveBlendRatio">The move blend ratio.</param>
+		/// <param name="vehicle">
+		/// The vehicle to get to the point.
+		/// Set <see langword="null"/> to let the <see cref="Ped"/> use any <see cref="Vehicle"/>s.
+		/// If a <see cref="Vehicle"/> instance is set that does not exist in the game, the method will silently fail
+		/// without even creating a <c>CTaskGoToPointAnyMeans</c>, which is supposed to be created.
+		/// </param>
+		/// <param name="useLongRangeVehiclePathing">
+		/// If <see langword="true"/>, the created task may use a <c>CTaskVehicleGotoLongRange</c>, which automatically
+		/// loads nodes in the background (may be useful to avoid the task not going to a point when you want to get
+		/// <see cref="Ped"/>s to a point far from where the player is).
+		/// If <see langword="false"/>, the created task will not use a <c>CTaskVehicleGotoLongRange</c>, which may
+		/// result in the task not going to a point if the specified point is too far from where the player is.
+		/// </param>
+		/// <param name="drivingFlags">The driving flags.</param>
+		/// <param name="maxRangeToShootTargets">
+		/// The max range to shoot targets in meters.
+		/// </param>
+		/// <param name="extraVehToTargetDistToPreferVeh">
+		/// <para>
+		/// The distance in meters that partially determines if the <see cref="Ped"/> stops considering when they are
+		/// not in a <see cref="Vehicle"/>. The high this value is, the further the <see cref="Ped"/> will stop
+		/// considering from <paramref name="target"/>. Roughly speaking, if this parameter is more than the square of
+		/// the distance between the <see cref="Ped"/> and <paramref name="target"/>, they will not basically take any
+		/// <see cref="Vehicle"/>s.
+		/// </para>
+		/// <para>
+		/// Strictly speaking, the distance between a <see cref="Vehicle"/> and
+		/// <paramref name="target"/> and this parameter is less than or equal to the sum of the distance between
+		/// the <see cref="Ped"/> and <paramref name="target"/> and the square root, the task will stop considering
+		/// the <see cref="Vehicle"/>.<br/>
+		/// You can confirm if it is correct that how exactly this parameter works that explained in this document by
+		/// searching for <c>"76 04 B0 01 EB 79 0F 28 9A ? ? ? ? F3 0F 59 ED"</c> and inspecting nearby instructions,
+		/// where rcx is the pointer to a <c>CTaskGoToPointAnyMeans</c>, rdx is the pointer to a considered
+		/// <c>CVehicle</c>, and r8 is the pointer to the <c>CPed</c> who is executing the rcx task.
+		/// </para>
+		/// </param>
+		/// <param name="driveStraightLineDistance">
+		/// The distance to target in meters at which the <see cref="Ped"/> will start driving straight instead of
+		/// following vehicle nodes.
+		/// </param>
+		/// <param name="extraFlags">
+		/// The extra flags for how the created task should be executed.
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// The cruise speed in m/s.
+		/// </param>
+		/// <param name="targetArriveDist">
+		/// The distance to target in meters at which a vehicle task will quit.
+		/// </param>
+		public void GoToPointAnyMeansExtraParamsWithCruiseSpeed(Vector3 target, PedMoveBlendRatio moveBlendRatio,
+			Vehicle vehicle, bool useLongRangeVehiclePathing = false,
+			VehicleDrivingFlags drivingFlags = VehicleDrivingFlags.DrivingModeStopForVehicles,
+			float maxRangeToShootTargets = -1f, float extraVehToTargetDistToPreferVeh = 0f,
+			float driveStraightLineDistance = 20f,
+			TaskGoToPointAnyMeansFlags extraFlags = TaskGoToPointAnyMeansFlags.Default, float cruiseSpeed = -1f,
+			float targetArriveDist = 4f)
+			=> Function.Call(Hash.TASK_GO_TO_COORD_ANY_MEANS_EXTRA_PARAMS_WITH_CRUISE_SPEED, _ped.Handle, target.X,
+				target.Y, target.Z, moveBlendRatio,
+				vehicle, useLongRangeVehiclePathing, (int)drivingFlags, maxRangeToShootTargets,
+				extraVehToTargetDistToPreferVeh, driveStraightLineDistance, (int)extraFlags, cruiseSpeed,
+				targetArriveDist);
 
 		public void GuardCurrentPosition()
 		{
@@ -459,43 +643,38 @@ namespace GTA
 
 		public void PlayAnimation(string animDict, string animName)
 		{
-			PlayAnimationInternal((ClipDictionary)animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
+			PlayAnimationInternal((ClipDictionary)animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, false, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(ClipDictionary clipDict, string animName)
 		{
-			PlayAnimationInternal(clipDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, AnimationIKControlFlags.None);
+			PlayAnimationInternal(clipDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, false, AnimationIKControlFlags.None);
 		}
-
 		public void PlayAnimation(string animDict, string animName, float speed, int duration, float playbackRate)
 		{
-			PlayAnimationInternal((ClipDictionary)animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, AnimationIKControlFlags.None);
+			PlayAnimationInternal((ClipDictionary)animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, false, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(ClipDictionary clipDict, string animName, AnimationBlendDelta blendSpeed, int duration, float startPhase)
 		{
-			PlayAnimationInternal(clipDict, animName, blendSpeed.Value, -blendSpeed.Value, duration, AnimationFlags.None, startPhase, AnimationIKControlFlags.None);
+			PlayAnimationInternal(clipDict, animName, blendSpeed.Value, -blendSpeed.Value, duration, AnimationFlags.None, startPhase, false, AnimationIKControlFlags.None);
 		}
-
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, int duration, AnimationFlags flags)
 		{
-			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, -8f, duration, flags, 0f, AnimationIKControlFlags.None);
+			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, -8f, duration, flags, 0f, false, AnimationIKControlFlags.None);
 		}
-
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
 		{
-			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, AnimationIKControlFlags.None);
+			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, false, AnimationIKControlFlags.None);
 		}
-
 		public void PlayAnimation(ClipDictionary clipDict, string animName, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase)
 		{
-			PlayAnimationInternal(clipDict, animName, blendInSpeed.Value, blendOutSpeed.Value, duration, flags, startPhase, AnimationIKControlFlags.None);
+			PlayAnimationInternal(clipDict, animName, blendInSpeed.Value, blendOutSpeed.Value, duration, flags, startPhase, false, AnimationIKControlFlags.None);
 		}
-
-		public void PlayAnimation(ClipDictionary clipDict, string animName, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase, AnimationIKControlFlags ikFlags)
+		public void PlayAnimation(ClipDictionary clipDict, string animName, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
 		{
-			PlayAnimationInternal(clipDict, animName, blendInSpeed.Value, -blendOutSpeed.Value, duration, flags, startPhase, ikFlags);
+			PlayAnimationInternal(clipDict, animName, blendInSpeed.Value, -blendOutSpeed.Value, duration, flags, startPhase, phaseControlled, ikFlags);
 		}
 
-		private void PlayAnimationInternal(ClipDictionary clipDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, AnimationIKControlFlags ikFlags)
+		private void PlayAnimationInternal(ClipDictionary clipDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, clipDict);
 
@@ -511,13 +690,56 @@ namespace GTA
 				}
 			}
 
-			// The sign of blend delta doesn't make any difference in TASK_PLAY_ANIM and TASK_PLAY_ANIM_ADVANCED, but R* might add sign checks for blend delta values in the future so we'll have to check the signs of blend delta values as well.
-			// The third last argument is named phaseControlled in commands_task.sch.
-			// Considering how paparrazo3.ysc calls this function, the third last argument may be useful under a synchronized scene.
+			// The sign of blend delta doesn't make any difference in TASK_PLAY_ANIM and TASK_PLAY_ANIM_ADVANCED,
+			// but R* might add sign checks for blend delta values in the future so we'll have to check the signs of
+			// blend delta values as well.
 			// The last argument is named bAllowOverrideCloneUpdate and will not be useful in the story mode.
-			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, clipDict, animName, blendInSpeed, blendOutSpeed, duration, (int)flags, startPhase, 0, (int)ikFlags, 0);
+			Function.Call(Hash.TASK_PLAY_ANIM, _ped.Handle, clipDict, animName, blendInSpeed, blendOutSpeed, duration,
+				(int)flags, startPhase, phaseControlled, (int)ikFlags, 0);
 		}
 
+		/// <summary>
+		/// Plays an anim task on the <see cref="Ped"/> with a reposition and reorientation at the beginning.
+		/// </summary>
+		/// <param name="clipDict">The clip dictionary for animation.</param>
+		/// <param name="animName">The animation name.</param>
+		/// <param name="position">The initial position in World Coordinates to start the anim at.</param>
+		/// <param name="rotation">
+		/// The initial rotation (in degrees, format &lt;&lt; pitch, roll, heading &gt;&gt;) to playback the anim from.
+		/// </param>
+		/// <param name="blendInDelta">The rate at which the task will blend in.</param>
+		/// <param name="blendOutDelta">The rate at which the task will blend out.</param>
+		/// <param name="timeToPlay">The time to play in milliseconds.</param>
+		/// <param name="flags">The animation flags.</param>
+		/// <param name="startPhase">The phase to start between 0 and 1.</param>
+		/// <param name="rotOrder">The rotation order.</param>
+		/// <param name="ikFlags">The IK flags.</param>
+		/// <remarks>
+		/// <para>
+		/// Specifying the task flags both <see cref="AnimationFlags.ExtractInitialOffset"/> and
+		/// <see cref="AnimationFlags.OverridePhysics"/> will instruct the task to play the anim using an initial offset
+		/// specified by the animator (if one exists). Use this flag to playback synced anims on multiple peds (i.e.
+		/// give all peds the same Pos and Rot values and the animation flag
+		/// <see cref="AnimationFlags.ExtractInitialOffset"/> and <see cref="AnimationFlags.OverridePhysics"/>)
+		/// </para>
+		/// <para>
+		/// This method does not automatically request <paramref name="clipDict"/>, which is different from
+		/// <see cref="PlayAnimation(ClipDictionary, string)"/>, so you will need to manually request it.
+		/// </para>
+		/// </remarks>
+		public void PlayAnimationAdvanced(ClipDictionary clipDict, string animName, Vector3 position, Vector3 rotation,
+			AnimationBlendDelta? blendInDelta = null, AnimationBlendDelta? blendOutDelta = null, int timeToPlay = -1,
+			AnimationFlags flags = AnimationFlags.None, float startPhase = 0f,
+			EulerRotationOrder rotOrder = EulerRotationOrder.YXZ,
+			AnimationIKControlFlags ikFlags = AnimationIKControlFlags.None)
+		{
+			float blendInDeltaArg = blendInDelta?.Value ?? AnimationBlendDelta.Normal.Value;
+			float blendOutDeltaArg = -(blendOutDelta?.Value ?? AnimationBlendDelta.Normal.Value);
+
+			Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, _ped.Handle, clipDict, animName, position.X, position.Y, position.Z,
+				rotation.X, rotation.Y, rotation.Z, blendInDeltaArg, blendOutDeltaArg, timeToPlay, (int)flags,
+				startPhase, (int)rotOrder, (int)ikFlags);
+		}
 		public void RappelFromHelicopter()
 		{
 			Function.Call(Hash.TASK_RAPPEL_FROM_HELI, _ped.Handle, 0x41200000);
