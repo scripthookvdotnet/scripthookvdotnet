@@ -657,10 +657,15 @@ namespace SHVDN
 				s_explodeProjectileFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, void>)(new IntPtr(*(int*)(address + 13) + address + 17));
 			}
 
+			address = FindPatternBmh("\x0F\x84\x8F\x00\x00\x00\x8A\x48\x28\x80\xE9\x02\x80\xF9\x03\x0F\x87\x80\x00\x00\x00\x48\x8B\x10\x48\x8B\xC8\xFF\x52", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				// The offset is 0x78 in b2944, and one more v func addition before this func makes us have to create another memory pattern/signature
+				s_getFragInstVFuncOffset = *(sbyte*)(address + 0x1D);
+			}
 			address = FindPatternNaive("\x0F\xBE\x5E\x06\x48\x8B\xCF\xFF\x50\x00\x8B\xD3\x48\x8B\xC8\xE8\x00\x00\x00\x00\x8B\x4E", "xxxxxxxxx?xxxxxx????xx");
 			if (address != null)
 			{
-				s_getFragInstVFuncOffset = *(sbyte*)(address + 9);
 				s_detachFragmentPartByIndexFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(new IntPtr(*(int*)(address + 16) + address + 20));
 			}
 			address = FindPatternBmh("\x74\x56\x48\x8B\x0D\x00\x00\x00\x00\x41\x0F\xB7\xD0\x45\x33\xC9\x45\x33\xC0", "xxxxx????xxxxxxxxxx");
@@ -6564,6 +6569,51 @@ namespace SHVDN
 			var getFragInstFunc = (delegate* unmanaged[Stdcall]<IntPtr, FragInst*>)(vFuncAddr);
 
 			return getFragInstFunc(entityAddress);
+		}
+
+		/// <summary>
+		/// Gets whether the passed entity has a skeleton.
+		/// This method is provided so it makes possible for SHVDN to avoid the game crashing for trying to use an absent
+		/// CrSkeleton address when calling entity attachment native functions with bone indices but one of them does not
+		/// have a CrSkeleton, even in the game versions earlier than v1.0.2699.0.
+		/// </summary>
+		public static bool EntityHasSkeleton(int handle)
+		{
+			IntPtr addr = GetEntityAddress(handle);
+			if (addr == null)
+			{
+				return false;
+			}
+
+			return EntityHasCrSkeleton(addr);
+		}
+		/// <summary>
+		/// Gets whether the CEntity has a CrSkeleton.
+		/// Basically does the same thing as what the native DOES_ENTITY_HAVE_SKELETON does but this method takes
+		/// an CEntity address.
+		/// </summary>
+		/// <param name="cEntityAddress">The CEntity address (does not has to be CPhysical).</param>
+		private static bool EntityHasCrSkeleton(IntPtr cEntityAddress)
+		{
+			FragInst* fragInst = GetFragInstAddressOfEntity(cEntityAddress);
+			if (fragInst == null)
+			{
+				return false;
+			}
+
+			FragCacheEntry* fragCache = fragInst->fragCacheEntry;
+			if (fragCache == null)
+			{
+				return false;
+			}
+
+			CrSkeleton* crSkel = fragCache->crSkeleton;
+			if (crSkel == null)
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 		private static int GetFragmentGroupCountOfFragInst(FragInst* fragInst)

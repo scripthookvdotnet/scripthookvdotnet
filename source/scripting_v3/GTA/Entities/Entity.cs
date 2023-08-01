@@ -165,10 +165,15 @@ namespace GTA
 		/// <value>
 		/// <see langword="true"/> if this <see cref="Entity"/> has a skeleton; otherwise, <see langword="false"/>.
 		/// </value>
-		/// <remarks>
-		/// Currently only available in v1.0.2699.0 or later.
-		/// </remarks>
-		public bool HasSkeleton => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_SKELETON, Handle);
+		public bool HasSkeleton
+		{
+			get
+			{
+				return (int)Game.Version >= (int)GameVersion.v1_0_2699_0_Steam
+					? Function.Call<bool>(Hash.DOES_ENTITY_HAVE_SKELETON, Handle)
+					: SHVDN.NativeMemory.EntityHasSkeleton(Handle);
+			}
+		}
 
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Entity"/> has an animation director.
