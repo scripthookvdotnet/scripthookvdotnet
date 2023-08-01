@@ -5164,10 +5164,10 @@ namespace SHVDN
 				float maxX = Math.Max(x1, x2);
 				float maxY = Math.Max(y1, y2);
 
-				int minAreaRegionX = Math.Min(Math.Max((int)((minX + 8192f) / 512), 0), 32);
-				int minAreaRegionY = Math.Min(Math.Max((int)((minY + 8192f) / 512), 0), 32);
-				int maxAreaRegionX = Math.Min(Math.Max((int)((maxX + 8192f) / 512), 0), 32);
-				int maxAreaRegionY = Math.Min(Math.Max((int)((maxY + 8192f) / 512), 0), 32);
+				int minAreaRegionX = Math.Min(Math.Max((int)((minX + 8192f) / 512), 0), 31);
+				int minAreaRegionY = Math.Min(Math.Max((int)((minY + 8192f) / 512), 0), 31);
+				int maxAreaRegionX = Math.Min(Math.Max((int)((maxX + 8192f) / 512), 0), 31);
+				int maxAreaRegionY = Math.Min(Math.Max((int)((maxY + 8192f) / 512), 0), 31);
 
 				int areaIdCount = (maxAreaRegionX - minAreaRegionX + 1) * (maxAreaRegionY - minAreaRegionY + 1);
 
@@ -5187,10 +5187,10 @@ namespace SHVDN
 				float rectMaxX = x + radius;
 				float rectMaxY = y + radius;
 
-				int minAreaRegionXIndex = Math.Min(Math.Max((int)((rectMinX + 8192f) / 512), 0), 32);
-				int minAreaRegionYIndex = Math.Min(Math.Max((int)((rectMinY + 8192f) / 512), 0), 32);
-				int maxAreaRegionXIndex = Math.Min(Math.Max((int)((rectMaxX + 8192f) / 512), 0), 32);
-				int maxAreaRegionYIndex = Math.Min(Math.Max((int)((rectMaxY + 8192f) / 512), 0), 32);
+				int minAreaRegionXIndex = Math.Min(Math.Max((int)((rectMinX + 8192f) / 512), 0), 31);
+				int minAreaRegionYIndex = Math.Min(Math.Max((int)((rectMinY + 8192f) / 512), 0), 31);
+				int maxAreaRegionXIndex = Math.Min(Math.Max((int)((rectMaxX + 8192f) / 512), 0), 31);
+				int maxAreaRegionYIndex = Math.Min(Math.Max((int)((rectMaxY + 8192f) / 512), 0), 31);
 
 				for (int regionYIndex = minAreaRegionYIndex; regionYIndex <= maxAreaRegionYIndex; regionYIndex++)
 				{
