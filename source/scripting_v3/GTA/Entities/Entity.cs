@@ -188,6 +188,56 @@ namespace GTA
 		/// </remarks>
 		public bool HasAnimationDirector => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_ANIM_DIRECTOR, Handle);
 
+		/// <summary>
+		/// Gets a value that indicates whether this <see cref="Entity"/> is owned by a SHVDN script including the console.
+		/// When this property returns <see langword="true"/>, you can successfully call <see cref="MarkAsNoLongerNeeded"/>.
+		/// </summary>
+		/// <remarks>
+		/// Strictly speaking, this property returns true if the <c>CGameScriptHandler</c> associated with this
+		/// <see cref="Entity"/> matches the one of the SHVDN runtime script. Although this property calls
+		/// <c>DOES_ENTITY_BELONG_TO_THIS_SCRIPT</c>, ScriptHookVDotNet uses a shared <c>GtaThread</c> since
+		/// and the SHVDN runtime script registers only one script via Script Hook V and thus the SHVDN runtime uses
+		/// only one <c>CGameScriptHandler</c> instance for all SHVDN scripts (which is held by the <c>GtaThread</c>
+		/// of SHVDN runtime script). This behavior is very similar to how RAGE Plugin Hook executes its plugins in how
+		/// game resources are managed (not in how .NET assemblies are managed, however).
+		/// </remarks>
+		// The canonical name of 2nd argument is bDeadCheck in DOES_ENTITY_BELONG_TO_THIS_SCRIPT, but it has no effect
+		public bool IsOwnedByShvdnScript => Function.Call<bool>(Hash.DOES_ENTITY_BELONG_TO_THIS_SCRIPT, Handle, true);
+		/// <summary>
+		/// Gets a value that indicates whether this <see cref="Entity"/> is owned by a script including ysc scripts
+		/// or external scripts other than SHVDN.
+		/// </summary>
+		public bool IsOwnedBySomeScript => OwnerScriptName != null;
+		/// <summary>
+		/// Gets the script name of the <c>scrThread</c> that owns this <see cref="Entity"/>.
+		/// Although you can get distinct names of ysc scripts with this property, you should not except that you can
+		/// get a distinct name for external scripts, since both Script Hook V and RAGE Plugin Hook use shared script
+		/// names for all scripts/plugins.
+		/// </summary>
+		/// <remarks>
+		/// This property will return <see langword="null"/> if no script owns this <see cref="Entity"/>.
+		/// If some Script Hook V script (including SHVDN) owns this <see cref="Entity"/>, this property should return
+		/// "audiotest" (or "AudioTest").
+		/// If some RAGE Plugin Hook plugin owns this <see cref="Entity"/>, this property should return "RagePluginHook".
+		/// </remarks>
+		public string OwnerScriptName
+		{
+			get
+			{
+				// Get the string address so we can make sure if GET_ENTITY_SCRIPT returns a valid string address
+				// Unfortunately, Fucntion.Call returns the empty string even if the address is null for compatibility
+				// reasons in v3 and v2, while Marshal.PtrToStringUTF8 in .NET Core/5+ returns null in this case
+				// The 2nd argument InstanceId (a pointer value) is eventually always unused, so just set to null
+				IntPtr strAddr = Function.Call<IntPtr>(Hash.GET_ENTITY_SCRIPT, Handle, null);
+				if (strAddr == IntPtr.Zero)
+				{
+					return null;
+				}
+
+				return SHVDN.StringMarshal.PtrToStringUtf8(strAddr);
+			}
+		}
+
 		#endregion
 
 		#region Styling
