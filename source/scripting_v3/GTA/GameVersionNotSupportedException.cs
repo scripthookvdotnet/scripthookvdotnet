@@ -10,6 +10,31 @@ using System.Text.RegularExpressions;
 
 namespace GTA
 {
+	/// <summary>
+	/// The exception that is thrown when an invoked method is not supported in the running game version.
+	/// </summary>
+	/// <remarks>
+	/// <see cref="GameVersionNotSupportedException"/> indicates that no implementation exists for the running game
+	/// version for an invoked method or property. There are two typical cases where a
+	/// <see cref="GameVersionNotSupportedException"/> is thrown:
+	/// <list type="bullet">
+	/// <item>
+	/// <description>
+	/// The relevant implementation is completely absent and operation cannot be performed in a meaningful way in
+	/// the running game version. For example, <see cref="Vehicle.SetRestrictedAmmoCount(int, int)"/> cannot be
+	/// implemented for the game versions earlier than v1.0.877.1 due to the absent of the member of restricted ammo
+	/// count in <c>CVehicle</c>.
+	/// </description>
+	/// </item>
+	/// <item>
+	/// <description>
+	/// An invoked method or property calls a native function that does not exist in the running game version.
+	/// In this case, some issues can be resolved with a custom wrapper implementation for earlier game version
+	/// if relevant implementation is present.
+	/// </description>
+	/// </item>
+	/// </list>
+	/// </remarks>
 	[Serializable]
 	public sealed class GameVersionNotSupportedException : Exception
 	{
