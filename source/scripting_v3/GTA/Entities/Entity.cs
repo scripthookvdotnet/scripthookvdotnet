@@ -1664,11 +1664,7 @@ namespace GTA
 		/// <param name="position">The position relative to the <paramref name="entity"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/>.</param>
 		public void AttachTo(Entity entity, Vector3 position = default, Vector3 rotation = default)
-		{
-			// Note: bActiveCollisions (12th argument) will not work if -1 is passed as the bone index value
-			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entity.Handle, -1, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, 0, 0, 0, 0, 2, 1);
-		}
-
+			=> AttachTo(entity, position, rotation, false, false, false, false, EulerRotationOrder.YXZ);
 		/// <summary>
 		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
 		/// </summary>
@@ -1676,16 +1672,65 @@ namespace GTA
 		/// <param name="position">The position relative to the <paramref name="entityBone"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/></param>
 		public void AttachTo(EntityBone entityBone, Vector3 position = default, Vector3 rotation = default)
-			=> AttachTo(entityBone, position, rotation, false, EulerRotationOrder.YXZ);
+			=> AttachTo(entityBone, position, rotation, false, false, false, false, EulerRotationOrder.YXZ);
+		/// <summary>
+		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
+		/// </summary>
+		/// <param name="entity">The <see cref="Entity"/> to attach this <see cref="Entity"/> to.</param>
+		/// <param name="offset">The offset relative to the <paramref name="entity"/> to attach this <see cref="Entity"/> to.</param>
+		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/>.</param>
+		/// <param name="detachWhenDead">Specifies whether this <see cref="Ped"/> will be detached when they are dead.</param>
+		/// <param name="detachWhenRagdoll">Specifies whether this <see cref="Ped"/> will be detached when they are ragdolling.</param>
+		/// <param name="activeCollisions">
+		/// Specifies whether the collision of this <see cref="Entity"/> will be left activated for other
+		/// <see cref="Entity"/>s with colliders. This <see cref="Entity"/> will not collide with static collisions
+		/// such as map collisions, which are part of <see cref="Building"/>s or <see cref="AnimatedBuilding"/>s, or
+		/// those of <see cref="Entity"/>s with no working colliders.
+		/// </param>
+		/// <param name="useBasicAttachIfPed">
+		/// If <see langword="true"/> this method forces a path, even for <see cref="Ped"/>s, that will use all three rotation components
+		/// This parameter does not have effect if this <see cref="Entity"/> is a <see cref="Vehicle"/> or <see cref="Prop"/>.
+		/// </param>
+		/// <param name="rotationOrder">The rotation order.</param>
+		public void AttachTo(Entity entity, Vector3 offset, Vector3 rotation, bool detachWhenDead = false, bool detachWhenRagdoll = false, bool activeCollisions = false, bool useBasicAttachIfPed = false, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
+		{
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY,
+				Handle,
+				entity,
+				-1,
+				offset.X,
+				offset.Y,
+				offset.Z,
+				rotation.X,
+				rotation.Y,
+				rotation.Z,
+				detachWhenDead,
+				detachWhenRagdoll,
+				activeCollisions,
+				useBasicAttachIfPed,
+				(int)rotationOrder,
+				true);
+		}
 		/// <summary>
 		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
 		/// </summary>
 		/// <param name="entityBone">The <see cref="EntityBone"/> to attach this <see cref="Entity"/> to.</param>
 		/// <param name="offset">The offset relative to the <paramref name="entityBone"/> to attach this <see cref="Entity"/> to.</param>
-		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/></param>
-		/// <param name="leaveCollisionActivated">Specifies whether the collision of this <see cref="Entity"/> will be left activated.</param>
+		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/>.</param>
+		/// <param name="detachWhenDead">Specifies whether this <see cref="Ped"/> will be detached when they are dead.</param>
+		/// <param name="detachWhenRagdoll">Specifies whether this <see cref="Ped"/> will be detached when they are ragdolling.</param>
+		/// <param name="activeCollisions">
+		/// Specifies whether the collision of this <see cref="Entity"/> will be left activated for other
+		/// <see cref="Entity"/>s with colliders. This <see cref="Entity"/> will not collide with static collisions
+		/// such as map collisions, which are part of <see cref="Building"/>s or <see cref="AnimatedBuilding"/>s, or
+		/// those of <see cref="Entity"/>s with no working colliders.
+		/// </param>
+		/// <param name="useBasicAttachIfPed">
+		/// If <see langword="true"/> this method forces a path, even for <see cref="Ped"/>s, that will use all three rotation components
+		/// This parameter does not have effect if this <see cref="Entity"/> is a <see cref="Vehicle"/> or <see cref="Prop"/>.
+		/// </param>
 		/// <param name="rotationOrder">The rotation order.</param>
-		public void AttachTo(EntityBone entityBone, Vector3 offset, Vector3 rotation, bool leaveCollisionActivated, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
+		public void AttachTo(EntityBone entityBone, Vector3 offset, Vector3 rotation, bool detachWhenDead = false, bool detachWhenRagdoll = false, bool activeCollisions = false, bool useBasicAttachIfPed = false, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
 		{
 			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY,
 				Handle,
@@ -1697,10 +1742,10 @@ namespace GTA
 				rotation.X,
 				rotation.Y,
 				rotation.Z,
-				false,
-				false,
-				leaveCollisionActivated,
-				false,
+				detachWhenDead,
+				detachWhenRagdoll,
+				activeCollisions,
+				useBasicAttachIfPed,
 				(int)rotationOrder,
 				true);
 		}
