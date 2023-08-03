@@ -1657,30 +1657,30 @@ namespace GTA
 		{
 			Function.Call(Hash.DETACH_ENTITY, Handle, applyVelocity, noCollisionUntilClear);
 		}
+		/// <inheritdoc cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"/>
+		public void AttachTo(Entity entity, Vector3 position = default, Vector3 rotation = default)
+			=> AttachTo(entity, position, rotation, false, false, false, false, EulerRotationOrder.YXZ);
+		/// <inheritdoc cref="AttachTo(EntityBone, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"/>
+		public void AttachTo(EntityBone entityBone, Vector3 position = default, Vector3 rotation = default)
+			=> AttachTo(entityBone, position, rotation, false, false, false, false, EulerRotationOrder.YXZ);
 		/// <summary>
 		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="Entity"/> to attach this <see cref="Entity"/> to.</param>
-		/// <param name="position">The position relative to the <paramref name="entity"/> to attach this <see cref="Entity"/> to.</param>
+		/// <param name="offset">
+		/// The offset relative to the <paramref name="entity"/> to attach this <see cref="Entity"/> to.
+		/// If <paramref name="attachOffsetIsRelative"/> is <see langword="true"/>, the offset will be used as offset
+		/// in world space.
+		/// </param>
 		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/>.</param>
-		public void AttachTo(Entity entity, Vector3 position = default, Vector3 rotation = default)
-			=> AttachTo(entity, position, rotation, false, false, false, false, EulerRotationOrder.YXZ);
-		/// <summary>
-		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
-		/// </summary>
-		/// <param name="entityBone">The <see cref="EntityBone"/> to attach this <see cref="Entity"/> to.</param>
-		/// <param name="position">The position relative to the <paramref name="entityBone"/> to attach this <see cref="Entity"/> to.</param>
-		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/></param>
-		public void AttachTo(EntityBone entityBone, Vector3 position = default, Vector3 rotation = default)
-			=> AttachTo(entityBone, position, rotation, false, false, false, false, EulerRotationOrder.YXZ);
-		/// <summary>
-		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
-		/// </summary>
-		/// <param name="entity">The <see cref="Entity"/> to attach this <see cref="Entity"/> to.</param>
-		/// <param name="offset">The offset relative to the <paramref name="entity"/> to attach this <see cref="Entity"/> to.</param>
-		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entity"/>.</param>
-		/// <param name="detachWhenDead">Specifies whether this <see cref="Ped"/> will be detached when they are dead.</param>
-		/// <param name="detachWhenRagdoll">Specifies whether this <see cref="Ped"/> will be detached when they are ragdolling.</param>
+		/// <param name="detachWhenDead">
+		/// If <see langword="true"/> and this <see cref="Entity"/> is a <see cref="Ped"/>, the <see cref="Ped"/>
+		/// will be detached when they are dead.
+		/// </param>
+		/// <param name="detachWhenRagdoll">
+		/// If <see langword="true"/> and this <see cref="Entity"/> is a <see cref="Ped"/>, the <see cref="Ped"/>
+		/// will be detached when they ragdolls.
+		/// </param>
 		/// <param name="activeCollisions">
 		/// Specifies whether the collision of this <see cref="Entity"/> will be left activated for other
 		/// <see cref="Entity"/>s with colliders. This <see cref="Entity"/> will not collide with static collisions
@@ -1692,62 +1692,105 @@ namespace GTA
 		/// This parameter does not have effect if this <see cref="Entity"/> is a <see cref="Vehicle"/> or <see cref="Prop"/>.
 		/// </param>
 		/// <param name="rotationOrder">The rotation order.</param>
-		public void AttachTo(Entity entity, Vector3 offset, Vector3 rotation, bool detachWhenDead = false, bool detachWhenRagdoll = false, bool activeCollisions = false, bool useBasicAttachIfPed = false, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
+		/// <param name="attachOffsetIsRelative">
+		/// <para>
+		/// Specifies whether <paramref name="offset"/> is in the local space of <paramref name="entity"/>
+		/// rather than world space.
+		/// </para>
+		/// <para>
+		/// Always set to <see langword="true"/> in all occurrences of <c>ATTACH_ENTITY_TO_ENTITY</c> in ysc scripts
+		/// as of v1.0.2944.0.
+		/// </para>
+		/// </param>
+		/// <param name="markAsNoLongerNeededWhenDetached">
+		/// <para>
+		/// If <see langword="true"/> and the game version is v1.0.1493.0 or later, the game marks as no longer
+		/// needed when this <see cref="Entity"/> gets detached from <paramref name="entity"/>.
+		/// This <see cref="Entity"/> must be owned by the SHVDN runtime to get marked as no longer needed
+		/// when this <see cref="Entity"/> gets detached, or the <see cref="Entity"/> will just get detached.
+		/// </para>
+		/// <para>
+		/// Always set to <see langword="false"/> in all occurrences of <c>ATTACH_ENTITY_TO_ENTITY</c> in ysc scripts
+		/// as of v1.0.2944.0.
+		/// </para>
+		/// </param>
+		public void AttachTo(Entity entity, Vector3 offset, Vector3 rotation, bool detachWhenDead = false,
+			bool detachWhenRagdoll = false, bool activeCollisions = false, bool useBasicAttachIfPed = false,
+			EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ, bool attachOffsetIsRelative = true,
+			bool markAsNoLongerNeededWhenDetached = false)
 		{
-			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY,
-				Handle,
-				entity,
-				-1,
-				offset.X,
-				offset.Y,
-				offset.Z,
-				rotation.X,
-				rotation.Y,
-				rotation.Z,
-				detachWhenDead,
-				detachWhenRagdoll,
-				activeCollisions,
-				useBasicAttachIfPed,
-				(int)rotationOrder,
-				true);
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entity, -1, offset.X, offset.Y, offset.Z,
+				rotation.X, rotation.Y, rotation.Z, detachWhenDead, detachWhenRagdoll, activeCollisions, useBasicAttachIfPed,
+				(int)rotationOrder, attachOffsetIsRelative, markAsNoLongerNeededWhenDetached);
 		}
-		/// <summary>
-		/// Attaches this <see cref="Entity"/> to a different <see cref="Entity"/>
-		/// </summary>
+
 		/// <param name="entityBone">The <see cref="EntityBone"/> to attach this <see cref="Entity"/> to.</param>
-		/// <param name="offset">The offset relative to the <paramref name="entityBone"/> to attach this <see cref="Entity"/> to.</param>
-		/// <param name="rotation">The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="entityBone"/>.</param>
-		/// <param name="detachWhenDead">Specifies whether this <see cref="Ped"/> will be detached when they are dead.</param>
-		/// <param name="detachWhenRagdoll">Specifies whether this <see cref="Ped"/> will be detached when they are ragdolling.</param>
+		/// <param name="offset">
+		/// <inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// path="/param[@name='offset']"
+		/// />
+		/// </param>
+		/// <param name="rotation">
+		/// <inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// path="/param[@name='rotation']"
+		/// />
+		/// </param>
+		/// <param name="detachWhenDead">
+		/// <inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// path="/param[@name='detachWhenDead']"
+		/// />
+		/// </param>
+		/// <param name="detachWhenRagdoll">
+		/// <inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// path="/param[@name='detachWhenRagdoll']"
+		/// />
+		/// </param>
 		/// <param name="activeCollisions">
-		/// Specifies whether the collision of this <see cref="Entity"/> will be left activated for other
-		/// <see cref="Entity"/>s with colliders. This <see cref="Entity"/> will not collide with static collisions
-		/// such as map collisions, which are part of <see cref="Building"/>s or <see cref="AnimatedBuilding"/>s, or
-		/// those of <see cref="Entity"/>s with no working colliders.
+		/// <inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// path="/param[@name='activeCollisions']"
+		/// />
 		/// </param>
 		/// <param name="useBasicAttachIfPed">
-		/// If <see langword="true"/> this method forces a path, even for <see cref="Ped"/>s, that will use all three rotation components
-		/// This parameter does not have effect if this <see cref="Entity"/> is a <see cref="Vehicle"/> or <see cref="Prop"/>.
+		/// <inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// path="/param[@name='useBasicAttachIfPed']"
+		/// />
 		/// </param>
-		/// <param name="rotationOrder">The rotation order.</param>
-		public void AttachTo(EntityBone entityBone, Vector3 offset, Vector3 rotation, bool detachWhenDead = false, bool detachWhenRagdoll = false, bool activeCollisions = false, bool useBasicAttachIfPed = false, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
+		/// <param name="rotationOrder">
+		/// <inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// path="/param[@name='rotationOrder']"
+		/// />
+		/// </param>
+		/// <param name="attachOffsetIsRelative">
+		/// <inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// path="/param[@name='attachOffsetIsRelative']"
+		/// />
+		/// </param>
+		/// <param name="markAsNoLongerNeededWhenDetached">
+		/// <inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// path="/param[@name='markAsNoLongerNeededWhenDetached']"
+		/// />
+		/// </param>
+		///
+		///	<inheritdoc
+		/// cref="AttachTo(Entity, Vector3, Vector3, bool, bool, bool, bool, EulerRotationOrder, bool, bool)"
+		/// />
+		public void AttachTo(EntityBone entityBone, Vector3 offset, Vector3 rotation, bool detachWhenDead = false,
+			bool detachWhenRagdoll = false, bool activeCollisions = false, bool useBasicAttachIfPed = false,
+			EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ, bool attachOffsetIsRelative = true,
+			bool markAsNoLongerNeededWhenDetached = false)
 		{
-			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY,
-				Handle,
-				entityBone.Owner.Handle,
-				entityBone,
-				offset.X,
-				offset.Y,
-				offset.Z,
-				rotation.X,
-				rotation.Y,
-				rotation.Z,
-				detachWhenDead,
-				detachWhenRagdoll,
-				activeCollisions,
-				useBasicAttachIfPed,
-				(int)rotationOrder,
-				true);
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY, Handle, entityBone.Owner, entityBone.Index, offset.X, offset.Y,
+				offset.Z, rotation.X, rotation.Y, rotation.Z, detachWhenDead, detachWhenRagdoll, activeCollisions,
+				useBasicAttachIfPed, (int)rotationOrder, attachOffsetIsRelative, markAsNoLongerNeededWhenDetached);
 		}
 
 		/// <summary>
