@@ -1230,9 +1230,16 @@ namespace GTA
 		public WeaponCollection Weapons => _weapons ?? (_weapons = new WeaponCollection(this));
 
 		/// <summary>
-		/// Gets the vehicle weapon this <see cref="Ped"/> is using.
-		/// <remarks>The vehicle weapon, returns <see cref="VehicleWeaponHash.Invalid"/> if this <see cref="Ped"/> isnt using a vehicle weapon.</remarks>
+		/// Gets the vehicle weapon this <see cref="Ped"/> is using on <see cref="CurrentVehicle"/>.
 		/// </summary>
+		/// <returns>
+		/// The vehicle weapon this <see cref="Ped"/> is currently using ifsuccessfully found a vehicle weapon;
+		/// otherwise, <see cref="VehicleWeaponHash.Invalid"/>
+		/// </returns>
+		/// <remarks>
+		/// Despite the interface, this property will eventually get or set the value on
+		/// <see cref="CurrentVehicle"/> if it exists.
+		/// </remarks>
 		public VehicleWeaponHash VehicleWeapon
 		{
 			get
@@ -1246,6 +1253,20 @@ namespace GTA
 			}
 			set => Function.Call(Hash.SET_CURRENT_PED_VEHICLE_WEAPON, Handle, (uint)value);
 		}
+
+		/// <summary>
+		/// Attempts to set the vehicle weapon this <see cref="Ped"/> is using on <see cref="CurrentVehicle"/>.
+		/// </summary>
+		/// <param name="hash">The vehicle weapon hash.</param>
+		/// <returns>
+		/// <see langword="true"/> if the operation was successful; otherwise, <see langword="false"/>.
+		/// </returns>
+		/// <remarks>
+		/// Despite the interface, this property will set the value on <see cref="CurrentVehicle"/> if it exists and
+		/// <paramref name="hash"/> is listed on the <see cref="VehicleWeaponHandlingData"/> for the current vehicle.
+		/// </remarks>
+		public bool TrySetVehicleWeapon(VehicleWeaponHash hash)
+			=> Function.Call<bool>(Hash.SET_CURRENT_PED_VEHICLE_WEAPON, Handle, (uint)hash);
 
 		/// <summary>
 		/// Sets if this <see cref="Ped"/> can switch between different weapons.
