@@ -2301,6 +2301,7 @@ namespace GTA
 		/// cref="AttachBoneToBonePhysically"
 		/// path="/param[@name='rotationOrder']"
 		/// />
+		/// </param>
 		/// <param name="invMassScaleA">
 		/// <inheritdoc
 		/// cref="AttachBoneToBonePhysicallyOverrideInverseMass"
@@ -2313,7 +2314,9 @@ namespace GTA
 		/// path="/param[@name='invMassScaleB']"
 		/// />
 		/// </param>
-		/// </param>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.2944.0.
+		/// </exception>
 		public void AttachToMatrixPhysicallyOverrideInverseMass(Entity secondEntity, Vector3 secondEntityOffset,
 			Vector3 thisEntityOffset, Vector3 rotation, float physicalStrength, bool constrainRotation,
 			bool doInitialWarp = true, bool collideWithEntity = false, bool addInitialSeparation = true,
@@ -2423,6 +2426,9 @@ namespace GTA
 		/// path="/remarks"
 		/// />
 		/// </remarks>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.2944.0.
+		/// </exception>
 		public void AttachBoneToMatrixPhysicallyOverrideInverseMass(EntityBone boneOfThisEntity, Entity secondEntity,
 			Vector3 secondEntityOffset, Vector3 thisEntityOffset, Vector3 rotation, float physicalStrength,
 			bool constrainRotation, bool doInitialWarp = true, bool collideWithEntity = false,
@@ -2526,6 +2532,9 @@ namespace GTA
 		/// path="/remarks"
 		/// />
 		/// </remarks>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.2944.0.
+		/// </exception>
 		public void AttachToBonePhysicallyOverrideInverseMass(EntityBone boneOfSecondEntity, Vector3 secondEntityOffset,
 			Vector3 thisEntityOffset, Vector3 rotation, float physicalStrength, bool constrainRotation,
 			bool doInitialWarp = true, bool collideWithEntity = false, bool addInitialSeparation = true,
@@ -2629,6 +2638,9 @@ namespace GTA
 		/// path="/remarks"
 		/// />
 		/// </remarks>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.2944.0.
+		/// </exception>
 		public void AttachBoneToBonePhysicallyOverrideInverseMass(EntityBone boneOfThisEntity,
 			EntityBone boneOfSecondEntity, Vector3 secondEntityOffset, Vector3 thisEntityOffset, Vector3 rotation,
 			float physicalStrength, bool constrainRotation, bool doInitialWarp = true, bool collideWithEntity = false,
