@@ -207,7 +207,7 @@ namespace GTA
 		/// Gets a value that indicates whether this <see cref="Entity"/> is owned by a script including ysc scripts
 		/// or external scripts other than SHVDN.
 		/// </summary>
-		public bool IsOwnedBySomeScript => OwnerScriptName != null;
+		public bool IsOwnedByAnyScript => OwnerScriptName != null;
 		/// <summary>
 		/// Gets the script name of the <c>scrThread</c> that owns this <see cref="Entity"/>.
 		/// Although you can get distinct names of ysc scripts with this property, you should not except that you can
