@@ -6590,7 +6590,7 @@ namespace SHVDN
 				return false;
 			}
 
-			return EntityHasCrSkeleton(addr);
+			return CEntityHasCrSkeleton(addr);
 		}
 		/// <summary>
 		/// Gets whether the CEntity has a CrSkeleton.
@@ -6598,7 +6598,7 @@ namespace SHVDN
 		/// an CEntity address.
 		/// </summary>
 		/// <param name="cEntityAddress">The CEntity address (does not has to be CPhysical).</param>
-		private static bool EntityHasCrSkeleton(IntPtr cEntityAddress)
+		public static bool CEntityHasCrSkeleton(IntPtr cEntityAddress)
 		{
 			FragInst* fragInst = GetFragInstAddressOfEntity(cEntityAddress);
 			if (fragInst == null)
