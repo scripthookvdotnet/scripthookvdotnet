@@ -1514,11 +1514,43 @@ namespace GTA
 		/// <param name="minBounds">The minimum bounds.</param>
 		/// <param name="maxBounds">The maximum bounds.</param>
 		/// <returns>
-		///   <see langword="true" /> if this <see cref="Entity"/> is in the specified area; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if this <see cref="Entity"/> is in the specified area; otherwise, <see langword="false" />.
 		/// </returns>
+		/// <remarks>
+		/// This overload tests with a 2D area defined in X and Y axes for compatibility built against v3.6.0 or earlier,
+		/// while most tests of IS_ENTITY_IN_AREA are done with 3D areas in ysc scripts.
+		/// When you test with a 3D area, you need to use <see cref="IsInArea(Vector3, Vector3, bool, PedTransportMode)"/>.
+		/// </remarks>
 		public bool IsInArea(Vector3 minBounds, Vector3 maxBounds)
+			=> IsInArea(minBounds, maxBounds, false, PedTransportMode.Any);
+		/// <summary>
+		/// Determines whether this <see cref="Entity"/> is in a specified area.
+		/// </summary>
+		/// <param name="minCoords">
+		/// A coordinates that defines the axis aligned area to test along with <paramref name="maxCoords"/>.
+		/// Despite the name, does not have to be lower than <paramref name="maxCoords"/> in all components.
+		/// </param>
+		/// <param name="maxCoords">
+		/// A coordinates that defines the axis aligned area to test along with <paramref name="minCoords"/>.
+		/// Despite the name, does not have to be higher than <paramref name="maxCoords"/> in all components.
+		/// </param>
+		/// <param name="do3DCheck">
+		/// If set to <see langword="true"/>, the method will test if the <see cref="Entity"/> is in an 3D area,
+		/// which means both coordinates will be also considered in z axis.
+		/// If set to <see langword="false"/>, the method will only check if the point is in area in X and Y axes.
+		/// </param>
+		/// <param name="transportMode">
+		/// The transport mode constraint so the test can be passed.
+		/// </param>
+		/// <returns>
+		/// <see langword="true" /> if this <see cref="Entity"/> is in the specified area; otherwise, <see langword="false" />.
+		/// </returns>
+		public bool IsInArea(Vector3 minCoords, Vector3 maxCoords, bool do3DCheck,
+			PedTransportMode transportMode = PedTransportMode.Any)
 		{
-			return Function.Call<bool>(Hash.IS_ENTITY_IN_AREA, Handle, minBounds.X, minBounds.Y, minBounds.Z, maxBounds.X, maxBounds.Y, maxBounds.Z);
+			return Function.Call<bool>(Hash.IS_ENTITY_IN_AREA, Handle, minCoords.X, minCoords.Y, minCoords.Z, maxCoords.X,
+				maxCoords.Y, maxCoords.Z, false /* HighlightArea (unused in public builds) */, do3DCheck,
+				(int)transportMode);
 		}
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is in a specified angled area.
@@ -1527,9 +1559,48 @@ namespace GTA
 		/// <param name="edge">The mid-point of opposite base edge on the other Z.</param>
 		/// <param name="angle">The width. Wrongly named parameter but is kept for existing script compatibilities.</param>
 		/// <returns>
-		///   <see langword="true" /> if this <see cref="Entity"/> is in the specified angled area; otherwise, <see langword="false" />.
+		///   <see langword="true"/> if this <see cref="Entity"/> is in the specified angled area; otherwise, <see langword="false" />.
 		/// </returns>
-		public bool IsInAngledArea(Vector3 origin, Vector3 edge, float angle) => IsInAngledArea(origin, edge, angle, true);
+		public bool IsInAngledArea(Vector3 origin, Vector3 edge, float angle)
+			=> IsInAngledArea(origin, edge, angle, true, PedTransportMode.Any);
+		/// <summary>
+		/// <inheritdoc
+		/// cref="IsInAngledArea(Vector3, Vector3, float, bool, PedTransportMode)"
+		/// path="/summary"
+		/// />
+		/// </summary>
+		/// <param name="originEdge">
+		/// <inheritdoc
+		/// cref="IsInAngledArea(Vector3, Vector3, float, bool, PedTransportMode)"
+		/// path="/param[@name='originEdge']"
+		/// />
+		/// </param>
+		/// <param name="extentEdge">
+		/// <inheritdoc
+		/// cref="IsInAngledArea(Vector3, Vector3, float, bool, PedTransportMode)"
+		/// path="/param[@name='extentEdge']"
+		/// />
+		/// </param>
+		/// <param name="width">
+		/// <inheritdoc
+		/// cref="IsInAngledArea(Vector3, Vector3, float, bool, PedTransportMode)"
+		/// path="/param[@name='width']"
+		/// />
+		/// </param>
+		/// <param name="includeZAxis">
+		/// <inheritdoc
+		/// cref="IsInAngledArea(Vector3, Vector3, float, bool, PedTransportMode)"
+		/// path="/param[@name='do3DCheck']"
+		/// />
+		/// </param>
+		/// <returns>
+		/// <inheritdoc
+		/// cref="IsInAngledArea(Vector3, Vector3, float, bool, PedTransportMode)"
+		/// path="/returns"
+		/// />
+		/// </returns>
+		public bool IsInAngledArea(Vector3 originEdge, Vector3 extentEdge, float width, bool includeZAxis)
+		 => IsInAngledArea(originEdge, extentEdge, width, includeZAxis, PedTransportMode.Any);
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is in a specified angled area.
 		/// An angled area is an X-Z oriented rectangle with three parameters: origin, extent, and width.
@@ -1537,16 +1608,24 @@ namespace GTA
 		/// <param name="originEdge">The mid-point along a base edge of the rectangle.</param>
 		/// <param name="extentEdge">The mid-point of opposite base edge on the other Z.</param>
 		/// <param name="width">The length of the base edge.</param>
-		/// <param name="includeZAxis">
-		/// If set to <see langword="true" />, the method will also check if the point is in area in Z axis as well as X and Y axes.
-		/// If set to <see langword="false" />, the method will only check if the point is in area in X and Y axes.
+		/// <param name="do3DCheck">
+		/// If set to <see langword="true"/>, the method will also check if the point is in area in Z axis as well as
+		/// X and Y axes.
+		/// If set to <see langword="false"/>, the method will only check if the point is in area in X and Y axes.
+		/// </param>
+		/// <param name="transportMode">
+		/// The transport mode constraint so the test can be passed.
 		/// </param>
 		/// <returns>
-		///   <see langword="true" /> if this <see cref="Entity"/> is in the specified angled area; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if this <see cref="Entity"/> is in the specified angled area;
+		/// otherwise, <see langword="false" />.
 		/// </returns>
-		public bool IsInAngledArea(Vector3 originEdge, Vector3 extentEdge, float width, bool includeZAxis)
+		public bool IsInAngledArea(Vector3 originEdge, Vector3 extentEdge, float width, bool do3DCheck,
+			PedTransportMode transportMode = PedTransportMode.Any)
 		{
-			return Function.Call<bool>(Hash.IS_ENTITY_IN_ANGLED_AREA, Handle, originEdge.X, originEdge.Y, originEdge.Z, extentEdge.X, extentEdge.Y, extentEdge.Z, width, false, includeZAxis, 0);
+			return Function.Call<bool>(Hash.IS_ENTITY_IN_ANGLED_AREA, Handle, originEdge.X, originEdge.Y, originEdge.Z,
+				extentEdge.X, extentEdge.Y, extentEdge.Z, width, false /* HighlightArea (unused in public builds) */,
+				do3DCheck, (int)transportMode);
 		}
 
 		/// <summary>
@@ -1562,17 +1641,31 @@ namespace GTA
 			return Vector3.Subtract(Position, position).LengthSquared() < range * range;
 		}
 
+		/// <inheritdoc cref="IsNearEntity(Entity, Vector3, bool, PedTransportMode)"/>
+		public bool IsNearEntity(Entity entity, Vector3 bounds)
+			=> IsNearEntity(entity, bounds, true, PedTransportMode.Any);
 		/// <summary>
 		/// Determines whether this <see cref="Entity"/> is near a specified <see cref="Entity"/>.
 		/// </summary>
 		/// <param name="entity">The <see cref="Entity"/> to check.</param>
 		/// <param name="bounds">The max displacement from the <paramref name="entity"/>.</param>
+		/// <param name="do3DCheck">
+		/// If set to <see langword="true"/>, the method will also check if the point is in area in Z axis as well as
+		/// X and Y axes.
+		/// If set to <see langword="false"/>, the method will only check if the point is in area in X and Y axes.
+		/// </param>
+		/// <param name="transportMode">
+		/// The transport mode constraint so the test can be passed.
+		/// </param>
 		/// <returns>
-		///   <see langword="true" /> if this <see cref="Entity"/> is near the <paramref name="entity"/>; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if this <see cref="Entity"/> is near the <paramref name="entity"/>;
+		/// otherwise, <see langword="false" />.
 		/// </returns>
-		public bool IsNearEntity(Entity entity, Vector3 bounds)
+		public bool IsNearEntity(Entity entity, Vector3 bounds, bool do3DCheck,
+			PedTransportMode transportMode = PedTransportMode.Any)
 		{
-			return Function.Call<bool>(Hash.IS_ENTITY_AT_ENTITY, Handle, entity.Handle, bounds.X, bounds.Y, bounds.Z, false, true, false);
+			return Function.Call<bool>(Hash.IS_ENTITY_AT_ENTITY, Handle, entity.Handle, bounds.X, bounds.Y, bounds.Z,
+				false /* HighlightArea (unused in public builds) */, do3DCheck, (int)transportMode);
 		}
 
 		/// <summary>
