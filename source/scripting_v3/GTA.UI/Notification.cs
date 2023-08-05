@@ -217,6 +217,41 @@ namespace GTA.UI
 				val1, char2Txd, char2TextureName, val2, (int)customColor1, (int)customColor2);
 			return handle != -1 ? new FeedItem(handle) : null;
 		}
+		/// <summary>
+		/// Displays the award component.
+		/// </summary>
+		/// <param name="message">
+		/// The message body.
+		/// </param>
+		/// <param name="txd">
+		/// The texture dictionary for the icon on the left.
+		/// </param>
+		/// <param name="textureName">
+		/// The texture name string for the icon on the left.
+		/// </param>
+		/// <param name="xp">
+		/// The gained "RP" amount that will be displayed on the right side of the feed item.
+		/// </param>
+		/// <param name="awardColor">
+		/// The award color. Specifies the text color and filters the texture.
+		/// </param>
+		/// <param name="title">
+		/// The text label that will be displayed at the top of the feed item (title).
+		/// Note that long text will not expand the space vertically and color tokens such as <c>~r~</c> will be
+		/// shown as HTML tags.
+		/// </param>
+		/// <returns>
+		/// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+		/// </returns>
+		public static FeedItem PostAward(string message, Txd txd, string textureName, int xp,
+			HudColor awardColor, string title = null)
+		{
+			BeginTextCommandForFeedPostAndPushLongString(message);
+
+			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_AWARD, txd, textureName, xp,
+				(int)awardColor, title);
+			return handle != -1 ? new FeedItem(handle) : null;
+		}
 
 		private static void BeginTextCommandForFeedPostAndPushLongString(string message)
 		{
