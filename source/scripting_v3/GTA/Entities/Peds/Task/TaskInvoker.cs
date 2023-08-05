@@ -985,51 +985,162 @@ namespace GTA
 			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, (int)missionFlags);
 		}
 
-		/// <summary>Gives the plane a mission.</summary>
+		/// <summary>Gives a plane a mission.</summary>
 		/// <param name="plane">The helicopter.</param>
 		/// <param name="target">The target <see cref="Vehicle"/>.</param>
 		/// <param name="missionType">The vehicle mission type.</param>
 		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="targetReachedDist">distance (in meters) at which heli thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
-		/// <param name="flightHeight">The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).</param>
-		/// <param name="minHeightAboveTerrain">The height in meters that the heli will try to stay above terrain (ie 20 == always tries to stay at least 20 meters above ground).</param>
-		/// <param name="planeOrientation">The orientation the plane tries to be in (<c>0f</c> to <c>360f</c>). Use <c>-1f</c> if not bothered. <c>-1f</c> Should be used in 99% of the times.</param>
-#pragma warning disable CS1573
-		// More research needed for the parameter "precise". Even one of the leaked source didn't have the info for "bPrecise".
-		public void StartPlaneMission(Vehicle plane, Vehicle target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f, bool precise = true)
-#pragma warning restore CS1573
+		/// <param name="targetReachedDist">
+		/// Distance (in meters) at which heli thinks it's arrived.
+		/// Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and
+		/// <see cref="VehicleMissionType.Circle"/>.
+		/// </param>
+		/// <param name="flightHeight">
+		/// The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).
+		/// </param>
+		/// <param name="minHeightAboveTerrain">
+		/// The height in meters that the heli will try to stay above terrain
+		/// (ie 20 == always tries to stay at least 20 meters above ground).
+		/// </param>
+		/// <param name="planeOrientation">
+		/// The orientation the plane tries to be in (<c>0f</c> to <c>360f</c>). Use <c>-1f</c> if not bothered.
+		/// <c>-1f</c> Should be used in 99% of the times.
+		/// </param>
+		/// <param name="precise">
+		/// Specifies whether to tell the plane to move precisely with VTOL.
+		/// If <see langword="true"/> and the plane has VTOL, the plane will use VTOL and set the vertical flight
+		/// nozzles position to the position for vertical flight.
+		/// If <see langword="true"/> and the plane has VTOL, the plane will not use VTOL and set the vertical flight
+		/// nozzles position to the position for horizontal flight.
+		/// If the plane does not have VTOL, this parameter has no effect.
+		/// </param>
+		public void StartPlaneMission(Vehicle plane, Vehicle target, VehicleMissionType missionType, float cruiseSpeed,
+			float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f,
+			bool precise = true)
 		{
 			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, target.Handle, 0, 0f, 0f, 0f, (int)missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
 		}
 
-		/// <summary>Gives the plane a mission.</summary>
-		/// <param name="plane">The helicopter.</param>
+		/// <summary>
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/summary"
+		/// />
+		/// </summary>
+		/// <param name="plane">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='plane']"
+		/// />
+		/// </param>
 		/// <param name="target">The target <see cref="Ped"/>.</param>
-		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="targetReachedDist">distance (in meters) at which heli thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
-		/// <param name="flightHeight">The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).</param>
-		/// <param name="minHeightAboveTerrain">The height in meters that the heli will try to stay above terrain (ie 20 == always tries to stay at least 20 meters above ground).</param>
-		/// <param name="planeOrientation">The orientation the plane tries to be in (<c>0f</c> to <c>360f</c>). Use <c>-1f</c> if not bothered. <c>-1f</c> Should be used in 99% of the times.</param>
-#pragma warning disable CS1573
-		public void StartPlaneMission(Vehicle plane, Ped target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f, bool precise = true)
-#pragma warning restore CS1573
+		/// <param name="missionType">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='missionType']"
+		/// />
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='cruiseSpeed']"
+		/// />
+		/// </param>
+		/// <param name="targetReachedDist">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='targetReachedDist']"
+		/// />
+		/// </param>
+		/// <param name="flightHeight">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='flightHeight']"
+		/// />
+		/// </param>
+		/// <param name="minHeightAboveTerrain">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='minHeightAboveTerrain']"
+		/// />
+		/// </param>
+		/// <param name="planeOrientation">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='planeOrientation']"
+		/// />
+		/// </param>
+		/// <param name="precise">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='precise']"
+		/// />
+		/// </param>
+		public void StartPlaneMission(Vehicle plane, Ped target, VehicleMissionType missionType, float cruiseSpeed,
+			float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f,
+			bool precise = true)
 		{
 			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, 0, target.Handle, 0f, 0f, 0f, (int)missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
 		}
 
-		/// <summary>Gives the plane a mission.</summary>
-		/// <param name="plane">The plane.</param>
+		/// <summary>
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/summary"
+		/// />
+		/// </summary>
+		/// <param name="plane">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='plane']"
+		/// />
+		/// </param>
 		/// <param name="target">The target coordinate.</param>
-		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="targetReachedDist">distance (in meters) at which heli thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
-		/// <param name="flightHeight">The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).</param>
-		/// <param name="minHeightAboveTerrain">The height in meters that the heli will try to stay above terrain (ie 20 == always tries to stay at least 20 meters above ground).</param>
-		/// <param name="planeOrientation">The orientation the plane tries to be in (<c>0f</c> to <c>360f</c>). Use <c>-1f</c> if not bothered. <c>-1f</c> Should be used in 99% of the times.</param>
-#pragma warning disable CS1573
-		public void StartPlaneMission(Vehicle plane, Vector3 target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f, bool precise = true)
-#pragma warning restore CS1573
+		/// <param name="missionType">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='missionType']"
+		/// />
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='cruiseSpeed']"
+		/// />
+		/// </param>
+		/// <param name="targetReachedDist">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='targetReachedDist']"
+		/// />
+		/// </param>
+		/// <param name="flightHeight">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='flightHeight']"
+		/// />
+		/// </param>
+		/// <param name="minHeightAboveTerrain">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='minHeightAboveTerrain']"
+		/// />
+		/// </param>
+		/// <param name="planeOrientation">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='planeOrientation']"
+		/// />
+		/// </param>
+		/// <param name="precise">
+		/// <inheritdoc
+		/// cref="StartPlaneMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, bool)"
+		/// path="/param[@name='precise']"
+		/// />
+		/// </param>
+		public void StartPlaneMission(Vehicle plane, Vector3 target, VehicleMissionType missionType, float cruiseSpeed,
+			float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f,
+			bool precise = true)
 		{
 			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
 		}
