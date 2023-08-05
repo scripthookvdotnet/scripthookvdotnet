@@ -1008,11 +1008,11 @@ namespace GTA
 		/// </param>
 		/// <param name="precise">
 		/// Specifies whether to tell the plane to move precisely with VTOL.
-		/// If <see langword="true"/> and the plane has VTOL, the plane will use VTOL and set the vertical flight
+		/// If <see langword="true"/> and the plane supports VTOL, the plane will use VTOL and set the vertical flight
 		/// nozzles position to the position for vertical flight.
-		/// If <see langword="true"/> and the plane has VTOL, the plane will not use VTOL and set the vertical flight
+		/// If <see langword="true"/> and the plane supports VTOL, the plane will not use VTOL and set the vertical flight
 		/// nozzles position to the position for horizontal flight.
-		/// If the plane does not have VTOL, this parameter has no effect.
+		/// If the plane does not support VTOL, this parameter has no effect.
 		/// </param>
 		public void StartPlaneMission(Vehicle plane, Vehicle target, VehicleMissionType missionType, float cruiseSpeed,
 			float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float planeOrientation = -1f,
@@ -1182,6 +1182,47 @@ namespace GTA
 		public void StartBoatMission(Vehicle boat, Vector3 target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, BoatMissionFlags missionFlags)
 		{
 			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, (int)missionFlags);
+		}
+
+		/// <summary>
+		/// <para>
+		/// Tells a plane with VTOL (like <see cref="VehicleHash.Hydra"/> or <see cref="VehicleHash.Avenger"/>)
+		/// to move precisely throughout the world. Will fail for other <see cref="Vehicle"/>s.
+		/// </para>
+		/// <para>
+		/// Not available in the game versions earlier than v1.0.1290.1.
+		/// </para>
+		/// </summary>
+		/// <param name="plane">The plane to apply the task.</param>
+		/// <param name="target">The target coordinates.</param>
+		/// <param name="flightHeight">
+		/// The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).
+		/// </param>
+		/// <param name="minHeightAboveTerrain">
+		/// The height in meters that the heli will try to stay above terrain
+		/// (ie 20 == always tries to stay at least 20 meters above ground).
+		/// </param>
+		/// <param name="desiredOrientation">
+		/// The orientation the plane tries to be in (<c>0f</c> to <c>360f</c>).
+		/// Set <see langword="null"/> to not constrain.
+		/// </param>
+		/// <param name="autoPilot">
+		/// Specifies whether to apply the plane goto task directly to the <see cref="Vehicle"/>, and apply some flags
+		/// to allow this task to run with no driver.
+		/// </param>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.1290.1.
+		/// </exception>
+		public void GoToPlanePreciseVtol(Vehicle plane, Vector3 target, int flightHeight, int minHeightAboveTerrain,
+			float? desiredOrientation = null, bool autoPilot = false)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(TaskInvoker),
+				nameof(GoToPlanePreciseVtol));
+
+			bool useDesiredOrientation = desiredOrientation.HasValue;
+			Function.Call(Hash.TASK_PLANE_GOTO_PRECISE_VTOL, _ped.Handle, plane, target.X, target.Y, target.Z,
+				flightHeight, minHeightAboveTerrain, useDesiredOrientation, desiredOrientation ?? 0f,
+				autoPilot);
 		}
 
 		/// <inheritdoc cref="SwapWeapon(bool)"/>
