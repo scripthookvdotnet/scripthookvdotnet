@@ -1269,6 +1269,50 @@ namespace GTA
 			=> Function.Call<bool>(Hash.SET_CURRENT_PED_VEHICLE_WEAPON, Handle, (uint)hash);
 
 		/// <summary>
+		/// Fires this <see cref="Ped"/>'s current vehicle weapon on the current <see cref="Vehicle"/>
+		/// at the target <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="target">
+		/// The target <see cref="Entity"/>.
+		/// If the current vehicle weapon is a rocket weapon and supports homing,
+		/// the fired rocket will home in the target.
+		/// If the target does not exist, this method will not ignore or throw an exception and instead
+		/// the <see cref="Vehicle"/> will fire at (0f, 0f, 0f) as <c>SET_VEHICLE_SHOOT_AT_TARGET</c> does.
+		/// </param>
+		/// <remarks>
+		/// <para>
+		/// If this <see cref="Ped"/> is not the player, the vehicle weapon will not follow the angle constraints.
+		/// If this <see cref="Ped"/> is the player, the ped will shoot in the direction of vehicle is facing
+		/// (does not disable homing in such case).
+		/// </para>
+		/// <para>
+		/// The appropriate <c>CVehicleWeapon</c> shoots at the target on the current <see cref="Vehicle"/>
+		/// if the prerequisite is satisfied (retrieves via this <see cref="Ped"/>'s <c>CPedWeaponManager</c>).
+		/// </para>
+		/// </remarks>
+		public void FireVehicleWeaponAt(Entity target)
+			=> Function.Call<bool>(Hash.SET_VEHICLE_SHOOT_AT_TARGET, Handle, target, 0f, 0f, 0f);
+		/// <summary>
+		/// Fires this <see cref="Ped"/>'s current vehicle weapon on the current <see cref="Vehicle"/>
+		/// at the target coordinates.
+		/// </summary>
+		/// <param name="target">
+		/// The target coordinates.
+		/// </param>
+		/// <remarks>
+		/// <para>
+		/// If this <see cref="Ped"/> is not the player, the vehicle weapon will not follow the angle constraints.
+		/// If this <see cref="Ped"/> is the player, the ped will shoot in the direction of vehicle is facing.
+		/// </para>
+		/// <para>
+		/// The appropriate <c>CVehicleWeapon</c> shoots at the target on the current <see cref="Vehicle"/>
+		/// if the prerequisite is satisfied (retrieves via this <see cref="Ped"/>'s <c>CPedWeaponManager</c>).
+		/// </para>
+		/// </remarks>
+		public void FireVehicleWeaponAt(Vector3 target)
+			=> Function.Call<bool>(Hash.SET_VEHICLE_SHOOT_AT_TARGET, Handle, null, target.X, target.Y, target.Z);
+
+		/// <summary>
 		/// Sets if this <see cref="Ped"/> can switch between different weapons.
 		/// </summary>
 		public bool CanSwitchWeapons
