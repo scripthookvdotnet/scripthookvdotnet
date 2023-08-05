@@ -33,9 +33,9 @@ namespace GTA
 
 		public override bool Equals(object obj)
 		{
-			if (obj is FeedItem feed)
+			if (obj is FeedItem feedItem)
 			{
-				return Equals(feed);
+				return Equals(feedItem);
 			}
 
 			return false;
