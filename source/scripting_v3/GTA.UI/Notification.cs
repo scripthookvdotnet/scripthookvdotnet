@@ -195,7 +195,7 @@ namespace GTA.UI
 		/// </param>
 		/// <param name="val1">The integral value for the character 1 (left side).</param>
 		/// <param name="char2TxdAndTexNamePair">
-		/// The pair of a texture dictionary struct and texture name string for the character 1 (left side).
+		/// The pair of a texture dictionary struct and texture name string for the character 2 (right side).
 		/// </param>
 		/// <param name="val2">The integral value for the character 2 (right side).</param>
 		/// <param name="customColor1">
