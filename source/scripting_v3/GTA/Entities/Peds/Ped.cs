@@ -1270,7 +1270,7 @@ namespace GTA
 
 		/// <summary>
 		/// Fires this <see cref="Ped"/>'s current vehicle weapon on the current <see cref="Vehicle"/>
-		/// at the target <see cref="Entity"/>.
+		/// at the target <see cref="Entity"/> this frame.
 		/// </summary>
 		/// <param name="target">
 		/// The target <see cref="Entity"/>.
@@ -1294,7 +1294,7 @@ namespace GTA
 			=> Function.Call<bool>(Hash.SET_VEHICLE_SHOOT_AT_TARGET, Handle, target, 0f, 0f, 0f);
 		/// <summary>
 		/// Fires this <see cref="Ped"/>'s current vehicle weapon on the current <see cref="Vehicle"/>
-		/// at the target coordinates.
+		/// at the target coordinates this frame.
 		/// </summary>
 		/// <param name="target">
 		/// The target coordinates.
