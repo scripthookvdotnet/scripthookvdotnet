@@ -1286,7 +1286,7 @@ namespace GTA
 		/// (does not disable homing in such case).
 		/// </para>
 		/// <para>
-		/// The appropriate <c>CVehicleWeapon</c> shoots at the target on the current <see cref="Vehicle"/>
+		/// The appropriate <c>CVehicleWeapon</c> of the current <see cref="Vehicle"/> shoots at the target
 		/// if the prerequisite is satisfied (retrieves via this <see cref="Ped"/>'s <c>CPedWeaponManager</c>).
 		/// </para>
 		/// </remarks>
@@ -1305,7 +1305,7 @@ namespace GTA
 		/// If this <see cref="Ped"/> is the player, the ped will shoot in the direction of vehicle is facing.
 		/// </para>
 		/// <para>
-		/// The appropriate <c>CVehicleWeapon</c> shoots at the target on the current <see cref="Vehicle"/>
+		/// The appropriate <c>CVehicleWeapon</c> of the current <see cref="Vehicle"/> shoots at the target
 		/// if the prerequisite is satisfied (retrieves via this <see cref="Ped"/>'s <c>CPedWeaponManager</c>).
 		/// </para>
 		/// </remarks>
