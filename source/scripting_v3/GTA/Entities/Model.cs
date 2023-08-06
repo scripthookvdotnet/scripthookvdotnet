@@ -9,7 +9,7 @@ using System;
 
 namespace GTA
 {
-	public struct Model : IEquatable<Model>, INativeValue, IStreamingResource
+	public struct Model : IEquatable<Model>, INativeValue, IScriptStreamingResource
 	{
 		public Model(int hash) : this()
 		{

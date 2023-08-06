@@ -14,7 +14,7 @@ namespace GTA
 	/// the official scripting headers) or <c>clip_sets.xml</c> files.
 	/// Note that clip/animation sets are different from clip/animation dictionaries, which is created from <c>ycd</c> files.
 	/// </summary>
-	public readonly struct ClipSet : IEquatable<ClipSet>, IStreamingResource
+	public readonly struct ClipSet : IEquatable<ClipSet>, IScriptStreamingResource
 	{
 		public ClipSet(string name) : this()
 		{

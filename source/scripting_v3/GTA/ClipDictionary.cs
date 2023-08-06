@@ -18,7 +18,7 @@ namespace GTA
 	/// GTA V doesn't have game classes for animation dictionaries different from clip dictionaries
 	/// while the exe has <c>rage::crClipDictionary</c> and <c>rage::fwClipDictionaryStore</c> classes.
 	/// </remarks>
-	public readonly struct ClipDictionary : IEquatable<ClipDictionary>, IStreamingResource
+	public readonly struct ClipDictionary : IEquatable<ClipDictionary>, IScriptStreamingResource
 	{
 		public ClipDictionary(string name) : this()
 		{

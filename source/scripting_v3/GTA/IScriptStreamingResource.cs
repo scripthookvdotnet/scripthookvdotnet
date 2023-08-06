@@ -1,14 +1,15 @@
 //
-// Copyright (C) 2015 crosire & kagikn & contributors
+// Copyright (C) 2023 kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
 namespace GTA
 {
 	/// <summary>
-	/// A streaming resource.
+	/// A interface for streaming resources that can be requested and pinned by scripts
+	/// (by increasing reference counts).
 	/// </summary>
-	public interface IStreamingResource
+	public interface IScriptStreamingResource
 	{
 		bool IsLoaded
 		{
