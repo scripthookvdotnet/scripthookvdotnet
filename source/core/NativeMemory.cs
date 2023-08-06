@@ -3018,7 +3018,14 @@ namespace SHVDN
 					return false;
 				}
 
-				int low = 0, high = weaponInventoryArray->size - 1;
+				int arraySize = weaponInventoryArray->size;
+				if (arraySize == 0)
+				{
+					weaponHash = 0;
+					return false;
+				}
+
+				int low = 0, high = arraySize - 1;
 				while (true)
 				{
 					unsafe
