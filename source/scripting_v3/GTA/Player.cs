@@ -639,6 +639,23 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Sets the pending wanted level for the player.
+		/// The wanted level changes takes 10 seconds before it gets applied (emulating the time it takes a citizen to
+		/// report the crime) if the passed wanted level is higher than the current.
+		/// Otherwise, the change will get applied immediately, including <see cref="CurrentCrimeValue"/> and
+		/// <see cref="WantedCenterPosition"/>.
+		/// </summary>
+		public void SetPendingWantedLevel(int wantedLevel, bool delayLawResponse = false)
+			=> Function.Call(Hash.SET_PLAYER_WANTED_LEVEL, Handle, wantedLevel, delayLawResponse);
+
+		/// <summary>
+		/// Sets the pending wanted level for the player only if its higher than the current.
+		/// The wanted level changes takes 10 seconds before it gets applied.
+		/// </summary>
+		public void SetPendingWantedLevelNoDrop(int wantedLevel, bool delayLawResponse = false)
+			=> Function.Call(Hash.SET_PLAYER_WANTED_LEVEL_NO_DROP, Handle, wantedLevel, delayLawResponse);
+
+		/// <summary>
 		/// Sets the wanted level for this <see cref="Player"/> but without refocusing the search area.
 		/// </summary>
 		/// <remarks>
