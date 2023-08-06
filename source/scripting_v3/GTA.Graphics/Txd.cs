@@ -11,7 +11,7 @@ namespace GTA.Graphics
 	/// <summary>
 	/// Represents a struct that contains a texture dictionary <see cref="string"/>.
 	/// </summary>
-	public readonly struct Txd : IEquatable<Txd>
+	public readonly struct Txd : IEquatable<Txd>, IScriptStreamingResource
 	{
 		public Txd(string name)
 		{
