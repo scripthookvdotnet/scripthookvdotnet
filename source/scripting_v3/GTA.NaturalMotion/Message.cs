@@ -7,6 +7,7 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace GTA.NaturalMotion
 {
@@ -191,11 +192,21 @@ namespace GTA.NaturalMotion
 			_stringVector3ArrayArguments?.Clear();
 		}
 
+		/// <summary>
+		/// This method is called from internal methods of ScriptHookVDotNet and is
+		/// not intended to be used directly from your code.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public void CreateBoolIntFloatArgDictIfNotCreated()
 		{
 			_boolIntFloatArguments ??= new Dictionary<string, (int value, Type type)>();
 		}
 
+		/// <summary>
+		/// This method is called from internal methods of ScriptHookVDotNet and is
+		/// not intended to be used directly from your code.
+		/// </summary>
+		[EditorBrowsable(EditorBrowsableState.Never)]
 		public void CreateStringVector3ArrayArgDictIfNotCreated()
 		{
 			_stringVector3ArrayArguments ??= new Dictionary<string, object>();
