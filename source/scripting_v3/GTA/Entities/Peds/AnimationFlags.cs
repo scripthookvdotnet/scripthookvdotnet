@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -150,9 +151,9 @@ namespace GTA
 		/// </summary>
 		UseFullBlending = 1073741824,
 
-		[Obsolete("AnimationFlags.AllowRotation is obsolete, use AnimationFlags.Secondary instead.")]
+		[Obsolete("Use AnimationFlags.Secondary instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		AllowRotation = Secondary,
-		[Obsolete("AnimationFlags.CancelableWithMovement is obsolete, use AnimationFlags.AbortOnPedMovement instead.")]
+		[Obsolete("Use AnimationFlags.AbortOnPedMovement instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		CancelableWithMovement = AbortOnPedMovement,
 	}
 }

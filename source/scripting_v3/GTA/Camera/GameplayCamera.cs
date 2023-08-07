@@ -6,6 +6,7 @@
 using GTA.Math;
 using GTA.Native;
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -405,9 +406,8 @@ namespace GTA
 		/// Gets the first-person ped aim zoom factor associated with equipped sniper scoped weapon,
 		/// or the mobile phone camera, if active.
 		/// </summary>
-		[Obsolete(
-			"GameplayCamera.Zoom is obsolete since it does not suggest the value is relevant only when a first person aim camera is used."
-			+ "Use GameplayCamera.FirstPersonAimCameraZoomFactor instead.")]
+		[Obsolete("GameplayCamera.Zoom is obsolete since it does not suggest the value is relevant only when a first person aim camera is used. "
+			+ "Use GameplayCamera.FirstPersonAimCameraZoomFactor instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static float Zoom => FirstPersonAimCameraZoomFactor;
 
 		/// <summary>

@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -25,12 +26,12 @@ namespace GTA
 		StopAtTrafficLights = 128,
 		/// <summary>
 		/// Make the <see cref="Ped"/> prefer to go off the road rather than enter oncoming lanes when avoiding (steering around) obstacles if the correct lanes are full.
-		/// Even if this value is set, the <see cref="Ped"/> will try to steer around obstacles by entering other correct lanes if the correct lanes are not full. 
+		/// Even if this value is set, the <see cref="Ped"/> will try to steer around obstacles by entering other correct lanes if the correct lanes are not full.
 		/// </summary>
 		GoOffRoadWhenAvoiding = 256,
 		/// <summary>
 		/// Allow the <see cref="Ped"/> to drive into the oncoming traffic if the correct lanes are full.
-		/// Even if this value is set, the <see cref="Ped"/> will try to reach the correct lanes again as soon as possible. 
+		/// Even if this value is set, the <see cref="Ped"/> will try to reach the correct lanes again as soon as possible.
 		/// </summary>
 		AllowGoingWrongWay = 512,
 		Reverse = 1024,
@@ -99,29 +100,39 @@ namespace GTA
 		/// <summary>Swerve around cars, be careful around peds, and stop for lights.</summary>
 		DrivingModeAvoidVehiclesStopForPedsObeyLights = SwerveAroundAllVehicles | StopAtTrafficLights | StopForPeds | SteerAroundObjects | UseShortCutLinks | ChangeLanesAroundObstructions | StopForVehicles,
 
-		[Obsolete("VehicleDrivingFlags.UseBlinkers is obsolete because it is incorrect, please use VehicleDrivingFlags.GoOffRoadWhenAvoiding instead.")]
+		[Obsolete("VehicleDrivingFlags.UseBlinkers is obsolete because it is incorrect, use VehicleDrivingFlags.GoOffRoadWhenAvoiding instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		UseBlinkers = GoOffRoadWhenAvoiding,
-		[Obsolete("VehicleDrivingFlags.FollowTraffic is obsolete because  it has less obvious name, please use VehicleDrivingFlags.StopForVehicles instead.")]
+		[Obsolete("VehicleDrivingFlags.FollowTraffic is obsolete because it has less obvious name, use VehicleDrivingFlags.StopForVehicles instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		FollowTraffic = StopForVehicles,
-		[Obsolete("VehicleDrivingFlags.YieldToPeds is obsolete, please use VehicleDrivingFlags.StopForPeds instead.")]
+		[Obsolete("VehicleDrivingFlags.YieldToPeds is obsolete, use VehicleDrivingFlags.StopForPeds instead."),
+		 EditorBrowsable(EditorBrowsableState.Never)]
 		YieldToPeds = StopForPeds,
-		[Obsolete("VehicleDrivingFlags.AvoidVehicles is obsolete because has less obvious name, please use VehicleDrivingFlags.SwerveAroundAllVehicles instead.")]
+		[Obsolete("VehicleDrivingFlags.AvoidVehicles is obsolete because has less obvious name, use VehicleDrivingFlags.SwerveAroundAllVehicles instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		AvoidVehicles = SwerveAroundAllVehicles,
 		/// <summary>
 		/// Use <see cref="SteerAroundStationaryVehicles"/> instead.
 		/// Even with this flag set, the ped may avoid vehicles that have drivers when they are stationary.
 		/// </summary>
-		[Obsolete("VehicleDrivingFlags.AvoidEmptyVehicles is obsolete because it is inaccurate, please use VehicleDrivingFlags.SteerAroundStationaryVehicles instead.")]
+		[Obsolete("VehicleDrivingFlags.AvoidEmptyVehicles is obsolete because it is inaccurate, use VehicleDrivingFlags.SteerAroundStationaryVehicles instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		AvoidEmptyVehicles = SteerAroundStationaryVehicles,
-		[Obsolete("VehicleDrivingFlags.AvoidPeds is obsolete because it has less obvious name, please use VehicleDrivingFlags.SteerAroundPeds instead.")]
+		[Obsolete("VehicleDrivingFlags.AvoidPeds is obsolete because it has less obvious name, use VehicleDrivingFlags.SteerAroundPeds instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		AvoidPeds = SteerAroundPeds,
-		[Obsolete("VehicleDrivingFlags.AvoidObjects is obsolete because it has less obvious name, please use VehicleDrivingFlags.SteerAroundObjects instead.")]
+		[Obsolete("VehicleDrivingFlags.AvoidObjects is obsolete because it has less obvious name, use VehicleDrivingFlags.SteerAroundObjects instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		AvoidObjects = SteerAroundObjects,
-		[Obsolete("VehicleDrivingFlags.AllowMedianCrossing is obsolete because it is inaccurate, please use VehicleDrivingFlags.UseShortCutLinks instead.")]
+		[Obsolete("VehicleDrivingFlags.AllowMedianCrossing is obsolete because it is inaccurate, use VehicleDrivingFlags.UseShortCutLinks instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		AllowMedianCrossing = UseShortCutLinks,
-		[Obsolete("VehicleDrivingFlags.IgnorePathFinding is obsolete because it has less obvious name, please use VehicleDrivingFlags.ForceStraightLine instead.")]
+		[Obsolete("VehicleDrivingFlags.IgnorePathFinding is obsolete because it has less obvious name, use VehicleDrivingFlags.ForceStraightLine instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		IgnorePathFinding = ForceStraightLine,
-		[Obsolete("VehicleDrivingFlags.DriveBySight is obsolete because it is inaccurate, please use VehicleDrivingFlags.PreferNavmeshRoute instead.")]
+		[Obsolete("VehicleDrivingFlags.DriveBySight is obsolete because it is inaccurate, use VehicleDrivingFlags.PreferNavmeshRoute instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		DriveBySight = PreferNavmeshRoute,
 	}
 }

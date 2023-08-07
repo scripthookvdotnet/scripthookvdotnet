@@ -16,7 +16,7 @@ namespace GTA
 	public enum Bone
 	{
 		/// <summary>
-		/// The correspoinding bone tag value for <c>BONETAG_INVALID</c>,
+		/// The corresponding bone tag value for <c>BONETAG_INVALID</c>,
 		/// which is used in some meta/xml files such as weapon meta files and <c>damages.meta</c>.
 		/// </summary>
 		Invalid = -1,

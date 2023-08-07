@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -18,13 +19,13 @@ namespace GTA
 		LineAbreast,
 		FollowInLine,
 
-		[Obsolete("Formation.Default is obsolete, use Formation.Loose instead.")]
+		[Obsolete("Use Formation.Loose instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		Default = Loose,
-		[Obsolete("Formation.Circle1 is obsolete, use Formation.SurroundFacingInwards instead.")]
+		[Obsolete("Use Formation.SurroundFacingInwards instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		Circle1 = SurroundFacingInwards,
-		[Obsolete("Formation.Circle2 is obsolete, use Formation.SurroundFacingAhead instead.")]
+		[Obsolete("Use Formation.SurroundFacingAhead instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		Circle2 = SurroundFacingAhead,
-		[Obsolete("Formation.Line is obsolete, use Formation.FollowInLine instead.")]
+		[Obsolete("Use Formation.FollowInLine instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		Line = FollowInLine,
 	}
 }

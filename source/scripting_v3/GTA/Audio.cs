@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using GTA.Math;
 using GTA.Native;
 
@@ -138,7 +139,8 @@ namespace GTA
 		/// <param name="soundFile">The sound file to play.</param>
 		/// <param name="soundSet">The name of the sound inside the file.</param>
 		/// <returns>The identifier of the active sound effect instance.</returns>
-		[Obsolete("Audio.PlaySoundAt is obsolete, use ScriptSoundId.PlaySoundFromEntity or Audio.PlaySoundFromEntityAndForget.")]
+		[Obsolete("Use ScriptSoundId.PlaySoundFromEntity or Audio.PlaySoundFromEntityAndForget instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static int PlaySoundAt(Entity entity, string soundFile, string soundSet)
 		{
 			int id = Function.Call<int>(Hash.GET_SOUND_ID);
@@ -151,7 +153,8 @@ namespace GTA
 		/// <param name="position">The world coordinates to play the sound at.</param>
 		/// <param name="soundFile">The sound file to play.</param>
 		/// <returns>The identifier of the active sound effect instance.</returns>
-		[Obsolete("Audio.PlaySoundAt is obsolete, use ScriptSoundId.PlaySoundFromPosition or Audio.PlaySoundFromPositionAndForget.")]
+		[Obsolete("Use ScriptSoundId.PlaySoundFromPosition or Audio.PlaySoundFromPositionAndForget instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static int PlaySoundAt(Vector3 position, string soundFile)
 		{
 			int id = Function.Call<int>(Hash.GET_SOUND_ID);
@@ -165,7 +168,8 @@ namespace GTA
 		/// <param name="soundFile">The sound file to play.</param>
 		/// <param name="soundSet">The name of the sound inside the file.</param>
 		/// <returns>The identifier of the active sound effect instance.</returns>
-		[Obsolete("Audio.PlaySoundAt is obsolete, use ScriptSoundId.PlaySoundFromPosition or Audio.PlaySoundFromPositionAndForget.")]
+		[Obsolete("Use ScriptSoundId.PlaySoundFromPosition or Audio.PlaySoundFromPositionAndForget instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static int PlaySoundAt(Vector3 position, string soundFile, string soundSet)
 		{
 			int id = Function.Call<int>(Hash.GET_SOUND_ID);
@@ -177,7 +181,8 @@ namespace GTA
 		/// </summary>
 		/// <param name="soundFile">The sound file to play.</param>
 		/// <returns>The identifier of the active sound effect instance.</returns>
-		[Obsolete("Audio.PlaySoundFrontend is obsolete, use ScriptSoundId.PlaySoundFrontend or Audio.PlaySoundFrontendAndForget.")]
+		[Obsolete("Use ScriptSoundId.PlaySoundFrontend or Audio.PlaySoundFrontendAndForget instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static int PlaySoundFrontend(string soundFile)
 		{
 			int id = Function.Call<int>(Hash.GET_SOUND_ID);
@@ -190,7 +195,8 @@ namespace GTA
 		/// <param name="soundFile">The sound file to play.</param>
 		/// <param name="soundSet">The name of the sound inside the file.</param>
 		/// <returns>The identifier of the active sound effect instance.</returns>
-		[Obsolete("Audio.PlaySoundFrontend is obsolete, use ScriptSoundId.PlaySoundFrontend or Audio.PlaySoundFrontendAndForget.")]
+		[Obsolete("Use ScriptSoundId.PlaySoundFrontend or Audio.PlaySoundFrontendAndForget instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static int PlaySoundFrontend(string soundFile, string soundSet)
 		{
 			int id = Function.Call<int>(Hash.GET_SOUND_ID);
@@ -202,7 +208,7 @@ namespace GTA
 		/// Cancels playing the specified sound instance.
 		/// </summary>
 		/// <param name="id">The identifier of the active sound effect instance.</param>
-		[Obsolete("Audio.StopSound is obsolete, use ScriptSoundId.Stop.")]
+		[Obsolete("Use ScriptSoundId.Stop instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static void StopSound(int id)
 		{
 			Function.Call(Hash.STOP_SOUND, id);
@@ -211,7 +217,7 @@ namespace GTA
 		/// Releases the specified sound instance. Call this for every sound effect started.
 		/// </summary>
 		/// <param name="id">The identifier of the active sound effect instance.</param>
-		[Obsolete("Audio.ReleaseSound is obsolete, use ScriptSoundId.Release.")]
+		[Obsolete("Use ScriptSoundId.Release instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static void ReleaseSound(int id)
 		{
 			Function.Call(Hash.RELEASE_SOUND_ID, id);
@@ -221,7 +227,7 @@ namespace GTA
 		/// Gets a boolean indicating whether the specified sound instance has completed playing.
 		/// </summary>
 		/// <param name="id">The identifier of the active sound effect instance.</param>
-		[Obsolete("Audio.HasSoundFinished is obsolete, use ScriptSoundId.HasFinished.")]
+		[Obsolete("Use ScriptSoundId.HasFinished instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static bool HasSoundFinished(int id)
 		{
 			return Function.Call<bool>(Hash.HAS_SOUND_FINISHED, id);

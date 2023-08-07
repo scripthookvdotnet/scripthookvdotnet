@@ -5,6 +5,7 @@
 
 using GTA.Native;
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -28,7 +29,8 @@ namespace GTA
 
 		public string Name => AnchorPoint.ToString();
 
-		[Obsolete("PedProp.Type is obsolete, use PedProp.AnchorPoint instead.")]
+		[Obsolete("PedProp.Type is obsolete, use PedProp.AnchorPoint instead."),
+		 EditorBrowsable(EditorBrowsableState.Never)]
 		public PedPropType Type => (PedPropType)AnchorPoint;
 
 		public PedPropAnchorPoint AnchorPoint

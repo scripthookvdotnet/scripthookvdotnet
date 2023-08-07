@@ -6,6 +6,7 @@
 using GTA.Math;
 using GTA.Native;
 using System;
+using System.ComponentModel;
 using System.Drawing;
 
 namespace GTA
@@ -1121,7 +1122,8 @@ namespace GTA
 		{
 			get => Function.Call<bool>(Hash.IS_PLAYER_CONTROL_ON, Handle);
 			[Obsolete("The setter of Player.CanControlCharacter is obsolete because it fails to switch the controls back on if the flag for ambient script " +
-				"is set when the player controls got disabled. Use Player.SetControlState instead.")]
+				"is set when the player controls got disabled. Use Player.SetControlState instead."),
+			 EditorBrowsable(EditorBrowsableState.Never)]
 			set => SetControlState(value);
 		}
 

@@ -7,6 +7,7 @@ using GTA.Math;
 using GTA.Native;
 using GTA.NaturalMotion;
 using System;
+using System.ComponentModel;
 using System.Linq;
 
 namespace GTA
@@ -162,7 +163,8 @@ namespace GTA
 			Function.Call(Hash.RESET_PED_VISIBLE_DAMAGE, Handle);
 		}
 
-		[Obsolete("The Ped.GiveHelmet overload with Helmet enum parameter is obsolete, use the overload with HelmetPropFlags enum parameter instead.")]
+		[Obsolete("Use Ped.GiveHelmet(bool, HelmetPropFlags, int) instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public void GiveHelmet(bool canBeRemovedByPed, Helmet helmetType, int textureIndex)
 		{
 			Function.Call(Hash.GIVE_PED_HELMET, Handle, !canBeRemovedByPed, (int)helmetType, textureIndex);
@@ -176,7 +178,7 @@ namespace GTA
 		/// The helmet prop flags to test. If none of helmets for this <see cref="Ped"/> do not meet the requirements specified by the flags,
 		/// The <see cref="Ped"/> will not have a helmet.
 		/// </param>
-		/// <param name="overwriteHelmetTexureId">
+		/// <param name="overwriteHelmetTextureId">
 		/// If negative, a random texture will be used.
 		/// If non-negative and the specified texture id is present, the texture with specified id will be used.
 		/// If non-negative and the specified texture id is not present, the previous texture will be used
@@ -185,9 +187,9 @@ namespace GTA
 		/// <remarks>
 		/// This method will not give the <see cref="Ped"/> a new helmet if they already has one.
 		/// </remarks>
-		public void GiveHelmet(bool dontTakeOffHelmet = true, HelmetPropFlags helmetPropFlags = HelmetPropFlags.DefaultHelmet, int overwriteHelmetTexureId = -1)
+		public void GiveHelmet(bool dontTakeOffHelmet = true, HelmetPropFlags helmetPropFlags = HelmetPropFlags.DefaultHelmet, int overwriteHelmetTextureId = -1)
 		{
-			Function.Call(Hash.GIVE_PED_HELMET, Handle, dontTakeOffHelmet, (uint)helmetPropFlags, overwriteHelmetTexureId);
+			Function.Call(Hash.GIVE_PED_HELMET, Handle, dontTakeOffHelmet, (uint)helmetPropFlags, overwriteHelmetTextureId);
 		}
 
 		/// <summary>
@@ -253,7 +255,8 @@ namespace GTA
 		/// This property will clear the wet/soaked effect if the value is set to the zero for the compatibility of scripts built against v3.6.0.
 		/// </remarks>
 		[Obsolete("Ped.WetnessHeight is obsolete because it does not indicate that it clears the wetness effect from the ped if the value is exactly zero," +
-			"while the value can take any values in the range of -2f to 1.99f inclusive. Please use Ped.Wet or Ped.ClearWetnessEffect instead.")]
+			"while the value can take any values in the range of -2f to 1.99f inclusive. Please use Ped.Wet or Ped.ClearWetnessEffect instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public float WetnessHeight
 		{
 			set
@@ -614,10 +617,10 @@ namespace GTA
 		}
 
 		/// <inheritdoc cref="GetConfigFlag(PedConfigFlags)"/>
-		[Obsolete("The Ped.GetConfigFlag overload with int parameter is obsolete, use the overload with PedConfigFlags instead.")]
+		[Obsolete("Use GetConfigFlag(PedConfigFlags) instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public bool GetConfigFlag(int flagID) => GetConfigFlag((PedConfigFlags)flagID);
 		/// <inheritdoc cref="GetConfigFlag(PedConfigFlags)"/>
-		[Obsolete("The Ped.SetConfigFlag overload with int parameter is obsolete, use the overload with PedConfigFlags instead.")]
+		[Obsolete("Use SetConfigFlag(PedConfigFlags, bool) instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public void SetConfigFlag(int flagID, bool value) => SetConfigFlag((PedConfigFlags)flagID, value);
 
 		/// <summary>
@@ -773,8 +776,8 @@ namespace GTA
 		/// Despite the property name, this property does not determine whether permanent events can interrupt the <see cref="Ped"/>'s tasks (e.g. seeing hated peds or getting shot at).
 		/// </summary>
 		/// <inheritdoc cref="KeepTaskWhenMarkedAsNoLongerNeeded"/>
-		[Obsolete("Ped.AlwaysKeepTask is obsolete because it does not indicate it only affects when the ped is marked as no longer needed. Use Ped.KeepTaskWhenMarkedAsNoLongerNeeded instead.")]
-
+		[Obsolete("Ped.AlwaysKeepTask is obsolete because it does not indicate that it only affects when the ped is marked as no longer needed. " +
+		          "Use Ped.KeepTaskWhenMarkedAsNoLongerNeeded instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public bool AlwaysKeepTask
 		{
 			set => KeepTaskWhenMarkedAsNoLongerNeeded = value;
@@ -1408,7 +1411,8 @@ namespace GTA
 		/// <summary>
 		/// Sets the value that indicates whether this <see cref="Ped"/> can be knocked off a <see cref="Vehicle"/> (not limited to a bike despite the property name).
 		/// </summary>
-		[Obsolete("Ped.CanBeKnockedOffBike is obsolete, use Ped.KnockOffVehicleType instead.")]
+		[Obsolete("Use Ped.KnockOffVehicleType instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public bool CanBeKnockedOffBike
 		{
 			set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, !value);
@@ -1616,7 +1620,7 @@ namespace GTA
 		/// <remarks>
 		/// Despite the interface, this actually changes the driving flags field on <c>CTaskVehicleMissionBase</c>, which is not for <see cref="Ped"/> but for <see cref="Vehicle"/>.
 		/// </remarks>
-		[Obsolete("Ped.DrivingStyle is obsolete, use VehicleDrivingFlags instead.")]
+		[Obsolete("Use Ped.VehicleDrivingFlags instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public DrivingStyle DrivingStyle
 		{
 			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (int)value);
@@ -2447,11 +2451,12 @@ namespace GTA
 		/// </para>
 		/// <para>
 		/// Despite what the doc for this property said in between v3.0.0 in v3.6.0, the loading state of some animation
-		/// dictionaries has nothing to do with this property. Specifying a string only resigtered as a clip/animation
+		/// dictionaries has nothing to do with this property. Specifying a string only registered as a clip/animation
 		/// dictionary will result in the setter failure.
 		/// </para>
 		/// </remarks>
-		[Obsolete("Ped.MovementAnimationSet is obsolete. Use Ped.SetMovementClipSet or Ped.ResetMovementClipSet instead.")]
+		[Obsolete("Use Ped.SetMovementClipSet or Ped.ResetMovementClipSet instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public string MovementAnimationSet
 		{
 			set

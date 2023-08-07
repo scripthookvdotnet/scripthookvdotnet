@@ -760,7 +760,9 @@ namespace GTA
 		/// <returns>
 		///   <see langword="true" /> if this <see cref="Entity"/> is in the specified angled area; otherwise, <see langword="false" />.
 		/// </returns>
-		[Obsolete("Entity.IsInArea(Vector3, Vector3, float) is obsolete because it actually tests using an angled area, use Entity.IsInAngledArea(Vector3, Vector3, float) instead.")]
+		[Obsolete("Entity.IsInArea(Vector3, Vector3, float) is obsolete because it actually tests using an angled area. " +
+		          "Call IS_ENTITY_IN_AREA manually to test with an axis aligned area in this API version instead. " +
+		          "Use Entity.IsInAngledArea(Vector3, Vector3, float) to test with an angled area instead.")]
 		public bool IsInArea(Vector3 pos1, Vector3 pos2, float angle)
 		{
 			return IsInAngledArea(pos1, pos2, angle);

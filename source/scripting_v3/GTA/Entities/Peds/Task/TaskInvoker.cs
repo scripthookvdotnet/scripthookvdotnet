@@ -6,6 +6,7 @@
 using GTA.Math;
 using GTA.Native;
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -28,12 +29,12 @@ namespace GTA
 			Function.Call(Hash.TASK_ACHIEVE_HEADING, _ped.Handle, heading, timeout);
 		}
 
-		[Obsolete("TaskInvoker.AimAt is obsolete, use TaskInvoker.AimGunAtEntity for entity targets instead.")]
+		[Obsolete("Use TaskInvoker.AimGunAtEntity for entity targets instead.")]
 		public void AimAt(Entity target, int duration)
 		{
 			Function.Call(Hash.TASK_AIM_GUN_AT_ENTITY, _ped.Handle, target.Handle, duration, 0);
 		}
-		[Obsolete("TaskInvoker.AimAt is obsolete, use TaskInvoker.AimGunAtPosition for coordinate targets instead.")]
+		[Obsolete("Use TaskInvoker.AimGunAtPosition for coordinate targets instead.")]
 		public void AimAt(Vector3 target, int duration)
 		{
 			Function.Call(Hash.TASK_AIM_GUN_AT_COORD, _ped.Handle, target.X, target.Y, target.Z, duration, 0, 0);
@@ -150,7 +151,8 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_WANDER, _ped.Handle, vehicle.Handle, speed, (int)drivingFlags);
 		}
-		[Obsolete("The CruiseWithVehicle overload with DrivingStyle enum is obsolete, use the overload with VehicleDrivingFlags enum.")]
+		[Obsolete("Use TaskInvoker.CruiseWithVehicle(Vehicle, float, VehicleDrivingFlags) instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public void CruiseWithVehicle(Vehicle vehicle, float speed, DrivingStyle style = DrivingStyle.Normal)
 		{
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_WANDER, _ped.Handle, vehicle.Handle, speed, (int)style);
@@ -160,7 +162,8 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, (int)drivingFlags, radius);
 		}
-		[Obsolete("The DriveTo overload with DrivingStyle enum is obsolete, use the overload with VehicleDrivingFlags enum.")]
+		[Obsolete("Use DriveTo(Vehicle, Vector3, float, VehicleDrivingFlags, float) instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public void DriveTo(Vehicle vehicle, Vector3 target, float radius, float speed, DrivingStyle style = DrivingStyle.Normal)
 		{
 			Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, (int)style, radius);
@@ -374,7 +377,8 @@ namespace GTA
 			Function.Call(Hash.TASK_GOTO_ENTITY_OFFSET_XY, _ped.Handle, target.Handle, timeout, offset.X, offset.Y, offset.Z, 1f, true);
 		}
 
-		[Obsolete("TaskInvoker.GoTo with the position parameter may not obvious enough to suggest it uses navigation mesh. Use TaskInvoker.FollowNavMeshTo instead.")]
+		[Obsolete("TaskInvoker.GoTo with the position parameter may not obvious enough to suggest it uses navigation mesh. Use TaskInvoker.FollowNavMeshTo instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public void GoTo(Vector3 position, int timeout = -1)
 		{
 			Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, 0f, 0, 0f);
@@ -386,7 +390,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Tells the <see cref="Ped"/> to go to a coord, without using the navemesh.
+		/// Tells the <see cref="Ped"/> to go to a coord, without using the navmesh.
 		/// </summary>
 		/// <param name="position">The position to go to.</param>
 		/// <param name="moveBlendRatio">Specifies how much fast the ped will move.</param>
@@ -451,7 +455,7 @@ namespace GTA
 				moveBlendRatio,
 				vehicle, useLongRangeVehiclePathing, (int)drivingFlags, maxRangeToShootTargets,
 				extraVehToTargetDistToPreferVeh, driveStraightLineDistance, (int)extraFlags, warpTimerMs);
-		
+
 
 		/// <summary>
 		/// Tells the <see cref="Ped"/> to go to a point by any means.

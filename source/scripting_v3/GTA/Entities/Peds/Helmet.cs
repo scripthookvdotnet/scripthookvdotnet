@@ -7,7 +7,7 @@ using System;
 
 namespace GTA
 {
-	[Obsolete("GTA.Helmet is obsolete, use GTA.HelmetPropFlags.")]
+	[Obsolete("Use GTA.HelmetPropFlags instead.")]
 	public enum Helmet : uint
 	{
 		RegularMotorcycleHelmet = 4096u,

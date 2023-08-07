@@ -57,17 +57,17 @@ namespace GTA
 		/// <summary>Players cannot attempt to enter the <see cref="Vehicle"/> with the enter vehicle key or button.</summary>
 		IgnoredByPlayer,
 
-		[Obsolete("VehicleLockStatus.Locked is obsolete, please use VehicleLockStatus.CannotEnter instead.")]
+		[Obsolete("Use VehicleLockStatus.CannotEnter instead.")]
 		Locked = 2,
-		[Obsolete("VehicleLockStatus.LockedForPlayer is obsolete, please use VehicleLockStatus.PlayerCannotEnter instead.")]
+		[Obsolete("Use VehicleLockStatus.PlayerCannotEnter instead.")]
 		LockedForPlayer,
 		/// <summary>
 		/// <para>The <see cref="Vehicle"/> is locked and must be broken into even if already broken into (the same as <see cref="CanBeBrokenIntoPersist"/>).</para>
 		/// <para>Doesn't allow players to exit the <see cref="Vehicle"/> with the exit vehicle key or button.</para>
 		/// </summary>
-		[Obsolete("VehicleLockStatus.StickPlayerInside is obsolete, please use VehicleLockStatus.PlayerCannotLeaveCanBeBrokenIntoPersist instead.")]
+		[Obsolete("Use VehicleLockStatus.PlayerCannotLeaveCanBeBrokenIntoPersist instead.")]
 		StickPlayerInside,
-		[Obsolete("VehicleLockStatus.CannotBeTriedToEnter is obsolete, please use VehicleLockStatus.IgnoredByPlayer instead.")]
+		[Obsolete("Use VehicleLockStatus.IgnoredByPlayer instead.")]
 		CannotBeTriedToEnter = 10,
 	}
 }

@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -18,13 +19,13 @@ namespace GTA
 		Windshield,
 		BackWindshield,
 
-		[Obsolete("ExtraWindow1 is obsolete, please use MiddleLeftWindow instead.")]
+		[Obsolete("Use MiddleLeftWindow instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		ExtraWindow1 = MiddleLeftWindow,
-		[Obsolete("ExtraWindow2 is obsolete, please use MiddleRightWindow instead.")]
+		[Obsolete("Use MiddleRightWindow instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		ExtraWindow2 = MiddleRightWindow,
-		[Obsolete("ExtraWindow3 is obsolete, please use Windshield instead.")]
+		[Obsolete("Use Windshield instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		ExtraWindow3 = Windshield,
-		[Obsolete("ExtraWindow4 is obsolete, please use BackWindshield instead.")]
+		[Obsolete("Use BackWindshield instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		ExtraWindow4 = BackWindshield,
 	}
 }

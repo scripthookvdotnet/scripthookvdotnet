@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace GTA
@@ -358,7 +359,9 @@ namespace GTA
 		/// The <see cref="WeaponComponent"/> instance if the first component of all the components for <see cref="WeaponAttachmentPoint.GunRoot"/> is found;
 		/// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
 		/// </returns>
-		[Obsolete("WeaponComponentCollection.GetLuxuryFinishComponent is wrongly named and cannot necessarily get all of the components for gun_root (e.g. camo components), please use WeaponComponentCollection.GetGunRootComponent instead.")]
+		[Obsolete("WeaponComponentCollection.GetLuxuryFinishComponent is wrongly named and cannot necessarily get all of the components for gun_root (e.g. camo components)," +
+		          "use WeaponComponentCollection.GetGunRootComponent instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public WeaponComponent GetLuxuryFinishComponent()
 		{
 			foreach (WeaponComponent component in this)

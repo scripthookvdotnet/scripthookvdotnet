@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -70,11 +71,11 @@ namespace GTA
 		/// This flag takes precedence over <see cref="AllowJacking"/>.
 		/// </summary>
 		DontJackAnyone = 8388608,
-		[Obsolete("EnterVehicleFlags.AllowJacking is obsolete, use EnterVehicleFlags.JackAnyone instead.")]
+		[Obsolete("Use EnterVehicleFlags.JackAnyone instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		AllowJacking = JackAnyone,
-		[Obsolete("EnterVehicleFlags.EnterFromOppositeSide is obsolete, use EnterVehicleFlags.UseRightEntry instead.")]
+		[Obsolete("Use EnterVehicleFlags.UseRightEntry instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		EnterFromOppositeSide = UseRightEntry,
-		[Obsolete("EnterVehicleFlags.OnlyOpenDoor is obsolete, use EnterVehicleFlags.JustPullPedOut instead.")]
+		[Obsolete("Use EnterVehicleFlags.JustPullPedOut instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		OnlyOpenDoor = JustPullPedOut,
 	}
 }

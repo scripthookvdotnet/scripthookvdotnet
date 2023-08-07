@@ -7,6 +7,7 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -105,7 +106,8 @@ namespace GTA
 		/// <summary>
 		/// Gets the script wheel index for native functions.
 		/// </summary>
-		[Obsolete("Use Use VehicleWheel.BoneId or VehicleWheel.ScriptIndex instead.")]
+		[Obsolete("Use VehicleWheel.BoneId or VehicleWheel.ScriptIndex instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public int Index => (int)ScriptIndex;
 
 		/// <summary>

@@ -6,6 +6,7 @@
 using GTA.Math;
 using GTA.Native;
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -520,8 +521,8 @@ namespace GTA
 		/// <summary>
 		/// Sets a cam active which will be interpolated too from this <see cref="Camera"/>.
 		/// </summary>
-		[Obsolete("Camera.InterpTo(Camera, int, int, int) is obsolete." +
-		          "Use Camera.InterpTo(Camera, int, CameraGraphType, CameraGraphType, EulerRotationOrder) instead.")]
+		[Obsolete("Use Camera.InterpTo(Camera, int, CameraGraphType, CameraGraphType, EulerRotationOrder) instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public void InterpTo(Camera to, int duration, int easePosition, int easeRotation)
 		{
 			Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, to.Handle, Handle, duration, easePosition, easeRotation);

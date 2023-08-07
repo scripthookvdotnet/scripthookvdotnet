@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -42,13 +43,17 @@ namespace GTA
 		/// </summary>
 		ForceRotPlusForce,
 
-		[Obsolete("ForceType.MinForce is obsolete because it is incorrect, use ForceType.InternalForce instead.")]
+		[Obsolete("ForceType.MinForce is obsolete because it is incorrect, use ForceType.InternalForce instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		MinForce = InternalForce,
-		[Obsolete("ForceType.MaxForceRot is obsolete because it is incorrect, use ForceType.InternalImpulse instead.")]
+		[Obsolete("ForceType.MaxForceRot is obsolete because it is incorrect, use ForceType.InternalImpulse instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		MaxForceRot = InternalImpulse,
-		[Obsolete("ForceType.MinForce2 is obsolete because it is incorrect, use ForceType.ExternalForce instead.")]
+		[Obsolete("ForceType.MinForce2 is obsolete because it is incorrect, use ForceType.ExternalForce instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		MinForce2 = ExternalForce,
-		[Obsolete("ForceType.MaxForceRot2 is obsolete because it is incorrect, use ForceType.ExternalImpulse instead.")]
+		[Obsolete("ForceType.MaxForceRot2 is obsolete because it is incorrect, use ForceType.ExternalImpulse instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		MaxForceRot2 = ExternalImpulse,
 	}
 }

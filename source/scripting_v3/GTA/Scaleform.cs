@@ -19,7 +19,7 @@ namespace GTA
 		{
 			Handle = handle;
 		}
-		[Obsolete("The Scaleform construtor with a string parameter is obsolete. Use Scaleform.RequestMovie instead.")]
+		[Obsolete("The Scaleform constructor with a string parameter is obsolete. Use Scaleform.RequestMovie instead.")]
 		public Scaleform(string scaleformID)
 		{
 			Handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);

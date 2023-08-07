@@ -12,7 +12,7 @@ namespace GTA
 	/// Consider using <see cref="VehicleDrivingFlags"/> since it represents how flags affects how <see cref="Ped"/>s should drive vehicles
 	/// more accurately than this enumeration.
 	/// </summary>
-	[Obsolete("DrivingStyle is obsolete, use VehicleDrivingFlags instead.")]
+	[Obsolete("Use VehicleDrivingFlags instead.")]
 	public enum DrivingStyle
 	{
 		Normal = 786603,

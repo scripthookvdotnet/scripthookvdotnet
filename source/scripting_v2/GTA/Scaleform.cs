@@ -14,7 +14,8 @@ namespace GTA
 	{
 		private string _scaleformId;
 
-		[Obsolete("Scaleform(int handle) is obsolete, Please Use Scaleform(string scaleformID) instead")]
+		[Obsolete("Use Scaleform(string scaleformID) in this API version instead. " +
+		          "In the v3 API, use one of static constructors such as Scaleform.RequestMovie instead.")]
 		public Scaleform(int handle)
 		{
 			Handle = handle;
@@ -40,7 +41,8 @@ namespace GTA
 		public bool IsValid => Handle != 0;
 		public bool IsLoaded => Function.Call<bool>(Hash.HAS_SCALEFORM_MOVIE_LOADED, Handle);
 
-		[Obsolete("Scaleform.Load(string scaleformID) is obsolete, Please Use Scaleform(string scaleformID) instead")]
+		[Obsolete("Use Scaleform(string scaleformID) in this API version instead. " +
+		          "In the v3 API, use one of static constructors such as Scaleform.RequestMovie instead.")]
 		public bool Load(string scaleformID)
 		{
 			int handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);

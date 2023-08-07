@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -28,13 +29,13 @@ namespace GTA
 		Crashing,
 		Water,
 
-		[Obsolete("ParachuteLandingType.None is obsolete, use ParachuteLandingType.Invalid instead.")]
+		[Obsolete("Use ParachuteLandingType.Invalid instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		None = -1,
-		[Obsolete("ParachuteLandingType.Stumbling is obsolete, use ParachuteLandingType.Regular instead.")]
+		[Obsolete("Use ParachuteLandingType.Regular instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		Stumbling = 1,
-		[Obsolete("ParachuteLandingType.Rolling is obsolete, use ParachuteLandingType.Fast instead.")]
+		[Obsolete("Use ParachuteLandingType.Fast instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		Rolling,
-		[Obsolete("ParachuteLandingType.Ragdoll is obsolete, use ParachuteLandingType.Crashing instead.")]
+		[Obsolete("Use ParachuteLandingType.Crashing instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		Ragdoll,
 	}
 }

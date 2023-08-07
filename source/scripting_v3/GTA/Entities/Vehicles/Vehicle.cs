@@ -695,7 +695,8 @@ namespace GTA
 		public float EnginePowerMultiplier
 		{
 			[Obsolete("The getter of Vehicle.EnginePowerMultiplier is obsolete since MODIFY_VEHICLE_TOP_SPEED does not store the passed value " +
-				"as the 2nd argument to any of vehicle members in v1.0.887.1 or earlier. This property returns zero in those versions.")]
+				"as the 2nd argument to any of vehicle members in v1.0.887.1 or earlier. This property returns zero in those versions."),
+			EditorBrowsable(EditorBrowsableState.Never)]
 			get
 			{
 				if (Game.Version < GameVersion.v1_0_944_2_Steam)
@@ -815,7 +816,8 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the gears value of this <see cref="Vehicle"/>.
 		/// </summary>
-		[Obsolete("Vehicle.Gears is obsolete, please use Vehicle.HighGear for the high gear value and Vehicle.CurrentGear for the current gear value instead.")]
+		[Obsolete("Use Vehicle.HighGear for the high gear value and Vehicle.CurrentGear for the current gear value instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public int Gears
 		{
 			get => HighGear;
@@ -1399,7 +1401,8 @@ namespace GTA
 
 				return lightState1;
 			}
-			[Obsolete("The setter of Vehicle.AreLightsOn is obsolete. Use Vehicle.SetScriptedLightSetting instead.")]
+			[Obsolete("The setter of Vehicle.AreLightsOn is obsolete. Use Vehicle.SetScriptedLightSetting instead."),
+			EditorBrowsable(EditorBrowsableState.Never)]
 			set => Function.Call(Hash.SET_VEHICLE_LIGHTS, Handle, value ? 3 : 4);
 		}
 

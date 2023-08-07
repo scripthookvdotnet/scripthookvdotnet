@@ -6,6 +6,7 @@
 using GTA.Native;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace GTA
 {
@@ -52,7 +53,8 @@ namespace GTA
 			}
 		}
 
-		[Obsolete("The indexer overload with the type PedPropType is obsolete, use the indexer overload with the type PedPropAnchorPoint instead.")]
+		[Obsolete("Use the indexer overload with the type PedPropAnchorPoint instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public PedProp this[PedPropType propId] => this[(PedPropAnchorPoint)propId];
 
 		public PedProp[] GetAllProps()

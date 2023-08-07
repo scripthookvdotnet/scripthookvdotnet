@@ -68,7 +68,7 @@ namespace GTA
 		/// The current date and time.
 		/// </value>
 		[Obsolete("World.CurrentDate is obsolete because DateTime can represent the years only in the range of 1 to 9999, while the game supports wider range of years." +
-			"Use properties or methods of GTA.Clock instead.")]
+			"Use properties or methods of GTA.Clock instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static DateTime CurrentDate
 		{
 			get
@@ -1226,7 +1226,7 @@ namespace GTA
 		/// These types of pickups are part of the ambient population and will get removed if the player moves too far away from them.
 		/// </summary>
 		[Obsolete("The World.CreateAmbientPickup overload with non-optional custom model and amount (named \"value\") parameters are obsolete since they can lead to confusion in custom model parameter (which is actually not mandatory)." +
-			"Use the other World.CreateAmbientPickup overload with optional placement flags and amount parameters.")]
+			"Use World.CreateAmbientPickup(PickupType, Vector3, PickupPlacementFlags, int, Model, bool) instead.")]
 		public static Prop CreateAmbientPickup(PickupType type, Vector3 position, Model model, int value)
 			=> CreateAmbientPickup(type, position, PickupPlacementFlags.None, value, model, false);
 
@@ -1263,7 +1263,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="type">The pickup type hash.</param>
 		/// <param name="position">The pickup position to place in world space.</param>
-		/// <param name="rotation">The pickup oritentation.</param>
+		/// <param name="rotation">The pickup orientation.</param>
 		/// <param name="placementFlags">The pickup placement flags.</param>
 		/// <param name="amount">
 		/// A variable amount that can be specified for some pickups, such as money or ammo.
@@ -1310,14 +1310,16 @@ namespace GTA
 		/// Spawns a <see cref="Pickup"/> at the specified position.
 		/// </summary>
 		[Obsolete("The World.CreatePickup overloads with non-optional custom model and amount (named \"value\") parameters are obsolete since they can lead to confusion in custom model parameter (which is actually not mandatory)." +
-			"Use a World.CreatePickup overload with optional placement flags and amount parameters.")]
+			"Use a World.CreatePickup overload with optional placement flags and amount parameters instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static Pickup CreatePickup(PickupType type, Vector3 position, Model model, int value)
 			=> CreatePickup(type, position, PickupPlacementFlags.None, value, model);
 		/// <summary>
 		/// Spawns a <see cref="Pickup"/> at the specified position.
 		/// </summary>
 		[Obsolete("The World.CreatePickup overloads with non-optional custom model and amount (named \"value\") parameters are obsolete since they can lead to confusion in custom model parameter (which is actually not mandatory)." +
-			"Use a World.CreatePickup overload with optional placement flags and amount parameters.")]
+			"Use a World.CreatePickup overload with optional placement flags and amount parameters instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static Pickup CreatePickup(PickupType type, Vector3 position, Vector3 rotation, Model model, int value)
 			=> CreatePickup(type, position, rotation, PickupPlacementFlags.None, value, EulerRotationOrder.YXZ, model);
 
@@ -1395,7 +1397,8 @@ namespace GTA
 		/// <summary>
 		/// Destroys all scripted <see cref="Camera"/>s.
 		/// </summary>
-		[Obsolete("World.DestroyAllCameras is obsolete. Use Camera.DeleteAllCameras instead.")]
+		[Obsolete("World.DestroyAllCameras is obsolete. Use Camera.DeleteAllCameras instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static void DestroyAllCameras()
 		{
 			Function.Call(Hash.DESTROY_ALL_CAMS, 0);
@@ -1412,7 +1415,8 @@ namespace GTA
 		/// even if the method fails to create and <c>CREATE_CAM_WITH_PARAMS</c> returns -1 due to the camera pool being full.
 		/// This is done for compatibility for scripts built against v3.6.0 or earlier.
 		/// </remarks>
-		[Obsolete("World.CreateCamera is obsolete. Use Camera.Create instead.")]
+		[Obsolete("World.CreateCamera is obsolete. Use Camera.Create instead."),
+		 EditorBrowsable(EditorBrowsableState.Never)]
 		public static Camera CreateCamera(Vector3 position, Vector3 rotation, float fov)
 		{
 			return new Camera(Function.Call<int>(Hash.CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2));
@@ -1431,7 +1435,8 @@ namespace GTA
 		/// </remarks>
 		[Obsolete("World.RenderingCamera is obsolete. " +
 		          "Use Camera.RenderingScriptedCamera to get the rendering scripted camera. " +
-		          "Use Camera.StartRenderingScriptedCamera or Camera.StopRenderingScriptedCamera to tell the game to render or stop rendering a scripted camera.")]
+		          "Use Camera.StartRenderingScriptedCamera or Camera.StopRenderingScriptedCamera to tell the game to render or stop rendering a scripted camera."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static Camera RenderingCamera
 		{
 			get => new(Function.Call<int>(Hash.GET_RENDERING_CAM));
@@ -1855,7 +1860,7 @@ namespace GTA
 		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
 		/// Entity, bool, bool, Entity, bool, bool, bool)" path="/param[@name='targetEntity']"/>
 		/// </param>
-		/// 
+		///
 		/// <inheritdoc cref="ShootSingleBullet(Vector3, Vector3, int, WeaponAsset, Ped, bool, bool, bool, float,
 		/// Entity, bool, bool, Entity, bool, bool, bool)"/>
 		public static void ShootSingleBullet(Vector3 startPosition, Vector3 endPosition, int damage,
@@ -2230,7 +2235,8 @@ namespace GTA
 		/// <param name="radius">The radius of the raycast.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		[Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. Use ShapeTest.StartTestCapsule instead.")]
+		[Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. " +
+		          "Use ShapeTest.StartTestCapsule instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectFlags options, Entity ignoreEntity = null)
 		{
 			return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE,
@@ -2256,7 +2262,8 @@ namespace GTA
 		/// <param name="maxDistance">How far the raycast should go out to.</param>
 		/// <param name="options">What type of objects the raycast should intersect with.</param>
 		/// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-		[Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. Use ShapeTest.StartTestCapsule instead.")]
+		[Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. " +
+		          "Use ShapeTest.StartTestCapsule instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectFlags options, Entity ignoreEntity = null)
 		{
 			Vector3 target = source + direction * maxDistance;
@@ -2462,7 +2469,8 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The position.</param>
 		/// <returns>The height measured in meters</returns>
-		[Obsolete("\"float GetGroundHeight(Vector2)\" is obsolete. Use \"bool GetGroundHeight(Vector3, out float, GetGroundHeightMode)\" instead.")]
+		[Obsolete("Use GetGroundHeight(Vector3, out float, GetGroundHeightMode) instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static float GetGroundHeight(Vector2 position)
 		{
 			return GetGroundHeight(new Vector3(position.X, position.Y, 1000f));
@@ -2474,7 +2482,8 @@ namespace GTA
 		/// </summary>
 		/// <param name="position">The position.</param>
 		/// <returns>The height measured in meters</returns>
-		[Obsolete("\"float GetGroundHeight(Vector3)\" is obsolete. Use \"bool GetGroundHeight(Vector3, out float, GetGroundHeightMode)\" instead.")]
+		[Obsolete("Use GetGroundHeight(Vector3, out float, GetGroundHeightMode) instead."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public static float GetGroundHeight(Vector3 position)
 		{
 			float resultArg;
@@ -2616,7 +2625,7 @@ namespace GTA
 		/// <param name="sidewalk">if set to <see langword="true" /> Only find positions on the sidewalk.</param>
 		/// <param name="flags">The flags.</param>
 		[Obsolete("World.GetSafeCoordForPed is obsolete since there is no way to check if the method is failed while GET_SAFE_COORD_FOR_PED provides one." +
-			"Use GetSafePositionForPed instead.")]
+		"Use GetSafePositionForPed instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk = true, int flags = 0)
 		{
 			NativeVector3 outPos;
