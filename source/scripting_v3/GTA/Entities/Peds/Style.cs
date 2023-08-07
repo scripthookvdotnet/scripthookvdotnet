@@ -65,7 +65,7 @@ namespace GTA
 			foreach (PedPropAnchorPoint anchorPosition in Enum.GetValues(typeof(PedPropAnchorPoint)))
 			{
 				PedProp prop = this[anchorPosition];
-				if (prop.HasAnyVariations)
+				if (prop.HasVariations)
 				{
 					props.Add(prop);
 				}
@@ -80,7 +80,7 @@ namespace GTA
 			foreach (PedComponentType componentId in Enum.GetValues(typeof(PedComponentType)))
 			{
 				PedComponent component = this[componentId];
-				if (component.HasAnyVariations)
+				if (component.HasVariations)
 				{
 					components.Add(component);
 				}

@@ -3,6 +3,8 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
+using System.ComponentModel;
 using GTA.Native;
 
 namespace GTA
@@ -26,14 +28,27 @@ namespace GTA
 			get;
 		}
 
+		/// <summary>
+		/// Returns the number of available drawable models for the component type.
+		/// </summary>
 		public int Count => Function.Call<int>(Hash.GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS, _ped.Handle, (int)Type);
 
+		/// <summary>
+		/// The drawable id/index.
+		/// </summary>
 		public int Index
 		{
 			get => Function.Call<int>(Hash.GET_PED_DRAWABLE_VARIATION, _ped.Handle, (int)Type);
 			set => SetVariation(value);
 		}
 
+		/// <summary>
+		/// The texture count property for current <see cref="Index"/>.
+		/// </summary>
+		/// <remarks>
+		/// You need to set a drawable id via <see cref="Index"/> before you can get the correct number of textures
+		/// for a drawable model.
+		/// </remarks>
 		public int TextureCount
 		{
 			get
@@ -51,6 +66,12 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// The texture index for the current drawable <see cref="Index"/>.
+		/// </summary>
+		/// <remarks>
+		/// You need to set a drawable id via <see cref="Index"/> before you can get of set the texture index properly.
+		/// </remarks>
 		public int TextureIndex
 		{
 			get => Function.Call<int>(Hash.GET_PED_TEXTURE_VARIATION, _ped.Handle, (int)Type);
@@ -75,8 +96,17 @@ namespace GTA
 
 		public bool HasVariations => Count > 1;
 
+		/// <summary>
+		/// Returns <see langword="true"/> if there are textures for current drawable id (<see cref="Index"/>).
+		/// </summary>
+		[Obsolete("PedComponent.HasTextureVariations is obsolete because it does not make sense " +
+		          "as texture count cannot be determined without specifying both component id and drawable id."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public bool HasTextureVariations => Count > 0 && TextureCount > 1;
 
+		[Obsolete("PedComponent.HasAnyVariation is obsolete because it does not make sense " +
+		          "as texture count cannot be determined without specifying both component id and drawable id."),
+		EditorBrowsable(EditorBrowsableState.Never)]
 		public bool HasAnyVariations => HasVariations || HasTextureVariations;
 
 		public override string ToString()
