@@ -34,6 +34,8 @@ namespace GTA
 		/// </summary>
 		Foliage = 256,
 		Everything = 511,
+
+		LosToEntity = Map | Objects,
 		BoundingBox = Vehicles | PedCapsules | Ragdolls | Objects | Pickups | Glass,
 
 		[Obsolete("IntersectFlags.MissionEntities is obsolete because it is incorrect, use IntersectFlags.Vehicles instead."),

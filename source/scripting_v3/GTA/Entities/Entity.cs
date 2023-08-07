@@ -2821,14 +2821,30 @@ namespace GTA
 		/// <see langword="true"/> if this <see cref="Entity"/> has physics; otherwise, <see langword="false" />.
 		/// </value>
 		/// <remarks>
-		/// Physics are streamed in separately from the drawable object, though <see cref="Entity"/> physics near the player are streamed.
+		/// Physics are streamed in separately from the drawable object, though <see cref="Entity"/> physics near
+		/// the player are streamed.
+		/// This property returns <see langword="true"/> when the <see cref="Entity"/> has <c>phInstGta</c>.
 		/// </remarks>
 		public bool HasPhysics => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_PHYSICS, Handle);
 		/// <summary>
 		/// Activates the physics of this <see cref="Entity"/>.
+		/// Needs <see cref="HasPhysics"/> to return <see langword="true"/> before calling this method has actual effects.
 		/// </summary>
 		/// <seealso cref="HasPhysics"/>
 		public void ActivatePhysics() => Function.Call(Hash.ACTIVATE_PHYSICS, Handle);
+
+		/// <summary>
+		/// Checks if this <see cref="Entity"/> has no active physics collider.
+		/// </summary>
+		/// <returns>
+		/// <see langword="true"/> if this <see cref="Entity"/> exists and no active physics collider;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
+		/// <remarks>
+		/// This property returns <see langword="true"/> when the <see cref="Entity"/> exists and does not have
+		/// a <c>rage::phCollider</c> instance.
+		/// </remarks>
+		public bool IsStatic => Function.Call<bool>(Hash.IS_ENTITY_STATIC, Handle);
 
 		/// <summary>
 		/// Sets a <see cref="Entity"/> damping.
@@ -3108,6 +3124,35 @@ namespace GTA
 				return foundEventTag;
 			}
 		}
+
+		#endregion
+
+		#region Line Of Sight
+
+		/// <summary>
+		/// Checks if the entity has a clear line of sight to another <see cref="Entity"/>.
+		/// If the 2 entities are <see cref="Ped"/>s then the LOS check is done between the heads of
+		/// the 2 <see cref="Ped"/>s.
+		/// </summary>
+		public bool HasClearLineOfSightTo(Entity target, IntersectFlags losFlags = IntersectFlags.LosToEntity)
+			=> Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY, Handle, target, (int)losFlags);
+
+		/// <summary>
+		/// Checks if the entity has a clear line of sight to another <see cref="Entity"/>.
+		/// If the 2 entities are <see cref="Ped"/>s then the LOS check is done between the heads of
+		/// the 2 <see cref="Ped"/>s.
+		/// </summary>
+		public bool HasClearLineOfSightToAdjustForCover(Entity target, IntersectFlags losFlags = IntersectFlags.LosToEntity)
+			=> Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY_ADJUST_FOR_COVER, Handle, target, (int)losFlags);
+
+		/// <summary>
+		/// Checks if the entity has a clear line of sight to another <see cref="Entity"/>, and the second entity is
+		/// in a 180 sphere in front of this <see cref="Entity"/>.
+		/// If the 2 entities are <see cref="Ped"/>s then the LOS check is done between the heads of
+		/// the 2 <see cref="Ped"/>s.
+		/// </summary>
+		public bool HasClearLineOfSightToInFront(Entity target)
+			=> Function.Call<bool>(Hash.HAS_ENTITY_CLEAR_LOS_TO_ENTITY_IN_FRONT, Handle, target);
 
 		#endregion
 
