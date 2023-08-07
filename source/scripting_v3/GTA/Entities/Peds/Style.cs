@@ -20,6 +20,17 @@ namespace GTA
 
 		#endregion
 
+		/// <summary>
+		/// The max component count.
+		/// At least GET_NUMBER_OF_PED_DRAWABLE_VARIATIONS will return zero if the 2nd argument is 0xC or higher as uint32_t.
+		/// </summary>
+		private const int NumPedComponent = 12;
+
+		/// <summary>
+		/// The practical max ped prop count.
+		/// </summary>
+		private const int NumPedProps = 9;
+
 		internal Style(Ped ped)
 		{
 			_ped = ped;
@@ -62,12 +73,13 @@ namespace GTA
 		public PedProp[] GetAllProps()
 		{
 			var props = new List<PedProp>();
-			foreach (PedPropAnchorPoint anchorPosition in Enum.GetValues(typeof(PedPropAnchorPoint)))
+			for (int i = 0; i < NumPedProps; i++)
 			{
-				PedProp prop = this[anchorPosition];
-				if (prop.HasVariations)
+				PedPropAnchorPoint anchorPoint = (PedPropAnchorPoint)i;
+				PedProp pedProp = this[anchorPoint];
+				if (pedProp.HasVariations)
 				{
-					props.Add(prop);
+					props.Add(pedProp);
 				}
 			}
 
@@ -77,9 +89,10 @@ namespace GTA
 		public PedComponent[] GetAllComponents()
 		{
 			var components = new List<PedComponent>();
-			foreach (PedComponentType componentId in Enum.GetValues(typeof(PedComponentType)))
+			for (int i = 0; i < NumPedComponent; i++)
 			{
-				PedComponent component = this[componentId];
+				PedComponentType componentType = (PedComponentType)i;
+				PedComponent component = this[componentType];
 				if (component.HasVariations)
 				{
 					components.Add(component);
