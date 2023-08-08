@@ -229,6 +229,42 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the rain level.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Level higher than <c>'0.5f'</c>, only the creation of puddles gets faster, rain and rain sound won't increase after that.
+		/// </para>
+		/// <para>
+		/// Level of <c>'0.0f'</c> rain and rain sounds are disabled and there won't be any new puddles.
+		/// </para>
+		/// <para>
+		/// To use the rain level of the current weather, set this to <c>`-1f`</c>.
+		/// </para>
+		/// </remarks>
+		/// <value>
+		/// The rain level.
+		/// </value>
+		public static float RainLevel
+		{
+			get => Function.Call<float>(Hash.GET_RAIN_LEVEL);
+			set
+			{
+				if (value < 0f)
+				{
+					value = -1;
+				}
+
+				if (value > 1f)
+				{
+					value = 1f;
+				}
+
+				Function.Call(Hash.SET_RAIN, value);
+			}
+		}
+
 		#endregion
 
 		#region Wind
