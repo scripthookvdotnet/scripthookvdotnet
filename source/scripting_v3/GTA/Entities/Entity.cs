@@ -251,7 +251,7 @@ namespace GTA
 		/// Gets or sets how opaque this <see cref="Entity"/> is.
 		/// </summary>
 		/// <value>
-		/// 0 for completely see through, 255 for fully opaque
+		/// 0 for completely see through, 255 for fully opaque.
 		/// </value>
 		public int Opacity
 		{
@@ -259,6 +259,26 @@ namespace GTA
 			set => Function.Call(Hash.SET_ENTITY_ALPHA, Handle, value, false);
 		}
 
+		/// <summary>
+		/// Sets the <see cref="Opacity"/>.
+		/// </summary>
+		/// <param name="opacity">
+		/// The opacity level in 0 to 255, where 0 (to 49) for completely see through, 255 for fully opaque.
+		/// </param>
+		/// <param name="useSmoothOpacity">
+		/// <para>
+		/// If <see langword="true"/> and this <see cref="Entity"/> is a <see cref="Prop"/>,
+		/// it will use smooth opacity/alpha rather than reduced polygons.
+		/// </para>
+		/// <para>
+		/// This value is not properly supported on <see cref="Ped"/>s and <see cref="Vehicle"/>s.
+		/// <see cref="Vehicle"/>s use smooth opacity regardless of this value.
+		/// </para>
+		/// </param>
+		public void SetOpacity(int opacity, bool useSmoothOpacity)
+		{
+			Function.Call(Hash.SET_ENTITY_ALPHA, Handle, opacity, useSmoothOpacity);
+		}
 		/// <summary>
 		/// Resets the <see cref="Opacity"/>.
 		/// </summary>

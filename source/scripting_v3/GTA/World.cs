@@ -3,6 +3,7 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using GTA.Graphics;
 using GTA.Math;
 using GTA.Native;
 using System;
@@ -2058,22 +2059,84 @@ namespace GTA
 		/// <param name="color">The color of the marker.</param>
 		/// <param name="bobUpAndDown">if set to <see langword="true" /> the marker will bob up and down.</param>
 		/// <param name="faceCamera">if set to <see langword="true" /> the marker will always face the camera, regardless of its rotation.</param>
-		/// <param name="rotateY">if set to <see langword="true" /> rotates only on the y axis(heading).</param>
+		/// <param name="rotateY">
+		/// if set to <see langword="true" /> rotates only on the z axis (heading).
+		/// Incorrectly named as &quot;rotateY&quot;, but the name is kept for source compatibility.
+		/// </param>
 		/// <param name="textueDict">Name of texture dictionary to load the texture from, leave null for no texture in the marker.</param>
 		/// <param name="textureName">Name of texture inside the dictionary to load the texture from, leave null for no texture in the marker.</param>
 		/// <param name="drawOnEntity">if set to <see langword="true" /> draw on any <see cref="Entity"/> that intersects the marker.</param>
+		/// <remarks>
+		/// There is no overload that takes <see cref="Nullable{T}"/> <see cref="TxdAndTextureNamePair"/> as a default
+		/// parameter, since trying to provide one will result in ambiguious call resolution.
+		/// </remarks>
 		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color, bool bobUpAndDown = false, bool faceCamera = false, bool rotateY = false, string textueDict = null, string textureName = null, bool drawOnEntity = false)
 		{
 			if (!string.IsNullOrEmpty(textueDict) && !string.IsNullOrEmpty(textureName))
 			{
-				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X,
+				Function.Call(Hash.DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X,
 					scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamera, 2, rotateY, textueDict,
 					textureName, drawOnEntity);
 			}
 			else
 			{
-				Function.Call(Hash.DRAW_MARKER, type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X,
+				Function.Call(Hash.DRAW_MARKER, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y, rot.Z, scale.X,
 					scale.Y, scale.Z, color.R, color.G, color.B, color.A, bobUpAndDown, faceCamera, 2, rotateY, 0, 0, drawOnEntity);
+			}
+		}
+		/// <summary>
+		/// Draws a marker this frame with 2 extra parameters.
+		/// Not supported in the game versions earlier than v1.0.573.1.
+		/// </summary>
+		/// <param name="type">The type of marker.</param>
+		/// <param name="pos">The position of the marker.</param>
+		/// <param name="dir">The direction the marker points in.</param>
+		/// <param name="rot">The rotation of the marker.</param>
+		/// <param name="scale">The amount to scale the marker by.</param>
+		/// <param name="color">The color of the marker.</param>
+		/// <param name="bounce">if set to <see langword="true" /> the marker will bounce up and down.</param>
+		/// <param name="faceCamera">if set to <see langword="true" /> the marker will always face the camera, regardless of its rotation.</param>
+		/// <param name="rotOrder">The rotation order.</param>
+		/// <param name="rotate">if set to <see langword="true" /> rotates only on the z axis(heading).</param>
+		/// <param name="txdAndTexNamePair">
+		/// The pair of a <see cref="Txd"/> struct and a texture name string.
+		/// Leave <see langword="null"/> to use the texture for <paramref name="type"/>.
+		/// </param>
+		/// <param name="renderInverted">
+		/// if set to <see langword="true"/> the marker will be drawed in the reverse order.
+		/// Marker vertices will shown on any <c>CEntity</c> (which includes but not limited to <see cref="Entity"/>
+		/// and <see cref="Building"/>), that are intersected.
+		/// </param>
+		/// <param name="usePreAlphaDepth">
+		/// If <see langword="false"/>, the marker will not use pre-alpha depth, making the marker invisible behind
+		/// translucent <see cref="Vehicle"/>s and translucent <see cref="Prop"/>s with smooth opacity (which is
+		/// different from <see cref="DrawMarker"/>.
+		/// </param>
+		/// <param name="matchEntityRotOrder">
+		/// If <see langword="true"/>, the marker will rotate in the same way how <see cref="Entity"/>s are rotated
+		/// (which is different from <see cref="DrawMarker"/>.
+		/// </param>
+		public static void DrawMarkerEx(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale,
+			Color color, bool bounce = false, bool faceCamera = false,
+			EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, bool rotate = false,
+			TxdAndTextureNamePair? txdAndTexNamePair = null, bool renderInverted = false,
+			bool usePreAlphaDepth = true, bool matchEntityRotOrder = false)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_573_1_Steam, nameof(World),
+				nameof(DrawMarkerEx));
+
+			if (txdAndTexNamePair == null)
+			{
+				Function.Call(Hash.DRAW_MARKER_EX, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y,
+					rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bounce, faceCamera,
+					(int)rotOrder, rotate, null, null, renderInverted, usePreAlphaDepth, matchEntityRotOrder);
+			}
+			else
+			{
+				(Txd txd, string texName) = txdAndTexNamePair.GetValueOrDefault();
+				Function.Call(Hash.DRAW_MARKER_EX, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y,
+					rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bounce, faceCamera,
+					(int)rotOrder, rotate, txd, texName, renderInverted, usePreAlphaDepth, matchEntityRotOrder);
 			}
 		}
 
