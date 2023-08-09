@@ -251,15 +251,11 @@ namespace GTA
 			get => Function.Call<float>(Hash.GET_RAIN_LEVEL);
 			set
 			{
-				if (value < 0f)
-				{
-					value = -1;
-				}
-
-				if (value > 1f)
-				{
-					value = 1f;
-				}
+		public static float RainLevel => Function.Call<float>(Hash.GET_RAIN_LEVEL);	
+		public static float RainLevelOverride
+		{
+			set => Function.Call(Hash.SET_RAIN, value);
+		}
 
 				Function.Call(Hash.SET_RAIN, value);
 			}
