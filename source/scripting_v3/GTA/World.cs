@@ -259,6 +259,32 @@ namespace GTA
 			set => Function.Call(Hash.SET_RAIN, value);
 		}
 
+		/// <summary>
+		/// Gets the snow level.
+		/// </summary>
+		/// <value>
+		/// The snow level.
+		/// </value>
+		public static float SnowLevel => Function.Call<float>(Hash.GET_SNOW_LEVEL);
+
+		/// <summary>
+		/// Sets the snow level.
+		/// </summary>
+		/// <remarks>
+		/// <para>
+		/// Set level to <c>'0f'</c> disables snow effects.
+		/// </para>
+		/// <para>
+		/// Set level to <c>'-1f'</c> the snow effects are set to the current weather.
+		/// </para>
+		/// </remarks>
+		/// <value>
+		/// The snow level.
+		/// </value>
+		public static float SnowLevelOverride
+		{
+			set => Function.Call(Hash.SET_SNOW, value);
+		}
 		#endregion
 
 		#region Wind
