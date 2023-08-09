@@ -232,26 +232,42 @@ namespace GTA
 		#endregion
 
 		#region Wind
-		public static float WindSpeed
+
+		/// <summary>
+		/// Gets the current wind speed in m/s. The value is between 0 to 12.
+		/// </summary>
+		public static float WindSpeed => Function.Call<float>(Hash.GET_WIND_SPEED);
+
+		/// <summary>
+		/// Sets the wind speed override by percentage, where 1.0 sets the current wind speed to 12.0 in m/s.
+		/// Sets an negative value to stop using the override and let the game calculates the current wind speed as usual.
+		/// </summary>
+		/// <remarks>
+		/// Although this property does not clamp the override value at all, the game clamps the wind speed between
+		/// 0 and 12.0.
+		/// </remarks>
+		public static float WindSpeedOverride
 		{
-			get => Function.Call<float>(Hash.GET_WIND_SPEED);
-			set
-			{
-				if (value < 0f)
-				{
-					value = 0;
-				}
-
-				if (value > 12f)
-				{
-					value = 12f;
-				}
-
-				Function.Call(Hash.SET_WIND_SPEED, value);
-			}
+			set => Function.Call(Hash.SET_WIND, value);
 		}
 
+		/// <summary>
+		/// Sets the wind speed override by speed. The value divided by 12 will be set if the result is lower than 1.0.
+		/// Otherwise, the value will be set to 1.0.
+		/// Sets an negative value to stop using the override and let the game calculates the current wind speed as usual.
+		/// </summary>
+		/// <remarks>
+		/// Basically do the same as <see cref="set_WindSpeedOverride"/> does but with a upper bound and one division.
+		/// Use <see cref="set_WindSpeedOverride"/> to set the value precisely (and avoid one division for performance).
+		/// </remarks>
+		public static void SetWindSpeedOverrideBySpeed(float windSpeed)
+			=> Function.Call(Hash.SET_WIND_SPEED, windSpeed);
+
+		/// <summary>
+		/// Gets the current wind direction with a unit vector.
+		/// </summary>
 		public static Vector3 WindDirection => Function.Call<Vector3>(Hash.GET_WIND_DIRECTION);
+
 		#endregion
 
 		#region Blips
