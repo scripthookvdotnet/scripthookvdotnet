@@ -230,7 +230,15 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the rain level.
+		/// Gets the rain level.
+		/// </summary>
+		/// <value>
+		/// The rain level.
+		/// </value>
+		public static float RainLevel => Function.Call<float>(Hash.GET_RAIN_LEVEL);
+
+		/// <summary>
+		/// Sets the rain level.
 		/// </summary>
 		/// <remarks>
 		/// <para>
@@ -240,25 +248,15 @@ namespace GTA
 		/// Level of <c>'0.0f'</c> rain and rain sounds are disabled and there won't be any new puddles.
 		/// </para>
 		/// <para>
-		/// To use the rain level of the current weather, set this to <c>`-1f`</c>.
+		/// To use the rain level of the current weather, set this to <c>'-1f'</c>.
 		/// </para>
 		/// </remarks>
 		/// <value>
 		/// The rain level.
 		/// </value>
-		public static float RainLevel
-		{
-			get => Function.Call<float>(Hash.GET_RAIN_LEVEL);
-			set
-			{
-		public static float RainLevel => Function.Call<float>(Hash.GET_RAIN_LEVEL);	
 		public static float RainLevelOverride
 		{
 			set => Function.Call(Hash.SET_RAIN, value);
-		}
-
-				Function.Call(Hash.SET_RAIN, value);
-			}
 		}
 
 		#endregion
