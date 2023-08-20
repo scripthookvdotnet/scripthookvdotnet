@@ -907,43 +907,133 @@ namespace GTA
 			Function.Call(Hash.TASK_START_SCENARIO_AT_POSITION, _ped.Handle, scenarioName, position.X, position.Y, position.Z, heading, timeToLeave, playIntroClip, warp);
 		}
 
-		/// <summary>Tells the <see cref="Ped"/> to perform a task when in a <see cref="Vehicle"/> against another <see cref="Vehicle"/>.</summary>
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to perform a task when in a <see cref="Vehicle"/> against another
+		/// <see cref="Vehicle"/>.
+		/// </summary>
 		/// <param name="vehicle">The <see cref="Vehicle"/> to use to achieve the task.</param>
 		/// <param name="target">The target <see cref="Vehicle"/>.</param>
 		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
+		/// <param name="cruiseSpeed">The cruise speed for the task in m/s.</param>
 		/// <param name="drivingFlags">The driving flags for the task.</param>
-		/// <param name="targetReachedDist">The distance at which the AI thinks the target has been reached and the car stops. To pick default value, the parameter can be passed in as <c>-1</c>.</param>
-		/// <param name="straightLineDist">The distance at which the AI switches to heading for the target directly instead of following the nodes. To pick default value, the parameter can be passed in as <c>-1</c>.</param>
-		/// <param name="driveAgainstTraffic">if set to <see langword="true" />, allows the car to drive on the opposite side of the road into incoming traffic.</param>
+		/// <param name="targetReachedDist">
+		/// The distance in meters at which the AI thinks the target has been reached and the car stops.
+		/// To pick default value <c>4f</c>, the parameter can be passed in as <c>-1</c> or any other values less than
+		/// zero.
+		/// </param>
+		/// <param name="straightLineDist">
+		/// The distance in meters at which the AI switches to heading for the target directly instead of following
+		/// the nodes.
+		/// The max acceptable value is 255, or the value will be clamp to 255 by the native function
+		/// <c>TASK_VEHICLE_MISSION</c>.
+		/// To pick default value <c>20f</c>, the parameter can be passed in as <c>-1</c> or any other values less than
+		/// zero.
+		/// </param>
+		/// <param name="driveAgainstTraffic">
+		/// if set to <see langword="true"/>, allows the car to drive on the opposite side of the road into incoming traffic.
+		/// </param>
 		public void StartVehicleMission(Vehicle vehicle, Vehicle target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, float straightLineDist, bool driveAgainstTraffic = true)
 		{
 			Function.Call(Hash.TASK_VEHICLE_MISSION, _ped.Handle, vehicle.Handle, target.Handle, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
 		}
 
-		/// <summary>Tells the <see cref="Ped"/> to target another ped with a vehicle.</summary>
-		/// <param name="vehicle">The <see cref="Vehicle"/> to use to achieve the task.</param>
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to target another <see cref="Ped"/> with a <see cref="Vehicle"/>.
+		/// </summary>
+		/// <param name="vehicle">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='vehicle']"
+		/// />
+		/// </param>
 		/// <param name="target">The target <see cref="Ped"/>.</param>
-		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="drivingFlags">The driving flags for the task.</param>
-		/// <param name="targetReachedDist">The distance at which the AI thinks the target has been reached and the car stops. To pick default value, the parameter can be passed in as <c>-1</c>.</param>
-		/// <param name="straightLineDist">The distance at which the AI switches to heading for the target directly instead of following the nodes. To pick default value, the parameter can be passed in as <c>-1</c>.</param>
-		/// <param name="driveAgainstTraffic">if set to <see langword="true" />, allows the car to drive on the opposite side of the road into incoming traffic.</param>
+		/// <param name="missionType">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='missionType']"
+		/// />
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='cruiseSpeed']"
+		/// />
+		/// </param>
+		/// <param name="drivingFlags">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='drivingFlags']"
+		/// />
+		/// </param>
+		/// <param name="targetReachedDist">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='targetReachedDist']"
+		/// />
+		/// </param>
+		/// <param name="straightLineDist">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='straightLineDist']"
+		/// />
+		/// </param>
+		/// <param name="driveAgainstTraffic">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='driveAgainstTraffic']"
+		/// />
+		/// </param>
 		public void StartVehicleMission(Vehicle vehicle, Ped target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, float straightLineDist, bool driveAgainstTraffic = true)
 		{
 			Function.Call(Hash.TASK_VEHICLE_MISSION_PED_TARGET, _ped.Handle, vehicle.Handle, target.Handle, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
 		}
 
-		/// <summary>Tells the <see cref="Ped"/> to target a coord with a <see cref="Vehicle"/>.</summary>
-		/// <param name="vehicle">The <see cref="Vehicle"/> to use to achieve the task.</param>
+		/// <summary>
+		/// Tells the <see cref="Ped"/> to target a coord with a <see cref="Vehicle"/>.
+		/// </summary>
+		/// <param name="vehicle">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='vehicle']"
+		/// />
+		/// </param>
 		/// <param name="target">The target coordinates.</param>
-		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="drivingFlags">The driving flags for the task.</param>
-		/// <param name="targetReachedDist">The distance at which the AI thinks the target has been reached and the car stops. To pick default value, the parameter can be passed in as <c>-1</c>.</param>
-		/// <param name="straightLineDist">The distance at which the AI switches to heading for the target directly instead of following the nodes. To pick default value, the parameter can be passed in as <c>-1</c>.</param>
-		/// <param name="driveAgainstTraffic">if set to <see langword="true" />, allows the car to drive on the opposite side of the road into incoming traffic.</param>
+		/// <param name="missionType">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='missionType']"
+		/// />
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='cruiseSpeed']"
+		/// />
+		/// </param>
+		/// <param name="drivingFlags">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='drivingFlags']"
+		/// />
+		/// </param>
+		/// <param name="targetReachedDist">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='targetReachedDist']"
+		/// />
+		/// </param>
+		/// <param name="straightLineDist">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='straightLineDist']"
+		/// />
+		/// </param>
+		/// <param name="driveAgainstTraffic">
+		/// <inheritdoc
+		/// cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"
+		/// path="/param[@name='driveAgainstTraffic']"
+		/// />
+		/// </param>
 		public void StartVehicleMission(Vehicle vehicle, Vector3 target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, float straightLineDist, bool driveAgainstTraffic = true)
 		{
 			Function.Call(Hash.TASK_VEHICLE_MISSION_COORS_TARGET, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
@@ -953,12 +1043,29 @@ namespace GTA
 		/// <param name="heli">The helicopter.</param>
 		/// <param name="target">The target <see cref="Vehicle"/>.</param>
 		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="targetReachedDist">distance (in meters) at which heli thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
-		/// <param name="flightHeight">The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).</param>
-		/// <param name="minHeightAboveTerrain">The height in meters that the heli will try to stay above terrain (ie 20 == always tries to stay at least 20 meters above ground).</param>
-		/// <param name="heliOrientation">The orientation the heli tries to be in (<c>0f</c> to <c>360f</c>). Use <c>-1f</c> if not bothered. <c>-1f</c> Should be used in 99% of the times.</param>
-		/// <param name="slowDownDistance">In general, get more control with big number and more dynamic with smaller. Setting to <c>-1</c> means use default tuning(<c>100</c>).</param>
+		/// <param name="cruiseSpeed">The cruise speed for the task in m/s.</param>
+		/// <param name="targetReachedDist">
+		/// The distance in meters at which heli thinks it's arrived.
+		/// Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and
+		/// <see cref="VehicleMissionType.Circle"/>.
+		/// To pick default value <c>4f</c>, the parameter can be passed in as <c>-1</c> or any other values less than
+		/// zero.
+		/// </param>
+		/// <param name="flightHeight">
+		/// The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).
+		/// </param>
+		/// <param name="minHeightAboveTerrain">
+		/// The height in meters that the heli will try to stay above terrain (ie 20 == always tries to stay at least
+		/// 20 meters above ground).
+		/// </param>
+		/// <param name="heliOrientation">
+		/// The orientation the heli tries to be in (<c>0f</c> to <c>360f</c>).
+		/// Use <c>-1f</c> (or any value less than zero) if not bothered. <c>-1f</c> Should be used in 99% of the times.
+		/// </param>
+		/// <param name="slowDownDistance">
+		/// In general, get more control with big number and more dynamic with smaller.
+		/// Setting to <c>-1</c> means use default tuning (<c>100</c>).
+		/// </param>
 		/// <param name="missionFlags">The heli mission flags for the task.</param>
 		public void StartHeliMission(Vehicle heli, Vehicle target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float heliOrientation = -1f, float slowDownDistance = -1f, HeliMissionFlags missionFlags = HeliMissionFlags.None)
 		{
@@ -966,32 +1073,122 @@ namespace GTA
 		}
 
 		/// <summary>Gives the helicopter a mission.</summary>
-		/// <param name="heli">The helicopter.</param>
+		/// <param name="heli">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='heli']"
+		/// />
+		/// </param>
 		/// <param name="target">The target <see cref="Ped"/>.</param>
-		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="targetReachedDist">distance (in meters) at which heli thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
-		/// <param name="flightHeight">The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).</param>
-		/// <param name="minHeightAboveTerrain">The height in meters that the heli will try to stay above terrain (ie 20 == always tries to stay at least 20 meters above ground).</param>
-		/// <param name="heliOrientation">The orientation the heli tries to be in (<c>0f</c> to <c>360f</c>). Use <c>-1f</c> if not bothered. <c>-1f</c> Should be used in 99% of the times.</param>
-		/// <param name="slowDownDistance">In general, get more control with big number and more dynamic with smaller. Setting to <c>-1</c> means use default tuning(<c>100</c>).</param>
-		/// <param name="missionFlags">The heli mission flags for the task.</param>
+		/// <param name="missionType">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='missionType']"
+		/// />
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='cruiseSpeed']"
+		/// />
+		/// </param>
+		/// <param name="targetReachedDist">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='targetReachedDist']"
+		/// />
+		/// </param>
+		/// <param name="flightHeight">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='flightHeight']"
+		/// />
+		/// </param>
+		/// <param name="minHeightAboveTerrain">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='minHeightAboveTerrain']"
+		/// />
+		/// </param>
+		/// <param name="heliOrientation">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='heliOrientation']"
+		/// />
+		/// </param>
+		/// <param name="slowDownDistance">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='slowDownDistance']"
+		/// />
+		/// </param>
+		/// <param name="missionFlags">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='missionFlags']"
+		/// />
+		/// </param>
 		public void StartHeliMission(Vehicle heli, Ped target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float heliOrientation = -1f, float slowDownDistance = -1f, HeliMissionFlags missionFlags = HeliMissionFlags.None)
 		{
 			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, 0, target.Handle, 0f, 0f, 0f, (int)missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, (int)missionFlags);
 		}
 
 		/// <summary>Gives the helicopter a mission.</summary>
-		/// <param name="heli">The helicopter.</param>
+		/// <param name="heli">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='heli']"
+		/// />
+		/// </param>
 		/// <param name="target">The target coordinate.</param>
-		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="targetReachedDist">distance (in meters) at which heli thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
-		/// <param name="flightHeight">The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).</param>
-		/// <param name="minHeightAboveTerrain">The height in meters that the heli will try to stay above terrain (ie 20 == always tries to stay at least 20 meters above ground).</param>
-		/// <param name="heliOrientation">The orientation the heli tries to be in (<c>0f</c> to <c>360f</c>). Use <c>-1f</c> if not bothered. <c>-1f</c> Should be used in 99% of the times.</param>
-		/// <param name="slowDownDistance">In general, get more control with big number and more dynamic with smaller. Setting to <c>-1</c> means use default tuning(<c>100</c>).</param>
-		/// <param name="missionFlags">The heli mission flags for the task.</param>
+		/// <param name="missionType">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='missionType']"
+		/// />
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='cruiseSpeed']"
+		/// />
+		/// </param>
+		/// <param name="targetReachedDist">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='targetReachedDist']"
+		/// />
+		/// </param>
+		/// <param name="flightHeight">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='flightHeight']"
+		/// />
+		/// </param>
+		/// <param name="minHeightAboveTerrain">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='minHeightAboveTerrain']"
+		/// />
+		/// </param>
+		/// <param name="heliOrientation">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='heliOrientation']"
+		/// />
+		/// </param>
+		/// <param name="slowDownDistance">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='slowDownDistance']"
+		/// />
+		/// </param>
+		/// <param name="missionFlags">
+		/// <inheritdoc
+		/// cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"
+		/// path="/param[@name='missionFlags']"
+		/// />
+		/// </param>
 		public void StartHeliMission(Vehicle heli, Vector3 target, VehicleMissionType missionType, float cruiseSpeed, float targetReachedDist, int flightHeight, int minHeightAboveTerrain, float heliOrientation = -1f, float slowDownDistance = -1f, HeliMissionFlags missionFlags = HeliMissionFlags.None)
 		{
 			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, (int)missionFlags);
@@ -1001,11 +1198,13 @@ namespace GTA
 		/// <param name="plane">The helicopter.</param>
 		/// <param name="target">The target <see cref="Vehicle"/>.</param>
 		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
+		/// <param name="cruiseSpeed">The cruise speed for the task in m/s.</param>
 		/// <param name="targetReachedDist">
-		/// Distance (in meters) at which heli thinks it's arrived.
+		/// Distance in meters at which heli thinks it's arrived.
 		/// Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and
 		/// <see cref="VehicleMissionType.Circle"/>.
+		/// To pick default value <c>4f</c>, the parameter can be passed in as <c>-1</c> or any other values less than
+		/// zero.
 		/// </param>
 		/// <param name="flightHeight">
 		/// The Z coordinate the heli tries to maintain (i.e. 30 == 30 meters above sea level).
@@ -1161,9 +1360,15 @@ namespace GTA
 		/// <param name="boat">The boat.</param>
 		/// <param name="target">The target <see cref="Vehicle"/>.</param>
 		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
+		/// <param name="cruiseSpeed">The cruise speed for the task in m/s.</param>
 		/// <param name="drivingFlags">The driving flags for the task.</param>
-		/// <param name="targetReachedDist">distance (in meters) at which boat thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
+		/// <param name="targetReachedDist">
+		/// The distance in meters at which boat thinks it's arrived.
+		/// Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and
+		/// <see cref="VehicleMissionType.Circle"/>.
+		/// To pick default value <c>4f</c>, the parameter can be passed in as <c>-1</c> or any other values less than
+		/// zero.
+		/// </param>
 		/// <param name="missionFlags">The boat mission flags for the task.</param>
 		public void StartBoatMission(Vehicle boat, Vehicle target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, BoatMissionFlags missionFlags)
 		{
@@ -1171,26 +1376,86 @@ namespace GTA
 		}
 
 		/// <summary>Gives the boat a mission.</summary>
-		/// <param name="boat">The boat.</param>
+		/// <param name="boat">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='boat']"
+		/// />
+		/// </param>
 		/// <param name="target">The target <see cref="Ped"/>.</param>
-		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="drivingFlags">The driving flags for the task.</param>
-		/// <param name="targetReachedDist">distance (in meters) at which boat thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
-		/// <param name="missionFlags">The boat mission flags for the task.</param>
+		/// <param name="missionType">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='missionType']"
+		/// />
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='cruiseSpeed']"
+		/// />
+		/// </param>
+		/// <param name="drivingFlags">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='drivingFlags']"
+		/// />
+		/// </param>
+		/// <param name="targetReachedDist">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='targetReachedDist']"
+		/// />
+		/// </param>
+		/// <param name="missionFlags">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='missionFlags']"
+		/// />
+		/// </param>
 		public void StartBoatMission(Vehicle boat, Ped target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, BoatMissionFlags missionFlags)
 		{
 			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, 0, target.Handle, 0f, 0f, 0f, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, (int)missionFlags);
 		}
 
 		/// <summary>Gives the boat a mission.</summary>
-		/// <param name="boat">The boat.</param>
+		/// <param name="boat">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='boat']"
+		/// />
+		/// </param>
 		/// <param name="target">The target coordinate.</param>
-		/// <param name="missionType">The vehicle mission type.</param>
-		/// <param name="cruiseSpeed">The cruise speed for the task.</param>
-		/// <param name="drivingFlags">The driving flags for the task.</param>
-		/// <param name="targetReachedDist">distance (in meters) at which boat thinks it's arrived. Also used as the hover distance for <see cref="VehicleMissionType.Attack"/> and <see cref="VehicleMissionType.Circle"/></param>
-		/// <param name="missionFlags">The boat mission flags for the task.</param>
+		/// <param name="missionType">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='missionType']"
+		/// />
+		/// </param>
+		/// <param name="cruiseSpeed">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='cruiseSpeed']"
+		/// />
+		/// </param>
+		/// <param name="drivingFlags">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='drivingFlags']"
+		/// />
+		/// </param>
+		/// <param name="targetReachedDist">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='targetReachedDist']"
+		/// />
+		/// </param>
+		/// <param name="missionFlags">
+		/// <inheritdoc
+		/// cref="StartBoatMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, BoatMissionFlags)"
+		/// path="/param[@name='missionFlags']"
+		/// />
+		/// </param>
 		public void StartBoatMission(Vehicle boat, Vector3 target, VehicleMissionType missionType, float cruiseSpeed, VehicleDrivingFlags drivingFlags, float targetReachedDist, BoatMissionFlags missionFlags)
 		{
 			Function.Call(Hash.TASK_BOAT_MISSION, _ped.Handle, boat.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, (int)missionFlags);
