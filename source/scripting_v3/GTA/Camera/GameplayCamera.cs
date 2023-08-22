@@ -476,6 +476,9 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is a player-controlled cinematic camera; otherwise, <see langword="false" />.
 		/// </value>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.1493.0.
+		/// </exception>
 		public static bool IsCinematicCamInputActive
 		{
 			get
