@@ -445,6 +445,14 @@ namespace GTA
 		public static bool IsFirstPersonAimCamActive => Function.Call<bool>(Hash.IS_FIRST_PERSON_AIM_CAM_ACTIVE);
 
 		/// <summary>
+		/// Gets a value indicating whether the cinematic camera is active.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is the cinematic camera; otherwise, <see langword="false" />.
+		/// </value>
+		public static bool IsCinematicCamActive => Function.Call<bool>(Hash.IS_CINEMATIC_CAM_INPUT_ACTIVE);
+
+		/// <summary>
 		/// Gets a value indicating whether the active gameplay camera is looking behind.
 		/// </summary>
 		/// <value>
