@@ -445,12 +445,48 @@ namespace GTA
 		public static bool IsFirstPersonAimCamActive => Function.Call<bool>(Hash.IS_FIRST_PERSON_AIM_CAM_ACTIVE);
 
 		/// <summary>
-		/// Gets a value indicating whether the cinematic camera is active.
+		/// Gets a value indicating whether a first person vehicle camera is active.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is the cinematic camera; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is a first person vehicle camera; otherwise, <see langword="false" />.
 		/// </value>
-		public static bool IsCinematicCamActive => Function.Call<bool>(Hash.IS_CINEMATIC_CAM_INPUT_ACTIVE);
+		public static bool IsFirstPersonVehicleCamActive => Function.Call<bool>(Hash.IS_CINEMATIC_FIRST_PERSON_VEHICLE_INTERIOR_CAM_RENDERING);
+
+		/// <summary>
+		/// Gets a value indicating whether any cinematic camera is active.
+		/// Note that this will also return true if in first-person view while inside a vehicle.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is a cinematic camera; otherwise, <see langword="false" />.
+		/// </value>
+		public static bool IsAnyCinematicCamActive => Function.Call<bool>(Hash.IS_CINEMATIC_CAM_RENDERING);
+
+		/// <summary>
+		/// Gets a value indicating whether an idle cinematic camera is active.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is a idle cinematic camera; otherwise, <see langword="false" />.
+		/// </value>
+		public static bool IsIdleCinematicCamActive => Function.Call<bool>(Hash.IS_CINEMATIC_IDLE_CAM_RENDERING);
+
+		/// <summary>
+		/// Gets a value indicating whether a player-controlled cinematic camera is active.
+		/// Only available in v1.0.1493.0 or later game versions.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is a player-controlled cinematic camera; otherwise, <see langword="false" />.
+		/// </value>
+		public static bool IsCinematicCamInputActive
+		{
+			get
+			{
+				if (Game.Version < GameVersion.v1_0_1493_0_Steam)
+				{
+					GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1493_0_Steam, nameof(GameplayCamera), nameof(IsCinematicCamInputActive));
+				}
+				return Function.Call<bool>(Hash.IS_CINEMATIC_CAM_INPUT_ACTIVE);
+			}
+		}
 
 		/// <summary>
 		/// Gets a value indicating whether the active gameplay camera is looking behind.
