@@ -32,7 +32,7 @@ namespace GTA
 		public static bool IsFirstPersonVehicleCamRendering => Function.Call<bool>(Hash.IS_CINEMATIC_FIRST_PERSON_VEHICLE_INTERIOR_CAM_RENDERING);
 
 		/// <summary>
-		/// Gets a value indicating whether the vehicle nose cam is rendering.
+		/// Gets a value indicating whether the vehicle bonnet cam is rendering.
 		/// For example, this will return true if using the weapon cam on the Hydra.
 		/// Only available in v1.0.372.2 or later versions.
 		/// </summary>
