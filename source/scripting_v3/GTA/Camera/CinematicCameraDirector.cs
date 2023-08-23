@@ -24,12 +24,12 @@ namespace GTA
 		public static void InvalidateVehicleIdleCam() => Function.Call(Hash.INVALIDATE_CINEMATIC_VEHICLE_IDLE_MODE);
 
 		/// <summary>
-		/// Gets a value indicating whether a first person vehicle camera is active.
+		/// Gets a value indicating whether a first person vehicle interior camera is active.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> is a first person vehicle camera; otherwise, <see langword="false" />.
 		/// </value>
-		public static bool IsFirstPersonVehicleCamRendering => Function.Call<bool>(Hash.IS_CINEMATIC_FIRST_PERSON_VEHICLE_INTERIOR_CAM_RENDERING);
+		public static bool IsFirstPersonVehicleInteriorCamRendering => Function.Call<bool>(Hash.IS_CINEMATIC_FIRST_PERSON_VEHICLE_INTERIOR_CAM_RENDERING);
 
 		/// <summary>
 		/// Gets a value indicating whether the vehicle bonnet cam is rendering.
@@ -37,7 +37,7 @@ namespace GTA
 		/// Only available in v1.0.372.2 or later versions.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> is a vehicle nose camera; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> is a vehicle bonnet camera; otherwise, <see langword="false" />.
 		/// </value>
 		/// <exception cref="GameVersionNotSupportedException">
 		/// Thrown if called in game versions earlier than v1.0.372.2.
@@ -102,9 +102,9 @@ namespace GTA
 		/// <summary>
 		/// Stops shaking the <see cref="CinematicCameraDirector"/>'s active camera.
 		/// </summary>
-		public static void StopShaking()
+		public static void StopShaking(bool stopImmediately = false)
 		{
-			Function.Call(Hash.STOP_CINEMATIC_CAM_SHAKING, true);
+			Function.Call(Hash.STOP_CINEMATIC_CAM_SHAKING, stopImmediately);
 		}
 
 		/// <summary>
