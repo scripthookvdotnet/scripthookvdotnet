@@ -454,7 +454,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets a value indicating whether any cinematic camera is active.
-		/// Note that this will also return true if in first-person view while inside a vehicle.
+		/// Note that this will also return true if in first person view while inside a vehicle.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is a cinematic camera; otherwise, <see langword="false" />.
@@ -465,7 +465,7 @@ namespace GTA
 		/// Gets a value indicating whether an idle cinematic camera is active.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is a idle cinematic camera; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is an idle cinematic camera; otherwise, <see langword="false" />.
 		/// </value>
 		public static bool IsIdleCinematicCamActive => Function.Call<bool>(Hash.IS_CINEMATIC_IDLE_CAM_RENDERING);
 
@@ -477,7 +477,7 @@ namespace GTA
 		/// <see langword="true" /> if the <see cref="GameplayCamera"/> is a player-controlled cinematic camera; otherwise, <see langword="false" />.
 		/// </value>
 		/// <exception cref="GameVersionNotSupportedException">
-		/// Thrown if called in the game versions earlier than v1.0.1493.0.
+		/// Thrown if called in game versions earlier than v1.0.1493.0.
 		/// </exception>
 		public static bool IsCinematicCamInputActive
 		{
