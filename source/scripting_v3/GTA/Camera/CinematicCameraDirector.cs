@@ -102,6 +102,7 @@ namespace GTA
 		/// <summary>
 		/// Stops shaking the <see cref="CinematicCameraDirector"/>'s active camera.
 		/// </summary>
+		/// <param name="stopImmediately">Whether to stop shaking immediately; defaults to <see langword="false"/></param>
 		public static void StopShaking(bool stopImmediately = false)
 		{
 			Function.Call(Hash.STOP_CINEMATIC_CAM_SHAKING, stopImmediately);
