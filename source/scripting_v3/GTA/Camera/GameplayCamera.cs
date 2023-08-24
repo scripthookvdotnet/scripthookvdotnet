@@ -384,11 +384,6 @@ namespace GTA
 		#endregion
 
 		/// <summary>
-		/// Invalidates the cinematic idle camera, restarting the associated idle counter.
-		/// </summary>
-		public static void InvalidateIdleCamera() => Function.Call(Hash.INVALIDATE_IDLE_CAM);
-
-		/// <summary>
 		/// Gets or sets the first-person ped aim zoom factor associated with equipped sniper scoped weapon,
 		/// or the mobile phone camera, if active.
 		/// </summary>
@@ -465,9 +460,10 @@ namespace GTA
 		/// <summary>
 		/// Stops shaking the <see cref="GameplayCamera"/>.
 		/// </summary>
-		public static void StopShaking()
+		/// <param name="stopImmediately">Whether to stop shaking immediately; defaults to <see langword="false"/></param>
+		public static void StopShaking(bool stopImmediately = false)
 		{
-			Function.Call(Hash.STOP_GAMEPLAY_CAM_SHAKING, true);
+			Function.Call(Hash.STOP_GAMEPLAY_CAM_SHAKING, stopImmediately);
 		}
 
 		/// <summary>
