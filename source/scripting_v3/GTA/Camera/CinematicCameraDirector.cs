@@ -70,20 +70,20 @@ namespace GTA
 		public static bool IsIdleCamRendering => Function.Call<bool>(Hash.IS_CINEMATIC_IDLE_CAM_RENDERING);
 
 		/// <summary>
-		/// Gets a value indicating whether a player-controlled cinematic camera is active.
+		/// Gets a value indicating whether the cinematic camera mode switch is active.
 		/// Only available in v1.0.1493.0 or later game versions.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> is a player-controlled cinematic camera; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> mode switch is active; otherwise, <see langword="false" />.
 		/// </value>
 		/// <exception cref="GameVersionNotSupportedException">
 		/// Thrown if called in game versions earlier than v1.0.1493.0.
 		/// </exception>
-		public static bool IsPlayerCamActive
+		public static bool IsCinematicModeActive
 		{
 			get
 			{
-				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1493_0_Steam, nameof(CinematicCameraDirector), nameof(IsPlayerCamActive));
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1493_0_Steam, nameof(CinematicCameraDirector), nameof(IsCinematicModeActive));
 
 				return Function.Call<bool>(Hash.IS_CINEMATIC_CAM_INPUT_ACTIVE);
 			}
