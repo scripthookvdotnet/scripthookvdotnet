@@ -2164,6 +2164,12 @@ namespace GTA
 		/// </summary>
 		public static void SuppressShockingEventsNextFrame() => Function.Call(Hash.SUPPRESS_SHOCKING_EVENTS_NEXT_FRAME);
 
+		/// <summary>
+		/// Sets the intensity of the "shaking" effect of all vehicles at speed.
+		/// </summary>
+		/// <param name="multiplier">Intensity of the shaking effect between 0f and 1f.</param>
+		public static void VehicleShakeMultiplier(float multiplier) => Function.Call(Hash.SET_CAR_HIGH_SPEED_BUMP_SEVERITY_MULTIPLIER, multiplier);
+
 		#endregion
 
 		#region Drawing
