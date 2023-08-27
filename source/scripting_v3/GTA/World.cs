@@ -205,6 +205,11 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Transitions the weather to a random state.
+		/// </summary>
+		public static void SetRandomWeather() => Function.Call(Hash.SET_RANDOM_WEATHER_TYPE);
+
+		/// <summary>
 		/// Sets the gravity level for all <see cref="World"/> objects.
 		/// </summary>
 		/// <value>
@@ -228,6 +233,11 @@ namespace GTA
 				SHVDN.NativeMemory.WorldGravity = 9.800000f;
 			}
 		}
+
+		/// <summary>
+		/// Forces a flash of lightning and its accompanying thunder to occur at a random location.
+		/// </summary>
+		public static void ForceLightningFlash() => Function.Call(Hash.FORCE_LIGHTNING_FLASH);
 
 		/// <summary>
 		/// Gets the rain level.
@@ -1064,6 +1074,25 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Sets the density of ambient vehicles in the world.
+		/// Must be called each frame to remain in effect.
+		/// </summary>
+		/// <param name="density">The density multiplier, between 0 and 1.</param>
+		public static void SetAmbientVehicleDensityThisFrame(float density)
+		{
+			Function.Call(Hash.SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME, density);
+			Function.Call(Hash.SET_PARKED_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME, density);
+			Function.Call(Hash.SET_RANDOM_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME, density);
+		}
+
+		/// <summary>
+		/// Sets the density of ambient peds in the world.
+		/// Must be called each frame to remain in effect.
+		/// </summary>
+		/// <param name="density">The density multiplier, between 0 and 1.</param>
+		public static void SetAmbientPedDensityThisFrame(float density) => Function.Call(Hash.SET_PED_DENSITY_MULTIPLIER_THIS_FRAME, density);
+
+		/// <summary>
 		/// Spawns a <see cref="Ped"/> of the given <see cref="Model"/> at the position and heading specified.
 		/// </summary>
 		/// <param name="model">The <see cref="Model"/> of the <see cref="Ped"/>.</param>
@@ -1660,6 +1689,11 @@ namespace GTA
 		public static void ClearAreaOfCops(Vector3 position, float radius)
 			=> Function.Call(Hash.CLEAR_AREA_OF_COPS, position.X, position.Y, position.Z, radius, false);
 
+		/// <summary>
+		/// Clears all currently present trains from the world.
+		/// </summary>
+		public static void DeleteAllTrains() => Function.Call(Hash.DELETE_ALL_TRAINS);
+
 		#endregion
 
 		#region Particle Effects
@@ -2115,6 +2149,20 @@ namespace GTA
 
 			return new RelationshipGroup(resultArg);
 		}
+
+		/// <summary>
+		/// Creates a shocking event of specified type at the given position for the given duration.
+		/// </summary>
+		/// <param name="eventType">The type of shocking event peds nearby will perceive.</param>
+		/// <param name="position">The epicenter position of the shocking event.</param>
+		/// <param name="duration">The duration of the shocking event.</param>
+		public static void CreateShockingEvent(EventType eventType, Vector3 position, float duration)
+			=> Function.Call(Hash.ADD_SHOCKING_EVENT_AT_POSITION, (int)eventType, position.X, position.Y, position.Z, duration);
+
+		/// <summary>
+		/// Suppresses shocking events per frame, preventing all peds from reacting to them.
+		/// </summary>
+		public static void SuppressShockingEventsNextFrame() => Function.Call(Hash.SUPPRESS_SHOCKING_EVENTS_NEXT_FRAME);
 
 		#endregion
 
@@ -2843,6 +2891,20 @@ namespace GTA
 			}
 
 			return Vector3.Zero;
+		}
+
+		/// <summary>
+		/// Gets the nearest roadside point to the given coordinates.
+		/// </summary>
+		/// <param name="position">The position to check around.</param>
+		public static Vector3 GetPositionOnRoadside(Vector3 position)
+		{
+			Vector3 ret;
+			unsafe
+			{
+				Function.Call(Hash.GET_POSITION_BY_SIDE_OF_ROAD, position.X, position.Y, position.Z, -1, &ret);
+			}
+			return ret;
 		}
 
 		/// <summary>
