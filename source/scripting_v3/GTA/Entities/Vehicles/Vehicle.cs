@@ -67,10 +67,7 @@ namespace GTA
 			get => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash.IS_ROCKET_BOOST_ACTIVE, Handle);
 			set
 			{
-				if (Game.Version < GameVersion.v1_0_944_2_Steam)
-				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(IsRocketBoostActive));
-				}
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(IsRocketBoostActive));
 
 				Function.Call(Hash.SET_ROCKET_BOOST_ACTIVE, Handle, value);
 			}
@@ -85,6 +82,15 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_DIRT_LEVEL, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets the amount of paint fade on this <see cref="Vehicle"/> between 0.0 (new) and 1.0 (fully worn).
+		/// </summary>
+		public float PaintFadeLevel
+		{
+			get => Function.Call<float>(Hash.GET_VEHICLE_ENVEFF_SCALE, Handle);
+			set => Function.Call(Hash.SET_VEHICLE_ENVEFF_SCALE, Handle, value);
+		}
+
 		public VehicleModCollection Mods => _mods ??= new VehicleModCollection(this);
 
 		public VehicleWheelCollection Wheels => _wheels ??= new VehicleWheelCollection(this);
@@ -94,6 +100,21 @@ namespace GTA
 		public void Wash()
 		{
 			DirtLevel = 0f;
+		}
+
+		/// <summary>
+		/// If disabled, any raised hydraulics are lowered and controls are disabled. If enabled, hydraulics are raised if lowered and controls are enabled.
+		/// Only available in v1.0.505.2 or later versions.
+		/// </summary>
+		/// <param name="toggle">Whether to enable this <see cref="Vehicle"/>'s hydraulic controls or not.</param>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in game versions earlier than v1.0.505.2.
+		/// </exception>
+		public void SetHydraulicsControl(bool toggle)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_505_2_Steam, nameof(Vehicle), nameof(SetHydraulicsControl));
+
+			Function.Call(Hash.SET_HYDRAULICS_CONTROL, Handle, toggle);
 		}
 
 		public bool IsExtraOn(int extra)
@@ -110,6 +131,12 @@ namespace GTA
 		{
 			Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
 		}
+
+		/// <summary>
+		/// Overrides this <see cref="Vehicle"/>'s engine audio with that of another vehicle.
+		/// </summary>
+		/// <param name="vehicleModel">The model of <see cref="Vehicle"/> to source engine sounds from.</param>
+		public void OverrideEngineAudio(Model vehicleModel) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, vehicleModel.ToString());
 
 		#endregion
 
@@ -395,10 +422,16 @@ namespace GTA
 		public bool CanJump => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash.GET_CAR_HAS_JUMP, Handle);
 
 		/// <summary>
+		/// Sets whether the exhaust of this <see cref="Vehicle"/> will make popping noises.
+		/// </summary>
+		/// <param name="enabled"><see langword="true" /> to enable exhaust popping; otherwise, <see langword="false" />.</param>
+		public void ExhaustPopsEnabled(bool enabled) => Function.Call(Hash.ENABLE_VEHICLE_EXHAUST_POPS, enabled);
+
+		/// <summary>
 		/// Gets the display name of this <see cref="Vehicle"/>.
 		/// <remarks>Use <see cref="Game.GetLocalizedString(string)"/> to get the localized name.</remarks>
 		/// </summary>
-		public string DisplayName => GetModelDisplayName(base.Model);
+		public string DisplayName => GetModelDisplayName(Model);
 		/// <summary>
 		/// Gets the localized name of this <see cref="Vehicle"/>
 		/// </summary>
@@ -1049,6 +1082,21 @@ namespace GTA
 		/// Gets the maximum traction of this <see cref="Vehicle"/>.
 		/// </summary>
 		public float MaxTraction => Function.Call<float>(Hash.GET_VEHICLE_MAX_TRACTION, Handle);
+
+		/// <summary>
+		/// Reduces this <see cref="Vehicle"/>'s current grip level.
+		/// In game versions prior to v1.0.1604.0, levels 1-3 are identical.
+		/// </summary>
+		/// <param name="level">The level from 0-3 to reduce grip by, with 0 being no reduction and 3 being maximum reduction.</param>
+		public void ReduceGripLevel(int level)
+		{
+			Function.Call(Hash.SET_VEHICLE_REDUCE_GRIP, Handle, level != 0);
+
+			if (Game.Version >= GameVersion.v1_0_1604_0_Steam)
+			{
+				Function.Call(Hash.SET_VEHICLE_REDUCE_GRIP_LEVEL, Handle, level);
+			}
+		}
 
 		/// <summary>
 		/// Gets the speed the drive wheels are turning at.
@@ -2044,10 +2092,7 @@ namespace GTA
 		/// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.944.2 or earlier game versions.</exception>
 		public int GetRestrictedAmmoCount(int vehicleWeaponIndex)
 		{
-			if (Game.Version < GameVersion.v1_0_1011_1_Steam)
-			{
-				throw new GameVersionNotSupportedException(GameVersion.v1_0_1011_1_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-			}
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1011_1_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
 			return Function.Call<int>(Hash.GET_VEHICLE_WEAPON_RESTRICTED_AMMO, Handle, vehicleWeaponIndex);
 		}
@@ -2072,10 +2117,7 @@ namespace GTA
 		/// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.877.1 or earlier game versions.</exception>
 		public void SetRestrictedAmmoCount(int vehicleWeaponIndex, int ammoCount)
 		{
-			if (Game.Version < GameVersion.v1_0_944_2_Steam)
-			{
-				throw new GameVersionNotSupportedException(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(SetRestrictedAmmoCount));
-			}
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(SetRestrictedAmmoCount));
 
 			Function.Call(Hash.SET_VEHICLE_WEAPON_RESTRICTED_AMMO, Handle, vehicleWeaponIndex, ammoCount);
 		}
@@ -2097,19 +2139,13 @@ namespace GTA
 		{
 			get
 			{
-				if (Game.Version < GameVersion.v1_0_1180_2_Steam)
-				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-				}
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
 				return Function.Call<int>(Hash.GET_VEHICLE_BOMB_AMMO, Handle);
 			}
 			set
 			{
-				if (Game.Version < GameVersion.v1_0_1180_2_Steam)
-				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-				}
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
 				Function.Call(Hash.SET_VEHICLE_BOMB_AMMO, Handle, value);
 			}
@@ -2132,19 +2168,13 @@ namespace GTA
 		{
 			get
 			{
-				if (Game.Version < GameVersion.v1_0_1180_2_Steam)
-				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-				}
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
 				return Function.Call<int>(Hash.GET_VEHICLE_COUNTERMEASURE_AMMO, Handle);
 			}
 			set
 			{
-				if (Game.Version < GameVersion.v1_0_1180_2_Steam)
-				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-				}
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
 				Function.Call(Hash.SET_VEHICLE_COUNTERMEASURE_AMMO, Handle, value);
 			}
@@ -2162,7 +2192,7 @@ namespace GTA
 		/// </value>
 		public bool HasForks => Bones.Contains("forks");
 
-		#region Carbobob
+		#region Cargobob
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> has a bomb bay.
@@ -2471,10 +2501,7 @@ namespace GTA
 		/// </summary>
 		public void StopBringingToHalt()
 		{
-			if (Game.Version < GameVersion.v1_0_1103_2_Steam)
-			{
-				throw new GameVersionNotSupportedException(GameVersion.v1_0_1103_2_Steam, nameof(Vehicle), nameof(StopBringingToHalt));
-			}
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1103_2_Steam, nameof(Vehicle), nameof(StopBringingToHalt));
 
 			Function.Call(Hash.STOP_BRINGING_VEHICLE_TO_HALT, Handle);
 		}
@@ -2496,15 +2523,24 @@ namespace GTA
 		/// <param name="allowPlayerToCancel">Whether to allow the player to cancel parachuting before the vehicle lands</param>
 		public void StartParachuting(bool allowPlayerToCancel)
 		{
-			if (Game.Version < GameVersion.v1_0_944_2_Steam)
-			{
-				throw new GameVersionNotSupportedException(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(StartParachuting));
-			}
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_944_2_Steam, nameof(Vehicle), nameof(StartParachuting));
 
 			if (HasParachute)
 			{
 				Function.Call((Hash)0x0BFFB028B3DD0A97, Handle, allowPlayerToCancel);
 			}
+		}
+
+		/// <summary>
+		/// Completely enables or disables this <see cref="Vehicle"/>'s flight mode, used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// Only available in v1.0.1290.1 or later.
+		/// </summary>
+		/// <param name="allowed">Whether to allow the <see cref="Vehicle"/> to switch to flight mode or not.</param>
+		public void SpecialFlightModeAllowed(bool allowed)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeAllowed));
+
+			Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_ALLOWED, Handle, allowed);
 		}
 
 		/// <summary>
@@ -2527,10 +2563,7 @@ namespace GTA
 			}
 			set
 			{
-				if (Game.Version < GameVersion.v1_0_1290_1_Steam)
-				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeTargetRatio));
-				}
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeTargetRatio));
 
 				Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_TARGET_RATIO, Handle, value);
 			}
@@ -2556,10 +2589,7 @@ namespace GTA
 			}
 			set
 			{
-				if (Game.Version < GameVersion.v1_0_1290_1_Steam)
-				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeCurrentRatio));
-				}
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeCurrentRatio));
 
 				Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_RATIO, Handle, value);
 			}
@@ -2585,10 +2615,7 @@ namespace GTA
 			}
 			set
 			{
-				if (Game.Version < GameVersion.v1_0_1290_1_Steam)
-				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeWingRatio));
-				}
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeWingRatio));
 
 				IntPtr address = MemoryAddress;
 				if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
@@ -2619,10 +2646,7 @@ namespace GTA
 			}
 			set
 			{
-				if (Game.Version < GameVersion.v1_0_1290_1_Steam)
-				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(AreWingsEnabledForSpecialFlightMode));
-				}
+				GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(AreWingsEnabledForSpecialFlightMode));
 
 				Function.Call(Hash.SET_DISABLE_HOVER_MODE_FLIGHT, Handle, !value);
 			}
