@@ -3,6 +3,7 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System.Numerics;
 using GTA.Native;
 
 namespace GTA.UI
@@ -74,6 +75,29 @@ namespace GTA.UI
 			get => !Function.Call<bool>(Hash.IS_RADAR_HIDDEN);
 			set => Function.Call(Hash.DISPLAY_RADAR, value);
 		}
+
+		/// <summary>
+		/// Locks the minimap at the specified angle relative to the main map layout.
+		/// If a value less than 0 or greater than 360 is used, the minimap angle will become unlocked.
+		/// </summary>
+		/// <param name="angle">The angle in degrees from 0-360 to lock the minimap to.</param>
+		public static void LockRadarDirection(int angle) => Function.Call(Hash.LOCK_MINIMAP_ANGLE, angle);
+
+		/// <summary>
+		/// Unlocks the minimap direction if locked.
+		/// </summary>
+		public static void UnlockRadarDirection() => Function.Call(Hash.UNLOCK_MINIMAP_ANGLE);
+
+		/// <summary>
+		/// Locks the minimap at the specified position in the game world.
+		/// </summary>
+		/// <param name="position">The world coordinates to lock the minimap to.</param>
+		public static void LockRadarPosition(Vector3 position) => Function.Call(Hash.LOCK_MINIMAP_POSITION, position.X, position.Y);
+
+		/// <summary>
+		/// Unlocks the minimap position if it has been locked.
+		/// </summary>
+		public static void UnlockRadarPosition() => Function.Call(Hash.UNLOCK_MINIMAP_POSITION);
 
 		/// <summary>
 		/// Sets how far the minimap should be zoomed in.

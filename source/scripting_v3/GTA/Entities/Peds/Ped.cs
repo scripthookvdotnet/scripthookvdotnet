@@ -1642,6 +1642,14 @@ namespace GTA
 			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (uint)value);
 		}
 
+		/// <summary>
+		/// Sets how aggressive a driver this <see cref="Ped"/> will be. Range is 0f to 1f, with 0f being no aggression and 1f being maximum aggression.
+		/// </summary>
+		public float DrivingAggressiveness
+		{
+			set => Function.Call(Hash.SET_DRIVER_AGGRESSIVENESS, Handle, value);
+		}
+
 		#endregion
 
 		#region Jacking

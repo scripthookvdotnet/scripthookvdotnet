@@ -757,6 +757,15 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the speed vector of this <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="relativeToEntity"><see langword="true" /> to get the vector relative to this entity; <see langword="false" /> for relative to the world.</param>
+		public Vector3 SpeedVector(bool relativeToEntity)
+		{
+			return Function.Call<Vector3>(Hash.GET_ENTITY_SPEED_VECTOR, Handle, relativeToEntity);
+		}
+
+		/// <summary>
 		/// Gets or sets the velocity of this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 Velocity

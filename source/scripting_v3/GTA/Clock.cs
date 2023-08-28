@@ -148,6 +148,14 @@ namespace GTA
 		public static void SetDateZeroBasedMonth(int day, int month, int year) => Function.Call(Hash.SET_CLOCK_DATE, day, month, year);
 
 		/// <summary>
+		/// Adds the specified number of hours, minutes, and seconds to the current in-game time.
+		/// </summary>
+		/// <param name="hours">The number of hours to add to the in-game clock.</param>
+		/// <param name="minutes">The number of minutes to add to the in-game clock.</param>
+		/// <param name="seconds">The number of seconds to add to the in-game clock.</param>
+		public static void AddToCurrentTime(int hours, int minutes, int seconds) => Function.Call(Hash.ADD_TO_CLOCK_TIME, hours, minutes, seconds);
+
+		/// <summary>
 		/// Gets the day of the week.
 		/// </summary>
 		/// <remarks>

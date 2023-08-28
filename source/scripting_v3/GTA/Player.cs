@@ -897,6 +897,11 @@ namespace GTA
 		/// </summary>
 		public void DeactivateSpecialAbility() => Function.Call(Hash.SPECIAL_ABILITY_DEACTIVATE, Handle, 0);
 
+		/// <summary>
+		/// Deactivates the special ability for this <see cref="Player"/> instantly without the usual transition animation.
+		/// </summary>
+		public void DeactivateSpecialAbilityInstantly() => Function.Call(Hash.SPECIAL_ABILITY_DEACTIVATE_FAST, Handle, 0);
+
 		#endregion
 
 		/// <summary>
