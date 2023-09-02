@@ -1074,15 +1074,13 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Sets the density of ambient vehicles in the world.
+		/// Sets the density of all ambient vehicles in the world.
 		/// Must be called each frame to remain in effect.
 		/// </summary>
 		/// <param name="density">The density multiplier, between 0 and 1.</param>
-		public static void SetAmbientVehicleDensityThisFrame(float density)
+		public static void SetAmbientVehicleDensityMultiplierThisFrame(float density)
 		{
 			Function.Call(Hash.SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME, density);
-			Function.Call(Hash.SET_PARKED_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME, density);
-			Function.Call(Hash.SET_RANDOM_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME, density);
 		}
 
 		/// <summary>
@@ -1090,7 +1088,7 @@ namespace GTA
 		/// Must be called each frame to remain in effect.
 		/// </summary>
 		/// <param name="density">The density multiplier, between 0 and 1.</param>
-		public static void SetAmbientPedDensityThisFrame(float density) => Function.Call(Hash.SET_PED_DENSITY_MULTIPLIER_THIS_FRAME, density);
+		public static void SetAmbientPedDensityMultiplierThisFrame(float density) => Function.Call(Hash.SET_PED_DENSITY_MULTIPLIER_THIS_FRAME, density);
 
 		/// <summary>
 		/// Spawns a <see cref="Ped"/> of the given <see cref="Model"/> at the position and heading specified.
@@ -2151,24 +2149,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Creates a shocking event of specified type at the given position for the given duration.
-		/// </summary>
-		/// <param name="eventType">The type of shocking event peds nearby will perceive.</param>
-		/// <param name="position">The epicenter position of the shocking event.</param>
-		/// <param name="duration">The duration of the shocking event.</param>
-		public static void CreateShockingEvent(EventType eventType, Vector3 position, float duration)
-			=> Function.Call(Hash.ADD_SHOCKING_EVENT_AT_POSITION, (int)eventType, position.X, position.Y, position.Z, duration);
-
-		/// <summary>
-		/// Suppresses shocking events per frame, preventing all peds from reacting to them.
-		/// </summary>
-		public static void SuppressShockingEventsNextFrame() => Function.Call(Hash.SUPPRESS_SHOCKING_EVENTS_NEXT_FRAME);
-
-		/// <summary>
 		/// Sets the intensity of the "shaking" effect of all vehicles at speed.
 		/// </summary>
 		/// <param name="multiplier">Intensity of the shaking effect between 0f and 1f.</param>
-		public static void VehicleShakeMultiplier(float multiplier) => Function.Call(Hash.SET_CAR_HIGH_SPEED_BUMP_SEVERITY_MULTIPLIER, multiplier);
+		public static void VehicleHighSpeedBumpMultiplier(float multiplier) => Function.Call(Hash.SET_CAR_HIGH_SPEED_BUMP_SEVERITY_MULTIPLIER, multiplier);
 
 		#endregion
 
@@ -2900,17 +2884,21 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the nearest roadside point to the given coordinates.
+		/// Gets the nearest roadside point to the given coordinates. Returns true on success.
 		/// </summary>
 		/// <param name="position">The position to check around.</param>
-		public static Vector3 GetPositionOnRoadside(Vector3 position)
+		/// <param name="direction">Which direction to check relative to the given position.</param>
+		/// <param name="output">The variable which will receive the output position of this function.</param>
+		public static bool GetPositionOnRoadside(Vector3 position, DirectionType direction, out Vector3 output)
 		{
 			Vector3 ret;
+			bool result;
 			unsafe
 			{
-				Function.Call(Hash.GET_POSITION_BY_SIDE_OF_ROAD, position.X, position.Y, position.Z, -1, &ret);
+				result = Function.Call<bool>(Hash.GET_POSITION_BY_SIDE_OF_ROAD, position.X, position.Y, position.Z, (int)direction, &ret);
 			}
-			return ret;
+			output = ret;
+			return result;
 		}
 
 		/// <summary>
