@@ -753,30 +753,6 @@ namespace GTA
 				startPhase, (int)rotOrder, (int)ikFlags);
 		}
 
-		/// <summary>
-		/// Sets the speed of the anim task matching the given ClipDictAndAnimNamePair on the <see cref="Ped"/> to the given multiplier.
-		/// </summary>
-		/// <param name="clipDictAndAnimNamePair">The pair of a clip/animation dictionary name and an animation name.</param>
-		/// <param name="speedMultiplier">The amount to multiply the animation's normal playback speed by.</param>
-		public void SetAnimationSpeed(ClipDictAndAnimNamePair clipDictAndAnimNamePair, float speedMultiplier)
-		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
-
-			Function.Call(Hash.SET_ENTITY_ANIM_SPEED, _ped.Handle, clipDict, animName, speedMultiplier);
-		}
-
-		/// <summary>
-		/// Sets the timestamp of the anim task matching the given ClipDictAndAnimNamePair on the <see cref="Ped"/> to the given value.
-		/// </summary>
-		/// <param name="clipDictAndAnimNamePair">The pair of a clip/animation dictionary name and an animation name.</param>
-		/// <param name="timestamp">The timestamp in the animation to set the specified animation to.</param>
-		public void SetAnimationTime(ClipDictAndAnimNamePair clipDictAndAnimNamePair, float timestamp)
-		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
-
-			Function.Call(Hash.SET_ENTITY_ANIM_SPEED, _ped.Handle, clipDict, animName, timestamp);
-		}
-
 		public void RappelFromHelicopter()
 		{
 			Function.Call(Hash.TASK_RAPPEL_FROM_HELI, _ped.Handle, 0x41200000);
@@ -1580,22 +1556,6 @@ namespace GTA
 		public void VehicleChase(Ped target)
 		{
 			Function.Call(Hash.TASK_VEHICLE_CHASE, _ped.Handle, target.Handle);
-		}
-
-		/// <summary>
-		/// This sets any VehicleDrivingFlags that the <see cref="Ped"/> will use while a vehicle chase task is active.
-		/// </summary>
-		public void VehicleChaseBehaviorFlags(VehicleDrivingFlags flags)
-		{
-			Function.Call(Hash.SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG, _ped.Handle, flags, true);
-		}
-
-		/// <summary>
-		/// This sets the distance from the target <see cref="Ped"/>'s <see cref="Vehicle"/> that the <see cref="Ped"/> will attempt to maintain.
-		/// </summary>
-		public void VehicleChaseDistance(float distance)
-		{
-			Function.Call(Hash.SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE, _ped.Handle, distance);
 		}
 
 		public void VehicleShootAtPed(Ped target)

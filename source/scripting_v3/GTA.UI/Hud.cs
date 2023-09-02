@@ -3,7 +3,7 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using System.Numerics;
+using GTA.Math;
 using GTA.Native;
 
 namespace GTA.UI
@@ -92,7 +92,7 @@ namespace GTA.UI
 		/// Locks the minimap at the specified position in the game world.
 		/// </summary>
 		/// <param name="position">The world coordinates to lock the minimap to.</param>
-		public static void LockRadarPosition(Vector3 position) => Function.Call(Hash.LOCK_MINIMAP_POSITION, position.X, position.Y);
+		public static void LockRadarPosition(Vector2 position) => Function.Call(Hash.LOCK_MINIMAP_POSITION, position.X, position.Y);
 
 		/// <summary>
 		/// Unlocks the minimap position if it has been locked.

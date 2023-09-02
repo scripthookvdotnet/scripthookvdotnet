@@ -294,18 +294,22 @@ namespace GTA
 		/// <summary>
 		/// Toggles ped nodes in a cubic area. <see cref="Ped"/>s will walk in areas that are switched on and new <see cref="Ped"/>s will be generated in them.
 		/// A ped node is switched off, no <see cref="Ped"/>s should be created in it and <see cref="Ped"/>s that already exist will try to avoid walking through it.
-		/// To undo effects of this method, use <see cref="SetPedNodesBackToOriginal(Vector3, Vector3)"/>.
+		/// To undo effects of this method, use <see cref="SetPedNodesBackToOriginal(Vector3, Vector3, bool)"/>.
 		/// </summary>
 		/// <param name="min">The minimum position of the region.</param>
 		/// <param name="max">The maximum position of the region.</param>
 		/// <param name="active">Specifies wheter ped nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
-		public static void SwitchPedNodesInArea(Vector3 min, Vector3 max, bool active) => Function.Call(Hash.SET_PED_PATHS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, false);
+		/// <param name="forceAbortCurrentPath">Forces any active pathfinding requests to abort before this function executes.</param>
+		public static void SwitchPedNodesInArea(Vector3 min, Vector3 max, bool active, bool forceAbortCurrentPath) =>
+			Function.Call(Hash.SET_PED_PATHS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, forceAbortCurrentPath);
 		/// <summary>
 		/// Sets all ped nodes in area back to their original state as per area and ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
 		/// </summary>
 		/// <param name="min">The minimum position of the region.</param>
 		/// <param name="max">The maximum position of the region.</param>
-		public static void SetPedNodesBackToOriginal(Vector3 min, Vector3 max) => Function.Call(Hash.SET_PED_PATHS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, false);
+		/// <param name="forceAbortCurrentPath">Forces any active pathfinding requests to abort before this function executes.</param>
+		public static void SetPedNodesBackToOriginal(Vector3 min, Vector3 max, bool forceAbortCurrentPath) =>
+			Function.Call(Hash.SET_PED_PATHS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, forceAbortCurrentPath);
 
 		/// <summary>
 		/// Toggles vehicle nodes in angled area. <see cref="Vehicle"/>s will drive on to roads that are switched on and new <see cref="Vehicle"/>s will be generated on them.

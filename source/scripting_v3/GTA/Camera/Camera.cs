@@ -558,15 +558,14 @@ namespace GTA
 		/// <summary>
 		/// Attaches this <see cref="Camera"/> to a specific bone on a specific <see cref="Vehicle"/>.
 		/// </summary>
-		/// <param name="vehicle">The vehicle to attach the camera to.</param>
-		/// <param name="boneId">The name of the vehicle bone to attach the camera to.</param>
-		/// <param name="offset">Offset relative to the specified <paramref name="boneId"/>.</param>
+		/// <param name="vehicleBone">The <see cref="Vehicle"/> bone to attach the camera to.</param>
+		/// <param name="offset">Offset relative to the specified <paramref name="bone"/>.</param>
 		/// <param name="rotation">Rotation vector of the <see cref="Camera"/>.</param>
-		/// <param name="relativeRotation">Set <see langword="true" /> to have rotation relative to the specified <paramref name="boneId"/>; else set <see langword="false" />.</param>
+		/// <param name="relativeRotation">Set <see langword="true" /> to have rotation relative to the specified <paramref name="bone"/>; else set <see langword="false" />.</param>
 		/// <param name="fixedDirection">Set <see langword="true" /> to have camera direction match the <see cref="Vehicle"/> direction; else set <see langword="false" />.</param>
-		public void AttachTo(Vehicle vehicle, string boneId, Vector3 offset, Vector3 rotation, bool relativeRotation, bool fixedDirection)
+		public void AttachTo(EntityBone vehicleBone, Vector3 offset, Vector3 rotation, bool relativeRotation, bool fixedDirection)
 		{
-			Function.Call(Hash.ATTACH_CAM_TO_VEHICLE_BONE, Handle, vehicle, vehicle.Bones[boneId].Index, relativeRotation, rotation.X, rotation.Y, rotation.Z, offset.X, offset.Y, offset.Z, fixedDirection);
+			Function.Call(Hash.ATTACH_CAM_TO_VEHICLE_BONE, Handle, vehicleBone.Owner.Handle, vehicleBone.Index, relativeRotation, rotation.X, rotation.Y, rotation.Z, offset.X, offset.Y, offset.Z, fixedDirection);
 		}
 
 		/// <summary>
