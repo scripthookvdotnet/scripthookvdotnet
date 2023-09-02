@@ -138,8 +138,8 @@ namespace GTA
 		/// <summary>
 		/// Overrides this <see cref="Vehicle"/>'s engine audio with that of another vehicle.
 		/// </summary>
-		/// <param name="vehicleModel">The model of <see cref="Vehicle"/> to source engine sounds from.</param>
-		public void OverrideEngineAudio(Model vehicleModel) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, vehicleModel.ToString());
+		/// <param name="vehicleModelName">The internal name of the <see cref="Vehicle"/> to source engine sounds from, e.g. "DELUXO".</param>
+		public void OverrideEngineAudio(string vehicleModelName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, vehicleModelName);
 
 		#endregion
 
@@ -2563,9 +2563,9 @@ namespace GTA
 		/// Only available in v1.0.1290.1 or later.
 		/// </summary>
 		/// <param name="allowed">Whether to allow the <see cref="Vehicle"/> to switch to flight mode or not.</param>
-		public void SpecialFlightModeAllowed(bool allowed)
+		public void SetSpecialFlightModeAllowed(bool allowed)
 		{
-			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SpecialFlightModeAllowed));
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SetSpecialFlightModeAllowed));
 
 			Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_ALLOWED, Handle, allowed);
 		}
