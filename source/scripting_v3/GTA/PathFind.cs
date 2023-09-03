@@ -294,7 +294,7 @@ namespace GTA
 		/// <summary>
 		/// Toggles ped nodes in a cubic area. <see cref="Ped"/>s will walk in areas that are switched on and new <see cref="Ped"/>s will be generated in them.
 		/// A ped node is switched off, no <see cref="Ped"/>s should be created in it and <see cref="Ped"/>s that already exist will try to avoid walking through it.
-		/// To undo effects of this method, use <see cref="SetPedNodesBackToOriginal(Vector3, Vector3, bool)"/>.
+		/// To undo effects of this method, use <see cref="SetPedPathsBackToOriginal(Vector3, Vector3, bool)"/>.
 		/// </summary>
 		/// <param name="min">The minimum position of the region.</param>
 		/// <param name="max">The maximum position of the region.</param>
