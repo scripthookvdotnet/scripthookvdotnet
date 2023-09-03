@@ -300,7 +300,7 @@ namespace GTA
 		/// <param name="max">The maximum position of the region.</param>
 		/// <param name="active">Specifies wheter ped nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
 		/// <param name="forceAbortCurrentPath">Forces any active pathfinding requests to abort before this function executes.</param>
-		public static void SwitchPedNodesInArea(Vector3 min, Vector3 max, bool active, bool forceAbortCurrentPath) =>
+		public static void SwitchPedPathsInArea(Vector3 min, Vector3 max, bool active, bool forceAbortCurrentPath) =>
 			Function.Call(Hash.SET_PED_PATHS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, forceAbortCurrentPath);
 		/// <summary>
 		/// Sets all ped nodes in area back to their original state as per area and ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
@@ -308,7 +308,7 @@ namespace GTA
 		/// <param name="min">The minimum position of the region.</param>
 		/// <param name="max">The maximum position of the region.</param>
 		/// <param name="forceAbortCurrentPath">Forces any active pathfinding requests to abort before this function executes.</param>
-		public static void SetPedNodesBackToOriginal(Vector3 min, Vector3 max, bool forceAbortCurrentPath) =>
+		public static void SetPedPathsBackToOriginal(Vector3 min, Vector3 max, bool forceAbortCurrentPath) =>
 			Function.Call(Hash.SET_PED_PATHS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, forceAbortCurrentPath);
 
 		/// <summary>
