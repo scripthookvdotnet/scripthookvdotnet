@@ -1076,19 +1076,21 @@ namespace GTA
 		/// <summary>
 		/// Sets the density of all ambient vehicles in the world.
 		/// Must be called each frame to remain in effect.
+		/// Values are 0.0f to 1.0f inclusive; any value outside this range will cause this function to do nothing.
 		/// </summary>
-		/// <param name="density">The density multiplier, between 0 and 1.</param>
-		public static void SetAmbientVehicleDensityMultiplierThisFrame(float density)
+		/// <param name="densityMult">The density multiplier, between 0 and 1.</param>
+		public static void SetAmbientVehicleDensityMultiplierThisFrame(float densityMult)
 		{
-			Function.Call(Hash.SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME, density);
+			Function.Call(Hash.SET_VEHICLE_DENSITY_MULTIPLIER_THIS_FRAME, densityMult);
 		}
 
 		/// <summary>
 		/// Sets the density of ambient peds in the world.
 		/// Must be called each frame to remain in effect.
+		/// Values are 0.0f to 1.0f inclusive; any value outside this range will cause this function to do nothing.
 		/// </summary>
-		/// <param name="density">The density multiplier, between 0 and 1.</param>
-		public static void SetAmbientPedDensityMultiplierThisFrame(float density) => Function.Call(Hash.SET_PED_DENSITY_MULTIPLIER_THIS_FRAME, density);
+		/// <param name="densityMult">The density multiplier, between 0 and 1.</param>
+		public static void SetAmbientPedDensityMultiplierThisFrame(float densityMult) => Function.Call(Hash.SET_PED_DENSITY_MULTIPLIER_THIS_FRAME, densityMult);
 
 		/// <summary>
 		/// Spawns a <see cref="Ped"/> of the given <see cref="Model"/> at the position and heading specified.
@@ -2889,7 +2891,7 @@ namespace GTA
 		/// <param name="position">The position to check around.</param>
 		/// <param name="direction">Which direction to check relative to the given position.</param>
 		/// <param name="output">The variable which will receive the output position of this function.</param>
-		public static bool GetPositionOnRoadside(Vector3 position, DirectionType direction, out Vector3 output)
+		public static bool GetPositionOnRoadside(Vector3 position, Direction direction, out Vector3 output)
 		{
 			Vector3 ret;
 			bool result;

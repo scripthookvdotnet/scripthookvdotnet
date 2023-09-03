@@ -5,7 +5,7 @@
 
 namespace GTA
 {
-	public enum DirectionType
+	public enum Direction
 	{
 		Any = -1,
 		Forwards,
