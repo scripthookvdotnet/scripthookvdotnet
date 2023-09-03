@@ -136,10 +136,10 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Overrides this <see cref="Vehicle"/>'s engine audio with that of another vehicle.
+		/// Overrides this <see cref="Vehicle"/>'s audio profile with that of another vehicle.
 		/// </summary>
-		/// <param name="vehicleModelName">The internal name of the <see cref="Vehicle"/> to source engine sounds from, e.g. "DELUXO".</param>
-		public void OverrideEngineAudio(string vehicleModelName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, vehicleModelName);
+		/// <param name="gameObjectName">Generally accepts the internal name of the <see cref="Vehicle"/> to source an audio profile from, e.g. "DELUXO".</param>
+		public void ForceUseAudioGameObject(string gameObjectName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, gameObjectName);
 
 		#endregion
 
