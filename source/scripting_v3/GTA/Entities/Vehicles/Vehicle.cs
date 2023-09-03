@@ -85,6 +85,15 @@ namespace GTA
 			set => Function.Call(Hash.SET_VEHICLE_DIRT_LEVEL, Handle, value);
 		}
 
+		/// <summary>
+		/// Gets or sets the opacity of the EnvEff texture on this <see cref="Vehicle"/> between 0.0 (transparent) and 1.0 (opaque).
+		/// </summary>
+		public float EnvEffLevel
+		{
+			get => Function.Call<float>(Hash.GET_VEHICLE_ENVEFF_SCALE, Handle);
+			set => Function.Call(Hash.SET_VEHICLE_ENVEFF_SCALE, Handle, value);
+		}
+
 		public VehicleModCollection Mods => _mods ??= new VehicleModCollection(this);
 
 		public VehicleWheelCollection Wheels => _wheels ??= new VehicleWheelCollection(this);
@@ -94,6 +103,21 @@ namespace GTA
 		public void Wash()
 		{
 			DirtLevel = 0f;
+		}
+
+		/// <summary>
+		/// If disabled, any raised hydraulics are lowered and controls are disabled. If enabled, hydraulics are raised if lowered and controls are enabled.
+		/// Only available in v1.0.505.2 or later versions.
+		/// </summary>
+		/// <param name="toggle">Whether to enable this <see cref="Vehicle"/>'s hydraulic controls or not.</param>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in game versions earlier than v1.0.505.2.
+		/// </exception>
+		public void SetHydraulicsControl(bool toggle)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_505_2_Steam, nameof(Vehicle), nameof(SetHydraulicsControl));
+
+			Function.Call(Hash.SET_HYDRAULICS_CONTROL, Handle, toggle);
 		}
 
 		public bool IsExtraOn(int extra)
@@ -110,6 +134,12 @@ namespace GTA
 		{
 			Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
 		}
+
+		/// <summary>
+		/// Overrides this <see cref="Vehicle"/>'s audio profile with that of another vehicle.
+		/// </summary>
+		/// <param name="gameObjectName">Generally accepts the internal name of the <see cref="Vehicle"/> to source an audio profile from, e.g. "DELUXO".</param>
+		public void ForceUseAudioGameObject(string gameObjectName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, gameObjectName);
 
 		#endregion
 
@@ -395,10 +425,33 @@ namespace GTA
 		public bool CanJump => Game.Version >= GameVersion.v1_0_944_2_Steam && Function.Call<bool>(Hash.GET_CAR_HAS_JUMP, Handle);
 
 		/// <summary>
+		/// Sets whether the exhaust of this <see cref="Vehicle"/> will make popping noises.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> to enable exhaust popping; otherwise, <see langword="false" />.
+		/// </value>
+		public bool AreExhaustPopsEnabled
+		{
+			set => Function.Call(Hash.ENABLE_VEHICLE_EXHAUST_POPS, value);
+		}
+
+		/// <summary>
+		/// Sets whether this vehicle has low-friction tires equipped.
+		/// Only works on Automobiles, Helicopters, and Planes.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> to equip this <see cref="Vehicle"/> with low-friction tires; otherwise, <see langword="false" />.
+		/// </value>
+		public bool HasLowerFrictionTires
+		{
+			set => Function.Call(Hash.SET_VEHICLE_REDUCE_GRIP, Handle, value);
+		}
+
+		/// <summary>
 		/// Gets the display name of this <see cref="Vehicle"/>.
 		/// <remarks>Use <see cref="Game.GetLocalizedString(string)"/> to get the localized name.</remarks>
 		/// </summary>
-		public string DisplayName => GetModelDisplayName(base.Model);
+		public string DisplayName => GetModelDisplayName(Model);
 		/// <summary>
 		/// Gets the localized name of this <see cref="Vehicle"/>
 		/// </summary>
@@ -1051,6 +1104,19 @@ namespace GTA
 		public float MaxTraction => Function.Call<float>(Hash.GET_VEHICLE_MAX_TRACTION, Handle);
 
 		/// <summary>
+		/// Reduces this <see cref="Vehicle"/>'s current grip level.
+		/// Only works on Automobiles, Helicopters, and Planes.
+		/// Only supported in game versions 1.0.1604.0 or later.
+		/// </summary>
+		/// <param name="level">The level from 0-3 to reduce grip by, with 0 being no reduction and 3 being maximum reduction.</param>
+		public void SetReducedGripLevel(int level)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1604_0_Steam, nameof(Vehicle), nameof(SetReducedGripLevel));
+
+			Function.Call(Hash.SET_VEHICLE_REDUCE_GRIP_LEVEL, Handle, level);
+		}
+
+		/// <summary>
 		/// Gets the speed the drive wheels are turning at.
 		/// This is the value used for the dashboard speedometers (after being converted to mph).
 		/// </summary>
@@ -1351,15 +1417,16 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its siren turned on.
 		/// </summary>
 		/// <value>
-		///   <see langword="true" /> if this <see cref="Vehicle"/> has its siren turned on; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if this <see cref="Vehicle"/> has its siren turned on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsSirenActive
 		{
 			get => Function.Call<bool>(Hash.IS_VEHICLE_SIREN_ON, Handle);
 			set => Function.Call(Hash.SET_VEHICLE_SIREN, Handle, value);
 		}
+
 		/// <summary>
-		/// Sets a value indicating whether the siren on this <see cref="Vehicle"/> is muted.
+		/// Gets or sets a value indicating whether the siren on this <see cref="Vehicle"/> is muted.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if the siren on this <see cref="Vehicle"/> is muted; otherwise, <see langword="false" />.
@@ -1368,6 +1435,28 @@ namespace GTA
 		{
 			get => SHVDN.NativeMemory.Vehicle.HasMutedSirens(Handle);
 			set => Function.Call(Hash.SET_VEHICLE_HAS_MUTED_SIRENS, Handle, value);
+		}
+
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Vehicle"/> has its horn enabled.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if this <see cref="Vehicle"/> has its horn enabled; otherwise, <see langword="false" />.
+		/// </value>
+		public bool IsHornEnabled
+		{
+			set => Function.Call(Hash.SET_HORN_ENABLED, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> has its horn turned on.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if this <see cref="Vehicle"/> has its horn turned on; otherwise, <see langword="false" />.
+		/// </value>
+		public bool IsHornActive
+		{
+			get => Function.Call<bool>(Hash.IS_HORN_ACTIVE, Handle);
 		}
 
 		/// <summary>
@@ -2162,7 +2251,7 @@ namespace GTA
 		/// </value>
 		public bool HasForks => Bones.Contains("forks");
 
-		#region Carbobob
+		#region Cargobob
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Vehicle"/> has a bomb bay.
@@ -2505,6 +2594,18 @@ namespace GTA
 			{
 				Function.Call((Hash)0x0BFFB028B3DD0A97, Handle, allowPlayerToCancel);
 			}
+		}
+
+		/// <summary>
+		/// Completely enables or disables this <see cref="Vehicle"/>'s flight mode, used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
+		/// Only available in v1.0.1290.1 or later.
+		/// </summary>
+		/// <param name="allowed">Whether to allow the <see cref="Vehicle"/> to switch to flight mode or not.</param>
+		public void SetSpecialFlightModeAllowed(bool allowed)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Vehicle), nameof(SetSpecialFlightModeAllowed));
+
+			Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_ALLOWED, Handle, allowed);
 		}
 
 		/// <summary>
