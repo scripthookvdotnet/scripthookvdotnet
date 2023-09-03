@@ -862,6 +862,26 @@ namespace GTA
 		/// </summary>
 		public NavMeshRouteResult GetNavMeshRouteResult() => Function.Call<NavMeshRouteResult>(Hash.GET_NAVMESH_ROUTE_RESULT, Handle);
 
+		/// <summary>
+		/// This sets or unsets any VehicleChaseFlags that the <see cref="Ped"/> will use if a vehicle chase task is currently active.
+		/// You must call VehicleChase before calling this function or it will have no effect.
+		/// </summary>
+		/// <param name="flags">The VehicleChaseFlags to set or unset.</param>
+		/// <param name="set"><see langword="true"/> to set the flags; otherwise <see langword="false"/> to unset flags.</param>
+		public void SetVehicleChaseBehaviorFlags(VehicleChaseFlags flags, bool set)
+		{
+			Function.Call(Hash.SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG, Handle, flags, set);
+		}
+
+		/// <summary>
+		/// This sets the distance from the target <see cref="Ped"/>'s <see cref="Vehicle"/> that the <see cref="Ped"/> will attempt to maintain if a vehicle chase task is currently active.
+		/// You must call VehicleChase before calling this function or it will have no effect.
+		/// </summary>
+		public void SetVehicleChaseIdealPursuitDistance(float distance)
+		{
+			Function.Call(Hash.SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE, Handle, distance);
+		}
+
 
 		#endregion
 
@@ -1640,6 +1660,14 @@ namespace GTA
 		public VehicleDrivingFlags VehicleDrivingFlags
 		{
 			set => Function.Call(Hash.SET_DRIVE_TASK_DRIVING_STYLE, Handle, (uint)value);
+		}
+
+		/// <summary>
+		/// Sets how aggressive a driver this <see cref="Ped"/> will be. Range is 0f to 1f, with 0f being no aggression and 1f being maximum aggression.
+		/// </summary>
+		public float DrivingAggressiveness
+		{
+			set => Function.Call(Hash.SET_DRIVER_AGGRESSIVENESS, Handle, value);
 		}
 
 		#endregion

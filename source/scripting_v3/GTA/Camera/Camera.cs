@@ -556,6 +556,18 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Attaches this <see cref="Camera"/> to a specific bone on a specific <see cref="Vehicle"/>.
+		/// </summary>
+		/// <param name="vehicleBone">The <see cref="Vehicle"/> bone to attach the camera to.</param>
+		/// <param name="offset">Offset relative to the specified <paramref name="vehicleBone"/>.</param>
+		/// <param name="rotation">Rotation vector of the <see cref="Camera"/>.</param>
+		/// <param name="hardAttachment">Set <see langword="true" /> to have rotation match that of the specified <paramref name="vehicleBone"/>; else set <see langword="false" />.</param>
+		public void AttachToVehicleBone(EntityBone vehicleBone, Vector3 offset, Vector3 rotation, bool hardAttachment)
+		{
+			Function.Call(Hash.ATTACH_CAM_TO_VEHICLE_BONE, Handle, vehicleBone.Owner.Handle, vehicleBone.Index, hardAttachment, rotation.X, rotation.Y, rotation.Z, offset.X, offset.Y, offset.Z, true);
+		}
+
+		/// <summary>
 		/// Detaches this <see cref="Camera"/> from any <see cref="Entity"/> or <see cref="PedBone"/> it may be attached to.
 		/// </summary>
 		public void Detach()

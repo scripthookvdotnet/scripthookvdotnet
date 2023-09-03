@@ -757,6 +757,15 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Gets the speed vector of this <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="relativeToEntity"><see langword="true" /> to get the vector relative to this entity; <see langword="false" /> for relative to the world.</param>
+		public Vector3 GetSpeedVector(bool relativeToEntity)
+		{
+			return Function.Call<Vector3>(Hash.GET_ENTITY_SPEED_VECTOR, Handle, relativeToEntity);
+		}
+
+		/// <summary>
 		/// Gets or sets the velocity of this <see cref="Entity"/>.
 		/// </summary>
 		public Vector3 Velocity
@@ -3097,6 +3106,30 @@ namespace GTA
 		/// Events can include one or more attributes of different types that can be used to get data from the animation.
 		/// </remarks>
 		public bool HasAnimationEventFired(int eventHash) => Function.Call<bool>(Hash.HAS_ANIM_EVENT_FIRED, Handle, eventHash);
+
+		/// <summary>
+		/// Sets the speed of the anim task matching the given ClipDictAndAnimNamePair on the <see cref="Ped"/> to the given multiplier.
+		/// </summary>
+		/// <param name="clipDictAndAnimNamePair">The pair of a clip/animation dictionary name and an animation name.</param>
+		/// <param name="speedMultiplier">The amount to multiply the animation's normal playback speed by.</param>
+		public void SetAnimationSpeed(ClipDictAndAnimNamePair clipDictAndAnimNamePair, float speedMultiplier)
+		{
+			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
+
+			Function.Call(Hash.SET_ENTITY_ANIM_SPEED, Handle, clipDict, animName, speedMultiplier);
+		}
+
+		/// <summary>
+		/// Sets the timestamp of the anim task matching the given ClipDictAndAnimNamePair on the <see cref="Ped"/> to the given value.
+		/// </summary>
+		/// <param name="clipDictAndAnimNamePair">The pair of a clip/animation dictionary name and an animation name.</param>
+		/// <param name="newCurrentTime">The time in the animation to set the specified animation to.</param>
+		public void SetAnimationCurrentTime(ClipDictAndAnimNamePair clipDictAndAnimNamePair, float newCurrentTime)
+		{
+			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
+
+			Function.Call(Hash.SET_ENTITY_ANIM_CURRENT_TIME, Handle, clipDict, animName, newCurrentTime);
+		}
 
 		/// <summary>
 		/// Gets a float value representing animation's current playtime with respect to its total playtime.

@@ -752,6 +752,7 @@ namespace GTA
 				rotation.X, rotation.Y, rotation.Z, blendInDeltaArg, blendOutDeltaArg, timeToPlay, (int)flags,
 				startPhase, (int)rotOrder, (int)ikFlags);
 		}
+
 		public void RappelFromHelicopter()
 		{
 			Function.Call(Hash.TASK_RAPPEL_FROM_HELI, _ped.Handle, 0x41200000);

@@ -292,7 +292,27 @@ namespace GTA
 		public static bool RequestPathNodesInAreaThisFrame(Vector2 min, Vector2 max) => Function.Call<bool>(Hash.REQUEST_PATH_NODES_IN_AREA_THIS_FRAME, min.X, min.Y, max.X, max.Y);
 
 		/// <summary>
-		///  Switches vehicle nodes an angled area. <see cref="Vehicle"/>s will drive on to roads that are switched on and new <see cref="Vehicle"/>s will be generated on them.
+		/// Toggles ped nodes in a cubic area. <see cref="Ped"/>s will walk in areas that are switched on and new <see cref="Ped"/>s will be generated in them.
+		/// A ped node is switched off, no <see cref="Ped"/>s should be created in it and <see cref="Ped"/>s that already exist will try to avoid walking through it.
+		/// To undo effects of this method, use <see cref="SetPedPathsBackToOriginal(Vector3, Vector3, bool)"/>.
+		/// </summary>
+		/// <param name="min">The minimum position of the region.</param>
+		/// <param name="max">The maximum position of the region.</param>
+		/// <param name="active">Specifies wheter ped nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
+		/// <param name="forceAbortCurrentPath">Forces any active pathfinding requests to abort before this function executes.</param>
+		public static void SwitchPedPathsInArea(Vector3 min, Vector3 max, bool active, bool forceAbortCurrentPath) =>
+			Function.Call(Hash.SET_PED_PATHS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, forceAbortCurrentPath);
+		/// <summary>
+		/// Sets all ped nodes in area back to their original state as per area and ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
+		/// </summary>
+		/// <param name="min">The minimum position of the region.</param>
+		/// <param name="max">The maximum position of the region.</param>
+		/// <param name="forceAbortCurrentPath">Forces any active pathfinding requests to abort before this function executes.</param>
+		public static void SetPedPathsBackToOriginal(Vector3 min, Vector3 max, bool forceAbortCurrentPath) =>
+			Function.Call(Hash.SET_PED_PATHS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, forceAbortCurrentPath);
+
+		/// <summary>
+		/// Toggles vehicle nodes in angled area. <see cref="Vehicle"/>s will drive on to roads that are switched on and new <see cref="Vehicle"/>s will be generated on them.
 		/// A vehicle node is switched off, no <see cref="Vehicle"/>s should be created on it and <see cref="Vehicle"/>s that already exist will try to avoid driving on to it.
 		/// To undo effects of this method, use <see cref="SetVehicleNodesBackToOriginal(Vector3, Vector3)"/> or <see cref="SetVehicleNodesBackToOriginalInAngledArea(Vector3, Vector3, float)"/>.
 		/// </summary>
@@ -302,7 +322,7 @@ namespace GTA
 		public static void SwitchVehicleNodesInArea(Vector3 min, Vector3 max, bool active) => Function.Call(Hash.SET_ROADS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, false);
 		/// <summary>
 		/// <para>
-		/// Switches vehicle nodes an angled area. <see cref="Vehicle"/>s will drive on to roads that are switched on and new <see cref="Vehicle"/>s will be generated on them.
+		/// Toggles vehicle nodes in angled area. <see cref="Vehicle"/>s will drive on to roads that are switched on and new <see cref="Vehicle"/>s will be generated on them.
 		/// A vehicle node is switched off, no <see cref="Vehicle"/>s should be created on it and <see cref="Vehicle"/>s that already exist will try to avoid driving on to it.
 		/// To undo effects of this method, use <see cref="SetVehicleNodesBackToOriginal(Vector3, Vector3)"/> or <see cref="SetVehicleNodesBackToOriginalInAngledArea(Vector3, Vector3, float)"/>.
 		/// </para>
@@ -317,14 +337,14 @@ namespace GTA
 		public static void SwitchVehicleNodesInAngledArea(Vector3 position1, Vector3 position2, float areaWidth, bool active)
 			=> Function.Call(Hash.SET_ROADS_IN_ANGLED_AREA, position1.X, position1.Y, position1.Z, position2.X, position2.Y, position2.Z, areaWidth, false, active, false);
 		/// <summary>
-		/// Sets all vehicle nodes in area back to their original state as per area a ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
+		/// Sets all vehicle nodes in area back to their original state as per area and ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
 		/// </summary>
 		/// <param name="min">The minimum position of the region.</param>
 		/// <param name="max">The maximum position of the region.</param>
 		public static void SetVehicleNodesBackToOriginal(Vector3 min, Vector3 max) => Function.Call(Hash.SET_ROADS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, false);
 		/// <summary>
 		/// <para>
-		/// Sets all vehicle nodes in area back to their original state as per area a ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
+		/// Sets all vehicle nodes in area back to their original state as per area and ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
 		/// </para>
 		/// <para>
 		/// <paramref name="position1"/> and <paramref name="position2"/> define the midpoints of two parallel sides and <paramref name="areaWidth"/> is the width of these sides.

@@ -1,4 +1,4 @@
-﻿using GTA.Math;
+using GTA.Math;
 using GTA.Native;
 
 namespace GTA
@@ -136,5 +136,16 @@ namespace GTA
 		/// if new load scene is taking too long time to load a location.
 		/// </remarks>
 		public static bool IsNewLoadSceneLoaded => Function.Call<bool>(Hash.IS_NEW_LOAD_SCENE_LOADED);
+
+		/// <summary>
+		/// Sets the population budget allocated for spawning ambient <see cref="Ped"/>s.
+		/// </summary>
+		/// <param name="amount">The budget amount to allocate from 0 to 3, with 0 being none and 3 being normal.</param>
+		public static void SetPedPopulationBudget(int amount) => Function.Call(Hash.SET_PED_POPULATION_BUDGET, amount);
+		/// <summary>
+		/// Sets the population budget allocated for spawning ambient <see cref="Vehicle"/>s.
+		/// </summary>
+		/// <param name="amount">The budget amount to allocate from 0 to 3, with 0 being none and 3 being normal.</param>
+		public static void SetVehiclePopulationBudget(int amount) => Function.Call(Hash.SET_VEHICLE_POPULATION_BUDGET, amount);
 	}
 }
