@@ -86,9 +86,9 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the amount of paint fade on this <see cref="Vehicle"/> between 0.0 (new) and 1.0 (fully worn).
+		/// Gets or sets the opacity of the EnvEff texture on this <see cref="Vehicle"/> between 0.0 (transparent) and 1.0 (opaque).
 		/// </summary>
-		public float PaintFadeLevel
+		public float EnvEffLevel
 		{
 			get => Function.Call<float>(Hash.GET_VEHICLE_ENVEFF_SCALE, Handle);
 			set => Function.Call(Hash.SET_VEHICLE_ENVEFF_SCALE, Handle, value);
