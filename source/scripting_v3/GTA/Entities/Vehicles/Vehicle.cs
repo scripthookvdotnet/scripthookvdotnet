@@ -1417,15 +1417,16 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its siren turned on.
 		/// </summary>
 		/// <value>
-		///   <see langword="true" /> if this <see cref="Vehicle"/> has its siren turned on; otherwise, <see langword="false" />.
+		/// <see langword="true" /> if this <see cref="Vehicle"/> has its siren turned on; otherwise, <see langword="false" />.
 		/// </value>
 		public bool IsSirenActive
 		{
 			get => Function.Call<bool>(Hash.IS_VEHICLE_SIREN_ON, Handle);
 			set => Function.Call(Hash.SET_VEHICLE_SIREN, Handle, value);
 		}
+
 		/// <summary>
-		/// Sets a value indicating whether the siren on this <see cref="Vehicle"/> is muted.
+		/// Gets or sets a value indicating whether the siren on this <see cref="Vehicle"/> is muted.
 		/// </summary>
 		/// <value>
 		/// <see langword="true" /> if the siren on this <see cref="Vehicle"/> is muted; otherwise, <see langword="false" />.
@@ -1434,6 +1435,28 @@ namespace GTA
 		{
 			get => SHVDN.NativeMemory.Vehicle.HasMutedSirens(Handle);
 			set => Function.Call(Hash.SET_VEHICLE_HAS_MUTED_SIRENS, Handle, value);
+		}
+
+		/// <summary>
+		/// Sets a value indicating whether this <see cref="Vehicle"/> has its horn enabled.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if this <see cref="Vehicle"/> has its horn enabled; otherwise, <see langword="false" />.
+		/// </value>
+		public bool IsHornEnabled
+		{
+			set => Function.Call(Hash.SET_HORN_ENABLED, Handle, value);
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Vehicle"/> has its horn turned on.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> if this <see cref="Vehicle"/> has its horn turned on; otherwise, <see langword="false" />.
+		/// </value>
+		public bool IsHornActive
+		{
+			get => Function.Call<bool>(Hash.IS_HORN_ACTIVE, Handle);
 		}
 
 		/// <summary>
