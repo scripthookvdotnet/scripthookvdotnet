@@ -868,7 +868,7 @@ namespace GTA
 		/// </summary>
 		/// <param name="flags">The VehicleChaseFlags to set or unset.</param>
 		/// <param name="set"><see langword="true"/> to set the flags; otherwise <see langword="false"/> to unset flags.</param>
-		public void VehicleChaseBehaviorFlags(VehicleChaseFlags flags, bool set)
+		public void SetVehicleChaseBehaviorFlags(VehicleChaseFlags flags, bool set)
 		{
 			Function.Call(Hash.SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG, Handle, flags, set);
 		}
@@ -877,7 +877,7 @@ namespace GTA
 		/// This sets the distance from the target <see cref="Ped"/>'s <see cref="Vehicle"/> that the <see cref="Ped"/> will attempt to maintain if a vehicle chase task is currently active.
 		/// You must call VehicleChase before calling this function or it will have no effect.
 		/// </summary>
-		public void VehicleChaseDistance(float distance)
+		public void SetVehicleChaseIdealPursuitDistance(float distance)
 		{
 			Function.Call(Hash.SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE, Handle, distance);
 		}
