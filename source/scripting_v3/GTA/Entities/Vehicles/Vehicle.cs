@@ -427,8 +427,25 @@ namespace GTA
 		/// <summary>
 		/// Sets whether the exhaust of this <see cref="Vehicle"/> will make popping noises.
 		/// </summary>
-		/// <param name="enabled"><see langword="true" /> to enable exhaust popping; otherwise, <see langword="false" />.</param>
-		public void ExhaustPopsEnabled(bool enabled) => Function.Call(Hash.ENABLE_VEHICLE_EXHAUST_POPS, enabled);
+		/// <value>
+		/// <see langword="true" /> to enable exhaust popping; otherwise, <see langword="false" />.
+		/// </value>
+		public bool AreExhaustPopsEnabled
+		{
+			set => Function.Call(Hash.ENABLE_VEHICLE_EXHAUST_POPS, value);
+		}
+
+		/// <summary>
+		/// Sets whether this vehicle has low-friction tires equipped.
+		/// Only works on Automobiles, Helicopters, and Planes.
+		/// </summary>
+		/// <value>
+		/// <see langword="true" /> to equip this <see cref="Vehicle"/> with low-friction tires; otherwise, <see langword="false" />.
+		/// </value>
+		public bool HasLowerFrictionTires
+		{
+			set => Function.Call(Hash.SET_VEHICLE_REDUCE_GRIP, Handle, value);
+		}
 
 		/// <summary>
 		/// Gets the display name of this <see cref="Vehicle"/>.
@@ -1088,17 +1105,15 @@ namespace GTA
 
 		/// <summary>
 		/// Reduces this <see cref="Vehicle"/>'s current grip level.
-		/// In game versions prior to v1.0.1604.0, levels 1-3 are identical.
+		/// Only works on Automobiles, Helicopters, and Planes.
+		/// Only supported in game versions 1.0.1604.0 or later.
 		/// </summary>
 		/// <param name="level">The level from 0-3 to reduce grip by, with 0 being no reduction and 3 being maximum reduction.</param>
-		public void ReduceGripLevel(int level)
+		public void SetReducedGripLevel(int level)
 		{
-			Function.Call(Hash.SET_VEHICLE_REDUCE_GRIP, Handle, level != 0);
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1604_0_Steam, nameof(Vehicle), nameof(SetReducedGripLevel));
 
-			if (Game.Version >= GameVersion.v1_0_1604_0_Steam)
-			{
-				Function.Call(Hash.SET_VEHICLE_REDUCE_GRIP_LEVEL, Handle, level);
-			}
+			Function.Call(Hash.SET_VEHICLE_REDUCE_GRIP_LEVEL, Handle, level);
 		}
 
 		/// <summary>
