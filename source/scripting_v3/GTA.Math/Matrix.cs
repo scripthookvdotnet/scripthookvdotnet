@@ -308,7 +308,7 @@ namespace GTA.Math
 			}
 		}
 
-		const float FLT_EPSILON = 1.19209e-07f;
+		const float F32Epsilon = 1.19209e-07f;
 
 		/// <summary>Gets the origin of the coordinate system.</summary>
 		/// <returns>The origin of the coordinate system.</returns>
@@ -323,7 +323,7 @@ namespace GTA.Math
 			M43 = newOrigin.Z;
 		}
 
-		public Vector3 GetScaleVector() => GetScaleVector(FLT_EPSILON);
+		public Vector3 GetScaleVector() => GetScaleVector(F32Epsilon);
 
 		/// <summary>Returns a 3D scale vector calculated from this matrix (where each component is the magnitude of a row vector) with error tolerance.</summary>
 		public Vector3 GetScaleVector(float tolerance)
@@ -529,7 +529,7 @@ namespace GTA.Math
 			float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
 			float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
 
-			if (System.Math.Abs(1f - scaleXSquared) > FLT_EPSILON || System.Math.Abs(1f - scaleYSquared) > FLT_EPSILON || System.Math.Abs(1f - scaleZSquared) > FLT_EPSILON)
+			if (System.Math.Abs(1f - scaleXSquared) > F32Epsilon || System.Math.Abs(1f - scaleYSquared) > F32Epsilon || System.Math.Abs(1f - scaleZSquared) > F32Epsilon)
 			{
 				// This path is an edge case
 				// In GTA V, entity matrices expect to have no scaling
@@ -597,7 +597,7 @@ namespace GTA.Math
 		// because you should be instead of showing gigantic infinite mesh
 		// also returning a big number like 3.4e+38f causes sequential NaN issues by multiplying
 		// so we hardcode as 0
-		private float GetSafeScaleReciprocal(float scale, float tolerance = FLT_EPSILON)
+		private float GetSafeScaleReciprocal(float scale, float tolerance = F32Epsilon)
 		{
 			if (System.Math.Abs(scale) <= tolerance)
 			{
@@ -1198,7 +1198,7 @@ namespace GTA.Math
 		public Matrix GetMatrixWithoutScale()
 		{
 			Matrix result = this;
-			result.RemoveScaling(FLT_EPSILON);
+			result.RemoveScaling(F32Epsilon);
 			return result;
 		}
 
@@ -1232,7 +1232,7 @@ namespace GTA.Math
 		/// </summary>
 		public void RemoveScaling()
 		{
-			RemoveScaling(FLT_EPSILON);
+			RemoveScaling(F32Epsilon);
 		}
 
 		/// <summary>
