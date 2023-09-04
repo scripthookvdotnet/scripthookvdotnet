@@ -308,7 +308,7 @@ namespace GTA.Math
 			}
 		}
 
-		const float F32Epsilon = 1.19209e-07f;
+		const float F32Epsilon = 1.1920929e-7f;
 
 		/// <summary>Gets the origin of the coordinate system.</summary>
 		/// <returns>The origin of the coordinate system.</returns>
