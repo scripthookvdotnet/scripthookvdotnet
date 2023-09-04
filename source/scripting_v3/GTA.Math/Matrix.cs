@@ -1203,6 +1203,18 @@ namespace GTA.Math
 		}
 
 		/// <summary>
+		/// Returns matrix after RemoveScaling with error tolerance.
+		/// </summary>
+		/// <param name="tolerance">The error tolerance.</param>
+		/// <returns>The matrix without scale information.</returns>
+		public Matrix GetMatrixWithoutScale(float tolerance)
+		{
+			Matrix result = this;
+			result.RemoveScaling(tolerance);
+			return result;
+		}
+
+		/// <summary>
 		/// Returns the same matrix but without translation.
 		/// </summary>
 		/// <returns>The matrix without translation information.</returns>
@@ -1213,40 +1225,6 @@ namespace GTA.Math
 			result.M42 = 0f;
 			result.M43 = 0f;
 			return result;
-		}
-
-		/// <summary>
-		/// Returns matrix after RemoveScaling with error tolerance.
-		/// </summary>
-		/// <param name="tolerance">The error tolerance.</param>
-		/// <returns>The matrix without scale information.</returns>
-		public void GetMatrixWithoutScale(float tolerance)
-		{
-			float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
-			float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
-			float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
-
-			if (System.Math.Abs(1f - scaleXSquared) > tolerance)
-			{
-				float scaleX = 1f / (float)System.Math.Sqrt(scaleXSquared);
-				M11 *= scaleX;
-				M12 *= scaleX;
-				M13 *= scaleX;
-			}
-			if (System.Math.Abs(1f - scaleYSquared) > tolerance)
-			{
-				float scaleY = 1f / (float)System.Math.Sqrt(scaleYSquared);
-				M21 *= scaleY;
-				M22 *= scaleY;
-				M23 *= scaleY;
-			}
-			if (System.Math.Abs(1f - scaleZSquared) > tolerance)
-			{
-				float scaleZ = 1f / (float)System.Math.Sqrt(scaleZSquared);
-				M31 *= scaleZ;
-				M32 *= scaleZ;
-				M33 *= scaleZ;
-			}
 		}
 
 		/// <summary>
