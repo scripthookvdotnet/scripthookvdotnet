@@ -599,6 +599,496 @@ namespace GTA
 			return new Matrix(SHVDN.NativeMemory.ReadMatrix(address)).InverseTransformPoint(entityOffset);
 		}
 
+		#region Attaching
+
+		/// <summary>
+		/// Attaches this <see cref="EntityBone"/> to a <see cref="EntityBone"/> of a different <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="boneOfSecondEntity">
+		/// The <see cref="EntityBone"/> to attach this <see cref="EntityBone"/> to that belongs to another
+		/// <see cref="Entity"/>.
+		/// </param>
+		/// <param name="activeCollisions">
+		/// If <see langword="true"/> this <see cref="Entity"/> collide with other <see cref="Entity"/>s (does not
+		/// collide with map collision or static <see cref="Prop"/>s that do not have physics/colliders).
+		/// </param>
+		/// <param name="useBasicAttachIfPed">
+		/// Specifies whether the method forces a path, even for <see cref="Ped"/>s, that will use all three rotation
+		/// components, just like how <see cref="Vehicle"/>s and <see cref="Prop"/>s will be placed.
+		/// if <see langword="false"/>, pitch will not work and roll will only work on negative numbers for <see cref="Ped"/>s.
+		/// If the owner <see cref="Entity"/> of this <see cref="EntityBone"/> is a <see cref="Vehicle"/>s or
+		/// <see cref="Prop"/>, setting this parameter to <see langword="true"/> has no effect as they use all
+		/// rotations by default.
+		/// </param>
+		/// <remarks>
+		/// Both <see cref="Entity"/>s must have skeletons if they exist in the game. Otherwise, this method will throw
+		/// a <see cref="InvalidOperationException"/> or <see cref="ArgumentException"/> so the method can prevent the
+		/// game from getting crashed for trying to access the null <c>rage::crSkeleton</c> in a virtual function of
+		/// <c>CEntity</c>.
+		/// </remarks>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.791.2.
+		/// </exception>
+		/// <exception cref="InvalidOperationException">
+		/// Thrown if both of the entities exist but this <see cref="Entity"/> does not have a skeleton.
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		/// Thrown if both of the entities exist but the <see cref="Entity"/> of <paramref name="boneOfSecondEntity"/>
+		/// does not have a skeleton.
+		/// </exception>
+		public void AttachToBone(EntityBone boneOfSecondEntity, bool activeCollisions = true,
+			bool useBasicAttachIfPed = false)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_791_2_Steam, nameof(EntityBone),
+				nameof(AttachToBone));
+
+			Entity secondEntity = boneOfSecondEntity.Owner;
+
+			if (!ThisEntityAndSecondEntityExist(secondEntity))
+			{
+				return;
+			}
+
+			ThrowExceptionIfEitherOfEntityDoesNotHaveSkeleton(secondEntity);
+
+			Function.Call(Hash.ATTACH_ENTITY_BONE_TO_ENTITY_BONE, Owner, Index, secondEntity,
+				boneOfSecondEntity.Index, activeCollisions, useBasicAttachIfPed);
+		}
+
+		/// <summary>
+		/// Attaches this <see cref="EntityBone"/> to a <see cref="EntityBone"/> of a different <see cref="Entity"/>
+		/// assuming that the bone is facing along the y axis.
+		/// </summary>
+		/// <param name="boneOfSecondEntity">
+		/// The <see cref="EntityBone"/> to attach this <see cref="EntityBone"/> to that belongs to another
+		/// <see cref="Entity"/>.
+		/// </param>
+		/// <param name="activeCollisions">
+		/// If <see langword="true"/> this <see cref="Entity"/> collide with other <see cref="Entity"/>s (does not
+		/// collide with map collision or static <see cref="Prop"/>s that do not have physics/colliders).
+		/// </param>
+		/// <param name="useBasicAttachIfPed">
+		/// Specifies whether the method forces a path, even for <see cref="Ped"/>s, that will use all three rotation
+		/// components, just like how <see cref="Vehicle"/>s and <see cref="Prop"/>s will be placed.
+		/// if <see langword="false"/>, pitch will not work and roll will only work on negative numbers for <see cref="Ped"/>s.
+		/// If the owner <see cref="Entity"/> of this <see cref="EntityBone"/> is a <see cref="Vehicle"/>s or
+		/// <see cref="Prop"/>, setting this parameter to <see langword="true"/> has no effect as they use all
+		/// rotations by default.
+		/// </param>
+		/// <remarks>
+		/// Both <see cref="Entity"/>s must have skeletons if they exist in the game. Otherwise, this method will throw
+		/// a <see cref="InvalidOperationException"/> or <see cref="ArgumentException"/> so the method can prevent the
+		/// game from getting crashed for trying to access the null <c>rage::crSkeleton</c> in a virtual function of
+		/// <c>CEntity</c>.
+		/// </remarks>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.791.2.
+		/// </exception>
+		/// <exception cref="InvalidOperationException">
+		/// Thrown if both of the entities exist but this <see cref="Entity"/> does not have a skeleton.
+		/// </exception>
+		/// <exception cref="ArgumentException">
+		/// Thrown if both of the entities exist but the <see cref="Entity"/> of <paramref name="boneOfSecondEntity"/>
+		/// does not have a skeleton.
+		/// </exception>
+		public void AttachToBoneYForward(EntityBone boneOfSecondEntity, bool activeCollisions = true,
+			bool useBasicAttachIfPed = false)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_791_2_Steam, nameof(Entity),
+				nameof(AttachToBoneYForward));
+
+			Entity secondEntity = boneOfSecondEntity.Owner;
+			if (!ThisEntityAndSecondEntityExist(secondEntity))
+			{
+				return;
+			}
+
+			ThrowExceptionIfEitherOfEntityDoesNotHaveSkeleton(secondEntity);
+
+			Function.Call(Hash.ATTACH_ENTITY_BONE_TO_ENTITY_BONE_Y_FORWARD, Owner, Index, secondEntity,
+				boneOfSecondEntity.Index, activeCollisions, useBasicAttachIfPed);
+		}
+
+		private bool ThisEntityAndSecondEntityExist(Entity secondEntity)
+		{
+			// Silently return if either of the entities does not exist, just like how ATTACH_ENTITY_BONE_TO_ENTITY_BONE checks
+			// We don't want to throw exceptions that much unless otherwise the game will encounter a game crash,
+			// as we can't really check all the conditions needed for natives without inspecting the assembly code of them
+			return (Owner?.Exists() ?? false) && (secondEntity?.Exists() ?? false);
+		}
+
+		/// <summary>
+		/// This method is present since ATTACH_ENTITY_BONE_TO_ENTITY_BONE will crash the game if both entities exist but
+		/// either of them does not have a skeleton.
+		/// </summary>
+		private void ThrowExceptionIfEitherOfEntityDoesNotHaveSkeleton(Entity secondEntity)
+		{
+			if (!(Owner?.HasSkeleton ?? false))
+			{
+				throw new InvalidOperationException("The entity of this bone does not have a skeleton.");
+			}
+
+			if (!(secondEntity?.HasSkeleton ?? false))
+			{
+				throw new ArgumentException("The entity of passed bone does not have a skeleton.", nameof(secondEntity));
+			}
+		}
+
+		/// <summary>
+		/// Attaches this <see cref="EntityBone"/> to the transformation matrix (physics capsule) of a different
+		/// <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="secondEntity">
+		/// The <see cref="Entity"/> to attach this <see cref="EntityBone"/> to.
+		/// </param>
+		/// <param name="secondEntityOffset">
+		/// The attach point offset of <paramref name="secondEntity"/> in local space.
+		/// </param>
+		/// <param name="thisEntityOffset">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='thisEntityOffset']"
+		/// />
+		/// </param>
+		/// <param name="rotation">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='rotation']"
+		/// />
+		/// </param>
+		/// <param name="physicalStrength">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='physicalStrength']"
+		/// />
+		/// </param>
+		/// <param name="constrainRotation">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='constrainRotation']"
+		/// />
+		/// </param>
+		/// <param name="doInitialWarp">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='doInitialWarp']"
+		/// />
+		/// </param>
+		/// <param name="addInitialSeparation">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='addInitialSeparation']"
+		/// />
+		/// </param>
+		/// <param name="collideWithEntity">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='collideWithEntity']"
+		/// />
+		/// </param>
+		/// <param name="rotationOrder">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='rotationOrder']"
+		/// />
+		/// </param>
+		/// <remarks>
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/remarks"
+		/// />
+		/// </remarks>
+		public void AttachToEntityPhysically( Entity secondEntity, Vector3 secondEntityOffset,
+			Vector3 thisEntityOffset, Vector3 rotation, float physicalStrength, bool constrainRotation,
+			bool doInitialWarp = true, bool collideWithEntity = false, bool addInitialSeparation = true,
+			EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
+		{
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY, Owner, secondEntity, Index, -1,
+				secondEntityOffset.X, secondEntityOffset.Y, secondEntityOffset.Z, thisEntityOffset.X,
+				thisEntityOffset.Y, thisEntityOffset.Z, rotation.X, rotation.Y, rotation.Z, physicalStrength,
+				constrainRotation, doInitialWarp, collideWithEntity, addInitialSeparation, (int)rotationOrder);
+		}
+
+		/// <summary>
+		/// Attaches a bone of this <see cref="Entity"/> to a bone of a different <see cref="Entity"/>.
+		/// </summary>
+		/// <param name="boneOfSecondEntity">
+		/// The <see cref="EntityBone"/> to attach this <see cref="EntityBone"/> to that belongs to
+		/// second/another <see cref="Entity"/>.
+		/// </param>
+		/// <param name="secondEntityOffset">
+		/// The attach point offset of <paramref name="boneOfSecondEntity"/> in local space.
+		/// </param>
+		/// <param name="thisEntityOffset">
+		/// The attach point offset of this <see cref="Entity"/> relative to this <see cref="EntityBone"/>.
+		/// </param>
+		/// <param name="rotation">
+		/// The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="rotation"/>.
+		/// </param>
+		/// <param name="physicalStrength">
+		/// The physical strength. Should be in newton.
+		/// Negative values mean that the attachment between the tho <see cref="Entity"/>s
+		/// has the infinite physical strength.
+		/// A medium strength value is 500.
+		/// </param>
+		/// <param name="constrainRotation">
+		/// Specifies whether you wish to constrain rotation as well as position.
+		/// In most cases the answer will be Yes. Unless you want to have a hanging/swinging thing.
+		/// </param>
+		/// <param name="doInitialWarp">
+		/// <para>
+		/// Specifies whether to warp this <see cref="Entity"/> to the specified attach point.
+		/// If <see langword="true"/> or this <see cref="Entity"/> is a <see cref="Ped"/>,
+		/// this method will warp this <see cref="Entity"/> to the specified attach point.
+		/// </para>
+		/// <para>
+		/// Otherwise, If <paramref name="addInitialSeparation"/> is <see langword="true"/>,
+		/// the initial separation will be used as an allowed give in the attachment (e.g. a rope length).
+		/// If <paramref name="addInitialSeparation"/> is <see langword="false"/>,
+		/// this <see cref="Entity"/> will not warp and instead the other one will warp to the attach point.
+		/// </para>
+		/// <para>
+		/// Although setting this parameter to <see langword="true"/> does not make it prevent from warp
+		/// this <see cref="Ped"/> to the specified attach point, you need to set this parameter to
+		/// <see langword="false"/> if you want this <see cref="Entity"/> and the other <see cref="Entity"/> to allow
+		/// separated as long as the initial separation.
+		/// </para>
+		/// </param>
+		/// <param name="addInitialSeparation">
+		/// If <see langword="true"/> and <paramref name="doInitialWarp"/> is <see langword="false"/>,
+		/// this method will not warp either of the two <see cref="Entity"/>s they can get separated as long as
+		/// the initial separation (where the attach point and the two offset determines how high the initial
+		/// separation value is).
+		/// </param>
+		/// <param name="collideWithEntity">
+		/// Specifies whether set of the two <see cref="Entity"/>s will collide with each other after attached.
+		/// They will collide with other ones by default.
+		/// </param>
+		/// <param name="rotationOrder">The rotation order.</param>
+		/// <remarks>
+		/// If a bone index of a <see cref="Entity"/> is invalid, its attach point will fallback to its
+		/// transformation matrix.
+		/// </remarks>
+		public void AttachToBonePhysically(EntityBone boneOfSecondEntity, Vector3 secondEntityOffset,
+			Vector3 thisEntityOffset, Vector3 rotation, float physicalStrength, bool constrainRotation,
+			bool doInitialWarp = true, bool collideWithEntity = false, bool addInitialSeparation = true,
+			EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ)
+		{
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY, Owner, boneOfSecondEntity.Owner,
+				Index, boneOfSecondEntity.Index, secondEntityOffset.X, secondEntityOffset.Y, secondEntityOffset.Z,
+				thisEntityOffset.X, thisEntityOffset.Y, thisEntityOffset.Z, rotation.X, rotation.Y, rotation.Z,
+				physicalStrength, constrainRotation, doInitialWarp, collideWithEntity, addInitialSeparation,
+				(int)rotationOrder);
+		}
+
+		/// <summary>
+		/// <para>
+		/// Attaches a bone of this <see cref="Entity"/> to the transformation matrix (physics capsule) of a different
+		/// <see cref="Entity"/>  with custom override values of inverse mass scale for the two <see cref="Entity"/>s.
+		/// </para>
+		/// <para>
+		/// Only available in v1.0.2944.0 or later game versions.
+		/// </para>
+		/// </summary>
+		/// <param name="secondEntity">
+		/// <inheritdoc
+		/// cref="AttachToEntityPhysically"
+		/// path="/param[@name='secondEntity']"
+		/// />
+		/// </param>
+		/// <param name="secondEntityOffset">
+		/// <inheritdoc
+		/// cref="AttachToEntityPhysically"
+		/// path="/param[@name='secondEntityOffset']"
+		/// />
+		/// </param>
+		/// <param name="thisEntityOffset">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='thisEntityOffset']"
+		/// />
+		/// </param>
+		/// <param name="rotation">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='rotation']"
+		/// />
+		/// </param>
+		/// <param name="physicalStrength">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='physicalStrength']"
+		/// />
+		/// </param>
+		/// <param name="constrainRotation">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='constrainRotation']"
+		/// />
+		/// </param>
+		/// <param name="doInitialWarp">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='doInitialWarp']"
+		/// />
+		/// </param>
+		/// <param name="addInitialSeparation">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='addInitialSeparation']"
+		/// />
+		/// </param>
+		/// <param name="collideWithEntity">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='collideWithEntity']"
+		/// />
+		/// </param>
+		/// <param name="rotationOrder">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='rotationOrder']"
+		/// />
+		/// </param>
+		/// <param name="invMassScaleA">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysicallyOverrideInverseMass"
+		/// path="/param[@name='invMassScaleA']"
+		/// />
+		/// </param>
+		/// <param name="invMassScaleB">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysicallyOverrideInverseMass"
+		/// path="/param[@name='invMassScaleB']"
+		/// />
+		/// </param>
+		/// <remarks>
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/remarks"
+		/// />
+		/// </remarks>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.2944.0.
+		/// </exception>
+		public void AttachToEntityPhysicallyOverrideInverseMass(Entity secondEntity, Vector3 secondEntityOffset,
+			Vector3 thisEntityOffset, Vector3 rotation, float physicalStrength, bool constrainRotation,
+			bool doInitialWarp = true, bool collideWithEntity = false, bool addInitialSeparation = true,
+			EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ, float invMassScaleA = 1f,
+			float invMassScaleB = 1f)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2944_0, nameof(Entity),
+				nameof(AttachToEntityPhysicallyOverrideInverseMass));
+
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY_OVERRIDE_INVERSE_MASS, Owner, secondEntity,
+				Index, -1, secondEntityOffset.X, secondEntityOffset.Y, secondEntityOffset.Z, thisEntityOffset.X,
+				thisEntityOffset.Y, thisEntityOffset.Z, rotation.X, rotation.Y, rotation.Z, physicalStrength,
+				constrainRotation, doInitialWarp, collideWithEntity, addInitialSeparation, (int)rotationOrder,
+				invMassScaleA, invMassScaleB);
+		}
+
+		/// <summary>
+		/// <para>
+		/// Attaches a bone of this <see cref="Entity"/> to a bone of a different <see cref="Entity"/> with custom
+		/// override values of inverse mass scale for the two <see cref="Entity"/>s.
+		/// </para>
+		/// <para>
+		/// Only available in v1.0.2944.0 or later game versions.
+		/// </para>
+		/// </summary>
+		/// <param name="boneOfSecondEntity">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='boneOfSecondEntity']"
+		/// />
+		/// </param>
+		/// <param name="secondEntityOffset">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='secondEntityOffset']"
+		/// />
+		/// </param>
+		/// <param name="thisEntityOffset">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='thisEntityOffset']"
+		/// />
+		/// </param>
+		/// <param name="rotation">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='rotation']"
+		/// />
+		/// </param>
+		/// <param name="physicalStrength">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='physicalStrength']"
+		/// />
+		/// </param>
+		/// <param name="constrainRotation">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='constrainRotation']"
+		/// />
+		/// </param>
+		/// <param name="doInitialWarp">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='doInitialWarp']"
+		/// />
+		/// </param>
+		/// <param name="addInitialSeparation">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='addInitialSeparation']"
+		/// />
+		/// </param>
+		/// <param name="collideWithEntity">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='collideWithEntity']"
+		/// />
+		/// </param>
+		/// <param name="rotationOrder">
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/param[@name='rotationOrder']"
+		/// />
+		/// </param>
+		/// <param name="invMassScaleA">
+		/// The inverse mass scale of this <see cref="Entity"/> to multiply.
+		/// </param>
+		/// <param name="invMassScaleB">
+		/// The inverse mass scale of the other <see cref="Entity"/> to multiply.
+		/// </param>
+		/// <remarks>
+		/// <inheritdoc
+		/// cref="AttachToBonePhysically"
+		/// path="/remarks"
+		/// />
+		/// </remarks>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.2944.0.
+		/// </exception>
+		public void AttachToBonePhysicallyOverrideInverseMass(EntityBone boneOfSecondEntity,
+			Vector3 secondEntityOffset, Vector3 thisEntityOffset, Vector3 rotation, float physicalStrength,
+			bool constrainRotation, bool doInitialWarp = true, bool collideWithEntity = false,
+			bool addInitialSeparation = true, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ,
+			float invMassScaleA = 1f, float invMassScaleB = 1f)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2944_0, nameof(Entity),
+				nameof(AttachToBonePhysicallyOverrideInverseMass));
+
+			Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY_OVERRIDE_INVERSE_MASS, Owner,
+				boneOfSecondEntity.Owner, Index, boneOfSecondEntity.Index, secondEntityOffset.X,
+				secondEntityOffset.Y, secondEntityOffset.Z, thisEntityOffset.X, thisEntityOffset.Y, thisEntityOffset.Z,
+				rotation.X, rotation.Y, rotation.Z, physicalStrength, constrainRotation, doInitialWarp,
+				collideWithEntity, addInitialSeparation, (int)rotationOrder, invMassScaleA, invMassScaleB);
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Determines if an <see cref="object"/> refers to the same bone as this <see cref="EntityBone"/>.
 		/// </summary>
