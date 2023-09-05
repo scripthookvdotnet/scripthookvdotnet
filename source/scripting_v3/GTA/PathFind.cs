@@ -292,22 +292,36 @@ namespace GTA
 		public static bool RequestPathNodesInAreaThisFrame(Vector2 min, Vector2 max) => Function.Call<bool>(Hash.REQUEST_PATH_NODES_IN_AREA_THIS_FRAME, min.X, min.Y, max.X, max.Y);
 
 		/// <summary>
-		/// Toggles ped nodes in a cubic area. <see cref="Ped"/>s will walk in areas that are switched on and new <see cref="Ped"/>s will be generated in them.
-		/// A ped node is switched off, no <see cref="Ped"/>s should be created in it and <see cref="Ped"/>s that already exist will try to avoid walking through it.
-		/// To undo effects of this method, use <see cref="SetPedPathsBackToOriginal(Vector3, Vector3, bool)"/>.
+		/// Toggles ped paths in a cubic area. <see cref="Ped"/>s will walk in areas that are switched on and new
+		/// <see cref="Ped"/>s will be generated on them. If a ped path is switched off, no <see cref="Ped"/>s will be
+		/// created on it and <see cref="Ped"/>s that already exist will try to avoid walking through it.
+		/// To revert to the original state, use <see cref="SetPedPathsBackToOriginal(Vector3, Vector3, bool)"/>.
 		/// </summary>
 		/// <param name="min">The minimum position of the region.</param>
 		/// <param name="max">The maximum position of the region.</param>
-		/// <param name="active">Specifies wheter ped nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
-		/// <param name="forceAbortCurrentPath">Forces any active pathfinding requests to abort before this function executes.</param>
+		/// <param name="active">
+		/// Specifies wheter ped nodes in area should be switched on or off. If <see langword="true"/>, they will be
+		/// switched on.
+		/// </param>
+		/// <param name="forceAbortCurrentPath">
+		/// If <see langword="true"/>, this method will avoid possible stalls by forcing any active pathfinding request
+		/// to be aborted before switching ped navmeshes.
+		/// Use this if there are reports of this method causing brief hangs waiting for navmesh data to be accessible,
+		/// but be aware that if timing-critical pathfinding is occuring, that it can be interruped by this.
+		/// </param>
 		public static void SwitchPedPathsInArea(Vector3 min, Vector3 max, bool active, bool forceAbortCurrentPath) =>
 			Function.Call(Hash.SET_PED_PATHS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, forceAbortCurrentPath);
 		/// <summary>
-		/// Sets all ped nodes in area back to their original state as per area and ynd file defines (which is loaded as <c>CPathRegion</c> in the game process memory).
+		/// Sets all ped paths (navmeshes) in area back to their original state as per the map data and ynv files define.
 		/// </summary>
 		/// <param name="min">The minimum position of the region.</param>
 		/// <param name="max">The maximum position of the region.</param>
-		/// <param name="forceAbortCurrentPath">Forces any active pathfinding requests to abort before this function executes.</param>
+		/// <param name="forceAbortCurrentPath">
+		/// If <see langword="true"/>, this method will avoid possible stalls by forcing any active pathfinding request
+		/// to be aborted before switching ped navmeshes.
+		/// Use this if there are reports of this method causing brief hangs waiting for navmesh data to be accessible,
+		/// but be aware that if timing-critical pathfinding is occuring, that it can be interruped by this.
+		/// </param>
 		public static void SetPedPathsBackToOriginal(Vector3 min, Vector3 max, bool forceAbortCurrentPath) =>
 			Function.Call(Hash.SET_PED_PATHS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, forceAbortCurrentPath);
 
