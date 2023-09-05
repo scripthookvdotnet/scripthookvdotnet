@@ -136,9 +136,28 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Overrides this <see cref="Vehicle"/>'s audio profile with that of another vehicle.
+		/// Overrides this <see cref="Vehicle"/>'s audio game object with another so the vehicle has different verious
+		/// vehicle sounds such as horn, door, suspension, and start sequences.
 		/// </summary>
-		/// <param name="gameObjectName">Generally accepts the internal name of the <see cref="Vehicle"/> to source an audio profile from, e.g. "DELUXO".</param>
+		/// <param name="gameObjectName">
+		/// <para>
+		/// The audio game object name. Case insensitive in ASCII characters since the string will be hashed using
+		/// (almost) the same function as <see cref="Game.GenerateHash(string)"/> uses.
+		/// </para>
+		/// <para>
+		/// Generally accepts the internal game name of the <see cref="Vehicle"/> to source an audio profile from,
+		/// such as "sentinel" or "deluxo". All valilla vehicles use unique game audio objects as of v1.0.2944.0
+		/// because none of them have <c>audioNameHash</c> override in vehicles.meta. For mod vehicles, you might
+		/// want to check if <c>audioNameHash</c> is overridden.
+		/// </para>
+		/// <para>
+		/// You can use any names listed as items of any audio type of vehicle, boat, bicycle, aeroplane, helicopter,
+		/// or train. You can find one with the term <c>Item type="[some type]"</c> ("[some type]" can be
+		/// <c>Vehicle</c>, <c>Boat</c>, <c>Bicycle</c>, <c>Aeroplane</c>, <c>Helicopter</c>, <c>Train</c>)
+		/// in <c>game.dat[some number].rel</c> in CodeWalker. "BJXL_ARMENIAN_3" and "STRETCH_MICHAEL_4" are registered
+		/// as the vehicle type for 2 ysc scripts for example and you can use them.
+		/// </para>
+		/// </param>
 		public void ForceUseAudioGameObject(string gameObjectName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, gameObjectName);
 
 		#endregion
