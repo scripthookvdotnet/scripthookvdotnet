@@ -651,8 +651,8 @@ namespace GTA
 
 			ThrowExceptionIfEitherOfEntityDoesNotHaveSkeleton(secondEntity);
 
-			Function.Call(Hash.ATTACH_ENTITY_BONE_TO_ENTITY_BONE, Owner, Index, secondEntity,
-				boneOfSecondEntity.Index, activeCollisions, useBasicAttachIfPed);
+			Function.Call(Hash.ATTACH_ENTITY_BONE_TO_ENTITY_BONE, Owner, secondEntity, Index, boneOfSecondEntity.Index,
+				activeCollisions, useBasicAttachIfPed);
 		}
 
 		/// <summary>
@@ -705,7 +705,7 @@ namespace GTA
 
 			ThrowExceptionIfEitherOfEntityDoesNotHaveSkeleton(secondEntity);
 
-			Function.Call(Hash.ATTACH_ENTITY_BONE_TO_ENTITY_BONE_Y_FORWARD, Owner, Index, secondEntity,
+			Function.Call(Hash.ATTACH_ENTITY_BONE_TO_ENTITY_BONE_Y_FORWARD, Owner, secondEntity, Index,
 				boneOfSecondEntity.Index, activeCollisions, useBasicAttachIfPed);
 		}
 
