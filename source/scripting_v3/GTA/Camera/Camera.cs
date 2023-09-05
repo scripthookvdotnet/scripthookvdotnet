@@ -557,18 +557,52 @@ namespace GTA
 
 		/// <summary>
 		/// Attaches this <see cref="Camera"/> to a specific bone on a specific <see cref="Vehicle"/>.
+		/// the camera will only copy translation components of the transformation matrix of
+		/// <paramref name="vehicleBone"/>.
 		/// </summary>
 		/// <param name="vehicleBone">The <see cref="Vehicle"/> bone to attach the camera to.</param>
-		/// <param name="offset">Offset relative to the specified <paramref name="vehicleBone"/>.</param>
-		/// <param name="rotation">Rotation vector of the <see cref="Camera"/>.</param>
-		/// <param name="hardAttachment">Set <see langword="true" /> to have rotation match that of the specified <paramref name="vehicleBone"/>; else set <see langword="false" />.</param>
+		/// <param name="positionOffset">The additional offset to be applied from the attach position.</param>
+		/// <param name="offsetIsRelative">
+		/// If true, <paramref name="positionOffset"/> are applied relative to the transform of the attached
+		/// <see cref="Vehicle"/> (not the bone), rather than in world-space. Effective as long as the
+		/// <see cref="Camera"/> is attached.
+		/// </param>
 		/// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.1290.1 or earlier game versions.</exception>
-		public void AttachToVehicleBone(EntityBone vehicleBone, Vector3 offset, Vector3 rotation, bool hardAttachment)
+		public void AttachToVehicleBone(EntityBone vehicleBone, Vector3 positionOffset, bool offsetIsRelative = true)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Camera), nameof(AttachToVehicleBone));
+
+			// The rotational offsets have effect only if hard attachment flag is set
+			Function.Call(Hash.ATTACH_CAM_TO_VEHICLE_BONE, Handle, vehicleBone.Owner.Handle, vehicleBone.Index,
+				false /* hardAttachment */, 0f, 0f, 0f, positionOffset.X, positionOffset.Y, positionOffset.Z,
+				offsetIsRelative);
+		}
+
+		/// <summary>
+		/// Attaches this <see cref="Camera"/> to a specific bone on a specific <see cref="Vehicle"/>.
+		/// Tthe camera will have both translation and rotation vector components of its transformation matrix match
+		/// that of <paramref name="vehicleBone"/>.
+		/// </summary>
+		/// <param name="vehicleBone">The <see cref="Vehicle"/> bone to attach the camera to.</param>
+		/// <param name="rotationOffset">
+		/// An additional rotational offset to be applied from the attach bone rotation (x=yaw, y=pitch, z=roll).
+		/// </param>
+		/// <param name="positionOffset">The additional offset to be applied from the attach position.</param>
+		/// <param name="offsetIsRelative">
+		/// If true, <paramref name="positionOffset"/> are applied relative to the transform of the attached
+		/// <see cref="Vehicle"/> (not the bone), rather than in world-space. Effective as long as the
+		/// <see cref="Camera"/> is attached. <paramref name="rotationOffset"/> is always relative to the transform of
+		/// the bone even if this parameter is set to <see langword="true"/>.
+		/// </param>
+		/// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.1290.1 or earlier game versions.</exception>
+		public void HardAttachToVehicleBone(EntityBone vehicleBone, Vector3 rotationOffset,
+			Vector3 positionOffset, bool offsetIsRelative = true)
 		{
 			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Camera), nameof(AttachToVehicleBone));
 
 			Function.Call(Hash.ATTACH_CAM_TO_VEHICLE_BONE, Handle, vehicleBone.Owner.Handle, vehicleBone.Index,
-				hardAttachment, rotation.X, rotation.Y, rotation.Z, offset.X, offset.Y, offset.Z, true);
+				true /* hardAttachment */, rotationOffset.X, rotationOffset.Y, rotationOffset.Z, positionOffset.X,
+				positionOffset.Y, positionOffset.Z, offsetIsRelative);
 		}
 
 		/// <summary>
