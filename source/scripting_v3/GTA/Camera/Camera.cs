@@ -562,9 +562,13 @@ namespace GTA
 		/// <param name="offset">Offset relative to the specified <paramref name="vehicleBone"/>.</param>
 		/// <param name="rotation">Rotation vector of the <see cref="Camera"/>.</param>
 		/// <param name="hardAttachment">Set <see langword="true" /> to have rotation match that of the specified <paramref name="vehicleBone"/>; else set <see langword="false" />.</param>
+		/// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.1290.1 or earlier game versions.</exception>
 		public void AttachToVehicleBone(EntityBone vehicleBone, Vector3 offset, Vector3 rotation, bool hardAttachment)
 		{
-			Function.Call(Hash.ATTACH_CAM_TO_VEHICLE_BONE, Handle, vehicleBone.Owner.Handle, vehicleBone.Index, hardAttachment, rotation.X, rotation.Y, rotation.Z, offset.X, offset.Y, offset.Z, true);
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Camera), nameof(AttachToVehicleBone));
+
+			Function.Call(Hash.ATTACH_CAM_TO_VEHICLE_BONE, Handle, vehicleBone.Owner.Handle, vehicleBone.Index,
+				hardAttachment, rotation.X, rotation.Y, rotation.Z, offset.X, offset.Y, offset.Z, true);
 		}
 
 		/// <summary>
