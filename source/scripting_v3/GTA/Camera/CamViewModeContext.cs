@@ -5,7 +5,7 @@
 
 namespace GTA
 {
-	public enum CameraViewModeContext
+	public enum CamViewModeContext
 	{
 		OnFoot,
 		InVehicle,

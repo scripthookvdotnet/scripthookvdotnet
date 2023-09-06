@@ -21,7 +21,7 @@ namespace GTA
 		/// where the current rendering camera (<c>camBaseCamera</c>) does not match any scripted cameras this scripted
 		/// camera director (<c>camScriptDirector</c>) is managing.
 		/// </remarks>
-		public static Camera RenderingCamera
+		public static Camera RenderingCam
 		{
 			get
 			{

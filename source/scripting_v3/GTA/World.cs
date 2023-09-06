@@ -1537,7 +1537,7 @@ namespace GTA
 		/// rendering camera does not match any scripted cameras the scripted camera director is managing.
 		/// </remarks>
 		[Obsolete("World.RenderingCamera is obsolete. " +
-			"Use ScriptCameraDirector.RenderingCamera to get the rendering scripted camera. " +
+			"Use ScriptCameraDirector.RenderingCam to get the rendering scripted camera. " +
 			"Use ScriptCameraDirector.StartRendering or ScriptCameraDirector.StopRendering to tell the game to render " +
 			"or stop rendering a scripted camera."),
 		EditorBrowsable(EditorBrowsableState.Never)]

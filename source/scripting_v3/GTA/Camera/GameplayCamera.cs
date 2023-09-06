@@ -154,51 +154,51 @@ namespace GTA
 		/// <summary>
 		/// Gets the value that indicates a follow-ped camera is active.
 		/// </summary>
-		public static bool IsFollowPedCameraActive => Function.Call<bool>(Hash.IS_FOLLOW_PED_CAM_ACTIVE);
+		public static bool IsFollowPedCamActive => Function.Call<bool>(Hash.IS_FOLLOW_PED_CAM_ACTIVE);
 
 		/// <summary>
 		/// Gets the global view mode used by all follow-ped cameras.
 		/// </summary>
-		public static CameraViewMode FollowPedCameraViewMode
+		public static CamViewMode FollowPedCamViewMode
 		{
-			get => Function.Call<CameraViewMode>(Hash.GET_FOLLOW_PED_CAM_VIEW_MODE);
+			get => Function.Call<CamViewMode>(Hash.GET_FOLLOW_PED_CAM_VIEW_MODE);
 			set => Function.Call(Hash.SET_FOLLOW_PED_CAM_VIEW_MODE, (int)value);
 		}
 
 		/// <summary>
 		/// Gets the value that indicates a follow-vehicle camera is active.
 		/// </summary>
-		public static bool IsFollowVehicleCameraActive => Function.Call<bool>(Hash.IS_FOLLOW_VEHICLE_CAM_ACTIVE);
+		public static bool IsFollowVehicleCamActive => Function.Call<bool>(Hash.IS_FOLLOW_VEHICLE_CAM_ACTIVE);
 
 		/// <summary>
 		/// Gets or sets the view mode used by the follow-vehicle and vehicle-aim cameras associated with classes of vehicles
 		/// that are not handled specially, such as cars.
-		/// Use <see cref="GetCameraViewModeForContext"/> or <see cref="SetCameraViewModeForContext"/>
+		/// Use <see cref="GetCamViewModeForContext"/> or <see cref="SetCamViewModeForContext"/>
 		/// to query the view mode applied for other classes of vehicle.
 		/// </summary>
-		public static CameraViewMode FollowVehicleCameraViewMode
+		public static CamViewMode FollowVehicleCamViewMode
 		{
-			get => Function.Call<CameraViewMode>(Hash.GET_FOLLOW_VEHICLE_CAM_VIEW_MODE);
+			get => Function.Call<CamViewMode>(Hash.GET_FOLLOW_VEHICLE_CAM_VIEW_MODE);
 			set => Function.Call(Hash.SET_FOLLOW_VEHICLE_CAM_VIEW_MODE, (int)value);
 		}
 
 		/// <summary>
 		///  Gets the camera view mode for the specified context.
 		/// </summary>
-		public static CameraViewMode GetCameraViewModeForContext(CameraViewModeContext context)
-			=> Function.Call<CameraViewMode>(Hash.GET_CAM_VIEW_MODE_FOR_CONTEXT, (int)context);
+		public static CamViewMode GetCamViewModeForContext(CamViewModeContext context)
+			=> Function.Call<CamViewMode>(Hash.GET_CAM_VIEW_MODE_FOR_CONTEXT, (int)context);
 
 		/// <summary>
 		///	Sets the camera view mode for the specified context.
 		/// </summary>
-		public static CameraViewMode SetCameraViewModeForContext(CameraViewModeContext context, CameraViewMode viewMode)
-			=> Function.Call<CameraViewMode>(Hash.SET_CAM_VIEW_MODE_FOR_CONTEXT, (int)context, (int)viewMode);
+		public static CamViewMode SetCamViewModeForContext(CamViewModeContext context, CamViewMode viewMode)
+			=> Function.Call<CamViewMode>(Hash.SET_CAM_VIEW_MODE_FOR_CONTEXT, (int)context, (int)viewMode);
 
 		/// <summary>
 		/// Returns the view mode context for the active gameplay camera.
 		/// </summary>
-		public static CameraViewModeContext ActiveViewModeContext
-			=> Function.Call<CameraViewModeContext>(Hash.GET_CAM_ACTIVE_VIEW_MODE_CONTEXT);
+		public static CamViewModeContext ActiveViewModeContext
+			=> Function.Call<CamViewModeContext>(Hash.GET_CAM_ACTIVE_VIEW_MODE_CONTEXT);
 
 		#region Hint Camera
 
@@ -362,11 +362,11 @@ namespace GTA
 		/// <param name="vehicle">
 		/// The vehicle for follow vehicle camera.
 		/// You can pass <see langword="null"/> or a invalid <see cref="Vehicle"/>
-		/// if <paramref name="inVehicleState"/> is set to <see cref="CameraInVehicleState.OutsideVehicle"/>,
-		/// since this value will not be used for <see cref="CameraInVehicleState.OutsideVehicle"/>.
+		/// if <paramref name="inVehicleState"/> is set to <see cref="CamInVehicleState.OutsideVehicle"/>,
+		/// since this value will not be used for <see cref="CamInVehicleState.OutsideVehicle"/>.
 		/// </param>
 		/// <param name="inVehicleState">The in vehicle camera state enum.</param>
-		public static void SetInVehicleCameraStateThisUpdate(Vehicle vehicle, CameraInVehicleState inVehicleState)
+		public static void SetInVehicleCameraStateThisUpdate(Vehicle vehicle, CamInVehicleState inVehicleState)
 			=> Function.Call(Hash.SET_IN_VEHICLE_CAM_STATE_THIS_UPDATE, vehicle, (int)inVehicleState);
 
 		/// <summary>
@@ -388,10 +388,11 @@ namespace GTA
 		/// or the mobile phone camera, if active.
 		/// </summary>
 		/// <remarks>
-		/// The specified zoom factor will be clamped to between 1.0 and the maximum zoom factor supported by the specific weapon/camera.
-		/// The zoom factor will also automatically reset to 1.0 if the follow <see cref="Ped"/>'s equipped weapon changes or the mobile phone camera toggles on or off.
+		/// The specified zoom factor will be clamped to between 1.0 and the maximum zoom factor supported by the
+		/// specific weapon/camera. The zoom factor will also automatically reset to 1.0 if the follow
+		/// <see cref="Ped"/>'s equipped weapon changes or the mobile phone camera toggles on or off.
 		/// </remarks>
-		public static float FirstPersonAimCameraZoomFactor
+		public static float FirstPersonAimCamZoomFactor
 		{
 			get => Function.Call<float>(Hash.GET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR);
 			set => Function.Call(Hash.SET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR, value);
@@ -401,9 +402,10 @@ namespace GTA
 		/// Gets the first-person ped aim zoom factor associated with equipped sniper scoped weapon,
 		/// or the mobile phone camera, if active.
 		/// </summary>
-		[Obsolete("GameplayCamera.Zoom is obsolete since it does not suggest the value is relevant only when a first person aim camera is used. "
-			+ "Use GameplayCamera.FirstPersonAimCameraZoomFactor instead."), EditorBrowsable(EditorBrowsableState.Never)]
-		public static float Zoom => FirstPersonAimCameraZoomFactor;
+		[Obsolete("GameplayCamera.Zoom is obsolete since it does not suggest the value is relevant only when a first" +
+			"person aim camera is used. Use GameplayCamera.FirstPersonAimCamZoomFactor instead."),
+			EditorBrowsable(EditorBrowsableState.Never)]
+		public static float Zoom => FirstPersonAimCamZoomFactor;
 
 		/// <summary>
 		/// Gets the field of view of the <see cref="GameplayCamera"/>.

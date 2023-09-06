@@ -5,7 +5,7 @@
 
 namespace GTA
 {
-	public enum CameraViewMode
+	public enum CamViewMode
 	{
 		ThirdPersonNear,
 		ThirdPersonMedium,

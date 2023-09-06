@@ -5,7 +5,7 @@
 
 namespace GTA
 {
-	public enum CameraInVehicleState
+	public enum CamInVehicleState
 	{
 		/// <summary>
 		/// Gameplay camera in interpolating to the follow vehicle camera.
