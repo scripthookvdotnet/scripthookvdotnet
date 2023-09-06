@@ -59,7 +59,7 @@ namespace GTA
 		/// <value>
 		/// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> is a cinematic camera; otherwise, <see langword="false" />.
 		/// </value>
-		public static bool IsAnyCamRendering => Function.Call<bool>(Hash.IS_CINEMATIC_CAM_RENDERING);
+		public static bool IsRendering => Function.Call<bool>(Hash.IS_CINEMATIC_CAM_RENDERING);
 
 		/// <summary>
 		/// Gets a value indicating whether an idle cinematic camera is rendering.
