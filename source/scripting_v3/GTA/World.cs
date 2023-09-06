@@ -1507,7 +1507,8 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Creates a <see cref="Camera"/>, use <see cref="Camera.StartRenderingScriptedCamera(bool)"/> to switch to this camera.
+		/// Creates a <see cref="Camera"/>, use <see cref="ScriptCameraDirector.StartRendering(bool)"/> to switch to
+		/// this camera.
 		/// </summary>
 		/// <param name="position">The position of the camera.</param>
 		/// <param name="rotation">The rotation of the camera.</param>
@@ -1532,12 +1533,13 @@ namespace GTA
 		/// </value>
 		/// <remarks>
 		/// Setting to <see langword="null" /> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>.
-		/// The getter will return a invalid <see cref="Camera"/> where <see cref="PoolObject.Handle"/> is -1 if no scripted
-		/// camera is rendering by the scripted camera director.
+		/// The getter will return a invalid <see cref="Camera"/> where <see cref="PoolObject.Handle"/> is -1 if the
+		/// rendering camera does not match any scripted cameras the scripted camera director is managing.
 		/// </remarks>
 		[Obsolete("World.RenderingCamera is obsolete. " +
-		          "Use Camera.RenderingScriptedCamera to get the rendering scripted camera. " +
-		          "Use Camera.StartRenderingScriptedCamera or Camera.StopRenderingScriptedCamera to tell the game to render or stop rendering a scripted camera."),
+			"Use ScriptCameraDirector.RenderingCamera to get the rendering scripted camera. " +
+			"Use ScriptCameraDirector.StartRendering or ScriptCameraDirector.StopRendering to tell the game to render " +
+			"or stop rendering a scripted camera."),
 		EditorBrowsable(EditorBrowsableState.Never)]
 		public static Camera RenderingCamera
 		{
