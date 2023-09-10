@@ -176,7 +176,8 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets a value that indicates whether this <see cref="Entity"/> has an animation director.
+		/// Gets a value that indicates whether this <see cref="Entity"/> has an animation director
+		/// (<c>rage::fwAnimDirector</c>).
 		/// <see cref="HasAnimationEventFired(int)"/> requires the <see cref="Entity"/> to have an animation director.
 		/// You can use this property to check that the entity has an animation director before calling that method.
 		/// </summary>
@@ -184,9 +185,33 @@ namespace GTA
 		/// <see langword="true"/> if this <see cref="Entity"/> has an animation director; otherwise, <see langword="false"/>.
 		/// </value>
 		/// <remarks>
-		/// Currently only available in v1.0.2699.0 or later.
+		/// Although <c>DOES_ENTITY_HAVE_ANIM_DIRECTOR</c> is only available in v1.0.2699.0 or later, you can
+		/// successfully call this property in all game versions.
 		/// </remarks>
-		public bool HasAnimationDirector => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_ANIM_DIRECTOR, Handle);
+		public bool HasAnimationDirector
+		{
+			get
+			{
+				if (Game.Version >= GameVersion.v1_0_2699_0_Steam)
+				{
+					return Function.Call<bool>(Hash.DOES_ENTITY_HAVE_ANIM_DIRECTOR, Handle);
+				}
+
+				IntPtr entityAddr = MemoryAddress;
+				if (entityAddr == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				IntPtr unkStructAddr = SHVDN.NativeMemory.ReadAddress(entityAddr + 0x50);
+				if (unkStructAddr == IntPtr.Zero)
+				{
+					return false;
+				}
+
+				return SHVDN.NativeMemory.ReadAddress(unkStructAddr + 0x40) != IntPtr.Zero;
+			}
+		}
 
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Entity"/> is owned by a SHVDN script including the console.
