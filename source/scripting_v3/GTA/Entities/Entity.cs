@@ -2338,11 +2338,14 @@ namespace GTA
 		#region Physics
 
 		/// <summary>
-		/// Gets a value that indicates whether this <see cref="Entity"/> has physics.
-		/// Before calling physics methods or properties such as <see cref="set_Velocity"/>, you have to check that the entity has physics.
+		/// Gets a value that indicates whether this <see cref="Entity"/> has physics (<c>rage::phInst</c>) so it can
+		/// collide with <see cref="Entity"/>s.
+		/// Before calling physics methods or properties such as <see cref="set_Velocity"/>, you need to check that
+		/// the entity has physics.
 		/// </summary>
 		/// <value>
-		/// <see langword="true"/> if this <see cref="Entity"/> has physics; otherwise, <see langword="false" />.
+		/// <see langword="true"/> if this <see cref="Entity"/> has physics (<c>rage::phInst</c>); otherwise,
+		/// <see langword="false"/>.
 		/// </value>
 		/// <remarks>
 		/// Physics are streamed in separately from the drawable object, though <see cref="Entity"/> physics near
@@ -2351,14 +2354,48 @@ namespace GTA
 		/// </remarks>
 		public bool HasPhysics => Function.Call<bool>(Hash.DOES_ENTITY_HAVE_PHYSICS, Handle);
 		/// <summary>
-		/// Activates the physics of this <see cref="Entity"/>.
-		/// Needs <see cref="HasPhysics"/> to return <see langword="true"/> before calling this method has actual effects.
+		/// Activates the physics of this <see cref="Entity"/> by having a physics collider (<c>rage::phCollider</c>)
+		/// for the <see cref="Entity"/>, which is needed to physically move in both linear and rotational motions (not
+		/// needed for entity animations or any bones rotating).
+		/// Needs <see cref="HasPhysics"/> to return <see langword="true"/> before calling this method can successfully
+		/// have the <see cref="Entity"/> activate the physics.
 		/// </summary>
 		/// <seealso cref="HasPhysics"/>
+		/// <remarks>
+		/// This method is not appropriate to keep the <see cref="Entity"/> having its physics collider.
+		/// Use <see cref="SetToRespondToPhysicsSystem()"/> to keep it.
+		/// </remarks>
 		public void ActivatePhysics() => Function.Call(Hash.ACTIVATE_PHYSICS, Handle);
+		/// <summary>
+		/// Deactivates the physics of this <see cref="Entity"/> by destroying its <c>rage::phCollider</c> so the
+		/// <see cref="Entity"/> can't physically move in both linear and rotational motions.
+		/// Does not stop animations or any bones rotating, since they have nothing to do with <c>rage::phCollider</c>.
+		/// </summary>
+		public void DeactivatePhysics() => Function.Call(Hash.SET_ENTITY_DYNAMIC, Handle, false);
+		/// <summary>
+		/// <para>
+		/// Sets the entity to respond to the physics system. Needs <see cref="HasPhysics"/> to return
+		/// <see langword="true"/> before calling this method has actual effects.
+		/// </para>
+		/// <para>
+		/// Keeps this <see cref="Entity"/> having its physics collider (<c>rage::phCollider</c>) if the entity has a
+		/// physics collider, where <see cref="IsStatic"/> returns <see langword="false"/>; otherwise, activates the
+		/// physics of this <see cref="Entity"/> (same effect as <see cref="ActivatePhysics"/> in such case).
+		/// </para>
+		/// </summary>
+		/// <remarks>
+		/// You need to call this method as long as you want to keep this <see cref="Entity"/> having its physics
+		/// collider, since this method only sets certain variables to certain values on its <c>rage::phCollider</c> so
+		/// it will not be destroyed by game code in the next frame if the <see cref="Entity"/> is using a
+		/// <c>rage::phCollider</c>.
+		/// </remarks>
+		public void SetToRespondToPhysicsSystem() => Function.Call(Hash.SET_ENTITY_DYNAMIC, Handle, true);
 
 		/// <summary>
-		/// Checks if this <see cref="Entity"/> has no active physics collider.
+		/// Checks if this <see cref="Entity"/> has no active physics collider so it cannot physically move in both
+		/// linear and rotational motions (hence no linear velocity or angular velocity).
+		/// Returning <see langword="true"/> does not mean that the <see cref="Entity"/> is not using animations or
+		/// having some of its bones rotating.
 		/// </summary>
 		/// <returns>
 		/// <see langword="true"/> if this <see cref="Entity"/> exists and no active physics collider;
