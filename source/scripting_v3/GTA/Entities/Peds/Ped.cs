@@ -863,19 +863,19 @@ namespace GTA
 		public NavMeshRouteResult GetNavMeshRouteResult() => Function.Call<NavMeshRouteResult>(Hash.GET_NAVMESH_ROUTE_RESULT, Handle);
 
 		/// <summary>
-		/// Sets or unsets any <see cref="VehicleChaseFlags"/> that the <see cref="Ped"/> will use for an active
+		/// Sets or unsets any <see cref="VehicleChaseBehaviorFlags"/> that the <see cref="Ped"/> will use for an active
 		/// vehicle chase task (<c>CTaskVehicleChase</c>).
 		/// A vehicle chase task (<c>CTaskVehicleChase</c>) on the <see cref="Ped"/> must be run, which can be created
 		/// by calling <see cref="TaskInvoker.VehicleChase(Ped)"/>, before calling this method or it will have no
 		/// effect.
 		/// </summary>
 		/// <param name="flags">The flag to set or unset.</param>
-		/// <param name="set">
+		/// <param name="value">
 		/// <see langword="true"/> to set the flags; otherwise <see langword="false"/> to unset flags.
 		/// </param>
-		public void SetVehicleChaseBehaviorFlags(VehicleChaseFlags flags, bool set)
+		public void SetVehicleChaseBehaviorFlags(VehicleChaseBehaviorFlags flags, bool value)
 		{
-			Function.Call(Hash.SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG, Handle, flags, set);
+			Function.Call(Hash.SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG, Handle, flags, value);
 		}
 
 		/// <summary>
