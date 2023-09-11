@@ -1864,11 +1864,16 @@ namespace GTA
 		public bool WasKilledByTakedown => Function.Call<bool>(Hash.WAS_PED_KILLED_BY_TAKEDOWN, Handle);
 
 		/// <summary>
-		/// Gets the combat target <see cref="Ped"/> who this <see cref="Ped"/> is in combat with for a <c>CTaskCombat</c> of this <see cref="Ped"/>.
+		/// Gets the combat target <see cref="Ped"/> who this <see cref="Ped"/> is in combat with for a
+		/// <c>CTaskCombat</c> of this <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
 		/// Although <c>GET_PED_TARGET_FROM_COMBAT_PED</c> is not present in v1.0.2245.0 or earlier game versions,
-		/// this property supports all game versions.
+		/// this property supports all game versions. Unlike the native, this property does not check if the
+		/// <see cref="Ped"/> is running <c>CTaskCombat</c> before this property can return a valid <see cref="Ped"/>.
+		/// The native would return a valid <see cref="Ped"/> if it is in the case where a <c>CTaskCombat</c> would be
+		/// found on an inactive task tree of <c>CTaskTreePed</c>, however, since it traverse the first
+		/// <c>CTaskInfo</c> and its nodes on <c>CPedIntelligence</c>, not the active task tree.
 		/// </remarks>
 		public Ped CombatTarget
 		{
@@ -1879,6 +1884,15 @@ namespace GTA
 			}
 		}
 
+		/// <summary>
+		/// Gets the melee target for this <see cref="Ped"/>. This <see cref="Ped"/> must be performing any type of
+		/// melee action (attack, block, stealth kill, takedown, dodge, etc) before this property can return a valid
+		/// <see cref="Ped"/>.
+		/// </summary>
+		/// <remarks>
+		/// This property access the target <see cref="Ped"/> address field of a <c>CTaskMeleeActionResult</c> that is
+		/// run by this <see cref="Ped"/>.
+		/// </remarks>
 		public Ped MeleeTarget
 		{
 			get
