@@ -803,15 +803,18 @@ namespace GTA
 		/// Gets a value that indicates whether this <see cref="Player"/> has their special ability.
 		/// </summary>
 		/// <value>
-		/// <see langword="true"/> if this <see cref="Player"/> has their special ability; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if this <see cref="Player"/> has their special ability; otherwise,
+		/// <see langword="false"/>.
 		/// </value>
-		public bool HasSpecialAbility => SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle) != IntPtr.Zero;
+		public bool HasSpecialAbility
+			=> SHVDN.NativeMemory.GetPrimarySpecialAbilityStructAddress(Handle) != IntPtr.Zero;
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Player"/> is using their special ability.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if this <see cref="Player"/> is using their special ability; otherwise, <see langword="false" />.
+		/// <see langword="true"/> if this <see cref="Player"/> is using their special ability; otherwise,
+		/// <see langword="false"/>.
 		/// </value>
 		public bool IsSpecialAbilityActive => Function.Call<bool>(Hash.IS_SPECIAL_ABILITY_ACTIVE, Handle);
 
@@ -819,7 +822,8 @@ namespace GTA
 		/// Gets or sets a value indicating whether this <see cref="Player"/> can use their special ability.
 		/// </summary>
 		/// <value>
-		/// <see langword="true" /> if this  <see cref="Player"/> can use their special ability; otherwise, <see langword="false" />.
+		/// <see langword="true"/> if this  <see cref="Player"/> can use their special ability; otherwise,
+		/// <see langword="false"/>.
 		/// </value>
 		public bool IsSpecialAbilityEnabled
 		{
@@ -833,7 +837,9 @@ namespace GTA
 		/// Charges the special ability for this <see cref="Player"/>.
 		/// </summary>
 		/// <param name="absoluteAmount">The absolute amount.</param>
-		/// <param name="ignoreActive">If <see langword="true"/>, thid method will do nothing if the special ability is active.</param>
+		/// <param name="ignoreActive">
+		/// If <see langword="true"/>, thid method will do nothing if the special ability is active.
+		/// </param>
 		public void ChargeSpecialAbility(int absoluteAmount, bool ignoreActive)
 		{
 			Function.Call(Hash.SPECIAL_ABILITY_CHARGE_ABSOLUTE, Handle, absoluteAmount, ignoreActive);
@@ -845,7 +851,9 @@ namespace GTA
 		/// Charges the special ability for this <see cref="Player"/>.
 		/// </summary>
 		/// <param name="normalizedRatio">The amount between <c>0.0f</c> and <c>1.0f</c></param>
-		/// <param name="ignoreActive">If <see langword="false"/>, thid method will do nothing if the special ability is active.</param>
+		/// <param name="ignoreActive">
+		/// If <see langword="false"/>, thid method will do nothing if the special ability is active.
+		/// </param>
 		public void ChargeSpecialAbility(float normalizedRatio, bool ignoreActive)
 		{
 			Function.Call(Hash.SPECIAL_ABILITY_CHARGE_NORMALIZED, Handle, normalizedRatio, ignoreActive);
@@ -856,7 +864,9 @@ namespace GTA
 		/// <summary>
 		/// Refills the special ability for this <see cref="Player"/>.
 		/// </summary>
-		/// <param name="ignoreActive">If <see langword="false"/>, thid method will do nothing if the special ability is active.</param>
+		/// <param name="ignoreActive">
+		/// If <see langword="false"/>, thid method will do nothing if the special ability is active.
+		/// </param>
 		public void RefillSpecialAbility(bool ignoreActive)
 		{
 			Function.Call(Hash.SPECIAL_ABILITY_FILL_METER, Handle, ignoreActive);
@@ -867,7 +877,9 @@ namespace GTA
 		/// <summary>
 		/// Depletes the special ability for this <see cref="Player"/>.
 		/// </summary>
-		/// <param name="ignoreActive">If <see langword="false"/>, thid method will do if the special ability is active.</param>
+		/// <param name="ignoreActive">
+		/// If <see langword="false"/>, this method will to nothing if the special ability is active.
+		/// </param>
 		public void DepleteSpecialAbility(bool ignoreActive)
 		{
 			Function.Call(Hash.SPECIAL_ABILITY_DEPLETE_METER, Handle, ignoreActive);
@@ -888,19 +900,28 @@ namespace GTA
 				return;
 			}
 
-			// SPECIAL_ABILITY_ACTIVATE is not present, have to manually call what SPECIAL_ABILITY_ACTIVATE eventually calls if the player has their special ability
+			// SPECIAL_ABILITY_ACTIVATE is not present, have to manually call what SPECIAL_ABILITY_ACTIVATE eventually
+			// calls if the player has their special ability
 			SHVDN.NativeMemory.ActivateSpecialAbility(Handle);
 		}
 
 		/// <summary>
 		/// Deactivates the special ability for this <see cref="Player"/>.
 		/// </summary>
+		/// <remarks>
+		/// The current time scale for the special ability, which is different from the one that can be accessed via
+		/// <see cref="Game.TimeScale"/>, will gradually go to 1.0 (in the ease-out style where the value starts
+		/// quickly, slowing down the animation continues).
+		/// </remarks>
 		public void DeactivateSpecialAbility() => Function.Call(Hash.SPECIAL_ABILITY_DEACTIVATE, Handle, 0);
 
 		/// <summary>
-		/// Deactivates the special ability for this <see cref="Player"/> instantly without the usual transition animation.
+		/// Deactivates the special ability for this <see cref="Player"/> instantly without applying the fadeout fx.
+		/// Also immediately sets the current time scale for the special ability, which is different from the one that
+		/// can be accessed via <see cref="Game.TimeScale"/>, to 1.0.
 		/// </summary>
-		public void DeactivateSpecialAbilityInstantly() => Function.Call(Hash.SPECIAL_ABILITY_DEACTIVATE_FAST, Handle, 0);
+		public void DeactivateSpecialAbilityInstantly()
+			=> Function.Call(Hash.SPECIAL_ABILITY_DEACTIVATE_FAST, Handle, 0);
 
 		#endregion
 
