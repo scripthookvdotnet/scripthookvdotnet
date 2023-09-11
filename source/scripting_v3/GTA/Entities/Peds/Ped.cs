@@ -1816,10 +1816,6 @@ namespace GTA
 
 		public bool IsBeingStunned => Function.Call<bool>(Hash.IS_PED_BEING_STUNNED, Handle);
 
-		public bool IsBeingStealthKilled => Function.Call<bool>(Hash.IS_PED_BEING_STEALTH_KILLED, Handle);
-
-		public bool IsPerformingStealthKill => Function.Call<bool>(Hash.IS_PED_PERFORMING_STEALTH_KILL, Handle);
-
 		public bool IsInCover => Function.Call<bool>(Hash.IS_PED_IN_COVER, Handle, false);
 
 		public bool IsInCoverFacingLeft => Function.Call<bool>(Hash.IS_PED_IN_COVER_FACING_LEFT, Handle);
@@ -1884,14 +1880,37 @@ namespace GTA
 			}
 		}
 
+		public bool IsInCombatAgainst(Ped target)
+		{
+			return Function.Call<bool>(Hash.IS_PED_IN_COMBAT, Handle, target.Handle);
+		}
+
+		#region Melee Action Result
+
+		/// <summary>
+		/// Returns whether this <see cref="Ped"/> is currently performing any type of melee action (attack, block,
+		/// stealth kill, takedown, dodge, etc).
+		/// </summary>
+		/// <remarks>
+		/// This property returns <see langword="true"/> when the <see cref="Ped"/> is executing a
+		/// <c>CTaskMeleeActionResult</c> on the active task tree of the <c>CTaskTreePed</c> on <c>CPedIntelligence</c>.
+		/// </remarks>
+		public bool IsPerformingMeleeAction => Function.Call<bool>(Hash.IS_PED_PERFORMING_MELEE_ACTION, Handle);
+		public bool IsPerformingStealthKill => Function.Call<bool>(Hash.IS_PED_PERFORMING_STEALTH_KILL, Handle);
+		public bool IsPerformingCounterAttack => Function.Call<bool>(Hash.IS_PED_PERFORMING_A_COUNTER_ATTACK, Handle);
+		/// <summary>
+		/// Returns whether this <see cref="Ped"/> is currently being killed by a melee stealth action.
+		/// </summary>
+		public bool IsBeingStealthKilled => Function.Call<bool>(Hash.IS_PED_BEING_STEALTH_KILLED, Handle);
+
 		/// <summary>
 		/// Gets the melee target for this <see cref="Ped"/>. This <see cref="Ped"/> must be performing any type of
 		/// melee action (attack, block, stealth kill, takedown, dodge, etc) before this property can return a valid
 		/// <see cref="Ped"/>.
 		/// </summary>
 		/// <remarks>
-		/// This property access the target <see cref="Ped"/> address field of a <c>CTaskMeleeActionResult</c> that is
-		/// run by this <see cref="Ped"/>.
+		/// This property access the field of the target <see cref="Ped"/> address of a <c>CTaskMeleeActionResult</c>
+		/// that is executed by this <see cref="Ped"/>.
 		/// </remarks>
 		public Ped MeleeTarget
 		{
@@ -1902,10 +1921,7 @@ namespace GTA
 			}
 		}
 
-		public bool IsInCombatAgainst(Ped target)
-		{
-			return Function.Call<bool>(Hash.IS_PED_IN_COMBAT, Handle, target.Handle);
-		}
+		#endregion
 
 		/// <summary>
 		/// Gets the <see cref="Entity"/> that killed this <see cref="Ped"/>.
