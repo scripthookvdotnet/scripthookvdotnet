@@ -1798,6 +1798,10 @@ namespace GTA
 
 		public bool IsInCombat => Function.Call<bool>(Hash.IS_PED_IN_COMBAT, Handle);
 
+		/// <summary>
+		/// Gets a value that indicates whether this <see cref="Ped"/> is in melee combat (doing a melee task, which
+		/// is <c>CTaskMelee</c>).
+		/// </summary>
 		public bool IsInMeleeCombat => Function.Call<bool>(Hash.IS_PED_IN_MELEE_COMBAT, Handle);
 
 		public bool IsAiming => GetConfigFlag(PedConfigFlags.IsAimingGun);
