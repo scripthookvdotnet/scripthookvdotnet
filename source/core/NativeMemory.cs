@@ -2613,10 +2613,10 @@ namespace SHVDN
 					CEventStackOffset = *(int*)(address + 4);
 				}
 
-				address = FindPatternNaive("\x48\x8B\xF0\x48\x3B\xC8\x74\x20\x48\x85\xC9\x74\x08\x49\x8B\xD6\xE8", "xxxxxxxxxxxxxxxxx");
+				address = FindPatternBmh("\x74\x51\x48\x8D\x81\x00\x00\x00\x00\x48\x85\xC0\x74\x43\x48\x8B\x00\x48\x85\xC0\x74\x0A", "xxxxx????xxxxxxxxxxxxx");
 				if (address != null)
 				{
-					PedIntelligenceCTaskInfoOffset = *(int*)(address - 0x1F);
+					PedIntelligenceCTaskInfoOffset = *(int*)(address + 0x5);
 					PedIntelligenceCombatTargetPedAddressOffset = PedIntelligenceCTaskInfoOffset + 0x18;
 					PedIntelligenceCurrentScriptTaskHashOffset = PedIntelligenceCTaskInfoOffset + 0x20;
 					PedIntelligenceCurrentScriptTaskStatusOffset = PedIntelligenceCTaskInfoOffset + 0x24;
@@ -2885,7 +2885,7 @@ namespace SHVDN
 
 			public static int GetCombatTargetPedHandleFromCombatPed(IntPtr pedAddress)
 			{
-				if (PedIntelligenceCTaskInfoOffset == 0)
+				if (PedIntelligenceCombatTargetPedAddressOffset == 0)
 				{
 					return 0;
 				}
@@ -2911,7 +2911,7 @@ namespace SHVDN
 
 			public static int GetCombatTargetPedHandleFromCombatPed(int pedHandle)
 			{
-				if (PedIntelligenceCTaskInfoOffset == 0)
+				if (PedIntelligenceCombatTargetPedAddressOffset == 0)
 				{
 					return 0;
 				}
