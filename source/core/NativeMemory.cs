@@ -317,7 +317,7 @@ namespace SHVDN
 
 				s_unkScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)((long*)(*(int*)(address + 0x30) + address + 0x34));
 				s_isUsingMultiScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, bool>)((long*)(*(int*)(address + 0x38) + address + 0x3C));
-				s_getAppropriateScreenInfoFunc = (delegate* unmanaged[Stdcall]<IntPtr, ScreenInfo*>)((long*)(*(int*)(address + 0x50) + address + 0x54));
+				s_getMainScreenInfoFunc = (delegate* unmanaged[Stdcall]<IntPtr, ScreenInfo*>)((long*)(*(int*)(address + 0x50) + address + 0x54));
 			}
 
 			// Find euphoria functions
@@ -3103,14 +3103,15 @@ namespace SHVDN
 		[StructLayout(LayoutKind.Explicit, Size = 0x30)]
 		internal struct ScreenInfo
 		{
+			// these fields should be in pixel coordinates
 			[FieldOffset(0x14)]
-			internal uint nonMainScreenWidth;
+			internal uint left;
 			[FieldOffset(0x18)]
-			internal uint physicalWidth;
+			internal uint right;
 			[FieldOffset(0x1C)]
-			internal uint nonMainScreenHeight;
+			internal uint top;
 			[FieldOffset(0x20)]
-			internal uint physicalHeight;
+			internal uint bottom;
 		}
 
 		private static int* s_physicalScrenWidthAddr;
@@ -3124,7 +3125,7 @@ namespace SHVDN
 		/// Returns only either 0 or 1.
 		/// </remarks>
 		private static delegate* unmanaged[Stdcall]<IntPtr, bool> s_isUsingMultiScreenFunc;
-		private static delegate* unmanaged[Stdcall]<IntPtr, ScreenInfo*> s_getAppropriateScreenInfoFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, ScreenInfo*> s_getMainScreenInfoFunc;
 
 		internal sealed class GetMainWindowResoltionTask : IScriptTask
 		{
@@ -3141,11 +3142,11 @@ namespace SHVDN
 				{
 					// A lot of functions call this function twice for some reason, so we call it twice for safely
 					generalScreenInfoAddr = s_unkScreenFunc(s_screenInfoAddr);
-					ScreenInfo* screenInfoAddr = s_getAppropriateScreenInfoFunc(generalScreenInfoAddr);
+					ScreenInfo* screenInfoAddr = s_getMainScreenInfoFunc(generalScreenInfoAddr);
 
 					resolutionResult = new Size(
-						(int)(screenInfoAddr->physicalWidth - screenInfoAddr->nonMainScreenWidth),
-						(int)(screenInfoAddr->physicalHeight - screenInfoAddr->nonMainScreenHeight)
+						(int)(screenInfoAddr->right - screenInfoAddr->left),
+						(int)(screenInfoAddr->bottom - screenInfoAddr->top)
 						);
 				}
 			}
