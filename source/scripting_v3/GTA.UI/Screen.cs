@@ -112,7 +112,8 @@ namespace GTA.UI
 		public const float Height = 720f;
 
 		/// <summary>
-		/// Gets the actual screen resolution the game is being rendered at
+		/// Gets the actual/physical screen resolution the game is being rendered at.
+		/// In 3x1 modes, non-main windows are also considered.
 		/// </summary>
 		public static Size Resolution
 		{
@@ -128,9 +129,26 @@ namespace GTA.UI
 			}
 		}
 		/// <summary>
+		/// Gets the main window screen resolution the game is being rendered at.
+		/// In 3x1 modes, non-main windows are not considered.
+		/// </summary>
+		public static Size MainWindowResolution => SHVDN.NativeMemory.GetMainWindowResolution();
+		/// <summary>
 		/// Gets the current screen aspect ratio of the main window.
 		/// </summary>
-		public static float AspectRatio => Function.Call<float>(Hash.GET_ASPECT_RATIO, 0);
+		/// <remarks>
+		/// Takes into account custom overrides from the settings menu, so this property will return an appropriate
+		/// constant value if the aspect ratio is overridden.
+		/// </remarks>
+		public static float AspectRatio => Function.Call<float>(Hash.GET_ASPECT_RATIO, false);
+		/// <summary>
+		/// Gets the physical aspect ratio of the game window (Useful for 3x1 modes).
+		/// </summary>
+		/// <remarks>
+		/// Takes into account custom overrides from the settings menu, so this property will return an appropriate
+		/// constant value if the aspect ratio is overridden.
+		/// </remarks>
+		public static float PhysicalAspectRatio => Function.Call<float>(Hash.GET_ASPECT_RATIO, true);
 		/// <summary>
 		/// Gets the screen width scaled against a 720pixel height base.
 		/// </summary>
