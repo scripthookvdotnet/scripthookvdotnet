@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -305,6 +306,18 @@ namespace SHVDN
 			if (address != null)
 			{
 				s_interiorProxyPoolAddress = (ulong*)(*(int*)(address + 12) + address + 16);
+			}
+
+			address = FindPatternBmh("\x0F\x84\x87\x00\x00\x00\xFF\xC9\x74\x79\xFF\xC9\x74\x6B\x66\x0F\x6E\x35", "xxxxxxxxxxxxxxxxxx");
+			if (address != null)
+			{
+				s_physicalScrenWidthAddr = (int*)(*(int*)(address + 0x12) + address + 0x16);
+				s_physicalScrenHeightAddr = (int*)(*(int*)(address + 0x1A) + address + 0x1E);
+				s_screenInfoAddr = new IntPtr((long*)(*(int*)(address + 0x2B) + address + 0x2F));
+
+				s_unkScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)((long*)(*(int*)(address + 0x30) + address + 0x34));
+				s_isUsingMultiScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, bool>)((long*)(*(int*)(address + 0x38) + address + 0x3C));
+				s_getAppropriateScreenInfoFunc = (delegate* unmanaged[Stdcall]<IntPtr, ScreenInfo*>)((long*)(*(int*)(address + 0x50) + address + 0x54));
 			}
 
 			// Find euphoria functions
@@ -3084,6 +3097,68 @@ namespace SHVDN
 
 			#endregion
 		}
+
+		#region -- Screen Data --
+
+		[StructLayout(LayoutKind.Explicit, Size = 0x30)]
+		internal struct ScreenInfo
+		{
+			[FieldOffset(0x14)]
+			internal uint nonMainScreenWidth;
+			[FieldOffset(0x18)]
+			internal uint physicalWidth;
+			[FieldOffset(0x1C)]
+			internal uint nonMainScreenHeight;
+			[FieldOffset(0x20)]
+			internal uint physicalHeight;
+		}
+
+		private static int* s_physicalScrenWidthAddr;
+		private static int* s_physicalScrenHeightAddr;
+		private static IntPtr s_screenInfoAddr;
+		/// <remarks>
+		/// May need to be called in the main thread if the game is using multiple screens.
+		/// </remarks>
+		private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr> s_unkScreenFunc;
+		/// <remarks>
+		/// Returns only either 0 or 1.
+		/// </remarks>
+		private static delegate* unmanaged[Stdcall]<IntPtr, bool> s_isUsingMultiScreenFunc;
+		private static delegate* unmanaged[Stdcall]<IntPtr, ScreenInfo*> s_getAppropriateScreenInfoFunc;
+
+		internal sealed class GetMainWindowResoltionTask : IScriptTask
+		{
+			#region Fields
+			internal Size resolutionResult;
+			#endregion
+
+			public void Run()
+			{
+				resolutionResult = new Size(*s_physicalScrenWidthAddr, *s_physicalScrenHeightAddr);
+
+				IntPtr generalScreenInfoAddr = s_unkScreenFunc(s_screenInfoAddr);
+				if (s_isUsingMultiScreenFunc(generalScreenInfoAddr))
+				{
+					// A lot of functions call this function twice for some reason, so we call it twice for safely
+					generalScreenInfoAddr = s_unkScreenFunc(s_screenInfoAddr);
+					ScreenInfo* screenInfoAddr = s_getAppropriateScreenInfoFunc(generalScreenInfoAddr);
+
+					resolutionResult = new Size(
+						(int)(screenInfoAddr->physicalWidth - screenInfoAddr->nonMainScreenWidth),
+						(int)(screenInfoAddr->physicalHeight - screenInfoAddr->nonMainScreenHeight)
+						);
+				}
+			}
+		}
+
+		public static Size GetMainWindowResolution()
+		{
+			var task = new GetMainWindowResoltionTask();
+			ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+			return task.resolutionResult;
+		}
+
+		#endregion
 
 		#region -- Model Info --
 
