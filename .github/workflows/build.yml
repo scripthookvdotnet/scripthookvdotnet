@@ -23,7 +23,7 @@ jobs:
     - name: Define SHVDN version
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        git fetch --unshallow
+        git fetch --unshallow 2>&1 | Out-Null
         $env:SHVDN_VERSION = echo "SHVDN_VERSION=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" refs/tags |% { $_.Substring(1) })"
         echo "Version: $env:SHVDN_VERSION"
         echo $env:SHVDN_VERSION >> $env:GITHUB_ENV
