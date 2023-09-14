@@ -9,7 +9,7 @@ using System;
 namespace GTA
 {
 	/// <summary>
-	/// Represents a dictionary struct for an clip/animation dictionary, which is created from a ycd file.
+	/// Represents a dictionary struct for an creature clip/animation dictionary, which is created from a ycd file.
 	/// Note that clip/animation dictionaries are different from clip sets, which is defined in
 	/// <c>clip_sets.ymt</c> or <c>clip_sets.xml</c> files.
 	/// </summary>
@@ -18,9 +18,9 @@ namespace GTA
 	/// GTA V doesn't have game classes for animation dictionaries different from clip dictionaries
 	/// while the exe has <c>rage::crClipDictionary</c> and <c>rage::fwClipDictionaryStore</c> classes.
 	/// </remarks>
-	public readonly struct ClipDictionary : IEquatable<ClipDictionary>, IScriptStreamingResource
+	public readonly struct CrClipDictionary : IEquatable<CrClipDictionary>, IScriptStreamingResource
 	{
-		public ClipDictionary(string name) : this()
+		public CrClipDictionary(string name) : this()
 		{
 			Name = name;
 		}
@@ -44,29 +44,29 @@ namespace GTA
 		public int HashName() => Game.GenerateHash(Name);
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="ClipDictionary"/> exists
+		/// Gets a value indicating whether this <see cref="CrClipDictionary"/> exists
 		/// in the <c>fwClipDictionaryStore</c> pool.
 		/// </summary>
 		public bool Exists => Function.Call<bool>(Hash.DOES_ANIM_DICT_EXIST, Name);
 
 		/// <summary>
-		/// Gets a value indicating whether this <see cref="ClipDictionary"/> is loaded
-		/// so the animations of this <see cref="ClipDictionary"/> are ready to use.
+		/// Gets a value indicating whether this <see cref="CrClipDictionary"/> is loaded
+		/// so the animations of this <see cref="CrClipDictionary"/> are ready to use.
 		/// </summary>
 		public bool IsLoaded => Function.Call<bool>(Hash.HAS_ANIM_DICT_LOADED, Name);
 
 		/// <summary>
-		/// Attempts to load this <see cref="ClipDictionary"/> into memory.
+		/// Attempts to load this <see cref="CrClipDictionary"/> into memory.
 		/// </summary>
 		public void Request()
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, Name);
 		}
 		/// <summary>
-		/// Attempts to load this <see cref="ClipDictionary"/> into memory for a given period of time.
+		/// Attempts to load this <see cref="CrClipDictionary"/> into memory for a given period of time.
 		/// </summary>
-		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="ClipDictionary"/>.</param>
-		/// <returns><see langword="true" /> if this <see cref="ClipDictionary"/> is loaded; otherwise, <see langword="false" />.</returns>
+		/// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="CrClipDictionary"/>.</param>
+		/// <returns><see langword="true" /> if this <see cref="CrClipDictionary"/> is loaded; otherwise, <see langword="false" />.</returns>
 		public bool Request(int timeout)
 		{
 			Request();
@@ -89,7 +89,7 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Tells the game we have finished using this <see cref="ClipDictionary"/> and it can be freed from memory.
+		/// Tells the game we have finished using this <see cref="CrClipDictionary"/> and it can be freed from memory.
 		/// </summary>
 		public void MarkAsNoLongerNeeded()
 		{
@@ -100,38 +100,38 @@ namespace GTA
 		/// Returns <see langword="true"/> if the Jenkins-one-at-a-time (joaat) hash value of <see cref="Name"/>
 		/// matches that of <paramref name="other"/>, as the game uses joaat hashes as identifiers of clip dictionaries.
 		/// </summary>
-		public bool Equals(ClipDictionary other)
+		public bool Equals(CrClipDictionary other)
 		{
 			return HashName() == other.HashName();
 		}
 		public override bool Equals(object obj)
 		{
-			if (obj is ClipDictionary model)
+			if (obj is CrClipDictionary clipDict)
 			{
-				return Equals(model);
+				return Equals(clipDict);
 			}
 
 			return false;
 		}
 
-		public static bool operator ==(ClipDictionary left, ClipDictionary right)
+		public static bool operator ==(CrClipDictionary left, CrClipDictionary right)
 		{
 			return left.Equals(right);
 		}
-		public static bool operator !=(ClipDictionary left, ClipDictionary right)
+		public static bool operator !=(CrClipDictionary left, CrClipDictionary right)
 		{
 			return !left.Equals(right);
 		}
 
-		public static implicit operator InputArgument(ClipDictionary value)
+		public static implicit operator InputArgument(CrClipDictionary value)
 		{
 			return new InputArgument(value.Name);
 		}
-		public static explicit operator ClipDictionary(string value)
+		public static explicit operator CrClipDictionary(string value)
 		{
-			return new ClipDictionary(value);
+			return new CrClipDictionary(value);
 		}
-		public static explicit operator string(ClipDictionary value)
+		public static explicit operator string(CrClipDictionary value)
 		{
 			return value.Name;
 		}

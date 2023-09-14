@@ -2612,7 +2612,7 @@ namespace GTA
 		/// <returns><see langword="true"/> if the animation has successfully started playing; otherwise, <see langword="false"/></returns>
 		public bool PlayAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendDelta, bool loop, bool holdLastFrame, bool driveToPose = false, float startPhase = 0f, AnimationFlags animFlags = AnimationFlags.None)
 		{
-			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			(CrClipDictionary clipDict, string clipName) = crClipAsset;
 			return Function.Call<bool>(Hash.PLAY_ENTITY_ANIM, Handle, clipName, clipDict, blendDelta.Value, loop, holdLastFrame, driveToPose, startPhase, (int)animFlags);
 		}
 
@@ -2624,7 +2624,7 @@ namespace GTA
 		/// </returns>
 		public bool StopAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendDelta)
 		{
-			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			(CrClipDictionary clipDict, string clipName) = crClipAsset;
 			return Function.Call<bool>(Hash.STOP_ENTITY_ANIM, Handle, clipName, clipDict, blendDelta.Value);
 		}
 
@@ -2633,7 +2633,7 @@ namespace GTA
 		/// </summary>
 		public bool IsPlayingAnimation(CrClipAsset crClipAsset, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			(CrClipDictionary clipDict, string clipName) = crClipAsset;
 			return Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, Handle, clipDict, clipName, (int)type);
 		}
 
@@ -2645,7 +2645,7 @@ namespace GTA
 		/// </remarks>
 		public bool HasFinishedAnimation(CrClipAsset crClipAsset, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			(CrClipDictionary clipDict, string clipName) = crClipAsset;
 			return Function.Call<bool>(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, clipDict, clipName, (int)type);
 		}
 
@@ -2672,7 +2672,7 @@ namespace GTA
 		/// <param name="speedMultiplier">The amount to multiply the animation's normal playback speed by.</param>
 		public void SetAnimationSpeed(CrClipAsset crClipAsset, float speedMultiplier)
 		{
-			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			(CrClipDictionary clipDict, string clipName) = crClipAsset;
 
 			Function.Call(Hash.SET_ENTITY_ANIM_SPEED, Handle, clipDict, clipName, speedMultiplier);
 		}
@@ -2685,7 +2685,7 @@ namespace GTA
 		/// <param name="newCurrentTime">The time in the animation to set the specified animation to.</param>
 		public void SetAnimationCurrentTime(CrClipAsset crClipAsset, float newCurrentTime)
 		{
-			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			(CrClipDictionary clipDict, string clipName) = crClipAsset;
 
 			Function.Call(Hash.SET_ENTITY_ANIM_CURRENT_TIME, Handle, clipDict, clipName, newCurrentTime);
 		}
@@ -2728,7 +2728,7 @@ namespace GTA
 
 			unsafe
 			{
-				(ClipDictionary clipDict, string clipName) = crClipAsset;
+				(CrClipDictionary clipDict, string clipName) = crClipAsset;
 				bool foundEventTag = Function.Call<bool>(Hash.FIND_ANIM_EVENT_PHASE, Handle, clipDict, clipName, eventName, &startPhaseTemp, &endPhaseTemp);
 
 				startPhase = startPhaseTemp;

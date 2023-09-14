@@ -9,7 +9,7 @@ using System.Xml.Linq;
 namespace GTA
 {
 	/// <summary>
-	/// Represents a struct that contains a <see cref="GTA.ClipDictionary"/> and a animation clip name
+	/// Represents a struct that contains a <see cref="GTA.CrClipDictionary"/> and a animation clip name
 	/// <see cref="string"/> so you can find a animation clip (an instance of a subclass of <c>rage::crClip</c>, which
 	/// is an abstract one).
 	/// </summary>
@@ -30,19 +30,19 @@ namespace GTA
 	public readonly struct CrClipAsset : IEquatable<CrClipAsset>
 	{
 		public CrClipAsset(string clipDictName, string animName) :
-			this(new ClipDictionary(clipDictName), animName)
+			this(new CrClipDictionary(clipDictName), animName)
 		{
 		}
-		public CrClipAsset(ClipDictionary clipDict, string animName)
+		public CrClipAsset(CrClipDictionary clipDict, string animName)
 		{
 			ClipDictionary = clipDict;
 			ClipName = animName;
 		}
 
 		/// <summary>
-		/// Gets the <see cref="GTA.ClipDictionary"/> struct of clip/animation dictionary name.
+		/// Gets the <see cref="GTA.CrClipDictionary"/> struct of clip/animation dictionary name.
 		/// </summary>
-		public ClipDictionary ClipDictionary
+		public CrClipDictionary ClipDictionary
 		{
 			get; init;
 		}
@@ -89,7 +89,7 @@ namespace GTA
 
 		public override int GetHashCode() => ClipDictionary.GetHashCode() * 17 + HashClipName();
 
-		public void Deconstruct(out ClipDictionary clipDict, out string clipName)
+		public void Deconstruct(out CrClipDictionary clipDict, out string clipName)
 		{
 			clipDict = ClipDictionary;
 			clipName = ClipName;

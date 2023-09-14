@@ -722,7 +722,7 @@ namespace GTA
 
 		public void PlayAnimation(string animDict, string animName)
 		{
-			PlayAnimationInternal((ClipDictionary)animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, false, AnimationIKControlFlags.None);
+			PlayAnimationInternal((CrClipDictionary)animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, false, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(CrClipAsset crClipAsset)
 		{
@@ -730,7 +730,7 @@ namespace GTA
 		}
 		public void PlayAnimation(string animDict, string animName, float speed, int duration, float playbackRate)
 		{
-			PlayAnimationInternal((ClipDictionary)animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, false, AnimationIKControlFlags.None);
+			PlayAnimationInternal((CrClipDictionary)animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, false, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendSpeed, int duration, float startPhase)
 		{
@@ -739,12 +739,12 @@ namespace GTA
 		}
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, int duration, AnimationFlags flags)
 		{
-			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, -8f, duration, flags, 0f, false,
+			PlayAnimationInternal((CrClipDictionary)animDict, animName, blendInSpeed, -8f, duration, flags, 0f, false,
 				AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
 		{
-			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, false, AnimationIKControlFlags.None);
+			PlayAnimationInternal((CrClipDictionary)animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, false, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase)
 		{
@@ -757,10 +757,10 @@ namespace GTA
 
 		private void PlayAnimationInternal(CrClipAsset crClipAsset, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
 		{
-			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			(CrClipDictionary clipDict, string clipName) = crClipAsset;
 			PlayAnimationInternal(clipDict, clipName, blendOutSpeed, blendOutSpeed, duration, flags, startPhase, phaseControlled, ikFlags);
 		}
-		private void PlayAnimationInternal(ClipDictionary clipDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
+		private void PlayAnimationInternal(CrClipDictionary clipDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
 		{
 			Function.Call(Hash.REQUEST_ANIM_DICT, clipDict);
 
@@ -810,7 +810,7 @@ namespace GTA
 		/// <see cref="AnimationFlags.ExtractInitialOffset"/> and <see cref="AnimationFlags.OverridePhysics"/>)
 		/// </para>
 		/// <para>
-		/// This method does not automatically request <see cref="ClipDictionary"/> of <paramref name="crClipAsset"/>
+		/// This method does not automatically request <see cref="CrClipDictionary"/> of <paramref name="crClipAsset"/>
 		/// which is different from <see cref="PlayAnimation(CrClipAsset)"/>, so you will need to manually request it.
 		/// </para>
 		/// </remarks>
@@ -820,7 +820,7 @@ namespace GTA
 			EulerRotationOrder rotOrder = EulerRotationOrder.YXZ,
 			AnimationIKControlFlags ikFlags = AnimationIKControlFlags.None)
 		{
-			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			(CrClipDictionary clipDict, string clipName) = crClipAsset;
 			float blendInDeltaArg = blendInDelta?.Value ?? AnimationBlendDelta.Normal.Value;
 			float blendOutDeltaArg = -(blendOutDelta?.Value ?? AnimationBlendDelta.Normal.Value);
 
@@ -1715,7 +1715,7 @@ namespace GTA
 		/// </param>
 		public void StopScriptedAnimationTask(CrClipAsset crClipAsset, AnimationBlendDelta? blendOutDelta = null)
 		{
-			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			(CrClipDictionary clipDict, string clipName) = crClipAsset;
 			float deltaArg = blendOutDelta.HasValue
 				? -(float)(blendOutDelta.Value)
 				: -(AnimationBlendDelta.Normal.Value);
