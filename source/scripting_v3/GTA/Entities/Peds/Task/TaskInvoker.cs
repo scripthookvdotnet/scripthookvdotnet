@@ -758,7 +758,7 @@ namespace GTA
 		private void PlayAnimationInternal(CrClipAsset crClipAsset, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
 		{
 			(CrClipDictionary clipDict, string clipName) = crClipAsset;
-			PlayAnimationInternal(clipDict, clipName, blendOutSpeed, blendOutSpeed, duration, flags, startPhase, phaseControlled, ikFlags);
+			PlayAnimationInternal(clipDict, clipName, blendInSpeed, blendOutSpeed, duration, flags, startPhase, phaseControlled, ikFlags);
 		}
 		private void PlayAnimationInternal(CrClipDictionary clipDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
 		{
