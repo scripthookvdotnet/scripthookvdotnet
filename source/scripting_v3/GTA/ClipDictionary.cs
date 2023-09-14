@@ -34,6 +34,16 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Computes the hash of <see cref="Name"/> in the same way as how the game calculates hashes for clip
+		/// dictionaries to store in the global <c>rage::fwClipDictionaryStore</c> and as how
+		/// <see cref="Game.GenerateHash(string)"/> calculates.
+		/// May be useful when you want to get the identifier in the same way as how the game handles texture
+		/// dictionaries or when you investigate game memory to see how clips are stored in clip dictionaries.
+		/// </summary>
+		/// <returns>The hash value calculated from <see cref="Name"/>.</returns>
+		public int HashName() => Game.GenerateHash(Name);
+
+		/// <summary>
 		/// Gets a value indicating whether this <see cref="ClipDictionary"/> exists
 		/// in the <c>fwClipDictionaryStore</c> pool.
 		/// </summary>
@@ -86,9 +96,13 @@ namespace GTA
 			Function.Call(Hash.REMOVE_ANIM_DICT, Name);
 		}
 
+		/// <summary>
+		/// Returns <see langword="true"/> if the Jenkins-one-at-a-time (joaat) hash value of <see cref="Name"/>
+		/// matches that of <paramref name="other"/>, as the game uses joaat hashes as identifiers of clip dictionaries.
+		/// </summary>
 		public bool Equals(ClipDictionary other)
 		{
-			return Name == other.Name;
+			return HashName() == other.HashName();
 		}
 		public override bool Equals(object obj)
 		{

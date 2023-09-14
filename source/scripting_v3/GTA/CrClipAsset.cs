@@ -4,6 +4,7 @@
 //
 
 using System;
+using System.Xml.Linq;
 
 namespace GTA
 {
@@ -54,8 +55,23 @@ namespace GTA
 			get; init;
 		}
 
+		/// <summary>
+		/// Computes the hash of <see cref="ClipName"/> in the same way as how the game calculates hashes for clip
+		/// names to store in a <c>rage::crClipDictionary</c> and as how <see cref="Game.GenerateHash(string)"/>
+		/// calculates.
+		/// May be useful when you want to get the identifier in the same way as how the game handles texture
+		/// dictionaries or when you investigate game memory to see how clips are stored in the clip dictionary.
+		/// </summary>
+		/// <returns>The hash value calculated from <see cref="ClipName"/>.</returns>
+		public int HashClipName() => Game.GenerateHash(ClipName);
+
+		/// <summary>
+		/// Returns <see langword="true"/> if the Jenkins-one-at-a-time (joaat) hash values of both
+		/// <see cref="ClipDictionary"/> and <see cref="ClipName"/> match those of <paramref name="other"/>,
+		/// as the game uses joaat hashes as identifiers of clip dictionaries and clip names.
+		/// </summary>
 		public bool Equals(CrClipAsset other)
-			=> ClipDictionary == other.ClipDictionary && ClipName == other.ClipName;
+			=> ClipDictionary == other.ClipDictionary && HashClipName() == other.HashClipName();
 		public override bool Equals(object obj)
 		{
 			if (obj is CrClipAsset crClipAsset)
@@ -71,7 +87,7 @@ namespace GTA
 		public static bool operator !=(CrClipAsset left, CrClipAsset right)
 			=> !left.Equals(right);
 
-		public override int GetHashCode() => ClipDictionary.GetHashCode() * 17 + ClipName.GetHashCode();
+		public override int GetHashCode() => ClipDictionary.GetHashCode() * 17 + HashClipName();
 
 		public void Deconstruct(out ClipDictionary clipDict, out string clipName)
 		{
