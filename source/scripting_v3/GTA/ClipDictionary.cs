@@ -138,7 +138,7 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			return Name.GetHashCode();
+			return HashName();
 		}
 
 		public override string ToString() => Name;
