@@ -724,39 +724,41 @@ namespace GTA
 		{
 			PlayAnimationInternal((ClipDictionary)animDict, animName, 8f, -8f, -1, AnimationFlags.None, 0f, false, AnimationIKControlFlags.None);
 		}
-		public void PlayAnimation(ClipDictAndAnimNamePair clipDictAndAnimNamePair)
+		public void PlayAnimation(CrClipAsset crClipAsset)
 		{
-			PlayAnimationInternal(clipDictAndAnimNamePair, 8f, -8f, -1, AnimationFlags.None, 0f, false, AnimationIKControlFlags.None);
+			PlayAnimationInternal(crClipAsset, 8f, -8f, -1, AnimationFlags.None, 0f, false, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(string animDict, string animName, float speed, int duration, float playbackRate)
 		{
 			PlayAnimationInternal((ClipDictionary)animDict, animName, speed, -speed, duration, AnimationFlags.None, playbackRate, false, AnimationIKControlFlags.None);
 		}
-		public void PlayAnimation(ClipDictAndAnimNamePair clipDictAndAnimNamePair, AnimationBlendDelta blendSpeed, int duration, float startPhase)
+		public void PlayAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendSpeed, int duration, float startPhase)
 		{
-			PlayAnimationInternal(clipDictAndAnimNamePair, blendSpeed.Value, -blendSpeed.Value, duration, AnimationFlags.None, startPhase, false, AnimationIKControlFlags.None);
+			PlayAnimationInternal(crClipAsset, blendSpeed.Value, -blendSpeed.Value, duration, AnimationFlags.None,
+				startPhase, false, AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, int duration, AnimationFlags flags)
 		{
-			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, -8f, duration, flags, 0f, false, AnimationIKControlFlags.None);
+			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, -8f, duration, flags, 0f, false,
+				AnimationIKControlFlags.None);
 		}
 		public void PlayAnimation(string animDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float playbackRate)
 		{
 			PlayAnimationInternal((ClipDictionary)animDict, animName, blendInSpeed, blendOutSpeed, duration, flags, playbackRate, false, AnimationIKControlFlags.None);
 		}
-		public void PlayAnimation(ClipDictAndAnimNamePair clipDictAndAnimNamePair, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase)
+		public void PlayAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase)
 		{
-			PlayAnimationInternal(clipDictAndAnimNamePair, blendInSpeed.Value, blendOutSpeed.Value, duration, flags, startPhase, false, AnimationIKControlFlags.None);
+			PlayAnimationInternal(crClipAsset, blendInSpeed.Value, blendOutSpeed.Value, duration, flags, startPhase, false, AnimationIKControlFlags.None);
 		}
-		public void PlayAnimation(ClipDictAndAnimNamePair clipDictAndAnimNamePair, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
+		public void PlayAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
 		{
-			PlayAnimationInternal(clipDictAndAnimNamePair, blendInSpeed.Value, -blendOutSpeed.Value, duration, flags, startPhase, phaseControlled, ikFlags);
+			PlayAnimationInternal(crClipAsset, blendInSpeed.Value, -blendOutSpeed.Value, duration, flags, startPhase, phaseControlled, ikFlags);
 		}
 
-		private void PlayAnimationInternal(ClipDictAndAnimNamePair clipDictAndAnimNamePair, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
+		private void PlayAnimationInternal(CrClipAsset crClipAsset, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
 		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
-			PlayAnimationInternal(clipDict, animName, blendOutSpeed, blendOutSpeed, duration, flags, startPhase, phaseControlled, ikFlags);
+			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			PlayAnimationInternal(clipDict, clipName, blendOutSpeed, blendOutSpeed, duration, flags, startPhase, phaseControlled, ikFlags);
 		}
 		private void PlayAnimationInternal(ClipDictionary clipDict, string animName, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
 		{
@@ -785,8 +787,8 @@ namespace GTA
 		/// <summary>
 		/// Plays an anim task on the <see cref="Ped"/> with a reposition and reorientation at the beginning.
 		/// </summary>
-		/// <param name="clipDictAndAnimNamePair">
-		/// The pair of a clip/animation dictionary name and an animation name.
+		/// <param name="crClipAsset">
+		/// The <see cref="CrClipAsset"/> to find the corresponding clip.
 		/// </param>
 		/// <param name="position">The initial position in World Coordinates to start the anim at.</param>
 		/// <param name="rotation">
@@ -808,22 +810,21 @@ namespace GTA
 		/// <see cref="AnimationFlags.ExtractInitialOffset"/> and <see cref="AnimationFlags.OverridePhysics"/>)
 		/// </para>
 		/// <para>
-		/// This method does not automatically request <see cref="ClipDictionary"/> of
-		/// <paramref name="clipDictAndAnimNamePair"/>, which is different from
-		/// <see cref="PlayAnimation(ClipDictAndAnimNamePair)"/>, so you will need to manually request it.
+		/// This method does not automatically request <see cref="ClipDictionary"/> of <paramref name="crClipAsset"/>
+		/// which is different from <see cref="PlayAnimation(CrClipAsset)"/>, so you will need to manually request it.
 		/// </para>
 		/// </remarks>
-		public void PlayAnimationAdvanced(ClipDictAndAnimNamePair clipDictAndAnimNamePair, Vector3 position, Vector3 rotation,
+		public void PlayAnimationAdvanced(CrClipAsset crClipAsset, Vector3 position, Vector3 rotation,
 			AnimationBlendDelta? blendInDelta = null, AnimationBlendDelta? blendOutDelta = null, int timeToPlay = -1,
 			AnimationFlags flags = AnimationFlags.None, float startPhase = 0f,
 			EulerRotationOrder rotOrder = EulerRotationOrder.YXZ,
 			AnimationIKControlFlags ikFlags = AnimationIKControlFlags.None)
 		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
+			(ClipDictionary clipDict, string clipName) = crClipAsset;
 			float blendInDeltaArg = blendInDelta?.Value ?? AnimationBlendDelta.Normal.Value;
 			float blendOutDeltaArg = -(blendOutDelta?.Value ?? AnimationBlendDelta.Normal.Value);
 
-			Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, _ped.Handle, clipDict, animName, position.X, position.Y, position.Z,
+			Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, _ped.Handle, clipDict, clipName, position.X, position.Y, position.Z,
 				rotation.X, rotation.Y, rotation.Z, blendInDeltaArg, blendOutDeltaArg, timeToPlay, (int)flags,
 				startPhase, (int)rotOrder, (int)ikFlags);
 		}
@@ -1703,23 +1704,23 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Attempts to stop a play anim task initiated by <see cref="PlayAnimation(ClipDictAndAnimNamePair)"/>.
+		/// Attempts to stop a play anim task initiated by <see cref="PlayAnimation(CrClipAsset)"/>.
 		/// Does not stop non-scripted animation tasks.
 		/// </summary>
-		/// <param name="clipDictAndAnimNamePair">
-		/// The pair of a clip/animation dictionary name and an animation name.
+		/// <param name="crClipAsset">
+		/// The <see cref="CrClipAsset"/> to find the corresponding clip.
 		/// </param>
 		/// <param name="blendOutDelta">
 		/// The blend out delta. if set to <see langword="null"/>, <see cref="AnimationBlendDelta.Normal"/> will be used.
 		/// </param>
-		public void StopScriptedAnimationTask(ClipDictAndAnimNamePair clipDictAndAnimNamePair, AnimationBlendDelta? blendOutDelta = null)
+		public void StopScriptedAnimationTask(CrClipAsset crClipAsset, AnimationBlendDelta? blendOutDelta = null)
 		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
+			(ClipDictionary clipDict, string clipName) = crClipAsset;
 			float deltaArg = blendOutDelta.HasValue
 				? -(float)(blendOutDelta.Value)
 				: -(AnimationBlendDelta.Normal.Value);
 
-			Function.Call(Hash.STOP_ANIM_TASK, _ped.Handle, clipDict, animName, deltaArg);
+			Function.Call(Hash.STOP_ANIM_TASK, _ped.Handle, clipDict, clipName, deltaArg);
 		}
 
 		[Obsolete("Use StopScriptedAnimationTask instead.")]

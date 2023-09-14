@@ -11,7 +11,7 @@ namespace GTA
 	public enum EntityAnimationType
 	{
 		/// <summary>
-		/// Includes scripted animations, such as anims initated by <see cref="TaskInvoker.PlayAnimation(ClipDictAndAnimNamePair)"/>,
+		/// Includes scripted animations, such as anims initated by <see cref="TaskInvoker.PlayAnimation(CrClipAsset)"/>,
 		/// <c>TASK_SCRIPTED_ANIMATION</c>, and <c>PLAY_ENTITY_ANIM</c>.
 		/// </summary>
 		Script = 1,

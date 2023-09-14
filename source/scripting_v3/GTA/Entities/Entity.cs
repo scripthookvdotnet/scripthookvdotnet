@@ -148,7 +148,7 @@ namespace GTA
 
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Entity"/> has a drawable object.
-		/// <see cref="PlayAnimation(ClipDictAndAnimNamePair, AnimationBlendDelta, bool, bool, bool, float, AnimationFlags)"/>
+		/// <see cref="PlayAnimation(CrClipAsset, AnimationBlendDelta, bool, bool, bool, float, AnimationFlags)"/>
 		/// and <c>PLAY_SYNCHRONIZED_ENTITY_ANIM</c> require the <see cref="Entity"/> to have a drawable.
 		/// You can use this property to check that the entity has a drawable before attempting to play the anim.
 		/// </summary>
@@ -2597,8 +2597,8 @@ namespace GTA
 		/// <summary>
 		/// Plays an <see cref="Entity"/> animation.
 		/// </summary>
-		/// <param name="clipDictAndAnimNamePair">
-		/// The pair of an animation name and clip/animation dictionary name.
+		/// <param name="crClipAsset">
+		/// The <see cref="CrClipAsset"/> to find the corresponding clip.
 		/// </param>
 		/// <param name="blendDelta">The blend delta.</param>
 		/// <param name="loop">Specifies whether the animation should loop.</param>
@@ -2608,12 +2608,12 @@ namespace GTA
 		/// </param>
 		/// <param name="startPhase">The start phase between 0f to 1f.</param>
 		/// <param name="animFlags">The animation flags.</param>
-		/// <remarks>For <see cref="Ped"/>, use <see cref="TaskInvoker.PlayAnimation(ClipDictAndAnimNamePair)"/>.</remarks>
+		/// <remarks>For <see cref="Ped"/>, use <see cref="TaskInvoker.PlayAnimation(CrClipAsset)"/>.</remarks>
 		/// <returns><see langword="true"/> if the animation has successfully started playing; otherwise, <see langword="false"/></returns>
-		public bool PlayAnimation(ClipDictAndAnimNamePair clipDictAndAnimNamePair, AnimationBlendDelta blendDelta, bool loop, bool holdLastFrame, bool driveToPose = false, float startPhase = 0f, AnimationFlags animFlags = AnimationFlags.None)
+		public bool PlayAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendDelta, bool loop, bool holdLastFrame, bool driveToPose = false, float startPhase = 0f, AnimationFlags animFlags = AnimationFlags.None)
 		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
-			return Function.Call<bool>(Hash.PLAY_ENTITY_ANIM, Handle, animName, clipDict, blendDelta.Value, loop, holdLastFrame, driveToPose, startPhase, (int)animFlags);
+			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			return Function.Call<bool>(Hash.PLAY_ENTITY_ANIM, Handle, clipName, clipDict, blendDelta.Value, loop, holdLastFrame, driveToPose, startPhase, (int)animFlags);
 		}
 
 		/// <summary>
@@ -2622,19 +2622,19 @@ namespace GTA
 		/// <returns>
 		/// <see langword="true"/> if the animation has successfully stopped playing; otherwise, <see langword="false"/>.
 		/// </returns>
-		public bool StopAnimation(ClipDictAndAnimNamePair clipDictAndAnimNamePair, AnimationBlendDelta blendDelta)
+		public bool StopAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendDelta)
 		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
-			return Function.Call<bool>(Hash.STOP_ENTITY_ANIM, Handle, animName, clipDict, blendDelta.Value);
+			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			return Function.Call<bool>(Hash.STOP_ENTITY_ANIM, Handle, clipName, clipDict, blendDelta.Value);
 		}
 
 		/// <summary>
 		/// Gets a value that indicates whether this <see cref="Entity"/> is playing the animation.
 		/// </summary>
-		public bool IsPlayingAnimation(ClipDictAndAnimNamePair clipDictAndAnimNamePair, EntityAnimationType type = EntityAnimationType.Default)
+		public bool IsPlayingAnimation(CrClipAsset crClipAsset, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
-			return Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, Handle, clipDict, animName, (int)type);
+			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			return Function.Call<bool>(Hash.IS_ENTITY_PLAYING_ANIM, Handle, clipDict, clipName, (int)type);
 		}
 
 		/// <summary>
@@ -2643,10 +2643,10 @@ namespace GTA
 		/// <remarks>
 		/// Will only ever return <see langword="true"/> for anims that hold at the end (i.e. anims that loop or end automatically will always return <see langword="false"/>).
 		/// </remarks>
-		public bool HasFinishedAnimation(ClipDictAndAnimNamePair clipDictAndAnimNamePair, EntityAnimationType type = EntityAnimationType.Default)
+		public bool HasFinishedAnimation(CrClipAsset crClipAsset, EntityAnimationType type = EntityAnimationType.Default)
 		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
-			return Function.Call<bool>(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, clipDict, animName, (int)type);
+			(ClipDictionary clipDict, string clipName) = crClipAsset;
+			return Function.Call<bool>(Hash.HAS_ENTITY_ANIM_FINISHED, Handle, clipDict, clipName, (int)type);
 		}
 
 		/// <summary>
@@ -2665,27 +2665,29 @@ namespace GTA
 		public bool HasAnimationEventFired(int eventHash) => Function.Call<bool>(Hash.HAS_ANIM_EVENT_FIRED, Handle, eventHash);
 
 		/// <summary>
-		/// Sets the speed of the anim task matching the given ClipDictAndAnimNamePair on the <see cref="Ped"/> to the given multiplier.
+		/// Sets the speed of the anim task matching the given <see cref="CrClipAsset"/> on the <see cref="Ped"/> to
+		/// the given multiplier.
 		/// </summary>
-		/// <param name="clipDictAndAnimNamePair">The pair of a clip/animation dictionary name and an animation name.</param>
+		/// <param name="crClipAsset">The <see cref="CrClipAsset"/> to find the corresponding clip.</param>
 		/// <param name="speedMultiplier">The amount to multiply the animation's normal playback speed by.</param>
-		public void SetAnimationSpeed(ClipDictAndAnimNamePair clipDictAndAnimNamePair, float speedMultiplier)
+		public void SetAnimationSpeed(CrClipAsset crClipAsset, float speedMultiplier)
 		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
+			(ClipDictionary clipDict, string clipName) = crClipAsset;
 
-			Function.Call(Hash.SET_ENTITY_ANIM_SPEED, Handle, clipDict, animName, speedMultiplier);
+			Function.Call(Hash.SET_ENTITY_ANIM_SPEED, Handle, clipDict, clipName, speedMultiplier);
 		}
 
 		/// <summary>
-		/// Sets the timestamp of the anim task matching the given ClipDictAndAnimNamePair on the <see cref="Ped"/> to the given value.
+		/// Sets the timestamp of the anim task matching the given <see cref="CrClipAsset"/> on the <see cref="Ped"/>
+		/// to the given value.
 		/// </summary>
-		/// <param name="clipDictAndAnimNamePair">The pair of a clip/animation dictionary name and an animation name.</param>
+		/// <param name="crClipAsset">The <see cref="CrClipAsset"/> to find the corresponding clip.</param>
 		/// <param name="newCurrentTime">The time in the animation to set the specified animation to.</param>
-		public void SetAnimationCurrentTime(ClipDictAndAnimNamePair clipDictAndAnimNamePair, float newCurrentTime)
+		public void SetAnimationCurrentTime(CrClipAsset crClipAsset, float newCurrentTime)
 		{
-			(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
+			(ClipDictionary clipDict, string clipName) = crClipAsset;
 
-			Function.Call(Hash.SET_ENTITY_ANIM_CURRENT_TIME, Handle, clipDict, animName, newCurrentTime);
+			Function.Call(Hash.SET_ENTITY_ANIM_CURRENT_TIME, Handle, clipDict, clipName, newCurrentTime);
 		}
 
 		/// <summary>
@@ -2693,22 +2695,22 @@ namespace GTA
 		/// This value increasing in a range from [0.0 to 1.0] and wrap back to 0.0 when it reach 1.0.
 		/// The phase of the anim is between 0.0 and 1.0 regardless of the anim length.
 		/// </summary>
-		public float GetAnimationCurrentTime(ClipDictAndAnimNamePair clipDictAndAnimNamePair)
-			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_CURRENT_TIME, Handle, clipDictAndAnimNamePair.ClipDictionary,
-				clipDictAndAnimNamePair.AnimationName);
+		public float GetAnimationCurrentTime(CrClipAsset crClipAsset)
+			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_CURRENT_TIME, Handle, crClipAsset.ClipDictionary,
+				crClipAsset.ClipName);
 
 		/// <summary>
 		/// Gets the total animation time in milliseconds.
 		/// </summary>
-		public float GetAnimationTotalTime(ClipDictAndAnimNamePair clipDictAndAnimNamePair)
-			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_TOTAL_TIME, Handle, clipDictAndAnimNamePair.ClipDictionary,
-				clipDictAndAnimNamePair.AnimationName);
+		public float GetAnimationTotalTime(CrClipAsset crClipAsset)
+			=> Function.Call<float>(Hash.GET_ENTITY_ANIM_TOTAL_TIME, Handle, crClipAsset.ClipDictionary,
+				crClipAsset.ClipName);
 
 		/// <summary>
 		/// Searches an animation for the start and end phase of an event.
 		/// </summary>
-		/// <param name="clipDictAndAnimNamePair">
-		/// The pair of a clip/animation dictionary name and an animation name.
+		/// <param name="crClipAsset">
+		/// The <see cref="CrClipAsset"/> to find the corresponding clip.
 		/// </param>
 		/// <param name="eventName">
 		/// The event name. Will be converted to a joaat hash internally since event name is stored as a hash.
@@ -2720,14 +2722,14 @@ namespace GTA
 		/// If the event tag is found, it's end phase will be filled.
 		/// </param>
 		/// <returns><see langword="true"/> if this method found an event tag in an animation playing; otherwise, <see langword="false"/>.</returns>
-		public bool FindAnimationEventPhase(ClipDictAndAnimNamePair clipDictAndAnimNamePair, string eventName, out float startPhase, out float endPhase)
+		public bool FindAnimationEventPhase(CrClipAsset crClipAsset, string eventName, out float startPhase, out float endPhase)
 		{
 			float startPhaseTemp, endPhaseTemp;
 
 			unsafe
 			{
-				(ClipDictionary clipDict, string animName) = clipDictAndAnimNamePair;
-				bool foundEventTag = Function.Call<bool>(Hash.FIND_ANIM_EVENT_PHASE, Handle, clipDict, animName, eventName, &startPhaseTemp, &endPhaseTemp);
+				(ClipDictionary clipDict, string clipName) = crClipAsset;
+				bool foundEventTag = Function.Call<bool>(Hash.FIND_ANIM_EVENT_PHASE, Handle, clipDict, clipName, eventName, &startPhaseTemp, &endPhaseTemp);
 
 				startPhase = startPhaseTemp;
 				endPhase = endPhaseTemp;
