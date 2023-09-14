@@ -87,7 +87,7 @@ namespace GTA
 		/// Does nothing in (probably) v1.0.505.2 or earlier game versions.
 		/// </param>
 		/// <param name="useFullSuperJumpForce">
-		///	If <see langword="true"/> and <paramref name="doSuperJump"/> is <see langword="true"/> as well, the super jump height will be doubled.
+		/// If <see langword="true"/> and <paramref name="doSuperJump"/> is <see langword="true"/> as well, the super jump height will be doubled.
 		/// Internally, the super jump and the beast jump flags will be used for a new <c>CTaskJumpVault</c> (even if <paramref name="doSuperJump"/> is <see langword="false"/>).
 		/// Does nothing in (probably) v1.0.505.2 or earlier game versions.
 		/// </param>
@@ -1115,6 +1115,108 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_VEHICLE_MISSION_COORS_TARGET, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, (uint)drivingFlags, targetReachedDist, straightLineDist, driveAgainstTraffic);
 		}
+		/// <summary>
+		/// Tells a <see cref="Vehicle"/> to escort another <see cref="Entity"/>.
+		/// Identical to <see cref="StartVehicleMission(Vehicle, Vehicle, VehicleMissionType, float, VehicleDrivingFlags, float, float, bool)"/>
+		/// with <see cref="VehicleMissionType.Escort"/>, but allows setting a custom offset.
+		/// </summary>
+		/// <param name="vehicle">The <see cref="Vehicle"/> to drive.</param>
+		/// <param name="escortEntity">The <see cref="Entity"/> to escort.</param>
+		/// <param name="escortType">The escort types.</param>
+		/// <param name="cruiseSpeed">The cruise speed in meters.</param>
+		/// <param name="drivingFlags">The driving flags.</param>
+		/// <param name="customOffset">
+		/// The distance how far the <see cref="Ped"/> will keep the distance between <paramref name="escortEntity"/>
+		/// in meters. If less than zero, the following value will be used as a fallback in the created task:
+		/// <list type="bullet">
+		/// <item>
+		/// <description>
+		/// If <paramref name="escortType"/> is either <see cref="VehicleEscortType.Rear"/> or
+		/// <see cref="VehicleEscortType.Front"/>, always 5 meters is used as a fallback regardless of the vehicle type
+		/// (<see cref="VehicleType"/>). To test if the fall back value is correct for front or rear escort types,
+		/// search a dumped exe for <c>0F 28 46 ? F3 0F 10 8B ? ? 00 00 0F 2F 0D ? ? ? ? 0F 29 45 ? 73 08</c>.
+		/// </description>
+		/// </item>
+		/// <item>
+		/// <description>
+		/// If <paramref name="escortType"/> is either <see cref="VehicleEscortType.Left"/> or
+		/// <see cref="VehicleEscortType.Right"/>, one of the following three fallback values will be used and the
+		/// vehicle type (<see cref="VehicleType"/>) determines this. Fallback values:
+		/// 	<list type="bullet">
+		/// 	<item>
+		/// 	<description>
+		/// 	For helicopters, blimp, and autogyro types, which are <see cref="VehicleType.Helicopter"/>,
+		/// 	<see cref="VehicleType.Blimp"/>, and <see cref="VehicleType.Autogyro"/>, 15 meters.
+		/// 	</description>
+		/// 	</item>
+		/// 	<item>
+		/// 	<description>
+		/// 	For motorcycle type (<see cref="VehicleType.Motorcycle"/>), 1.4 meters. This does not include bicycle
+		/// 	type (<see cref="VehicleType.Bicycle"/>).
+		/// 	</description>
+		/// 	</item>
+		/// 	<item>
+		/// 	<description>
+		/// 	For any vehicle types other than, heli, blimp, motorcycle, and autogyro, 2 meters. Do note that this
+		/// 	fallback value applies for plane type <see cref="VehicleType.Plane"/>.
+		/// 	</description>
+		/// 	</item>
+		///     </list>
+		/// To test if the fall back value is correct for left or right escort types, search a dumped exe for
+		/// <c>0F 57 F6 0F 2F FE 44 0F 28 C6 73 32</c>.
+		/// </description>
+		/// </item>
+		/// </list>
+		/// The fallback values are subject to change by game updates.
+		/// </param>
+		/// <param name="minHeightAboveTerrain">
+		/// Only used for helicopters. The height in meters that the heli will try to stay above terrain
+		/// (i.e. 20 == always tries to stay at least 20 meters above ground).
+		/// </param>
+		/// <param name="straightLineDistance">
+		/// The distance to target in meters at which the <see cref="Ped"/> will start driving straight instead of
+		/// following vehicle nodes.
+		/// </param>
+		public void VehicleEscort(Vehicle vehicle, Entity escortEntity, VehicleEscortType escortType,
+			float cruiseSpeed, VehicleDrivingFlags drivingFlags, float customOffset = -1f,
+			int minHeightAboveTerrain = 20, float straightLineDistance = 20f)
+		{
+			Function.Call(Hash.TASK_VEHICLE_ESCORT, _ped.Handle, vehicle, escortEntity, (int)escortType, cruiseSpeed,
+				(int)drivingFlags, customOffset, minHeightAboveTerrain, straightLineDistance);
+		}
+		/// <summary>
+		/// Tells a <see cref="Vehicle"/> to follow another <see cref="Entity"/>.
+		/// This task sits sort of in between <see cref="VehicleEscort"/> and <see cref="VehicleChase"/>.
+		/// Not as fine-controlled as <see cref="VehicleEscort"/> but not as aggressive as <see cref="VehicleChase"/>.
+		/// This task is preferable to <see cref="VehicleEscort"/> when the following vehicle might start off in front
+		/// of the thing it's supposed to follow.
+		/// </summary>
+		/// <param name="vehicle">
+		/// The <see cref="Vehicle"/> to use to follow <paramref name="followEntity"/>.
+		/// </param>
+		/// <param name="followEntity">The <see cref="Entity"/> to follow.</param>
+		/// <param name="cruiseSpeed">The cruise speed in m/s.</param>
+		/// <param name="drivingFlags">The driving flags.</param>
+		/// <param name="followDistance">The follow distance.</param>
+		public void VehicleFollow(Vehicle vehicle, Entity followEntity, float cruiseSpeed,
+			VehicleDrivingFlags drivingFlags, int followDistance = 20)
+		{
+			Function.Call(Hash.TASK_VEHICLE_FOLLOW, _ped.Handle, vehicle, followEntity, cruiseSpeed, (int)drivingFlags,
+				followDistance);
+		}
+
+		/// <summary>
+		/// Tells a helicopter to protect another <see cref="Entity"/>.
+		/// Identical to <see cref="StartHeliMission(Vehicle, Vehicle, VehicleMissionType, float, float, int, int, float, float, HeliMissionFlags)"/>
+		/// with <see cref="VehicleMissionType.HeliProtect"/>, but allows setting a custom offset.
+		/// </summary>
+		public void VehicleHeliProtect(Vehicle heli, Entity protectEntity, float cruiseSpeed,
+			VehicleDrivingFlags drivingFlags, float customOffset = -1f, int minHeightAboveTerrain = 20,
+			HeliMissionFlags missionFlags = HeliMissionFlags.None)
+		{
+			Function.Call(Hash.TASK_VEHICLE_HELI_PROTECT, _ped.Handle, heli.Handle, protectEntity, cruiseSpeed,
+				(int)drivingFlags, customOffset, minHeightAboveTerrain, (int)missionFlags);
+		}
 
 		/// <summary>Gives the helicopter a mission.</summary>
 		/// <param name="heli">The helicopter.</param>
@@ -1270,6 +1372,21 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_HELI_MISSION, _ped.Handle, heli.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, targetReachedDist, heliOrientation, flightHeight, minHeightAboveTerrain, slowDownDistance, (int)missionFlags);
 		}
+		/// <summary>
+		/// Gives a helicopter a mission to escort another heli at an offset position.
+		/// </summary>
+		/// <param name="heli">
+		/// The helicopter for the <see cref="Ped"/> to escort <paramref name="escortHeli"/>.
+		/// </param>
+		/// <param name="escortHeli">
+		/// The helicopter to escort. If <see cref="Vehicle.Type"/> is a type other than
+		/// <see cref="VehicleType.Helicopter"/> on this argument, the method will fail without giving an escort task.
+		/// </param>
+		/// <param name="offset">
+		/// The escort offset.
+		/// </param>
+		public void HeliEscortHeli(Vehicle heli, Vehicle escortHeli, Vector3 offset)
+			=> Function.Call(Hash.TASK_HELI_ESCORT_HELI, _ped.Handle, heli, escortHeli, offset.X, offset.Y, offset.Z);
 
 		/// <summary>Gives a plane a mission.</summary>
 		/// <param name="plane">The helicopter.</param>
@@ -1432,6 +1549,20 @@ namespace GTA
 		{
 			Function.Call(Hash.TASK_PLANE_MISSION, _ped.Handle, plane.Handle, 0, 0, target.X, target.Y, target.Z, (int)missionType, cruiseSpeed, targetReachedDist, planeOrientation, flightHeight, minHeightAboveTerrain, precise);
 		}
+		/// <summary>
+		/// Gives plane a task to drive/taxi along the runway on the ground.
+		/// </summary>
+		/// <param name="plane">The plane to use/give a task.</param>
+		/// <param name="position">The target position.</param>
+		/// <param name="cruiseSpeed">The cruise speed in m/s.</param>
+		/// <param name="targetReachedDist">
+		/// The distance in meters at which the plane thinks it's arrived and the task stops executing.
+		/// </param>
+		public void PlaneTaxi(Vehicle plane, Vector3 position, float cruiseSpeed, float targetReachedDist)
+		{
+			Function.Call(Hash.TASK_PLANE_TAXI, _ped.Handle, plane, position.X, position.Y, position.Z, cruiseSpeed,
+				targetReachedDist);
+		}
 
 		/// <summary>Gives the boat a mission.</summary>
 		/// <param name="boat">The boat.</param>
@@ -1579,6 +1710,40 @@ namespace GTA
 				autoPilot);
 		}
 
+		/// <summary>
+		/// <para>
+		/// Tells a submarine to goto and stop at the position given.
+		/// </para>
+		/// <para>
+		/// Only available in the game version v1.0.1290.1 or later versions.
+		/// </para>
+		/// </summary>
+		/// <param name="submarine">The submarine to use or directly apply the task.</param>
+		/// <param name="position">The target position.</param>
+		/// <param name="autoPilot">
+		/// If <see langword="true"/>, a <c>CTaskVehicleGoToSubmarine</c> will be directly
+		/// applied to the <see cref="Vehicle"/>, and apply some flags to allow this task to run with no driver.
+		/// If <see langword="false"/>, a <c>CTaskVehicleGoToSubmarine</c> will be applied as a part of
+		/// <c>CTaskControlVehicle</c> in the <see cref="Ped"/>.
+		/// </param>
+		/// <exception cref="GameVersionNotSupportedException">
+		/// Thrown if called in the game versions earlier than v1.0.2189.0.
+		/// </exception>
+		/// <remarks>
+		/// Cannot be used in a <see cref="TaskSequence"/> if <paramref name="autoPilot"/> is <see langword="true"/>,
+		/// since <c>TASK_SUBMARINE_GOTO_AND_STOP</c> directly apply the task to the task manager of the
+		/// <see cref="Vehicle"/>'s intelligence in such case.
+		/// </remarks>
+		public void GoToSubmarineAndStop(Vehicle submarine, Vector3 position, bool autoPilot = false)
+		{
+			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2189_0_Steam, nameof(TaskInvoker),
+				nameof(GoToSubmarineAndStop));
+
+			Function.Call(Hash.TASK_SUBMARINE_GOTO_AND_STOP, _ped.Handle, submarine, position.X, position.Y, position.Z,
+				autoPilot);
+		}
+
+
 		/// <inheritdoc cref="SwapWeapon(bool)"/>
 		public void SwapWeapon() => SwapWeapon(false);
 		/// <summary>
@@ -1626,12 +1791,55 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// The <see cref="Ped"/> will chase the target <see cref="Ped"/>'s <see cref="Vehicle"/> with their own <see cref="Vehicle"/>.
-		/// Both <see cref="Ped"/>s must be in <see cref="Vehicle"/>s, or the task will abort.
+		/// The <see cref="Ped"/> will chase the target <see cref="Ped"/>'s <see cref="Vehicle"/> with their own
+		/// <see cref="Vehicle"/>. Both <see cref="Ped"/>s must be in <see cref="Vehicle"/>s, or the task will abort.
 		/// </summary>
+		/// <remarks>
+		/// Cannot be used in a <see cref="TaskSequence"/> since <c>TASK_VEHICLE_CHASE</c> does not expect the zero
+		/// handle for task sequences.
+		/// </remarks>
 		public void VehicleChase(Ped target)
 		{
 			Function.Call(Hash.TASK_VEHICLE_CHASE, _ped.Handle, target.Handle);
+		}
+		/// <summary>
+		/// Tells the <see cref="Ped"/> in a heli to chase an <see cref="Entity"/>. The <see cref="Ped"/> must be in
+		/// a heli.
+		/// </summary>
+		/// <remarks>
+		/// Cannot be used in a <see cref="TaskSequence"/> since <c>TASK_HELI_CHASE</c> does not expect the zero
+		/// handle for task sequences.
+		/// </remarks>
+		public void HeliChase(Entity target, Vector3 targetOffset)
+		{
+			Function.Call(Hash.TASK_HELI_CHASE, _ped.Handle, target.Handle, targetOffset.X, targetOffset.Y,
+				targetOffset.Z);
+		}
+		/// <summary>
+		/// Tells the <see cref="Ped"/> in a plane to land. The <see cref="Ped"/> will try to land in between the start
+		/// and end coords.
+		/// </summary>
+		/// <remarks>
+		/// Cannot be used in a <see cref="TaskSequence"/> since <c>TASK_PLANE_CHASE</c> does not expect the zero
+		/// handle for task sequences.
+		/// </remarks>
+		public void PlaneChase(Vehicle plane, Vector3 runWayStart, Vector3 runWayEnd)
+		{
+			Function.Call(Hash.TASK_PLANE_CHASE, _ped.Handle, plane.Handle, runWayStart.X, runWayStart.Y,
+				runWayStart.Z, runWayEnd.X, runWayEnd.Y, runWayEnd.Z);
+		}
+		/// <summary>
+		/// Tells the <see cref="Ped"/> in a heli to chase an <see cref="Entity"/>. The <see cref="Ped"/> must be in
+		/// a heli.
+		/// </summary>
+		/// <remarks>
+		/// Cannot be used in a <see cref="TaskSequence"/> since <c>TASK_PLANE_CHASE</c> does not expect the zero
+		/// handle for task sequences.
+		/// </remarks>
+		public void PlaneChase(Entity target, Vector3 targetOffset)
+		{
+			Function.Call(Hash.TASK_PLANE_CHASE, _ped.Handle, target.Handle, targetOffset.X, targetOffset.Y,
+				targetOffset.Z);
 		}
 
 		public void VehicleShootAtPed(Ped target)
