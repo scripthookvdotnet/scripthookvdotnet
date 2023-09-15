@@ -106,8 +106,8 @@ namespace GTA.UI
 		/// <param name="message">
 		/// The message body.
 		/// </param>
-		/// <param name="txdAndTexNamePair">
-		/// The pair of a texture dictionary struct and texture name string for the contact image used in the text
+		/// <param name="texAsset">
+		/// The <see cref="TextureAsset"/> for the contact image used in the text.
 		/// message.
 		/// </param>
 		/// <param name="isImportant">
@@ -126,12 +126,12 @@ namespace GTA.UI
 		/// <returns>
 		/// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
 		/// </returns>
-		public static FeedItem PostMessageText(string message, TxdAndTextureNamePair txdAndTexNamePair, bool isImportant, FeedTextIcon icon,
+		public static FeedItem PostMessageText(string message, TextureAsset texAsset, bool isImportant, FeedTextIcon icon,
 			string characterName, string subtitle = null)
 		{
 			BeginTextCommandForFeedPostAndPushLongString(message);
 
-			(Txd txd, string texName) = txdAndTexNamePair;
+			(Txd txd, string texName) = texAsset;
 			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT, txd, texName,
 				isImportant, (int)icon, characterName, subtitle);
 			return handle != -1 ? new FeedItem(handle) : null;
@@ -190,12 +190,12 @@ namespace GTA.UI
 		/// <summary>
 		/// Displays the MP Versus feed component used when you die in multiplayer.
 		/// </summary>
-		/// <param name="char1TxdAndTexNamePair">
-		/// The pair of a texture dictionary struct and texture name string for the character 1 (left side).
+		/// <param name="char1TexAsset">
+		/// The <see cref="TextureAsset"/> for the character 1 (left side).
 		/// </param>
 		/// <param name="val1">The integral value for the character 1 (left side).</param>
-		/// <param name="char2TxdAndTexNamePair">
-		/// The pair of a texture dictionary struct and texture name string for the character 2 (right side).
+		/// <param name="char2TexAsset">
+		/// The <see cref="TextureAsset"/> for the character 2 (right side).
 		/// </param>
 		/// <param name="val2">The integral value for the character 2 (right side).</param>
 		/// <param name="customColor1">
@@ -207,16 +207,16 @@ namespace GTA.UI
 		/// <returns>
 		/// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
 		/// </returns>
-		public static FeedItem PostVersusTitleUpdate(TxdAndTextureNamePair char1TxdAndTexNamePair, int val1,
-			TxdAndTextureNamePair char2TxdAndTexNamePair, int val2, HudColor customColor1 = HudColor.Invalid,
+		public static FeedItem PostVersusTitleUpdate(TextureAsset char1TexAsset, int val1,
+			TextureAsset char2TexAsset, int val2, HudColor customColor1 = HudColor.Invalid,
 			HudColor customColor2 = HudColor.Invalid)
 		{
 			// We can't use a custom string for versus feed, so just use the empty string
 			// In the exe, it is hardcoded to insert the string for VERSUS_SHORT at the center of the versus feed string template
 			Function.Call(Hash.BEGIN_TEXT_COMMAND_THEFEED_POST, SHVDN.NativeMemory.NullString);
 
-			(Txd char1Txd, string char1Txn) = char1TxdAndTexNamePair;
-			(Txd char2Txd, string char2Txn) = char2TxdAndTexNamePair;
+			(Txd char1Txd, string char1Txn) = char1TexAsset;
+			(Txd char2Txd, string char2Txn) = char2TexAsset;
 			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_VERSUS_TU, char1Txd, char1Txn, val1,
 				char2Txd, char2Txn, val2, (int)customColor1, (int)customColor2);
 			return handle != -1 ? new FeedItem(handle) : null;
@@ -227,8 +227,8 @@ namespace GTA.UI
 		/// <param name="message">
 		/// The message body.
 		/// </param>
-		/// <param name="txdAndTextureNamePair">
-		/// The pair of a texture dictionary struct and texture name string for the icon on the left.
+		/// <param name="texAsset">
+		/// The <see cref="TextureAsset"/> for the icon on the left.
 		/// </param>
 		/// <param name="xp">
 		/// The gained "RP" amount that will be displayed on the right side of the feed item.
@@ -244,12 +244,12 @@ namespace GTA.UI
 		/// <returns>
 		/// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
 		/// </returns>
-		public static FeedItem PostAward(string message, TxdAndTextureNamePair txdAndTextureNamePair, int xp,
+		public static FeedItem PostAward(string message, TextureAsset texAsset, int xp,
 			HudColor awardColor, string title = null)
 		{
 			BeginTextCommandForFeedPostAndPushLongString(message);
 
-			(Txd txd, string txn) = txdAndTextureNamePair;
+			(Txd txd, string txn) = texAsset;
 			int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_AWARD, txd, txn, xp, (int)awardColor, title);
 			return handle != -1 ? new FeedItem(handle) : null;
 		}

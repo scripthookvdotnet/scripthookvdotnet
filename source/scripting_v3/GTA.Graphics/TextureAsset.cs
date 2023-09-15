@@ -8,18 +8,19 @@ using System;
 namespace GTA.Graphics
 {
 	/// <summary>
-	/// Represents a struct that contains a <see cref="Txd"/> and a texture name <see cref="string"/>.
+	/// Represents a struct that contains a <see cref="Txd"/> and a texture name <see cref="string"/> to use a texture
+	/// (<c>rage::grcTexturePC11</c>).
 	/// </summary>
 	/// <remarks>
 	/// You should not use the default constructor. The fallback behavior can be changed from filling in the 2 values
 	/// with <see langword="null"/> after the codebase of SHVDN starts to use C# 10 or later C# version.
 	/// </remarks>
-	public readonly struct TxdAndTextureNamePair : IEquatable<TxdAndTextureNamePair>
+	public readonly struct TextureAsset : IEquatable<TextureAsset>
 	{
-		public TxdAndTextureNamePair(string txdName, string texName) : this(new Txd(txdName), texName)
+		public TextureAsset(string txdName, string texName) : this(new Txd(txdName), texName)
 		{
 		}
-		public TxdAndTextureNamePair(Txd txd, string texName)
+		public TextureAsset(Txd txd, string texName)
 		{
 			Txd = txd;
 			TextureName = texName;
@@ -40,21 +41,21 @@ namespace GTA.Graphics
 			get; init;
 		}
 
-		public bool Equals(TxdAndTextureNamePair other)
+		public bool Equals(TextureAsset other)
 			=> Txd == other.Txd && TextureName == other.TextureName;
 		public override bool Equals(object obj)
 		{
-			if (obj is TxdAndTextureNamePair txdAndTexNamePair)
+			if (obj is TextureAsset texAsset)
 			{
-				return Equals(txdAndTexNamePair);
+				return Equals(texAsset);
 			}
 
 			return false;
 		}
 
-		public static bool operator ==(TxdAndTextureNamePair left, TxdAndTextureNamePair right)
+		public static bool operator ==(TextureAsset left, TextureAsset right)
 			=> left.Equals(right);
-		public static bool operator !=(TxdAndTextureNamePair left, TxdAndTextureNamePair right)
+		public static bool operator !=(TextureAsset left, TextureAsset right)
 			=> !left.Equals(right);
 
 		public override int GetHashCode() => Txd.GetHashCode() * 17 + TextureName.GetHashCode();

@@ -2181,7 +2181,7 @@ namespace GTA
 		/// <param name="textureName">Name of texture inside the dictionary to load the texture from, leave null for no texture in the marker.</param>
 		/// <param name="drawOnEntity">if set to <see langword="true" /> draw on any <see cref="Entity"/> that intersects the marker.</param>
 		/// <remarks>
-		/// There is no overload that takes <see cref="Nullable{T}"/> <see cref="TxdAndTextureNamePair"/> as a default
+		/// There is no overload that takes <see cref="Nullable{T}"/> <see cref="TextureAsset"/> as a default
 		/// parameter, since trying to provide one will result in ambiguious call resolution.
 		/// </remarks>
 		public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color, bool bobUpAndDown = false, bool faceCamera = false, bool rotateY = false, string textueDict = null, string textureName = null, bool drawOnEntity = false)
@@ -2212,8 +2212,8 @@ namespace GTA
 		/// <param name="faceCamera">if set to <see langword="true" /> the marker will always face the camera, regardless of its rotation.</param>
 		/// <param name="rotOrder">The rotation order.</param>
 		/// <param name="rotate">if set to <see langword="true" /> rotates only on the z axis(heading).</param>
-		/// <param name="txdAndTexNamePair">
-		/// The pair of a <see cref="Txd"/> struct and a texture name string.
+		/// <param name="texAsset">
+		/// The <see cref="TextureAsset"/> to use a custom texture.
 		/// Leave <see langword="null"/> to use the texture for <paramref name="type"/>.
 		/// </param>
 		/// <param name="renderInverted">
@@ -2233,13 +2233,13 @@ namespace GTA
 		public static void DrawMarkerEx(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale,
 			Color color, bool bounce = false, bool faceCamera = false,
 			EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, bool rotate = false,
-			TxdAndTextureNamePair? txdAndTexNamePair = null, bool renderInverted = false,
+			TextureAsset? texAsset = null, bool renderInverted = false,
 			bool usePreAlphaDepth = true, bool matchEntityRotOrder = false)
 		{
 			GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_573_1_Steam, nameof(World),
 				nameof(DrawMarkerEx));
 
-			if (txdAndTexNamePair == null)
+			if (texAsset == null)
 			{
 				Function.Call(Hash.DRAW_MARKER_EX, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y,
 					rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bounce, faceCamera,
@@ -2247,7 +2247,7 @@ namespace GTA
 			}
 			else
 			{
-				(Txd txd, string texName) = txdAndTexNamePair.GetValueOrDefault();
+				(Txd txd, string texName) = texAsset.GetValueOrDefault();
 				Function.Call(Hash.DRAW_MARKER_EX, (int)type, pos.X, pos.Y, pos.Z, dir.X, dir.Y, dir.Z, rot.X, rot.Y,
 					rot.Z, scale.X, scale.Y, scale.Z, color.R, color.G, color.B, color.A, bounce, faceCamera,
 					(int)rotOrder, rotate, txd, texName, renderInverted, usePreAlphaDepth, matchEntityRotOrder);
