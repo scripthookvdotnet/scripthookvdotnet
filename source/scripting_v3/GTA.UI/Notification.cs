@@ -266,7 +266,7 @@ namespace GTA.UI
 		/// <param name="message">The message in the notification.</param>
 		/// <param name="blinking">if set to <see langword="true" /> the notification will blink.</param>
 		/// <returns>The handle of the <see cref="Notification"/> which can be used to hide it using <see cref="Notification.Hide(int)"/>.</returns>
-		[Obsolete("Use Notification.PostMessageText instead.")]
+		[Obsolete("Use Notification.PostTicker instead.")]
 		public static int Show(string message, bool blinking = false)
 		{
 			BeginTextCommandForFeedPostAndPushLongString(message);
