@@ -11,7 +11,7 @@ namespace GTA
 	/// <summary>
 	/// Represents a dictionary struct for an creature clip/animation dictionary, which is created from a ycd file.
 	/// Note that clip/animation dictionaries are different from clip sets, which is defined in
-	/// <c>clip_sets.ymt</c> or <c>clip_sets.xml</c> files.
+	/// <c>clip_sets.ymt</c> or <c>clip_sets.xml</c> files (you can request clip sets with <see cref="ClipSet"/>).
 	/// </summary>
 	/// <remarks>
 	/// Alghough some natives have the string "ANIM_DICT" but there's no ones that have "CLIP_DICT" on the other hand,

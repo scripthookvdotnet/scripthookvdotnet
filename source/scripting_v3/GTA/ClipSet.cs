@@ -12,7 +12,8 @@ namespace GTA
 	/// Represents a dictionary struct for a clip/animation set, which should represent a key name for <c>fwClipSet</c>.
 	/// Clip/Animation sets are defined in <c>clip_sets.ymt</c> (compiled file of <c>clip_sets.pso.meta</c> according to
 	/// the official scripting headers) or <c>clip_sets.xml</c> files.
-	/// Note that clip/animation sets are different from clip/animation dictionaries, which is created from <c>ycd</c> files.
+	/// Note that clip/animation sets are different from clip/animation dictionaries, which is created from <c>ycd</c>
+	/// files (you can request clip sets with <see cref="CrClipDictionary"/>).
 	/// </summary>
 	public readonly struct ClipSet : IEquatable<ClipSet>, IScriptStreamingResource
 	{
@@ -28,6 +29,17 @@ namespace GTA
 		{
 			get;
 		}
+
+		/// <summary>
+		/// Computes the hash of <see cref="Name"/> in the same way as how the game calculates hashes for clip sets to
+		/// store in the global <c>rage::fwClipSetManager</c> and as how <see cref="Game.GenerateHash(string)"/>
+		/// calculates.
+		/// May be useful when you want to get the identifier in the same way as how the game handles clip sets or when
+		/// you investigate game memory to see how clip sets (<c>rage::fwClipSet</c>) are stored in the
+		/// <c>rage::fwClipSetManager</c>.
+		/// </summary>
+		/// <returns>The hash value calculated from <see cref="Name"/>.</returns>
+		public int HashName() => Game.GenerateHash(Name);
 
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="ClipSet"/> is loaded
@@ -78,7 +90,7 @@ namespace GTA
 
 		public bool Equals(ClipSet other)
 		{
-			return Name == other.Name;
+			return HashName() == other.HashName();
 		}
 		public override bool Equals(object obj)
 		{
@@ -114,7 +126,7 @@ namespace GTA
 
 		public override int GetHashCode()
 		{
-			return Name.GetHashCode();
+			return HashName();
 		}
 
 		public override string ToString() => Name;
