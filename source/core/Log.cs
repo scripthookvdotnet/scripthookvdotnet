@@ -20,6 +20,9 @@ namespace SHVDN
 
 		private static string FilePath => Path.ChangeExtension(typeof(ScriptDomain).Assembly.Location, ".log");
 
+		internal static string FileName
+			=> Path.GetFileName(Path.ChangeExtension(typeof(ScriptDomain).Assembly.Location, ".log"));
+
 		public static void Clear()
 		{
 			try
@@ -38,7 +41,7 @@ namespace SHVDN
 			WriteToConsole(level, message);
 		}
 
-		private static void WriteToFile(Level level, params string[] message)
+		internal static void WriteToFile(Level level, params string[] message)
 		{
 			try
 			{
@@ -79,7 +82,7 @@ namespace SHVDN
 			}
 		}
 
-		private static void WriteToConsole(Level level, params string[] message)
+		internal static void WriteToConsole(Level level, params string[] message)
 		{
 			var console = AppDomain.CurrentDomain.GetData("Console") as Console;
 
