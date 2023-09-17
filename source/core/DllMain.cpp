@@ -152,9 +152,44 @@ internal:
 	static array<bool>^ _keyboardStatePool = gcnew array<bool>(256);
 	static ModifierKeyState _modKeyState = ModifierKeyState::None;
 
+	value struct LogMessageInfo
+	{
+		LogMessageInfo(SHVDN::Log::Level level, String^ message)
+		{
+			this->level = level;
+			this->message = message;
+		}
+
+		SHVDN::Log::Level level;
+		String^ message;
+	};
+
 	static void SetConsole()
 	{
 		console = (SHVDN::Console ^)AppDomain::CurrentDomain->GetData("Console");
+	}
+
+	static void SendPendingMessagesToConsole(SHVDN::Console^ console, List<LogMessageInfo>^ pendingMessageInfo)
+	{
+		if (console == nullptr)
+		{
+			return;
+		}
+
+		for each (LogMessageInfo messageInfo in pendingMessageInfo)
+		{
+			// Don't use Log.WriteToConsole here, we want to make sure that log strings will print via
+			// the passed console instance
+			switch (messageInfo.level)
+			{
+			case SHVDN::Log::Level::Error:
+				console->PrintError(messageInfo.message);
+				break;
+			case SHVDN::Log::Level::Warning:
+				console->PrintWarning(messageInfo.message);
+				break;
+			}
+		}
 	}
 
 	static void UpdatePrimaryKeyboardStateCache(unsigned char keyCode, bool down)
@@ -273,9 +308,17 @@ static ValueTuple<array<WinForms::Keys>^, InvalidKeysFoundError^> ParseKeyBindin
 	return ValueTuple<array<WinForms::Keys>^, InvalidKeysFoundError^>(resultKeyBinding->ToArray(), error);
 }
 
-static void LogKeyBindingParseError(String^ rawInput, InvalidKeysFoundError^ invalidKeysFoundError)
+static void AppendPendingMessageForConsole(List<ScriptHookVDotNet::LogMessageInfo>^ messageInfoBuffer,
+	SHVDN::Log::Level level, String^ input)
 {
-	SHVDN::Log::WriteToConsole(SHVDN::Log::Level::Error,
+	messageInfoBuffer->Add(ScriptHookVDotNet::LogMessageInfo(level, input));
+}
+
+static void LogKeyBindingParseError(String^ rawInput, InvalidKeysFoundError^ invalidKeysFoundError,
+	List<ScriptHookVDotNet::LogMessageInfo>^ messageInfoBuffer)
+{
+	AppendPendingMessageForConsole(messageInfoBuffer,
+		SHVDN::Log::Level::Error,
 		String::Format(
 			"Failed to parse a key binding from the string \"{0}\". See {1} for details.",
 			rawInput,
@@ -315,6 +358,7 @@ static void ScriptHookVDotNet_ManagedInit()
 	SHVDN::Console^% console = ScriptHookVDotNet::console;
 	SHVDN::ScriptDomain^% domain = ScriptHookVDotNet::domain;
 	List<String^>^ stashedConsoleCommandHistory = gcnew List<String^>();
+	List<ScriptHookVDotNet::LogMessageInfo>^ pendingLogMessageInfo = gcnew List<ScriptHookVDotNet::LogMessageInfo>();
 
 	// Unload previous domain (this unloads all script assemblies too)
 	{
@@ -366,7 +410,7 @@ static void ScriptHookVDotNet_ManagedInit()
 				InvalidKeysFoundError^ invalidKeysError = keyCombinationResult.Item2;
 				if (invalidKeysError != nullptr)
 				{
-					LogKeyBindingParseError(valueStr, invalidKeysError);
+					LogKeyBindingParseError(valueStr, invalidKeysError, pendingLogMessageInfo);
 				}
 				else
 				{
@@ -379,7 +423,7 @@ static void ScriptHookVDotNet_ManagedInit()
 				InvalidKeysFoundError^ invalidKeysError = keyCombinationResult.Item2;
 				if (invalidKeysError != nullptr)
 				{
-					LogKeyBindingParseError(valueStr, invalidKeysError);
+					LogKeyBindingParseError(valueStr, invalidKeysError, pendingLogMessageInfo);
 				}
 				else
 				{
@@ -446,6 +490,8 @@ static void ScriptHookVDotNet_ManagedInit()
 		// Print welcome message
 		console->PrintInfo("~c~--- Community Script Hook V .NET " SHVDN_VERSION " ---");
 		console->PrintInfo("~c~--- Type \"Help()\" to print an overview of available commands ---");
+
+		ScriptHookVDotNet::SendPendingMessagesToConsole(console, pendingLogMessageInfo);
 
 		// Update console pointer in script domain
 		domain->AppDomain->SetData("Console", console);

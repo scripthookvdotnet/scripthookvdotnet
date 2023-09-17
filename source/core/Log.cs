@@ -20,8 +20,7 @@ namespace SHVDN
 
 		private static string FilePath => Path.ChangeExtension(typeof(ScriptDomain).Assembly.Location, ".log");
 
-		internal static string FileName
-			=> Path.GetFileName(Path.ChangeExtension(typeof(ScriptDomain).Assembly.Location, ".log"));
+		internal static string FileName => Path.GetFileName(FilePath);
 
 		public static void Clear()
 		{
