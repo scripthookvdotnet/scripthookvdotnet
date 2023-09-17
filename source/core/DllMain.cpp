@@ -50,6 +50,15 @@ using namespace System::Collections::Generic;
 using namespace System::Reflection;
 namespace WinForms = System::Windows::Forms;
 
+[FlagsAttribute]
+private enum class ModifierKeyState
+{
+	None = 0,
+	Shift = 0x10000,
+	Control = 0x20000,
+	Alt = 0x40000,
+};
+
 public ref class ScriptHookVDotNet // This is not a static class, so that console scripts can inherit from it for ConsoleInput class
 {
 public:
@@ -135,22 +144,256 @@ public:
 internal:
 	static SHVDN::Console ^console = nullptr;
 	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
-	static WinForms::Keys reloadKey = WinForms::Keys::None;
-	static WinForms::Keys consoleKey = WinForms::Keys::F4;
+	static array<WinForms::Keys>^ reloadKeyBinding = { WinForms::Keys::None };
+	static array<WinForms::Keys>^ consoleKeyBinding = { WinForms::Keys::F4 };
 	static unsigned int scriptTimeoutThreshold = 5000;
 	static bool shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = true;
 	static Object^ unloadLock = gcnew Object();
+	static array<bool>^ _keyboardStatePool = gcnew array<bool>(256);
+	static ModifierKeyState _modKeyState = ModifierKeyState::None;
+
+	value struct LogMessageInfo
+	{
+		LogMessageInfo(SHVDN::Log::Level level, String^ message)
+		{
+			this->level = level;
+			this->message = message;
+		}
+
+		SHVDN::Log::Level level;
+		String^ message;
+	};
+
 	static void SetConsole()
 	{
 		console = (SHVDN::Console ^)AppDomain::CurrentDomain->GetData("Console");
 	}
+
+	static void SendPendingMessagesToConsole(SHVDN::Console^ console, List<LogMessageInfo>^ pendingMessageInfo)
+	{
+		if (console == nullptr)
+		{
+			return;
+		}
+
+		for each (LogMessageInfo messageInfo in pendingMessageInfo)
+		{
+			// Don't use Log.WriteToConsole here, we want to make sure that log strings will print via
+			// the passed console instance
+			switch (messageInfo.level)
+			{
+			case SHVDN::Log::Level::Error:
+				console->PrintError(messageInfo.message);
+				break;
+			case SHVDN::Log::Level::Warning:
+				console->PrintWarning(messageInfo.message);
+				break;
+			}
+		}
+	}
+
+	static void UpdatePrimaryKeyboardStateCache(unsigned char keyCode, bool down)
+	{
+		_keyboardStatePool[keyCode] = down;
+	}
+	static void UpdateKeyboardModifierStateCache(bool shift, bool ctrl, bool alt)
+	{
+		ModifierKeyState newState = (shift ? ModifierKeyState::Shift : ModifierKeyState::None);
+		newState = (ctrl ? newState | ModifierKeyState::Control : newState);
+		newState = (alt ? newState | ModifierKeyState::Alt : newState);
+
+		_modKeyState = newState;
+	}
 };
+
+ref class InvalidKeysFoundError sealed
+{
+internal:
+	value class PositionAndUnparsedStrInfo
+	{
+	private:
+		int _position;
+		String^ _unparsedStr;
+
+	public:
+		PositionAndUnparsedStrInfo(int position, String^ unparsedStr)
+		{
+			_position = position;
+			_unparsedStr = unparsedStr;
+		}
+
+		property int Position
+		{
+			int get() {
+				return _position;
+			}
+		}
+		property String^ UnparsedString
+		{
+			String^ get()
+			{
+				return _unparsedStr;
+			}
+		}
+	};
+
+	array<InvalidKeysFoundError::PositionAndUnparsedStrInfo>^ _unparsedStrInfo;
+
+	InvalidKeysFoundError(array<InvalidKeysFoundError::PositionAndUnparsedStrInfo>^ input)
+	{
+		_unparsedStrInfo = gcnew array<InvalidKeysFoundError::PositionAndUnparsedStrInfo>(input->Length);
+		input->CopyTo(_unparsedStrInfo, 0);
+	}
+
+	array<InvalidKeysFoundError::PositionAndUnparsedStrInfo>^ GetUnparsedStrSequence()
+	{
+		auto newArray = gcnew array<InvalidKeysFoundError::PositionAndUnparsedStrInfo>(_unparsedStrInfo->Length);
+		_unparsedStrInfo->CopyTo(newArray, 0);
+		return newArray;
+	}
+};
+
+ref class InvalidKeysFoundErrorBuilder sealed
+{
+private:
+	List<InvalidKeysFoundError::PositionAndUnparsedStrInfo>^ _invalidKeys;
+
+public:
+	InvalidKeysFoundErrorBuilder()
+	{
+		_invalidKeys = gcnew List<InvalidKeysFoundError::PositionAndUnparsedStrInfo>();
+	}
+
+	void Add(int position, String^ unparsedStr)
+	{
+		auto posAndKeyInfo = InvalidKeysFoundError::PositionAndUnparsedStrInfo(position, unparsedStr);
+		_invalidKeys->Add(posAndKeyInfo);
+	}
+
+	InvalidKeysFoundError^ Build()
+	{
+		return gcnew InvalidKeysFoundError(_invalidKeys->ToArray());
+	}
+};
+
+// This is for internel use, so use a System.Array for faster iteration
+static ValueTuple<array<WinForms::Keys>^, InvalidKeysFoundError^> ParseKeyBinding(String^ input)
+{
+	InvalidKeysFoundErrorBuilder^ errorBuilder = nullptr;
+
+	array<String^>^ inputSubstrings = input->Split('+');
+	List<WinForms::Keys>^ resultKeyBinding = gcnew List<WinForms::Keys>(inputSubstrings->Length);
+
+	for (int i = 0; i < inputSubstrings->Length; i++)
+	{
+		String^ keyStr = inputSubstrings[i]->Trim();
+
+		WinForms::Keys parsedKey;
+		if (Enum::TryParse(keyStr, true, parsedKey))
+		{
+			resultKeyBinding->Add(parsedKey);
+		}
+		else
+		{
+			if (errorBuilder == nullptr)
+			{
+				errorBuilder = gcnew InvalidKeysFoundErrorBuilder();
+			}
+
+			errorBuilder->Add(i, keyStr);
+		}
+	}
+
+	InvalidKeysFoundError^ error = (errorBuilder != nullptr ? errorBuilder->Build() : nullptr);
+	return ValueTuple<array<WinForms::Keys>^, InvalidKeysFoundError^>(resultKeyBinding->ToArray(), error);
+}
+
+static void AppendPendingMessageForConsole(List<ScriptHookVDotNet::LogMessageInfo>^ messageInfoBuffer,
+	SHVDN::Log::Level level, String^ input)
+{
+	messageInfoBuffer->Add(ScriptHookVDotNet::LogMessageInfo(level, input));
+}
+
+static String^ BuildKeyCombinationString(array<WinForms::Keys>^ keyBinding)
+{
+	if (keyBinding == nullptr)
+	{
+		throw gcnew ArgumentNullException("keyBinding");
+	}
+	if (keyBinding->Length == 0)
+	{
+		return String::Empty;
+	}
+
+	Text::StringBuilder^ strBuilder = gcnew Text::StringBuilder();
+	bool hasAlreadyFoundFirstElement = false;
+
+	for each (WinForms::Keys key in keyBinding)
+	{
+		if (hasAlreadyFoundFirstElement)
+		{
+			strBuilder->Append(" + ");
+		}
+		else
+		{
+			hasAlreadyFoundFirstElement = true;
+		}
+
+		strBuilder->Append((WinForms::Keys::typeid)->GetEnumName(static_cast<int>(key)));
+	}
+
+	return strBuilder->ToString();
+}
+
+static void LogKeyBindingParseError(String^ rawInput, InvalidKeysFoundError^ invalidKeysFoundError,
+	List<ScriptHookVDotNet::LogMessageInfo>^ messageInfoBuffer, array<WinForms::Keys>^ defaultKeyBinding)
+{
+	AppendPendingMessageForConsole(messageInfoBuffer,
+		SHVDN::Log::Level::Error,
+		String::Format(
+			"InvalidKeysFoundError: Failed to parse a key binding from the string \"{0}\". See {1} for details.",
+			rawInput,
+			SHVDN::Log::FileName
+		)
+	);
+
+	Text::StringBuilder^ errorLineBuilder = gcnew Text::StringBuilder();
+	bool hasAlreadyFoundFirstUnparsedString = false;
+	for each (auto unparsedInfo in invalidKeysFoundError->GetUnparsedStrSequence())
+	{
+		if (hasAlreadyFoundFirstUnparsedString)
+		{
+			errorLineBuilder->Append(Environment::NewLine);
+		}
+		else
+		{
+			hasAlreadyFoundFirstUnparsedString = true;
+		}
+		errorLineBuilder->Append(
+			String::Format("    Found an invalid key name \"{0}\" at index {1}", unparsedInfo.UnparsedString, unparsedInfo.Position)
+		);
+	}
+
+	SHVDN::Log::WriteToFile(SHVDN::Log::Level::Error,
+		String::Format(
+			"InvalidKeysFoundError: Failed to parse a key binding from the string \"{0}\":{1}{2}{3}{4}{5}{6}",
+			rawInput,
+			Environment::NewLine,
+			Environment::NewLine,
+			errorLineBuilder->ToString(),
+			Environment::NewLine,
+			Environment::NewLine,
+			"    Fallbacked to \"" + BuildKeyCombinationString(defaultKeyBinding) + "\""
+		)
+	);
+}
 
 static void ScriptHookVDotNet_ManagedInit()
 {
 	SHVDN::Console^% console = ScriptHookVDotNet::console;
 	SHVDN::ScriptDomain^% domain = ScriptHookVDotNet::domain;
 	List<String^>^ stashedConsoleCommandHistory = gcnew List<String^>();
+	List<ScriptHookVDotNet::LogMessageInfo>^ pendingLogMessageInfo = gcnew List<ScriptHookVDotNet::LogMessageInfo>();
 
 	// Unload previous domain (this unloads all script assemblies too)
 	{
@@ -195,10 +438,33 @@ static void ScriptHookVDotNet_ManagedInit()
 			String^ keyStr = data[0]->Trim();
 			String^ valueStr = data[1]->Trim();
 
-			if (String::Equals(keyStr, "ReloadKey", StringComparison::OrdinalIgnoreCase))
-				Enum::TryParse(valueStr, true, ScriptHookVDotNet::reloadKey);
-			else if (String::Equals(keyStr, "ConsoleKey", StringComparison::OrdinalIgnoreCase))
-				Enum::TryParse(valueStr, true, ScriptHookVDotNet::consoleKey);
+			ValueTuple<array<WinForms::Keys>^, InvalidKeysFoundError^> keyCombinationResult;
+
+			if (String::Equals(keyStr, "ReloadKeyBinding", StringComparison::OrdinalIgnoreCase)) {
+				keyCombinationResult = ParseKeyBinding(valueStr);
+				InvalidKeysFoundError^ invalidKeysError = keyCombinationResult.Item2;
+				if (invalidKeysError != nullptr)
+				{
+					LogKeyBindingParseError(valueStr, invalidKeysError, pendingLogMessageInfo, ScriptHookVDotNet::reloadKeyBinding);
+				}
+				else
+				{
+					ScriptHookVDotNet::reloadKeyBinding = keyCombinationResult.Item1;
+				}
+			}
+			else if (String::Equals(keyStr, "ConsoleKeyBinding", StringComparison::OrdinalIgnoreCase))
+			{
+				keyCombinationResult = ParseKeyBinding(valueStr);
+				InvalidKeysFoundError^ invalidKeysError = keyCombinationResult.Item2;
+				if (invalidKeysError != nullptr)
+				{
+					LogKeyBindingParseError(valueStr, invalidKeysError, pendingLogMessageInfo, ScriptHookVDotNet::consoleKeyBinding);
+				}
+				else
+				{
+					ScriptHookVDotNet::consoleKeyBinding = keyCombinationResult.Item1;
+				}
+			}
 			else if (String::Equals(keyStr, "ScriptTimeoutThreshold", StringComparison::OrdinalIgnoreCase))
 			{
 				unsigned int outVal;
@@ -260,6 +526,8 @@ static void ScriptHookVDotNet_ManagedInit()
 		console->PrintInfo("~c~--- Community Script Hook V .NET " SHVDN_VERSION " ---");
 		console->PrintInfo("~c~--- Type \"Help()\" to print an overview of available commands ---");
 
+		ScriptHookVDotNet::SendPendingMessagesToConsole(console, pendingLogMessageInfo);
+
 		// Update console pointer in script domain
 		domain->AppDomain->SetData("Console", console);
 		domain->AppDomain->DoCallBack(gcnew CrossAppDomainDelegate(&ScriptHookVDotNet::SetConsole));
@@ -287,11 +555,52 @@ static void ScriptHookVDotNet_ManagedTick()
 		scriptDomain->DoTick();
 }
 
+static bool AreAllKeysPressed(array<WinForms::Keys>^ keys)
+{
+	for each (WinForms::Keys key in keys)
+	{
+		switch (key)
+		{
+		case WinForms::Keys::Shift:
+			if ((ScriptHookVDotNet::_modKeyState & static_cast<ModifierKeyState>(WinForms::Keys::Shift))
+				== ModifierKeyState::None)
+			{
+				return false;
+			}
+			break;
+		case WinForms::Keys::Control:
+			if ((ScriptHookVDotNet::_modKeyState & static_cast<ModifierKeyState>(WinForms::Keys::Control))
+				== ModifierKeyState::None)
+			{
+				return false;
+			}
+			break;
+		case WinForms::Keys::Alt:
+			if ((ScriptHookVDotNet::_modKeyState & static_cast<ModifierKeyState>(WinForms::Keys::Alt))
+				== ModifierKeyState::None)
+			{
+				return false;
+			}
+			break;
+		default:
+			if (!ScriptHookVDotNet::_keyboardStatePool[(int)key])
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
 static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool keydown, bool ctrl, bool shift, bool alt)
 {
 	// Filter out invalid key codes
 	if (keycode <= 0 || keycode >= 256)
 		return;
+
+	ScriptHookVDotNet::UpdatePrimaryKeyboardStateCache(static_cast<unsigned char>(keycode), keydown);
+	ScriptHookVDotNet::UpdateKeyboardModifierStateCache(shift, ctrl, alt);
 
 	// Convert message into a key event
 	auto keys = safe_cast<WinForms::Keys>(keycode);
@@ -304,13 +613,13 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 	SHVDN::Console^ console = ScriptHookVDotNet::console;
 	if (console != nullptr)
 	{
-		if (keydown && keys == ScriptHookVDotNet::reloadKey)
+		if (keydown && AreAllKeysPressed(ScriptHookVDotNet::reloadKeyBinding))
 		{
 			// Force a reload
 			ScriptHookVDotNet::Reload();
 			return;
 		}
-		if (keydown && keys == ScriptHookVDotNet::consoleKey)
+		if (keydown && AreAllKeysPressed(ScriptHookVDotNet::consoleKeyBinding))
 		{
 			// Toggle open state
 			console->IsOpen = !console->IsOpen;

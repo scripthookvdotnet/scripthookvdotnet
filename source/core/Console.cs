@@ -210,6 +210,14 @@ namespace SHVDN
 		/// Writes an info message to the console.
 		/// </summary>
 		/// <param name="msg">The composite format string.</param>
+		public void PrintInfo(string msg)
+		{
+			AddLines("[~b~INFO~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+		}
+		/// <summary>
+		/// Writes an info message to the console.
+		/// </summary>
+		/// <param name="msg">The composite format string.</param>
 		/// <param name="args">The formatting arguments.</param>
 		public void PrintInfo(string msg, params object[] args)
 		{
@@ -224,6 +232,14 @@ namespace SHVDN
 		/// Writes an error message to the console.
 		/// </summary>
 		/// <param name="msg">The composite format string.</param>
+		public void PrintError(string msg)
+		{
+			AddLines("[~r~ERROR~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+		}
+		/// <summary>
+		/// Writes an error message to the console.
+		/// </summary>
+		/// <param name="msg">The composite format string.</param>
 		/// <param name="args">The formatting arguments.</param>
 		public void PrintError(string msg, params object[] args)
 		{
@@ -233,6 +249,14 @@ namespace SHVDN
 			}
 
 			AddLines("[~r~ERROR~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+		}
+		/// <summary>
+		/// Writes a warning message to the console.
+		/// </summary>
+		/// <param name="msg">The composite format string.</param>
+		public void PrintWarning(string msg)
+		{
+			AddLines("[~o~WARNING~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
 		}
 		/// <summary>
 		/// Writes a warning message to the console.
