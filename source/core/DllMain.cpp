@@ -314,13 +314,44 @@ static void AppendPendingMessageForConsole(List<ScriptHookVDotNet::LogMessageInf
 	messageInfoBuffer->Add(ScriptHookVDotNet::LogMessageInfo(level, input));
 }
 
+static String^ BuildKeyCombinationString(array<WinForms::Keys>^ keyBinding)
+{
+	if (keyBinding == nullptr)
+	{
+		throw gcnew ArgumentNullException("keyBinding");
+	}
+	if (keyBinding->Length == 0)
+	{
+		return String::Empty;
+	}
+
+	Text::StringBuilder^ strBuilder = gcnew Text::StringBuilder();
+	bool hasAlreadyFoundFirstElement = false;
+
+	for each (WinForms::Keys key in keyBinding)
+	{
+		if (hasAlreadyFoundFirstElement)
+		{
+			strBuilder->Append(" + ");
+		}
+		else
+		{
+			hasAlreadyFoundFirstElement = true;
+		}
+
+		strBuilder->Append((WinForms::Keys::typeid)->GetEnumName(static_cast<int>(key)));
+	}
+
+	return strBuilder->ToString();
+}
+
 static void LogKeyBindingParseError(String^ rawInput, InvalidKeysFoundError^ invalidKeysFoundError,
-	List<ScriptHookVDotNet::LogMessageInfo>^ messageInfoBuffer)
+	List<ScriptHookVDotNet::LogMessageInfo>^ messageInfoBuffer, array<WinForms::Keys>^ defaultKeyBinding)
 {
 	AppendPendingMessageForConsole(messageInfoBuffer,
 		SHVDN::Log::Level::Error,
 		String::Format(
-			"Failed to parse a key binding from the string \"{0}\". See {1} for details.",
+			"InvalidKeysFoundError: Failed to parse a key binding from the string \"{0}\". See {1} for details.",
 			rawInput,
 			SHVDN::Log::FileName
 		)
@@ -339,16 +370,20 @@ static void LogKeyBindingParseError(String^ rawInput, InvalidKeysFoundError^ inv
 			hasAlreadyFoundFirstUnparsedString = true;
 		}
 		errorLineBuilder->Append(
-			String::Format("    Found \"{0}\" at index {1}.", unparsedInfo.UnparsedString, unparsedInfo.Position)
+			String::Format("    Found an invalid key name \"{0}\" at index {1}", unparsedInfo.UnparsedString, unparsedInfo.Position)
 		);
 	}
 
 	SHVDN::Log::WriteToFile(SHVDN::Log::Level::Error,
 		String::Format(
-			"Failed to parse a key binding from the string \"{0}\":{1}{2}",
+			"InvalidKeysFoundError: Failed to parse a key binding from the string \"{0}\":{1}{2}{3}{4}{5}{6}",
 			rawInput,
 			Environment::NewLine,
-			errorLineBuilder->ToString()
+			Environment::NewLine,
+			errorLineBuilder->ToString(),
+			Environment::NewLine,
+			Environment::NewLine,
+			"    Fallbacked to \"" + BuildKeyCombinationString(defaultKeyBinding) + "\""
 		)
 	);
 }
@@ -410,7 +445,7 @@ static void ScriptHookVDotNet_ManagedInit()
 				InvalidKeysFoundError^ invalidKeysError = keyCombinationResult.Item2;
 				if (invalidKeysError != nullptr)
 				{
-					LogKeyBindingParseError(valueStr, invalidKeysError, pendingLogMessageInfo);
+					LogKeyBindingParseError(valueStr, invalidKeysError, pendingLogMessageInfo, ScriptHookVDotNet::reloadKeyBinding);
 				}
 				else
 				{
@@ -423,7 +458,7 @@ static void ScriptHookVDotNet_ManagedInit()
 				InvalidKeysFoundError^ invalidKeysError = keyCombinationResult.Item2;
 				if (invalidKeysError != nullptr)
 				{
-					LogKeyBindingParseError(valueStr, invalidKeysError, pendingLogMessageInfo);
+					LogKeyBindingParseError(valueStr, invalidKeysError, pendingLogMessageInfo, ScriptHookVDotNet::consoleKeyBinding);
 				}
 				else
 				{
