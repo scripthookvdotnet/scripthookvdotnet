@@ -144,8 +144,8 @@ public:
 internal:
 	static SHVDN::Console ^console = nullptr;
 	static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
-	static array<WinForms::Keys>^ reloadKeys = { WinForms::Keys::None };
-	static array<WinForms::Keys>^ consoleKeys = { WinForms::Keys::F4 };
+	static array<WinForms::Keys>^ reloadKeyBinding = { WinForms::Keys::None };
+	static array<WinForms::Keys>^ consoleKeyBinding = { WinForms::Keys::F4 };
 	static unsigned int scriptTimeoutThreshold = 5000;
 	static bool shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = true;
 	static Object^ unloadLock = gcnew Object();
@@ -405,7 +405,7 @@ static void ScriptHookVDotNet_ManagedInit()
 
 			ValueTuple<array<WinForms::Keys>^, InvalidKeysFoundError^> keyCombinationResult;
 
-			if (String::Equals(keyStr, "ReloadKey", StringComparison::OrdinalIgnoreCase)) {
+			if (String::Equals(keyStr, "ReloadKeyBinding", StringComparison::OrdinalIgnoreCase)) {
 				keyCombinationResult = ParseKeyBinding(valueStr);
 				InvalidKeysFoundError^ invalidKeysError = keyCombinationResult.Item2;
 				if (invalidKeysError != nullptr)
@@ -414,10 +414,10 @@ static void ScriptHookVDotNet_ManagedInit()
 				}
 				else
 				{
-					ScriptHookVDotNet::reloadKeys = keyCombinationResult.Item1;
+					ScriptHookVDotNet::reloadKeyBinding = keyCombinationResult.Item1;
 				}
 			}
-			else if (String::Equals(keyStr, "ConsoleKey", StringComparison::OrdinalIgnoreCase))
+			else if (String::Equals(keyStr, "ConsoleKeyBinding", StringComparison::OrdinalIgnoreCase))
 			{
 				keyCombinationResult = ParseKeyBinding(valueStr);
 				InvalidKeysFoundError^ invalidKeysError = keyCombinationResult.Item2;
@@ -427,7 +427,7 @@ static void ScriptHookVDotNet_ManagedInit()
 				}
 				else
 				{
-					ScriptHookVDotNet::consoleKeys = keyCombinationResult.Item1;
+					ScriptHookVDotNet::consoleKeyBinding = keyCombinationResult.Item1;
 				}
 			}
 			else if (String::Equals(keyStr, "ScriptTimeoutThreshold", StringComparison::OrdinalIgnoreCase))
@@ -578,13 +578,13 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 	SHVDN::Console^ console = ScriptHookVDotNet::console;
 	if (console != nullptr)
 	{
-		if (keydown && AreAllKeysPressed(ScriptHookVDotNet::reloadKeys))
+		if (keydown && AreAllKeysPressed(ScriptHookVDotNet::reloadKeyBinding))
 		{
 			// Force a reload
 			ScriptHookVDotNet::Reload();
 			return;
 		}
-		if (keydown && AreAllKeysPressed(ScriptHookVDotNet::consoleKeys))
+		if (keydown && AreAllKeysPressed(ScriptHookVDotNet::consoleKeyBinding))
 		{
 			// Toggle open state
 			console->IsOpen = !console->IsOpen;
