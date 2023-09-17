@@ -486,12 +486,14 @@ static bool AreAllKeysPressed(array<WinForms::Keys>^ keys)
 			{
 				return false;
 			}
+			break;
 		case WinForms::Keys::Control:
 			if ((ScriptHookVDotNet::_modKeyState & static_cast<ModifierKeyState>(WinForms::Keys::Control))
 				== ModifierKeyState::None)
 			{
 				return false;
 			}
+			break;
 		case WinForms::Keys::Alt:
 			if ((ScriptHookVDotNet::_modKeyState & static_cast<ModifierKeyState>(WinForms::Keys::Alt))
 				== ModifierKeyState::None)
