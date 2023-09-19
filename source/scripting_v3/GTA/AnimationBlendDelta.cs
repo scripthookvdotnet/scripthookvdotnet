@@ -20,10 +20,11 @@ namespace GTA
 	{
 		public AnimationBlendDelta(float value)
 		{
-			// Don't accept zero. If the blend delta is zero, CTaskScriptedAnimation can't finish animation blending because of infinity duration (which will be made by division of 1.0 by 0).
+			// Don't accept zero. If the blend delta is zero, CTaskScriptedAnimation can't finish animation blending
+			// because of infinity duration (which will be made by division of 1.0 by 0).
 			if (value <= 0)
 			{
-				throw new ArgumentException("The value should be positive.", "value");
+				throw new ArgumentOutOfRangeException(nameof(value), "The value should be positive.");
 			}
 
 			Value = value;
