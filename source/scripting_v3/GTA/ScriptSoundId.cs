@@ -113,7 +113,7 @@ namespace GTA
 		{
 			if (Game.Version < GameVersion.v1_0_678_1_Steam)
 			{
-				throw new GameVersionNotSupportedException(GameVersion.v1_0_678_1_Steam, nameof(ScriptSoundId), nameof(UpdatePosition));
+				GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_678_1_Steam), nameof(ScriptSoundId), nameof(UpdatePosition));
 			}
 
 			Function.Call(Hash.UPDATE_SOUND_COORD, Id, position.X, position.Y, position.Z);

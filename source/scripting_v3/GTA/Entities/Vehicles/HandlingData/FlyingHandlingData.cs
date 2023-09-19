@@ -605,7 +605,7 @@ namespace GTA
 			{
 				if (Game.Version < GameVersion.v1_0_1180_2_Steam)
 				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1180_2_Steam, nameof(FlyingHandlingData), nameof(ExtraLiftWithRoll));
+					GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1180_2_Steam), nameof(FlyingHandlingData), nameof(ExtraLiftWithRoll));
 				}
 
 				if (!IsValid)

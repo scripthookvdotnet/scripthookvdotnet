@@ -66,7 +66,7 @@ namespace GTA
 			{
 				if (Game.Version < GameVersion.v1_0_1493_0_Steam)
 				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1493_0_Steam, nameof(SpecialFlightHandlingData), nameof(VectorAngularDampingMin));
+					GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1493_0_Steam), nameof(SpecialFlightHandlingData), nameof(VectorAngularDampingMin));
 				}
 				if (!IsValid)
 				{
@@ -127,7 +127,7 @@ namespace GTA
 			{
 				if (Game.Version < GameVersion.v1_0_1493_0_Steam)
 				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1493_0_Steam, nameof(SpecialFlightHandlingData), nameof(VectorLinearDampingMin));
+					GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1493_0_Steam), nameof(SpecialFlightHandlingData), nameof(VectorLinearDampingMin));
 				}
 				if (!IsValid)
 				{
@@ -308,7 +308,7 @@ namespace GTA
 			{
 				if (Game.Version < GameVersion.v1_0_1493_0_Steam)
 				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1493_0_Steam, nameof(SpecialFlightHandlingData), nameof(MinSpeedForThrustFalloff));
+					GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1493_0_Steam), nameof(SpecialFlightHandlingData), nameof(MinSpeedForThrustFalloff));
 				}
 				if (!IsValid)
 				{
@@ -340,7 +340,7 @@ namespace GTA
 			{
 				if (Game.Version < GameVersion.v1_0_1493_0_Steam)
 				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1493_0_Steam, nameof(SpecialFlightHandlingData), nameof(BrakingThrustScale));
+					GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1493_0_Steam), nameof(SpecialFlightHandlingData), nameof(BrakingThrustScale));
 				}
 				if (!IsValid)
 				{

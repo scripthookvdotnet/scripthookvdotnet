@@ -175,7 +175,7 @@ namespace GTA
 			{
 				if (Game.Version < GameVersion.v1_0_1103_2_Steam)
 				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1103_2_Steam, nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
+					GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1103_2_Steam), nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
 				}
 				if (!IsValid)
 				{
@@ -202,7 +202,7 @@ namespace GTA
 			{
 				if (Game.Version < GameVersion.v1_0_1103_2_Steam)
 				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1103_2_Steam, nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
+					GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1103_2_Steam), nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
 				}
 				if (value.Length > s_elemCountForWeaponPropertyArrays)
 				{

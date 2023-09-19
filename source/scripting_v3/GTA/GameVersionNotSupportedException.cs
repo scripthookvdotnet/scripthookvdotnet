@@ -71,8 +71,11 @@ namespace GTA
 		{
 			if (Game.Version < minSupportedVersion)
 			{
-				throw new GameVersionNotSupportedException(minSupportedVersion, className, propertyOrMethodName);
+				Throw(minSupportedVersion, className, propertyOrMethodName);
 			}
 		}
+
+		internal static void Throw(GameVersion minSupportedVersion, string className, string propertyOrMethodName)
+			=> throw new GameVersionNotSupportedException(minSupportedVersion, className, propertyOrMethodName);
 	}
 }

@@ -197,7 +197,7 @@ namespace GTA.UI
 				// but we have to prevent the setter from calling in the game versions prior to b1868 since we haven't find a alternative way to do what DRAW_SPRITE_ARX_WITH_UV does
 				if (Game.Version < GameVersion.v1_0_1868_0_Steam)
 				{
-					throw new GameVersionNotSupportedException(GameVersion.v1_0_1868_0_Steam, nameof(Sprite), nameof(TextureCoordinates));
+					GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1868_0_Steam), nameof(Sprite), nameof(TextureCoordinates));
 				}
 
 				_textureCoordinates = value;
