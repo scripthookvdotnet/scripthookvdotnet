@@ -1302,7 +1302,9 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public override string ToString()
 		{
-			return $"X:{X.ToString()} Y:{Y.ToString()} Z:{Z.ToString()} W:{W.ToString()}";
+			CultureInfo culture = CultureInfo.CurrentCulture;
+			return string.Format("X:{0} Y:{1} Z:{2} W:{3}", X.ToString(culture), Y.ToString(culture),
+				Z.ToString(culture), W.ToString(culture));
 		}
 
 		/// <summary>
@@ -1314,7 +1316,8 @@ namespace GTA.Math
 		public string ToString(string format)
 		{
 			CultureInfo culture = CultureInfo.CurrentCulture;
-			return $"X:{X.ToString(format, culture)} Y:{Y.ToString(format, culture)} Z:{Z.ToString(format, culture)} W:{W.ToString(format, culture)}";
+			return string.Format("X:{0} Y:{1} Z:{2} W:{3}", X.ToString(format, culture), Y.ToString(format, culture),
+				Z.ToString(format, culture), W.ToString(format, culture));
 		}
 
 		/// <summary>

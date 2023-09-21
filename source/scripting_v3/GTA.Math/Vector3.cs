@@ -18,6 +18,7 @@
 //
 
 using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace GTA.Math
@@ -669,7 +670,12 @@ namespace GTA.Math
 		/// Converts the value of the object to its equivalent string representation.
 		/// </summary>
 		/// <returns>The string representation of the value of this instance.</returns>
-		public override string ToString() => $"X:{X.ToString()} Y:{Y.ToString()} Z:{Z.ToString()}";
+		public override string ToString()
+		{
+			CultureInfo culture = CultureInfo.CurrentCulture;
+			return string.Format(culture, "X:{0} Y:{1} Z:{2}", X.ToString(culture), Y.ToString(culture),
+				Z.ToString(culture));
+		}
 
 		/// <summary>
 		/// Converts the value of the object to its equivalent string representation.
@@ -683,7 +689,9 @@ namespace GTA.Math
 				return ToString();
 			}
 
-			return $"X:{X.ToString(format)} Y:{Y.ToString(format)} Z:{Z.ToString(format)}";
+			CultureInfo culture = CultureInfo.CurrentCulture;
+			return string.Format("X:{0} Y:{1} Z:{2}", X.ToString(format, culture), Y.ToString(format, culture),
+				Z.ToString(format, culture));
 		}
 
 		/// <summary>

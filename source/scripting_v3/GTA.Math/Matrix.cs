@@ -1499,28 +1499,15 @@ namespace GTA.Math
 		/// <returns>The string representation of the value of this instance.</returns>
 		public override string ToString()
 		{
-			CultureInfo currentCulture = CultureInfo.CurrentCulture;
-			string m11Str = M11.ToString(currentCulture);
-			string m12Str = M12.ToString(currentCulture);
-			string m13Str = M13.ToString(currentCulture);
-			string m14Str = M14.ToString(currentCulture);
-
-			string m21Str = M21.ToString(currentCulture);
-			string m22Str = M22.ToString(currentCulture);
-			string m23Str = M23.ToString(currentCulture);
-			string m24Str = M24.ToString(currentCulture);
-
-			string m31Str = M31.ToString(currentCulture);
-			string m32Str = M32.ToString(currentCulture);
-			string m33Str = M33.ToString(currentCulture);
-			string m34Str = M34.ToString(currentCulture);
-
-			string m41Str = M41.ToString(currentCulture);
-			string m42Str = M42.ToString(currentCulture);
-			string m43Str = M43.ToString(currentCulture);
-			string m44Str = M44.ToString(currentCulture);
-
-			return $"[M11:{m11Str} M12:{m12Str} M13:{m13Str} M14:{m14Str}] [M21:{m21Str} M22:{m22Str} M23:{m23Str} M24:{m24Str}] [M31:{m31Str} M32:{m32Str} M33:{m33Str} M34:{m34Str}] [M41:{m41Str} M42:{m42Str} M43:{m43Str} M44:{m44Str}]";
+			CultureInfo culture = CultureInfo.CurrentCulture;
+			return string.Format(culture,
+				"[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}] " +
+				"[M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
+                M11.ToString(culture), M12.ToString(culture), M13.ToString(culture), M14.ToString(culture),
+				M21.ToString(culture), M22.ToString(culture), M23.ToString(culture), M24.ToString(culture),
+				M31.ToString(culture), M32.ToString(culture), M33.ToString(culture), M34.ToString(culture),
+				M41.ToString(culture), M42.ToString(culture), M43.ToString(culture), M44.ToString(culture)
+				);
 		}
 
 		/// <summary>
@@ -1535,28 +1522,23 @@ namespace GTA.Math
 				return ToString();
 			}
 
-			CultureInfo currentCulture = CultureInfo.CurrentCulture;
-			string m11Str = M11.ToString(format, currentCulture);
-			string m12Str = M12.ToString(format, currentCulture);
-			string m13Str = M13.ToString(format, currentCulture);
-			string m14Str = M14.ToString(format, currentCulture);
+			CultureInfo culture = CultureInfo.CurrentCulture;
 
-			string m21Str = M21.ToString(format, currentCulture);
-			string m22Str = M22.ToString(format, currentCulture);
-			string m23Str = M23.ToString(format, currentCulture);
-			string m24Str = M24.ToString(format, currentCulture);
+			return string.Format(format, culture,
+				"[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}]" +
+				"[M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
+				M11.ToString(format, culture), M12.ToString(format, culture),
+				M13.ToString(format, culture), M14.ToString(format, culture),
 
-			string m31Str = M31.ToString(format, currentCulture);
-			string m32Str = M32.ToString(format, currentCulture);
-			string m33Str = M33.ToString(format, currentCulture);
-			string m34Str = M34.ToString(format, currentCulture);
+				M21.ToString(format, culture), M22.ToString(format, culture),
+				M23.ToString(format, culture), M24.ToString(format, culture),
 
-			string m41Str = M41.ToString(format, currentCulture);
-			string m42Str = M42.ToString(format, currentCulture);
-			string m43Str = M43.ToString(format, currentCulture);
-			string m44Str = M44.ToString(format, currentCulture);
+				M31.ToString(format, culture), M32.ToString(format, culture),
+				M33.ToString(format, culture), M34.ToString(format, culture),
 
-			return $"[M11:{m11Str} M12:{m12Str} M13:{m13Str} M14:{m14Str}] [M21:{m21Str} M22:{m22Str} M23:{m23Str} M24:{m24Str}] [M31:{m31Str} M32:{m32Str} M33:{m33Str} M34:{m34Str}] [M41:{m41Str} M42:{m42Str} M43:{m43Str} M44:{m44Str}]";
+				M41.ToString(format, culture), M42.ToString(format, culture),
+				M43.ToString(format, culture), M44.ToString(format, culture)
+				);
 		}
 
 		/// <summary>
