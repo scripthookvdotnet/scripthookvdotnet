@@ -28,7 +28,7 @@ namespace GTA.Math
 	/// </summary>
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
-	public struct Matrix : IEquatable<Matrix>
+	public struct Matrix : IEquatable<Matrix>, IFormattable
 	{
 		/// <summary>
 		/// Gets or sets the element of the matrix that exists in the first row and first column.
@@ -1538,6 +1538,36 @@ namespace GTA.Math
 
 				M41.ToString(format, culture), M42.ToString(format, culture),
 				M43.ToString(format, culture), M44.ToString(format, culture)
+				);
+		}
+
+		/// <summary>
+		/// Returns the string representation of the current instance using the specified format string to format
+		/// individual elements and the specified format provider to define culture-specific formatting.
+		/// </summary>
+		/// <param name="format">
+		/// A standard or custom numeric format string that defines the format of individual elements.
+		/// </param>
+		/// <param name="provider">
+		/// A format provider that supplies culture-specific formatting information.
+		/// </param>
+		/// <returns>The string representation of the value of this instance.</returns>
+		public string ToString(string format, IFormatProvider provider)
+		{
+			return string.Format(format, provider,
+				"[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}]" +
+				"[M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
+				M11.ToString(format, provider), M12.ToString(format, provider),
+				M13.ToString(format, provider), M14.ToString(format, provider),
+
+				M21.ToString(format, provider), M22.ToString(format, provider),
+				M23.ToString(format, provider), M24.ToString(format, provider),
+
+				M31.ToString(format, provider), M32.ToString(format, provider),
+				M33.ToString(format, provider), M34.ToString(format, provider),
+
+				M41.ToString(format, provider), M42.ToString(format, provider),
+				M43.ToString(format, provider), M44.ToString(format, provider)
 				);
 		}
 

@@ -24,7 +24,7 @@ namespace GTA.Math
 {
 	[Serializable]
 	[StructLayout(LayoutKind.Sequential, Pack = 4)]
-	public struct Vector2 : IEquatable<Vector2>
+	public struct Vector2 : IEquatable<Vector2>, IFormattable
 	{
 		/// <summary>
 		/// Gets or sets the X component of the vector.
@@ -485,6 +485,22 @@ namespace GTA.Math
 			}
 
 			return $"X:{X.ToString(format)} Y:{Y.ToString(format)}";
+		}
+
+		/// <summary>
+		/// Returns the string representation of the current instance using the specified format string to format
+		/// individual elements and the specified format provider to define culture-specific formatting.
+		/// </summary>
+		/// <param name="format">
+		/// A standard or custom numeric format string that defines the format of individual elements.
+		/// </param>
+		/// <param name="provider">
+		/// A format provider that supplies culture-specific formatting information.
+		/// </param>
+		/// <returns>The string representation of the value of this instance.</returns>
+		public string ToString(string format, IFormatProvider provider)
+		{
+			return $"X:{X.ToString(format, provider)} Y:{Y.ToString(format, provider)}";
 		}
 
 		/// <summary>

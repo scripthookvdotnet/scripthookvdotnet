@@ -30,7 +30,7 @@ namespace GTA.Math
 
 	[Serializable]
 	[StructLayout(LayoutKind.Explicit, Pack = 4)]
-	public struct Vector3 : IEquatable<Vector3>
+	public struct Vector3 : IEquatable<Vector3>, IFormattable
 	{
 		/// <summary>
 		/// Gets or sets the X component of the vector.
@@ -693,6 +693,21 @@ namespace GTA.Math
 			return string.Format("X:{0} Y:{1} Z:{2}", X.ToString(format, culture), Y.ToString(format, culture),
 				Z.ToString(format, culture));
 		}
+
+		/// <summary>
+		/// Returns the string representation of the current instance using the specified format string to format
+		/// individual elements and the specified format provider to define culture-specific formatting.
+		/// </summary>
+		/// <param name="format">
+		/// A standard or custom numeric format string that defines the format of individual elements.
+		/// </param>
+		/// <param name="provider">
+		/// A format provider that supplies culture-specific formatting information.
+		/// </param>
+		/// <returns>The string representation of the value of this instance.</returns>
+		public string ToString(string format, IFormatProvider provider)
+			=> string.Format("X:{0} Y:{1} Z:{2}", X.ToString(format, provider), Y.ToString(format, provider),
+				Z.ToString(format, provider));
 
 		/// <summary>
 		/// Returns the hash code for this instance.
