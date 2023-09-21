@@ -1306,14 +1306,15 @@ namespace GTA.Math
 		}
 
 		/// <summary>
-		/// Converts the value of the object to its equivalent string representation using <see cref="CultureInfo.InvariantCulture"/>.
+		/// Converts the value of the object to its equivalent string representation using
+		/// <see cref="CultureInfo.CurrentCulture"/>.
 		/// </summary>
 		/// <param name="format">The format.</param>
 		/// <returns>The string representation of the value of this instance.</returns>
 		public string ToString(string format)
 		{
-			CultureInfo invariantCulture = CultureInfo.InvariantCulture;
-			return $"X:{X.ToString(format, invariantCulture)} Y:{Y.ToString(format, invariantCulture)} Z:{Z.ToString(format, invariantCulture)} W:{W.ToString(format, invariantCulture)}";
+			CultureInfo culture = CultureInfo.CurrentCulture;
+			return $"X:{X.ToString(format, culture)} Y:{Y.ToString(format, culture)} Z:{Z.ToString(format, culture)} W:{W.ToString(format, culture)}";
 		}
 
 		/// <summary>
