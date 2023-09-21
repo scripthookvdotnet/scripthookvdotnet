@@ -2007,7 +2007,7 @@ namespace GTA.Native
 
 			if (address == IntPtr.Zero)
 			{
-				throw new IndexOutOfRangeException($"The index {index} does not correspond to an existing global variable.");
+				throw new IndexOutOfRangeException($"The index {index.ToString()} does not correspond to an existing global variable.");
 			}
 
 			return new GlobalVariable(address);
@@ -2225,7 +2225,7 @@ namespace GTA.Native
 
 			if (index < 0 || index >= count)
 			{
-				throw new IndexOutOfRangeException($"The index {index} was outside the array bounds.");
+				throw new IndexOutOfRangeException($"The index {index.ToString()} was outside the array bounds.");
 			}
 
 			return new GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));

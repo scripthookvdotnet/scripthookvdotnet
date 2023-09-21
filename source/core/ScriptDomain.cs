@@ -617,7 +617,7 @@ namespace SHVDN
 					int scriptCountUsingDeprecatedApi = DeprecatedScriptAssemblyNamesPerApiVersion.Values.Aggregate(0, (result, current) => result + current.Count);
 
 					PostTickerToFeed(
-						message: $"~o~WARNING~s~: {scriptCountUsingDeprecatedApi} scripts are using the v2 API (ScriptHookVDotNet2.dll), which is deprecated and not actively supported. See the console outputs or the log file for more details.",
+						message: $"~o~WARNING~s~: {scriptCountUsingDeprecatedApi.ToString()} scripts are using the v2 API (ScriptHookVDotNet2.dll), which is deprecated and not actively supported. See the console outputs or the log file for more details.",
 						isImportant: true,
 						cacheMessage: false
 					);
@@ -628,9 +628,9 @@ namespace SHVDN
 					int apiVersion = apiVersionAndScriptNameDict.Key;
 					int scriptAssemblyCount = apiVersionAndScriptNameDict.Value.Count;
 
-					string apiVersionString = apiVersion != 0 ? $"{apiVersion}.x" : "0.x or 1.x (fallbacked to the v2 API)";
+					string apiVersionString = apiVersion != 0 ? $"{apiVersion.ToString()}.x" : "0.x or 1.x (fallbacked to the v2 API)";
 
-					Log.Message(Log.Level.Warning, $"Found {scriptAssemblyCount} script(s) resolved to the deprecated API version {apiVersionString} (ScriptHookVDotNet2.dll). The v2 API is no longer actively supported. Please report to the authors who developed some of the deprecated scripts. The list of script names:");
+					Log.Message(Log.Level.Warning, $"Found {scriptAssemblyCount.ToString()} script(s) resolved to the deprecated API version {apiVersionString} (ScriptHookVDotNet2.dll). The v2 API is no longer actively supported. Please report to the authors who developed some of the deprecated scripts. The list of script names:");
 					foreach (string scriptName in apiVersionAndScriptNameDict.Value)
 					{
 						Log.Message(Log.Level.Warning, scriptName);
