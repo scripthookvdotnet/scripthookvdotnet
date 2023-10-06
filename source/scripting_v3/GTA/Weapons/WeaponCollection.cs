@@ -7,7 +7,6 @@ using GTA.Native;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace GTA
 {
@@ -77,65 +76,16 @@ namespace GTA
 		}
 
 		/// <remarks>
-		/// May count the <see cref="Weapon"/> instances with the hash for <see cref="WeaponHash.Unarmed"/> and <c>"OBJECT"</c> in favor of faster operation.
+		/// May count the <see cref="Weapon"/> instances with the hash for <see cref="WeaponHash.Unarmed"/> and
+		/// <c>"OBJECT"</c> in favor of faster operation.
 		/// </remarks>
 		/// <inheritdoc cref="IEnumerable{T}.GetEnumerator"/>
-		public IEnumerator<Weapon> GetEnumerator()
-		{
-			int currentIndex = 0;
-			while (true)
-			{
-				Weapon currentWeaponInstance = GetWeaponInstanceByIndexOfPedInventory(currentIndex++);
-				if (currentWeaponInstance == null)
-				{
-					yield break;
-				}
+		public Enumerator GetEnumerator() => new(this);
 
-				yield return currentWeaponInstance;
-			}
-		}
+		/// <internalonly/>
+		IEnumerator<Weapon> IEnumerable<Weapon>.GetEnumerator() => GetEnumerator();
 
-		private Weapon GetWeaponInstanceByIndexOfPedInventory(int index)
-		{
-			unsafe
-			{
-				IntPtr pedInventoryAddr = SHVDN.NativeMemory.Ped.GetCPedInventoryAddressFromPedHandle(owner.Handle);
-				if (pedInventoryAddr == IntPtr.Zero)
-				{
-					return null;
-				}
-
-				var weaponInventoryArray = (SHVDN.NativeMemory.RageAtArrayPtr*)(pedInventoryAddr + 0x18);
-				if (index >= weaponInventoryArray->size)
-				{
-					return null;
-				}
-
-				ulong itemAddress = weaponInventoryArray->GetElementAddress(index);
-				SHVDN.NativeMemory.ItemInfo* weaponInfo = *(SHVDN.NativeMemory.ItemInfo**)(itemAddress + 0x8);
-				if (weaponInfo == null)
-				{
-					return null;
-				}
-
-				var weaponHash = (WeaponHash)weaponInfo->nameHash;
-				if (weapons.TryGetValue(weaponHash, out Weapon weapon))
-				{
-					return weapon;
-				}
-
-				weapon = new Weapon(owner, weaponHash);
-				weapons.Add(weaponHash, weapon);
-
-				return weapon;
-			}
-		}
-
-		/// <remarks>
-		/// May count the <see cref="Weapon"/> instances with the hash for <see cref="WeaponHash.Unarmed"/> and <c>"OBJECT"</c> in favor of faster operation.
-		/// </remarks>
-		/// <inheritdoc cref="IEnumerable.GetEnumerator"/>
-		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<Weapon>)this).GetEnumerator();
 
 		/// <summary>
 		/// Gets an <c>array</c> of all <see cref="WeaponHash"/>es this <see cref="WeaponCollection"/> has.
@@ -427,6 +377,107 @@ namespace GTA
 			Function.Call(Hash.REMOVE_ALL_PED_WEAPONS, owner.Handle, true);
 
 			weapons.Clear();
+		}
+
+		public struct Enumerator : IEnumerator<Weapon>, IEnumerator
+		{
+			private readonly WeaponCollection _weaponCollection;
+			private Weapon _currentElement;
+			private int _index; // -1 = not started, -2 = ended/disposed
+
+			internal Enumerator(WeaponCollection weaponCollection)
+			{
+				_weaponCollection = weaponCollection;
+				_index = -1;
+				_currentElement = default;
+			}
+
+			public void Dispose()
+			{
+				_index = -2;
+				_currentElement = default;
+			}
+
+			public bool MoveNext()
+			{
+				if (_index == -2)
+					return false;
+
+				_index++;
+
+				Weapon currentWeaponInstance = GetWeaponInstanceByIndexOfPedInventory(_index);
+				if (currentWeaponInstance == null)
+				{
+					_index = -2;
+					_currentElement = default;
+					return false;
+				}
+
+				_currentElement = currentWeaponInstance;
+				return true;
+			}
+
+			public readonly Weapon Current
+			{
+				get
+				{
+					if (_index < 0)
+						ThrowEnumerationNotStartedOrEnded();
+					return _currentElement;
+				}
+			}
+
+			private readonly void ThrowEnumerationNotStartedOrEnded()
+			{
+				throw new InvalidOperationException(_index == -1
+					? "Enumeration has not started. Call MoveNext."
+					: "Enumeration already finished.");
+			}
+
+			readonly object IEnumerator.Current => Current;
+
+			void IEnumerator.Reset()
+			{
+				_index = -1;
+				_currentElement = default;
+			}
+
+			private readonly Weapon GetWeaponInstanceByIndexOfPedInventory(int index)
+			{
+				unsafe
+				{
+					Ped owner = _weaponCollection.owner;
+					IntPtr pedInventoryAddr = SHVDN.NativeMemory.Ped.GetCPedInventoryAddressFromPedHandle(owner.Handle);
+					if (pedInventoryAddr == IntPtr.Zero)
+					{
+						return null;
+					}
+
+					var weaponInventoryArray = (SHVDN.NativeMemory.RageAtArrayPtr*)(pedInventoryAddr + 0x18);
+					if (index >= weaponInventoryArray->size)
+					{
+						return null;
+					}
+
+					ulong itemAddress = weaponInventoryArray->GetElementAddress(index);
+					SHVDN.NativeMemory.ItemInfo* weaponInfo = *(SHVDN.NativeMemory.ItemInfo**)(itemAddress + 0x8);
+					if (weaponInfo == null)
+					{
+						return null;
+					}
+
+					var weaponHash = (WeaponHash)weaponInfo->nameHash;
+					if (_weaponCollection.weapons.TryGetValue(weaponHash, out Weapon weapon))
+					{
+						return weapon;
+					}
+
+					weapon = new Weapon(owner, weaponHash);
+					_weaponCollection.weapons.Add(weaponHash, weapon);
+
+					return weapon;
+				}
+			}
 		}
 	}
 }
