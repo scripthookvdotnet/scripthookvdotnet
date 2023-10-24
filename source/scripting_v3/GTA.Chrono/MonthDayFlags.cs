@@ -1,0 +1,119 @@
+//
+// Copyright (C) 2023 kagikn & contributors
+// License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
+//
+
+namespace GTA.Chrono
+{
+	internal readonly struct MonthDayFlags
+	{
+		internal MonthDayFlags(uint value) : this()
+		{
+			Value = value;
+		}
+		internal MonthDayFlags(int month, int day, YearFlags flags) : this()
+		{
+			Value = (uint)((month << 9) | (day << 4) | flags.Value);
+		}
+
+		internal uint Value { get; }
+
+		internal static MonthDayFlags? New(int month, int day, YearFlags flags)
+		{
+			if (month < 1 && month > 12 && day < 1 && day > 31)
+			{
+				return null;
+			}
+
+			return new MonthDayFlags(month, day, flags);
+		}
+
+		internal static MonthDayFlags FromOrdFlags(OrdFlags of)
+		{
+			uint ol = of.Value >> 3;
+			if (ol <= Internals.MaxOl)
+			{
+				// Array is indexed from `1 to Internals.MaxOl`, with a `0` index having a meaningless value.
+				return new MonthDayFlags(of.Value + ((uint)Internals.OlToMdl[ol] << 3));
+			}
+			else
+			{
+				// throwing an exception here would be reasonable, but we are just going on with a safe value.
+				return new MonthDayFlags(0);
+			}
+		}
+
+		internal bool IsValid
+		{
+			get
+			{
+				uint mdl = Value >> 3;
+				if (mdl > Internals.MaxMdl)
+				{
+					return false;
+				}
+
+				return Internals.MdlToOl[mdl] >= 0;
+			}
+		}
+
+		internal int Month => (int)(Value >> 9);
+
+		internal OrdFlags? ToOrdFlags()
+		{
+			return OrdFlags.FromMonthDayFlags(this);
+		}
+
+		internal MonthDayFlags? WithMonth(int month)
+		{
+			if (month < 0 || month > 12)
+			{
+				return null;
+			}
+
+			return new MonthDayFlags((Value & 0b1_1111_1111) | ((uint)month << 9));
+		}
+
+		internal int Day => (int)((Value >> 4) & 0b1_1111);
+
+		internal MonthDayFlags? WithDay(int day)
+		{
+			if (day < 0 || day > 31)
+			{
+				return null;
+			}
+
+			return new MonthDayFlags((Value & ~0b1_1111_0000u) | ((uint)day << 4));
+		}
+
+		internal MonthDayFlags WithFlags(YearFlags flags) => new((Value & ~0b1111u) | (flags.Value));
+
+		public bool Equals(MonthDayFlags other)
+		{
+			return Value == other.Value;
+		}
+		public override bool Equals(object obj)
+		{
+			if (obj is MonthDayFlags flags)
+			{
+				return Equals(flags);
+			}
+
+			return false;
+		}
+
+		public static bool operator ==(MonthDayFlags left, MonthDayFlags right)
+		{
+			return left.Equals(right);
+		}
+		public static bool operator !=(MonthDayFlags left, MonthDayFlags right)
+		{
+			return !left.Equals(right);
+		}
+
+		public override int GetHashCode()
+		{
+			return Value.GetHashCode();
+		}
+	}
+}

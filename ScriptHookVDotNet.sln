@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 15.0.26228.04
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScriptHookVDotNet", "ScriptHookVDotNet.vcxproj", "{B2933D8F-F922-40BD-BB70-18622A81AB8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet_APIv2", "source\scripting_v2\ScriptHookVDotNet_APIv2.csproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptHookVDotNet_APIv2", "source\scripting_v2\ScriptHookVDotNet_APIv2.csproj", "{019193A7-50C0-444A-84CA-777595E702CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptHookVDotNet_APIv3", "source\scripting_v3\ScriptHookVDotNet_APIv3.csproj", "{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptHookVDotNet_APIv3", "source\scripting_v3\ScriptHookVDotNet_APIv3.csproj", "{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "examples\Examples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScriptHookVDotNet_APIv3_Tests", "source\scripting_v3_tests\ScriptHookVDotNet_APIv3_Tests.csproj", "{87B61940-F7E6-409E-9BCF-3D450EDA2D45}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "examples\Examples.csproj", "{A717AD5D-C5B5-4769-BD40-F14C09F269BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,14 @@ Global
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release|x64.ActiveCfg = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Release|x64.Build.0 = Release|x64
 		{D68E6CB7-FC70-41C9-BD53-D79552B37F0E}.Run NativeGen|x64.ActiveCfg = Release|x64
+		{87B61940-F7E6-409E-9BCF-3D450EDA2D45}.Debug|x64.ActiveCfg = Debug|x64
+		{87B61940-F7E6-409E-9BCF-3D450EDA2D45}.Debug|x64.Build.0 = Debug|x64
+		{87B61940-F7E6-409E-9BCF-3D450EDA2D45}.Release + Examples|x64.ActiveCfg = Release|x64
+		{87B61940-F7E6-409E-9BCF-3D450EDA2D45}.Release + Examples|x64.Build.0 = Release|x64
+		{87B61940-F7E6-409E-9BCF-3D450EDA2D45}.Release|x64.ActiveCfg = Release|x64
+		{87B61940-F7E6-409E-9BCF-3D450EDA2D45}.Release|x64.Build.0 = Release|x64
+		{87B61940-F7E6-409E-9BCF-3D450EDA2D45}.Run NativeGen|x64.ActiveCfg = Release|x64
+		{87B61940-F7E6-409E-9BCF-3D450EDA2D45}.Run NativeGen|x64.Build.0 = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Debug|x64.ActiveCfg = Debug|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.ActiveCfg = Release|x64
 		{A717AD5D-C5B5-4769-BD40-F14C09F269BB}.Release + Examples|x64.Build.0 = Release|x64
