@@ -16,9 +16,17 @@ The issues page should be primarily used for bug reports and focused enhancement
 * [Visual C++ Redistributable for Visual Studio 2019 x64](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
 
 ## Downloads
-
-Pre-built binaries can be found on the [releases](https://github.com/crosire/scripthookvdotnet/releases) page.
+The stable builds can be downloaded from the [Releases](https://github.com/scripthookvdotnet/scripthookvdotnet/releases) page.
 You need to use the ASI file and the DLL files for APIs in an archive of the same version as internal structure can be changed without notices.
+
+For newer builds, check out the [Nightly Builds](https://github.com/scripthookvdotnet/scripthookvdotnet/actions/workflows/build.yml?query=branch%3Amain). Click some build you want to try and download the artifact zip file from the Artifacts section.
+You'll need your GitHub account to download nightly artifacts at the moment, but nightly releases will also be released via GitHub releases in the future so your GitHub account is not required to download nightly artifacts (at least for the latest one).
+
+For script developers, please note that new APIs included in new nightly builds but not included in any stable versions are subject to change without notice, so it is not advisable to use any of them for public builds of your scripts.
+
+## Installation
+* Extract all the files except for LICENSE.txt, README.txt, and all of xml files from the zip file into your game folder.
+    * The XML files are provided solely as API documentations for script developers. The .pdb files are not mandatory to run ScriptHookVDotNet as they are provided for easier diagnosing.
 
 ## Contributing
 
