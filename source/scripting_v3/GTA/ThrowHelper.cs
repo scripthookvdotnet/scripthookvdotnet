@@ -45,5 +45,15 @@ namespace GTA
 		{
 			throw new ArgumentException("GameClockDuration does not accept floating point Not-a-Number values.", nameof(paramName));
 		}
+
+		internal static void ArgumentOutOfRangeException_Enum_Value()
+		{
+			throw new ArgumentOutOfRangeException("value", "Enum value was out of legal range.");
+		}
+
+		internal static void ArgumentOutOfRangeException_Enum_Value(string paramName)
+		{
+			throw new ArgumentOutOfRangeException(paramName, "Enum value was out of legal range.");
+		}
 	}
 }

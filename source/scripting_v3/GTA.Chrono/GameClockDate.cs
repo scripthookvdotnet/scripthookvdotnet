@@ -93,27 +93,90 @@ namespace GTA.Chrono
 
 		public static GameClockDate FromYmd(int year, int month, int day)
 		{
-			YearFlags flags = YearFlags.FromYear(year);
-
-			return (MonthDayFlags.New(month, day, flags)) switch
+			if (!TryFromYmd(year, month, day, out GameClockDate date))
 			{
-				MonthDayFlags mdf => FromMdfUnchecked(year, mdf),
-				_ => throw new ArgumentOutOfRangeException(nameof(day))
-			};
+				ThrowInvalidGregorianMonthDay(year, month, day);
+			}
+
+			return date;
+
+			static void ThrowInvalidGregorianMonthDay(int year, int month, int day)
+			{
+				if (month < 1 || month > 12)
+				{
+					ThrowHelper.ThrowArgumentOutOfRangeException(nameof(month), month, 1, 12);
+				}
+
+				int dayMax = GetMaxDayOfMonth(month, YearFlags.FromYear(year));
+				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(day), day, 1, dayMax);
+			}
+		}
+
+		public static bool TryFromYmd(int year, int month, int day, out GameClockDate date)
+		{
+			YearFlags flags = YearFlags.FromYear(year);
+			MonthDayFlags? mdf = MonthDayFlags.New(month, day, flags);
+			if (mdf == null)
+			{
+				date = default;
+				return false;
+			}
+
+			MonthDayFlags mdfNonNullable = mdf.GetValueOrDefault();
+			if (!mdfNonNullable.IsValid)
+			{
+				date = default;
+				return false;
+			}
+
+			date = FromMdfUnchecked(year, mdfNonNullable);
+			return true;
 		}
 
 		public static GameClockDate FromOrdinalDate(int year, int ordinal)
 		{
+			if (!TryFromOrdinalDate(year, ordinal, out GameClockDate date))
+			{
+				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(ordinal), ordinal, 1,
+					YearFlags.FromYear(year).DayCount);
+			}
+
+			return date;
+		}
+
+		public static bool TryFromOrdinalDate(int year, int ordinal, out GameClockDate date)
+		{
 			YearFlags flags = YearFlags.FromYear(year);
 
-			return FromOrdinalAndFlags(year, ordinal, flags) switch
+			GameClockDate? dateNullable = FromOrdinalAndFlags(year, ordinal, flags);
+			if (dateNullable == null)
 			{
-				GameClockDate date => date,
-				_ => throw new ArgumentOutOfRangeException(nameof(ordinal))
-			};
+				date = default;
+				return false;
+			}
+
+			date = dateNullable.GetValueOrDefault();
+			return true;
 		}
 
 		public static GameClockDate FromIsoWeekDate(int year, int week, IsoDayOfWeek dayOfWeek)
+		{
+			if (!TryFromIsoWeekDate(year, week, dayOfWeek, out GameClockDate date))
+			{
+				if (dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek > IsoDayOfWeek.Sunday)
+				{
+					ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(dayOfWeek));
+				}
+
+				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(week), week, 1,
+					YearFlags.FromYear(year).IsoWeekCount);
+			}
+
+			return date;
+		}
+
+		public static bool TryFromIsoWeekDate(int year, int week, IsoDayOfWeek dayOfWeek,
+			out GameClockDate date)
 		{
 			YearFlags flags = YearFlags.FromYear(year);
 			uint nWeeks = flags.IsoWeekCount;
@@ -130,7 +193,8 @@ namespace GTA.Chrono
 				// ordinal < 1, previous year
 				YearFlags prevFlags = YearFlags.FromYear(year - 1);
 				var prevOrdFlags = new OrdFlags(weekOrd + prevFlags.DayCount - delta, prevFlags);
-				return new GameClockDate(year - 1, prevOrdFlags);
+				date = new GameClockDate(year - 1, prevOrdFlags);
+				return true;
 			}
 
 			int ordinal = weekOrd - delta;
@@ -138,13 +202,15 @@ namespace GTA.Chrono
 			if (ordinal <= nDays)
 			{
 				// this year
-				return new GameClockDate(year, new OrdFlags(ordinal, flags));
+				date = new GameClockDate(year, new OrdFlags(ordinal, flags));
+				return true;
 			}
 
 			// ordinal > nDays, next year
 			YearFlags nextFlags = YearFlags.FromYear(year + 1);
 			var nextOrdFlags = new OrdFlags(ordinal - nDays, nextFlags);
-			return new GameClockDate(year + 1, nextOrdFlags);
+			date = new GameClockDate(year + 1, nextOrdFlags);
+			return true;
 		}
 
 		public bool IsLeapYear => _ordFlags.IsLeapYear;
@@ -264,12 +330,7 @@ namespace GTA.Chrono
 
 			// Clamp original day in case new month is shorter
 			YearFlags flags = YearFlags.FromYear(year);
-			int dayMax = month switch
-			{
-				2 => (flags.DayCount == 366 ? 29 : 28),
-				4 or 6 or 9 or 11 => 30,
-				_ => 31,
-			};
+			int dayMax = GetMaxDayOfMonth(month, flags);
 			int day = Day;
 			if (day > dayMax)
 			{
@@ -485,6 +546,16 @@ namespace GTA.Chrono
 		public override int GetHashCode()
 		{
 			return _year.GetHashCode() + 17 * _ordFlags.GetHashCode();
+		}
+
+		private static int GetMaxDayOfMonth(int month, YearFlags flags)
+		{
+			return month switch
+			{
+				2 => (flags.IsLeapYear ? 29 : 28),
+				4 or 6 or 9 or 11 => 30,
+				_ => 31,
+			};
 		}
 
 		private static void DivModFloor(int val, int div, out int quotient, out int modulo)
