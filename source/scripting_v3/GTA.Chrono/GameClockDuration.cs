@@ -129,7 +129,7 @@ namespace GTA.Chrono
 
 		private static void ThrowOutOfRange_TooLongDuration()
 		{
-			throw new ArgumentOutOfRangeException("GameClockDuration overflowed because the duration is too long.");
+			throw new ArgumentOutOfRangeException(null, "GameClockDuration overflowed because the duration is too long.");
 		}
 
 		private static void ThrowIfOverflowedFromInt32YearMonthDay(long secs)
@@ -147,7 +147,6 @@ namespace GTA.Chrono
 			return 0;
 		}
 
-		// Returns a value less than zero if this object
 		public int CompareTo(object value)
 		{
 			if (value == null) return 1;
@@ -225,15 +224,9 @@ namespace GTA.Chrono
 
 		public GameClockDuration Negate() => -this;
 
-		public static GameClockDuration operator -(GameClockDuration d)
-		{
-			return new GameClockDuration(-d._secs);
-		}
+		public static GameClockDuration operator -(GameClockDuration d) => new(-d._secs);
 
-		public GameClockDuration Subtract(GameClockDuration duration)
-		{
-			return this - duration;
-		}
+		public GameClockDuration Subtract(GameClockDuration duration) => this - duration;
 
 		public static GameClockDuration operator -(GameClockDuration d1, GameClockDuration d2)
 		{
@@ -251,53 +244,65 @@ namespace GTA.Chrono
 		/// </summary>
 		/// <param name="duration">The left hand side of the operator.</param>
 		/// <param name="factor">The right hand side of the operator.</param>
-		/// <returns>A new <see cref="GameClockDuration"/> representing the result of multiplying <paramref name="duration"/> by
-		/// <paramref name="factor"/>.</returns>
+		/// <returns>
+		/// A new <see cref="GameClockDuration"/> representing the result of multiplying <paramref name="duration"/>
+		/// by <paramref name="factor"/>.
+		/// </returns>
 		public static GameClockDuration operator *(GameClockDuration duration, long factor)
 		{
-			checked
+			long result = duration._secs * factor;
+			if (duration._secs != 0 && result / duration._secs != factor)
 			{
-				long result = duration._secs * factor;
-				ThrowIfOverflowedFromInt32YearMonthDay(result);
-
-				return new GameClockDuration(result);
+				// overflow, throw ArgumentOutOfRangeException if overflowed to avoid the exception type surprise.
+				ThrowOutOfRange_TooLongDuration();
 			}
+			ThrowIfOverflowedFromInt32YearMonthDay(result);
+
+			return new GameClockDuration(result);
 		}
 		public static GameClockDuration operator *(GameClockDuration duration, double factor)
 		{
-			checked
+			if (double.IsNaN(factor))
 			{
-				if (double.IsNaN(factor))
-				{
-					ThrowHelper.ThrowArgumentException_Arg_CannotBeNaN(nameof(factor));
-				}
+				ThrowHelper.ThrowArgumentException_Arg_CannotBeNaN(nameof(factor));
+			}
 
-				// Usual use cases, where both differences are within about 156.92 weeks
-				// If both value is within the range where the squared values can exactly represent as double values,
-				// we can just calculate the result as a double and convert to long without any rounding errors
-				long durationSecs = duration._secs;
-				if (durationSecs >= -MaxSafeSqrtIntegerOutOfDouble && durationSecs <= MaxSafeSqrtIntegerOutOfDouble &&
-					factor >= MinSafeSqrtIntegerOutOfDouble && factor <= MaxSafeSqrtIntegerOutOfDouble)
+			// Usual use cases, where both differences are within about 156.92 weeks
+			// If both value is within the range where the squared values can exactly represent as double values,
+			// we can just calculate the result as a double and convert to long without any rounding errors
+			long durationSecs = duration._secs;
+			if (durationSecs >= -MaxSafeSqrtIntegerOutOfDouble && durationSecs <= MaxSafeSqrtIntegerOutOfDouble &&
+				factor >= MinSafeSqrtIntegerOutOfDouble && factor <= MaxSafeSqrtIntegerOutOfDouble)
+			{
+				return new GameClockDuration((long)(durationSecs * factor));
+			}
+
+			return MultiplyOperatorNonTypicalCases(durationSecs, factor);
+
+			static GameClockDuration MultiplyOperatorNonTypicalCases(long durationSecs, double factor)
+			{
+				// Calculate the result as a double for performance reasons (decimal calculation takes more than
+				// 10x times).
+				// The both values are weighted but can exactly calculate the result as a double.
+				if ((durationSecs > -SecToOptimizeLowerWeighted && durationSecs < SecToOptimizeLowerWeighted &&
+				factor > -SecToOptimizeHigherWeighted && factor < SecToOptimizeHigherWeighted) ||
+				(durationSecs > -SecToOptimizeHigherWeighted && durationSecs < SecToOptimizeHigherWeighted &&
+				factor > -SecToOptimizeLowerWeighted && factor < SecToOptimizeLowerWeighted))
 				{
 					return new GameClockDuration((long)(durationSecs * factor));
 				}
 
-				return MultiplyOperatorNonTypicalCases(durationSecs, factor);
-
-				static GameClockDuration MultiplyOperatorNonTypicalCases(long durationSecs, double factor)
+				// Fall back to decimal arithmetic, so the calculation 100% will not have any rounding errors.
+				// Throw ArgumentOutOfRangeException if OverflowException is thrown for decimal arithmetics or too
+				// large factor to match what FromDecimalSecondsInternal throws for too large or small results.
+				try
 				{
-					// Calculate the result as a double for performance (decimal calculation takes more than 10x times)
-					// The both values are weighted but can exactly calculate the result as a double
-					if ((durationSecs > -SecToOptimizeLowerWeighted && durationSecs < SecToOptimizeLowerWeighted &&
-					factor > -SecToOptimizeHigherWeighted && factor < SecToOptimizeHigherWeighted) ||
-					(durationSecs > -SecToOptimizeHigherWeighted && durationSecs < SecToOptimizeHigherWeighted &&
-					factor > -SecToOptimizeLowerWeighted && factor < SecToOptimizeLowerWeighted))
-					{
-						return new GameClockDuration((long)(durationSecs * factor));
-					}
-
-					// Fall back to decimal arithmetic, so the calculation 100% will not have any rounding errors
 					return FromDecimalSecondsInternal(durationSecs * (decimal)factor);
+				}
+				catch (OverflowException)
+				{
+					ThrowOutOfRange_TooLongDuration();
+					return default;
 				}
 			}
 		}
@@ -326,7 +331,8 @@ namespace GTA.Chrono
 			if (durationSecs >= -MaxSafeSqrtIntegerOutOfDouble && durationSecs <= MaxSafeSqrtIntegerOutOfDouble &&
 				(divisor < -InverseOfMaxSafeSqrtIntegerOutOfDouble || divisor > InverseOfMaxSafeSqrtIntegerOutOfDouble))
 			{
-				// No need to check if the result is not a infinity or NaN, abs of divisor is large enough to avoid infinities
+				// No need to check if the result is not a infinity or NaN, and the abs of divisor is large enough to
+				// avoid infinities
 				return new GameClockDuration((long)(durationSecs / divisor));
 			}
 
@@ -334,8 +340,9 @@ namespace GTA.Chrono
 
 			static GameClockDuration DivideOperatorNonTypicalCases(long durationSecs, double divisor)
 			{
-				// Calculate the result as a double for performance (decimal calculation takes more than 10x times)
-				// The both values are weighted but can exactly calculate the result as a double
+				// Calculate the result as a double for performance reasons (decimal calculation takes more than
+				// 10x times).
+				// The both values are weighted but can exactly calculate the result as a double.
 				if (durationSecs > -SecToOptimizeLowerWeighted && durationSecs < SecToOptimizeLowerWeighted &&
 				(divisor < -InverseOfSecToOptimizeHigherWeighted || divisor > InverseOfSecToOptimizeHigherWeighted))
 				{
@@ -347,8 +354,18 @@ namespace GTA.Chrono
 					return new GameClockDuration((long)(durationSecs / divisor));
 				}
 
-				// Fall back to decimal arithmetic, so the calculation 100% will not have any rounding errors
-				return FromDecimalSecondsInternal(durationSecs / (decimal)divisor);
+				// Fall back to decimal arithmetic, so the calculation 100% will not have any rounding errors.
+				// Throw ArgumentOutOfRangeException if OverflowException is thrown for decimal arithmetics or too
+				// large divisor to match what FromDecimalSecondsInternal throws for too large or small results.
+				try
+				{
+					return FromDecimalSecondsInternal(durationSecs / (decimal)divisor);
+				}
+				catch (OverflowException)
+				{
+					ThrowOutOfRange_TooLongDuration();
+					return default;
+				}
 			}
 		}
 		public static double operator /(GameClockDuration d1, GameClockDuration d2) => d1._secs / d2._secs;

@@ -215,11 +215,11 @@ namespace ScriptHookVDotNet_APIv3_Tests
 
 			GameClockDuration tempResultDuration = GameClockDuration.FromSeconds(0);
 
-			OverflowException exMax = Assert.Throws<OverflowException>(() => tempResultDuration = maxDuration + GameClockDuration.FromSeconds(1));
+			ArgumentOutOfRangeException exMax = Assert.Throws<ArgumentOutOfRangeException>(() => tempResultDuration = maxDuration + GameClockDuration.FromSeconds(1));
 			Assert.Equal("GameClockDuration overflowed because the duration is too long.", exMax.Message);
 			Assert.StrictEqual(GameClockDuration.FromSeconds(0), tempResultDuration);
 
-			OverflowException exMin = Assert.Throws<OverflowException>(() => tempResultDuration = minDuration + GameClockDuration.FromSeconds(-1));
+			ArgumentOutOfRangeException exMin = Assert.Throws<ArgumentOutOfRangeException>(() => tempResultDuration = minDuration + GameClockDuration.FromSeconds(-1));
 			Assert.Equal("GameClockDuration overflowed because the duration is too long.", exMax.Message);
 			Assert.StrictEqual(GameClockDuration.FromSeconds(0), tempResultDuration);
 		}
