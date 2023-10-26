@@ -88,8 +88,6 @@ namespace GTA.Chrono
 
 		internal readonly long _secs;
 
-		public long Days => _secs / SecsPerDay;
-
 		public int Hours => (int)((_secs / SecsPerHour) % 24);
 
 		public int Minutes => (int)((_secs / SecsPerMinute) % 60);
@@ -104,9 +102,17 @@ namespace GTA.Chrono
 
 		public double TotalMinutes => (double)_secs / SecsPerMinute;
 
-		public double TotalSeconds => (double)_secs;
+		public double TotalSeconds => (double)WholeSeconds;
 
-		public long ToInt64Seconds() => _secs;
+		public long WholeWeeks => _secs / SecsPerWeek;
+
+		public long WholeDays => _secs / SecsPerDay;
+
+		public long WholeHours => _secs / SecsPerHour;
+
+		public long WholeMinutes => _secs / SecsPerMinute;
+
+		public long WholeSeconds => _secs;
 
 		private static void CheckArgumentRange(string paramName, long value, long minInclusive, long maxInclusive)
 		{

@@ -28,12 +28,12 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			GameClockDuration maxDuration = GameClockDuration.MaxValue;
 
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
-				GameClockDuration.FromSeconds(GameClockDuration.MaxValue.ToInt64Seconds() + 1)
+				GameClockDuration.FromSeconds(GameClockDuration.MaxValue.WholeSeconds + 1)
 			);
 			Assert.Throws<ArgumentOutOfRangeException>(() => GameClockDuration.FromSeconds(long.MaxValue));
 
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
-				GameClockDuration.FromSeconds(GameClockDuration.MinValue.ToInt64Seconds() - 1)
+				GameClockDuration.FromSeconds(GameClockDuration.MinValue.WholeSeconds - 1)
 			);
 			Assert.Throws<ArgumentOutOfRangeException>(() => GameClockDuration.FromSeconds(long.MinValue));
 		}
@@ -215,11 +215,11 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			GameClockDuration durationMinus4Days = GameClockDuration.FromDays(-4);
 			GameClockDuration durationMinus5Weeks = GameClockDuration.FromWeeks(-5);
 
-			Assert.Equal(-1, durationMinus1Sec.ToInt64Seconds());
-			Assert.Equal(-2 * SecsPerMinute, durationMinus2Mins.ToInt64Seconds());
-			Assert.Equal(-3 * SecsPerHour, durationMinus3Hours.ToInt64Seconds());
-			Assert.Equal(-4 * SecsPerDay, durationMinus4Days.ToInt64Seconds());
-			Assert.Equal(-5 * SecsPerWeek, durationMinus5Weeks.ToInt64Seconds());
+			Assert.Equal(-1, durationMinus1Sec.WholeSeconds);
+			Assert.Equal(-2 * SecsPerMinute, durationMinus2Mins.WholeSeconds);
+			Assert.Equal(-3 * SecsPerHour, durationMinus3Hours.WholeSeconds);
+			Assert.Equal(-4 * SecsPerDay, durationMinus4Days.WholeSeconds);
+			Assert.Equal(-5 * SecsPerWeek, durationMinus5Weeks.WholeSeconds);
 		}
 
 		[Fact]
@@ -254,9 +254,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			GameClockDuration actualCalcRes = (durationLowerWeighted /
 				NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble);
 
-			Assert.StrictEqual((long)(durationLowerWeighted.ToInt64Seconds() /NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.ToInt64Seconds());
+			Assert.StrictEqual((long)(durationLowerWeighted.WholeSeconds /NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
 
-			Assert.NotStrictEqual((long)(durationLowerWeighted.ToInt64Seconds() / (decimal)NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.ToInt64Seconds());
+			Assert.NotStrictEqual((long)(durationLowerWeighted.WholeSeconds / (decimal)NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
 		}
 		[Fact]
 		public void DividesMaxSafeSqrtIntegerByInverseOfMaxSafeSqrtIntegerUsingDecimal()
@@ -266,8 +266,8 @@ namespace ScriptHookVDotNet_APIv3_Tests
 
 			GameClockDuration actualCalcRes = (durationLowerWeighted / InverseOfMaxSafeSqrtIntegerOutOfDouble);
 
-			Assert.NotStrictEqual((long)(durationLowerWeighted.ToInt64Seconds() / InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.ToInt64Seconds());
-			Assert.StrictEqual((long)(durationLowerWeighted.ToInt64Seconds() / (decimal)InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.ToInt64Seconds());
+			Assert.NotStrictEqual((long)(durationLowerWeighted.WholeSeconds / InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
+			Assert.StrictEqual((long)(durationLowerWeighted.WholeSeconds / (decimal)InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
 		}
 
 		[Fact]
@@ -277,7 +277,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 
 			double MinOptimizedValueHigherWeighted = 1.8189894035458565e-12.NextUp();
 
-			Assert.StrictEqual((long)(durationLowerWeighted.ToInt64Seconds() / MinOptimizedValueHigherWeighted), (durationLowerWeighted / MinOptimizedValueHigherWeighted).ToInt64Seconds());
+			Assert.StrictEqual((long)(durationLowerWeighted.WholeSeconds / MinOptimizedValueHigherWeighted), (durationLowerWeighted / MinOptimizedValueHigherWeighted).WholeSeconds);
 		}
 
 		[Fact]
@@ -287,7 +287,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 
 			double MinOptimizedValueLowerWeighted = 6.103515625e-05.NextUp();
 
-			Assert.StrictEqual((long)(durationHigherWeighted.ToInt64Seconds() / MinOptimizedValueLowerWeighted), (durationHigherWeighted / MinOptimizedValueLowerWeighted).ToInt64Seconds());
+			Assert.StrictEqual((long)(durationHigherWeighted.WholeSeconds / MinOptimizedValueLowerWeighted), (durationHigherWeighted / MinOptimizedValueLowerWeighted).WholeSeconds);
 		}
 	}
 }

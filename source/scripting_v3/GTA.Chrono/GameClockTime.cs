@@ -92,7 +92,7 @@ namespace GTA.Chrono
 
 		public GameClockTime OverflowingAddSigned(GameClockDuration duration, out long wrappedDays)
 		{
-			long rhsDurationSecs = duration.ToInt64Seconds();
+			long rhsDurationSecs = duration.WholeSeconds;
 
 			wrappedDays = (int)(rhsDurationSecs / 86_400);
 			long newSecs = _secs + rhsDurationSecs % 86_400;
@@ -143,10 +143,10 @@ namespace GTA.Chrono
 		}
 
 		public static GameClockTime operator +(GameClockTime time, GameClockDuration duration)
-			=> new GameClockTime((time._secs + 86400 + (int)(duration.ToInt64Seconds() % 86400)) % 86400);
+			=> new GameClockTime((time._secs + 86400 + (int)(duration.WholeSeconds % 86400)) % 86400);
 
 		public static GameClockTime operator -(GameClockTime time, GameClockDuration duration)
-			=> new GameClockTime((time._secs + 86400 - (int)(duration.ToInt64Seconds() % 86400)) % 86400);
+			=> new GameClockTime((time._secs + 86400 - (int)(duration.WholeSeconds % 86400)) % 86400);
 
 		public void Deconstruct(out int hour, out int minute, out int second)
 		{
