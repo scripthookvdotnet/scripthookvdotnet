@@ -127,16 +127,16 @@ namespace GTA.Chrono
 			}
 		}
 
-		private static void ThrowArgumentOverflowException()
+		private static void ThrowOutOfRange_TooLongDuration()
 		{
-			throw new OverflowException("GameClockDuration overflowed because the duration is too long.");
+			throw new ArgumentOutOfRangeException("GameClockDuration overflowed because the duration is too long.");
 		}
 
 		private static void ThrowIfOverflowedFromInt32YearMonthDay(long secs)
 		{
 			if (secs < MinSecDifference || secs > MaxSecDifference)
 			{
-				ThrowArgumentOverflowException();
+				ThrowOutOfRange_TooLongDuration();
 			}
 		}
 
@@ -360,7 +360,7 @@ namespace GTA.Chrono
 			if (secs <= MaxNegativeSecDifferenceOutOfBound || secs >= MinPositiveSecDifferenceOutOfBound ||
 				double.IsNaN(secs))
 			{
-				ThrowArgumentOverflowException();
+				ThrowOutOfRange_TooLongDuration();
 			}
 
 			return new GameClockDuration((long)secs);
@@ -369,7 +369,7 @@ namespace GTA.Chrono
 		{
 			if (secs <= MaxNegativeSecDifferenceOutOfBound || secs >= MinPositiveSecDifferenceOutOfBound)
 			{
-				ThrowArgumentOverflowException();
+				ThrowOutOfRange_TooLongDuration();
 			}
 
 			return new GameClockDuration((long)secs);
