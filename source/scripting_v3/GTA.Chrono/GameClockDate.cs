@@ -133,14 +133,6 @@ namespace GTA.Chrono
 				return new GameClockDate(year - 1, prevOrdFlags);
 			}
 
-			if (weekOrd <= delta)
-			{
-				// ordinal < 1, previous year
-				YearFlags prevFlags = YearFlags.FromYear(year - 1);
-				var prevOrdFlags = new OrdFlags(weekOrd + prevFlags.DayCount - delta, prevFlags);
-				return new GameClockDate(year - 1, prevOrdFlags);
-			}
-
 			int ordinal = weekOrd - delta;
 			int nDays = flags.DayCount;
 			if (ordinal <= nDays)
