@@ -27,9 +27,7 @@ namespace GTA.Chrono
 		const long SecsPerWeek = 604_800;
 
 		const long LeapYearCountOfInt32 = 1041529570;
-		const long NonLeapYearCountOfInt32 = 3253437726;
-		const long HalfLeapYearCountOfInt32 = LeapYearCountOfInt32 / 2;
-		const long HalfNonLeapYearCountOfInt32 = NonLeapYearCountOfInt32 / 2;
+		const long NonLeapYearCountOfInt32 = 3253437725;
 
 		/// <summary>
 		/// The maximum integral value within which the square value can exactly represent and correctly compare it
@@ -40,7 +38,7 @@ namespace GTA.Chrono
 		/// <c>9_007_199_136_250_225</c> which is less than the safe maximum integer in <see langword="double"/>
 		/// <c>9_007_199_254_740_991</c> (the same value as <c>Number.MAX_SAFE_INTEGER</c> in JavaScript).
 		/// </remarks>
-		const int MaxSafeSqrtIntegerOutOfDouble = 94906265;
+		const int MaxSafeSqrtIntegerOutOfDouble = 94906266;
 		/// <summary>
 		/// The maximum integral value within which the square value can exactly represent and correctly compare it
 		/// with other values as a <see langword="double"/>. Roughly equivalent to -156.92 weeks.
@@ -63,12 +61,10 @@ namespace GTA.Chrono
 		/// </summary>
 		const long DayCountUInt32YearsLaterSinceInt32MinValueYear = (LeapYearCountOfInt32 * 366)
 			+ (NonLeapYearCountOfInt32 * 365);
-		const long MaxSecDifference = (DayCountUInt32YearsLaterSinceInt32MinValueYear - 1) * SecsPerDay
+		const long MaxSecDifference = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
 			+ 23 * SecsPerHour + 59 * SecsPerMinute + 59;
-		const long MinSecDifference = -((DayCountUInt32YearsLaterSinceInt32MinValueYear - 1) * SecsPerDay
+		const long MinSecDifference = -((DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
 			+ 23 * SecsPerHour + 59 * SecsPerMinute + 59);
-		const decimal MaxSecDifferenceDecimal = (decimal)MaxSecDifference;
-		const decimal MinSecDifferenceDecimal = (decimal)MinSecDifference;
 
 		/// <summary>
 		/// About 17540.8 years
@@ -81,7 +77,7 @@ namespace GTA.Chrono
 		const double InverseOfSecToOptimizeLowerWeighted = 6.103515625e-05;
 
 		/// <summary>
-		/// Same as 135_536_076_801_504_000 seconds. Can exactly represent as a double floating-point value.
+		/// Same as 135_536_076_770_054_400 seconds. Can exactly represent as a double floating-point value.
 		/// </summary>
 		const long MinPositiveSecDifferenceOutOfBound = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay;
 		const long MaxNegativeSecDifferenceOutOfBound = -MinPositiveSecDifferenceOutOfBound;

@@ -148,7 +148,22 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			GameClockDate maxDate = GameClockDate.MaxValue;
 			GameClockDate minDate = GameClockDate.MinValue;
 
-			Assert.Equal(GameClockDuration.FromDays(784354017364 - -784350575245), maxDate.SignedDurationSince(minDate));
+			const long LeapYearCountOfInt32 = 1041529570;
+			const long NonLeapYearCountOfInt32 = 3253437725;
+			const long DayCountUInt32YearsLaterSinceInt32MinValueYear = (LeapYearCountOfInt32 * 366)
+				+ (NonLeapYearCountOfInt32 * 365);
+
+			GameClockDuration durationFromMaxDateToMindate = maxDate.SignedDurationSince(minDate);
+			Assert.Equal(GameClockDuration.FromDays(DayCountUInt32YearsLaterSinceInt32MinValueYear),
+				durationFromMaxDateToMindate);
+			Assert.Throws<ArgumentOutOfRangeException>(() => durationFromMaxDateToMindate +
+				GameClockDuration.FromDays(1));
+
+			GameClockDuration durationFromMinDateToMaxdate = minDate.SignedDurationSince(maxDate);
+			Assert.Equal(GameClockDuration.FromDays(-DayCountUInt32YearsLaterSinceInt32MinValueYear),
+				durationFromMinDateToMaxdate);
+			Assert.Throws<ArgumentOutOfRangeException>(() => durationFromMinDateToMaxdate +
+				GameClockDuration.FromDays(-1));
 		}
 
 		[Fact]

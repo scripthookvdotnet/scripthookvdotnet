@@ -399,7 +399,7 @@ namespace GTA.Chrono
 
 			long cycle1 = (long)Internals.YearOrdinalToDayCycle(year1Mod400, (int)_ordFlags.Ordinal);
 			long cycle2 = (long)Internals.YearOrdinalToDayCycle(year2Mod400, (int)rhs._ordFlags.Ordinal);
-			return GameClockDuration.FromDays((year1Div400 - year2Div400) * 146_097 + (cycle1 - cycle2));
+			return GameClockDuration.FromDays(((long)year1Div400 - year2Div400) * 146_097 + (cycle1 - cycle2));
 		}
 
 		public int YearsSince(GameClockDate other)
