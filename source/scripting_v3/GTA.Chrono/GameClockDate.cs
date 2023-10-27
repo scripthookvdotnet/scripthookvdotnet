@@ -257,8 +257,6 @@ namespace GTA.Chrono
 			return true;
 		}
 
-		public GameClockDate AddMonths(int months)
-			=> AddMonths((long)months);
 		public GameClockDate AddMonths(long months)
 		{
 			if (!TryAddMonths(months, out GameClockDate date))
@@ -269,8 +267,6 @@ namespace GTA.Chrono
 			return date;
 		}
 
-		public bool TryAddMonths(int months, out GameClockDate date)
-			=> TryAddMonths((long)months, out date);
 		public bool TryAddMonths(long months, out GameClockDate date)
 		{
 			if (months == 0)
@@ -346,8 +342,6 @@ namespace GTA.Chrono
 			return result;
 		}
 
-		public GameClockDate SubtractMonths(int months)
-			=> SubtractMonths((long)months);
 		public GameClockDate SubtractMonths(long months)
 		{
 			if (!TrySubtractMonths(months, out GameClockDate date))
@@ -358,8 +352,6 @@ namespace GTA.Chrono
 			return date;
 		}
 
-		public bool TrySubtractMonths(int months, out GameClockDate date)
-			=> TrySubtractMonths((long)months, out date);
 		public bool TrySubtractMonths(long months, out GameClockDate date)
 		{
 			// Don't care about long.MinValue as the absolute value is larger than the number of months between
