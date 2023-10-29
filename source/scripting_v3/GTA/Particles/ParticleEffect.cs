@@ -200,7 +200,7 @@ namespace GTA
 		/// <param name="value">The new value for the parameter.</param>
 		public void SetParameter(string parameterName, float value)
 		{
-			Function.Call(Hash.SET_PARTICLE_FX_LOOPED_EVOLUTION, parameterName, value, 0);
+			Function.Call(Hash.SET_PARTICLE_FX_LOOPED_EVOLUTION, Handle, parameterName, value, false);
 		}
 
 		/// <summary>
