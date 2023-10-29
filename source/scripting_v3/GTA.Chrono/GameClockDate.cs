@@ -4,12 +4,38 @@
 //
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace GTA.Chrono
 {
 	/// <summary>
-	///
+	/// Represents a game clock date, allowing for every <see langword="int"/> year as how the game clock
+	/// can represent its year.
 	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// The <c>With*</c> methods can be convenient to change a single component of a date, but they must be used with
+	/// some care. Examples to watch out for:
+	/// <list type="bullet">
+	/// <item>
+	/// <description>
+	/// <see cref="WithYear"/> changes the year component of a year-month-day value. Do not use this method if you
+	/// want the ordinal to stay the same after changing the year, of if you want the week and weekday values to stay
+	/// the same.
+	/// </description>
+	/// </item>
+	/// <item>
+	/// <description>
+	/// Do not combine two <c>With*</c> methods to change two components of the date. For example to change both the
+	/// year and month components of a date. This could fail because an intermediate value does not exist, while the
+	/// final date would be valid.
+	/// </description>
+	/// </item>
+	/// </list>
+	/// For more complex changes to a date, it is best to create a new <see cref="GameClockDate"/> value instead of
+	/// altering an existing date.
+	/// </para>
+	/// </remarks>
 	public readonly struct GameClockDate : IEquatable<GameClockDate>, IComparable<GameClockDate>, IComparable,
 		Datelike<GameClockDate>
 	{
@@ -22,17 +48,48 @@ namespace GTA.Chrono
 		internal readonly int _year;
 		internal readonly OrdFlags _ordFlags;
 
+		/// <summary>
+		/// Represents the largest possible value of a <see cref="GameClockDate"/>.
+		/// </summary>
+		/// <value>
+		/// The largest possible value of <see cref="GameClockTime"/>, which is December 31, 2147483647 CE.
+		/// </value>
 		public static readonly GameClockDate MaxValue = new(int.MaxValue, OrdFlagsForMaxDate);
+		/// <summary>
+		/// Represents the smallest possible value of a <see cref="GameClockDate"/>.
+		/// </summary>
+		/// <value>
+		/// The smallest possible value of <see cref="GameClockTime"/>, which is January 1, -2147483648 BCE.
+		/// </value>
 		public static readonly GameClockDate MinValue = new(int.MinValue, OrdFlagsForMinDate);
+
 		private static readonly OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
 		private static readonly OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
 
+		/// <summary>
+		/// Returns the year part of this <see cref="GameClockDate"/>. The returned value is an integer in the range of
+		/// <see langword="int"/>.
+		/// </summary>
 		public readonly int Year => _year;
 
+		/// <summary>
+		/// Returns the day of the year represented by this <see cref="GameClockDate"/> starting from 1.
+		/// The returned value is an integer between 1 and 366.
+		/// </summary>
 		public readonly int DayOfYear => (int)_ordFlags.Ordinal;
 
+		/// <summary>
+		/// Returns the day of the year represented by this <see cref="GameClockDate"/> starting from 0.
+		/// The returned value is an integer between 0 and 365 (the same as <see cref="DayOfYear"/> minus 1).
+		/// </summary>
 		public readonly int ZeroBasedDayOfYear => DayOfYear - 1;
 
+		/// <summary>
+		/// Returns the day of the week represented by this <see cref="GameClockDate"/> in
+		/// <see cref="System.DayOfWeek"/>.
+		/// The returned value is an integer between 0 and 6, where 0 indicates Sunday, 1 indicates Monday, 2 indicates
+		/// Tuesday, 3 indicates Wednesday, 4 indicates Thursday, 5 indicates Friday, and 6 indicates Saturday.
+		/// </summary>
 		public readonly DayOfWeek DayOfWeek
 		{
 			get
@@ -41,14 +98,37 @@ namespace GTA.Chrono
 			}
 		}
 
+		/// <summary>
+		/// Returns the day of the week for ISO 8601 represented by this <see cref="GameClockDate"/> in
+		/// <see cref="Chrono.IsoDayOfWeek"/>.
+		/// The returned value is an integer between 0 and 6, where 0 indicates Monday, 1 indicates Tuesday,
+		/// 2 indicates Wednesday, 3 indicates Thursday, 4 indicates Friday, 5 indicates Saturday, and 6 indicates
+		/// Sunday.
+		/// </summary>
 		public readonly IsoDayOfWeek IsoDayOfWeek => _ordFlags.IsoDayOfWeek;
 
+		/// <summary>
+		/// Returns the month part of this <see cref="GameClockDate"/>.
+		/// The returned value is an integer between 1 and 12.
+		/// </summary>
 		public readonly int Month => MonthDayFlags.Month;
 
+		/// <summary>
+		/// Returns the zero-based month part of this <see cref="GameClockDate"/>.
+		/// The returned value is an integer between 0 and 11 (the same as <see cref="Month"/> minus 1).
+		/// </summary>
 		public readonly int ZeroBasedMonth => MonthDayFlags.Month - 1;
 
+		/// <summary>
+		/// Returns the day-of-month part of this <see cref="GameClockDate"/>.
+		/// The returned value is an integer between 1 and 31.
+		/// </summary>
 		public readonly int Day => MonthDayFlags.Day;
 
+		/// <summary>
+		/// Returns the zero-based day-of-month part of this <see cref="GameClockDate"/>.
+		/// The returned value is an integer between 0 and 30 (the same as <see cref="Day"/> minus 1).
+		/// </summary>
 		public readonly int ZeroBasedDay => MonthDayFlags.Day - 1;
 
 		internal readonly MonthDayFlags MonthDayFlags => _ordFlags.ToMonthDayFlags();
@@ -77,20 +157,39 @@ namespace GTA.Chrono
 		static GameClockDate FromMdfUnchecked(int year, MonthDayFlags mdf)
 			=> new GameClockDate(year, mdf.ToOrdFlags().GetValueOrDefault());
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDateTime"/> from the current date and given <see cref="GameClockTime"/>.
+		/// </summary>
 		public GameClockDateTime AndTime(GameClockTime time)
 			=> new(this, time);
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDateTime"/> from this <see cref="GameClockDate"/>, hour, minute and second.
+		/// </summary>
 		public GameClockDateTime AndHms(int hour, int minute, int second)
 		{
 			GameClockTime time = GameClockTime.FromHms(hour, minute, second);
 			return new GameClockDateTime(this, time);
 		}
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> from a <see cref="DateTime"/>.
+		/// This does not perform any time zone conversions, so a <see cref="DateTime"/> with a
+		/// <see cref="DateTime.Kind"/> of <see cref="DateTimeKind.Utc"/> will still represent the same year/month/day.
+		/// </summary>
 		public static GameClockDate FromDateTime(DateTime dateTime)
 		{
 			return FromYmd(dateTime.Year, dateTime.Month, dateTime.Day);
 		}
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> from the calendar date (year, month and day).
+		/// </summary>
+		/// <param name="year">The year. Any int32 years are valid.</param>
+		/// <param name="month">The month of year.</param>
+		/// <param name="day">The day of month.</param>
+		/// <returns>The resulting date.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">The parameters do not form a valid date.</exception>
 		public static GameClockDate FromYmd(int year, int month, int day)
 		{
 			if (!TryFromYmd(year, month, day, out GameClockDate date))
@@ -100,6 +199,7 @@ namespace GTA.Chrono
 
 			return date;
 
+			[MethodImpl(MethodImplOptions.NoInlining)]
 			static void ThrowInvalidGregorianMonthDay(int year, int month, int day)
 			{
 				if (month < 1 || month > 12)
@@ -112,6 +212,19 @@ namespace GTA.Chrono
 			}
 		}
 
+		/// <summary>
+		/// Tries to make a new <see cref="GameClockDate"/> from the calendar date (year, month and day).
+		/// </summary>
+		/// <param name="year">The year. Any int32 years are valid.</param>
+		/// <param name="month">The month of year.</param>
+		/// <param name="day">The day of month.</param>
+		/// <param name="date">
+		/// When this method returns, contains the result <see cref="GameClockDate"/>, or an undefined value on failure.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the date is valid and this method successfully created
+		/// a <see cref="GameClockDate"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool TryFromYmd(int year, int month, int day, out GameClockDate date)
 		{
 			YearFlags flags = YearFlags.FromYear(year);
@@ -133,6 +246,13 @@ namespace GTA.Chrono
 			return true;
 		}
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> from the ordinal date (year and day of the year).
+		/// </summary>
+		/// <param name="year">The year. Any int32 years are valid.</param>
+		/// <param name="ordinal">The month of year.</param>
+		/// <returns>The resulting date.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">The parameters do not form a valid date.</exception>
 		public static GameClockDate FromOrdinalDate(int year, int ordinal)
 		{
 			if (!TryFromOrdinalDate(year, ordinal, out GameClockDate date))
@@ -144,6 +264,18 @@ namespace GTA.Chrono
 			return date;
 		}
 
+		/// <summary>
+		/// Tries to make a new <see cref="GameClockDate"/> from the ordinal date (year and day of the year).
+		/// </summary>
+		/// <param name="year">The year. Any int32 years are valid.</param>
+		/// <param name="ordinal">The day of the year.</param>
+		/// <param name="date">
+		/// When this method returns, contains the result <see cref="GameClockDate"/>, or an undefined value on failure.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the date is valid and this method successfully created
+		/// a <see cref="GameClockDate"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool TryFromOrdinalDate(int year, int ordinal, out GameClockDate date)
 		{
 			YearFlags flags = YearFlags.FromYear(year);
@@ -159,9 +291,26 @@ namespace GTA.Chrono
 			return true;
 		}
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> from the ISO week date (year, week number and day of the week).
+		/// The resulting <see cref="GameClockDate"/> may have a different year from the input year.
+		/// </summary>
+		/// <param name="year">The year. Any int32 years are valid.</param>
+		/// <param name="week">The week number.</param>
+		/// <param name="dayOfWeek">The day of the <paramref name="week"/>.</param>
+		/// <returns>The resulting date.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">The parameters do not form a valid date.</exception>
 		public static GameClockDate FromIsoWeekDate(int year, int week, IsoDayOfWeek dayOfWeek)
 		{
 			if (!TryFromIsoWeekDate(year, week, dayOfWeek, out GameClockDate date))
+			{
+				Throw_InvalidIsoWeekDate(year, week, dayOfWeek);
+			}
+
+			return date;
+
+			[MethodImpl(MethodImplOptions.NoInlining)]
+			static void Throw_InvalidIsoWeekDate(int year, int week, IsoDayOfWeek dayOfWeek)
 			{
 				if (dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek > IsoDayOfWeek.Sunday)
 				{
@@ -171,19 +320,33 @@ namespace GTA.Chrono
 				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(week), week, 1,
 					YearFlags.FromYear(year).IsoWeekCount);
 			}
-
-			return date;
 		}
 
+		/// <summary>
+		/// Tries to make a new <see cref="GameClockDateTime"/> from the ISO week date (year, week number and day of
+		/// the week).
+		/// </summary>
+		/// <param name="year">The year. Any int32 years are valid.</param>
+		/// <param name="week">The week number.</param>
+		/// <param name="dayOfWeek">The day of the week.</param>
+		/// <param name="date">
+		/// When this method returns, contains the result <see cref="GameClockDate"/>, or an undefined value on failure.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the date is valid and this method successfully created
+		/// a <see cref="GameClockDate"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool TryFromIsoWeekDate(int year, int week, IsoDayOfWeek dayOfWeek,
 			out GameClockDate date)
 		{
 			YearFlags flags = YearFlags.FromYear(year);
 			uint nWeeks = flags.IsoWeekCount;
 
-			if (week < 1 || week > nWeeks)
+			if ((dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek < IsoDayOfWeek.Sunday) ||
+				(week < 1 || week > nWeeks))
 			{
-				throw new ArgumentOutOfRangeException(nameof(week));
+				date = default;
+				return false;
 			}
 
 			int weekOrd = week * 7 + (int)dayOfWeek;
@@ -213,8 +376,28 @@ namespace GTA.Chrono
 			return true;
 		}
 
+		/// <summary>
+		/// Returns <see langword="true"/> if the year of this <see cref="GameClockDate"/> is a leap one.
+		/// </summary>
 		public bool IsLeapYear => _ordFlags.IsLeapYear;
 
+		/// <summary>
+		/// Adds a specified game clock duration to a specified game clock date, yielding a new date.
+		/// Discards the fractional days, rounding to the closest integral number of days towards
+		/// <see cref="GameClockDuration.Zero"/>.
+		/// </summary>
+		/// <param name="date">The date to add.</param>
+		/// <param name="duration">The duration to add. Only the whole days will be used.</param>
+		/// <returns>
+		/// An object whose value is the sum of the <paramref name="date"/> and the whole days of <paramref name="duration"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
+		/// <see cref="MaxValue"/>.
+		/// </exception>
+		/// <remarks>
+		/// The equivalent method for this operator is <see cref="Add(GameClockDuration)"/>.
+		/// </remarks>
 		public static GameClockDate operator +(GameClockDate date, GameClockDuration duration)
 		{
 			if (!date.TryAdd(duration, out GameClockDate result))
@@ -225,8 +408,39 @@ namespace GTA.Chrono
 			return result;
 		}
 
+		/// <summary>
+		/// Returns a new <see cref="GameClockDate"/> that adds the whole days of the specified
+		/// <see cref="GameClockDuration"/> to the value of this instance. Discards the fractional days, rounding to
+		/// the closest integral number of days towards <see cref="GameClockDuration.Zero"/>.
+		/// </summary>
+		/// <param name="duration">
+		/// A positive or negative game clock duration. Only the whole days will be used.
+		/// </param>
+		/// <returns>
+		/// An object whose value is the sum of the date represented by this instance and the whole days represented
+		/// by <paramref name="duration"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
+		/// <see cref="MaxValue"/>.
+		/// </exception>
 		public GameClockDate Add(GameClockDuration duration) => this + duration;
 
+		/// <summary>
+		/// Tries to return a new <see cref="GameClockDate"/> that adds the whole days of the specified
+		/// <see cref="GameClockDuration"/> to the value of this instance. Discards the fractional days, rounding to
+		/// the closest integral number of days towards <see cref="GameClockDuration.Zero"/>.
+		/// </summary>
+		/// <param name="duration">
+		/// A positive or negative game clock duration. Only the whole days will be used.
+		/// </param>
+		/// <param name="date">
+		/// When this method returns, contains the result <see cref="GameClockDate"/>, or an undefined value on failure.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the resulting date is between <see cref="MinValue"/> and <see cref="MaxValue"/>;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
 		public bool TryAdd(GameClockDuration duration, out GameClockDate date)
 		{
 			long wholeDays = (long)duration.TotalDays;
@@ -257,16 +471,44 @@ namespace GTA.Chrono
 			return true;
 		}
 
+		/// <summary>
+		/// Adds a duration in <paramref name="months"/> to the date.
+		/// </summary>
+		/// <param name="months">The number of months to add. Can be negative.</param>
+		/// <returns>
+		/// An object whose value is the sum of the date represented by this instance and <paramref name="months"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
+		/// <see cref="MaxValue"/>.
+		/// </exception>
+		/// <remarks>
+		/// Uses the last day of the month if the day does not exist in the resulting month.
+		/// </remarks>
 		public GameClockDate AddMonths(long months)
 		{
 			if (!TryAddMonths(months, out GameClockDate date))
 			{
-				throw new ArgumentOutOfRangeException(nameof(months));
+				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(months));
 			}
 
 			return date;
 		}
 
+		/// <summary>
+		/// Tries to add a duration in <paramref name="months"/> to the date.
+		/// </summary>
+		/// <param name="months">The number of months to add. Can be negative.</param>
+		/// <param name="date">
+		/// When this method returns, contains the result <see cref="GameClockDate"/>, or an undefined value on failure.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the resulting date is between <see cref="MinValue"/> and <see cref="MaxValue"/>;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
+		/// <remarks>
+		/// Uses the last day of the month if the day does not exist in the resulting month.
+		/// </remarks>
 		public bool TryAddMonths(long months, out GameClockDate date)
 		{
 			if (months == 0)
@@ -336,22 +578,65 @@ namespace GTA.Chrono
 			return FromMdfUnchecked(year, new MonthDayFlags(month, day, flags));
 		}
 
+		/// <summary>
+		/// Tries to return a new <see cref="GameClockDate"/> that subtracts the whole days of the specified
+		/// <see cref="GameClockDuration"/> to the value of this instance. Discards the fractional days, rounding to
+		/// the closest integral number of days towards <see cref="GameClockDuration.Zero"/>.
+		/// </summary>
+		/// <param name="duration">
+		/// A positive or negative game clock duration. Only the whole days will be used.
+		/// </param>
+		/// <param name="date">
+		/// When this method returns, contains the result <see cref="GameClockDate"/>, or an undefined value on failure.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the resulting date is between <see cref="MinValue"/> and <see cref="MaxValue"/>;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
 		public bool TrySubtract(GameClockDuration duration, out GameClockDate date)
 		{
 			bool result = TryAdd(-duration, out date);
 			return result;
 		}
 
+		/// <summary>
+		/// Subtracts a duration in <paramref name="months"/> from the date.
+		/// </summary>
+		/// <param name="months">The number of months to subtract. Can be negative.</param>
+		/// <returns>
+		/// An object whose value is the date represented by this instance minus <paramref name="months"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
+		/// <see cref="MaxValue"/>.
+		/// </exception>
+		/// <remarks>
+		/// Uses the last day of the month if the day does not exist in the resulting month.
+		/// </remarks>
 		public GameClockDate SubtractMonths(long months)
 		{
 			if (!TrySubtractMonths(months, out GameClockDate date))
 			{
-				throw new ArgumentOutOfRangeException(nameof(months));
+				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(months));
 			}
 
 			return date;
 		}
 
+		/// <summary>
+		/// Tries to subtract a duration in <paramref name="months"/> to the date.
+		/// </summary>
+		/// <param name="months">The number of months to subtract. Can be negative.</param>
+		/// <param name="date">
+		/// When this method returns, contains the result <see cref="GameClockDate"/>, or an undefined value on failure.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the resulting date is between <see cref="MinValue"/> and <see cref="MaxValue"/>;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
+		/// <remarks>
+		/// Uses the last day of the month if the day does not exist in the resulting month.
+		/// </remarks>
 		public bool TrySubtractMonths(long months, out GameClockDate date)
 		{
 			// Don't care about long.MinValue as the absolute value is larger than the number of months between
@@ -359,18 +644,62 @@ namespace GTA.Chrono
 			return TryAddMonths(-months, out date);
 		}
 
+		/// <summary>
+		/// Subtracts a specified game clock duration to a specified game clock date, yielding a new date.
+		/// Discards the fractional days, rounding to the closest integral number of days towards
+		/// <see cref="GameClockDuration.Zero"/>.
+		/// </summary>
+		/// <param name="date">The date to subtract from.</param>
+		/// <param name="duration">The duration to subtract. Only the whole days will be used.</param>
+		/// <returns>
+		/// An object whose value is the <paramref name="date"/> minus the whole days of <paramref name="duration"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
+		/// <see cref="MaxValue"/>.
+		/// </exception>
+		/// <remarks>
+		/// The equivalent method for this operator is <see cref="Add(GameClockDuration)"/>.
+		/// </remarks>
 		public static GameClockDate operator -(GameClockDate date, GameClockDuration duration)
 		{
 			if (!date.TrySubtract(duration, out GameClockDate result))
 			{
-				throw new ArgumentOutOfRangeException(nameof(duration));
+				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(duration));
 			}
 
 			return result;
 		}
 
+		/// <summary>
+		/// Returns a new <see cref="GameClockDate"/> that subtracts the whole days of the specified
+		/// <see cref="GameClockDuration"/> to the value of this instance. Discards the fractional days, rounding to
+		/// the closest integral number of days towards <see cref="GameClockDuration.Zero"/>.
+		/// </summary>
+		/// <param name="duration">
+		/// A positive or negative game clock duration. Only the whole days will be used.
+		/// </param>
+		/// <returns>
+		/// An object whose value is the date represented by this instance minus the whole days represented
+		/// by <paramref name="duration"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
+		/// <see cref="MaxValue"/>.
+		/// </exception>
 		public GameClockDate Subtract(GameClockDuration duration) => this - duration;
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> with the year number changed, while keeping the same month and day.
+		/// </summary>
+		/// <param name="year">The new year.</param>
+		/// <returns>
+		/// An object whose value is the date represented by this instance but the year is the specified
+		/// <paramref name="year"/>.
+		/// </returns>
+		/// <exception cref="ArgumentException">
+		/// The date is February 29 in a leap year but the specified <paramref name="year"/> is a non-leap one.
+		/// </exception>
 		public GameClockDate WithYear(int year)
 		{
 			// we need to operate with `mdf` since we should keep the month and day number as is
@@ -382,51 +711,128 @@ namespace GTA.Chrono
 			GameClockDate? newDate = FromMdf(year, mdf);
 			if (newDate == null)
 			{
-				throw new ArgumentException("cannot create GameClockDate that represents February 29 in a non-leap year.");
+				ThrowArgumentException_NoFeb29NonLeapYear();
 			}
 
 			return newDate.GetValueOrDefault();
+
+			static void ThrowArgumentException_NoFeb29NonLeapYear()
+			{
+				throw new ArgumentException("cannot create GameClockDate that represents February 29 in a non-leap year.");
+			}
 		}
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> with the month number (starting from 1) changed.
+		/// </summary>
+		/// <param name="month">The new month.</param>
+		/// <returns>
+		/// An object whose value is the date represented by this instance but the month is the specified
+		/// <paramref name="month"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The specified <paramref name="month"/> is invalid (not an integer between 1 and 12).
+		/// </exception>
 		public GameClockDate WithMonth(int month)
 		{
 			MonthDayFlags? newMdf = MonthDayFlags.WithMonth(month);
 			if (newMdf == null)
 			{
-				throw new ArgumentOutOfRangeException();
+				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(month), month, 1, 12);
 			}
 
 			return WithMonthDayFlags(newMdf.GetValueOrDefault());
 		}
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> with the month number (starting from 0) changed.
+		/// </summary>
+		/// <param name="month">The new month.</param>
+		/// <returns>
+		/// An object whose value is the date represented by this instance but the month is the specified
+		/// <paramref name="month"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The specified <paramref name="month"/> is invalid (not an integer between 0 and 11).
+		/// </exception>
 		public GameClockDate WithZeroBasedMonth(int month)
 			=> WithMonth(month + 1);
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> with the day of month (starting from 1) changed.
+		/// </summary>
+		/// <param name="day">The new day of month.</param>
+		/// <returns>
+		/// An object whose value is the date represented by this instance but the day of month is the specified
+		/// <paramref name="day"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The specified <paramref name="day"/> is invalid.
+		/// </exception>
 		public GameClockDate WithDay(int day)
 		{
 			MonthDayFlags? newMdf = MonthDayFlags.WithDay(day);
 			if (newMdf == null)
 			{
-				throw new ArgumentOutOfRangeException();
+				Throw_InvalidDayNumber(day, MonthDayFlags.Month, _ordFlags);
 			}
 
 			return WithMonthDayFlags(newMdf.GetValueOrDefault());
+
+			[MethodImpl(MethodImplOptions.NoInlining)]
+			static void Throw_InvalidDayNumber(int day, int month, OrdFlags of)
+			{
+				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(day), day, 1, GetMaxDayOfMonth(month, of.Flags));
+			}
 		}
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> with the day of month (starting from 0) changed.
+		/// </summary>
+		/// <param name="day">The new day of month.</param>
+		/// <returns>
+		/// An object whose value is the date represented by this instance but the day of month is the specified
+		/// <paramref name="day"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The specified <paramref name="day"/> is invalid.
+		/// </exception>
 		public GameClockDate WithZeroBasedDay(int day)
 			=> WithDay(day + 1);
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> with the day of year (starting from 1) changed.
+		/// </summary>
+		/// <param name="dayOfYear">The day of year.</param>
+		/// <returns>
+		/// An object whose value is the date represented by this instance but the day of year is
+		/// <paramref name="dayOfYear"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The specified <paramref name="dayOfYear"/> is invalid.
+		/// </exception>
 		public GameClockDate WithDayOfYear(int dayOfYear)
 		{
 			OrdFlags? of = _ordFlags.WithOrdinal(dayOfYear);
 			if (of == null)
 			{
-				throw new ArgumentOutOfRangeException(nameof(dayOfYear));
+				ThrowHelper.ThrowArgumentOutOfRangeException(nameof(dayOfYear), dayOfYear, 1, _ordFlags.Flags.DayCount);
 			}
 
 			return WithOrdFlags(of.GetValueOrDefault());
 		}
 
+		/// <summary>
+		/// Makes a new <see cref="GameClockDate"/> with the day of year (starting from 0) changed.
+		/// </summary>
+		/// <param name="dayOfYear">The day of year.</param>
+		/// <returns>
+		/// An object whose value is the date represented by this instance but the day of year is
+		/// <paramref name="dayOfYear"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The specified <paramref name="dayOfYear"/> is invalid.
+		/// </exception>
 		public GameClockDate WithZeroBasedDayOfYear(int dayOfYear)
 			=> WithDayOfYear(dayOfYear + 1);
 
@@ -435,6 +841,16 @@ namespace GTA.Chrono
 		private GameClockDate WithMonthDayFlags(MonthDayFlags mdf)
 			=> WithOrdFlags(mdf.ToOrdFlags().GetValueOrDefault());
 
+		/// <summary>
+		/// Returns a duration subtracted from this instance by <paramref name="rhs"/>.
+		/// This does not throw an exception in any cases, as all possible output fits in the range of
+		/// <see cref="GameClockDuration"/>.
+		/// </summary>
+		/// <param name="rhs">The other date.</param>
+		/// <returns>
+		/// An object whose value is the date represented by a duration subtracted from this instance by
+		/// <paramref name="rhs"/>.
+		/// </returns>
 		public GameClockDuration SignedDurationSince(GameClockDate rhs)
 		{
 			int year1 = Year;
@@ -447,6 +863,14 @@ namespace GTA.Chrono
 			return GameClockDuration.FromDays(((long)year1Div400 - year2Div400) * 146_097 + (cycle1 - cycle2));
 		}
 
+		/// <summary>
+		/// Returns the number of whole years from <paramref name="other"/> until this instance.
+		/// </summary>
+		/// <param name="other">The other date.</param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentException">
+		/// <paramref name="other"/> is later than this instance.
+		/// </exception>
 		public int YearsSince(GameClockDate other)
 		{
 			int years = Year - other.Year;
@@ -463,6 +887,12 @@ namespace GTA.Chrono
 			};
 		}
 
+		/// <summary>
+		/// Deconstructs a time into year, month, and day components.
+		/// </summary>
+		/// <param name="year">The year component.</param>
+		/// <param name="month">The month component.</param>
+		/// <param name="day">The day component.</param>
 		public void Deconstruct(out int year, out int month, out int day)
 		{
 			year = Year;
@@ -470,10 +900,27 @@ namespace GTA.Chrono
 			day = Day;
 		}
 
+		/// <summary>
+		/// Returns a value indicating whether this instance is equal to a specified <see cref="GameClockDate"/>
+		/// object.
+		/// </summary>
+		/// <param name="other">An object to compare with this instance.</param>
+		/// <returns>
+		/// <see langword="true"/> if <paramref name="other"/> represents the same game clock date as this instance;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
 		public bool Equals(GameClockDate other)
 		{
 			return _year == other._year && _ordFlags == other._ordFlags;
 		}
+		/// <summary>
+		/// Returns a value indicating whether this instance is equal to a specified object.
+		/// </summary>
+		/// <param name="obj">An object to compare with this instance.</param>
+		/// <returns>
+		/// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockDate"/> object that represents
+		/// the same game clock date as the current <see cref="GameClockDate"/> structure; otherwise, false.
+		/// </returns>
 		public override bool Equals(object obj)
 		{
 			if (obj is GameClockDate duration)
@@ -484,15 +931,47 @@ namespace GTA.Chrono
 			return false;
 		}
 
+		/// <summary>
+		/// Indicates whether two <see cref="GameClockDate"/> instances are equal.
+		/// </summary>
+		/// <param name="left">The game clock date to compare.</param>
+		/// <param name="right">The second game date time to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the values of <paramref name="left"/> and <paramref name="right"/> are equal;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator ==(GameClockDate left, GameClockDate right)
 		{
 			return left.Equals(right);
 		}
+		/// <summary>
+		/// Indicates whether two <see cref="GameClockDate"/> instances are not equal.
+		/// </summary>
+		/// <param name="left">The game clock date to compare.</param>
+		/// <param name="right">The second game clock date to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the values of <paramref name="left"/> and <paramref name="right"/> are not equal;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator !=(GameClockDate left, GameClockDate right)
 		{
 			return !left.Equals(right);
 		}
 
+		/// <summary>
+		/// Compares the value of this instance to a specified object that contains a specified
+		/// <see cref="GameClockDate"/> value, and returns an integer that indicates whether this instance is earlier
+		/// than, the same as, or later than the specified <see cref="GameClockDate"/> value.
+		/// </summary>
+		/// <param name="value">A boxed object to compare, or <see langword="null"/>.</param>
+		/// <returns>
+		/// A signed number indicating the relative values of this instance and the value parameter. Less than zero if
+		/// this instance is earlier than value. Zero if this instance is the same as value. Greater than zero if this
+		/// instance is later than value.
+		/// </returns>
+		/// <exception cref="ArgumentException">
+		/// <paramref name="value"/> is not a <see cref="GameClockDate"/>.
+		/// </exception>
 		public int CompareTo(object value)
 		{
 			if (value == null) return 1;
@@ -501,7 +980,25 @@ namespace GTA.Chrono
 
 			return CompareTo(otherDuration);
 		}
-
+		/// <summary>
+		/// Compares the value of this instance to a specified <see cref="GameClockDate"/> value and indicates whether
+		/// this instance is earlier than, the same as, or later than the specified <see cref="GameClockDate"/> value.
+		/// </summary>
+		/// <param name="value">The object to compare to the current instance.</param>
+		/// <returns>
+		/// A signed number indicating the relative values of this instance and the value parameter.
+		/// <list type="bullet">
+		/// <item>
+		/// <description>Less than zero if this instance is earlier than <paramref name="value"/>.</description>
+		/// </item>
+		/// <item>
+		/// <description>Zero if this instance is the same as <paramref name="value"/>.</description>
+		/// </item>
+		/// <item>
+		/// <description>Greater than zero if this instance is later than <paramref name="value"/>.</description>
+		/// </item>
+		/// </list>
+		/// </returns>
 		public int CompareTo(GameClockDate value)
 		{
 			int thisYear = _year;
@@ -529,12 +1026,54 @@ namespace GTA.Chrono
 			return 0;
 		}
 
+		/// <summary>
+		/// Indicates whether a specified <see cref="GameClockDate"/> is earlier than another specified
+		/// <see cref="GameClockDate"/>.
+		/// </summary>
+		/// <param name="d1">The first game clock date to compare.</param>
+		/// <param name="d2">The second game clock date to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the value of <paramref name="d1"/> is earlier than the value of
+		/// <paramref name="d2"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator <(GameClockDate d1, GameClockDate d2) => d1.CompareTo(d2) < 0;
+		/// <summary>
+		/// Indicates whether a specified <see cref="GameClockDate"/> is earlier than or equal to another specified
+		/// <see cref="GameClockDate"/>.
+		/// </summary>
+		/// <param name="d1">The first game clock date to compare.</param>
+		/// <param name="d2">The second game clock date to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the value of <paramref name="d1"/> is earlier than or equal to the value of
+		/// <paramref name="d2"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator <=(GameClockDate d1, GameClockDate d2) => d1.CompareTo(d2) <= 0;
 
+		/// <summary>
+		/// Indicates whether a specified <see cref="GameClockDate"/> is later than another specified
+		/// <see cref="GameClockDate"/>.
+		/// </summary>
+		/// <param name="d1">The first game clock date to compare.</param>
+		/// <param name="d2">The second game clock date to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the value of <paramref name="d1"/> is later than the value of
+		/// <paramref name="d2"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator >(GameClockDate d1, GameClockDate d2) => d1.CompareTo(d2) > 0;
+		/// <summary>
+		/// Indicates whether a specified <see cref="GameClockDate"/> is later than or equal to another specified
+		/// <see cref="GameClockDate"/>.
+		/// </summary>
+		/// <param name="d1">The first game clock date to compare.</param>
+		/// <param name="d2">The second game clock date to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the value of <paramref name="d1"/> is later than or equal to the value of
+		/// <paramref name="d2"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator >=(GameClockDate d1, GameClockDate d2) => d1.CompareTo(d2) >= 0;
 
+		/// <summary>Returns a hash code for this instance.</summary>
+		/// <returns>A 32-bit signed integer hash code.</returns>
 		public override int GetHashCode()
 		{
 			return _year.GetHashCode() + 17 * _ordFlags.GetHashCode();

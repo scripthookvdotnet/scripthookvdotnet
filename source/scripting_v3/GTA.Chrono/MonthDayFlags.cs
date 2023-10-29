@@ -5,6 +5,20 @@
 
 namespace GTA.Chrono
 {
+	/// <summary>
+	/// <para>
+	/// Month, day of month and year flags: `<c>(month &lt;&lt; 9) | (day &lt;&lt; 4) | flags</c>`
+	/// </para>
+	/// <para>
+	/// The whole bits except for the least 3 bits are referred as `<c>Mdl</c>` (month, day of month and leap flag),
+	/// which is an index to the <see cref="Internals.MdlToOl"/> lookup table.
+	/// </para>
+	/// <para>
+	/// The methods implemented on <see cref="MonthDayFlags"/> do not always return a valid value.
+	/// Dates that can't exist, like February 30, can still be represented.
+	/// Use <see cref="IsValid"/> to check whether the date is valid.
+	/// </para>
+	/// </summary>
 	internal readonly struct MonthDayFlags
 	{
 		internal MonthDayFlags(uint value) : this()

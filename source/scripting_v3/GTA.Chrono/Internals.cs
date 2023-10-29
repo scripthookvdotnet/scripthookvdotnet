@@ -3,10 +3,6 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using System;
-using System.Text.RegularExpressions;
-using GTA.Chrono;
-
 internal static class Internals
 {
 	private static readonly byte[] YearDeltas = new byte[401] {

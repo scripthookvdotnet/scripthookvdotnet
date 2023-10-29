@@ -8,7 +8,7 @@ using System;
 namespace GTA.Chrono
 {
 	/// <summary>
-	/// GameClockHour, GameClockMinute, GameClockSecond, GameClockDay, GameClockMonth, GameClockYear
+	/// Represents a fixed length of game clock time with the millisecond precision.
 	/// </summary>
 	public readonly struct GameClockDuration : IEquatable<GameClockDuration>, IComparable<GameClockDuration>, IComparable
 	{
@@ -82,36 +82,118 @@ namespace GTA.Chrono
 		const long MinPositiveSecDifferenceOutOfBound = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay;
 		const long MaxNegativeSecDifferenceOutOfBound = -MinPositiveSecDifferenceOutOfBound;
 
+		/// <summary>
+		/// Represents the zero <see cref="GameClockDuration"/> value. This field is read-only.
+		/// </summary>
 		public static readonly GameClockDuration Zero = new(0);
+		/// <summary>
+		/// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
+		/// <see cref="GameClockDateTime.MinValue"/> to <see cref="GameClockDateTime.MaxValue"/>.
+		/// This field is read-only.
+		/// </summary>
 		public static readonly GameClockDuration MaxValue = new(MaxSecDifference);
+		/// <summary>
+		/// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
+		/// <see cref="GameClockDateTime.MaxValue"/> to <see cref="GameClockDateTime.MinValue"/>.
+		/// This field is read-only.
+		/// </summary>
 		public static readonly GameClockDuration MinValue = new(MinSecDifference);
 
 		internal readonly long _secs;
 
+		/// <summary>
+		/// Gets the hours component of the time interval represented by the current <see cref="GameClockDuration"/>
+		/// structure.
+		/// </summary>
+		/// <value>
+		/// The hour component of the current <see cref="GameClockDuration"/> structure.
+		/// The return value ranges from -23 through 23.
+		/// </value>
 		public int Hours => (int)((_secs / SecsPerHour) % 24);
 
+		/// <summary>
+		/// Gets the minutes component of the time interval represented by the current <see cref="GameClockDuration"/>
+		/// structure.
+		/// </summary>
+		/// <value>
+		/// The minute component of the current <see cref="GameClockDuration"/> structure.
+		/// The return value ranges from -59 through 59.
+		/// </value>
 		public int Minutes => (int)((_secs / SecsPerMinute) % 60);
 
+		/// <summary>
+		/// Gets the seconds component of the time interval represented by the current <see cref="GameClockDuration"/>
+		/// structure.
+		/// </summary>
+		/// <value>
+		/// The second component of the current <see cref="GameClockDuration"/> structure.
+		/// The return value ranges from -59 through 59.
+		/// </value>
 		public int Seconds => (int)(_secs % 60);
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole and fractional
+		/// weeks.
+		/// </summary>
+		/// <value>The total number of weeks represented by this instance.</value>
 		public double TotalWeeks => (double)_secs / SecsPerWeek;
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole and fractional
+		/// days.
+		/// </summary>
+		/// <value>The total number of days represented by this instance.</value>
 		public double TotalDays => (double)_secs / SecsPerDay;
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole and fractional
+		/// hours.
+		/// </summary>
+		/// <value>The total number of hours represented by this instance.</value>
 		public double TotalHours => (double)_secs / SecsPerHour;
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole and fractional
+		/// minutes.
+		/// </summary>
+		/// <value>The total number of minutes represented by this instance.</value>
 		public double TotalMinutes => (double)_secs / SecsPerMinute;
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole and fractional
+		/// seconds.
+		/// </summary>
+		/// <value>The total number of seconds represented by this instance.</value>
 		public double TotalSeconds => (double)WholeSeconds;
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole weeks.
+		/// </summary>
+		/// <value>The number of whole weeks represented by this instance.</value>
 		public long WholeWeeks => _secs / SecsPerWeek;
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole days.
+		/// </summary>
+		/// <value>The number of whole days represented by this instance.</value>
 		public long WholeDays => _secs / SecsPerDay;
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole hours.
+		/// </summary>
+		/// <value>The number of whole hours represented by this instance.</value>
 		public long WholeHours => _secs / SecsPerHour;
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole minutes.
+		/// </summary>
+		/// <value>The number of whole minutes represented by this instance.</value>
 		public long WholeMinutes => _secs / SecsPerMinute;
 
+		/// <summary>
+		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole seconds.
+		/// </summary>
+		/// <value>The number of whole seconds represented by this instance.</value>
 		public long WholeSeconds => _secs;
 
 		private static void CheckArgumentRange(string paramName, long value, long minInclusive, long maxInclusive)
@@ -160,7 +242,25 @@ namespace GTA.Chrono
 			if (_secs < t) return -1;
 			return 0;
 		}
-
+		/// <summary>
+		/// Compares the value of this instance to a specified <see cref="GameClockTime"/> value and indicates whether
+		/// this instance is less than, the same as, or greater than the specified <see cref="GameClockTime"/> value.
+		/// </summary>
+		/// <param name="value">The object to compare to the current instance.</param>
+		/// <returns>
+		/// A signed number indicating the relative values of this instance and the value parameter.
+		/// <list type="bullet">
+		/// <item>
+		/// <description>Less than zero if this instance is less than <paramref name="value"/>.</description>
+		/// </item>
+		/// <item>
+		/// <description>Zero if this instance is the same as <paramref name="value"/>.</description>
+		/// </item>
+		/// <item>
+		/// <description>Greater than zero if this instance is greater than <paramref name="value"/>.</description>
+		/// </item>
+		/// </list>
+		/// </returns>
 		public int CompareTo(GameClockDuration value)
 		{
 			long t = value._secs;
@@ -169,6 +269,14 @@ namespace GTA.Chrono
 			return 0;
 		}
 
+		/// <summary>
+		/// Returns a <see cref="GameClockDuration"/> that represents a specified number of weeks.
+		/// </summary>
+		/// <param name="weeks">A number of weeks.</param>
+		/// <returns>An object that represents <paramref name="weeks"/>.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// <paramref name="weeks"/> is not between -224100656035 and 224100656035.
+		/// </exception>
 		public static GameClockDuration FromWeeks(long weeks)
 		{
 			const long minWeeks = MinSecDifference / SecsPerWeek;
@@ -177,6 +285,14 @@ namespace GTA.Chrono
 
 			return new GameClockDuration(weeks * SecsPerWeek);
 		}
+		/// <summary>
+		/// Returns a <see cref="GameClockDuration"/> that represents a specified number of days.
+		/// </summary>
+		/// <param name="days">A number of days.</param>
+		/// <returns>An object that represents <paramref name="days"/>.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// <paramref name="days"/> is not between -1568704592245 and 1568704592245.
+		/// </exception>
 		public static GameClockDuration FromDays(long days)
 		{
 			const long minDays = MinSecDifference / SecsPerDay;
@@ -185,6 +301,14 @@ namespace GTA.Chrono
 
 			return new GameClockDuration(days * SecsPerDay);
 		}
+		/// <summary>
+		/// Returns a <see cref="GameClockDuration"/> that represents a specified number of hours.
+		/// </summary>
+		/// <param name="hours">A number of hours.</param>
+		/// <returns>An object that represents <paramref name="hours"/>.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// <paramref name="hours"/> is not between -37648910213903 and 37648910213903.
+		/// </exception>
 		public static GameClockDuration FromHours(long hours)
 		{
 			const long minHours = MinSecDifference / SecsPerHour;
@@ -193,6 +317,14 @@ namespace GTA.Chrono
 
 			return new GameClockDuration(hours * SecsPerHour);
 		}
+		/// <summary>
+		/// Returns a <see cref="GameClockDuration"/> that represents a specified number of minutes.
+		/// </summary>
+		/// <param name="minutes">A number of minutes.</param>
+		/// <returns>An object that represents <paramref name="minutes"/>.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// <paramref name="minutes"/> is not between -2258934612834239 and 2258934612834239.
+		/// </exception>
 		public static GameClockDuration FromMinutes(long minutes)
 		{
 			const long minMinutes = MinSecDifference / SecsPerMinute;
@@ -201,6 +333,14 @@ namespace GTA.Chrono
 
 			return new GameClockDuration(minutes * SecsPerMinute);
 		}
+		/// <summary>
+		/// Returns a <see cref="GameClockDuration"/> that represents a specified number of seconds.
+		/// </summary>
+		/// <param name="seconds">A number of seconds.</param>
+		/// <returns>An object that represents <paramref name="seconds"/>.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// <paramref name="seconds"/> is not between -135536076770054399 and 135536076770054399.
+		/// </exception>
 		public static GameClockDuration FromSeconds(long seconds)
 		{
 			const long minSeconds = MinSecDifference;
@@ -212,10 +352,31 @@ namespace GTA.Chrono
 		public static GameClockDuration FromTimeSpan(TimeSpan timeSpan)
 			=> new GameClockDuration(timeSpan.Ticks / TimeSpan.TicksPerSecond);
 
+		/// <summary>
+		/// Returns the specified instance of <see cref="GameClockDuration"/>.
+		/// </summary>
+		/// <param name="d">The duration to return.</param>
+		/// <returns>The time interval specified by <paramref name="d"/>.</returns>
 		public static GameClockDuration operator +(GameClockDuration d) => d;
 
+		/// <summary>
+		/// Returns a new <see cref="GameClockDuration"/> object whose value is the sum of the specified
+		/// <see cref="GameClockDuration"/> object and this instance.
+		/// </summary>
+		/// <param name="duration">The duration to add.</param>
+		/// <returns>
+		/// A new object that represents the value of this instance plus the value of <paramref name="duration"/>.
+		/// </returns>
 		public GameClockDuration Add(GameClockDuration duration) => this + duration;
 
+		/// <summary>
+		/// Adds two specified <see cref="GameClockDuration"/> instances.
+		/// </summary>
+		/// <param name="d1">The first game clock duration to add.</param>
+		/// <param name="d2">The second game clock duration to add.</param>
+		/// <returns>
+		/// An object whose value is the sum of the values of <paramref name="d1"/> and <paramref name="d2"/>.
+		/// </returns>
 		public static GameClockDuration operator +(GameClockDuration d1, GameClockDuration d2)
 		{
 			long result = d1._secs + d2._secs;
@@ -224,12 +385,41 @@ namespace GTA.Chrono
 			return new GameClockDuration(result);
 		}
 
+		/// <summary>
+		/// Returns a new <see cref="GameClockDuration"/> object whose value is the negated value of this instance.
+		/// </summary>
+		/// <returns>
+		/// A new object with the same numeric value as this instance, but with the opposite sign.
+		/// </returns>
 		public GameClockDuration Negate() => -this;
 
+		/// <summary>
+		/// Returns a <see cref="GameClockDuration"/> whose value is the negated value of the specified instance.
+		/// </summary>
+		/// <param name="d">The duration to be negated.</param>
+		/// <returns>
+		/// An object that has the same numeric value as this instance, but the opposite sign.
+		/// </returns>
 		public static GameClockDuration operator -(GameClockDuration d) => new(-d._secs);
 
+		/// <summary>
+		/// Returns a new <see cref="GameClockDuration"/> object whose value is the difference between the specified
+		/// <see cref="GameClockDuration"/> object and this instance.
+		/// </summary>
+		/// <param name="duration">The duration to be subtracted.</param>
+		/// <returns></returns>
 		public GameClockDuration Subtract(GameClockDuration duration) => this - duration;
 
+		/// <summary>
+		/// Subtracts a specified <see cref="GameClockDuration"/> from another specified
+		/// <see cref="GameClockDuration"/>.
+		/// </summary>
+		/// <param name="d1">The minuend.</param>
+		/// <param name="d2">The subtrahend.</param>
+		/// <returns>
+		/// An object whose value is the result of the value of <paramref name="d1"/> minus the value of
+		/// <paramref name="d2"/>.
+		/// </returns>
 		public static GameClockDuration operator -(GameClockDuration d1, GameClockDuration d2)
 		{
 			long result = d1._secs - d2._secs;
@@ -242,10 +432,11 @@ namespace GTA.Chrono
 		public GameClockDuration Multiply(double factor) => this * factor;
 
 		/// <summary>
-		/// Implements the operator * (multiplication).
+		/// Returns a new <see cref="GameClockDuration"/> object whose value is the result of multiplying the specified
+		/// <paramref name="duration"/> instance and the specified <paramref name="factor"/>.
 		/// </summary>
-		/// <param name="duration">The left hand side of the operator.</param>
-		/// <param name="factor">The right hand side of the operator.</param>
+		/// <param name="duration">The value to be multiplied.</param>
+		/// <param name="factor">The value to be multiplied by.</param>
 		/// <returns>
 		/// A new <see cref="GameClockDuration"/> representing the result of multiplying <paramref name="duration"/>
 		/// by <paramref name="factor"/>.
@@ -309,16 +500,56 @@ namespace GTA.Chrono
 			}
 		}
 
+		/// <summary>
+		/// Returns a new <see cref="GameClockDuration"/> object whose value is the result of multiplying the
+		/// specified <paramref name="factor"/> and the specified <paramref name="duration"/> instance.
+		/// </summary>
+		/// <param name="factor">The value to be multiplied by.</param>
+		/// <param name="duration">The value to be multiplied.</param>
+		/// <returns>
+		/// A new object that represents the value of the specified <paramref name="factor"/> multiplied by the value
+		/// of the specified <paramref name="duration"/> instance.
+		/// </returns>
 		public static GameClockDuration operator *(long factor, GameClockDuration duration)
 			=> duration * factor;
+		/// <summary>
+		/// Returns a new <see cref="GameClockDuration"/> object whose value is the result of multiplying the
+		/// specified <paramref name="factor"/> and the specified <paramref name="duration"/> instance.
+		/// </summary>
+		/// <param name="factor">The value to be multiplied by.</param>
+		/// <param name="duration">The value to be multiplied.</param>
+		/// <returns>
+		/// A new object that represents the value of the specified <paramref name="factor"/> multiplied by the value
+		/// of the specified <paramref name="duration"/> instance.
+		/// </returns>
 		public static GameClockDuration operator *(double factor, GameClockDuration duration)
 			=> duration * factor;
 
 		public GameClockDuration Divide(long factor) => this / factor;
 		public GameClockDuration Divide(double factor) => this / factor;
 
+		/// <summary>
+		/// Returns a new TimeSpan object whose value is the result of dividing the specified
+		/// <paramref name="duration"/> by the specified <paramref name="divisor"/>.
+		/// </summary>
+		/// <param name="duration">Dividend or the value to be divided.</param>
+		/// <param name="divisor">The value to be divided by.</param>
+		/// <returns>
+		/// A new object that represents the value of <paramref name="duration"/> divided by the value of
+		/// <paramref name="divisor"/>.
+		/// </returns>
 		public static GameClockDuration operator /(GameClockDuration duration, long divisor)
 			=> new GameClockDuration(duration._secs / divisor);
+		/// <summary>
+		/// Returns a new TimeSpan object whose value is the result of dividing the specified
+		/// <paramref name="duration"/> by the specified <paramref name="divisor"/>.
+		/// </summary>
+		/// <param name="duration">Dividend or the value to be divided.</param>
+		/// <param name="divisor">The value to be divided by.</param>
+		/// <returns>
+		/// A new object that represents the value of <paramref name="duration"/> divided by the value of
+		/// <paramref name="divisor"/>.
+		/// </returns>
 		public static GameClockDuration operator /(GameClockDuration duration, double divisor)
 		{
 			if (double.IsNaN(divisor))
@@ -370,6 +601,15 @@ namespace GTA.Chrono
 				}
 			}
 		}
+		/// <summary>
+		/// Returns a new Double value that's the result of dividing <paramref name="d1"/> by <paramref name="d2"/>.
+		/// </summary>
+		/// <param name="d1">The divident or the value to be divided.</param>
+		/// <param name="d2">The value to be divided by.</param>
+		/// <returns>
+		/// A new value that represents result of dividing <paramref name="d1"/> by the value of
+		/// <paramref name="d2"/>.
+		/// </returns>
 		public static double operator /(GameClockDuration d1, GameClockDuration d2) => d1._secs / d2._secs;
 
 		private static GameClockDuration IntervalFromF64Seconds(double secs)
@@ -424,6 +664,8 @@ namespace GTA.Chrono
 
 		public static bool operator >=(GameClockDuration t1, GameClockDuration t2) => t1._secs >= t2._secs;
 
+		/// <summary>Returns a hash code for this instance.</summary>
+		/// <returns>A 32-bit signed integer hash code.</returns>
 		public override int GetHashCode()
 		{
 			return _secs.GetHashCode();

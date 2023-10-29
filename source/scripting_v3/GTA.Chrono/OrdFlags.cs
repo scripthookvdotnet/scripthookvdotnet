@@ -5,6 +5,18 @@
 
 namespace GTA.Chrono
 {
+	/// <summary>
+	/// <para>
+	/// Ordinal (day of year) and year flags: `<c>(ordinal &lt;&lt; 4) | flags</c>`.
+	/// </para>
+	/// <para>
+	/// The whole bits except for the least 3 bits are referred as `<c>Ol</c>` (ordinal and leap flag),
+	/// which is an index to the <see cref="Internals.OlToMdl"/> lookup table.
+	/// </para>
+	/// <para>
+	/// The methods implemented on <see cref="OrdFlags"/> always return a valid value.
+	/// </para>
+	/// </summary>
 	internal readonly struct OrdFlags
 	{
 		// OL: (ordinal << 1) | leap year flag (where the least bit indicates non-leap year)
@@ -60,10 +72,10 @@ namespace GTA.Chrono
 			uint mdl = mdf.Value >> 3;
 			if (mdl > Internals.MaxMdl)
 			{
-				// Panicking on out-of-bounds indexing would be reasonable, but just return `None`.
+				// throwing an exception on out-of-bounds indexing would be reasonable, but just return null.
 				return null;
 			}
-			// Array is indexed from `[1..=MAX_MDL]`, with a `0` index having a meaningless value.
+			// Array is indexed from `1` to `Internals.MaxMdl`, with a `0` index having a meaningless value.
 			sbyte v = Internals.MdlToOl[mdl];
 			var of = new OrdFlags(mdf.Value - (uint)((v & 0x3ff) << 3));
 			return of.Validate();

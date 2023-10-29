@@ -6,14 +6,16 @@
 namespace GTA.Chrono
 {
 	/// <summary>
-	/// The YearFlags stores this information into 4 bits `abbb`,
-	/// where `a` is `1` for the common year (simplifies the `OrdFlags` validation)
-	/// and `bbb` is a non-zero `Weekday` (mapping `Mon` to 7, Tue to 1 and so on) of the last day in the past year
+	/// The YearFlags stores this information into 4 bits `<c>abbb</c>`,
+	/// where `<c>a</c>` is `<c>1</c>` for the common year (simplifies the <see cref="OrdFlags"/> validation)
+	/// and `<c>bbb</c>` is a non-zero <see cref="IsoDayOfWeek"/> (mapping <see cref="IsoDayOfWeek.Monday"/> to 7,
+	/// <see cref="IsoDayOfWeek.Tuesday"/> to 1 and so on) of the last day in the past year.
 	/// </summary>
 	public readonly struct YearFlags
 	{
 		// It would be a bit better if there were octal number literals with the prefix "0o" in C#,
 		// just like how Rust, JavaScript, Go, Python 3, and Swift define the prefix for octal literals...
+#pragma warning disable IDE1006 // Naming Styles
 		static readonly YearFlags A = new(0b1000 + 5);
 		static readonly YearFlags AG = new(5);
 		static readonly YearFlags B = new(0b1000 + 4);
@@ -28,6 +30,7 @@ namespace GTA.Chrono
 		static readonly YearFlags FE = new(7);
 		static readonly YearFlags G = new(0b1000 + 6);
 		static readonly YearFlags GF = new(6);
+#pragma warning restore IDE1006 // Naming Styles
 
 		/// <summary>
 		/// Contains dominical letters.
