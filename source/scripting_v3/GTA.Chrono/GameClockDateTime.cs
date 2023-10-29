@@ -22,7 +22,7 @@ namespace GTA.Chrono
 		public static readonly GameClockDateTime MinValue = new(GameClockDate.MinValue, GameClockTime.MinValue);
 
 		public readonly GameClockDate Date => _date;
-		private readonly GameClockTime Time => _time;
+		public readonly GameClockTime Time => _time;
 
 		public readonly int Hour => _time.Hour;
 
