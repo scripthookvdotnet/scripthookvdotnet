@@ -155,17 +155,17 @@ namespace GTA.UI
 		public static float ScaledWidth => Height * AspectRatio;
 
 		/// <summary>
-		/// Gets the chosen safezone value from the menu.
+		/// Gets the chosen safe zone value from the menu.
 		/// </summary>
 		/// <returns>
 		/// <para>
-		/// <see langword="0" /> - if the safezone is set to its maximum value.
+		/// <see langword="0" /> - if the safe zone is set to its maximum value.
 		/// </para>
 		/// <para>
-		/// <see langword="10" /> - if the safezone is set to its minimum value.
+		/// <see langword="10" /> - if the safe zone is set to its minimum value.
 		/// </para>
 		/// </returns>
-		public static int SafezoneSize => Game.GetProfileSetting(212);
+		public static int SafeZoneSizeProfile => Game.GetProfileSetting(212);
 
 		#endregion
 
