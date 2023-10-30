@@ -75,19 +75,19 @@ namespace GTA.Chrono
 		/// Returns the year part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer in the range of <see langword="int"/>.
 		/// </summary>
-		public readonly int Year => Date.Year;
+		public readonly int Year => _date.Year;
 
 		/// <summary>
 		/// Returns the day of the year represented by this <see cref="GameClockDateTime"/> starting from 1.
 		/// The returned value is an integer between 1 and 366.
 		/// </summary>
-		public readonly int DayOfYear => Date.DayOfYear;
+		public readonly int DayOfYear => _date.DayOfYear;
 
 		/// <summary>
 		/// Returns the day of the year represented by this <see cref="GameClockDateTime"/> starting from 0.
 		/// The returned value is an integer between 0 and 365 (the same as <see cref="DayOfYear"/> minus 1).
 		/// </summary>
-		public readonly int ZeroBasedDayOfYear => Date.ZeroBasedDayOfYear;
+		public readonly int ZeroBasedDayOfYear => _date.ZeroBasedDayOfYear;
 
 		/// <summary>
 		/// Returns the day of the week represented by this <see cref="GameClockDateTime"/> in
@@ -95,7 +95,7 @@ namespace GTA.Chrono
 		/// The returned value is an integer between 0 and 6, where 0 indicates Sunday, 1 indicates Monday, 2 indicates
 		/// Tuesday, 3 indicates Wednesday, 4 indicates Thursday, 5 indicates Friday, and 6 indicates Saturday.
 		/// </summary>
-		public readonly DayOfWeek DayOfWeek => Date.DayOfWeek;
+		public readonly DayOfWeek DayOfWeek => _date.DayOfWeek;
 
 		/// <summary>
 		/// Returns the day of the week for ISO 8601 represented by this <see cref="GameClockDateTime"/> in
@@ -104,31 +104,31 @@ namespace GTA.Chrono
 		/// 2 indicates Wednesday, 3 indicates Thursday, 4 indicates Friday, 5 indicates Saturday, and 6 indicates
 		/// Sunday.
 		/// </summary>
-		public readonly IsoDayOfWeek IsoDayOfWeek => Date.IsoDayOfWeek;
+		public readonly IsoDayOfWeek IsoDayOfWeek => _date.IsoDayOfWeek;
 
 		/// <summary>
 		/// Returns the month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 1 and 12.
 		/// </summary>
-		public readonly int Month => Date.Month;
+		public readonly int Month => _date.Month;
 
 		/// <summary>
 		/// Returns the zero-based month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 0 and 11 (the same as <see cref="Month"/> minus 1).
 		/// </summary>
-		public readonly int ZeroBasedMonth => Date.ZeroBasedMonth;
+		public readonly int ZeroBasedMonth => _date.ZeroBasedMonth;
 
 		/// <summary>
 		/// Returns the day-of-month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 1 and 31.
 		/// </summary>
-		public readonly int Day => Date.Day;
+		public readonly int Day => _date.Day;
 
 		/// <summary>
 		/// Returns the zero-based day-of-month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 0 and 30 (the same as <see cref="Day"/> minus 1).
 		/// </summary>
-		public readonly int ZeroBasedDay => Date.ZeroBasedDay;
+		public readonly int ZeroBasedDay => _date.ZeroBasedDay;
 
 		/// <summary>
 		/// Gets the hour component of the time represented by this instance.
@@ -174,7 +174,7 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentException">
 		/// The date is February 29 in a leap year but the specified <paramref name="year"/> is a non-leap one.
 		/// </exception>
-		public GameClockDateTime WithYear(int year) => new(Date.WithYear(year), Time);
+		public GameClockDateTime WithYear(int year) => new(_date.WithYear(year), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the month number (starting from 1) changed.
@@ -187,7 +187,7 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// The specified <paramref name="month"/> is invalid (not an integer between 1 and 12).
 		/// </exception>
-		public GameClockDateTime WithMonth(int month) => new(Date.WithMonth(month), Time);
+		public GameClockDateTime WithMonth(int month) => new(_date.WithMonth(month), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the month number (starting from 0) changed.
@@ -200,7 +200,7 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// The specified <paramref name="month"/> is invalid (not an integer between 0 and 11).
 		/// </exception>
-		public GameClockDateTime WithZeroBasedMonth(int month) => new(Date.WithZeroBasedMonth(month), Time);
+		public GameClockDateTime WithZeroBasedMonth(int month) => new(_date.WithZeroBasedMonth(month), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of month (starting from 1) changed.
@@ -213,7 +213,7 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// The specified <paramref name="day"/> is invalid.
 		/// </exception>
-		public GameClockDateTime WithDay(int day) => new(Date.WithDay(day), Time);
+		public GameClockDateTime WithDay(int day) => new(_date.WithDay(day), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of month (starting from 0) changed.
@@ -226,7 +226,7 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// The specified <paramref name="day"/> is invalid.
 		/// </exception>
-		public GameClockDateTime WithZeroBasedDay(int day) => new(Date.WithZeroBasedDay(day), Time);
+		public GameClockDateTime WithZeroBasedDay(int day) => new(_date.WithZeroBasedDay(day), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of year (starting from 1) changed.
@@ -239,7 +239,7 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// The specified <paramref name="dayOfYear"/> is invalid.
 		/// </exception>
-		public GameClockDateTime WithDayOfYear(int dayOfYear) => new(Date.WithDayOfYear(dayOfYear), Time);
+		public GameClockDateTime WithDayOfYear(int dayOfYear) => new(_date.WithDayOfYear(dayOfYear), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of year (starting from 0) changed.
@@ -253,7 +253,7 @@ namespace GTA.Chrono
 		/// The specified <paramref name="dayOfYear"/> is invalid.
 		/// </exception>
 		public GameClockDateTime WithZeroBasedDayOfYear(int dayOfYear)
-			=> new(Date.WithZeroBasedDayOfYear(dayOfYear), Time);
+			=> new(_date.WithZeroBasedDayOfYear(dayOfYear), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the hour number changed.
@@ -263,7 +263,7 @@ namespace GTA.Chrono
 		/// An object whose value is the date time represented by this instance but the hour is the specified
 		/// <paramref name="hour"/>.
 		/// </returns>
-		public readonly GameClockDateTime WithHour(int hour) => new(Date, _time.WithHour(hour));
+		public readonly GameClockDateTime WithHour(int hour) => new(_date, _time.WithHour(hour));
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the minute number changed.
@@ -273,7 +273,7 @@ namespace GTA.Chrono
 		/// An object whose value is the date time represented by this instance but the minute is the specified
 		/// <paramref name="minute"/>.
 		/// </returns>
-		public readonly GameClockDateTime WithMinute(int minute) => new(Date, _time.WithMinute(minute));
+		public readonly GameClockDateTime WithMinute(int minute) => new(_date, _time.WithMinute(minute));
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the second number changed.
@@ -283,7 +283,7 @@ namespace GTA.Chrono
 		/// An object whose value is the date time represented by this instance but the second is the specified
 		/// <paramref name="second"/>.
 		/// </returns>
-		public readonly GameClockDateTime WithSecond(int second) => new(Date, _time.WithSecond(second));
+		public readonly GameClockDateTime WithSecond(int second) => new(_date, _time.WithSecond(second));
 
 		/// <summary>
 		/// Adds a specified duration to a specified date time, yielding a new date time.
@@ -603,13 +603,13 @@ namespace GTA.Chrono
 		/// </returns>
 		public int CompareTo(GameClockDateTime value)
 		{
-			int dateCompRes = _date.CompareTo(value.Date);
+			int dateCompRes = _date.CompareTo(value._date);
 			if (dateCompRes != 0)
 			{
 				return dateCompRes;
 			}
 
-			return _time.CompareTo(value.Time);
+			return _time.CompareTo(value._time);
 		}
 
 		/// <summary>

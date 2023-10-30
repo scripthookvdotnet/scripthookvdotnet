@@ -449,11 +449,11 @@ namespace GTA.Chrono
 			if (newOrdinal is > 0 and <= 365)
 			{
 				OrdFlags newOrdFlags = _ordFlags.WithOrdinalUnchecked((uint)newOrdinal);
-				date = new GameClockDate(Year, newOrdFlags);
+				date = new GameClockDate(_year, newOrdFlags);
 				return true;
 			}
 
-			DivModFloor(Year, 400, out int yearDiv400, out int yearMod400);
+			DivModFloor(_year, 400, out int yearDiv400, out int yearMod400);
 			long dayCycleUnclamped = Internals.YearOrdinalToDayCycle(yearMod400, DayOfYear) + wholeDays;
 			DivModFloor(dayCycleUnclamped, 146_097L, out long cycleDiv400Y, out long dayCycleClamped);
 			cycleDiv400Y += yearDiv400;
@@ -537,12 +537,12 @@ namespace GTA.Chrono
 
 			// Determine new year (without taking months into account for now). Return null if the new year is not in
 			// the range of int32.
-			if ((years > 0 && years > (int.MaxValue - Year)) || (years < 0 && years < (int.MinValue - Year)))
+			if ((years > 0 && years > (int.MaxValue - _year)) || (years < 0 && years < (int.MinValue - _year)))
 			{
 				return null;
 			}
 
-			int year = (int)(Year + years);
+			int year = (int)(_year + years);
 			int month = Month + left;
 
 			if (month <= 0)
@@ -836,7 +836,7 @@ namespace GTA.Chrono
 		public GameClockDate WithZeroBasedDayOfYear(int dayOfYear)
 			=> WithDayOfYear(dayOfYear + 1);
 
-		private GameClockDate WithOrdFlags(OrdFlags of) => new(Year, of);
+		private GameClockDate WithOrdFlags(OrdFlags of) => new(_year, of);
 
 		private GameClockDate WithMonthDayFlags(MonthDayFlags mdf)
 			=> WithOrdFlags(mdf.ToOrdFlags().GetValueOrDefault());
@@ -853,8 +853,8 @@ namespace GTA.Chrono
 		/// </returns>
 		public GameClockDuration SignedDurationSince(GameClockDate rhs)
 		{
-			int year1 = Year;
-			int year2 = rhs.Year;
+			int year1 = _year;
+			int year2 = rhs._year;
 			DivModFloor(year1, 400, out int year1Div400, out int year1Mod400);
 			DivModFloor(year2, 400, out int year2Div400, out int year2Mod400);
 
@@ -873,7 +873,7 @@ namespace GTA.Chrono
 		/// </exception>
 		public int YearsSince(GameClockDate other)
 		{
-			int years = Year - other.Year;
+			int years = _year - other._year;
 
 			if ((Month << 5 | Day) < (other.Month << 5 | other.Day))
 			{
@@ -895,7 +895,7 @@ namespace GTA.Chrono
 		/// <param name="day">The day component.</param>
 		public void Deconstruct(out int year, out int month, out int day)
 		{
-			year = Year;
+			year = _year;
 			month = Month;
 			day = Day;
 		}
