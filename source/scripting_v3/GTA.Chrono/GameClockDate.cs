@@ -48,6 +48,9 @@ namespace GTA.Chrono
 		internal readonly int _year;
 		internal readonly OrdFlags _ordFlags;
 
+		private static readonly OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
+		private static readonly OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
+
 		/// <summary>
 		/// Represents the largest possible value of a <see cref="GameClockDate"/>.
 		/// </summary>
@@ -62,9 +65,6 @@ namespace GTA.Chrono
 		/// The smallest possible value of <see cref="GameClockTime"/>, which is January 1, -2147483648 BCE.
 		/// </value>
 		public static readonly GameClockDate MinValue = new(int.MinValue, OrdFlagsForMinDate);
-
-		private static readonly OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
-		private static readonly OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
 
 		/// <summary>
 		/// Returns the year part of this <see cref="GameClockDate"/>. The returned value is an integer in the range of
