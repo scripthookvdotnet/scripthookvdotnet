@@ -13,19 +13,20 @@ internal static class IntExtensions
 	/// </summary>
 	public static int RemEuclid(this int lhs, int rhs)
 	{
-		int remainder = lhs % rhs;
-		if (remainder >= 0)
+		int r = lhs % rhs;
+		if (r < 0)
 		{
-			return remainder;
+			// If `rhs` is not `int.MinValue`, then `r + Math.Abs(rhs)` will not overflow and is clearly equivalent,
+			// because `r` is negative.
+			// Otherwise, `rhs` is `int.MinValue`, then we have `r - int.MinValue`, which is what we wanted (and will
+			// not overflow for negative `r`).
+			// We can't use Math.Abs(int) for int.MinValue, because it throws OverflowException for int.MinValue.
+			return (rhs < 0) ? (r - rhs) : (r + rhs);
 		}
-
-		int wrappedAbsRhs = rhs;
-		if (wrappedAbsRhs != int.MinValue)
+		else
 		{
-			wrappedAbsRhs = Math.Abs(wrappedAbsRhs);
+			return r;
 		}
-
-		return unchecked(remainder + wrappedAbsRhs);
 	}
 
 	public static int DivEuclid(this int lhs, int rhs)
@@ -45,19 +46,20 @@ internal static class IntExtensions
 	/// </summary>
 	public static long RemEuclid(this long lhs, long rhs)
 	{
-		long remainder = lhs % rhs;
-		if (remainder >= 0)
+		long r = lhs % rhs;
+		if (r < 0)
 		{
-			return remainder;
+			// If `rhs` is not `int.MinValue`, then `r + Math.Abs(rhs)` will not overflow and is clearly equivalent,
+			// because `r` is negative.
+			// Otherwise, `rhs` is `int.MinValue`, then we have `r - int.MinValue`, which is what we wanted (and will
+			// not overflow for negative `r`).
+			// We can't use Math.Abs(int) for int.MinValue, because it throws OverflowException for int.MinValue.
+			return (rhs < 0) ? (r - rhs) : (r + rhs);
 		}
-
-		long wrappedAbsRhs = rhs;
-		if (wrappedAbsRhs != long.MinValue)
+		else
 		{
-			wrappedAbsRhs = Math.Abs(wrappedAbsRhs);
+			return r;
 		}
-
-		return unchecked(remainder + wrappedAbsRhs);
 	}
 
 	public static long DivEuclid(this long lhs, long rhs)
