@@ -460,10 +460,19 @@ namespace GTA
 		}
 
 		/// <summary>
+		/// Stops shaking the <see cref="GameplayCamera"/> immediately.
+		/// </summary>
+		public static void StopShaking()
+		{
+			Function.Call(Hash.STOP_GAMEPLAY_CAM_SHAKING, true);
+		}
+		/// <summary>
 		/// Stops shaking the <see cref="GameplayCamera"/>.
 		/// </summary>
-		/// <param name="stopImmediately">Whether to stop shaking immediately; defaults to <see langword="false"/></param>
-		public static void StopShaking(bool stopImmediately = false)
+		/// <param name="stopImmediately">
+		/// <see langword="true"/> to stop shaking immediately; otherwise, <see langword="false"/>.
+		/// </param>
+		public static void StopShaking(bool stopImmediately)
 		{
 			Function.Call(Hash.STOP_GAMEPLAY_CAM_SHAKING, stopImmediately);
 		}
