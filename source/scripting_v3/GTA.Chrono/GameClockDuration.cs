@@ -27,7 +27,7 @@ namespace GTA.Chrono
 		const long SecsPerWeek = 604_800;
 
 		const long LeapYearCountOfInt32 = 1041529570;
-		const long NonLeapYearCountOfInt32 = 3253437725;
+		const long NonLeapYearCountOfInt32 = 3253437726;
 
 		/// <summary>
 		/// The maximum integral value within which the square value can exactly represent and correctly compare it
@@ -57,10 +57,11 @@ namespace GTA.Chrono
 
 		/// <summary>
 		/// The number of days elapsed in the 0x100000000 (4294967296) year since January 1st, the 0 year
-		/// (where year is in the range of <see langword="int"/>).
+		/// (where year is in the range of <see langword="int"/>) Subtracted by 1 because 1 day is taken for the min
+		/// date value.
 		/// </summary>
 		const long DayCountUInt32YearsLaterSinceInt32MinValueYear = (LeapYearCountOfInt32 * 366)
-			+ (NonLeapYearCountOfInt32 * 365);
+			+ (NonLeapYearCountOfInt32 * 365) - 1;
 		const long MaxSecDifference = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
 			+ 23 * SecsPerHour + 59 * SecsPerMinute + 59;
 		const long MinSecDifference = -((DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
