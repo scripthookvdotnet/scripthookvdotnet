@@ -77,7 +77,7 @@ namespace GTA.Chrono
 			}
 			// Array is indexed from `1` to `Internals.MaxMdl`, with a `0` index having a meaningless value.
 			sbyte v = Internals.MdlToOl[mdl];
-			var of = new OrdFlags(mdf.Value - (uint)((v & 0x3ff) << 3));
+			var of = new OrdFlags(mdf.Value - (((uint)v & 0x3ff) << 3));
 			return of.Validate();
 		}
 
@@ -104,7 +104,7 @@ namespace GTA.Chrono
 			weekday = GetIsoWeekdayFromU32Mod7(weekOrd);
 		}
 
-		internal IsoDayOfWeek IsoDayOfWeek => GetIsoWeekdayFromU32Mod7((Ordinal >> 4) + (Value & 0b111));
+		internal IsoDayOfWeek IsoDayOfWeek => GetIsoWeekdayFromU32Mod7((Value >> 4) + (Value & 0b111));
 
 		internal static IsoDayOfWeek GetIsoWeekdayFromU32Mod7(uint n)
 		{
