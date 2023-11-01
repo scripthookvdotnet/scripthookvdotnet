@@ -342,7 +342,7 @@ namespace GTA.Chrono
 			YearFlags flags = YearFlags.FromYear(year);
 			uint nWeeks = flags.IsoWeekCount;
 
-			if ((dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek < IsoDayOfWeek.Sunday) ||
+			if ((dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek > IsoDayOfWeek.Sunday) ||
 				(week < 1 || week > nWeeks))
 			{
 				date = default;
@@ -443,7 +443,9 @@ namespace GTA.Chrono
 		/// </returns>
 		public bool TryAdd(GameClockDuration duration, out GameClockDate date)
 		{
-			long wholeDays = (long)duration.TotalDays;
+			// dividing int64 secs by a float64 value may result in unintended rounding errors when converting secs
+			// into float64.
+			long wholeDays = (long)duration.WholeDays;
 			long newOrdinal = DayOfYear + wholeDays;
 
 			if (newOrdinal is > 0 and <= 365)
@@ -537,7 +539,7 @@ namespace GTA.Chrono
 
 			// Determine new year (without taking months into account for now). Return null if the new year is not in
 			// the range of int32.
-			if ((years > 0 && years > (int.MaxValue - _year)) || (years < 0 && years < (int.MinValue - _year)))
+			if ((years > 0 && _year > (int.MaxValue - years)) || (years < 0 && _year < (int.MinValue - years)))
 			{
 				return null;
 			}

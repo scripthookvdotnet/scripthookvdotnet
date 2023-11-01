@@ -70,7 +70,7 @@ namespace GTA.Chrono
 
 		internal int CalcIsoWeekDelta()
 		{
-			int delta = Value & 0xb0111;
+			int delta = (Value & 0b111);
 			if (delta < 3)
 			{
 				delta += 7;
