@@ -187,7 +187,7 @@ namespace GTA.Chrono
 		{
 			long rhsDurationSecs = duration.WholeSeconds;
 
-			wrappedDays = (int)(rhsDurationSecs / 86_400);
+			wrappedDays = rhsDurationSecs / 86_400;
 			long newSecs = _secs + rhsDurationSecs % 86_400;
 			if (newSecs < 0)
 			{
