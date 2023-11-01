@@ -56,12 +56,14 @@ namespace GTA.Chrono
 		const double InverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712127723509e-08;
 
 		/// <summary>
-		/// The number of days elapsed in the 0x100000000 (4294967296) year since January 1st, the 0 year
-		/// (where year is in the range of <see langword="int"/>) Subtracted by 1 because 1 day is taken for the min
-		/// date value.
+		/// The number of days elapsed since January 1st, the -2147483648 year until December 31st, the 2147483647 year,
+		/// which will result in 1_568_704_592_609 days. Subtracted by 1 because 1 day is taken for the min date value.
 		/// </summary>
 		const long DayCountUInt32YearsLaterSinceInt32MinValueYear = (LeapYearCountOfInt32 * 366)
 			+ (NonLeapYearCountOfInt32 * 365) - 1;
+		/// <summary>
+		/// The same value as 135_536_076_801_503_999 seconds.
+		/// </summary>
 		const long MaxSecDifference = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
 			+ 23 * SecsPerHour + 59 * SecsPerMinute + 59;
 		const long MinSecDifference = -((DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
