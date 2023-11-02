@@ -163,13 +163,6 @@ namespace GTA.Chrono
 		public double TotalMinutes => (double)_secs / SecsPerMinute;
 
 		/// <summary>
-		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole and fractional
-		/// seconds.
-		/// </summary>
-		/// <value>The total number of seconds represented by this instance.</value>
-		public double TotalSeconds => (double)WholeSeconds;
-
-		/// <summary>
 		/// Gets the value of the current <see cref="GameClockDuration"/> structure expressed in whole weeks.
 		/// </summary>
 		/// <value>The number of whole weeks represented by this instance.</value>

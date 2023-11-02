@@ -39,7 +39,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void MaxMinRelationship()
+		public void MinValue_is_negated_value_of_MaxValue()
 		{
 			Assert.Equal(GameClockDuration.MinValue, -GameClockDuration.MaxValue);
 		}
@@ -133,29 +133,19 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void TotalSeconds_CanReturnNotInTheRangeOfSafeIntegerOutOfF64()
-		{
-			GameClockDuration maxDuration = GameClockDuration.MaxValue;
-			GameClockDuration minDuration = GameClockDuration.MinValue;
-
-			Assert.False(maxDuration.TotalSeconds < MaxSafeIntegerOutOfF64);
-			Assert.False(minDuration.TotalSeconds > MinSafeIntegerOutOfF64);
-		}
-
-		[Fact]
 		public void CanUse_GameClockDate_SignedDurationSince_BetweenMinAndMax()
 		{
 			GameClockDate maxDate = GameClockDate.MaxValue;
 			GameClockDate minDate = GameClockDate.MinValue;
 
 			const long LeapYearCountOfInt32 = 1041529570;
-			const long NonLeapYearCountOfInt32 = 3253437725;
+			const long NonLeapYearCountOfInt32 = 3253437726;
 			const long DayCountUInt32YearsLaterSinceInt32MinValueYear = (LeapYearCountOfInt32 * 366)
-				+ (NonLeapYearCountOfInt32 * 365);
+				+ (NonLeapYearCountOfInt32 * 365) - 1;
 
 			GameClockDuration durationFromMaxDateToMindate = maxDate.SignedDurationSince(minDate);
-			Assert.Equal(GameClockDuration.FromDays(DayCountUInt32YearsLaterSinceInt32MinValueYear),
-				durationFromMaxDateToMindate);
+			Assert.Equal(GameClockDuration.FromDays(DayCountUInt32YearsLaterSinceInt32MinValueYear).WholeSeconds,
+				durationFromMaxDateToMindate.WholeSeconds);
 			Assert.Throws<ArgumentOutOfRangeException>(() => durationFromMaxDateToMindate +
 				GameClockDuration.FromDays(1));
 
