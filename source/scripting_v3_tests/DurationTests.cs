@@ -1,20 +1,11 @@
-using Xunit;
-using GTA.Chrono;
 using System;
+using GTA.Chrono;
+using Xunit;
 
 namespace ScriptHookVDotNet_APIv3_Tests
 {
 	public class DurationTests
 	{
-		/// The number of seconds in a minute.
-		const long SecsPerMinute = 60;
-		/// The number of seconds in an hour.
-		const long SecsPerHour = 3600;
-		/// The number of (non-leap) seconds in days.
-		const long SecsPerDay = 86_400;
-		/// The number of (non-leap) seconds in a week.
-		const long SecsPerWeek = 604_800;
-
 		/// The max safe integer value out of f64 (double) where the gap between the given value and the next up value is
 		/// 1.0 or less.
 		const double MaxSafeIntegerOutOfF64 = 9007199254740991.0;
@@ -23,25 +14,144 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		const double MinSafeIntegerOutOfF64 = -9007199254740991.0;
 
 		[Fact]
-		public void FromSeconds_ThrowsArgumentOutOfRangeExceptionIfOverflowed()
+		public void FromSeconds_with_the_arg_1_does_not_return_the_same_duration_as_zero()
+		{
+			GameClockDuration actual = GameClockDuration.FromSeconds(1);
+
+			Assert.NotEqual(GameClockDuration.Zero, actual);
+		}
+
+		[Theory]
+		[InlineData(1, 2, 3)]
+		[InlineData(-1, 1, 0)]
+		[InlineData(-1, -1, -2)]
+		public void Addition_of_two_duration_returns_the_same_duration_as_one_with_the_sum_of_two_second_values(
+			long secs1, long secs2, long expected)
+		{
+			GameClockDuration d1 = GameClockDuration.FromSeconds(secs1);
+			GameClockDuration d2 = GameClockDuration.FromSeconds(secs2);
+			GameClockDuration expectedDuration = GameClockDuration.FromSeconds(expected);
+
+			GameClockDuration actualAddMethod = d1.Add(d2);
+			GameClockDuration actualAdditionOp = d1 + d2;
+
+			Assert.Equal(expectedDuration, actualAddMethod);
+			Assert.Equal(expectedDuration, actualAdditionOp);
+		}
+
+		[Theory]
+		[InlineData(1, 2, 3)]
+		[InlineData(-1, 1, 0)]
+		[InlineData(-1, -1, -2)]
+		public void Subtraction_of_duration_from_GameClockDuration_is_the_same_as_addition_of_negated_duration(
+			long secs1, long secs2, long expected)
+		{
+			GameClockDuration d1 = GameClockDuration.FromSeconds(secs1);
+			GameClockDuration d2 = GameClockDuration.FromSeconds(secs2);
+			GameClockDuration expectedDuration = GameClockDuration.FromSeconds(expected);
+
+			GameClockDuration actualSubtractMethod = d1.Subtract(-d2);
+			GameClockDuration actualSubtractionOp = d1 - (-d2);
+
+			Assert.Equal(expectedDuration, actualSubtractMethod);
+			Assert.Equal(expectedDuration, actualSubtractionOp);
+		}
+
+		[Theory]
+		[InlineData(1)]
+		[InlineData(-1)]
+		[InlineData(31)]
+		[InlineData(-31)]
+		public void Negation_of_duration_returns_the_same_duration_but_with_opposite_sign(
+			long secs)
+		{
+			GameClockDuration actualDurationSecs = -GameClockDuration.FromSeconds(secs);
+			GameClockDuration expectedDurationSecs = GameClockDuration.FromSeconds(-secs);
+			GameClockDuration actualDurationDays = -GameClockDuration.FromDays(secs);
+			GameClockDuration expectedDurationDays = GameClockDuration.FromDays(-secs);
+
+			Assert.Equal(expectedDurationSecs, actualDurationSecs);
+			Assert.Equal(actualDurationDays, expectedDurationDays);
+		}
+
+		[Fact]
+		public void FromSeconds_with_too_large_or_small_value_fails()
 		{
 			GameClockDuration maxDuration = GameClockDuration.MaxValue;
-
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
-				GameClockDuration.FromSeconds(GameClockDuration.MaxValue.WholeSeconds + 1)
+				GameClockDuration.FromSeconds(maxDuration.WholeSeconds + 1)
 			);
 			Assert.Throws<ArgumentOutOfRangeException>(() => GameClockDuration.FromSeconds(long.MaxValue));
 
+			GameClockDuration minDuration = GameClockDuration.MinValue;
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
-				GameClockDuration.FromSeconds(GameClockDuration.MinValue.WholeSeconds - 1)
+				GameClockDuration.FromSeconds(minDuration.WholeSeconds - 1)
 			);
 			Assert.Throws<ArgumentOutOfRangeException>(() => GameClockDuration.FromSeconds(long.MinValue));
 		}
 
 		[Fact]
-		public void MinValue_is_negated_value_of_MaxValue()
+		public void Whole_seconds_of_max_value_is_135536076801503999_seconds()
 		{
-			Assert.Equal(GameClockDuration.MinValue, -GameClockDuration.MaxValue);
+			long wholeSecsOfMaxDuration = GameClockDuration.MaxValue.WholeSeconds;
+
+			Assert.Equal(135536076801503999, wholeSecsOfMaxDuration);
+		}
+
+		[Fact]
+		public void Whole_seconds_of_min_value_is_minus_135536076801503999_seconds()
+		{
+			long wholeSecsOfMinDuration = GameClockDuration.MinValue.WholeSeconds;
+
+			Assert.Equal(-135536076801503999, wholeSecsOfMinDuration);
+		}
+
+		[Fact]
+		public void FromDays_returns_the_same_value_FromSeconds_with_the_same_arg_but_multiplied_by_86400()
+		{
+			GameClockDuration actual1Day = GameClockDuration.FromDays(1);
+			GameClockDuration expected86400Secs = GameClockDuration.FromSeconds(86400);
+
+			Assert.Equal(expected86400Secs, actual1Day);
+
+			GameClockDuration actual10DaysMinus1000Secs
+				= GameClockDuration.FromDays(10) - GameClockDuration.FromSeconds(1000);
+			GameClockDuration expected863000Secs = GameClockDuration.FromSeconds(863_000);
+
+			Assert.Equal(expected863000Secs, actual10DaysMinus1000Secs);
+
+			GameClockDuration actual10DaysMinus1000000Secs
+				= GameClockDuration.FromDays(10) - GameClockDuration.FromSeconds(1_000_000);
+			GameClockDuration expectedMinus136000Secs = GameClockDuration.FromSeconds(-136_000);
+
+			Assert.Equal(expectedMinus136000Secs, actual10DaysMinus1000000Secs);
+
+			GameClockDuration actual3DaysPlus70Secs_ButWholeSecsNegated
+				= -(GameClockDuration.FromDays(3) + GameClockDuration.FromSeconds(70));
+			GameClockDuration expectedMinus4Days_Plus86400SecsMinus70Secs
+				= GameClockDuration.FromDays(-4) + GameClockDuration.FromSeconds(86_400 - 70);
+
+			Assert.Equal(expectedMinus4Days_Plus86400SecsMinus70Secs, actual3DaysPlus70Secs_ButWholeSecsNegated);
+		}
+
+		public static TheoryData<long, long> WholeDays_Valid_Secs_TestData =>
+			new TheoryData<long, long>
+			{
+				{ 86_399, 0 },
+				{ 86_400, 1 },
+				{ 86_401, 1 },
+				{ -86_399, 0 },
+				{ -86_400, -1 },
+				{ -86_401, -1 },
+			};
+
+		[Theory]
+		[MemberData(nameof(WholeDays_Valid_Secs_TestData))]
+		public void WholeDays_returns_only_whole_days_and_discards_fractional_days(long secs, long expectedDays)
+		{
+			GameClockDuration actualDuration = GameClockDuration.FromSeconds(secs);
+
+			Assert.Equal(expectedDays, actualDuration.WholeDays);
 		}
 
 		[Fact]
@@ -72,38 +182,21 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void NonGenericIComparable_RerurnsPositiveForNullArg()
+		public void NonGenericIComparable_returns_positive_for_null_arg()
 		{
 			GameClockDuration val = GameClockDuration.FromSeconds(5);
 			Assert.True(val.CompareTo(null) > 0);
 		}
 
 		[Fact]
-		public void NonGenericIComparable_ThrowsArgumentExceptionForForWrongTypeArg()
+		public void NonGenericIComparable_with_obj_other_than_duration_fails()
 		{
 			GameClockDuration val = GameClockDuration.FromSeconds(5);
 			Assert.Throws<ArgumentException>(() => val.CompareTo(1) > 0);
 		}
 
 		[Fact]
-		public void AdditionOperator_AddAnotherValue_ReturnsTheResultIfNotOverflowed()
-		{
-			GameClockDuration duration = GameClockDuration.FromSeconds(1);
-			duration += GameClockDuration.FromSeconds(5);
-
-			Assert.StrictEqual(GameClockDuration.FromSeconds(6), duration);
-		}
-
-		[Fact]
-		public void NegationOperator_NegatesAndTheSameValueButTheSignIsNegated()
-		{
-			GameClockDuration d = GameClockDuration.FromSeconds(1);
-
-			Assert.Equal(-d, GameClockDuration.FromSeconds(-1));
-		}
-
-		[Fact]
-		public void Seconds_ExtractsSecondComponentNotNumOfWholeSeconds()
+		public void Seconds_extracts_second_component_not_num_of_whole_seconds()
 		{
 			GameClockDuration duration = GameClockDuration.FromMinutes(3) + GameClockDuration.FromSeconds(57);
 			Assert.Equal(57, duration.Seconds);
@@ -113,7 +206,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void Minutes_ExtractsMinuteComponentNotNumOfWholeMinutes()
+		public void Minutes_extracts_minute_component_not_num_of_whole_minutes()
 		{
 			GameClockDuration duration = GameClockDuration.FromHours(4) + GameClockDuration.FromMinutes(58);
 			Assert.Equal(58, duration.Minutes);
@@ -123,7 +216,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void Hours_ExtractsHourComponentNotNumOfWholeHours()
+		public void Hours_extracts_hour_component_not_num_of_whole_hours()
 		{
 			GameClockDuration duration = GameClockDuration.FromDays(5) + GameClockDuration.FromHours(23);
 			Assert.Equal(23, duration.Hours);
@@ -133,31 +226,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void CanUse_GameClockDate_SignedDurationSince_BetweenMinAndMax()
-		{
-			GameClockDate maxDate = GameClockDate.MaxValue;
-			GameClockDate minDate = GameClockDate.MinValue;
-
-			const long LeapYearCountOfInt32 = 1041529570;
-			const long NonLeapYearCountOfInt32 = 3253437726;
-			const long DayCountUInt32YearsLaterSinceInt32MinValueYear = (LeapYearCountOfInt32 * 366)
-				+ (NonLeapYearCountOfInt32 * 365) - 1;
-
-			GameClockDuration durationFromMaxDateToMindate = maxDate.SignedDurationSince(minDate);
-			Assert.Equal(GameClockDuration.FromDays(DayCountUInt32YearsLaterSinceInt32MinValueYear).WholeSeconds,
-				durationFromMaxDateToMindate.WholeSeconds);
-			Assert.Throws<ArgumentOutOfRangeException>(() => durationFromMaxDateToMindate +
-				GameClockDuration.FromDays(1));
-
-			GameClockDuration durationFromMinDateToMaxdate = minDate.SignedDurationSince(maxDate);
-			Assert.Equal(GameClockDuration.FromDays(-DayCountUInt32YearsLaterSinceInt32MinValueYear),
-				durationFromMinDateToMaxdate);
-			Assert.Throws<ArgumentOutOfRangeException>(() => durationFromMinDateToMaxdate +
-				GameClockDuration.FromDays(-1));
-		}
-
-		[Fact]
-		public void TotalMinutes_ReturnsInTheRangeOfSafeIntegerOutOfF64()
+		public void TotalMinutes_returns_a_certain_value_in_the_range_of_safe_integer_out_of_f64()
 		{
 			GameClockDuration maxDuration = GameClockDuration.MaxValue;
 			GameClockDuration minDuration = GameClockDuration.MinValue;
@@ -167,7 +236,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void TotalHours_ReturnsInTheRangeOfSafeIntegerOutOfF64()
+		public void TotalHours_returns_a_certain_value_in_the_range_of_safe_integer_out_of_f64()
 		{
 			GameClockDuration maxDuration = GameClockDuration.MaxValue;
 			GameClockDuration minDuration = GameClockDuration.MinValue;
@@ -177,7 +246,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void TotalDays_ReturnsInTheRangeOfSafeIntegerOutOfF64()
+		public void TotalDays__returns_a_certain_value_in_the_range_of_safe_integer_out_of_f64()
 		{
 			GameClockDuration maxDuration = GameClockDuration.MaxValue;
 			GameClockDuration minDuration = GameClockDuration.MinValue;
@@ -187,7 +256,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void TotalWeeks_ReturnsInTheRangeOfSafeIntegerOutOfF64()
+		public void TotalWeeks__returns_a_certain_value_in_the_range_of_safe_integer_out_of_f64()
 		{
 			GameClockDuration maxDuration = GameClockDuration.MaxValue;
 			GameClockDuration minDuration = GameClockDuration.MinValue;
@@ -197,49 +266,10 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void FromMethods_NegativeArg_ReturnsTheSameValuesAsPassedValuesButWithTimeFactorMultiplied()
-		{
-			GameClockDuration durationMinus1Sec = GameClockDuration.FromSeconds(-1);
-			GameClockDuration durationMinus2Mins = GameClockDuration.FromMinutes(-2);
-			GameClockDuration durationMinus3Hours = GameClockDuration.FromHours(-3);
-			GameClockDuration durationMinus4Days = GameClockDuration.FromDays(-4);
-			GameClockDuration durationMinus5Weeks = GameClockDuration.FromWeeks(-5);
-
-			Assert.Equal(-1, durationMinus1Sec.WholeSeconds);
-			Assert.Equal(-2 * SecsPerMinute, durationMinus2Mins.WholeSeconds);
-			Assert.Equal(-3 * SecsPerHour, durationMinus3Hours.WholeSeconds);
-			Assert.Equal(-4 * SecsPerDay, durationMinus4Days.WholeSeconds);
-			Assert.Equal(-5 * SecsPerWeek, durationMinus5Weeks.WholeSeconds);
-		}
-
-		[Fact]
-		public void AdditionOperator_AddAnotherValue_ThrowsOverflowExceptionIfOverflowed()
-		{
-			GameClockDuration maxDuration = GameClockDuration.MaxValue;
-			GameClockDuration minDuration = GameClockDuration.MinValue;
-
-			GameClockDuration tempResultDuration = GameClockDuration.FromSeconds(0);
-
-			ArgumentOutOfRangeException exMax = Assert.Throws<ArgumentOutOfRangeException>(() => tempResultDuration = maxDuration + GameClockDuration.FromSeconds(1));
-			Assert.Equal("GameClockDuration overflowed because the duration is too long.", exMax.Message);
-			Assert.StrictEqual(GameClockDuration.FromSeconds(0), tempResultDuration);
-
-			ArgumentOutOfRangeException exMin = Assert.Throws<ArgumentOutOfRangeException>(() => tempResultDuration = minDuration + GameClockDuration.FromSeconds(-1));
-			Assert.Equal("GameClockDuration overflowed because the duration is too long.", exMax.Message);
-			Assert.StrictEqual(GameClockDuration.FromSeconds(0), tempResultDuration);
-		}
-
-		[Fact]
-		public void CompareTo_NextGreaterDuration_ReturnsPositiveValue()
-		{
-
-		}
-
-		[Fact]
-		public void DividesMaxSafeSqrtIntegerByNextGreaterValueOfInverseOfMaxSafeSqrtIntegerUsingDouble()
+		public void Division_with_double_divisor_uses_a_double_as_intermediate_value_if_abs_of_dividend_is_94906265_or_smaller_and_abs_of_divisor_is_inv_of_dividend_or_larger()
 		{
 			var durationLowerWeighted = GameClockDuration.FromSeconds(94906265);
-			double NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712127723509e-8.NextUp();
+			const double NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712197029352e-08;
 
 			GameClockDuration actualCalcRes = (durationLowerWeighted /
 				NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble);
@@ -248,20 +278,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 
 			Assert.NotStrictEqual((long)(durationLowerWeighted.WholeSeconds / (decimal)NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
 		}
-		[Fact]
-		public void DividesMaxSafeSqrtIntegerByInverseOfMaxSafeSqrtIntegerUsingDecimal()
-		{
-			var durationLowerWeighted = GameClockDuration.FromSeconds(94906265);
-			const double InverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712127723509e-08;
-
-			GameClockDuration actualCalcRes = (durationLowerWeighted / InverseOfMaxSafeSqrtIntegerOutOfDouble);
-
-			Assert.NotStrictEqual((long)(durationLowerWeighted.WholeSeconds / InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
-			Assert.StrictEqual((long)(durationLowerWeighted.WholeSeconds / (decimal)InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
-		}
 
 		[Fact]
-		public void DividesLowestSafeHigherWeightedValueByLowestSafeInverseOfHigherWeightedValueUsingDouble()
+		public void Division_with_double_divisor_uses_a_double_as_intermediate_value_if_abs_of_dividend_is_smaller_than_0x4000_and_abs_of_divisor_is_larger_than_inv_of_0x8000000000()
 		{
 			var durationLowerWeighted = GameClockDuration.FromSeconds(0x3FFF);
 
@@ -271,13 +290,25 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		}
 
 		[Fact]
-		public void DividesHighestSafeHigherWeightedValueByLowestSafeInverseOfLowerWeightedValueUsingDouble()
+		public void Division_with_double_divisor_uses_a_double_as_intermediate_value_if_abs_of_dividend_is_smaller_than_0x8000000000_and_abs_of_divisor_is_larger_than_inv_of_0x4000()
 		{
 			var durationHigherWeighted = GameClockDuration.FromSeconds(0x7FFFFFFFFF);
 
 			double MinOptimizedValueLowerWeighted = 6.103515625e-05.NextUp();
 
 			Assert.StrictEqual((long)(durationHigherWeighted.WholeSeconds / MinOptimizedValueLowerWeighted), (durationHigherWeighted / MinOptimizedValueLowerWeighted).WholeSeconds);
+		}
+
+		[Fact]
+		public void Division_with_double_divisor_uses_decimal_as_intermediate_value_if_the_division_does_not_fall_in_known_cases_where_the_result_is_100_percent_within_safe_integers_out_of_f64()
+		{
+			var durationLowerWeighted = GameClockDuration.FromSeconds(94906265);
+			double InverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712197029352e-08.NextDown();
+
+			GameClockDuration actualCalcRes = (durationLowerWeighted / InverseOfMaxSafeSqrtIntegerOutOfDouble);
+
+			Assert.NotStrictEqual((long)(durationLowerWeighted.WholeSeconds / InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
+			Assert.StrictEqual((long)(durationLowerWeighted.WholeSeconds / (decimal)InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
 		}
 	}
 }
