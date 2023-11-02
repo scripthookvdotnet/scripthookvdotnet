@@ -38,7 +38,7 @@ namespace GTA.Chrono
 		/// <c>9_007_199_136_250_225</c> which is less than the safe maximum integer in <see langword="double"/>
 		/// <c>9_007_199_254_740_991</c> (the same value as <c>Number.MAX_SAFE_INTEGER</c> in JavaScript).
 		/// </remarks>
-		const int MaxSafeSqrtIntegerOutOfDouble = 94906266;
+		const int MaxSafeSqrtIntegerOutOfDouble = 94906265;
 		/// <summary>
 		/// The maximum integral value within which the square value can exactly represent and correctly compare it
 		/// with other values as a <see langword="double"/>. Roughly equivalent to -156.92 weeks.
@@ -53,7 +53,7 @@ namespace GTA.Chrono
 		/// <summary>
 		/// The inverse of <see cref="MinSafeSqrtIntegerOutOfDouble"/> rounded to the nearest double value.
 		/// </summary>
-		const double InverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712127723509e-08;
+		const double InverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712197029352e-08;
 
 		/// <summary>
 		/// The number of days elapsed since January 1st, the -2147483648 year until December 31st, the 2147483647 year,
@@ -558,7 +558,7 @@ namespace GTA.Chrono
 			// we can just calculate the result as $a double and convert to long without any rounding errors
 			long durationSecs = duration._secs;
 			if (durationSecs >= -MaxSafeSqrtIntegerOutOfDouble && durationSecs <= MaxSafeSqrtIntegerOutOfDouble &&
-				(divisor < -InverseOfMaxSafeSqrtIntegerOutOfDouble || divisor > InverseOfMaxSafeSqrtIntegerOutOfDouble))
+				(divisor <= -InverseOfMaxSafeSqrtIntegerOutOfDouble || divisor >= InverseOfMaxSafeSqrtIntegerOutOfDouble))
 			{
 				// No need to check if the result is not a infinity or NaN, and the abs of divisor is large enough to
 				// avoid infinities
