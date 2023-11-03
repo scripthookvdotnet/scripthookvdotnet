@@ -555,7 +555,7 @@ namespace GTA.Chrono
 
 			// Usual use cases, where both differences are within about 156.92 weeks
 			// If both value is within the range where the squared values can exactly represent as double values,
-			// we can just calculate the result as $a double and convert to long without any rounding errors
+			// we can just calculate the result as a double and convert to long without any rounding errors
 			long durationSecs = duration._secs;
 			if (durationSecs >= -MaxSafeSqrtIntegerOutOfDouble && durationSecs <= MaxSafeSqrtIntegerOutOfDouble &&
 				(divisor <= -InverseOfMaxSafeSqrtIntegerOutOfDouble || divisor >= InverseOfMaxSafeSqrtIntegerOutOfDouble))
@@ -584,11 +584,26 @@ namespace GTA.Chrono
 				}
 
 				// Fall back to decimal arithmetic, so the calculation 100% will not have any rounding errors.
-				// Throw ArgumentOutOfRangeException if OverflowException is thrown for decimal arithmetics or too
-				// large divisor to match what FromDecimalSecondsInternal throws for too large or small results.
+
 				try
 				{
-					return FromDecimalSecondsInternal(durationSecs / (decimal)divisor);
+					// Throw ArgumentOutOfRangeException in the catch block if OverflowException is thrown for decimal
+					// arithmetics or too large divisor to match what FromDecimalSecondsInternal throws for too large
+					// or small results.
+					decimal divisorDecimal = (decimal)divisor;
+
+					// Throw ArgumentOutOfRangeException if the divisor is zero as decimal to avoid an unintended
+					// DivideByZeroException. we would not expect such exception when trying to divide an integer by
+					// a floating-point value.
+					// Since decimal's smallest positive value is `1e-28m` and `Decimal.Ceiling(1 / 1e-28m)` is larger
+					// than the number of whole seconds of GameClockDuration.MaxValue, we can assume that division by
+					// an arbitrary double smaller than 1e-28m will result in a value larger than the max seconds.
+					if (divisorDecimal == 0)
+					{
+						ThrowOutOfRange_TooLongDuration();
+					}
+
+					return FromDecimalSecondsInternal(durationSecs / divisorDecimal);
 				}
 				catch (OverflowException)
 				{
