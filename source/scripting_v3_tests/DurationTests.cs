@@ -265,50 +265,271 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			Assert.True(minDuration.TotalWeeks > MinSafeIntegerOutOfF64);
 		}
 
-		[Fact]
-		public void Division_with_double_divisor_uses_a_double_as_intermediate_value_if_abs_of_dividend_is_94906265_or_smaller_and_abs_of_divisor_is_inv_of_dividend_or_larger()
+		public static TheoryData<GameClockDuration, long, GameClockDuration> Multiplication_with_long_factor_Valid_Data =>
+			new TheoryData<GameClockDuration, long, GameClockDuration>
+			{
+				{ GameClockDuration.Zero, long.MaxValue, GameClockDuration.Zero },
+				{ GameClockDuration.Zero, long.MinValue, GameClockDuration.Zero },
+				{ GameClockDuration.FromSeconds(1), 0, GameClockDuration.Zero },
+				{ GameClockDuration.FromSeconds(1), 1, GameClockDuration.FromSeconds(1) },
+				{ GameClockDuration.FromSeconds(1), 3600, GameClockDuration.FromHours(1) },
+				{ GameClockDuration.FromSeconds(1), -3600, -GameClockDuration.FromHours(1) },
+				{ -GameClockDuration.FromSeconds(1), 3600, -GameClockDuration.FromHours(1) },
+				{ GameClockDuration.FromSeconds(1) + GameClockDuration.FromDays(1), 5,
+					GameClockDuration.FromSeconds(5) + GameClockDuration.FromDays(5) },
+				{ GameClockDuration.FromSeconds(45), -4, -GameClockDuration.FromMinutes(3) },
+				{ GameClockDuration.FromSeconds(-45), 4, -GameClockDuration.FromMinutes(3) },
+			};
+
+		[Theory]
+		[MemberData(nameof(Multiplication_with_long_factor_Valid_Data))]
+		public void Multiplication_with_long_factor_performs_against_the_internal_long_sec_value(
+			GameClockDuration duration, long factor, GameClockDuration expected)
 		{
-			var durationLowerWeighted = GameClockDuration.FromSeconds(94906265);
-			const double NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712197029352e-08;
+			GameClockDuration actualDurationMultiplyMethod = duration.Multiply(factor);
+			GameClockDuration actualDurationMultiplicationOp = duration * factor;
 
-			GameClockDuration actualCalcRes = (durationLowerWeighted /
-				NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble);
-
-			Assert.StrictEqual((long)(durationLowerWeighted.WholeSeconds /NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
-
-			Assert.NotStrictEqual((long)(durationLowerWeighted.WholeSeconds / (decimal)NextGreaterValOfInverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
+			Assert.Equal(expected, actualDurationMultiplyMethod);
+			Assert.Equal(expected, actualDurationMultiplicationOp);
 		}
 
 		[Fact]
-		public void Division_with_double_divisor_uses_a_double_as_intermediate_value_if_abs_of_dividend_is_smaller_than_0x4000_and_abs_of_divisor_is_larger_than_inv_of_0x8000000000()
+		public void Multiplication_with_Infinity_factor_fails()
 		{
-			var durationLowerWeighted = GameClockDuration.FromSeconds(0x3FFF);
+			Assert.Throws<ArgumentOutOfRangeException>(()
+				=> GameClockDuration.FromSeconds(1) * double.PositiveInfinity);
+			Assert.Throws<ArgumentOutOfRangeException>(()
+				=> GameClockDuration.FromSeconds(-1) * double.PositiveInfinity);
+			Assert.Throws<ArgumentOutOfRangeException>(()
+				=> GameClockDuration.FromSeconds(1) * double.NegativeInfinity);
+			Assert.Throws<ArgumentOutOfRangeException>(()
+				=> GameClockDuration.FromSeconds(-1) * double.NegativeInfinity);
 
-			double MinOptimizedValueHigherWeighted = 1.8189894035458565e-12.NextUp();
-
-			Assert.StrictEqual((long)(durationLowerWeighted.WholeSeconds / MinOptimizedValueHigherWeighted), (durationLowerWeighted / MinOptimizedValueHigherWeighted).WholeSeconds);
+			Assert.Throws<ArgumentOutOfRangeException>(()
+				=> GameClockDuration.FromSeconds(1).Multiply(double.PositiveInfinity));
+			Assert.Throws<ArgumentOutOfRangeException>(()
+				=> GameClockDuration.FromSeconds(-1).Multiply(double.PositiveInfinity));
+			Assert.Throws<ArgumentOutOfRangeException>(()
+				=> GameClockDuration.FromSeconds(1).Multiply(double.NegativeInfinity));
+			Assert.Throws<ArgumentOutOfRangeException>(()
+				=> GameClockDuration.FromSeconds(-1).Multiply(double.NegativeInfinity));
 		}
 
 		[Fact]
-		public void Division_with_double_divisor_uses_a_double_as_intermediate_value_if_abs_of_dividend_is_smaller_than_0x8000000000_and_abs_of_divisor_is_larger_than_inv_of_0x4000()
+		public void Multiplication_with_NaN_factor_fails()
 		{
-			var durationHigherWeighted = GameClockDuration.FromSeconds(0x7FFFFFFFFF);
+			Assert.Throws<ArgumentException>(() => GameClockDuration.Zero * double.NaN);
+			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(1) * double.NaN);
+			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(-1) * double.NaN);
 
-			double MinOptimizedValueLowerWeighted = 6.103515625e-05.NextUp();
-
-			Assert.StrictEqual((long)(durationHigherWeighted.WholeSeconds / MinOptimizedValueLowerWeighted), (durationHigherWeighted / MinOptimizedValueLowerWeighted).WholeSeconds);
+			Assert.Throws<ArgumentException>(() => GameClockDuration.Zero.Multiply(double.NaN));
+			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(1).Multiply(double.NaN));
+			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(-1).Multiply(double.NaN));
 		}
 
 		[Fact]
-		public void Division_with_double_divisor_uses_decimal_as_intermediate_value_if_the_division_does_not_fall_in_known_cases_where_the_result_is_100_percent_within_safe_integers_out_of_f64()
+		public void Multiplication_of_double_factor_returns_zero_duration_if_latter_factor_is_zero_or_duration_is_zero()
 		{
-			var durationLowerWeighted = GameClockDuration.FromSeconds(94906265);
-			double InverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712197029352e-08.NextDown();
+			GameClockDuration actualDurationOf1SecsMultipliedByZero
+				= GameClockDuration.FromSeconds(1) * 0.0;
+			GameClockDuration actualDurationOfZeroMultipliedByMinDouble
+				= GameClockDuration.Zero * double.MinValue;
+			GameClockDuration actualDurationOfZeroMultipliedByMaxDouble
+				= GameClockDuration.Zero * double.MaxValue;
 
-			GameClockDuration actualCalcRes = (durationLowerWeighted / InverseOfMaxSafeSqrtIntegerOutOfDouble);
+			Assert.Equal(0, actualDurationOf1SecsMultipliedByZero.WholeSeconds);
+			Assert.Equal(0, actualDurationOfZeroMultipliedByMinDouble.WholeSeconds);
+			Assert.Equal(0, actualDurationOfZeroMultipliedByMaxDouble.WholeSeconds);
+		}
 
-			Assert.NotStrictEqual((long)(durationLowerWeighted.WholeSeconds / InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
-			Assert.StrictEqual((long)(durationLowerWeighted.WholeSeconds / (decimal)InverseOfMaxSafeSqrtIntegerOutOfDouble), actualCalcRes.WholeSeconds);
+		public static TheoryData<GameClockDuration, double, GameClockDuration> Multiplication_double_factor_Simple_Case_Data =>
+			new TheoryData<GameClockDuration, double, GameClockDuration>
+			{
+				{ GameClockDuration.FromSeconds(1), 0.0, GameClockDuration.Zero },
+				{ GameClockDuration.FromSeconds(1), 1.0, GameClockDuration.FromSeconds(1) },
+				{ GameClockDuration.FromSeconds(1), 3600.0, GameClockDuration.FromHours(1) },
+				{ GameClockDuration.FromSeconds(1), -3600.0, -GameClockDuration.FromHours(1) },
+				{ -GameClockDuration.FromSeconds(1), 3600.0, -GameClockDuration.FromHours(1) },
+				{ GameClockDuration.FromSeconds(2), 2.75, GameClockDuration.FromSeconds(6) },
+				{ GameClockDuration.FromSeconds(45), -4.5, -GameClockDuration.FromSeconds(202) },
+				{ GameClockDuration.FromSeconds(-45), 4.5, -GameClockDuration.FromSeconds(202) },
+			};
+
+		[Theory]
+		[MemberData(nameof(Multiplication_double_factor_Simple_Case_Data))]
+		public void Multiplication_by_double_factor_simple_cases_where_the_intermediate_value_is_a_double(GameClockDuration duration, double factor, GameClockDuration expected)
+		{
+			GameClockDuration actual = (duration * factor);
+
+			Assert.Equal(expected, actual);
+		}
+
+		public static TheoryData<GameClockDuration, double, GameClockDuration> Multiplication_double_factor_Complex_Case_Data =>
+			new TheoryData<GameClockDuration, double, GameClockDuration>
+			{
+				{ GameClockDuration.FromSeconds(2020050260302305), 1.375,
+					GameClockDuration.FromSeconds(2777569107915670) },
+				{ GameClockDuration.FromSeconds(2020050260302302), 1.25,
+					GameClockDuration.FromSeconds(2525062825377878) },
+				{ GameClockDuration.FromSeconds(8000050260300301), 1.125,
+					GameClockDuration.FromSeconds(9000056542837839) },
+
+			};
+
+		[Theory]
+		[MemberData(nameof(Multiplication_double_factor_Complex_Case_Data))]
+		public void Multiplication_by_double_factor_uses_a_double_as_intermediate_value_and_rounds_with_nearest_even_midpoint_rounding_mode_if__the_abs_of_product_as_a_double_is_94906265_or_smaller(GameClockDuration duration, double factor, GameClockDuration expected)
+		{
+			GameClockDuration actual = (duration * factor);
+
+			// Note: this test will fail if the results as both double and decimal fall in the same value
+			Assert.Equal(expected, actual);
+			Assert.NotEqual(duration.WholeSeconds * (decimal)factor, (decimal)actual.WholeSeconds);
+		}
+
+		public static TheoryData<GameClockDuration, double, GameClockDuration> Multiplication_double_factor_Decimal_Case_Data =>
+			new TheoryData<GameClockDuration, double, GameClockDuration>
+			{
+				// `94906266.0 * 94906266.0` produces the same result `9007199326062756.0` as `94906266.0M * 94906266.0M`,
+				// where the gap between the next value is only 2.0. Hence, we test against `94906267.0` as this is the
+				// min value where the results will be different between double and decimal.
+				{ GameClockDuration.FromSeconds(94906265), 94906267.0, GameClockDuration.FromSeconds(9007199326062755) },
+				{ GameClockDuration.FromSeconds(94906267), 94906267.0, GameClockDuration.FromSeconds(9007199515875289) },
+				{ GameClockDuration.FromSeconds(379625061), 34906267.0, GameClockDuration.FromSeconds(13251293739157287) },
+				{ GameClockDuration.FromSeconds(549755813889), 16385, GameClockDuration.FromSeconds(9007749010571265) },
+				{ GameClockDuration.FromSeconds(16385), -549755813889, -GameClockDuration.FromSeconds(9007749010571265) },
+			};
+
+		[Theory]
+		[MemberData(nameof(Multiplication_double_factor_Decimal_Case_Data))]
+		public void Multiplication_by_double_factor_uses_decimal_as_intermediate_value_if_the_abs_of_product_as_a_double_is_9007199254740992_or_larger(
+			GameClockDuration duration, double factor, GameClockDuration expected)
+		{
+			GameClockDuration actual = duration * factor;
+
+			// Note: this test will fail if the results as both double and decimal fall in the same value
+			Assert.Equal(expected, actual);
+			Assert.NotEqual(expected.WholeSeconds, (long)(duration.WholeSeconds * factor));
+		}
+
+		public static TheoryData<GameClockDuration, long, GameClockDuration> Division_with_long_divisor_Valid_Data =>
+			new TheoryData<GameClockDuration, long, GameClockDuration>
+					{
+				{ GameClockDuration.Zero, long.MaxValue, GameClockDuration.Zero },
+				{ GameClockDuration.Zero, long.MinValue, GameClockDuration.Zero },
+				{ GameClockDuration.FromSeconds(123_456_789), 1, GameClockDuration.FromSeconds(123_456_789) },
+				{ GameClockDuration.FromSeconds(123_456_789), -1, -GameClockDuration.FromSeconds(123_456_789) },
+				{ -GameClockDuration.FromSeconds(123_456_789), -1, GameClockDuration.FromSeconds(123_456_789) },
+				{ -GameClockDuration.FromSeconds(123_456_789), 1, -GameClockDuration.FromSeconds(123_456_789) },
+				{ GameClockDuration.FromSeconds(1), 2, GameClockDuration.Zero },
+				{ GameClockDuration.FromSeconds(1), 2, GameClockDuration.Zero },
+				{ GameClockDuration.FromSeconds(50), 51, GameClockDuration.Zero },
+				{ GameClockDuration.FromSeconds(50), 49, GameClockDuration.FromSeconds(1) },
+				{ GameClockDuration.FromSeconds(2), 2, GameClockDuration.FromSeconds(1) },
+				{ GameClockDuration.FromSeconds(3), 2, GameClockDuration.FromSeconds(1) },
+				{ GameClockDuration.FromSeconds(60), 7, GameClockDuration.FromSeconds(8) },
+			};
+
+		[Theory]
+		[MemberData(nameof(Division_with_long_divisor_Valid_Data))]
+		public void Division_with_long_divisor_performs_against_the_internal_long_sec_value(
+			GameClockDuration duration, long divisor, GameClockDuration expected)
+		{
+			GameClockDuration actualDurationDivideMethod = duration.Divide(divisor);
+			GameClockDuration actualDurationDivisionOp = duration / divisor;
+
+			Assert.Equal(expected, actualDurationDivideMethod);
+			Assert.Equal(expected, actualDurationDivisionOp);
+		}
+
+		[Fact]
+		public void Division_with_zero_divisor_fails()
+		{
+			Assert.Throws<DivideByZeroException>(() => GameClockDuration.Zero / 0);
+			Assert.Throws<DivideByZeroException>(() => GameClockDuration.FromSeconds(1) / 0);
+			Assert.Throws<DivideByZeroException>(() => GameClockDuration.FromSeconds(-1) / 0);
+
+			Assert.Throws<ArgumentOutOfRangeException>(() => GameClockDuration.Zero / 0.0);
+			Assert.Throws<ArgumentOutOfRangeException>(() => GameClockDuration.FromSeconds(1) / 0.0);
+			Assert.Throws<ArgumentOutOfRangeException>(() => GameClockDuration.FromSeconds(-1) / 0.0);
+		}
+
+		[Fact]
+		public void Division_with_NaN_divisor_fails()
+		{
+			Assert.Throws<ArgumentException>(() => GameClockDuration.Zero / double.NaN);
+			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(1) / double.NaN);
+			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(-1) / double.NaN);
+		}
+
+		public static TheoryData<GameClockDuration, double, GameClockDuration> Division_double_divisor_Simple_Case_Data =>
+			new TheoryData<GameClockDuration, double, GameClockDuration>
+			{
+				{ GameClockDuration.Zero, GameClockDuration.MaxValue.WholeSeconds, GameClockDuration.Zero },
+				{ GameClockDuration.Zero, GameClockDuration.MinValue.WholeSeconds, GameClockDuration.Zero },
+				{ GameClockDuration.FromSeconds(2), 2.0, GameClockDuration.FromSeconds(1) },
+				{ GameClockDuration.FromSeconds(3), 2.0, GameClockDuration.FromSeconds(2) },
+				{ GameClockDuration.FromSeconds(-5), 2.0, GameClockDuration.FromSeconds(-2) },
+				{ GameClockDuration.FromSeconds(5), -2.0, GameClockDuration.FromSeconds(-2) },
+				{ GameClockDuration.FromSeconds(-5), -2.0, GameClockDuration.FromSeconds(2) },
+				{ GameClockDuration.FromSeconds(80), 7.5, GameClockDuration.FromSeconds(11) },
+				{ GameClockDuration.FromSeconds(-45), 4.5, GameClockDuration.FromSeconds(-10) },
+				{ GameClockDuration.FromSeconds(180), 9.8, GameClockDuration.FromSeconds(18) },
+			};
+
+		[Theory]
+		[MemberData(nameof(Division_double_divisor_Simple_Case_Data))]
+		public void Division_by_double_divisor_simple_cases_where_the_intermediate_value_is_a_double(GameClockDuration duration, double factor, GameClockDuration expected)
+		{
+			GameClockDuration actual = (duration / factor);
+
+			Assert.Equal(expected.WholeSeconds, actual.WholeSeconds);
+		}
+
+		public static TheoryData<GameClockDuration, double, GameClockDuration> Division_double_divisor_Complex_Case_Data =>
+			new TheoryData<GameClockDuration, double, GameClockDuration>
+			{
+				{ GameClockDuration.FromSeconds(1020050260302302), 0.875,
+					GameClockDuration.FromSeconds(1165771726059774) },
+				{ GameClockDuration.FromSeconds(1270150260342703), 0.75,
+					GameClockDuration.FromSeconds(1693533680456937) },
+				{ GameClockDuration.FromSeconds(60153266842715), 0.72132e-2,
+					GameClockDuration.FromSeconds(8339331620184522) },
+			};
+
+		[Theory]
+		[MemberData(nameof(Division_double_divisor_Complex_Case_Data))]
+		public void Division_by_double_divisor_uses_a_double_as_intermediate_value_and_rounds_with_nearest_even_midpoint_rounding_mode_if_abs_of_quotient_as_a_double_is_94906265_or_smaller(GameClockDuration duration, double factor, GameClockDuration expected)
+		{
+			GameClockDuration actual = (duration / factor);
+
+			Assert.Equal(expected, actual);
+			Assert.NotEqual(duration.WholeSeconds / (decimal)factor, actual.WholeSeconds);
+		}
+
+		public static TheoryData<GameClockDuration, double, GameClockDuration> Division_double_divisor_Decimal_Case_Data =>
+			new TheoryData<GameClockDuration, double, GameClockDuration>
+			{
+				// `94906266.0 * 94906266.0` produces the same result `9007199326062756.0` as `94906266.0M * 94906266.0M`,
+				// where the gap between the next value is only 2.0. Hence, we test against `94906267.0` as this is the
+				// min value where the results will be different between double and decimal.
+				{ GameClockDuration.FromSeconds(94906265), 1.0 / 94906267.0, GameClockDuration.FromSeconds(9007199326062798) },
+				{ GameClockDuration.FromSeconds(94906267), 1.0 / 94906267.0, GameClockDuration.FromSeconds(9007199515875332) },
+				{ GameClockDuration.FromSeconds(379625061), 1.0 / 34906267.0, GameClockDuration.FromSeconds(13251293739157267) },
+				{ GameClockDuration.FromSeconds(549755813889), 1.0 / 16385.0, GameClockDuration.FromSeconds(9007749010571270) },
+				{ GameClockDuration.FromSeconds(16385), 1.0 / -549755813889.0, GameClockDuration.FromSeconds(-9007749010571254) },
+			};
+
+		[Theory]
+		[MemberData(nameof(Division_double_divisor_Decimal_Case_Data))]
+		public void Division_by_double_divisor_uses_decimal_as_intermediate_value_if_the_abs_of_quotient_as_a_double_is_9007199254740992_or_larger(
+			GameClockDuration duration, double factor, GameClockDuration expected)
+		{
+			GameClockDuration actual = duration / factor;
+
+			// Note: this test will fail if the results as both double and decimal fall in the same value
+			Assert.Equal(expected.WholeSeconds, actual.WholeSeconds);
+			Assert.NotEqual(expected.WholeSeconds, (long)(duration.WholeSeconds / factor));
 		}
 	}
 }

@@ -594,7 +594,6 @@ namespace GTA.Chrono
 			return new GameClockDuration((long)decimal.Round(secs, MidpointRounding.ToEven));
 		}
 
-
 		public bool Equals(GameClockDuration other)
 		{
 			return _secs == other._secs;
