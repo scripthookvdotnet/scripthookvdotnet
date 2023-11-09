@@ -30,32 +30,6 @@ namespace GTA.Chrono
 		const long NonLeapYearCountOfInt32 = 3253437726;
 
 		/// <summary>
-		/// The maximum integral value within which the square value can exactly represent and correctly compare it
-		/// with other values as a <see langword="double"/>. Roughly equivalent to 156.92 weeks.
-		/// </summary>
-		/// <remarks>
-		/// The squared value of this value is
-		/// <c>9_007_199_136_250_225</c> which is less than the safe maximum integer in <see langword="double"/>
-		/// <c>9_007_199_254_740_991</c> (the same value as <c>Number.MAX_SAFE_INTEGER</c> in JavaScript).
-		/// </remarks>
-		const int MaxSafeSqrtIntegerOutOfDouble = 94906265;
-		/// <summary>
-		/// The maximum integral value within which the square value can exactly represent and correctly compare it
-		/// with other values as a <see langword="double"/>. Roughly equivalent to -156.92 weeks.
-		/// </summary>
-		/// <remarks>
-		/// The squared value of this value is
-		/// <c>-9_007_199_136_250_225</c> which is more than the safe minimum integer in <see langword="double"/>
-		/// <c>-9_007_199_254_740_991</c> (the same value as <c>Number.MIN_SAFE_INTEGER</c> in JavaScript).
-		/// </remarks>
-		const int MinSafeSqrtIntegerOutOfDouble = -94906265;
-
-		/// <summary>
-		/// The inverse of <see cref="MinSafeSqrtIntegerOutOfDouble"/> rounded to the nearest double value.
-		/// </summary>
-		const double InverseOfMaxSafeSqrtIntegerOutOfDouble = 1.0536712197029352e-08;
-
-		/// <summary>
 		/// The number of days elapsed since January 1st, the -2147483648 year until December 31st, the 2147483647 year,
 		/// which will result in 1_568_704_592_609 days. Subtracted by 1 because 1 day is taken for the min date value.
 		/// </summary>
@@ -70,17 +44,7 @@ namespace GTA.Chrono
 			+ 23 * SecsPerHour + 59 * SecsPerMinute + 59);
 
 		/// <summary>
-		/// About 17540.8 years
-		/// </summary>
-		const long SecToOptimizeHigherWeighted = 0x8000000000;
-
-		const long SecToOptimizeLowerWeighted = 0x4000;
-
-		const double InverseOfSecToOptimizeHigherWeighted = 1.8189894035458565e-12;
-		const double InverseOfSecToOptimizeLowerWeighted = 6.103515625e-05;
-
-		/// <summary>
-		/// Same as 135_536_076_770_054_400 seconds. Can exactly represent as a double floating-point value.
+		/// Same as 135_536_076_770_054_400 seconds. Can exactly represent as a f64 value.
 		/// </summary>
 		const long MinPositiveSecDifferenceOutOfBound = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay;
 		const long MaxNegativeSecDifferenceOutOfBound = -MinPositiveSecDifferenceOutOfBound;
@@ -456,37 +420,42 @@ namespace GTA.Chrono
 				ThrowHelper.ThrowArgumentException_Arg_CannotBeNaN(nameof(factor));
 			}
 
-			// Usual use cases, where both differences are within about 156.92 weeks
-			// If both value is within the range where the squared values can exactly represent as double values,
-			// we can just calculate the result as a double and convert to long without any rounding errors
 			long durationSecs = duration._secs;
-			if (durationSecs >= -MaxSafeSqrtIntegerOutOfDouble && durationSecs <= MaxSafeSqrtIntegerOutOfDouble &&
-				factor >= MinSafeSqrtIntegerOutOfDouble && factor <= MaxSafeSqrtIntegerOutOfDouble)
+			double resultDouble = durationSecs * factor;
+			if (resultDouble > -9007199254740992 && resultDouble < 9007199254740992)
 			{
-				return new GameClockDuration((long)(durationSecs * factor));
+				// The result is within the safe integers out of f64, just use the result calculated as f64.
+				// We want to calculate the result as a f64 for performance reasons as long as the result fall
+				// within the safe integers out of f64 (calculation as System.Decimal takes more than 10x time).
+				return IntervalFromF64Seconds(resultDouble);
 			}
 
-			return MultiplyOperatorNonTypicalCases(durationSecs, factor);
+			// Fall back to decimal arithmetic, so the calculation 100% will not have any rounding errors in the
+			// integral part.
+			// Let the code throw an exception even if the product as a double was an infinity.
+			return MultiplySecondsInDecimal(durationSecs, factor);
 
-			static GameClockDuration MultiplyOperatorNonTypicalCases(long durationSecs, double factor)
+			static GameClockDuration MultiplySecondsInDecimal(long durationSecs, double divisor)
 			{
-				// Calculate the result as a double for performance reasons (decimal calculation takes more than
-				// 10x times).
-				// The both values are weighted but can exactly calculate the result as a double.
-				if ((durationSecs > -SecToOptimizeLowerWeighted && durationSecs < SecToOptimizeLowerWeighted &&
-				factor > -SecToOptimizeHigherWeighted && factor < SecToOptimizeHigherWeighted) ||
-				(durationSecs > -SecToOptimizeHigherWeighted && durationSecs < SecToOptimizeHigherWeighted &&
-				factor > -SecToOptimizeLowerWeighted && factor < SecToOptimizeLowerWeighted))
-				{
-					return new GameClockDuration((long)(durationSecs * factor));
-				}
-
-				// Fall back to decimal arithmetic, so the calculation 100% will not have any rounding errors.
-				// Throw ArgumentOutOfRangeException if OverflowException is thrown for decimal arithmetics or too
-				// large factor to match what FromDecimalSecondsInternal throws for too large or small results.
 				try
 				{
-					return FromDecimalSecondsInternal(durationSecs * (decimal)factor);
+					// Throw ArgumentOutOfRangeException in the catch block if OverflowException is thrown for decimal
+					// arithmetics or too large divisor to match what FromDecimalSecondsInternal throws for too large
+					// or small results.
+					decimal divisorDecimal = (decimal)divisor;
+
+					// Throw ArgumentOutOfRangeException if the divisor is zero as decimal to avoid an unintended
+					// DivideByZeroException. we would not expect such exception when trying to divide an integer by
+					// a floating-point value.
+					// Since decimal's smallest positive value is `1e-28m` and `Decimal.Ceiling(1 / 1e-28m)` is larger
+					// than the number of whole seconds of GameClockDuration.MaxValue, we can assume that division by
+					// an arbitrary double smaller than 1e-28m will result in a value larger than the max seconds.
+					if (divisorDecimal == 0)
+					{
+						ThrowOutOfRange_TooLongDuration();
+					}
+
+					return FromDecimalSecondsInternal(durationSecs * divisorDecimal);
 				}
 				catch (OverflowException)
 				{
@@ -553,38 +522,23 @@ namespace GTA.Chrono
 				ThrowHelper.ThrowArgumentException_Arg_CannotBeNaN(nameof(divisor));
 			}
 
-			// Usual use cases, where both differences are within about 156.92 weeks
-			// If both value is within the range where the squared values can exactly represent as double values,
-			// we can just calculate the result as a double and convert to long without any rounding errors
 			long durationSecs = duration._secs;
-			if (durationSecs >= -MaxSafeSqrtIntegerOutOfDouble && durationSecs <= MaxSafeSqrtIntegerOutOfDouble &&
-				(divisor <= -InverseOfMaxSafeSqrtIntegerOutOfDouble || divisor >= InverseOfMaxSafeSqrtIntegerOutOfDouble))
+			double resultDouble = durationSecs / divisor;
+			if (resultDouble > -9007199254740992 && resultDouble < 9007199254740992)
 			{
-				// No need to check if the result is not a infinity or NaN, and the abs of divisor is large enough to
-				// avoid infinities
-				return new GameClockDuration((long)(durationSecs / divisor));
+				// The result is within the safe integers out of f64, just use the result calculated as f64.
+				// We want to calculate the result as a f64 for performance reasons as long as the result fall
+				// within the safe integers out of f64 (calculation as System.Decimal takes more than 10x time).
+				return IntervalFromF64Seconds(resultDouble);
 			}
 
-			return DivideOperatorNonTypicalCases(durationSecs, divisor);
+			// Fall back to decimal arithmetic, so the calculation 100% will not have any rounding errors in the
+			// integral part.
+			// Let the code throw an exception even if the product as a double was an infinity.
+			return DivideSecondsInDecimal(durationSecs, divisor);
 
-			static GameClockDuration DivideOperatorNonTypicalCases(long durationSecs, double divisor)
+			static GameClockDuration DivideSecondsInDecimal(long durationSecs, double divisor)
 			{
-				// Calculate the result as a double for performance reasons (decimal calculation takes more than
-				// 10x times).
-				// The both values are weighted but can exactly calculate the result as a double.
-				if (durationSecs > -SecToOptimizeLowerWeighted && durationSecs < SecToOptimizeLowerWeighted &&
-				(divisor < -InverseOfSecToOptimizeHigherWeighted || divisor > InverseOfSecToOptimizeHigherWeighted))
-				{
-					return new GameClockDuration((long)(durationSecs / divisor));
-				}
-				if (durationSecs > -SecToOptimizeHigherWeighted && durationSecs < SecToOptimizeHigherWeighted &&
-				(divisor < -InverseOfSecToOptimizeLowerWeighted || divisor > InverseOfSecToOptimizeLowerWeighted))
-				{
-					return new GameClockDuration((long)(durationSecs / divisor));
-				}
-
-				// Fall back to decimal arithmetic, so the calculation 100% will not have any rounding errors.
-
 				try
 				{
 					// Throw ArgumentOutOfRangeException in the catch block if OverflowException is thrown for decimal
@@ -625,15 +579,11 @@ namespace GTA.Chrono
 
 		private static GameClockDuration IntervalFromF64Seconds(double secs)
 		{
-			// The value (MaxSecDifferenceOutOfBound - 1), which is 135536076770054399, can't exactly represent as
-			// a double
-			if (secs <= MaxNegativeSecDifferenceOutOfBound || secs >= MinPositiveSecDifferenceOutOfBound ||
-				double.IsNaN(secs))
-			{
-				ThrowOutOfRange_TooLongDuration();
-			}
-
-			return new GameClockDuration((long)secs);
+			// Use the same rounding mode as how floating-point values are rounded when they can't be exactly
+			// represented in .NET, so users wouldn't get surprised as much as when the rounding mode is set to
+			// `MidpointRounding.AwayFromZero` (Round to nearest, ties away from zero).
+			// Do not check the second boundary, as this method is supposed to be called within the boundary.
+			return new GameClockDuration((long)System.Math.Round(secs, MidpointRounding.ToEven));
 		}
 		private static GameClockDuration FromDecimalSecondsInternal(decimal secs)
 		{
@@ -642,8 +592,14 @@ namespace GTA.Chrono
 				ThrowOutOfRange_TooLongDuration();
 			}
 
-			return new GameClockDuration((long)secs);
+			// Use `MidpointRounding.ToEven` (round to nearest, ties to even) so the rounding mode will match how
+			// floating-point values are rounded when they can't be exactly represented in .NET. The standard ECMA-335
+			// restricts the rounding mode for floating-point values to “round to the nearest number,”
+			// (roundTiesToEven) in Common Language Infrastructure (CLI), which is defined in I.12.1.3 in 6th edition
+			// of ECMA-335.
+			return new GameClockDuration((long)decimal.Round(secs, MidpointRounding.ToEven));
 		}
+
 
 		public bool Equals(GameClockDuration other)
 		{
