@@ -306,6 +306,8 @@ namespace GTA.Chrono
 		public static GameClockDuration FromTimeSpan(TimeSpan timeSpan)
 			=> new GameClockDuration(timeSpan.Ticks / TimeSpan.TicksPerSecond);
 
+		public GameClockDuration Abs() => (_secs < 0) ? new GameClockDuration(-_secs) : this;
+
 		/// <summary>
 		/// Returns the specified instance of <see cref="GameClockDuration"/>.
 		/// </summary>

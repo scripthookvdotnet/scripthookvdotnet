@@ -293,6 +293,32 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			Assert.Equal(expected, actualDurationMultiplicationOp);
 		}
 
+		public static TheoryData<GameClockDuration, GameClockDuration> Abs_Method_Test_Data =>
+			new TheoryData<GameClockDuration, GameClockDuration>
+			{
+				{ GameClockDuration.Zero, GameClockDuration.Zero },
+				{ GameClockDuration.FromSeconds(1), GameClockDuration.FromSeconds(1) },
+				{ GameClockDuration.FromSeconds(-1), GameClockDuration.FromSeconds(1) },
+				{ GameClockDuration.FromMinutes(2), GameClockDuration.FromMinutes(2) },
+				{ GameClockDuration.FromMinutes(-2), GameClockDuration.FromMinutes(2) },
+				{ GameClockDuration.FromHours(3), GameClockDuration.FromHours(3) },
+				{ GameClockDuration.FromHours(-3), GameClockDuration.FromHours(3) },
+				{ GameClockDuration.FromDays(4), GameClockDuration.FromDays(4) },
+				{ GameClockDuration.FromDays(-4), GameClockDuration.FromDays(4) },
+				{ GameClockDuration.FromWeeks(5), GameClockDuration.FromWeeks(5) },
+				{ GameClockDuration.FromWeeks(-5), GameClockDuration.FromWeeks(5) },
+			};
+
+		[Theory]
+		[MemberData(nameof(Abs_Method_Test_Data))]
+		public void Abs_returns_the_duration_but_with_the_positive_sign(
+			GameClockDuration duration, GameClockDuration expected)
+		{
+			GameClockDuration actual = duration.Abs();
+
+			Assert.Equal(expected, actual);
+		}
+
 		[Fact]
 		public void Multiplication_with_Infinity_factor_fails()
 		{

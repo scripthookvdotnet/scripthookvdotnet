@@ -286,6 +286,17 @@ namespace GTA.Chrono
 		public readonly GameClockDateTime WithSecond(int second) => new(_date, _time.WithSecond(second));
 
 		/// <summary>
+		/// Makes a new <see cref="GameClockDateTime"/> from a <see cref="DateTime"/>.
+		/// This does not perform any time zone conversions, so a <see cref="DateTime"/> with a
+		/// <see cref="DateTime.Kind"/> of <see cref="DateTimeKind.Utc"/> will still represent the same year/month/day.
+		/// </summary>
+		public static GameClockDateTime FromSystemDateTime(DateTime dateTime)
+		{
+			return GameClockDate.FromYmd(dateTime.Year, dateTime.Month, dateTime.Day)
+				.AndHms(dateTime.Hour, dateTime.Minute, dateTime.Second);
+		}
+
+		/// <summary>
 		/// Adds a specified duration to a specified date time, yielding a new date time.
 		/// </summary>
 		/// <param name="dateTime">The date time value to add.</param>
