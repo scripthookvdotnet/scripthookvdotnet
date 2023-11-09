@@ -44,12 +44,6 @@ namespace GTA.Chrono
 			+ 23 * SecsPerHour + 59 * SecsPerMinute + 59);
 
 		/// <summary>
-		/// Same as 135_536_076_770_054_400 seconds. Can exactly represent as a f64 value.
-		/// </summary>
-		const long MinPositiveSecDifferenceOutOfBound = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay;
-		const long MaxNegativeSecDifferenceOutOfBound = -MinPositiveSecDifferenceOutOfBound;
-
-		/// <summary>
 		/// Represents the zero <see cref="GameClockDuration"/> value. This field is read-only.
 		/// </summary>
 		public static readonly GameClockDuration Zero = new(0);
@@ -587,7 +581,7 @@ namespace GTA.Chrono
 		}
 		private static GameClockDuration FromDecimalSecondsInternal(decimal secs)
 		{
-			if (secs <= MaxNegativeSecDifferenceOutOfBound || secs >= MinPositiveSecDifferenceOutOfBound)
+			if (secs < MinSecDifference || secs > MaxSecDifference)
 			{
 				ThrowOutOfRange_TooLongDuration();
 			}
