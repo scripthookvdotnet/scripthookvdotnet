@@ -3,15 +3,16 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using GTA.Native;
 using System;
+using GTA.Native;
+using GTA.Chrono;
 
 namespace GTA
 {
 	/// <summary>
 	/// Represents the global game clock.
 	/// </summary>
-	public static class Clock
+	public static class GameClock
 	{
 		/// <summary>
 		/// Gets or sets a value that indicates whether the in-game clock is paused.
@@ -35,6 +36,113 @@ namespace GTA
 		{
 			get => SHVDN.NativeMemory.LastTimeClockTicked;
 			set => SHVDN.NativeMemory.LastTimeClockTicked = value;
+		}
+
+		/// <summary>
+		/// Gets or sets the current date time.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">
+		/// The month starting from 1 is not in the range of 1 to 12 inclusive and therefore the date time cannot be
+		/// semantically normalized (can be thrown only from the getter).
+		/// </exception>
+		/// <remarks>
+		/// <para>
+		/// Normalizes the day of the date and the time when getting the current value if they are not normalized.
+		/// For example, "Semptember 47th, 2013" will be normalized to "October 17th, 2013", and "30:89:72" will be
+		/// normalized to "7:30:12".
+		/// </para>
+		/// <para>
+		/// The game may get considerably heavier if you set the value to a value with a large year value such as 1e+7.
+		/// </para>
+		/// </remarks>
+		public static GameClockDateTime Now
+		{
+			get => Today.AndTime(TimeOfDay);
+			set
+			{
+				(GameClockDate date, GameClockTime time) = value;
+				Today = date;
+				TimeOfDay = time;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the current date.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">
+		/// The month starting from 1 is not in the range of 1 to 12 inclusive and therefore the date cannot be
+		/// semantically normalized (can be thrown only from the getter).
+		/// </exception>
+		/// <remarks>
+		/// <para>
+		/// Normalizes the day of the date when getting the current value if it is not normalized.
+		/// For example, "Semptember 47th, 2013" will be normalized to "October 17th, 2013".
+		/// </para>
+		/// <para>
+		/// The game may get considerably heavier if you set the value to a value with a large year value such as 1e+7.
+		/// </para>
+		/// </remarks>
+		public static GameClockDate Today
+		{
+			get
+			{
+				int month0 = MonthZero;
+				if (month0 < 0 || month0 > 11)
+				{
+					ThrowInvalidOperation_InvalidMonthZeroBased(month0);
+				}
+
+				int year = Year;
+				int day = Day;
+				if (day < 0 || day > GetDaysOfMonthZeroBased(month0, year))
+				{
+					NormalizeDate(ref year, ref month0, ref day);
+				}
+				return GameClockDate.FromYmd(year, month0 + 1, day);
+			}
+
+			set
+			{
+				(int year, int month, int day) = value;
+				SetDate(day, month, year);
+			}
+		}
+
+		private static void ThrowInvalidOperation_InvalidMonthZeroBased(int month0)
+		{
+			throw new InvalidOperationException($"The internal month was not in the legal range 0 to 11 " +
+				$"(was set to {month0}).");
+		}
+
+		/// <summary>
+		/// Gets or sets the current time.
+		/// </summary>
+		/// <remarks>
+		/// Normalizes the time when getting the current value if it is not normalized.
+		/// For example, "30:89:72" will be normalized to "7:30:12".
+		/// </remarks>
+		public static GameClockTime TimeOfDay
+		{
+			get
+			{
+				int hour = Hour;
+				int minute = Minute;
+				int second = Second;
+				if (second < 0 || second > 59 || minute < 0 || minute > 59 || hour < 0 || hour > 23)
+				{
+					NormalizeTime(ref second, ref minute, ref hour);
+				}
+
+				return GameClockTime.FromHms(hour, minute, second);
+			}
+
+			set
+			{
+				(int hour, int minute, int second) = value;
+				Hour = hour;
+				Minute = minute;
+				Second = second;
+			}
 		}
 
 		/// <summary>
@@ -122,7 +230,7 @@ namespace GTA
 		/// On the other hands, you can safely set an arbitrary day value as the game normalizes the day value as a result
 		/// when the game updates the clock minute.
 		/// </remarks>
-		public static void SetDate(int day, int month, int year) => SetDateZeroBasedMonth(day, month - 1, year);
+		private static void SetDate(int day, int month, int year) => SetDateZeroBasedMonth(day, month - 1, year);
 
 		/// <summary>
 		/// Sets the current date in the GTA world.
@@ -145,7 +253,7 @@ namespace GTA
 		/// On the other hands, you can safely set an arbitrary day value as the game normalizes the day value as a result
 		/// when the game updates the clock minute.
 		/// </remarks>
-		public static void SetDateZeroBasedMonth(int day, int month, int year) => Function.Call(Hash.SET_CLOCK_DATE, day, month, year);
+		private static void SetDateZeroBasedMonth(int day, int month, int year) => Function.Call(Hash.SET_CLOCK_DATE, day, month, year);
 
 		/// <summary>
 		/// Adds the specified number of hours, minutes, and seconds to the current in-game time.
@@ -200,21 +308,6 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets or sets the current time of day in the GTA world.
-		/// </summary>
-		/// <value>
-		/// The current time of day.
-		/// </value>
-		/// <remarks>
-		/// The resolution of the value is 1 second.
-		/// </remarks>
-		public static TimeSpan TimeOfDay
-		{
-			get => new (Hour, Minute, Second);
-			set => Function.Call(Hash.SET_CLOCK_TIME, value.Hours, value.Minutes, value.Seconds);
-		}
-
-		/// <summary>
 		/// Gets or sets how many milliseconds in the real world one game minute takes.
 		/// </summary>
 		/// <value>
@@ -226,56 +319,154 @@ namespace GTA
 			set => SHVDN.NativeMemory.MillisecondsPerGameMinute = value;
 		}
 
-		// these 2 arrays were taken from the exe (embedded as 4-byte arrays)
-		private static int[] s_firstDaysOfWeekForNonLeapYear = new int[12] { 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
-		private static int[] s_firstDaysOfWeekForLeapYear = new int[12] { 6, 2, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
-
 		/// <summary>
-		/// Returns an indication whether the specified year is a leap year.
-		/// Calculates in the same way as the game does.
+		/// Normalizes an date just like how the game clock normilizes the date if the day value is not normalized.
+		/// Cannot normalize if month0 is not in the range of 0 to 11 since the method can't determine how many days
+		/// to add or subtract.
 		/// </summary>
-		public static bool IsLeapYear(int year)
+		private static void NormalizeDate(ref int year, ref int month0, ref int day)
 		{
-			return (year % 4) == 0 && year != 100 * (year / 100) || year == 400 * (year / 400);
-		}
-
-		/// <param name="day">
-		/// The day (1 through the number of days in <paramref name="month"/>).
-		/// </param>
-		/// <param name="month">
-		/// The month (1 through 12).
-		/// </param>
-		/// <param name="year">
-		/// The year (no range limitation).
-		/// </param>
-		/// <inheritdoc cref="GetDayOfWeekZeroBasedMonth(int, int, int)"/>
-		public static DayOfWeek GetDayOfWeek(int day, int month, int year) => GetDayOfWeekZeroBasedMonth(day, month - 1, year);
-
-		/// <summary>
-		/// Gets the day of the week.
-		/// Calculates in the same way as the game does.
-		/// </summary>
-		/// <param name="day">
-		/// The day (1 through the number of days in <paramref name="month"/>).
-		/// </param>
-		/// <param name="month">
-		/// The month (1 through 12).
-		/// </param>
-		/// <param name="year">
-		/// The year (no range limitation).
-		/// </param>
-		public static DayOfWeek GetDayOfWeekZeroBasedMonth(int day, int month, int year)
-		{
-			int century = year % 100;
-			int firstDayOfWeek = s_firstDaysOfWeekForNonLeapYear[month];
-			int unk1 = 2 * (3 - (year - century) / 100 % 4);
-			int unk2 = century + century / 4;
-			if (IsLeapYear(year))
+			while (true)
 			{
-				firstDayOfWeek = s_firstDaysOfWeekForLeapYear[month];
+				int monthDay = GetDaysOfMonthZeroBased(month0, year);
+				if (day <= monthDay)
+				{
+					break;
+				}
+
+				day -= monthDay;
+				ShiftMonthsAndNormalizeYearAndMonth(ref year, ref month0, 1);
+			}
+			while (day <= 0)
+			{
+				if (month0 == 0)
+				{
+					month0 = 11;
+					--year;
+				}
+				else
+				{
+					--month0;
+				}
+
+				day += GetDaysOfMonthZeroBased(month0, year);
 			}
 
-			return (DayOfWeek)((day + unk1 + firstDayOfWeek + unk2) % 7);
+			return;
+
+			static void ShiftMonthsAndNormalizeYearAndMonth(ref int year, ref int month0, int diff)
+			{
+				month0 += diff;
+				if (month0 > 11)
+				{
+					do
+					{
+						month0 -= 12;
+						year++;
+					}
+					while (month0 > 11);
+				}
+				else if (month0 < 0)
+				{
+					do
+					{
+						month0 += 12;
+						year--;
+					}
+					while (month0 < 0);
+				}
+			}
 		}
+
+		/// <summary>
+		/// Normalizes an time in the almost same way from how the game clock normilizes the hour, minute, and second
+		/// (which is done by shifting them by one at the same time).
+		/// </summary>
+		private static void NormalizeTime(ref int second, ref int minute, ref int hour)
+		{
+			if (second >= 0 && second <= 59)
+			{
+				if (minute < 0 || minute >= 60)
+				{
+					NormalizeMinuteInternal(ref minute, ref hour);
+				}
+				else
+				{
+					// Should not come here, because the game would crash for an invalid hour value less than -1 or
+					// more than 25. "Invalid" minute or second values don't crash the game, but invalid hour values
+					// do. We just won't want to throw an exception, since we could semantically normalize hour values,
+					// which is different from invalid month values.
+					NormalizeHourInternal(ref hour);
+				}
+
+				return;
+			}
+			while (second >= 60)
+			{
+				second -= 60;
+				AddMinuteInternal(ref minute, ref hour, 1);
+			}
+			while (second < 0)
+			{
+				second += 60;
+				AddMinuteInternal(ref minute, ref hour, -1);
+			}
+		}
+
+		static void AddMinuteInternal(ref int minute, ref int hour, int diff)
+		{
+			minute += diff;
+
+			NormalizeMinuteInternal(ref minute, ref hour);
+		}
+
+		static void NormalizeMinuteInternal(ref int minute, ref int hour)
+		{
+			while (minute >= 60)
+			{
+				minute -= 60;
+				AddHourInternal(ref hour, 1);
+			}
+			while (minute < 0)
+			{
+				minute += 60;
+				AddHourInternal(ref hour, -1);
+			}
+		}
+
+		static void AddHourInternal(ref int hour, int diff)
+		{
+			hour += diff;
+
+			NormalizeHourInternal(ref hour);
+		}
+
+		static void NormalizeHourInternal(ref int hour)
+		{
+			while (hour >= 24)
+			{
+				hour -= 24;
+			}
+			while (hour < 0)
+			{
+				hour += 24;
+			}
+		}
+
+		/// <summary>
+		/// Get the number of month. Returns 31 if month0 is not in the range of 0 to 11 for smaller code size
+		/// (having an statement that throws an exception significantly increases code size).
+		/// </summary>
+		private static int GetDaysOfMonthZeroBased(int month0, int year)
+		{
+			return month0 switch
+			{
+				1 => IsLeapYear(year) ? 29 : 28,
+				3 or 5 or 8 or 10 => 30,
+				_ => 31,
+			};
+		}
+
+		private static bool IsLeapYear(int year) => year % 4 == 0 && (year % 25 != 0 || year % 16 == 0);
 	}
 }

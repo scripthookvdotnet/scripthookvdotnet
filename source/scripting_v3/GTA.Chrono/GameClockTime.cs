@@ -11,7 +11,7 @@ namespace GTA.Chrono
 	/// </summary>
 	/// <remarks>
 	/// The <see cref="GameClockTime"/> structure does not store the millisecond component. Although the game clock
-	/// stores the last time its minute ticked (which can be accessed via <see cref="Clock.LastTimeTicked"/>) and you
+	/// stores the last time its minute ticked (which can be accessed via <see cref="GameClock.LastTimeTicked"/>) and you
 	/// can calculate the pseudo-millisecond component, the last time is volatile and it will be set to the same value
 	/// as <see cref="Game.GameTime"/> every frame when the clock is paused.
 	/// </remarks>

@@ -45,7 +45,7 @@ namespace GTA
 
 		#region Time & Day
 
-		/// <inheritdoc cref="Clock.IsPaused"/>
+		/// <inheritdoc cref="GameClock.IsPaused"/>
 		public static bool IsClockPaused
 		{
 			get => SHVDN.NativeMemory.IsClockPaused;
@@ -68,8 +68,11 @@ namespace GTA
 		/// <value>
 		/// The current date and time.
 		/// </value>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The internal date is not valid for the Gregorian calendar or the internal time of day is not normalized.
+		/// </exception>
 		[Obsolete("World.CurrentDate is obsolete because DateTime can represent the years only in the range of 1 to 9999, while the game supports wider range of years." +
-			"Use properties or methods of GTA.Clock instead."), EditorBrowsable(EditorBrowsableState.Never)]
+			"Use properties or methods of GTA.GameClock instead."), EditorBrowsable(EditorBrowsableState.Never)]
 		public static DateTime CurrentDate
 		{
 			get
@@ -90,7 +93,19 @@ namespace GTA
 			}
 		}
 
-		/// <inheritdoc cref="Clock.TimeOfDay"/>
+		/// <summary>
+		/// Gets or sets the current time of day in the GTA world.
+		/// </summary>
+		/// <value>
+		/// The current time of day.
+		/// </value>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// One of the values minutes or seconds are smaller than <c>0</c> or larger than <c>59</c>, or the hour value
+		/// is smaller than <c>0</c> or larger than <c>23</c>.
+		/// </exception>
+		/// <remarks>
+		/// The resolution of the value is 1 second.
+		/// </remarks>
 		public static TimeSpan CurrentTimeOfDay
 		{
 			get
@@ -104,7 +119,7 @@ namespace GTA
 			set => Function.Call(Hash.SET_CLOCK_TIME, value.Hours, value.Minutes, value.Seconds);
 		}
 
-		/// <inheritdoc cref="Clock.MillisecondsPerGameMinute"/>
+		/// <inheritdoc cref="GameClock.MillisecondsPerGameMinute"/>
 		public static int MillisecondsPerGameMinute
 		{
 			get => Function.Call<int>(Hash.GET_MILLISECONDS_PER_GAME_MINUTE);
