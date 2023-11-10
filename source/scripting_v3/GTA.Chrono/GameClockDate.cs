@@ -177,7 +177,7 @@ namespace GTA.Chrono
 		/// This does not perform any time zone conversions, so a <see cref="DateTime"/> with a
 		/// <see cref="DateTime.Kind"/> of <see cref="DateTimeKind.Utc"/> will still represent the same year/month/day.
 		/// </summary>
-		public static GameClockDate FromDateTime(DateTime dateTime)
+		public static GameClockDate FromSystemDateTime(DateTime dateTime)
 		{
 			return FromYmd(dateTime.Year, dateTime.Month, dateTime.Day);
 		}
