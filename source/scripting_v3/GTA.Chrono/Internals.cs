@@ -3,9 +3,11 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-internal static class Internals
+namespace GTA.Chrono
 {
-	private static readonly byte[] YearDeltas = new byte[401] {
+	internal static class Internals
+	{
+		private static readonly byte[] YearDeltas = new byte[401] {
 		0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8,
 		8, 9, 9, 9, 9, 10, 10, 10, 10, 11, 11, 11, 11, 12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
 		15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17, 18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20,
@@ -27,13 +29,13 @@ internal static class Internals
 		96, 97, 97, 97, 97, // 400+1
 	};
 
-	internal const int MinOl = 1 << 1;
-	internal const int MaxOl = 366 << 1;
-	internal const int MaxMdl = (12 << 6) | (31 << 1) | 1;
+		internal const int MinOl = 1 << 1;
+		internal const int MaxOl = 366 << 1;
+		internal const int MaxMdl = (12 << 6) | (31 << 1) | 1;
 
-	const sbyte XX = -128;
+		const sbyte XX = -128;
 
-	internal static readonly sbyte[] MdlToOl = new sbyte[MaxMdl + 1] {
+		internal static readonly sbyte[] MdlToOl = new sbyte[MaxMdl + 1] {
 		XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX,
 		XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX,
 		XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, // 0
@@ -76,10 +78,10 @@ internal static class Internals
 		100, // 12
 	};
 
-	/// <summary>
-	/// Converts Ol to Mdl (where the day of month will be the 1st).
-	/// </summary>
-	internal static readonly byte[] OlToMdl = new byte[MaxOl + 1] {
+		/// <summary>
+		/// Converts Ol to Mdl (where the day of month will be the 1st).
+		/// </summary>
+		internal static readonly byte[] OlToMdl = new byte[MaxOl + 1] {
 		0, 0, // 0
 		64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
 		64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
@@ -120,27 +122,28 @@ internal static class Internals
 		98, // 12
 	};
 
-	internal static void DayCycleToYearOrdinal(int cycle, out int yearMod400, out int ordinal)
-	{
-		yearMod400 = cycle / 365;
-		int ordinal0 = cycle % 365;
-		int delta = YearDeltas[yearMod400];
-
-		if (ordinal0 < delta)
+		internal static void DayCycleToYearOrdinal(int cycle, out int yearMod400, out int ordinal)
 		{
-			yearMod400 -= 1;
-			ordinal0 += 365 - YearDeltas[yearMod400];
+			yearMod400 = cycle / 365;
+			int ordinal0 = cycle % 365;
+			int delta = YearDeltas[yearMod400];
+
+			if (ordinal0 < delta)
+			{
+				yearMod400 -= 1;
+				ordinal0 += 365 - YearDeltas[yearMod400];
+			}
+			else
+			{
+				ordinal0 -= delta;
+			}
+
+			ordinal = ordinal0 + 1;
 		}
-		else
+
+		internal static int YearOrdinalToDayCycle(int yearMod400, int ordinal)
 		{
-			ordinal0 -= delta;
+			return yearMod400 * 365 + YearDeltas[yearMod400] + ordinal - 1;
 		}
-
-		ordinal = ordinal0 + 1;
-	}
-
-	internal static int YearOrdinalToDayCycle(int yearMod400, int ordinal)
-	{
-		return yearMod400 * 365 + YearDeltas[yearMod400] + ordinal - 1;
 	}
 }
