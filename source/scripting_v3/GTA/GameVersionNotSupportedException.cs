@@ -53,8 +53,8 @@ namespace GTA
 		[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-			info.AddValue("MinimumSupportedVersion", MinimumSupportedGameVersion, typeof(GameVersion));
 			base.GetObjectData(info, context);
+			info.AddValue("MinimumSupportedVersion", MinimumSupportedGameVersion, typeof(GameVersion));
 		}
 
 		internal static string BuildErrorMessage(GameVersion minimumSupportedGameVersion, string className, string propertyOrMethodName)
