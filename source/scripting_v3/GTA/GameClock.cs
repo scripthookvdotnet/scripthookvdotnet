@@ -41,7 +41,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the current date time.
 		/// </summary>
-		/// <exception cref="InvalidOperationException">
+		/// <exception cref="InvalidInternalMonthOfGameClockException">
 		/// The month starting from 1 is not in the range of 1 to 12 inclusive and therefore the date time cannot be
 		/// semantically normalized (can be thrown only from the getter).
 		/// </exception>
@@ -62,7 +62,7 @@ namespace GTA
 				int month0 = MonthZero;
 				if (month0 < 0 || month0 > 11)
 				{
-					ThrowInvalidOperation_InvalidMonthZeroBased(month0);
+					ThrowInvalidInternalMonthOfGameClockException(month0);
 				}
 
 				int hour = Hour;
@@ -98,7 +98,7 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the current date.
 		/// </summary>
-		/// <exception cref="InvalidOperationException">
+		/// <exception cref="InvalidInternalMonthOfGameClockException">
 		/// The month starting from 1 is not in the range of 1 to 12 inclusive and therefore the date cannot be
 		/// semantically normalized (can be thrown only from the getter).
 		/// </exception>
@@ -139,10 +139,9 @@ namespace GTA
 			}
 		}
 
-		private static void ThrowInvalidOperation_InvalidMonthZeroBased(int month0)
+		private static void ThrowInvalidInternalMonthOfGameClockException(int month0)
 		{
-			throw new InvalidOperationException($"The internal month was not in the legal range 0 to 11 " +
-				$"(was set to {month0}).");
+			throw new InvalidInternalMonthOfGameClockException(month0);
 		}
 
 		/// <summary>
