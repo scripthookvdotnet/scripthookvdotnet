@@ -48,20 +48,49 @@ namespace GTA
 		/// <remarks>
 		/// <para>
 		/// Normalizes the day of the date and the time when getting the current value if they are not normalized.
-		/// For example, "Semptember 47th, 2013" will be normalized to "October 17th, 2013", and "30:89:72" will be
-		/// normalized to "7:30:12".
+		/// For example, "Semptember 47th, 2013 30:64:90" will be normalized to "October 18th, 2013 04:65:30".
 		/// </para>
 		/// <para>
-		/// The game may get considerably heavier if you set the value to a value with a large year value such as 1e+7.
+		/// The game may get considerably heavier if you set the value to a value with a large year value such as
+		/// <c>1e+7</c>.
 		/// </para>
 		/// </remarks>
 		public static GameClockDateTime Now
 		{
-			get => Today.AndTime(TimeOfDay);
+			get
+			{
+				int month0 = MonthZero;
+				if (month0 < 0 || month0 > 11)
+				{
+					ThrowInvalidOperation_InvalidMonthZeroBased(month0);
+				}
+
+				int hour = Hour;
+				int minute = Minute;
+				int second = Second;
+				int dayDiffForNormalizedDate = 0;
+				if (second < 0 || second > 59 || minute < 0 || minute > 59 || hour < 0 || hour > 23)
+				{
+					dayDiffForNormalizedDate += NormalizeTime(ref second, ref minute, ref hour);
+				}
+
+				GameClockTime time = GameClockTime.FromHms(hour, minute, second);
+
+				int year = Year;
+				int day = Day + dayDiffForNormalizedDate;
+				if (day < 0 || day > GetDaysOfMonthZeroBased(month0, year))
+				{
+					NormalizeDate(ref year, ref month0, ref day);
+				}
+
+				return GameClockDate.FromYmd(year, month0 + 1, day).AndTime(time);
+			}
 			set
 			{
 				(GameClockDate date, GameClockTime time) = value;
-				Today = date;
+				(int year, int month, int day) = date;
+
+				SetDate(day, month, year);
 				TimeOfDay = time;
 			}
 		}
@@ -75,36 +104,38 @@ namespace GTA
 		/// </exception>
 		/// <remarks>
 		/// <para>
-		/// Normalizes the day of the date when getting the current value if it is not normalized.
+		/// The getter normalizes the day of the date if it is not normalized.
 		/// For example, "Semptember 47th, 2013" will be normalized to "October 17th, 2013".
 		/// </para>
 		/// <para>
-		/// The game may get considerably heavier if you set the value to a value with a large year value such as 1e+7.
+		/// The setter normalizes the time of day if it is not normalized so the getter will be guaranteed to return
+		/// the same date right after setting the value.
+		/// </para>
+		/// <para>
+		/// The game may get considerably heavier if you set the value to a value with a large year value such as
+		/// <c>1e+7</c>.
 		/// </para>
 		/// </remarks>
 		public static GameClockDate Today
 		{
-			get
-			{
-				int month0 = MonthZero;
-				if (month0 < 0 || month0 > 11)
-				{
-					ThrowInvalidOperation_InvalidMonthZeroBased(month0);
-				}
-
-				int year = Year;
-				int day = Day;
-				if (day < 0 || day > GetDaysOfMonthZeroBased(month0, year))
-				{
-					NormalizeDate(ref year, ref month0, ref day);
-				}
-				return GameClockDate.FromYmd(year, month0 + 1, day);
-			}
-
+			get => Now.Date;
 			set
 			{
 				(int year, int month, int day) = value;
 				SetDate(day, month, year);
+
+				// Normalize the time if it is not normalized so the getter will be guaranteed to return the same date
+				// right after setting the value.
+				int hour = Hour;
+				int minute = Minute;
+				int second = Second;
+				if (second < 0 || second > 59 || minute < 0 || minute > 59 || hour < 0 || hour > 23)
+				{
+					NormalizeTime(ref second, ref minute, ref hour);
+					Hour = hour;
+					Minute = minute;
+					Second = second;
+				}
 			}
 		}
 
@@ -118,7 +149,7 @@ namespace GTA
 		/// Gets or sets the current time.
 		/// </summary>
 		/// <remarks>
-		/// Normalizes the time when getting the current value if it is not normalized.
+		/// The getter normalizes the time if it is not normalized.
 		/// For example, "30:89:72" will be normalized to "7:30:12".
 		/// </remarks>
 		public static GameClockTime TimeOfDay
@@ -380,77 +411,90 @@ namespace GTA
 
 		/// <summary>
 		/// Normalizes an time in the almost same way from how the game clock normilizes the hour, minute, and second
-		/// (which is done by shifting them by one at the same time).
+		/// (which is done by shifting them by one at the same time). Returns the number of day to add for the
+		/// noramlized date.
 		/// </summary>
-		private static void NormalizeTime(ref int second, ref int minute, ref int hour)
+		private static int NormalizeTime(ref int second, ref int minute, ref int hour)
 		{
 			if (second >= 0 && second <= 59)
 			{
 				if (minute < 0 || minute >= 60)
 				{
-					NormalizeMinuteInternal(ref minute, ref hour);
+					return NormalizeMinuteInternal(ref minute, ref hour);
 				}
 				else
 				{
 					// Should not come here, because the game would crash for an invalid hour value less than -1 or
 					// more than 25. "Invalid" minute or second values don't crash the game, but invalid hour values
-					// do. We just won't want to throw an exception, since we could semantically normalize hour values,
+					// do. We just don't want to throw an exception, since we could semantically normalize hour values,
 					// which is different from invalid month values.
-					NormalizeHourInternal(ref hour);
+					return NormalizeHourInternal(ref hour);
 				}
-
-				return;
 			}
+
+			int dayDiff = 0;
 			while (second >= 60)
 			{
 				second -= 60;
-				AddMinuteInternal(ref minute, ref hour, 1);
+				dayDiff += AddMinuteInternal(ref minute, ref hour, 1);
 			}
 			while (second < 0)
 			{
 				second += 60;
-				AddMinuteInternal(ref minute, ref hour, -1);
+				dayDiff += AddMinuteInternal(ref minute, ref hour, -1);
 			}
+
+			return dayDiff;
 		}
 
-		static void AddMinuteInternal(ref int minute, ref int hour, int diff)
+		static int AddMinuteInternal(ref int minute, ref int hour, int diff)
 		{
 			minute += diff;
 
-			NormalizeMinuteInternal(ref minute, ref hour);
+			return NormalizeMinuteInternal(ref minute, ref hour);
 		}
 
-		static void NormalizeMinuteInternal(ref int minute, ref int hour)
+		static int NormalizeMinuteInternal(ref int minute, ref int hour)
 		{
+			int dayDiff = 0;
+
 			while (minute >= 60)
 			{
 				minute -= 60;
-				AddHourInternal(ref hour, 1);
+				dayDiff += AddHourInternal(ref hour, 1);
 			}
 			while (minute < 0)
 			{
 				minute += 60;
-				AddHourInternal(ref hour, -1);
+				dayDiff += AddHourInternal(ref hour, -1);
 			}
+
+			return dayDiff;
 		}
 
-		static void AddHourInternal(ref int hour, int diff)
+		static int AddHourInternal(ref int hour, int diff)
 		{
 			hour += diff;
 
-			NormalizeHourInternal(ref hour);
+			return NormalizeHourInternal(ref hour);
 		}
 
-		static void NormalizeHourInternal(ref int hour)
+		static int NormalizeHourInternal(ref int hour)
 		{
+			int dayDiff = 0;
+
 			while (hour >= 24)
 			{
 				hour -= 24;
+				dayDiff++;
 			}
 			while (hour < 0)
 			{
 				hour += 24;
+				dayDiff--;
 			}
+
+			return dayDiff;
 		}
 
 		/// <summary>
