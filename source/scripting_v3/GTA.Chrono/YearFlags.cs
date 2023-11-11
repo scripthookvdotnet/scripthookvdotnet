@@ -13,6 +13,8 @@ namespace GTA.Chrono
 	/// </summary>
 	public readonly struct YearFlags
 	{
+		private readonly byte _value;
+
 		// It would be a bit better if there were octal number literals with the prefix "0o" in C#,
 		// just like how Rust, JavaScript, Go, Python 3, and Swift define the prefix for octal literals...
 #pragma warning disable IDE1006 // Naming Styles
@@ -57,20 +59,20 @@ namespace GTA.Chrono
 
 		internal YearFlags(byte flags)
 		{
-			Value = flags;
+			_value = flags;
 		}
 
-		internal byte Value { get; }
+		internal byte Value => _value;
 
 		internal static YearFlags FromYear(int year) => FromYearMod400(year.RemEuclid(400));
 
 		internal static YearFlags FromYearMod400(int year) => YearToFlags[year];
 
-		internal int DayCount => 366 - (Value >> 3);
+		internal int DayCount => 366 - (_value >> 3);
 
 		internal int CalcIsoWeekDelta()
 		{
-			int delta = (Value & 0b111);
+			int delta = (_value & 0b111);
 			if (delta < 3)
 			{
 				delta += 7;
@@ -87,8 +89,8 @@ namespace GTA.Chrono
 			// A -> 5
 		}
 
-		internal bool IsLeapYear => (Value & 0b1000) == 0;
+		internal bool IsLeapYear => (_value & 0b1000) == 0;
 
-		internal uint IsoWeekCount => 52u + ((0b0000_0100_0000_0110u >> Value) & 1u);
+		internal uint IsoWeekCount => 52u + ((0b0000_0100_0000_0110u >> _value) & 1u);
 	}
 }

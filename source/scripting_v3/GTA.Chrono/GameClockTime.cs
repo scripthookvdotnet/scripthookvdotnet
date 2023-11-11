@@ -30,14 +30,14 @@ namespace GTA.Chrono
 		/// <value>
 		/// The largest possible value of <see cref="GameClockTime"/>, which is 23:59:59.
 		/// </value>
-		public static readonly GameClockTime MaxValue = new(86400 - 1);
+		public static GameClockTime MaxValue = new(86400 - 1);
 		/// <summary>
 		/// Gets the smallest possible value of <see cref="GameClockDate"/>.
 		/// </summary>
 		/// <value>
 		/// The smallest possible value of <see cref="GameClockTime"/>, which is 00:00:00 (midnight).
 		/// </value>
-		public static readonly GameClockTime MinValue = new(0);
+		public static GameClockTime MinValue = new(0);
 
 		/// <summary>
 		/// Gets the hour component of the time represented by this instance.

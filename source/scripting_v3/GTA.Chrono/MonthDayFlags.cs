@@ -21,16 +21,18 @@ namespace GTA.Chrono
 	/// </summary>
 	internal readonly struct MonthDayFlags
 	{
+		private readonly uint _value;
+
 		internal MonthDayFlags(uint value) : this()
 		{
-			Value = value;
+			_value = value;
 		}
 		internal MonthDayFlags(int month, int day, YearFlags flags) : this()
 		{
-			Value = (uint)((month << 9) | (day << 4) | flags.Value);
+			_value = (uint)((month << 9) | (day << 4) | flags.Value);
 		}
 
-		internal uint Value { get; }
+		internal uint Value => _value;
 
 		internal static MonthDayFlags? New(int month, int day, YearFlags flags)
 		{
@@ -61,7 +63,7 @@ namespace GTA.Chrono
 		{
 			get
 			{
-				uint mdl = Value >> 3;
+				uint mdl = _value >> 3;
 				if (mdl > Internals.MaxMdl)
 				{
 					return false;
@@ -71,7 +73,7 @@ namespace GTA.Chrono
 			}
 		}
 
-		internal int Month => (int)(Value >> 9);
+		internal int Month => (int)(_value >> 9);
 
 		internal OrdFlags? ToOrdFlags()
 		{
@@ -85,10 +87,10 @@ namespace GTA.Chrono
 				return null;
 			}
 
-			return new MonthDayFlags((Value & 0b1_1111_1111) | ((uint)month << 9));
+			return new MonthDayFlags((_value & 0b1_1111_1111) | ((uint)month << 9));
 		}
 
-		internal int Day => (int)((Value >> 4) & 0b1_1111);
+		internal int Day => (int)((_value >> 4) & 0b1_1111);
 
 		internal MonthDayFlags? WithDay(int day)
 		{
@@ -97,14 +99,14 @@ namespace GTA.Chrono
 				return null;
 			}
 
-			return new MonthDayFlags((Value & ~0b1_1111_0000u) | ((uint)day << 4));
+			return new MonthDayFlags((_value & ~0b1_1111_0000u) | ((uint)day << 4));
 		}
 
-		internal MonthDayFlags WithFlags(YearFlags flags) => new((Value & ~0b1111u) | (flags.Value));
+		internal MonthDayFlags WithFlags(YearFlags flags) => new((_value & ~0b1111u) | (flags.Value));
 
 		public bool Equals(MonthDayFlags other)
 		{
-			return Value == other.Value;
+			return _value == other._value;
 		}
 		public override bool Equals(object obj)
 		{
@@ -127,7 +129,7 @@ namespace GTA.Chrono
 
 		public override int GetHashCode()
 		{
-			return Value.GetHashCode();
+			return _value.GetHashCode();
 		}
 	}
 }

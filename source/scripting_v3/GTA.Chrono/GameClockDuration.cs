@@ -12,6 +12,8 @@ namespace GTA.Chrono
 	/// </summary>
 	public readonly struct GameClockDuration : IEquatable<GameClockDuration>, IComparable<GameClockDuration>, IComparable
 	{
+		private readonly long _secs;
+
 		internal GameClockDuration(long seconds) : this()
 		{
 			_secs = seconds;
@@ -46,21 +48,19 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Represents the zero <see cref="GameClockDuration"/> value. This field is read-only.
 		/// </summary>
-		public static readonly GameClockDuration Zero = new(0);
+		public static GameClockDuration Zero = new(0);
 		/// <summary>
 		/// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
 		/// <see cref="GameClockDateTime.MinValue"/> to <see cref="GameClockDateTime.MaxValue"/>.
 		/// This field is read-only.
 		/// </summary>
-		public static readonly GameClockDuration MaxValue = new(MaxSecDifference);
+		public static GameClockDuration MaxValue = new(MaxSecDifference);
 		/// <summary>
 		/// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
 		/// <see cref="GameClockDateTime.MaxValue"/> to <see cref="GameClockDateTime.MinValue"/>.
 		/// This field is read-only.
 		/// </summary>
-		public static readonly GameClockDuration MinValue = new(MinSecDifference);
-
-		internal readonly long _secs;
+		public static GameClockDuration MinValue = new(MinSecDifference);
 
 		/// <summary>
 		/// Gets the hours component of the time interval represented by the current <see cref="GameClockDuration"/>

@@ -39,17 +39,17 @@ namespace GTA.Chrono
 	public readonly struct GameClockDate : IEquatable<GameClockDate>, IComparable<GameClockDate>, IComparable,
 		Datelike<GameClockDate>
 	{
+		private readonly int _year;
+		private readonly OrdFlags _ordFlags;
+
 		internal GameClockDate(int year, OrdFlags ordFlags) : this()
 		{
 			_year = year;
 			_ordFlags = ordFlags;
 		}
 
-		internal readonly int _year;
-		internal readonly OrdFlags _ordFlags;
-
-		private static readonly OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
-		private static readonly OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
+		private static OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
+		private static OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
 
 		/// <summary>
 		/// Represents the largest possible value of a <see cref="GameClockDate"/>.
@@ -57,32 +57,32 @@ namespace GTA.Chrono
 		/// <value>
 		/// The largest possible value of <see cref="GameClockTime"/>, which is December 31, 2147483647 CE.
 		/// </value>
-		public static readonly GameClockDate MaxValue = new(int.MaxValue, OrdFlagsForMaxDate);
+		public static GameClockDate MaxValue = new(int.MaxValue, OrdFlagsForMaxDate);
 		/// <summary>
 		/// Represents the smallest possible value of a <see cref="GameClockDate"/>.
 		/// </summary>
 		/// <value>
 		/// The smallest possible value of <see cref="GameClockTime"/>, which is January 1, -2147483648 BCE.
 		/// </value>
-		public static readonly GameClockDate MinValue = new(int.MinValue, OrdFlagsForMinDate);
+		public static GameClockDate MinValue = new(int.MinValue, OrdFlagsForMinDate);
 
 		/// <summary>
 		/// Returns the year part of this <see cref="GameClockDate"/>. The returned value is an integer in the range of
 		/// <see langword="int"/>.
 		/// </summary>
-		public readonly int Year => _year;
+		public int Year => _year;
 
 		/// <summary>
 		/// Returns the day of the year represented by this <see cref="GameClockDate"/> starting from 1.
 		/// The returned value is an integer between 1 and 366.
 		/// </summary>
-		public readonly int DayOfYear => (int)_ordFlags.Ordinal;
+		public int DayOfYear => (int)_ordFlags.Ordinal;
 
 		/// <summary>
 		/// Returns the day of the year represented by this <see cref="GameClockDate"/> starting from 0.
 		/// The returned value is an integer between 0 and 365 (the same as <see cref="DayOfYear"/> minus 1).
 		/// </summary>
-		public readonly int DayOfYear0 => DayOfYear - 1;
+		public int DayOfYear0 => DayOfYear - 1;
 
 		/// <summary>
 		/// Returns the day of the week represented by this <see cref="GameClockDate"/> in
@@ -90,7 +90,7 @@ namespace GTA.Chrono
 		/// The returned value is an integer between 0 and 6, where 0 indicates Sunday, 1 indicates Monday, 2 indicates
 		/// Tuesday, 3 indicates Wednesday, 4 indicates Thursday, 5 indicates Friday, and 6 indicates Saturday.
 		/// </summary>
-		public readonly DayOfWeek DayOfWeek
+		public DayOfWeek DayOfWeek
 		{
 			get
 			{
@@ -105,33 +105,33 @@ namespace GTA.Chrono
 		/// 2 indicates Wednesday, 3 indicates Thursday, 4 indicates Friday, 5 indicates Saturday, and 6 indicates
 		/// Sunday.
 		/// </summary>
-		public readonly IsoDayOfWeek IsoDayOfWeek => _ordFlags.IsoDayOfWeek;
+		public IsoDayOfWeek IsoDayOfWeek => _ordFlags.IsoDayOfWeek;
 
 		/// <summary>
 		/// Returns the month part of this <see cref="GameClockDate"/>.
 		/// The returned value is an integer between 1 and 12.
 		/// </summary>
-		public readonly int Month => MonthDayFlags.Month;
+		public int Month => MonthDayFlags.Month;
 
 		/// <summary>
 		/// Returns the zero-based month part of this <see cref="GameClockDate"/>.
 		/// The returned value is an integer between 0 and 11 (the same as <see cref="Month"/> minus 1).
 		/// </summary>
-		public readonly int Month0 => MonthDayFlags.Month - 1;
+		public int Month0 => MonthDayFlags.Month - 1;
 
 		/// <summary>
 		/// Returns the day-of-month part of this <see cref="GameClockDate"/>.
 		/// The returned value is an integer between 1 and 31.
 		/// </summary>
-		public readonly int Day => MonthDayFlags.Day;
+		public int Day => MonthDayFlags.Day;
 
 		/// <summary>
 		/// Returns the zero-based day-of-month part of this <see cref="GameClockDate"/>.
 		/// The returned value is an integer between 0 and 30 (the same as <see cref="Day"/> minus 1).
 		/// </summary>
-		public readonly int Day0 => MonthDayFlags.Day - 1;
+		public int Day0 => MonthDayFlags.Day - 1;
 
-		internal readonly MonthDayFlags MonthDayFlags => _ordFlags.ToMonthDayFlags();
+		internal MonthDayFlags MonthDayFlags => _ordFlags.ToMonthDayFlags();
 
 		static GameClockDate? FromOrdinalAndFlags(int year, int ordinal, YearFlags flags)
 		{

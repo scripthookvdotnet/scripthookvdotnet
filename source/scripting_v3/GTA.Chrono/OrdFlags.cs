@@ -19,22 +19,24 @@ namespace GTA.Chrono
 	/// </summary>
 	internal readonly struct OrdFlags
 	{
+		private readonly uint _value;
+
 		// OL: (ordinal << 1) | leap year flag (where the least bit indicates non-leap year)
 		private const int MinOrdLeap = 1 << 1;
 		private const int MaxOrdLeap = 366 << 1; // `(366 << 1) | 1` would be day 366 in a non-leap year
 
 		internal OrdFlags(uint value) : this()
 		{
-			Value = value;
+			_value = value;
 		}
 		internal OrdFlags(int ordinal, YearFlags flags) : this()
 		{
-			Value = ((uint)ordinal << 4) + flags.Value;
+			_value = ((uint)ordinal << 4) + flags.Value;
 		}
 
-		internal uint Value { get; }
+		internal uint Value => _value;
 
-		internal uint Ordinal => (Value >> 4);
+		internal uint Ordinal => (_value >> 4);
 
 		internal static OrdFlags? New(int ordinal, YearFlags flags)
 		{
@@ -48,18 +50,18 @@ namespace GTA.Chrono
 			{
 				return null;
 			}
-			var of = new OrdFlags(((uint)ordinal << 4) | (Value & 0b1111));
+			var of = new OrdFlags(((uint)ordinal << 4) | (_value & 0b1111));
 			return of.Validate();
 		}
 
 		internal OrdFlags WithOrdinalUnchecked(uint ordinal)
 		{
-			return new OrdFlags((ordinal << 4) | (Value & 0b1111));
+			return new OrdFlags((ordinal << 4) | (_value & 0b1111));
 		}
 
-		internal YearFlags Flags => new((byte)(Value & 0b1111));
+		internal YearFlags Flags => new((byte)(_value & 0b1111));
 
-		internal bool IsLeapYear => ((Value & 0b1000) == 0);
+		internal bool IsLeapYear => ((_value & 0b1000) == 0);
 
 		internal static OrdFlags FromOrdinalDateUnchecked(int year, int ordinal)
 		{
@@ -83,7 +85,7 @@ namespace GTA.Chrono
 
 		internal MonthDayFlags ToMonthDayFlags() => MonthDayFlags.FromOrdFlags(this);
 
-		internal uint Ol => Value >> 3;
+		internal uint Ol => _value >> 3;
 
 		internal OrdFlags? Validate()
 		{
@@ -104,7 +106,7 @@ namespace GTA.Chrono
 			weekday = GetIsoWeekdayFromU32Mod7(weekOrd);
 		}
 
-		internal IsoDayOfWeek IsoDayOfWeek => GetIsoWeekdayFromU32Mod7((Value >> 4) + (Value & 0b111));
+		internal IsoDayOfWeek IsoDayOfWeek => GetIsoWeekdayFromU32Mod7((_value >> 4) + (_value & 0b111));
 
 		internal static IsoDayOfWeek GetIsoWeekdayFromU32Mod7(uint n)
 		{
@@ -122,7 +124,7 @@ namespace GTA.Chrono
 
 		public bool Equals(OrdFlags other)
 		{
-			return Value == other.Value;
+			return _value == other._value;
 		}
 		public override bool Equals(object obj)
 		{
@@ -145,7 +147,7 @@ namespace GTA.Chrono
 
 		public override int GetHashCode()
 		{
-			return Value.GetHashCode();
+			return _value.GetHashCode();
 		}
 	}
 }

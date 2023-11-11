@@ -36,14 +36,14 @@ namespace GTA.Chrono
 	/// </remarks>
 	public readonly struct GameClockDateTime : IEquatable<GameClockDateTime>, IComparable<GameClockDateTime>, IComparable, Datelike<GameClockDateTime>, Timelike<GameClockDateTime>
 	{
+		private readonly GameClockDate _date;
+		private readonly GameClockTime _time;
+
 		public GameClockDateTime(GameClockDate date, GameClockTime time) : this()
 		{
 			_date = date;
 			_time = time;
 		}
-
-		internal readonly GameClockDate _date;
-		internal readonly GameClockTime _time;
 
 		/// <summary>
 		/// Gets the largest possible value of <see cref="GameClockDateTime"/>.
@@ -52,7 +52,7 @@ namespace GTA.Chrono
 		/// The largest possible value of <see cref="GameClockTime"/>, which is <c>+2147483647-12-31T23:59:59</c>
 		/// (23:59:59 on December 31, 2147483647 CE).
 		/// </value>
-		public static readonly GameClockDateTime MaxValue = new(GameClockDate.MaxValue, GameClockTime.MaxValue);
+		public static GameClockDateTime MaxValue = new(GameClockDate.MaxValue, GameClockTime.MaxValue);
 		/// <summary>
 		/// Gets the smallest possible value of <see cref="GameClockDateTime"/>.
 		/// </summary>
@@ -60,34 +60,34 @@ namespace GTA.Chrono
 		/// The smallest possible value of <see cref="GameClockTime"/>, which is <c>-2147483648-01-01T00:00:00</c>
 		/// (00:00:00 on January 1, -2147483648 BCE).
 		/// </value>
-		public static readonly GameClockDateTime MinValue = new(GameClockDate.MinValue, GameClockTime.MinValue);
+		public static GameClockDateTime MinValue = new(GameClockDate.MinValue, GameClockTime.MinValue);
 
 		/// <summary>
 		/// Returns the date component of this instance.
 		/// </summary>
-		public readonly GameClockDate Date => _date;
+		public GameClockDate Date => _date;
 		/// <summary>
 		/// Returns the time component of this instance.
 		/// </summary>
-		public readonly GameClockTime Time => _time;
+		public GameClockTime Time => _time;
 
 		/// <summary>
 		/// Returns the year part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer in the range of <see langword="int"/>.
 		/// </summary>
-		public readonly int Year => _date.Year;
+		public int Year => _date.Year;
 
 		/// <summary>
 		/// Returns the day of the year represented by this <see cref="GameClockDateTime"/> starting from 1.
 		/// The returned value is an integer between 1 and 366.
 		/// </summary>
-		public readonly int DayOfYear => _date.DayOfYear;
+		public int DayOfYear => _date.DayOfYear;
 
 		/// <summary>
 		/// Returns the day of the year represented by this <see cref="GameClockDateTime"/> starting from 0.
 		/// The returned value is an integer between 0 and 365 (the same as <see cref="DayOfYear"/> minus 1).
 		/// </summary>
-		public readonly int DayOfYear0 => _date.DayOfYear0;
+		public int DayOfYear0 => _date.DayOfYear0;
 
 		/// <summary>
 		/// Returns the day of the week represented by this <see cref="GameClockDateTime"/> in
@@ -95,7 +95,7 @@ namespace GTA.Chrono
 		/// The returned value is an integer between 0 and 6, where 0 indicates Sunday, 1 indicates Monday, 2 indicates
 		/// Tuesday, 3 indicates Wednesday, 4 indicates Thursday, 5 indicates Friday, and 6 indicates Saturday.
 		/// </summary>
-		public readonly DayOfWeek DayOfWeek => _date.DayOfWeek;
+		public DayOfWeek DayOfWeek => _date.DayOfWeek;
 
 		/// <summary>
 		/// Returns the day of the week for ISO 8601 represented by this <see cref="GameClockDateTime"/> in
@@ -104,36 +104,36 @@ namespace GTA.Chrono
 		/// 2 indicates Wednesday, 3 indicates Thursday, 4 indicates Friday, 5 indicates Saturday, and 6 indicates
 		/// Sunday.
 		/// </summary>
-		public readonly IsoDayOfWeek IsoDayOfWeek => _date.IsoDayOfWeek;
+		public IsoDayOfWeek IsoDayOfWeek => _date.IsoDayOfWeek;
 
 		/// <summary>
 		/// Returns the month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 1 and 12.
 		/// </summary>
-		public readonly int Month => _date.Month;
+		public int Month => _date.Month;
 
 		/// <summary>
 		/// Returns the zero-based month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 0 and 11 (the same as <see cref="Month"/> minus 1).
 		/// </summary>
-		public readonly int Month0 => _date.Month0;
+		public int Month0 => _date.Month0;
 
 		/// <summary>
 		/// Returns the day-of-month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 1 and 31.
 		/// </summary>
-		public readonly int Day => _date.Day;
+		public int Day => _date.Day;
 
 		/// <summary>
 		/// Returns the zero-based day-of-month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 0 and 30 (the same as <see cref="Day"/> minus 1).
 		/// </summary>
-		public readonly int Day0 => _date.Day0;
+		public int Day0 => _date.Day0;
 
 		/// <summary>
 		/// Gets the hour component of the time represented by this instance.
 		/// </summary>
-		public readonly int Hour => _time.Hour;
+		public int Hour => _time.Hour;
 
 		/// <summary>
 		/// Gets the hour number from 1 to 12 of the time represented by this instance with a boolean flag, which is
@@ -150,12 +150,12 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Gets the minute component of the time represented by this instance.
 		/// </summary>
-		public readonly int Minute => _time.Minute;
+		public int Minute => _time.Minute;
 
 		/// <summary>
 		/// Gets the second component of the time represented by this instance.
 		/// </summary>
-		public readonly int Second => _time.Second;
+		public int Second => _time.Second;
 
 		/// <summary>
 		/// Gets the number of seconds past the last midnight.
@@ -263,7 +263,7 @@ namespace GTA.Chrono
 		/// An object whose value is the date time represented by this instance but the hour is the specified
 		/// <paramref name="hour"/>.
 		/// </returns>
-		public readonly GameClockDateTime WithHour(int hour) => new(_date, _time.WithHour(hour));
+		public GameClockDateTime WithHour(int hour) => new(_date, _time.WithHour(hour));
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the minute number changed.
@@ -273,7 +273,7 @@ namespace GTA.Chrono
 		/// An object whose value is the date time represented by this instance but the minute is the specified
 		/// <paramref name="minute"/>.
 		/// </returns>
-		public readonly GameClockDateTime WithMinute(int minute) => new(_date, _time.WithMinute(minute));
+		public GameClockDateTime WithMinute(int minute) => new(_date, _time.WithMinute(minute));
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the second number changed.
@@ -283,7 +283,7 @@ namespace GTA.Chrono
 		/// An object whose value is the date time represented by this instance but the second is the specified
 		/// <paramref name="second"/>.
 		/// </returns>
-		public readonly GameClockDateTime WithSecond(int second) => new(_date, _time.WithSecond(second));
+		public GameClockDateTime WithSecond(int second) => new(_date, _time.WithSecond(second));
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> from a <see cref="DateTime"/>.
@@ -503,7 +503,7 @@ namespace GTA.Chrono
 		/// </summary>
 		/// <param name="date">The game clock date component.</param>
 		/// <param name="time">The game clock time component.</param>
-		public readonly void Deconstruct(out GameClockDate date, out GameClockTime time)
+		public void Deconstruct(out GameClockDate date, out GameClockTime time)
 		{
 			date = _date;
 			time = _time;
