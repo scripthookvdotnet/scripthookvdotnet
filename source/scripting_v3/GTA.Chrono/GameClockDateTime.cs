@@ -476,6 +476,20 @@ namespace GTA.Chrono
 			return true;
 		}
 
+		/// <summary>
+		/// Subtracts a duration in <paramref name="months"/> from the date time.
+		/// </summary>
+		/// <param name="months">The number of months to subtract. Can be negative.</param>
+		/// <returns>
+		/// An object whose value is the date time represented by this instance minus <paramref name="months"/>.
+		/// </returns>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
+		/// <see cref="MaxValue"/>.
+		/// </exception>
+		/// <remarks>
+		/// Uses the last day of the month if the day does not exist in the resulting month.
+		/// </remarks>
 		public GameClockDateTime SubtractMonths(long months)
 		{
 			if (!TrySubtractMonths(months, out GameClockDateTime dateTime))
@@ -486,6 +500,21 @@ namespace GTA.Chrono
 			return dateTime;
 		}
 
+		/// <summary>
+		/// Tries to subtract a duration in <paramref name="months"/> from the date time.
+		/// </summary>
+		/// <param name="months">The number of months to subtract. Can be negative.</param>
+		/// <param name="dateTime">
+		/// When this method returns, contains the result <see cref="GameClockDateTime"/>, or an undefined value on
+		/// failure.
+		/// </param>
+		/// <returns>
+		/// <see langword="true"/> if the resulting date time is between <see cref="MinValue"/> and
+		/// <see cref="MaxValue"/>; otherwise, <see langword="false"/>.
+		/// </returns>
+		/// <remarks>
+		/// Uses the last day of the month if the day does not exist in the resulting month.
+		/// </remarks>
 		public bool TrySubtractMonths(long months, out GameClockDateTime dateTime)
 		{
 			if (_date.TrySubtractMonths(months, out GameClockDate date))

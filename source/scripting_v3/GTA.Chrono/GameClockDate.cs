@@ -626,7 +626,7 @@ namespace GTA.Chrono
 		}
 
 		/// <summary>
-		/// Tries to subtract a duration in <paramref name="months"/> to the date.
+		/// Tries to subtract a duration in <paramref name="months"/> from the date.
 		/// </summary>
 		/// <param name="months">The number of months to subtract. Can be negative.</param>
 		/// <param name="date">
