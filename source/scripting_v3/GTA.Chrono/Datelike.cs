@@ -54,7 +54,7 @@ public interface Datelike<T>
 	/// Returns the zero-based month part of this interface.
 	/// The returned value is an integer between 0 and 11 (the same as <see cref="Month"/> minus 1).
 	/// </summary>
-	public int ZeroBasedMonth { get; }
+	public int Month0 { get; }
 
 	/// <summary>
 	/// Returns the day-of-month part of this interface. The returned value is an integer between 1 and 31.
@@ -65,7 +65,7 @@ public interface Datelike<T>
 	/// Returns the zero-based day-of-month part of this interface.
 	/// The returned value is an integer between 0 and 30 (the same as <see cref="Day"/> minus 1).
 	/// </summary>
-	public int ZeroBasedDay { get; }
+	public int Day0 { get; }
 
 	/// <summary>
 	/// Returns the day of the year represented by this interface starting from 1.
@@ -77,7 +77,7 @@ public interface Datelike<T>
 	/// Returns the day of the year represented by this interface starting from 0.
 	/// The returned value is an integer between 0 and 365 (the same as <see cref="DayOfYear"/> minus 1).
 	/// </summary>
-	public int ZeroBasedDayOfYear { get; }
+	public int DayOfYear0 { get; }
 
 	/// <summary>
 	/// Returns the day of the week represented by this interface in <see cref="System.DayOfWeek"/>.
@@ -135,7 +135,7 @@ public interface Datelike<T>
 	/// <exception cref="ArgumentOutOfRangeException">
 	/// The specified <paramref name="month"/> is invalid (not an integer between 0 and 11).
 	/// </exception>
-	public T WithZeroBasedMonth(int month);
+	public T WithMonth0(int month);
 
 	/// <summary>
 	/// Makes a new <see cref="Datelike{T}"/> with the day of month (starting from 1) changed.
@@ -161,7 +161,7 @@ public interface Datelike<T>
 	/// <exception cref="ArgumentOutOfRangeException">
 	/// The specified <paramref name="day"/> is invalid.
 	/// </exception>
-	public T WithZeroBasedDay(int day);
+	public T WithDay0(int day);
 
 	/// <summary>
 	/// Makes a new <see cref="Datelike{T}"/> with the day of year (starting from 1) changed.
@@ -187,5 +187,5 @@ public interface Datelike<T>
 	/// <exception cref="ArgumentOutOfRangeException">
 	/// The specified <paramref name="dayOfYear"/> is invalid.
 	/// </exception>
-	public T WithZeroBasedDayOfYear(int dayOfYear);
+	public T WithDayOfYear0(int dayOfYear);
 }

@@ -87,7 +87,7 @@ namespace GTA.Chrono
 		/// Returns the day of the year represented by this <see cref="GameClockDateTime"/> starting from 0.
 		/// The returned value is an integer between 0 and 365 (the same as <see cref="DayOfYear"/> minus 1).
 		/// </summary>
-		public readonly int ZeroBasedDayOfYear => _date.ZeroBasedDayOfYear;
+		public readonly int DayOfYear0 => _date.DayOfYear0;
 
 		/// <summary>
 		/// Returns the day of the week represented by this <see cref="GameClockDateTime"/> in
@@ -116,7 +116,7 @@ namespace GTA.Chrono
 		/// Returns the zero-based month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 0 and 11 (the same as <see cref="Month"/> minus 1).
 		/// </summary>
-		public readonly int ZeroBasedMonth => _date.ZeroBasedMonth;
+		public readonly int Month0 => _date.Month0;
 
 		/// <summary>
 		/// Returns the day-of-month part of this <see cref="GameClockDateTime"/>.
@@ -128,7 +128,7 @@ namespace GTA.Chrono
 		/// Returns the zero-based day-of-month part of this <see cref="GameClockDateTime"/>.
 		/// The returned value is an integer between 0 and 30 (the same as <see cref="Day"/> minus 1).
 		/// </summary>
-		public readonly int ZeroBasedDay => _date.ZeroBasedDay;
+		public readonly int Day0 => _date.Day0;
 
 		/// <summary>
 		/// Gets the hour component of the time represented by this instance.
@@ -200,7 +200,7 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// The specified <paramref name="month"/> is invalid (not an integer between 0 and 11).
 		/// </exception>
-		public GameClockDateTime WithZeroBasedMonth(int month) => new(_date.WithZeroBasedMonth(month), _time);
+		public GameClockDateTime WithMonth0(int month) => new(_date.WithMonth0(month), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of month (starting from 1) changed.
@@ -226,7 +226,7 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// The specified <paramref name="day"/> is invalid.
 		/// </exception>
-		public GameClockDateTime WithZeroBasedDay(int day) => new(_date.WithZeroBasedDay(day), _time);
+		public GameClockDateTime WithDay0(int day) => new(_date.WithDay0(day), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of year (starting from 1) changed.
@@ -252,8 +252,8 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentOutOfRangeException">
 		/// The specified <paramref name="dayOfYear"/> is invalid.
 		/// </exception>
-		public GameClockDateTime WithZeroBasedDayOfYear(int dayOfYear)
-			=> new(_date.WithZeroBasedDayOfYear(dayOfYear), _time);
+		public GameClockDateTime WithDayOfYear0(int dayOfYear)
+			=> new(_date.WithDayOfYear0(dayOfYear), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the hour number changed.

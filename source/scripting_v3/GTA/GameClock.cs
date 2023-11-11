@@ -59,7 +59,7 @@ namespace GTA
 		{
 			get
 			{
-				int month0 = MonthZero;
+				int month0 = Month0;
 				if (month0 < 0 || month0 > 11)
 				{
 					ThrowInvalidInternalMonthOfGameClockException(month0);
@@ -78,7 +78,7 @@ namespace GTA
 
 				int year = Year;
 				int day = Day + dayDiffForNormalizedDate;
-				if (day < 0 || day > GetDaysOfMonthZeroBased(month0, year))
+				if (day < 0 || day > GetDaysOfMonth0(month0, year))
 				{
 					NormalizeDate(ref year, ref month0, ref day);
 				}
@@ -187,7 +187,7 @@ namespace GTA
 		public static int Day
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH);
-			set => SetDateZeroBasedMonth(value, MonthZero, Year);
+			set => SetDateMonth0(value, Month0, Year);
 		}
 
 		/// <summary>
@@ -205,12 +205,12 @@ namespace GTA
 		/// </para>
 		/// <para>
 		/// When you do not plan to use this value to draw on the screen,
-		/// consider using <see cref="MonthZero"/> since the game internally uses the zero-based month representation.
+		/// consider using <see cref="Month0"/> since the game internally uses the zero-based month representation.
 		/// </para>
 		/// </remarks>
 		public static int Month
 		{
-			get => MonthZero + 1;
+			get => Month0 + 1;
 			set
 			{
 				ThrowHelper.CheckArgumentRange(nameof(value), value, 1, 12);
@@ -231,13 +231,13 @@ namespace GTA
 		/// and the invalid month will result an unexpected date time, the game having an invalid month for the game
 		/// clock will not crash the game.
 		/// </remarks>
-		public static int MonthZero
+		public static int Month0
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_MONTH);
 			set
 			{
 				ThrowHelper.CheckArgumentRange(nameof(value), value, 0, 11);
-				SetDateZeroBasedMonth(Day, value, Year);
+				SetDateMonth0(Day, value, Year);
 			}
 		}
 		/// <summary>
@@ -252,7 +252,7 @@ namespace GTA
 		public static int Year
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_YEAR);
-			set => SetDateZeroBasedMonth(Day, MonthZero, value);
+			set => SetDateMonth0(Day, Month0, value);
 		}
 
 		/// <summary>
@@ -276,7 +276,7 @@ namespace GTA
 		/// On the other hands, you can safely set an arbitrary day value as the game normalizes the day value as a result
 		/// when the game updates the clock minute.
 		/// </remarks>
-		private static void SetDate(int day, int month, int year) => SetDateZeroBasedMonth(day, month - 1, year);
+		private static void SetDate(int day, int month, int year) => SetDateMonth0(day, month - 1, year);
 
 		/// <summary>
 		/// Sets the current date in the GTA world.
@@ -299,7 +299,7 @@ namespace GTA
 		/// On the other hands, you can safely set an arbitrary day value as the game normalizes the day value as a result
 		/// when the game updates the clock minute.
 		/// </remarks>
-		private static void SetDateZeroBasedMonth(int day, int month, int year) => Function.Call(Hash.SET_CLOCK_DATE, day, month, year);
+		private static void SetDateMonth0(int day, int month, int year) => Function.Call(Hash.SET_CLOCK_DATE, day, month, year);
 
 		/// <summary>
 		/// Adds the specified number of hours, minutes, and seconds to the current in-game time.
@@ -374,7 +374,7 @@ namespace GTA
 		{
 			while (true)
 			{
-				int monthDay = GetDaysOfMonthZeroBased(month0, year);
+				int monthDay = GetDaysOfMonth0(month0, year);
 				if (day <= monthDay)
 				{
 					break;
@@ -395,7 +395,7 @@ namespace GTA
 					--month0;
 				}
 
-				day += GetDaysOfMonthZeroBased(month0, year);
+				day += GetDaysOfMonth0(month0, year);
 			}
 
 			return;
@@ -516,7 +516,7 @@ namespace GTA
 		/// Get the number of month. Returns 31 if month0 is not in the range of 0 to 11 for smaller code size
 		/// (having an statement that throws an exception significantly increases code size).
 		/// </summary>
-		private static int GetDaysOfMonthZeroBased(int month0, int year)
+		private static int GetDaysOfMonth0(int month0, int year)
 		{
 			return month0 switch
 			{
