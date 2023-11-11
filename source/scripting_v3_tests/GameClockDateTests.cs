@@ -10,13 +10,13 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		[Fact]
 		public void MaxValue()
 		{
-			VerifyTimeSpanYmd(GameClockDate.MaxValue, int.MaxValue, 12, 31);
+			VerifyClockDateYmd(GameClockDate.MaxValue, int.MaxValue, 12, 31);
 		}
 
 		[Fact]
 		public void MinValue()
 		{
-			VerifyTimeSpanYmd(GameClockDate.MinValue, int.MinValue, 1, 1);
+			VerifyClockDateYmd(GameClockDate.MinValue, int.MinValue, 1, 1);
 		}
 
 		public static TheoryData<int, int, int> Ymd_Successful_Data =>
@@ -46,7 +46,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		public void FromYmd_returns_expected_value_for_valid_date(int year, int month, int day)
 		{
 			GameClockDate date = GameClockDate.FromYmd(year, month, day);
-			VerifyTimeSpanYmd(date, year, month, day);
+			VerifyClockDateYmd(date, year, month, day);
 		}
 
 		[Theory]
@@ -59,7 +59,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			Assert.True(constructedValidDate);
 			Assert.NotEqual(default, date);
 
-			VerifyTimeSpanYmd(date, year, month, day);
+			VerifyClockDateYmd(date, year, month, day);
 		}
 
 		[Theory]
@@ -524,7 +524,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			yield return new object[] { int.MaxValue, 12, 31 };
 		}
 
-		private static void VerifyTimeSpanYmd(GameClockDate gameClockDate, int year, int month, int day)
+		private static void VerifyClockDateYmd(GameClockDate gameClockDate, int year, int month, int day)
 		{
 			Assert.Equal(year, gameClockDate.Year);
 			Assert.Equal(month, gameClockDate.Month);
