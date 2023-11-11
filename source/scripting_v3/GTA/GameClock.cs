@@ -193,11 +193,15 @@ namespace GTA
 		/// <summary>
 		/// Gets or sets the day of month starting from 1.
 		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The value is not between 0 and 11 (in the setter only).
+		/// </exception>
 		/// <remarks>
 		/// <para>
-		/// You should not set a value not in the range of 1 to 12 to this property.
-		/// Doing so may result in an unexpected date time, since the game uses an array of days in months
-		/// without array bound checking.
+		/// You should not expect the getter to always return a value in the range of 1 to 12.
+		/// Although the game uses an array of days in months (12 elements) without array bound checking
+		/// and the invalid month will result an unexpected date time, the game having an invalid month for the game
+		/// clock will not crash the game.
 		/// </para>
 		/// <para>
 		/// When you do not plan to use this value to draw on the screen,
@@ -207,22 +211,34 @@ namespace GTA
 		public static int Month
 		{
 			get => MonthZero + 1;
-			set => MonthZero = value - 1;
+			set
+			{
+				ThrowHelper.CheckArgumentRange(nameof(value), value, 1, 12);
+				SetDate(Day, value, Year);
+			}
 		}
 
 		/// <summary>
 		/// Gets or sets the day of month starting from 0.
 		/// The representation is the same as the game uses for the month.
 		/// </summary>
+		/// <exception cref="ArgumentOutOfRangeException">
+		/// The value is not between 0 and 11 (in the setter only).
+		/// </exception>
 		/// <remarks>
-		/// You should not set a value not in the range of 0 to 11 to this property.
-		/// Doing so may result in an unexpected date time, since the game uses an array of days in months
-		/// without array bound checking.
+		/// You should not expect the getter to always return a value in the range of 0 to 11.
+		/// Although the game uses an array of days in months (12 elements) without array bound checking
+		/// and the invalid month will result an unexpected date time, the game having an invalid month for the game
+		/// clock will not crash the game.
 		/// </remarks>
 		public static int MonthZero
 		{
 			get => Function.Call<int>(Hash.GET_CLOCK_MONTH);
-			set => SetDateZeroBasedMonth(Day, value, Year);
+			set
+			{
+				ThrowHelper.CheckArgumentRange(nameof(value), value, 0, 11);
+				SetDateZeroBasedMonth(Day, value, Year);
+			}
 		}
 		/// <summary>
 		/// Gets or sets the year number (no range limitation).
