@@ -1,6 +1,9 @@
 //
-// Copyright (C) 2023 kagikn & contributors
-// License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
+// Copyright 2012-2014 The Rust Project Developers
+// Copyright 2023 kagikn & contributors
+// Licensed under the MIT License.
+// Original license:
+// https://github.com/chronotope/chrono/blob/a44142528eb8bab32f9e16cb74e84bb060f4a667/LICENSE.txt
 //
 
 using System;
