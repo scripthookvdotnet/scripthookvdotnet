@@ -37,7 +37,7 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
 
 ## Chrono
 https://github.com/chronotope/chrono/  
-Portions of `GameClockDate`, `GameClockTime`, `GameClockDateTime`, `Internals`, `MothDayFlags`,
+Portions of `GameClockDate`, `GameClockTime`, `GameClockDateTime`, `Internals`, `MonthDayFlags`,
 `OrdFlags`, and `YearFlags` in the `GTA.Chrono` namespace use code from Chrono (for Rust), which
 carry the following license:
 ```
