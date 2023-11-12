@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2023 kagikn & contributors
+// License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
+//
+
 using System;
 using GTA.Chrono;
 using Xunit;
