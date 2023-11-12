@@ -36,4 +36,5 @@ Any contributions to the project are welcomed, it's recommended to use GitHub [p
 
 ## License
 
-All the source code except for the Vector, Matrix and Quaternion classes, which are licensed separately, is licensed under the conditions of the [zlib license](LICENSE.txt).
+ScriptHookVDotNet is primarily distributed under the terms of the zlib license.
+See [LICENSE](LICENSE.txt) and [COPYRIGHT](COPYRIGHT) for details.

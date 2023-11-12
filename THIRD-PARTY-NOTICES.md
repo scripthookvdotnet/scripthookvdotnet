@@ -1,5 +1,7 @@
 # Notices
-The following is a list of applicable licensing information for all the third-party material used, in whole or in part, within this software.
+The following is a list of applicable licensing information for all the third-party material used,
+in whole or in part, within this software. See [COPYRIGHT](COPYRIGHT.md) for copyright notices
+including portions of source code written by third parties.
 
 ## InlineIL.Fody
 https://github.com/ltrzesniewski/InlineIL.Fody
