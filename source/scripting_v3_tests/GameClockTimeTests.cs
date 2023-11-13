@@ -208,7 +208,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 
 		[Theory]
 		[MemberData(nameof(SignedDurationSince_Data))]
-		public static void Signed_duration_since_other_time_returns_signed_duration(GameClockTime laterTime,
+		public static void Signed_duration_since_another_time_returns_signed_duration(GameClockTime laterTime,
 			GameClockTime earlierTime, GameClockDuration expectedDurationNonNegative)
 		{
 			GameClockDuration posDuration = laterTime.SignedDurationSince(earlierTime);

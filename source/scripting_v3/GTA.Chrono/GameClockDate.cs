@@ -629,7 +629,7 @@ namespace GTA.Chrono
 		}
 
 		/// <summary>
-		/// Subtracts a specified game clock duration to a specified game clock date, yielding a new date.
+		/// Subtracts a specified duration from a specified date, yielding a new date.
 		/// Discards the fractional days, rounding to the closest integral number of days towards
 		/// <see cref="GameClockDuration.Zero"/>.
 		/// </summary>
@@ -651,6 +651,22 @@ namespace GTA.Chrono
 
 			return result;
 		}
+
+		/// <summary>
+		/// Subtracts a specified from the current date, yielding a signed duration.
+		/// This does not overflow or underflow at all, as all possible output fits in the range of
+		/// <see cref="GameClockDuration"/>.
+		/// </summary>
+		/// <param name="d1">The date value to subtract from (the minuend).</param>
+		/// <param name="d2">The date value to subtract (the subtrahend).</param>
+		/// <returns>
+		/// The signed duration between <paramref name="d1"/> and <paramref name="d2"/>; that is,
+		/// <paramref name="d1"/> minus <paramref name="d2"/>.
+		/// </returns>
+		/// <remarks>
+		/// The implementation is a wrapper around <see cref="SignedDurationSince(GameClockDate)"/>.
+		/// </remarks>
+		public static GameClockDuration operator -(GameClockDate d1, GameClockDate d2) => d1.SignedDurationSince(d2);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDate"/> with the year number changed, while keeping the same month and day.
@@ -811,7 +827,7 @@ namespace GTA.Chrono
 		/// </summary>
 		/// <param name="value">The date to subtract.</param>
 		/// <returns>
-		/// An object whose value is the date represented by a duration subtracted from this instance by
+		/// A signed duration that is equal to the date represented by this instance minus the date represented by
 		/// <paramref name="value"/>.
 		/// </returns>
 		public GameClockDuration SignedDurationSince(GameClockDate value)

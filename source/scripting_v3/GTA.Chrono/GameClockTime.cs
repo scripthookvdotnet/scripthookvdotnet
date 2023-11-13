@@ -232,7 +232,10 @@ namespace GTA.Chrono
 		/// <see cref="GameClockDuration"/> within +/- 1 day.
 		/// </summary>
 		/// <param name="value">The time to subtract.</param>
-		/// <returns>The resulting date.</returns>
+		/// <returns>
+		/// A signed duration that is equal to the time represented by this instance minus the time represented by
+		/// <paramref name="value"/>.
+		/// </returns>
 		public GameClockDuration SignedDurationSince(GameClockTime value) => new(_secs - value._secs);
 
 		/// <summary>
@@ -315,6 +318,22 @@ namespace GTA.Chrono
 		/// </remarks>
 		public static GameClockTime operator -(GameClockTime time, GameClockDuration duration)
 			=> new GameClockTime((time._secs + 86400 - (int)(duration.WholeSeconds % 86400)) % 86400);
+
+		/// <summary>
+		/// Subtracts a specified from the current time, yielding a signed duration.
+		/// This does not overflow or underflow at all, as all possible output fits in the range of
+		/// <see cref="GameClockDuration"/>.
+		/// </summary>
+		/// <param name="t1">The time value to subtract from (the minuend).</param>
+		/// <param name="t2">The time value to subtract (the subtrahend).</param>
+		/// <returns>
+		/// The signed duration between <paramref name="t1"/> and <paramref name="t2"/>; that is,
+		/// <paramref name="t1"/> minus <paramref name="t2"/>.
+		/// </returns>
+		/// <remarks>
+		/// The implementation is a wrapper around <see cref="SignedDurationSince(GameClockTime)"/>.
+		/// </remarks>
+		public static GameClockDuration operator -(GameClockTime t1, GameClockTime t2) => t1.SignedDurationSince(t2);
 
 		/// <summary>
 		/// Deconstructs a time into hour, minute, and second components.

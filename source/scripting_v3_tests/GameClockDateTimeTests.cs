@@ -26,16 +26,16 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		public static TheoryData<GameClockDateTime, GameClockDuration, GameClockDateTime> Add_Duration_Valid_TestData =>
 			new TheoryData<GameClockDateTime, GameClockDuration, GameClockDateTime>
 			{
-				{ GameClockDate.FromYmd(2014, 5, 6).AndHms(7, 8, 9), GameClockDuration.FromSeconds(3600 + 60 + 1),
-					GameClockDate.FromYmd(2014, 5, 6).AndHms(8, 9, 10) },
-				{ GameClockDate.FromYmd(2014, 5, 6).AndHms(7, 8, 9), GameClockDuration.FromSeconds(-(3600 + 60 + 1)),
-					GameClockDate.FromYmd(2014, 5, 6).AndHms(6, 7, 8) },
-				{ GameClockDate.FromYmd(2014, 5, 6).AndHms(7, 8, 9), GameClockDuration.FromSeconds(86399),
-					GameClockDate.FromYmd(2014, 5, 7).AndHms(7, 8, 8) },
-				{ GameClockDate.FromYmd(2014, 5, 6).AndHms(7, 8, 9), GameClockDuration.FromSeconds(86_400 * 10),
-					GameClockDate.FromYmd(2014, 5, 16).AndHms(7, 8, 9) },
-				{ GameClockDate.FromYmd(2014, 5, 6).AndHms(7, 8, 9), GameClockDuration.FromSeconds(-86_400 * 10),
-					GameClockDate.FromYmd(2014, 4, 26).AndHms(7, 8, 9) },
+				{ YmdHms(2014, 5, 6, 7, 8, 9), GameClockDuration.FromSeconds(3600 + 60 + 1),
+					YmdHms(2014, 5, 6, 8, 9, 10) },
+				{ YmdHms(2014, 5, 6, 7, 8, 9), GameClockDuration.FromSeconds(-(3600 + 60 + 1)),
+					YmdHms(2014, 5, 6, 6, 7, 8) },
+				{ YmdHms(2014, 5, 6, 7, 8, 9), GameClockDuration.FromSeconds(86399),
+					YmdHms(2014, 5, 7, 7, 8, 8) },
+				{ YmdHms(2014, 5, 6, 7, 8, 9), GameClockDuration.FromSeconds(86_400 * 10),
+					YmdHms(2014, 5, 16, 7, 8, 9) },
+				{ YmdHms(2014, 5, 6, 7, 8, 9), GameClockDuration.FromSeconds(-86_400 * 10),
+					YmdHms(2014, 4, 26, 7, 8, 9) },
 			};
 
 		[Theory]
@@ -65,6 +65,31 @@ namespace ScriptHookVDotNet_APIv3_Tests
 
 			Assert.True(trySubtractSuccessfullyConstructedDateTime);
 			Assert.Equal(expected, actualTrySubtract);
+		}
+
+		const long MaxDayFromMinDate = 1_568_704_592_609;
+
+		public static TheoryData<GameClockDateTime, GameClockDateTime, GameClockDuration> Signed_Duration_Since_Data =>
+			new TheoryData<GameClockDateTime, GameClockDateTime, GameClockDuration>
+			{
+				{ YmdHms(2014, 5, 6, 7, 8, 9), YmdHms(2014, 5, 6, 7, 8, 9), GameClockDuration.Zero },
+				{ YmdHms(2014, 5, 6, 7, 8, 10), YmdHms(2014, 5, 6, 7, 8, 9), GameClockDuration.FromSeconds(1) },
+				{ YmdHms(2014, 5, 6, 7, 8, 9), YmdHms(2014, 5, 6, 7, 8, 10), GameClockDuration.FromSeconds(-1) },
+				{ YmdHms(2014, 5, 7, 7, 8, 9), YmdHms(2014, 5, 6, 7, 8, 10), GameClockDuration.FromSeconds(86399) },
+				{ YmdHms(2001, 9, 9, 1, 46, 39), YmdHms(1970, 1, 1, 0, 0, 0), GameClockDuration.FromSeconds(999_999_999) },
+				{ GameClockDateTime.MaxValue, GameClockDateTime.MinValue,
+					GameClockDuration.FromDays(MaxDayFromMinDate) + GameClockDuration.FromSeconds(86399) },
+				{ GameClockDateTime.MinValue, GameClockDateTime.MaxValue,
+					GameClockDuration.FromDays(-MaxDayFromMinDate) + GameClockDuration.FromSeconds(-86399) },
+			};
+
+		[Theory]
+		[MemberData(nameof(Signed_Duration_Since_Data))]
+		public void Signed_duration_since_another_date_time_returns_signed_duration(GameClockDateTime dt1, GameClockDateTime dt2, GameClockDuration expected)
+		{
+			GameClockDuration actual = dt1.SignedDurationSince(dt2);
+
+			Assert.Equal(expected, actual);
 		}
 
 		[Fact]
@@ -102,6 +127,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			Assert.Throws<ArgumentOutOfRangeException>(()
 				=> minDateTimeRightBeforeMidnight + GameClockDuration.MinValue);
 		}
+
+		private static GameClockDateTime YmdHms(int y, int m, int d, int h, int n, int s)
+			=> GameClockDate.FromYmd(y, m, d).AndHms(h, n, s);
 
 		private static void VerifyGameClockDateTimeYmdHms(GameClockDateTime dateTime, int year, int month, int day, int hour, int minute, int second)
 		{
