@@ -163,10 +163,10 @@ namespace GTA.Chrono
 			}
 		}
 
-		public static int Compare(GameClockDuration t1, GameClockDuration t2)
+		public static int Compare(GameClockDuration left, GameClockDuration right)
 		{
-			if (t1._secs > t2._secs) return 1;
-			if (t1._secs < t2._secs) return -1;
+			if (left._secs > right._secs) return 1;
+			if (left._secs < right._secs) return -1;
 			return 0;
 		}
 
@@ -581,13 +581,13 @@ namespace GTA.Chrono
 			return new GameClockDuration((long)decimal.Round(secs, MidpointRounding.ToEven));
 		}
 
-		public bool Equals(GameClockDuration other)
+		public bool Equals(GameClockDuration value)
 		{
-			return _secs == other._secs;
+			return _secs == value._secs;
 		}
-		public override bool Equals(object obj)
+		public override bool Equals(object value)
 		{
-			if (obj is GameClockDuration duration)
+			if (value is GameClockDuration duration)
 			{
 				return Equals(duration);
 			}
@@ -604,12 +604,12 @@ namespace GTA.Chrono
 			return !left.Equals(right);
 		}
 
-		public static bool operator <(GameClockDuration t1, GameClockDuration t2) => t1._secs < t2._secs;
-		public static bool operator <=(GameClockDuration t1, GameClockDuration t2) => t1._secs <= t2._secs;
+		public static bool operator <(GameClockDuration left, GameClockDuration right) => left._secs < right._secs;
+		public static bool operator <=(GameClockDuration left, GameClockDuration right) => left._secs <= right._secs;
 
-		public static bool operator >(GameClockDuration t1, GameClockDuration t2) => t1._secs > t2._secs;
+		public static bool operator >(GameClockDuration left, GameClockDuration right) => left._secs > right._secs;
 
-		public static bool operator >=(GameClockDuration t1, GameClockDuration t2) => t1._secs >= t2._secs;
+		public static bool operator >=(GameClockDuration left, GameClockDuration right) => left._secs >= right._secs;
 
 		/// <summary>Returns a hash code for this instance.</summary>
 		/// <returns>A 32-bit signed integer hash code.</returns>

@@ -231,9 +231,9 @@ namespace GTA.Chrono
 		/// Subtracts another <see cref="GameClockTime"/> from the current time and returns a
 		/// <see cref="GameClockDuration"/> within +/- 1 day.
 		/// </summary>
-		/// <param name="rhs">The other time.</param>
+		/// <param name="value">The time to subtract.</param>
 		/// <returns>The resulting date.</returns>
-		public GameClockDuration SignedDurationSince(GameClockTime rhs) => new(_secs - rhs._secs);
+		public GameClockDuration SignedDurationSince(GameClockTime value) => new(_secs - value._secs);
 
 		/// <summary>
 		/// Compares the value of this instance to a specified object that contains a specified
@@ -361,26 +361,26 @@ namespace GTA.Chrono
 		/// Returns a value indicating whether this instance is equal to a specified <see cref="GameClockTime"/>
 		/// object.
 		/// </summary>
-		/// <param name="other">An object to compare with this instance.</param>
+		/// <param name="value">An object to compare with this instance.</param>
 		/// <returns>
-		/// <see langword="true"/> if <paramref name="other"/> represents the same game clock time as this instance;
+		/// <see langword="true"/> if <paramref name="value"/> represents the same game clock time as this instance;
 		/// otherwise, <see langword="false"/>.
 		/// </returns>
-		public bool Equals(GameClockTime other)
+		public bool Equals(GameClockTime value)
 		{
-			return _secs == other._secs;
+			return _secs == value._secs;
 		}
 		/// <summary>
 		/// Returns a value indicating whether this instance is equal to a specified object.
 		/// </summary>
-		/// <param name="obj">An object to compare with this instance.</param>
+		/// <param name="value">An object to compare with this instance.</param>
 		/// <returns>
-		/// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockTime"/> object that represents
+		/// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockTime"/> object that represents
 		/// the same game clock time as the current <see cref="GameClockTime"/> structure; otherwise, false.
 		/// </returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object value)
 		{
-			if (obj is GameClockTime duration)
+			if (value is GameClockTime duration)
 			{
 				return Equals(duration);
 			}
@@ -419,47 +419,47 @@ namespace GTA.Chrono
 		/// Indicates whether a specified <see cref="GameClockTime"/> is earlier than another specified
 		/// <see cref="GameClockTime"/>.
 		/// </summary>
-		/// <param name="t1">The first game clock time to compare.</param>
-		/// <param name="t2">The second game clock time to compare.</param>
+		/// <param name="left">The first game clock time to compare.</param>
+		/// <param name="right">The second game clock time to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="t1"/> is earlier than the value of
-		/// <paramref name="t2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is earlier than the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator <(GameClockTime t1, GameClockTime t2) => t1._secs < t2._secs;
+		public static bool operator <(GameClockTime left, GameClockTime right) => left._secs < right._secs;
 		/// <summary>
 		/// Indicates whether a specified <see cref="GameClockTime"/> is earlier than or equal to another specified
 		/// <see cref="GameClockTime"/>.
 		/// </summary>
-		/// <param name="t1">The first game clock time to compare.</param>
-		/// <param name="t2">The second game clock time to compare.</param>
+		/// <param name="left">The first game clock time to compare.</param>
+		/// <param name="right">The second game clock time to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="t1"/> is earlier than or equal to the value of
-		/// <paramref name="t2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is earlier than or equal to the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator <=(GameClockTime t1, GameClockTime t2) => t1._secs <=t2._secs;
+		public static bool operator <=(GameClockTime left, GameClockTime right) => left._secs <= right._secs;
 
 		/// <summary>
 		/// Indicates whether a specified <see cref="GameClockTime"/> is later than another specified
 		/// <see cref="GameClockTime"/>.
 		/// </summary>
-		/// <param name="t1">The first game clock time to compare.</param>
-		/// <param name="t2">The second game clock time to compare.</param>
+		/// <param name="left">The first game clock time to compare.</param>
+		/// <param name="right">The second game clock time to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="t1"/> is later than the value of
-		/// <paramref name="t2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is later than the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator >(GameClockTime t1, GameClockTime t2) => t1._secs > t2._secs;
+		public static bool operator >(GameClockTime left, GameClockTime right) => left._secs > right._secs;
 		/// <summary>
 		/// Indicates whether a specified <see cref="GameClockTime"/> is later than or equal to another specified
 		/// <see cref="GameClockTime"/>.
 		/// </summary>
-		/// <param name="t1">The first game clock time to compare.</param>
-		/// <param name="t2">The second game clock time to compare.</param>
+		/// <param name="left">The first game clock time to compare.</param>
+		/// <param name="right">The second game clock time to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="t1"/> is later than or equal to the value of
-		/// <paramref name="t2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is later than or equal to the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator >=(GameClockTime t1, GameClockTime t2) => t1._secs >= t2._secs;
+		public static bool operator >=(GameClockTime left, GameClockTime right) => left._secs >= right._secs;
 
 		/// <summary>Returns a hash code for this instance.</summary>
 		/// <returns>A 32-bit signed integer hash code.</returns>

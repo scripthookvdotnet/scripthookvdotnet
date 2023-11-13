@@ -253,7 +253,7 @@ namespace GTA.Chrono
 		/// Makes a new <see cref="GameClockDate"/> from the ordinal date (year and day of the year).
 		/// </summary>
 		/// <param name="year">The year. Any int32 years are valid.</param>
-		/// <param name="ordinal">The month of year.</param>
+		/// <param name="ordinal">The day of year.</param>
 		/// <returns>The resulting date.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">The parameters do not form a valid date.</exception>
 		public static GameClockDate FromOrdinalDate(int year, int ordinal)
@@ -271,7 +271,7 @@ namespace GTA.Chrono
 		/// Tries to make a new <see cref="GameClockDate"/> from the ordinal date (year and day of the year).
 		/// </summary>
 		/// <param name="year">The year. Any int32 years are valid.</param>
-		/// <param name="ordinal">The day of the year.</param>
+		/// <param name="ordinal">The day of year.</param>
 		/// <param name="date">
 		/// When this method returns, contains the result <see cref="GameClockDate"/>, or an undefined value on failure.
 		/// </param>
@@ -752,16 +752,16 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Makes a new <see cref="GameClockDate"/> with the month number (starting from 0) changed.
 		/// </summary>
-		/// <param name="month">The new month.</param>
+		/// <param name="month0">The new month.</param>
 		/// <returns>
 		/// An object whose value is the date represented by this instance but the month is the specified
-		/// <paramref name="month"/>.
+		/// <paramref name="month0"/>.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// The specified <paramref name="month"/> is invalid (not an integer between 0 and 11).
+		/// The specified <paramref name="month0"/> is invalid (not an integer between 0 and 11).
 		/// </exception>
-		public GameClockDate WithMonth0(int month)
-			=> WithMonth(month + 1);
+		public GameClockDate WithMonth0(int month0)
+			=> WithMonth(month0 + 1);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDate"/> with the day of month (starting from 1) changed.
@@ -794,16 +794,16 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Makes a new <see cref="GameClockDate"/> with the day of month (starting from 0) changed.
 		/// </summary>
-		/// <param name="day">The new day of month.</param>
+		/// <param name="day0">The new day of month.</param>
 		/// <returns>
 		/// An object whose value is the date represented by this instance but the day of month is the specified
-		/// <paramref name="day"/>.
+		/// <paramref name="day0"/>.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// The specified <paramref name="day"/> is invalid.
+		/// The specified <paramref name="day0"/> is invalid.
 		/// </exception>
-		public GameClockDate WithDay0(int day)
-			=> WithDay(day + 1);
+		public GameClockDate WithDay0(int day0)
+			=> WithDay(day0 + 1);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDate"/> with the day of year (starting from 1) changed.
@@ -830,16 +830,16 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Makes a new <see cref="GameClockDate"/> with the day of year (starting from 0) changed.
 		/// </summary>
-		/// <param name="dayOfYear">The day of year.</param>
+		/// <param name="dayOfYear0">The day of year.</param>
 		/// <returns>
 		/// An object whose value is the date represented by this instance but the day of year is
-		/// <paramref name="dayOfYear"/>.
+		/// <paramref name="dayOfYear0"/>.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// The specified <paramref name="dayOfYear"/> is invalid.
+		/// The specified <paramref name="dayOfYear0"/> is invalid.
 		/// </exception>
-		public GameClockDate WithDayOfYear0(int dayOfYear)
-			=> WithDayOfYear(dayOfYear + 1);
+		public GameClockDate WithDayOfYear0(int dayOfYear0)
+			=> WithDayOfYear(dayOfYear0 + 1);
 
 		private GameClockDate WithOrdFlags(OrdFlags of) => new(_year, of);
 
@@ -847,24 +847,24 @@ namespace GTA.Chrono
 			=> WithOrdFlags(mdf.ToOrdFlags().GetValueOrDefault());
 
 		/// <summary>
-		/// Returns a duration subtracted from this instance by <paramref name="rhs"/>.
+		/// Returns a duration subtracted from this instance by <paramref name="value"/>.
 		/// This does not throw an exception in any cases, as all possible output fits in the range of
 		/// <see cref="GameClockDuration"/>.
 		/// </summary>
-		/// <param name="rhs">The other date.</param>
+		/// <param name="value">The date to subtract.</param>
 		/// <returns>
 		/// An object whose value is the date represented by a duration subtracted from this instance by
-		/// <paramref name="rhs"/>.
+		/// <paramref name="value"/>.
 		/// </returns>
-		public GameClockDuration SignedDurationSince(GameClockDate rhs)
+		public GameClockDuration SignedDurationSince(GameClockDate value)
 		{
 			int year1 = _year;
-			int year2 = rhs._year;
+			int year2 = value._year;
 			DivModFloor(year1, 400, out int year1Div400, out int year1Mod400);
 			DivModFloor(year2, 400, out int year2Div400, out int year2Mod400);
 
 			long cycle1 = (long)Internals.YearOrdinalToDayCycle(year1Mod400, (int)_ordFlags.Ordinal);
-			long cycle2 = (long)Internals.YearOrdinalToDayCycle(year2Mod400, (int)rhs._ordFlags.Ordinal);
+			long cycle2 = (long)Internals.YearOrdinalToDayCycle(year2Mod400, (int)value._ordFlags.Ordinal);
 			return GameClockDuration.FromDays(((long)year1Div400 - year2Div400) * 146_097 + (cycle1 - cycle2));
 		}
 
@@ -909,26 +909,26 @@ namespace GTA.Chrono
 		/// Returns a value indicating whether this instance is equal to a specified <see cref="GameClockDate"/>
 		/// object.
 		/// </summary>
-		/// <param name="other">An object to compare with this instance.</param>
+		/// <param name="value">An object to compare with this instance.</param>
 		/// <returns>
-		/// <see langword="true"/> if <paramref name="other"/> represents the same game clock date as this instance;
+		/// <see langword="true"/> if <paramref name="value"/> represents the same game clock date as this instance;
 		/// otherwise, <see langword="false"/>.
 		/// </returns>
-		public bool Equals(GameClockDate other)
+		public bool Equals(GameClockDate value)
 		{
-			return _year == other._year && _ordFlags == other._ordFlags;
+			return _year == value._year && _ordFlags == value._ordFlags;
 		}
 		/// <summary>
 		/// Returns a value indicating whether this instance is equal to a specified object.
 		/// </summary>
-		/// <param name="obj">An object to compare with this instance.</param>
+		/// <param name="value">An object to compare with this instance.</param>
 		/// <returns>
-		/// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockDate"/> object that represents
+		/// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockDate"/> object that represents
 		/// the same game clock date as the current <see cref="GameClockDate"/> structure; otherwise, false.
 		/// </returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object value)
 		{
-			if (obj is GameClockDate duration)
+			if (value is GameClockDate duration)
 			{
 				return Equals(duration);
 			}
@@ -1035,47 +1035,47 @@ namespace GTA.Chrono
 		/// Indicates whether a specified <see cref="GameClockDate"/> is earlier than another specified
 		/// <see cref="GameClockDate"/>.
 		/// </summary>
-		/// <param name="d1">The first game clock date to compare.</param>
-		/// <param name="d2">The second game clock date to compare.</param>
+		/// <param name="left">The first game clock date to compare.</param>
+		/// <param name="right">The second game clock date to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="d1"/> is earlier than the value of
-		/// <paramref name="d2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is earlier than the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator <(GameClockDate d1, GameClockDate d2) => d1.CompareTo(d2) < 0;
+		public static bool operator <(GameClockDate left, GameClockDate right) => left.CompareTo(right) < 0;
 		/// <summary>
 		/// Indicates whether a specified <see cref="GameClockDate"/> is earlier than or equal to another specified
 		/// <see cref="GameClockDate"/>.
 		/// </summary>
-		/// <param name="d1">The first game clock date to compare.</param>
-		/// <param name="d2">The second game clock date to compare.</param>
+		/// <param name="left">The first game clock date to compare.</param>
+		/// <param name="right">The second game clock date to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="d1"/> is earlier than or equal to the value of
-		/// <paramref name="d2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is earlier than or equal to the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator <=(GameClockDate d1, GameClockDate d2) => d1.CompareTo(d2) <= 0;
+		public static bool operator <=(GameClockDate left, GameClockDate right) => left.CompareTo(right) <= 0;
 
 		/// <summary>
 		/// Indicates whether a specified <see cref="GameClockDate"/> is later than another specified
 		/// <see cref="GameClockDate"/>.
 		/// </summary>
-		/// <param name="d1">The first game clock date to compare.</param>
-		/// <param name="d2">The second game clock date to compare.</param>
+		/// <param name="left">The first game clock date to compare.</param>
+		/// <param name="right">The second game clock date to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="d1"/> is later than the value of
-		/// <paramref name="d2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is later than the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator >(GameClockDate d1, GameClockDate d2) => d1.CompareTo(d2) > 0;
+		public static bool operator >(GameClockDate left, GameClockDate right) => left.CompareTo(right) > 0;
 		/// <summary>
 		/// Indicates whether a specified <see cref="GameClockDate"/> is later than or equal to another specified
 		/// <see cref="GameClockDate"/>.
 		/// </summary>
-		/// <param name="d1">The first game clock date to compare.</param>
-		/// <param name="d2">The second game clock date to compare.</param>
+		/// <param name="left">The first game clock date to compare.</param>
+		/// <param name="right">The second game clock date to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="d1"/> is later than or equal to the value of
-		/// <paramref name="d2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is later than or equal to the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator >=(GameClockDate d1, GameClockDate d2) => d1.CompareTo(d2) >= 0;
+		public static bool operator >=(GameClockDate left, GameClockDate right) => left.CompareTo(right) >= 0;
 
 		/// <summary>Returns a hash code for this instance.</summary>
 		/// <returns>A 32-bit signed integer hash code.</returns>

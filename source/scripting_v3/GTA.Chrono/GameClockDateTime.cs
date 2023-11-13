@@ -192,15 +192,15 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the month number (starting from 0) changed.
 		/// </summary>
-		/// <param name="month">The new month.</param>
+		/// <param name="month0">The new month.</param>
 		/// <returns>
 		/// An object whose value is the date time represented by this instance but the month is the specified
-		/// <paramref name="month"/>.
+		/// <paramref name="month0"/>.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// The specified <paramref name="month"/> is invalid (not an integer between 0 and 11).
+		/// The specified <paramref name="month0"/> is invalid (not an integer between 0 and 11).
 		/// </exception>
-		public GameClockDateTime WithMonth0(int month) => new(_date.WithMonth0(month), _time);
+		public GameClockDateTime WithMonth0(int month0) => new(_date.WithMonth0(month0), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of month (starting from 1) changed.
@@ -218,15 +218,15 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of month (starting from 0) changed.
 		/// </summary>
-		/// <param name="day">The new day of month.</param>
+		/// <param name="day0">The new day of month.</param>
 		/// <returns>
 		/// An object whose value is the date time represented by this instance but the day of month is the specified
-		/// <paramref name="day"/>.
+		/// <paramref name="day0"/>.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// The specified <paramref name="day"/> is invalid.
+		/// The specified <paramref name="day0"/> is invalid.
 		/// </exception>
-		public GameClockDateTime WithDay0(int day) => new(_date.WithDay0(day), _time);
+		public GameClockDateTime WithDay0(int day0) => new(_date.WithDay0(day0), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of year (starting from 1) changed.
@@ -244,16 +244,16 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the day of year (starting from 0) changed.
 		/// </summary>
-		/// <param name="dayOfYear">The day of year.</param>
+		/// <param name="dayOfYear0">The day of year.</param>
 		/// <returns>
 		/// An object whose value is the date time represented by this instance but the day of year is
-		/// <paramref name="dayOfYear"/>.
+		/// <paramref name="dayOfYear0"/>.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// The specified <paramref name="dayOfYear"/> is invalid.
+		/// The specified <paramref name="dayOfYear0"/> is invalid.
 		/// </exception>
-		public GameClockDateTime WithDayOfYear0(int dayOfYear)
-			=> new(_date.WithDayOfYear0(dayOfYear), _time);
+		public GameClockDateTime WithDayOfYear0(int dayOfYear0)
+			=> new(_date.WithDayOfYear0(dayOfYear0), _time);
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDateTime"/> with the hour number changed.
@@ -542,27 +542,27 @@ namespace GTA.Chrono
 		/// Returns a value indicating whether this instance is equal to a specified <see cref="GameClockDateTime"/>
 		/// object.
 		/// </summary>
-		/// <param name="other">An object to compare with this instance.</param>
+		/// <param name="value">An object to compare with this instance.</param>
 		/// <returns>
-		/// <see langword="true"/> if <paramref name="other"/> represents the same game clock date time as this
+		/// <see langword="true"/> if <paramref name="value"/> represents the same game clock date time as this
 		/// instance; otherwise, <see langword="false"/>.
 		/// </returns>
-		public bool Equals(GameClockDateTime other)
+		public bool Equals(GameClockDateTime value)
 		{
-			return _date == other._date && _time == other._time;
+			return _date == value._date && _time == value._time;
 		}
 		/// <summary>
 		/// Returns a value indicating whether this instance is equal to a specified object.
 		/// </summary>
-		/// <param name="obj">An object to compare with this instance.</param>
+		/// <param name="value">An object to compare with this instance.</param>
 		/// <returns>
-		/// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockDateTime"/> object that
+		/// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockDateTime"/> object that
 		/// represents the same game clock date time as the current <see cref="GameClockDateTime"/> structure;
 		/// otherwise, false.
 		/// </returns>
-		public override bool Equals(object obj)
+		public override bool Equals(object value)
 		{
-			if (obj is GameClockDateTime duration)
+			if (value is GameClockDateTime duration)
 			{
 				return Equals(duration);
 			}
@@ -573,7 +573,7 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Indicates whether two <see cref="GameClockDateTime"/> instances are equal.
 		/// </summary>
-		/// <param name="left">The game clock date time to compare.</param>
+		/// <param name="left">The first game clock date time to compare.</param>
 		/// <param name="right">The second game date time to compare.</param>
 		/// <returns>
 		/// <see langword="true"/> if the values of <paramref name="left"/> and <paramref name="right"/> are equal;
@@ -586,7 +586,7 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Indicates whether two <see cref="GameClockDateTime"/> instances are not equal.
 		/// </summary>
-		/// <param name="left">The game clock date time to compare.</param>
+		/// <param name="left">The first game clock date time to compare.</param>
 		/// <param name="right">The second game clock date time to compare.</param>
 		/// <returns>
 		/// <see langword="true"/> if the values of <paramref name="left"/> and <paramref name="right"/> are not equal;
@@ -656,47 +656,47 @@ namespace GTA.Chrono
 		/// Indicates whether a specified <see cref="GameClockDateTime"/> is earlier than another specified
 		/// <see cref="GameClockDateTime"/>.
 		/// </summary>
-		/// <param name="dt1">The first game clock date time to compare.</param>
-		/// <param name="dt2">The second game clock date time to compare.</param>
+		/// <param name="left">The first game clock date time to compare.</param>
+		/// <param name="right">The second game clock date time to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="dt1"/> is earlier than the value of
-		/// <paramref name="dt2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is earlier than the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator <(GameClockDateTime dt1, GameClockDateTime dt2) => dt1.CompareTo(dt2) < 0;
+		public static bool operator <(GameClockDateTime left, GameClockDateTime right) => left.CompareTo(right) < 0;
 		/// <summary>
 		/// Indicates whether a specified <see cref="GameClockDateTime"/> is earlier than or equal to another specified
 		/// <see cref="GameClockDateTime"/>.
 		/// </summary>
-		/// <param name="dt1">The first game clock date time to compare.</param>
-		/// <param name="dt2">The second game clock date time to compare.</param>
+		/// <param name="left">The first game clock date time to compare.</param>
+		/// <param name="right">The second game clock date time to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="dt1"/> is earlier than or equal to the value of
-		/// <paramref name="dt2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is earlier than or equal to the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator <=(GameClockDateTime dt1, GameClockDateTime dt2) => dt1.CompareTo(dt2) <= 0;
+		public static bool operator <=(GameClockDateTime left, GameClockDateTime right) => left.CompareTo(right) <= 0;
 
 		/// <summary>
 		/// Indicates whether a specified <see cref="GameClockDateTime"/> is later than another specified
 		/// <see cref="GameClockDateTime"/>.
 		/// </summary>
-		/// <param name="dt1">The first game clock date to compare.</param>
-		/// <param name="dt2">The second game clock date to compare.</param>
+		/// <param name="left">The first game clock date to compare.</param>
+		/// <param name="right">The second game clock date to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="dt1"/> is later than the value of
-		/// <paramref name="dt2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is later than the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator >(GameClockDateTime dt1, GameClockDateTime dt2) => dt1.CompareTo(dt2) > 0;
+		public static bool operator >(GameClockDateTime left, GameClockDateTime right) => left.CompareTo(right) > 0;
 		/// <summary>
 		/// Indicates whether a specified <see cref="GameClockDateTime"/> is later than or equal to another specified
 		/// <see cref="GameClockDateTime"/>.
 		/// </summary>
-		/// <param name="dt1">The first game clock date time to compare.</param>
-		/// <param name="dt2">The second game clock date time to compare.</param>
+		/// <param name="left">The first game clock date time to compare.</param>
+		/// <param name="right">The second game clock date time to compare.</param>
 		/// <returns>
-		/// <see langword="true"/> if the value of <paramref name="dt1"/> is later than or equal to the value of
-		/// <paramref name="dt2"/>; otherwise, <see langword="false"/>.
+		/// <see langword="true"/> if the value of <paramref name="left"/> is later than or equal to the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
 		/// </returns>
-		public static bool operator >=(GameClockDateTime dt1, GameClockDateTime dt2) => dt1.CompareTo(dt2) >= 0;
+		public static bool operator >=(GameClockDateTime left, GameClockDateTime right) => left.CompareTo(right) >= 0;
 
 		/// <summary>Returns a hash code for this instance.</summary>
 		/// <returns>A 32-bit signed integer hash code.</returns>

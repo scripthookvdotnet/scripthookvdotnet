@@ -128,15 +128,15 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Makes a new <see cref="Datelike{T}"/> with the month number (starting from 0) changed.
 		/// </summary>
-		/// <param name="month">The new month.</param>
+		/// <param name="month0">The new month.</param>
 		/// <returns>
 		/// An object whose value is the date represented by this instance but the month is the specified
-		/// <paramref name="month"/>.
+		/// <paramref name="month0"/>.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// The specified <paramref name="month"/> is invalid (not an integer between 0 and 11).
+		/// The specified <paramref name="month0"/> is invalid (not an integer between 0 and 11).
 		/// </exception>
-		public T WithMonth0(int month);
+		public T WithMonth0(int month0);
 
 		/// <summary>
 		/// Makes a new <see cref="Datelike{T}"/> with the day of month (starting from 1) changed.
@@ -154,15 +154,15 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Makes a new <see cref="Datelike{T}"/> with the day of month (starting from 0) changed.
 		/// </summary>
-		/// <param name="day">The new day of month.</param>
+		/// <param name="day0">The new day of month.</param>
 		/// <returns>
 		/// An object whose value is the date represented by this instance but the day of month is the specified
-		/// <paramref name="day"/>.
+		/// <paramref name="day0"/>.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// The specified <paramref name="day"/> is invalid.
+		/// The specified <paramref name="day0"/> is invalid.
 		/// </exception>
-		public T WithDay0(int day);
+		public T WithDay0(int day0);
 
 		/// <summary>
 		/// Makes a new <see cref="Datelike{T}"/> with the day of year (starting from 1) changed.
@@ -180,14 +180,14 @@ namespace GTA.Chrono
 		/// <summary>
 		/// Makes a new <see cref="Datelike{T}"/> with the day of year (starting from 0) changed.
 		/// </summary>
-		/// <param name="dayOfYear">The day of year.</param>
+		/// <param name="dayOfYear0">The day of year.</param>
 		/// <returns>
 		/// An object whose value is the date represented by this instance but the day of year is
-		/// <paramref name="dayOfYear"/>.
+		/// <paramref name="dayOfYear0"/>.
 		/// </returns>
 		/// <exception cref="ArgumentOutOfRangeException">
-		/// The specified <paramref name="dayOfYear"/> is invalid.
+		/// The specified <paramref name="dayOfYear0"/> is invalid.
 		/// </exception>
-		public T WithDayOfYear0(int dayOfYear);
+		public T WithDayOfYear0(int dayOfYear0);
 	}
 }
