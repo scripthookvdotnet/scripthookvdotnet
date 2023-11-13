@@ -163,6 +163,20 @@ namespace GTA.Chrono
 			}
 		}
 
+		/// <summary>
+		/// Compares the value of this instance to a specified object that contains a specified
+		/// <see cref="GameClockDuration"/> value, and returns an integer that indicates whether this instance is
+		/// less than, the same as, or greater than the specified <see cref="GameClockDuration"/> value.
+		/// </summary>
+		/// <param name="value">A boxed object to compare, or <see langword="null"/>.</param>
+		/// <returns>
+		/// A signed number indicating the relative values of this instance and the value parameter. Less than zero if
+		/// this instance is less than value. Zero if this instance is the same as value. Greater than zero if this
+		/// instance is greater than value.
+		/// </returns>
+		/// <exception cref="ArgumentException">
+		/// <paramref name="value"/> is not a <see cref="GameClockDuration"/>.
+		/// </exception>
 		public int CompareTo(object value)
 		{
 			if (value == null) return 1;
@@ -542,10 +556,28 @@ namespace GTA.Chrono
 			return new GameClockDuration((long)decimal.Round(secs, MidpointRounding.ToEven));
 		}
 
+		/// <summary>
+		/// Returns a value indicating whether this instance is equal to a specified <see cref="GameClockDuration"/>
+		/// object.
+		/// </summary>
+		/// <param name="value">An object to compare with this instance.</param>
+		/// <returns>
+		/// <see langword="true"/> if <paramref name="value"/> represents the same game clock duration as this
+		/// instance; otherwise, <see langword="false"/>.
+		/// </returns>
 		public bool Equals(GameClockDuration value)
 		{
 			return _secs == value._secs;
 		}
+		/// <summary>
+		/// Returns a value indicating whether this instance is equal to a specified object.
+		/// </summary>
+		/// <param name="value">An object to compare with this instance.</param>
+		/// <returns>
+		/// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockDuration"/> object that
+		/// represents the same game clock duration as the current <see cref="GameClockDuration"/> structure;
+		/// otherwise, false.
+		/// </returns>
 		public override bool Equals(object value)
 		{
 			if (value is GameClockDuration duration)
@@ -556,20 +588,77 @@ namespace GTA.Chrono
 			return false;
 		}
 
+		/// <summary>
+		/// Indicates whether two <see cref="GameClockDuration"/> instances are equal.
+		/// </summary>
+		/// <param name="left">The first game clock duration to compare.</param>
+		/// <param name="right">The second game clock duration to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the values of <paramref name="left"/> and <paramref name="right"/> are equal;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator ==(GameClockDuration left, GameClockDuration right)
 		{
 			return left.Equals(right);
 		}
+		/// <summary>
+		/// Indicates whether two <see cref="GameClockDuration"/> instances are not equal.
+		/// </summary>
+		/// <param name="left">The first game clock duration to compare.</param>
+		/// <param name="right">The second game clock duration to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the values of <paramref name="left"/> and <paramref name="right"/> are not equal;
+		/// otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator !=(GameClockDuration left, GameClockDuration right)
 		{
 			return !left.Equals(right);
 		}
 
+		/// <summary>
+		/// Indicates whether a specified <see cref="GameClockDuration"/> is less than another specified
+		/// <see cref="GameClockDuration"/>.
+		/// </summary>
+		/// <param name="left">The first game clock duration to compare.</param>
+		/// <param name="right">The second game clock duration to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the value of <paramref name="left"/> is less than the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator <(GameClockDuration left, GameClockDuration right) => left._secs < right._secs;
+		/// <summary>
+		/// Indicates whether a specified <see cref="GameClockDuration"/> is less than or equal to another specified
+		/// <see cref="GameClockDuration"/>.
+		/// </summary>
+		/// <param name="left">The first game clock duration to compare.</param>
+		/// <param name="right">The second game clock duration to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the value of <paramref name="left"/> is less than or equal to the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator <=(GameClockDuration left, GameClockDuration right) => left._secs <= right._secs;
 
+		/// <summary>
+		/// Indicates whether a specified <see cref="GameClockDuration"/> is greater than another specified
+		/// <see cref="GameClockDuration"/>.
+		/// </summary>
+		/// <param name="left">The first game clock duration to compare.</param>
+		/// <param name="right">The second game clock duration to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the value of <paramref name="left"/> is greater than the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator >(GameClockDuration left, GameClockDuration right) => left._secs > right._secs;
-
+		/// <summary>
+		/// Indicates whether a specified <see cref="GameClockDuration"/> is greater than or equal to another specified
+		/// <see cref="GameClockDuration"/>.
+		/// </summary>
+		/// <param name="left">The first game clock duration to compare.</param>
+		/// <param name="right">The second game clock duration to compare.</param>
+		/// <returns>
+		/// <see langword="true"/> if the value of <paramref name="left"/> is greater than or equal to the value of
+		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
+		/// </returns>
 		public static bool operator >=(GameClockDuration left, GameClockDuration right) => left._secs >= right._secs;
 
 		/// <summary>Returns a hash code for this instance.</summary>

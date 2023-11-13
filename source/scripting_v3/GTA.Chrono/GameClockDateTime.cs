@@ -645,8 +645,8 @@ namespace GTA.Chrono
 		/// Indicates whether a specified <see cref="GameClockDateTime"/> is later than another specified
 		/// <see cref="GameClockDateTime"/>.
 		/// </summary>
-		/// <param name="left">The first game clock date to compare.</param>
-		/// <param name="right">The second game clock date to compare.</param>
+		/// <param name="left">The first game clock date time to compare.</param>
+		/// <param name="right">The second game clock date time to compare.</param>
 		/// <returns>
 		/// <see langword="true"/> if the value of <paramref name="left"/> is later than the value of
 		/// <paramref name="right"/>; otherwise, <see langword="false"/>.
