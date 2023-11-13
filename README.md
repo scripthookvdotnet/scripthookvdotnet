@@ -37,4 +37,4 @@ Any contributions to the project are welcomed, it's recommended to use GitHub [p
 ## License
 
 ScriptHookVDotNet is primarily distributed under the terms of the zlib license.
-See [LICENSE](LICENSE.txt) and [COPYRIGHT](COPYRIGHT) for details.
+See [LICENSE](LICENSE.txt) and [COPYRIGHT](COPYRIGHT.md) for details.
