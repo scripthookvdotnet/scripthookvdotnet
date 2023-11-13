@@ -34,11 +34,10 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
         msbuild /m /p:configuration=Release /p:platform=x64 ScriptHookVDotNet.sln `
-        && del bin\Release\ScriptHookVDotNet*.metagen `
-        && type README.md | more /P > bin\Release\README.txt `
-        && type LICENSE.txt | more /P > bin\Release\LICENSE.txt `
-        && robocopy . bin\Release README.md LICENSE.txt COPYRIGHT.md THIRD-PARTY-NOTICES.md `
-        && Get-ChildItem -Path "bin\Release\*.md" | Rename-Item -Path "bin\Release\$($_.Name)" -NewName { [System.IO.Path]::ChangeExtension($_.Name, ".txt") } `
+        && del bin\Release\ScriptHookVDotNet*.metagen
+        $robocopy_process = Start-Process "robocopy" -ArgumentList ". bin\Release README.md LICENSE.txt COPYRIGHT.md THIRD-PARTY-NOTICES.md" -PassThru -Wait
+        if ($robocopy_process.ExitCode -ne 1) { exit 1 }
+        Get-ChildItem -Path "bin\Release\*.md" | Rename-Item -Path "bin\Release\$($_.Name)" -NewName { [System.IO.Path]::ChangeExtension($_.Name, ".txt") } `
         && echo ReloadKeyBinding=None > bin\Release\ScriptHookVDotNet.ini `
         && echo ConsoleKeyBinding=F4 >> bin\Release\ScriptHookVDotNet.ini `
         && echo ScriptTimeoutThreshold=5000 >> bin\Release\ScriptHookVDotNet.ini `
