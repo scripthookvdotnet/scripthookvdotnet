@@ -38,7 +38,7 @@ jobs:
         $robocopy_process = Start-Process "robocopy" -ArgumentList ". bin\Release README.md LICENSE.txt COPYRIGHT.md THIRD-PARTY-NOTICES.md" -PassThru -Wait
         if ($robocopy_process.ExitCode -ne 1) { exit 1 }
         cd bin\Release `
-        && Get-ChildItem -File -Filter *.md | Rename-Item -Path "$($_.Name)" -NewName { [System.IO.Path]::ChangeExtension($_.Name, ".txt") } `
+        && Get-ChildItem -File -Filter *.md | Rename-Item -NewName { $_.Name -replace '.md','.txt' } `
         && cd ..\..\ `
         && echo ReloadKeyBinding=None > bin\Release\ScriptHookVDotNet.ini `
         && echo ConsoleKeyBinding=F4 >> bin\Release\ScriptHookVDotNet.ini `
