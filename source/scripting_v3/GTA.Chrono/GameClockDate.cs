@@ -398,9 +398,6 @@ namespace GTA.Chrono
 		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
 		/// <see cref="MaxValue"/>.
 		/// </exception>
-		/// <remarks>
-		/// The equivalent method for this operator is <see cref="Add(GameClockDuration)"/>.
-		/// </remarks>
 		public static GameClockDate operator +(GameClockDate date, GameClockDuration duration)
 		{
 			if (!date.TryAdd(duration, out GameClockDate result))
@@ -410,24 +407,6 @@ namespace GTA.Chrono
 
 			return result;
 		}
-
-		/// <summary>
-		/// Returns a new <see cref="GameClockDate"/> that adds the whole days of the specified
-		/// <see cref="GameClockDuration"/> to the value of this instance. Discards the fractional days, rounding to
-		/// the closest integral number of days towards <see cref="GameClockDuration.Zero"/>.
-		/// </summary>
-		/// <param name="duration">
-		/// A positive or negative game clock duration. Only the whole days will be used.
-		/// </param>
-		/// <returns>
-		/// An object whose value is the sum of the date represented by this instance and the whole days represented
-		/// by <paramref name="duration"/>.
-		/// </returns>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
-		/// <see cref="MaxValue"/>.
-		/// </exception>
-		public GameClockDate Add(GameClockDuration duration) => this + duration;
 
 		/// <summary>
 		/// Tries to return a new <see cref="GameClockDate"/> that adds the whole days of the specified
@@ -663,9 +642,6 @@ namespace GTA.Chrono
 		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
 		/// <see cref="MaxValue"/>.
 		/// </exception>
-		/// <remarks>
-		/// The equivalent method for this operator is <see cref="Add(GameClockDuration)"/>.
-		/// </remarks>
 		public static GameClockDate operator -(GameClockDate date, GameClockDuration duration)
 		{
 			if (!date.TrySubtract(duration, out GameClockDate result))
@@ -675,24 +651,6 @@ namespace GTA.Chrono
 
 			return result;
 		}
-
-		/// <summary>
-		/// Returns a new <see cref="GameClockDate"/> that subtracts the whole days of the specified
-		/// <see cref="GameClockDuration"/> to the value of this instance. Discards the fractional days, rounding to
-		/// the closest integral number of days towards <see cref="GameClockDuration.Zero"/>.
-		/// </summary>
-		/// <param name="duration">
-		/// A positive or negative game clock duration. Only the whole days will be used.
-		/// </param>
-		/// <returns>
-		/// An object whose value is the date represented by this instance minus the whole days represented
-		/// by <paramref name="duration"/>.
-		/// </returns>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// The resulting <see cref="GameClockDate"/> is less than <see cref="MinValue"/> or greater than
-		/// <see cref="MaxValue"/>.
-		/// </exception>
-		public GameClockDate Subtract(GameClockDuration duration) => this - duration;
 
 		/// <summary>
 		/// Makes a new <see cref="GameClockDate"/> with the year number changed, while keeping the same month and day.

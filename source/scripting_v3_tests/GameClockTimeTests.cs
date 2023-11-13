@@ -146,11 +146,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		public static void Addition_of_GameClockDuration_returns_added_time_and_overwraps_by_day(
 			GameClockTime origTime, GameClockDuration duration, GameClockTime expected)
 		{
-			GameClockTime actualTimeAddMethod = origTime.Add(duration);
-			GameClockTime actualTimeAdditionOp = origTime + duration;
+			GameClockTime actual = origTime + duration;
 
-			Assert.Equal(expected, actualTimeAddMethod);
-			Assert.Equal(expected, actualTimeAdditionOp);
+			Assert.Equal(expected, actual);
 		}
 
 		[Theory]
@@ -158,11 +156,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		public static void Subtraction_of_GameClockDuration_returns_the_same_time_as_addition_of_negated_duration(
 			GameClockTime origTime, GameClockDuration duration, GameClockTime expected)
 		{
-			GameClockTime actualTimeSubtractMethod = origTime.Subtract(-duration);
-			GameClockTime actualTimeSubtractionOp = origTime - (-duration);
+			GameClockTime actual = origTime - (-duration);
 
-			Assert.Equal(expected, actualTimeSubtractMethod);
-			Assert.Equal(expected, actualTimeSubtractionOp);
+			Assert.Equal(expected, actual);
 		}
 
 		public static TheoryData<GameClockTime, GameClockDuration, GameClockTime, long> Overflowing_Add_Duration_Data =>

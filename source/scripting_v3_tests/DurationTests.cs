@@ -37,11 +37,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			GameClockDuration d2 = GameClockDuration.FromSeconds(secs2);
 			GameClockDuration expectedDuration = GameClockDuration.FromSeconds(expected);
 
-			GameClockDuration actualAddMethod = d1.Add(d2);
-			GameClockDuration actualAdditionOp = d1 + d2;
+			GameClockDuration actual = d1 + d2;
 
-			Assert.Equal(expectedDuration, actualAddMethod);
-			Assert.Equal(expectedDuration, actualAdditionOp);
+			Assert.Equal(expectedDuration, actual);
 		}
 
 		[Theory]
@@ -55,11 +53,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			GameClockDuration d2 = GameClockDuration.FromSeconds(secs2);
 			GameClockDuration expectedDuration = GameClockDuration.FromSeconds(expected);
 
-			GameClockDuration actualSubtractMethod = d1.Subtract(-d2);
-			GameClockDuration actualSubtractionOp = d1 - (-d2);
+			GameClockDuration actual = d1 - (-d2);
 
-			Assert.Equal(expectedDuration, actualSubtractMethod);
-			Assert.Equal(expectedDuration, actualSubtractionOp);
+			Assert.Equal(expectedDuration, actual);
 		}
 
 		[Theory]
@@ -291,11 +287,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		public void Multiplication_with_long_factor_performs_against_the_internal_long_sec_value(
 			GameClockDuration duration, long factor, GameClockDuration expected)
 		{
-			GameClockDuration actualDurationMultiplyMethod = duration.Multiply(factor);
-			GameClockDuration actualDurationMultiplicationOp = duration * factor;
+			GameClockDuration actual = duration * factor;
 
-			Assert.Equal(expected, actualDurationMultiplyMethod);
-			Assert.Equal(expected, actualDurationMultiplicationOp);
+			Assert.Equal(expected, actual);
 		}
 
 		public static TheoryData<GameClockDuration, GameClockDuration> Abs_Method_Test_Data =>
@@ -335,15 +329,6 @@ namespace ScriptHookVDotNet_APIv3_Tests
 				=> GameClockDuration.FromSeconds(1) * double.NegativeInfinity);
 			Assert.Throws<ArgumentOutOfRangeException>(()
 				=> GameClockDuration.FromSeconds(-1) * double.NegativeInfinity);
-
-			Assert.Throws<ArgumentOutOfRangeException>(()
-				=> GameClockDuration.FromSeconds(1).Multiply(double.PositiveInfinity));
-			Assert.Throws<ArgumentOutOfRangeException>(()
-				=> GameClockDuration.FromSeconds(-1).Multiply(double.PositiveInfinity));
-			Assert.Throws<ArgumentOutOfRangeException>(()
-				=> GameClockDuration.FromSeconds(1).Multiply(double.NegativeInfinity));
-			Assert.Throws<ArgumentOutOfRangeException>(()
-				=> GameClockDuration.FromSeconds(-1).Multiply(double.NegativeInfinity));
 		}
 
 		[Fact]
@@ -352,10 +337,6 @@ namespace ScriptHookVDotNet_APIv3_Tests
 			Assert.Throws<ArgumentException>(() => GameClockDuration.Zero * double.NaN);
 			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(1) * double.NaN);
 			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(-1) * double.NaN);
-
-			Assert.Throws<ArgumentException>(() => GameClockDuration.Zero.Multiply(double.NaN));
-			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(1).Multiply(double.NaN));
-			Assert.Throws<ArgumentException>(() => GameClockDuration.FromSeconds(-1).Multiply(double.NaN));
 		}
 
 		[Fact]
@@ -466,11 +447,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		public void Division_with_long_divisor_performs_against_the_internal_long_sec_value(
 			GameClockDuration duration, long divisor, GameClockDuration expected)
 		{
-			GameClockDuration actualDurationDivideMethod = duration.Divide(divisor);
-			GameClockDuration actualDurationDivisionOp = duration / divisor;
+			GameClockDuration actual = duration / divisor;
 
-			Assert.Equal(expected, actualDurationDivideMethod);
-			Assert.Equal(expected, actualDurationDivisionOp);
+			Assert.Equal(expected, actual);
 		}
 
 		[Fact]

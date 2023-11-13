@@ -265,11 +265,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		[MemberData(nameof(Add_Duration_Successful_Data))]
 		public void Adding_duration_to_date_adds_only_whole_day_of_duration(GameClockDate date, GameClockDuration duration, GameClockDate expected)
 		{
-			GameClockDate actualDateAddMethod = date.Add(duration);
-			GameClockDate actualDateAdditionOp = date + duration;
+			GameClockDate actual = date + duration;
 
-			Assert.Equal(expected, actualDateAddMethod);
-			Assert.Equal(expected, actualDateAdditionOp);
+			Assert.Equal(expected, actual);
 		}
 
 		[Theory]
@@ -288,7 +286,6 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		[MemberData(nameof(Add_Duration_Invald_Data))]
 		public void Adding_excessive_duration_fails(GameClockDate date, GameClockDuration duration)
 		{
-			Assert.Throws<ArgumentOutOfRangeException>(() => date.Add(duration));
 			Assert.Throws<ArgumentOutOfRangeException>(() => date + duration);
 
 			bool constructedValidDate = date.TryAdd(duration, out GameClockDate actualDate);
@@ -303,11 +300,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		{
 			GameClockDate expected = date + (-duration);
 
-			GameClockDate actualDateSubtractMethod = date.Subtract(duration);
-			GameClockDate actualDateSubtractionOp = date - duration;
+			GameClockDate actual = date - duration;
 
-			Assert.Equal(expected, actualDateSubtractMethod);
-			Assert.Equal(expected, actualDateSubtractionOp);
+			Assert.Equal(expected, actual);
 		}
 
 		const long MaxMonthFromMinDateToMaxDateExclusive = 51_539_607_552;//((long)uint.MaxValue + 1) * 12;

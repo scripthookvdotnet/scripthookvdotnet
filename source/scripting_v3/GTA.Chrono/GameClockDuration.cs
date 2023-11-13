@@ -163,13 +163,6 @@ namespace GTA.Chrono
 			}
 		}
 
-		public static int Compare(GameClockDuration left, GameClockDuration right)
-		{
-			if (left._secs > right._secs) return 1;
-			if (left._secs < right._secs) return -1;
-			return 0;
-		}
-
 		public int CompareTo(object value)
 		{
 			if (value == null) return 1;
@@ -301,16 +294,6 @@ namespace GTA.Chrono
 		public static GameClockDuration operator +(GameClockDuration d) => d;
 
 		/// <summary>
-		/// Returns a new <see cref="GameClockDuration"/> object whose value is the sum of the specified
-		/// <see cref="GameClockDuration"/> object and this instance.
-		/// </summary>
-		/// <param name="duration">The duration to add.</param>
-		/// <returns>
-		/// A new object that represents the value of this instance plus the value of <paramref name="duration"/>.
-		/// </returns>
-		public GameClockDuration Add(GameClockDuration duration) => this + duration;
-
-		/// <summary>
 		/// Adds two specified <see cref="GameClockDuration"/> instances.
 		/// </summary>
 		/// <param name="d1">The first game clock duration to add.</param>
@@ -327,14 +310,6 @@ namespace GTA.Chrono
 		}
 
 		/// <summary>
-		/// Returns a new <see cref="GameClockDuration"/> object whose value is the negated value of this instance.
-		/// </summary>
-		/// <returns>
-		/// A new object with the same numeric value as this instance, but with the opposite sign.
-		/// </returns>
-		public GameClockDuration Negate() => -this;
-
-		/// <summary>
 		/// Returns a <see cref="GameClockDuration"/> whose value is the negated value of the specified instance.
 		/// </summary>
 		/// <param name="d">The duration to be negated.</param>
@@ -342,14 +317,6 @@ namespace GTA.Chrono
 		/// An object that has the same numeric value as this instance, but the opposite sign.
 		/// </returns>
 		public static GameClockDuration operator -(GameClockDuration d) => new(-d._secs);
-
-		/// <summary>
-		/// Returns a new <see cref="GameClockDuration"/> object whose value is the difference between the specified
-		/// <see cref="GameClockDuration"/> object and this instance.
-		/// </summary>
-		/// <param name="duration">The duration to be subtracted.</param>
-		/// <returns></returns>
-		public GameClockDuration Subtract(GameClockDuration duration) => this - duration;
 
 		/// <summary>
 		/// Subtracts a specified <see cref="GameClockDuration"/> from another specified
@@ -368,9 +335,6 @@ namespace GTA.Chrono
 
 			return new GameClockDuration(result);
 		}
-
-		public GameClockDuration Multiply(long factor) => this * factor;
-		public GameClockDuration Multiply(double factor) => this * factor;
 
 		/// <summary>
 		/// Returns a new <see cref="GameClockDuration"/> object whose value is the result of multiplying the specified
@@ -470,9 +434,6 @@ namespace GTA.Chrono
 		/// </returns>
 		public static GameClockDuration operator *(double factor, GameClockDuration duration)
 			=> duration * factor;
-
-		public GameClockDuration Divide(long factor) => this / factor;
-		public GameClockDuration Divide(double factor) => this / factor;
 
 		/// <summary>
 		/// Returns a new TimeSpan object whose value is the result of dividing the specified

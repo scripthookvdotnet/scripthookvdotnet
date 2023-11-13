@@ -43,12 +43,10 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		public void Addition_of_duration_to_GameClockDateTime_can_change_both_date_and_time(GameClockDateTime dateTime,
 			GameClockDuration duration, GameClockDateTime expected)
 		{
-			GameClockDateTime actualAddMethod = dateTime.Add(duration);
-			GameClockDateTime actualAdditionOp = dateTime + duration;
+			GameClockDateTime actual = dateTime + duration;
 			bool tryAddSuccessfullyConstructedDateTime = dateTime.TryAdd(duration, out GameClockDateTime actualTryAdd);
 
-			Assert.Equal(expected, actualAddMethod);
-			Assert.Equal(expected, actualAdditionOp);
+			Assert.Equal(expected, actual);
 
 			Assert.True(tryAddSuccessfullyConstructedDateTime);
 			Assert.Equal(expected, actualTryAdd);
@@ -59,13 +57,11 @@ namespace ScriptHookVDotNet_APIv3_Tests
 		public void Subtraction_of_duration_from_GameClockDateTime_is_the_same_as_addition_of_negated_duration(
 			GameClockDateTime dateTime, GameClockDuration duration, GameClockDateTime expected)
 		{
-			GameClockDateTime actualSubtractMethod = dateTime.Subtract(-duration);
-			GameClockDateTime actualSubtractionOp = dateTime - (-duration);
+			GameClockDateTime actual = dateTime - (-duration);
 			bool trySubtractSuccessfullyConstructedDateTime
 				= dateTime.TrySubtract(-duration, out GameClockDateTime actualTrySubtract);
 
-			Assert.Equal(expected, actualSubtractMethod);
-			Assert.Equal(expected, actualSubtractionOp);
+			Assert.Equal(expected, actual);
 
 			Assert.True(trySubtractSuccessfullyConstructedDateTime);
 			Assert.Equal(expected, actualTrySubtract);

@@ -302,20 +302,6 @@ namespace GTA.Chrono
 			=> new GameClockTime((time._secs + 86400 + (int)(duration.WholeSeconds % 86400)) % 86400);
 
 		/// <summary>
-		/// Returns a new <see cref="GameClockTime"/> that adds the value of the specified
-		/// <see cref="GameClockDuration"/> to the value of this instance.
-		/// </summary>
-		/// <param name="duration">A positive or negative duration.</param>
-		/// <returns>
-		/// An object whose value is the sum of the time represented by this instance and the duration represented by
-		/// <paramref name="duration"/>.
-		/// </returns>
-		/// <remarks>
-		/// The addition wraps around and ignores integral number of days.
-		/// </remarks>
-		public GameClockTime Add(GameClockDuration duration) => this + duration;
-
-		/// <summary>
 		/// Subtracts a specified duration from a specified time and returns a new time.
 		/// </summary>
 		/// <param name="time">The time value to subtract from.</param>
@@ -329,20 +315,6 @@ namespace GTA.Chrono
 		/// </remarks>
 		public static GameClockTime operator -(GameClockTime time, GameClockDuration duration)
 			=> new GameClockTime((time._secs + 86400 - (int)(duration.WholeSeconds % 86400)) % 86400);
-
-		/// <summary>
-		/// Returns a new <see cref="GameClockTime"/> that subtracts the specified duration from the value of this
-		/// instance.
-		/// </summary>
-		/// <param name="duration">The game clock duration to subtract.</param>
-		/// <returns>
-		/// An object that is equal to the date and time represented by this instance minus the duration represented
-		/// by <paramref name="duration"/>.
-		/// </returns>
-		/// <remarks>
-		/// The subtraction wraps around and ignores integral number of days.
-		/// </remarks>
-		public GameClockTime Subtract(GameClockDuration duration) => this - duration;
 
 		/// <summary>
 		/// Deconstructs a time into hour, minute, and second components.

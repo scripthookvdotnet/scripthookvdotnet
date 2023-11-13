@@ -318,23 +318,6 @@ namespace GTA.Chrono
 		}
 
 		/// <summary>
-		/// Returns a new <see cref="GameClockDateTime"/> that adds the specified <see cref="GameClockDuration"/> to
-		/// the value of this instance.
-		/// </summary>
-		/// <param name="duration">
-		/// A positive or negative game clock duration.
-		/// </param>
-		/// <returns>
-		/// An object whose value is the sum of the date time represented by this instance and
-		/// <paramref name="duration"/>.
-		/// </returns>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// The resulting <see cref="GameClockDateTime"/> is less than <see cref="MinValue"/> or greater than
-		/// <see cref="MaxValue"/>.
-		/// </exception>
-		public GameClockDateTime Add(GameClockDuration duration) => this + duration;
-
-		/// <summary>
 		/// Tries to return a new <see cref="GameClockDateTime"/> that adds the specified
 		/// <see cref="GameClockDuration"/> to the value of this instance. .
 		/// </summary>
@@ -429,23 +412,6 @@ namespace GTA.Chrono
 
 			return result;
 		}
-
-		/// <summary>
-		/// Returns a new <see cref="GameClockDateTime"/> that subtracts the specified <see cref="GameClockDuration"/>
-		/// to the value of this instance.
-		/// </summary>
-		/// <param name="duration">
-		/// A positive or negative game clock duration.
-		/// </param>
-		/// <returns>
-		/// An object whose value is the date time represented by this instance minus the duration represented
-		/// by <paramref name="duration"/>.
-		/// </returns>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// The resulting <see cref="GameClockDateTime"/> is less than <see cref="MinValue"/> or greater than
-		/// <see cref="MaxValue"/>.
-		/// </exception>
-		public GameClockDateTime Subtract(GameClockDuration duration) => this - duration;
 
 		/// <summary>
 		/// Tries to return a new <see cref="GameClockDateTime"/> that subtracts the specified
