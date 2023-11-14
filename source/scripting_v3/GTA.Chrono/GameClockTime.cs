@@ -28,6 +28,9 @@ namespace GTA.Chrono
 			_secs = secs;
 		}
 
+		public GameClockTime(int hour, int minute, int second) : this()
+			=> FromHms(hour, minute, second);
+
 		/// <summary>
 		/// Gets the largest possible value of <see cref="GameClockDate"/>.
 		/// </summary>

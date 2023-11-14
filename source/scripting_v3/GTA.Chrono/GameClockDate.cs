@@ -51,6 +51,9 @@ namespace GTA.Chrono
 			_ordFlags = ordFlags;
 		}
 
+		public GameClockDate(int year, int month, int day) : this()
+			=> FromYmd(year, month, day);
+
 		private static OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
 		private static OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
 

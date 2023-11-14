@@ -45,6 +45,12 @@ namespace GTA.Chrono
 			_time = time;
 		}
 
+		public GameClockDateTime(int year, int month, int day, int hour, int minute, int second) : this()
+		{
+			_date = new GameClockDate(year, month, day);
+			_time = new GameClockTime(hour, minute, second);
+		}
+
 		/// <summary>
 		/// Gets the largest possible value of <see cref="GameClockDateTime"/>.
 		/// </summary>
