@@ -33,6 +33,10 @@ namespace GTA.Chrono
 	/// For more complex changes to a date, it is best to create a new <see cref="GameClockDateTime"/> value instead of
 	/// altering an existing date.
 	/// </para>
+	/// <para>
+	/// Do not access any methods or properties on <see cref="GameClockDateTime"/> with the default value. Doing so may
+	/// result in undefined behaviors.
+	/// </para>
 	/// </remarks>
 	public readonly struct GameClockDateTime : IEquatable<GameClockDateTime>, IComparable<GameClockDateTime>, IComparable, Datelike<GameClockDateTime>, Timelike<GameClockDateTime>
 	{
