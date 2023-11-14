@@ -34,6 +34,7 @@ namespace GTA.Chrono
 	/// altering an existing date.
 	/// </para>
 	/// </remarks>
+	[Serializable]
 	public readonly struct GameClockDateTime : IEquatable<GameClockDateTime>, IComparable<GameClockDateTime>, IComparable, Datelike<GameClockDateTime>, Timelike<GameClockDateTime>
 	{
 		private readonly GameClockDate _date;
