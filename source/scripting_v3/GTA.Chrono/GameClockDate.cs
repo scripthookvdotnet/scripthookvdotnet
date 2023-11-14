@@ -679,10 +679,19 @@ namespace GTA.Chrono
 		/// <exception cref="ArgumentException">
 		/// The date is February 29 in a leap year but the specified <paramref name="year"/> is a non-leap one.
 		/// </exception>
+		/// <exception cref="InvalidOperationException">
+		/// The internal state of this instance is invalid and therefore cannot create a new
+		/// <see cref="GameClockDate"/>.
+		/// </exception>
 		public GameClockDate WithYear(int year)
 		{
 			// we need to operate with `mdf` since we should keep the month and day number as is
 			MonthDayFlags mdf = MonthDayFlags;
+
+			if (mdf.Month == 2 && mdf.Day == 29 && !YearFlags.FromYear(year).IsLeapYear)
+			{
+				ThrowArgumentException_NoFeb29NonLeapYear();
+			}
 
 			YearFlags flags = YearFlags.FromYear(year);
 			mdf = mdf.WithFlags(flags);
@@ -690,7 +699,7 @@ namespace GTA.Chrono
 			GameClockDate? newDate = FromMdf(year, mdf);
 			if (newDate == null)
 			{
-				ThrowArgumentException_NoFeb29NonLeapYear();
+				ThrowInvalidOperation_CannotCallWithMethodWithInvalidInternalState();
 			}
 
 			return newDate.GetValueOrDefault();
@@ -819,6 +828,11 @@ namespace GTA.Chrono
 
 		private GameClockDate WithMonthDayFlags(MonthDayFlags mdf)
 			=> WithOrdFlags(mdf.ToOrdFlags().GetValueOrDefault());
+
+		private void ThrowInvalidOperation_CannotCallWithMethodWithInvalidInternalState()
+		{
+			throw new InvalidOperationException("Cannot create a new GameClockDate with a GameClockDate with invalid state (e.g. the default value).");
+		}
 
 		/// <summary>
 		/// Returns a duration subtracted from this instance by <paramref name="value"/>.
