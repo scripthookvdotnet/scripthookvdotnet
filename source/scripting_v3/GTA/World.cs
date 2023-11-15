@@ -697,52 +697,60 @@ namespace GTA
 		}
 
 		/// <summary>
-		/// Gets the closest <see cref="PickupObject"/> to a given position in the World associated with a <see cref="Pickup"/>.
+		/// Gets the closest pickup object as <see cref="Prop"/> to a given position in the World.
 		/// </summary>
-		/// <param name="position">The position to find the nearest <see cref="PickupObject"/>.</param>
-		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="PickupObject"/>s.</param>
+		/// <param name="position">The position to find the nearest <see cref="Prop"/>.</param>
+		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		/// <remarks>
 		/// <para>
-		/// Returns <see langword="null" /> if no <see cref="PickupObject"/> was in the given region.
+		/// Returns <see langword="null" /> if no <see cref="Prop"/> was in the given region.
 		/// </para>
-		/// <para>
-		/// Although this method returns a <see cref="PickupObject"/> instance, it specifies the base class
-		/// <see cref="Prop"/> type as the return type for compatibility for scripts built against v3.6.0 or earlier
-		/// versions of SHVDN. If you need to use the return value as <see cref="PickupObject"/>, you can cast it
-		/// into <see cref="PickupObject"/>.
-		/// </para>
+		/// <remarks>
+		/// This method returns an array of <see cref="Prop"/> instances for all pickup objects for compatibility
+		/// reasons (ones for scripts built against v3.6.0 or earlier versions of SHVDN).
+		/// Arrays in .NET s covariant and that may lead you to an <see cref="ArrayTypeMismatchException"/> when you
+		/// call a method that returns an array of one of the derived types of the return type. For this reason,
+		/// this method does not return an array of <see cref="PickupObject"/> but instead returns one of
+		/// <see cref="Prop"/> as how this method returns in v3.6.0 or earlier versions.
+		/// </remarks>
 		/// </remarks>
 		public static Prop GetClosestPickupObject(Vector3 position, float radius)
 		{
 			return GetClosest(position, GetNearbyPickupObjects(position, radius));
 		}
 		/// <summary>
-		/// Gets an <c>array</c> of all <see cref="PickupObject"/>s in the World associated with a <see cref="Pickup"/>.
+		/// Gets an <c>array</c> of pickup objects as <see cref="Prop"/>s in a given region in the World.
 		/// </summary>
 		/// <remarks>
-		/// Although this method returns an array of <see cref="PickupObject"/> instances, it specifies an array of
-		/// the base class <see cref="Prop"/> type as the return type for compatibility for scripts built against
-		/// v3.6.0 or earlier versions of SHVDN. If you need to use the return value as an array of
-		/// <see cref="PickupObject"/>, you can cast it into an array of <see cref="PickupObject"/>.
+		/// This method returns an array of <see cref="Prop"/> instances for all pickup objects for compatibility
+		/// reasons (ones for scripts built against v3.6.0 or earlier versions of SHVDN).
+		/// Arrays in .NET s covariant and that may lead you to an <see cref="ArrayTypeMismatchException"/> when you
+		/// call a method that returns an array of one of the derived types of the return type. For this reason,
+		/// this method does not return an array of <see cref="PickupObject"/> but instead returns one of
+		/// <see cref="Prop"/> as how this method returns in v3.6.0 or earlier versions.
 		/// </remarks>
 		public static Prop[] GetAllPickupObjects()
 		{
-			return Array.ConvertAll<int, Prop>(SHVDN.NativeMemory.GetPickupObjectHandles(), handle => new PickupObject(handle));
+			return Array.ConvertAll(SHVDN.NativeMemory.GetPickupObjectHandles(), handle => new Prop(handle));
 		}
 		/// <summary>
-		/// Gets an <c>array</c> of all <see cref="PickupObject"/>s in a given region in the World associated with a <see cref="Pickup"/>.
+		/// Gets an <c>array</c> of all pickup objects as <see cref="Prop"/>s in a given region in the World.
 		/// </summary>
 		/// <param name="position">The position to check the <see cref="Entity"/> against.</param>
 		/// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Prop"/>s.</param>
 		/// <remarks>
-		/// Although this method returns an array of <see cref="PickupObject"/> instances, it specifies an array of
-		/// the base class <see cref="Prop"/> type as the return type for compatibility for scripts built against
-		/// v3.6.0 or earlier versions of SHVDN. If you need to use the return value as an array of
-		/// <see cref="PickupObject"/>, you can cast it into an array of <see cref="PickupObject"/>.
+		/// This method returns an array of <see cref="Prop"/> instances for all pickup objects for compatibility
+		/// reasons (ones for scripts built against v3.6.0 or earlier versions of SHVDN).
+		/// Arrays in .NET s covariant and that may lead you to an <see cref="ArrayTypeMismatchException"/> when you
+		/// call a method that returns an array of one of the derived types of the return type. For this reason,
+		/// this method does not return an array of <see cref="PickupObject"/> but instead returns one of
+		/// <see cref="Prop"/> as how this method returns in v3.6.0 or earlier versions.
 		/// </remarks>
 		public static Prop[] GetNearbyPickupObjects(Vector3 position, float radius)
 		{
-			return Array.ConvertAll<int, Prop>(SHVDN.NativeMemory.GetPickupObjectHandles(position.ToInternalFVector3(), radius), handle => new PickupObject(handle));
+			return Array.ConvertAll(
+				SHVDN.NativeMemory.GetPickupObjectHandles(position.ToInternalFVector3(), radius),
+				handle => new Prop(handle));
 		}
 		/// <summary>
 		/// Gets the closest <see cref="Projectile"/> to a given position in the World.
