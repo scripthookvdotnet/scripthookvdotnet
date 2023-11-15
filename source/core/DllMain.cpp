@@ -495,13 +495,12 @@ static void ScriptHookVDotNet_ManagedInit()
 	if (domain == nullptr)
 		return;
 
-	// Set functions for Thread Local Storage (TLS), so scripts can do tasks that need variables in the TLS of the main thread in their script thread
-	domain->InitTlsFunctionPointers(static_cast<IntPtr>(GetTlsContext), static_cast<IntPtr>(SetTlsContext));
-	domain->SetTlsContextOfGameMainThread(static_cast<IntPtr>(GetTlsContextAddrOfGameMainThread()));
-	domain->SetGameMainThreadId(GetGameMainThreadId());
-
 	domain->ScriptTimeoutThreshold = ScriptHookVDotNet::scriptTimeoutThreshold;
 	domain->ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker;
+
+	// Set functions for Thread Local Storage (TLS), so scripts can do tasks that need variables in the TLS of the main thread in their script thread
+	domain->InitTlsStuffForTlsContextSwitch(static_cast<IntPtr>(GetTlsContext), static_cast<IntPtr>(SetTlsContext),
+		static_cast<IntPtr>(GetTlsContextAddrOfGameMainThread()), GetGameMainThreadId());
 
 	try
 	{

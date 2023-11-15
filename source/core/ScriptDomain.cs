@@ -54,6 +54,8 @@ namespace SHVDN
 		private IntPtr _tlsContextOfMainThread;
 		private uint _gameMainThreadIdUnmanaged;
 
+		private ReaderWriterLockSlim _lockForTlsVariables = new ReaderWriterLockSlim();
+
 		/// <summary>
 		/// The byte array that contains "CELL_EMAIL_BCON", which is used when SHVDN logs unhandled exceptions
 		/// or old scripting SDK/API version warning via a feed ticker.
@@ -63,20 +65,21 @@ namespace SHVDN
 		/// </remarks>
 		private static byte[] s_cellEmailBconByteStr = Encoding.ASCII.GetBytes("CELL_EMAIL_BCON\0");
 
-		internal unsafe void InitTlsFunctionPointers(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc)
+		internal unsafe void InitTlsStuffForTlsContextSwitch(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc,
+			IntPtr tlsAddr, uint threadId)
 		{
-			_getTlsContext = (delegate* unmanaged[Cdecl]<IntPtr>)getTlsContextFunc;
-			_setTlsContext = (delegate* unmanaged[Cdecl]<IntPtr, void>)setTlsContextFunc;
-		}
-
-		internal unsafe void SetTlsContextOfGameMainThread(IntPtr tlsAddr)
-		{
-			_tlsContextOfMainThread = tlsAddr;
-		}
-
-		internal unsafe void SetGameMainThreadId(uint threadId)
-		{
-			_gameMainThreadIdUnmanaged = threadId;
+			_lockForTlsVariables.EnterWriteLock();
+			try
+			{
+				_getTlsContext = (delegate* unmanaged[Cdecl]<IntPtr>)getTlsContextFunc;
+				_setTlsContext = (delegate* unmanaged[Cdecl]<IntPtr, void>)setTlsContextFunc;
+				_tlsContextOfMainThread = tlsAddr;
+				_gameMainThreadIdUnmanaged = threadId;
+			}
+			finally
+			{
+				_lockForTlsVariables.ExitWriteLock();
+			}
 		}
 
 		internal void InitNativeNemoryMembers()
@@ -183,6 +186,7 @@ namespace SHVDN
 
 		private void DisposeUnmanagedResource()
 		{
+			_lockForTlsVariables.Dispose();
 			// Need to free native strings when disposing the script domain
 			CleanupStrings();
 			// Need to free unmanaged resources in NativeMemory
@@ -702,28 +706,36 @@ namespace SHVDN
 		/// <param name="task">The task to execute.</param>
 		public void ExecuteTaskWithGameThreadTlsContext(IScriptTask task)
 		{
-			if (_gameMainThreadIdUnmanaged == GetCurrentThreadId())
+			_lockForTlsVariables.EnterReadLock();
+			try
 			{
-				// Request came from the main thread of the exe, so can just execute it right away
-				task.Run();
-			}
-			else
-			{
-				unsafe
+				if (_gameMainThreadIdUnmanaged == GetCurrentThreadId())
 				{
-					IntPtr tlsContextOfScriptThread = _getTlsContext();
-					_setTlsContext(_tlsContextOfMainThread);
+					// Request came from the main thread of the exe, so can just execute it right away
+					task.Run();
+				}
+				else
+				{
+					unsafe
+					{
+						IntPtr tlsContextOfScriptThread = _getTlsContext();
+						_setTlsContext(_tlsContextOfMainThread);
 
-					try
-					{
-						task.Run();
-					}
-					finally
-					{
-						// Need to revert TLS context to the real one of the script thread
-						_setTlsContext(tlsContextOfScriptThread);
+						try
+						{
+							task.Run();
+						}
+						finally
+						{
+							// Need to revert TLS context to the real one of the script thread
+							_setTlsContext(tlsContextOfScriptThread);
+						}
 					}
 				}
+			}
+			finally
+			{
+				_lockForTlsVariables.ExitReadLock();
 			}
 		}
 
