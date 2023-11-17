@@ -25,7 +25,7 @@ You'll need your GitHub account to download nightly artifacts at the moment, but
 For script developers, please note that new APIs included in new nightly builds but not included in any stable versions are subject to change without notice, so it is not advisable to use any of them for public builds of your scripts.
 
 ## Installation
-* Extract all the files except for LICENSE.txt, README.txt, and all of xml files from the zip file into your game folder.
+* Extract all the files except for .txt and .xml files from the zip file into your game folder.
     * The XML files are provided solely as API documentations for script developers. The .pdb files are not mandatory to run ScriptHookVDotNet as they are provided for easier diagnosing.
 
 ## Contributing
