@@ -1,8 +1,7 @@
 name: Build
 
 on:
-  push:
-  pull_request:
+  workflow_call:
 
 permissions:
   contents: read
@@ -11,21 +10,35 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.3.1
       with:
         msbuild-architecture: x64
-        vs-version: 16.1.6
+        vs-version: 17.7.6
     - name: Install ScriptHookV SDK
       working-directory: ${{env.SOLUTION_FILE_PATH}}
       run: ./tools/install_sdk.ps1
     - name: Define SHVDN version
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        git fetch --unshallow 2>&1 | Out-Null
-        $env:SHVDN_VERSION = echo "SHVDN_VERSION=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" refs/tags |% { $_.Substring(1) })"
-        echo "Version: $env:SHVDN_VERSION"
+        # callers can't (directly) pass property values of the env var, so check if the current ref is a version tag in here
+        $VerInput = ""
+        $currentRefIsVersionTag = $env:GITHUB_REF -match '^refs/tags/v([0-9]+\.[0-9]+\.[0-9]+)'
+        if ($currentRefIsVersionTag) {
+          $VerInput = $matches[1]
+        }
+
+        if ($VerInput -eq "")
+        {
+          git fetch --unshallow 2>&1 | Out-Null
+          $env:SHVDN_VERSION = echo "SHVDN_VERSION=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" refs/tags |% { $_.Substring(1) })"
+        }
+        else
+        {
+          $env:SHVDN_VERSION = "SHVDN_VERSION=$($VerInput)"
+        }
+        echo "Version: v$($VerInput)"
         echo $env:SHVDN_VERSION >> $env:GITHUB_ENV
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
