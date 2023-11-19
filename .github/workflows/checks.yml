@@ -1,0 +1,21 @@
+name: Perform checks
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**'
+      - '!.github/**'
+      - '!*.yml'
+      - '!README.md'
+      - '!COPYRIGHT.md'
+      - '!THIRD-PARTY-NOTICES.md'
+      - '.github/workflows/*.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    # well, we just check if we can build the source code in this workflow for now...
