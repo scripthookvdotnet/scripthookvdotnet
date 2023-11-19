@@ -1,0 +1,49 @@
+name: Stable Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    # can't (directly) pass property values of the env var for reusable workflows, so build workflow takes care
+
+  create-release-draft:
+    needs: build
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download artifact from build Workflow
+        uses: actions/download-artifact@v3
+        with:
+          name: ScriptHookVDotNet
+          path: bin/Release
+      - run: ls -R
+        working-directory: bin/Release
+      - name: Pack build
+        run: |
+          $ArtifactName = "ScriptHookVDotNet-$($env:GITHUB_REF_NAME)"
+          $ArtifactFileName = "$($ArtifactName).zip"
+          "artifact_name=$($ArtifactName)" >> $env:GITHUB_ENV
+          "artifact_filename=$($ArtifactFileName)" >> $env:GITHUB_ENV
+          7z a $($ArtifactFileName) ${{ github.workspace }}/bin/Release/*
+      - name: Push new release
+        uses: ncipollo/release-action@v1.13.0
+        with:
+          # should add a boilerplate body text to save our time
+          name: ${{ env.artifact_name }}
+          artifacts: |
+            ${{ env.artifact_filename }}
+          draft: true
+          artifactErrorsFailBuild: true
+          omitBodyDuringUpdate: true
+          omitDraftDuringUpdate: true
+          omitNameDuringUpdate: true
+          token: ${{ secrets.RELEASE_TOKEN_GITHUB }}
