@@ -380,7 +380,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelHealthOffset) < 1000f;
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireHealthOffset) < 1000f;
             }
         }
         /// <summary>
