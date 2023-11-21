@@ -2216,21 +2216,21 @@ namespace SHVDN
                 address = FindPatternBmh("\xF3\x0F\x59\x05\x00\x00\x00\x00\xF3\x0F\x59\x83\x00\x00\x00\x00\xF3\x0F\x10\xC8\x0F\xC6\xC9\x00", "xxxx????xxxx????xxxxxxxx");
                 if (address != null)
                 {
-                    WheelSteeringLimitMultiplierOffset = *(int*)(address + 12);
-                    WheelSuspensionStrengthOffset = WheelSteeringLimitMultiplierOffset - 4;
+                    CWheelFrontRearSelectorOffset = *(int*)(address + 12);
+                    CWheelStaticForceOffset = CWheelFrontRearSelectorOffset - 4;
                 }
 
                 address = FindPatternBmh("\xF3\x0F\x5C\xC8\x0F\x2F\xCB\xF3\x0F\x11\x89\x00\x00\x00\x00\x72\x10\xF3\x0F\x10\x1D", "xxxxxxxxxxx????xxxxxx");
                 if (address != null)
                 {
-                    WheelTemperatureOffset = *(int*)(address + 11);
+                    CWheelTireTemperatureOffset = *(int*)(address + 11);
                 }
 
                 address = FindPatternBmh("\x74\x13\x0F\x57\xC0\x0F\x2E\x80", "xxxxxxxx");
                 if (address != null)
                 {
-                    TireHealthOffset = *(int*)(address + 8);
-                    WheelHealthOffset = TireHealthOffset - 4;
+                    CWheelTireHealthOffset = *(int*)(address + 8);
+                    CWheelSuspensionHealthOffset = CWheelTireHealthOffset - 4;
                 }
 
                 // the tire wear multipiler value for vehicle wheels is present only in b1868 or newer versions
@@ -2239,13 +2239,13 @@ namespace SHVDN
                     address = FindPatternNaive("\x45\x84\xF6\x74\x08\xF3\x0F\x59\x0D\x00\x00\x00\x00\xF3\x0F\x10\x83", "xxxxxxxxx????xxxx");
                     if (address != null)
                     {
-                        TireWearRateOffset = *(int*)(address + 0x22);
+                        CWheelTireWearRateOffset = *(int*)(address + 0x22);
 
                         // The values for SET_TYRE_WEAR_RATE_SCALE and SET_TYRE_MAXIMUM_GRIP_DIFFERENCE_DUE_TO_WEAR_RATE are not present in b1868
                         if (gameVersion >= 59)
                         {
-                            WheelMaxGripDiffDueToWearRateOffset = TireWearRateOffset + 4;
-                            TireWearRateScaleOffset = TireWearRateOffset + 8;
+                            CWheelMaxGripDiffFromWearRateOffset = CWheelTireWearRateOffset + 4;
+                            CWheelWearRateScaleOffset = CWheelTireWearRateOffset + 8;
                         }
                     }
                 }
@@ -2259,7 +2259,7 @@ namespace SHVDN
                 address = FindPatternNaive("\xEB\x02\x33\xC9\xF6\x81\x00\x00\x00\x00\x01\x75\x43", "xxxxxx????xxx");
                 if (address != null)
                 {
-                    WheelTouchingFlagsOffset = *(int*)(address + 6);
+                    CWheelDynamicFlagsOffset = *(int*)(address + 6);
                 }
 
                 address = FindPatternBmh("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8", "xxxxxxxx????xxxx");
@@ -2430,26 +2430,30 @@ namespace SHVDN
             private static delegate* unmanaged[Stdcall]<IntPtr, void> s_burstVehicleTireOnRimNewFunc;
             private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_burstVehicleTireOnRimOldFunc;
 
-            public static int WheelSteeringLimitMultiplierOffset { get; }
+            // Although we're sure the name of corresponding field in the exe is `m_fFrontRearSelector`, we don't know
+            // what this value exactly affects...
+            public static int CWheelFrontRearSelectorOffset { get; }
 
-            public static int WheelSuspensionStrengthOffset { get; }
+            public static int CWheelStaticForceOffset { get; }
 
-            public static int WheelTemperatureOffset { get; }
+            public static int CWheelTireTemperatureOffset { get; }
 
-            public static int WheelHealthOffset { get; }
+            public static int CWheelSuspensionHealthOffset { get; }
 
-            public static int TireHealthOffset { get; }
+            public static int CWheelTireHealthOffset { get; }
 
-            public static int TireWearRateOffset { get; }
+            public static int CWheelTireWearRateOffset { get; }
             /// <summary>
             /// This value only affects how fast a vehicle tire health decreases, which is different from
-            /// <see cref="TireWearRateOffset"/>.
+            /// <see cref="CWheelTireWearRateOffset"/>.
             /// </summary>
-            public static int WheelMaxGripDiffDueToWearRateOffset { get; }
-            public static int TireWearRateScaleOffset { get; }
+            public static int CWheelMaxGripDiffFromWearRateOffset { get; }
+            public static int CWheelWearRateScaleOffset { get; }
 
-            // the on fire offset is the same as this offset
-            public static int WheelTouchingFlagsOffset { get; }
+            /// <summary>
+            /// The offset for the flag on CWheel where the "on fire" flag and "is touching" flag are set.
+            /// </summary>
+            public static int CWheelDynamicFlagsOffset { get; }
 
             public static int WheelIdOffset { get; }
 
@@ -2471,17 +2475,21 @@ namespace SHVDN
 
             public static bool IsWheelTouchingSurface(IntPtr wheelAddress, IntPtr vehicleAddress)
             {
-                if (WheelTouchingFlagsOffset == 0)
+                if (CWheelDynamicFlagsOffset == 0)
                 {
                     return false;
                 }
 
-                uint wheelTouchingFlag = *(uint*)(wheelAddress + WheelTouchingFlagsOffset).ToPointer();
+                uint wheelTouchingFlag = *(uint*)(wheelAddress + CWheelDynamicFlagsOffset).ToPointer();
                 if ((wheelTouchingFlag & 1) != 0)
                 {
                     return true;
                 }
 
+                // Although `CWheel::GetIsTouching(CWheel *this)` only checks a certain flag in the `CWheel` instance
+                // (the same check done above), we do the "slower check" for compatibilities for v3 scripts built
+                // against v3.6.0 or earlier versions unless we confirm that removing the slower one doesn't break
+                // the compatibilities.
                 #region Slower Check
                 if (((wheelTouchingFlag >> 1) & 1) == 0)
                 {

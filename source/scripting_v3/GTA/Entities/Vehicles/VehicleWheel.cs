@@ -11,6 +11,9 @@ using System.ComponentModel;
 
 namespace GTA
 {
+    /// <summary>
+    /// Represents a vehicle wheel for a vehicle (internally for a <c>CWheel</c> struct).
+    /// </summary>
     public sealed class VehicleWheel
     {
         #region Fields
@@ -154,7 +157,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the last contact position.
+        /// Gets the last contact (hit) position.
         /// </summary>
         public Vector3 LastContactPosition
         {
@@ -171,9 +174,9 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the normal vector of surface this <see cref="VehicleWheel"/> is contacting.
+        /// Gets the hit normal, which is the direction of the collision.
         /// </summary>
-        public Vector3 SurfaceNormalVector
+        public Vector3 HitNormal
         {
             get
             {
@@ -195,55 +198,57 @@ namespace GTA
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSteeringLimitMultiplierOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelFrontRearSelectorOffset == 0)
                 {
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelSteeringLimitMultiplierOffset);
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelFrontRearSelectorOffset);
             }
             set
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSteeringLimitMultiplierOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelFrontRearSelectorOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelSteeringLimitMultiplierOffset, value);
+                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelFrontRearSelectorOffset, value);
             }
         }
 
         /// <summary>
-        /// Gets or sets the suspension strength of this <see cref="VehicleWheel"/>.
-        /// After the value is changed, the physics of the owner <see cref="Vehicle"/> must be activated before the change can apply.
+        /// Gets or sets the static force of this <see cref="VehicleWheel"/>.
+        /// After the value is changed, the physics of the owner <see cref="Vehicle"/> must be activated before
+        /// the change can apply.
         /// </summary>
-        public float SuspensionStrength
+        public float StaticForce
         {
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSuspensionStrengthOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelStaticForceOffset == 0)
                 {
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelSuspensionStrengthOffset);
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelStaticForceOffset);
             }
             set
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSuspensionStrengthOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelStaticForceOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelSuspensionStrengthOffset, value);
+                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelStaticForceOffset, value);
             }
         }
 
         /// <summary>
-        /// Gets or sets the temperature of <see cref="VehicleWheel"/>. This value rises when <see cref="Vehicle"/> is drifting, braking, or in burnout.
+        /// Gets or sets the tire temperature of <see cref="VehicleWheel"/>.
+        /// This value rises when <see cref="Vehicle"/> is drifting, braking, or in burnout.
         /// If this value is kept at <c>59f</c> when <see cref="Vehicle"/> is on burnout for a short time, the tire will burst.
         /// </summary>
         public float Temperature
@@ -251,22 +256,22 @@ namespace GTA
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTemperatureOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelTireTemperatureOffset == 0)
                 {
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelTemperatureOffset);
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireTemperatureOffset);
             }
             set
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTemperatureOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelTireTemperatureOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelTemperatureOffset, value);
+                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireTemperatureOffset, value);
             }
         }
 
@@ -294,22 +299,22 @@ namespace GTA
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset == 0)
                 {
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset, 3);
+                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset, 3);
             }
             set
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset, 3, value);
+                SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset, 3, value);
             }
         }
 
@@ -321,22 +326,22 @@ namespace GTA
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset == 0)
                 {
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset + 4, 3);
+                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 3);
             }
             set
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset + 4, 3, value);
+                SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 3, value);
             }
         }
 
@@ -348,22 +353,22 @@ namespace GTA
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset == 0)
                 {
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset + 4, 4);
+                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 4);
             }
             set
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.WheelTouchingFlagsOffset + 4, 4, value);
+                SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 4, value);
             }
         }
 
@@ -375,12 +380,12 @@ namespace GTA
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireHealthOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset == 0)
                 {
                     return false;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireHealthOffset) < 1000f;
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset) < 1000f;
             }
         }
         /// <summary>
@@ -391,38 +396,38 @@ namespace GTA
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireHealthOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset == 0)
                 {
                     return false;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireHealthOffset) <= 0f;
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset) <= 0f;
             }
         }
         /// <summary>
-        /// Gets or sets the wheel health.
+        /// Gets or sets the suspention health.
         /// </summary>
         public float Health
         {
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelHealthOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelSuspensionHealthOffset == 0)
                 {
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelHealthOffset);
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelSuspensionHealthOffset);
             }
             set
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelHealthOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelSuspensionHealthOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelHealthOffset, value);
+                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelSuspensionHealthOffset, value);
             }
         }
         /// <summary>
@@ -434,33 +439,34 @@ namespace GTA
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireHealthOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset == 0)
                 {
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireHealthOffset);
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset);
             }
             set
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireHealthOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset == 0)
                 {
                     return;
                 }
 
-                // Change value to 0 if the value is negative. IS_VEHICLE_TYRE_BURST returns true only if value is exactly 0 when the 3rd parameter (the bool completely) is a non-zero value.
+                // Change value to 0 if the value is negative. `IS_VEHICLE_TYRE_BURST` returns true only if value is
+                // exactly 0 when the 3rd parameter (the bool completely) is a non-zero value.
                 if (value < 0f)
                 {
                     value = 0f;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.TireHealthOffset, value);
+                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset, value);
             }
         }
         /// <summary>
         /// <para>
-        /// Gets or sets the value indicating how fast the tires will wear out.
+        /// Gets or sets the value indicating how fast the tire will wear out.
         /// The higher this value is, the greater downforce will be created.
         /// </para>
         /// <para>
@@ -479,10 +485,10 @@ namespace GTA
         /// </exception>
         public float WearMultiplier
         {
-            // If you wonder why SET_TYRE_WEAR_RATE and SET_TYRE_WEAR_RATE_SCALE produces the same result in SHV scripts,
-            // that's because SHV maps hashes for SET_TYRE_WEAR_RATE wrong in versions that support up to v1.0.2944.0 or
-            // a older game version (maps hashes for SET_TYRE_WEAR_RATE_SCALE instead)
-            // You can actually call SET_TYRE_WEAR_RATE in RPH and FiveM
+            // If you wonder why `SET_TYRE_WEAR_RATE` and `SET_TYRE_WEAR_RATE_SCALE` produce the same result in SHV
+            // scripts, that's because SHV maps hashes for `SET_TYRE_WEAR_RATE` wrong in versions that support up to
+            // v1.0.2944.0 or a older game version (maps hashes for `SET_TYRE_WEAR_RATE_SCALE` instead).
+            // You can actually call `SET_TYRE_WEAR_RATE` in RPH and FiveM.
             get
             {
                 if (Game.Version < GameVersion.v1_0_1868_0_Steam)
@@ -491,24 +497,24 @@ namespace GTA
                 }
 
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireWearRateOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelTireWearRateOffset == 0)
                 {
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireWearRateOffset);
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireWearRateOffset);
             }
             set
             {
                 GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1868_0_Steam, nameof(VehicleWheel), nameof(WearMultiplier));
 
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireWearRateOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelTireWearRateOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.TireWearRateOffset, value);
+                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireWearRateOffset, value);
             }
         }
         /// <summary>
@@ -525,7 +531,7 @@ namespace GTA
         /// <exception cref="GameVersionNotSupportedException">
         /// Thrown when called on a game version prior to v1.0.2060.0.
         /// </exception>
-        public float MaxGripDifferenceDueToWearRate
+        public float MaxGripDiffFromWearRate
         {
             get
             {
@@ -535,24 +541,24 @@ namespace GTA
                 }
 
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelMaxGripDiffDueToWearRateOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelMaxGripDiffFromWearRateOffset == 0)
                 {
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelMaxGripDiffDueToWearRateOffset);
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelMaxGripDiffFromWearRateOffset);
             }
             set
             {
                 GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2060_0_Steam, nameof(VehicleWheel), nameof(WearMultiplier));
 
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelMaxGripDiffDueToWearRateOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelMaxGripDiffFromWearRateOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.WheelMaxGripDiffDueToWearRateOffset, value);
+                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelMaxGripDiffFromWearRateOffset, value);
             }
         }
         /// <summary>
@@ -582,24 +588,24 @@ namespace GTA
                 }
 
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireWearRateScaleOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelWearRateScaleOffset == 0)
                 {
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.TireWearRateScaleOffset);
+                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelWearRateScaleOffset);
             }
             set
             {
                 GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2060_0_Steam, nameof(VehicleWheel), nameof(WearMultiplier));
 
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.TireWearRateScaleOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelWearRateScaleOffset == 0)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.TireWearRateScaleOffset, value);
+                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelWearRateScaleOffset, value);
             }
         }
 
@@ -608,7 +614,7 @@ namespace GTA
         /// </summary>
         public void Fix()
         {
-            // Do what SET_VEHICLE_TYRE_FIXED exactly does
+            // Do what `SET_VEHICLE_TYRE_FIXED` exactly does
             Fix(false);
         }
         /// <summary>
@@ -646,7 +652,7 @@ namespace GTA
                 return;
             }
 
-            // Do what SET_VEHICLE_TYRE_BURST exactly does with false (zero) as 3rd parameter
+            // Do what `SET_VEHICLE_TYRE_BURST` exactly does with false (zero) as 3rd parameter
             SHVDN.NativeMemory.Vehicle.PunctureTire(address, damage, Vehicle.MemoryAddress);
         }
 
@@ -661,13 +667,14 @@ namespace GTA
                 return;
             }
 
-            // Do what SET_VEHICLE_TYRE_BURST exactly does with true (non-zero) as 3rd parameter and 1000f as 4th parameter
+            // Do what `SET_VEHICLE_TYRE_BURST` exactly does with true (non-zero) as 3rd parameter and 1000f as 4th
+            // parameter
             SHVDN.NativeMemory.Vehicle.BurstTireOnRim(address, Vehicle.MemoryAddress);
         }
 
         // Property doesn't make much sense for hydraulic suspention raise factor,
-        // as SET_HYDRAULIC_SUSPENSION_RAISE_FACTOR implicitly changes some other lowrider control states on a vehicle
-        // wheel struct and CVehicle if the native successfully changes the raise factor
+        // as `SET_HYDRAULIC_SUSPENSION_RAISE_FACTOR` implicitly changes some other lowrider control states on
+        // a `CWheel` and `CVehicle` if the native successfully changes the raise factor
         /// <summary>
         /// <para>
         /// Sets the hydraulic suspension raise factor for this wheel.
