@@ -5,9 +5,9 @@
 
 namespace GTA
 {
-	public enum CargobobHook
-	{
-		Hook,
-		Magnet,
-	}
+    public enum CargobobHook
+    {
+        Hook,
+        Magnet,
+    }
 }

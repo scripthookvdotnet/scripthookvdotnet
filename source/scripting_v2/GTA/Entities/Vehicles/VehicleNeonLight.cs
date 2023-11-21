@@ -5,11 +5,11 @@
 
 namespace GTA
 {
-	public enum VehicleNeonLight
-	{
-		Left,
-		Right,
-		Front,
-		Back,
-	}
+    public enum VehicleNeonLight
+    {
+        Left,
+        Right,
+        Front,
+        Back,
+    }
 }

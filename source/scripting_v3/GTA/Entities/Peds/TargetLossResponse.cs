@@ -5,10 +5,10 @@
 
 namespace GTA
 {
-	public enum TargetLossResponse
-	{
-		ExitTask,
-		NeverLoseTarget,
-		SearchForTarget
-	}
+    public enum TargetLossResponse
+    {
+        ExitTask,
+        NeverLoseTarget,
+        SearchForTarget
+    }
 }

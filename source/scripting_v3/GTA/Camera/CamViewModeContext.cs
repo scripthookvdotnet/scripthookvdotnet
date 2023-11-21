@@ -5,15 +5,15 @@
 
 namespace GTA
 {
-	public enum CamViewModeContext
-	{
-		OnFoot,
-		InVehicle,
-		OnBike,
-		InBoat,
-		InAircraft,
-		InSubmarine,
-		InHeli,
-		InTurret
-	}
+    public enum CamViewModeContext
+    {
+        OnFoot,
+        InVehicle,
+        OnBike,
+        InBoat,
+        InAircraft,
+        InSubmarine,
+        InHeli,
+        InTurret
+    }
 }

@@ -5,18 +5,18 @@
 
 namespace GTA
 {
-	public enum VehicleWheelBoneId
-	{
-		Invalid = -1,
-		WheelLeftFront = 11,
-		WheelRightFront,
-		WheelLeftRear,
-		WheelRightRear,
-		WheelLeftMiddle1,
-		WheelRightMiddle1,
-		WheelLeftMiddle2,
-		WheelRightMiddle2,
-		WheelLeftMiddle3,
-		WheelRightMiddle3,
-	}
+    public enum VehicleWheelBoneId
+    {
+        Invalid = -1,
+        WheelLeftFront = 11,
+        WheelRightFront,
+        WheelLeftRear,
+        WheelRightRear,
+        WheelLeftMiddle1,
+        WheelRightMiddle1,
+        WheelLeftMiddle2,
+        WheelRightMiddle2,
+        WheelLeftMiddle3,
+        WheelRightMiddle3,
+    }
 }

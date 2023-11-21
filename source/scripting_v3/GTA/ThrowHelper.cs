@@ -14,94 +14,94 @@ using System;
 
 namespace GTA
 {
-	internal static class ThrowHelper
-	{
-		/// <summary>
-		/// Throws an <see cref="ArgumentOutOfRangeException"/>.
-		/// </summary>
-		/// <param name="paramName">The name of the parameter.</param>
-		/// <exception cref="ArgumentOutOfRangeException"/>
-		internal static void ThrowArgumentOutOfRangeException(string paramName)
-		{
-			throw new ArgumentOutOfRangeException(paramName);
-		}
+    internal static class ThrowHelper
+    {
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/>.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        internal static void ThrowArgumentOutOfRangeException(string paramName)
+        {
+            throw new ArgumentOutOfRangeException(paramName);
+        }
 
-		/// <summary>
-		/// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info.
-		/// </summary>
-		/// <param name="paramName">The name of the parameter.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
-		/// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
-		/// <exception cref="ArgumentOutOfRangeException"/>
-		internal static void ThrowArgumentOutOfRangeException(string paramName, long value, long minInclusive, long maxInclusive)
-		{
-			throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString()}, {maxInclusive.ToString()}].");
-		}
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
+        /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        internal static void ThrowArgumentOutOfRangeException(string paramName, long value, long minInclusive, long maxInclusive)
+        {
+            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString()}, {maxInclusive.ToString()}].");
+        }
 
-		/// <summary>
-		/// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info.
-		/// </summary>
-		/// <param name="paramName">The name of the parameter.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
-		/// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
-		/// <exception cref="ArgumentOutOfRangeException"/>
-		internal static void ThrowArgumentOutOfRangeException(string paramName, double value, double minInclusive, double maxInclusive)
-		{
-			throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString()}, {maxInclusive.ToString()}].");
-		}
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
+        /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        internal static void ThrowArgumentOutOfRangeException(string paramName, double value, double minInclusive, double maxInclusive)
+        {
+            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString()}, {maxInclusive.ToString()}].");
+        }
 
-		/// <summary>
-		/// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info if
-		/// <paramref name="value"/> is not in the range.
-		/// </summary>
-		/// <param name="paramName">The name of the parameter.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
-		/// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
-		/// </exception>
-		internal static void CheckArgumentRange(string paramName, long value, long minInclusive, long maxInclusive)
-		{
-			if (value < minInclusive || value > maxInclusive)
-			{
-				ThrowArgumentOutOfRangeException(paramName, value, minInclusive, maxInclusive);
-			}
-		}
-		/// <summary>
-		/// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info if
-		/// <paramref name="value"/> is not in the range.
-		/// </summary>
-		/// <param name="paramName">The name of the parameter.</param>
-		/// <param name="value">The value.</param>
-		/// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
-		/// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
-		/// <exception cref="ArgumentOutOfRangeException">
-		/// <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
-		/// </exception>
-		internal static void CheckArgumentRange(string paramName, int value, int minInclusive, int maxInclusive)
-		{
-			if (value < minInclusive || value > maxInclusive)
-			{
-				ThrowArgumentOutOfRangeException(paramName, value, minInclusive, maxInclusive);
-			}
-		}
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info if
+        /// <paramref name="value"/> is not in the range.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
+        /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
+        /// </exception>
+        internal static void CheckArgumentRange(string paramName, long value, long minInclusive, long maxInclusive)
+        {
+            if (value < minInclusive || value > maxInclusive)
+            {
+                ThrowArgumentOutOfRangeException(paramName, value, minInclusive, maxInclusive);
+            }
+        }
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info if
+        /// <paramref name="value"/> is not in the range.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="value">The value.</param>
+        /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
+        /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
+        /// </exception>
+        internal static void CheckArgumentRange(string paramName, int value, int minInclusive, int maxInclusive)
+        {
+            if (value < minInclusive || value > maxInclusive)
+            {
+                ThrowArgumentOutOfRangeException(paramName, value, minInclusive, maxInclusive);
+            }
+        }
 
-		internal static void ThrowArgumentException_Arg_CannotBeNaN(string paramName)
-		{
-			throw new ArgumentException("GameClockDuration does not accept floating point Not-a-Number values.", nameof(paramName));
-		}
+        internal static void ThrowArgumentException_Arg_CannotBeNaN(string paramName)
+        {
+            throw new ArgumentException("GameClockDuration does not accept floating point Not-a-Number values.", nameof(paramName));
+        }
 
-		/// <summary>
-		/// Throws an <see cref="ArgumentOutOfRangeException"/> with a parameter name for an enum value out of legal
-		/// range, which means the value is not defined.
-		/// </summary>
-		/// <exception cref="ArgumentOutOfRangeException"/>
-		internal static void ArgumentOutOfRangeException_Enum_Value(string paramName)
-		{
-			throw new ArgumentOutOfRangeException(paramName, "Enum value was out of legal range.");
-		}
-	}
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> with a parameter name for an enum value out of legal
+        /// range, which means the value is not defined.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        internal static void ArgumentOutOfRangeException_Enum_Value(string paramName)
+        {
+            throw new ArgumentOutOfRangeException(paramName, "Enum value was out of legal range.");
+        }
+    }
 }

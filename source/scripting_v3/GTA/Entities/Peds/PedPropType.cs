@@ -5,17 +5,17 @@
 
 namespace GTA
 {
-	public enum PedPropType
-	{
-		Hats,
-		Glasses,
-		EarPieces,
-		Unknown3,
-		Unknown4,
-		Unknown5,
-		Watches,
-		Wristbands,
-		Unknown8,
-		Unknown9,
-	}
+    public enum PedPropType
+    {
+        Hats,
+        Glasses,
+        EarPieces,
+        Unknown3,
+        Unknown4,
+        Unknown5,
+        Watches,
+        Wristbands,
+        Unknown8,
+        Unknown9,
+    }
 }

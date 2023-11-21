@@ -5,20 +5,20 @@
 
 namespace GTA.UI
 {
-	public enum FeedTextIcon
-	{
-		Blank,
-		Message,
-		Email,
-		NewContact,
-		Driver,
-		Hacker,
-		Shooter,
-		Invite,
-		RP,
-		Cash,
-		AP,
-		XPAlt,
-		CashAlt,
-	}
+    public enum FeedTextIcon
+    {
+        Blank,
+        Message,
+        Email,
+        NewContact,
+        Driver,
+        Hacker,
+        Shooter,
+        Invite,
+        RP,
+        Cash,
+        AP,
+        XPAlt,
+        CashAlt,
+    }
 }

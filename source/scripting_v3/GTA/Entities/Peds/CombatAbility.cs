@@ -5,10 +5,10 @@
 
 namespace GTA
 {
-	public enum CombatAbility
-	{
-		Poor,
-		Average,
-		Professional
-	}
+    public enum CombatAbility
+    {
+        Poor,
+        Average,
+        Professional
+    }
 }

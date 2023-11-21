@@ -7,13 +7,13 @@ using System;
 
 namespace GTA
 {
-	[Flags]
-	public enum GetClosestVehicleNodeFlags
-	{
-		None = 0,
-		IncludeSwitchedOffNodes = 1,
-		IncludeBoatNodes = 2,
-		IgnoreSlipLanes = 4,
-		IgnoreSwitchedOffDeadEnds = 8,
-	}
+    [Flags]
+    public enum GetClosestVehicleNodeFlags
+    {
+        None = 0,
+        IncludeSwitchedOffNodes = 1,
+        IncludeBoatNodes = 2,
+        IgnoreSlipLanes = 4,
+        IgnoreSwitchedOffDeadEnds = 8,
+    }
 }
