@@ -5,11 +5,11 @@
 
 namespace GTA
 {
-	public enum VehicleWindow
-	{
-		FrontLeftWindow,
-		FrontRightWindow,
-		BackLeftWindow,
-		BackRightWindow,
-	}
+    public enum VehicleWindow
+    {
+        FrontLeftWindow,
+        FrontRightWindow,
+        BackLeftWindow,
+        BackRightWindow,
+    }
 }

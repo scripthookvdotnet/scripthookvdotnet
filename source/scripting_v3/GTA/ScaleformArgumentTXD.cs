@@ -5,13 +5,13 @@
 
 namespace GTA
 {
-	public sealed class ScaleformArgumentTXD
-	{
-		internal string _txd;
+    public sealed class ScaleformArgumentTXD
+    {
+        internal string _txd;
 
-		public ScaleformArgumentTXD(string s)
-		{
-			_txd = s;
-		}
-	}
+        public ScaleformArgumentTXD(string s)
+        {
+            _txd = s;
+        }
+    }
 }

@@ -5,8 +5,8 @@
 
 namespace GTA
 {
-	public enum RopeType
-	{
-		Normal = 4,
-	}
+    public enum RopeType
+    {
+        Normal = 4,
+    }
 }

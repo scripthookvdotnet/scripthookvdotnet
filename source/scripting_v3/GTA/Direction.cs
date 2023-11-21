@@ -5,10 +5,10 @@
 
 namespace GTA
 {
-	public enum Direction
-	{
-		Any = -1,
-		Forwards,
-		Backwards,
-	}
+    public enum Direction
+    {
+        Any = -1,
+        Forwards,
+        Backwards,
+    }
 }

@@ -5,11 +5,11 @@
 
 namespace GTA
 {
-	public enum PlayerTargetingMode
-	{
-		AssistedAimFull,
-		AssistedAimPartial,
-		FreeAimAssisted,
-		FreeAim,
-	}
+    public enum PlayerTargetingMode
+    {
+        AssistedAimFull,
+        AssistedAimPartial,
+        FreeAimAssisted,
+        FreeAim,
+    }
 }

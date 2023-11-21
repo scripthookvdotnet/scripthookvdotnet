@@ -7,11 +7,11 @@ using System;
 
 namespace GTA
 {
-	[Flags]
-	public enum NewLoadSceneFlags
-	{
-		RequireCollision = 1,
-		LongSwitchCutscene = 2,
-		InteriorAndExterior = 4,
-	}
+    [Flags]
+    public enum NewLoadSceneFlags
+    {
+        RequireCollision = 1,
+        LongSwitchCutscene = 2,
+        InteriorAndExterior = 4,
+    }
 }

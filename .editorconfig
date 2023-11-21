@@ -1,11 +1,19 @@
 root = true
 
 [*.{cs,cpp,h}]
-charset = utf-8 # Without this setting, Visual Studio will try to read codebase using the current ANSI code page
+# Without this setting, Visual Studio will try to read codebase using the current ANSI code page
+charset = utf-8
 indent_size = 4
-indent_style = tab
+indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+[*.{csproj,json,props,targets,yaml,yml}]
+indent_size = 2
+
+# utf-8-bom has to be specified for assembly attributes for C++/CLI programs so the ANSI encoding won't have influence
+[AssemblyInfo.cpp]
+charset = utf-8-bom
 
 # C# files
 [*.cs]
@@ -141,6 +149,3 @@ csharp_space_between_method_declaration_name_and_open_parenthesis = false
 csharp_space_between_method_declaration_parameter_list_parentheses = false
 csharp_space_between_parentheses = false
 csharp_space_between_square_brackets = false
-
-[AssemblyInfo.cpp]
-charset = utf-8-bom # utf-8-bom has to be specified for assembly attributes for C++/CLI programs so the ANSI encoding won't have influence

@@ -5,21 +5,21 @@
 
 namespace GTA
 {
-	public enum VehicleWheelType
-	{
-		Stock = -1, 
-		Sport,
-		Muscle,
-		Lowrider,
-		SUV,
-		Offroad,
-		Tuner,
-		BikeWheels,
-		HighEnd,
-		BennysOriginals,
-		BennysBespoke,
-		OpenWheel,
-  		Street,
-		Track,
-	}
+    public enum VehicleWheelType
+    {
+        Stock = -1,
+        Sport,
+        Muscle,
+        Lowrider,
+        SUV,
+        Offroad,
+        Tuner,
+        BikeWheels,
+        HighEnd,
+        BennysOriginals,
+        BennysBespoke,
+        OpenWheel,
+        Street,
+        Track,
+    }
 }

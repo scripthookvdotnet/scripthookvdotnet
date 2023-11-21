@@ -5,11 +5,11 @@
 
 namespace GTA
 {
-	public enum VehicleRoofState
-	{
-		Closed,
-		Opening,
-		Opened,
-		Closing,
-	}
+    public enum VehicleRoofState
+    {
+        Closed,
+        Opening,
+        Opened,
+        Closing,
+    }
 }

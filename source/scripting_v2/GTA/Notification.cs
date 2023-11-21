@@ -7,18 +7,18 @@ using GTA.Native;
 
 namespace GTA
 {
-	public sealed class Notification
-	{
-		private readonly int _handle;
+    public sealed class Notification
+    {
+        private readonly int _handle;
 
-		internal Notification(int handle)
-		{
-			this._handle = handle;
-		}
+        internal Notification(int handle)
+        {
+            this._handle = handle;
+        }
 
-		public void Hide()
-		{
-			Function.Call(Hash._REMOVE_NOTIFICATION, _handle);
-		}
-	}
+        public void Hide()
+        {
+            Function.Call(Hash._REMOVE_NOTIFICATION, _handle);
+        }
+    }
 }

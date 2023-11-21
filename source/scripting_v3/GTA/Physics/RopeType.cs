@@ -5,9 +5,9 @@
 
 namespace GTA
 {
-	public enum RopeType
-	{
-		ThickRope = 4,
-		ThinMetalWire = 5,
-	}
+    public enum RopeType
+    {
+        ThickRope = 4,
+        ThinMetalWire = 5,
+    }
 }

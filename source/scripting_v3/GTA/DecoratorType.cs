@@ -5,16 +5,16 @@
 
 namespace GTA
 {
-	public enum DecoratorType
-	{
-		Unknown,
-		Float,
-		Bool,
-		Int,
-		/// <remarks>
-		/// The relevant native functions do not appear in production builds.
-		/// </remarks>
-		String,
-		Time,
-	}
+    public enum DecoratorType
+    {
+        Unknown,
+        Float,
+        Bool,
+        Int,
+        /// <remarks>
+        /// The relevant native functions do not appear in production builds.
+        /// </remarks>
+        String,
+        Time,
+    }
 }

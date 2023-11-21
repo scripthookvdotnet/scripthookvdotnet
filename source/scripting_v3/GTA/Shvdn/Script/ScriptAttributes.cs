@@ -7,12 +7,12 @@ using System;
 
 namespace GTA
 {
-	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public sealed class ScriptAttributes : Attribute
-	{
-		public string Author;
-		public string SupportURL;
-		public bool NoScriptThread;
-		public bool NoDefaultInstance;
-	}
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class ScriptAttributes : Attribute
+    {
+        public string Author;
+        public string SupportURL;
+        public bool NoScriptThread;
+        public bool NoDefaultInstance;
+    }
 }

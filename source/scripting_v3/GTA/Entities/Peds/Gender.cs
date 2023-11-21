@@ -5,9 +5,9 @@
 
 namespace GTA
 {
-	public enum Gender
-	{
-		Male,
-		Female,
-	}
+    public enum Gender
+    {
+        Male,
+        Female,
+    }
 }

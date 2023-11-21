@@ -5,15 +5,15 @@
 
 namespace GTA
 {
-	public enum VehicleWindowTint
-	{
-		Invalid = -1,
-		None,
-		PureBlack,
-		DarkSmoke,
-		LightSmoke,
-		Stock,
-		Limo,
-		Green,
-	}
+    public enum VehicleWindowTint
+    {
+        Invalid = -1,
+        None,
+        PureBlack,
+        DarkSmoke,
+        LightSmoke,
+        Stock,
+        Limo,
+        Green,
+    }
 }

@@ -5,11 +5,11 @@
 
 namespace GTA
 {
-	public enum EntityType
-	{
-		Invalid,
-		Ped,
-		Vehicle,
-		Prop,
-	}
+    public enum EntityType
+    {
+        Invalid,
+        Ped,
+        Vehicle,
+        Prop,
+    }
 }

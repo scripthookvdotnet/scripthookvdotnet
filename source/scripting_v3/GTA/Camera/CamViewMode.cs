@@ -5,12 +5,12 @@
 
 namespace GTA
 {
-	public enum CamViewMode
-	{
-		ThirdPersonNear,
-		ThirdPersonMedium,
-		ThirdPersonFar,
-		Cinematic,
-		FirstPerson
-	}
+    public enum CamViewMode
+    {
+        ThirdPersonNear,
+        ThirdPersonMedium,
+        ThirdPersonFar,
+        Cinematic,
+        FirstPerson
+    }
 }
