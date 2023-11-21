@@ -4626,23 +4626,23 @@ namespace SHVDN
                 [FieldOffset(0x20)]
                 internal uint NodeCountPed;
                 [FieldOffset(0x28)]
-                internal IntPtr NodeLinkPtr;
+                internal IntPtr NodeLinkArrayPtr;
                 [FieldOffset(0x30)]
                 internal uint NodeLinkCount;
                 [FieldOffset(0x38)]
-                internal IntPtr JunctionPtr;
+                internal IntPtr VirtualJunctionArrayPtr;
                 [FieldOffset(0x40)]
-                internal IntPtr JunctionHeightMapBytesPtr;
-                [FieldOffset(0x50)]
-                internal IntPtr JunctionRefsPtr;
-                [FieldOffset(0x58)]
-                internal ushort JunctionRefsCount0;
-                [FieldOffset(0x5A)]
-                internal ushort JunctionRefsCount1;
+                internal IntPtr HeightSampleArrayPtr;
+
+                // `CPathRegion.JunctionMap` is at 0x50, which has a `rage::CPathRegion::JunctionMapContainer`.
+                // `rage::CPathRegion::JunctionMapContainer` is practically an alias of
+                // `rage::atBinaryMap<int,unsigned int>`. `rage::atBinaryMap` internally has a bool (at the 0x0 offset)
+                // that represents whether the content is sorted before the `rage::atArray` field.
+
                 [FieldOffset(0x60)]
                 internal uint JunctionCount;
                 [FieldOffset(0x64)]
-                internal uint JunctionHeightMapBytesCount;
+                internal uint HeightSampleCount;
 
                 internal CPathNode* GetPathNode(uint nodeId)
                 {
@@ -4657,14 +4657,14 @@ namespace SHVDN
 
                 internal CPathNodeLink* GetPathNodeLink(uint index)
                 {
-                    if (NodeLinkPtr == IntPtr.Zero && index >= NodeLinkCount)
+                    if (NodeLinkArrayPtr == IntPtr.Zero && index >= NodeLinkCount)
                     {
                         return null;
                     }
 
                     return GetPathNodeLinkUnsafe(index);
                 }
-                internal CPathNodeLink* GetPathNodeLinkUnsafe(uint index) => (CPathNodeLink*)((ulong)NodeLinkPtr + index * (uint)sizeof(CPathNodeLink));
+                internal CPathNodeLink* GetPathNodeLinkUnsafe(uint index) => (CPathNodeLink*)((ulong)NodeLinkArrayPtr + index * (uint)sizeof(CPathNodeLink));
             }
 
             private static CPathRegion* GetCPathRegion(uint areaId)
@@ -4711,16 +4711,23 @@ namespace SHVDN
             [StructLayout(LayoutKind.Explicit, Size = 0x28)]
             internal struct CPathNode
             {
-                // 0x0 to 0xF region is unused
+                [FieldOffset(0x0)]
+                internal CPathNode* Next;
+                [FieldOffset(0x8)]
+                internal CPathNode* Previous;
+
+                // Note: CPathNode in the game is supposed to have rage::CNodeAddress (4-byte union, which has
+                // a regular uint32_t field and bit fields) at 0x10
                 [FieldOffset(0x10)]
                 internal ushort AreaId;
                 [FieldOffset(0x12)]
                 internal ushort NodeId;
+
                 [FieldOffset(0x14)]
-                internal uint StreetHash;
+                internal uint StreetNameHash;
 
                 [FieldOffset(0x1A)]
-                internal ushort LinkId;
+                internal ushort startIndexOfLinks;
 
                 // These 2 fields should be multiplied by 4 when you convert back to float
                 [FieldOffset(0x1C)]
@@ -4957,6 +4964,7 @@ namespace SHVDN
             [StructLayout(LayoutKind.Explicit, Size = 0x8)]
             internal struct CPathNodeLink
             {
+                // Same as CPathNode, this field is supposed to be a rage::CNodeAddress...
                 [FieldOffset(0x0)]
                 internal ushort AreaId;
                 [FieldOffset(0x2)]
@@ -5133,7 +5141,7 @@ namespace SHVDN
                     return Array.Empty<int>();
                 }
 
-                ushort pathNodeLinkStartId = pathNode->LinkId;
+                ushort pathNodeLinkStartId = pathNode->startIndexOfLinks;
                 int pathNodeLinkCount = pathNode->LinkCount;
 
                 int[] result = new int[pathNodeLinkCount];
