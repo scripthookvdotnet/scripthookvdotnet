@@ -722,7 +722,7 @@ namespace GTA
         /// <remarks>
         /// Unlike when you commit a crime that refocuses the search area, this method also updates <see cref="TimeLastSpotted"/>.
         /// </remarks>
-        public void ForceGetSpottedByPolice() => Function.Call(Hash.REPORT_POLICE_SPOTTED_PLAYER, Handle);
+        public void ReportPoliceSpottingPlayer() => Function.Call(Hash.REPORT_POLICE_SPOTTED_PLAYER, Handle);
         /// <summary>
         /// Force hidden evasion to start for this <see cref="Player"/>, making wanted stars flashing and cops using vision cones to search for the player.
         /// You can use this method at any point that police know where this player is.
