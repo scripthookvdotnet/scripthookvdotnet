@@ -582,7 +582,8 @@ namespace SHVDN
             {
                 CPlayerInfoMaxHealthOffset = *(int*)(address - 4);
             }
-            // None of variables for player targeting and wanted info are not accessed with direct offsets from CPlayerInfo instances in the game code
+            // None of fields on `CPlayerPedTargeting` and `CWanted` are accessed with direct offsets from
+            // `CPlayerInfo` instances in the game code
             address = FindPatternBmh("\x48\x85\xFF\x74\x23\x48\x85\xDB\x74\x26", "xxxxxxxxxx");
             if (address != null)
             {
@@ -597,9 +598,9 @@ namespace SHVDN
             if (address != null)
             {
                 CurrentCrimeValueOffset = (int)*(byte*)(address + 0x2A);
-                TimeToApplyPendingCrimeValueOffset = (int)*(byte*)(address + 0x7);
+                TimeWhenNewCrimeValueTakesEffectOffset = (int)*(byte*)(address + 0x7);
                 CurrentWantedLevelOffset = *(int*)(address + 0x17);
-                PendingCrimeValueOffset = *(int*)(address + 0x1D);
+                NewCrimeValueOffset = *(int*)(address + 0x1D);
             }
             address = FindPatternBmh("\xF6\x87\x00\x00\x00\x00\x02\x44\x8B\x00\x00\x00\x00\x00\x75\x0E", "xx??xxxxx?????xx");
             if (address != null)
@@ -608,9 +609,9 @@ namespace SHVDN
                 // Flags for ignoring player are actually read/written as a byte in the game code, but make this value 4-byte aligned because SetBit and IsBitSet reads/writes as an int value
                 CWantedIgnorePlayerFlagOffset = isWantedStarFlashingOffset - 3;
 
-                CWantedLastTimeSearchAreaRefocusedOffset = isWantedStarFlashingOffset - 0x23;
-                CWantedLastTimeSpottedByPoliceOffset = CWantedLastTimeSearchAreaRefocusedOffset + 0x4;
-                CWantedStartTimeOfHiddenEvasionOffset = CWantedLastTimeSearchAreaRefocusedOffset + 0xC;
+                CWantedTimeSearchLastRefocusedOffset = isWantedStarFlashingOffset - 0x23;
+                CWantedTimeLastSpottedOffset = CWantedTimeSearchLastRefocusedOffset + 0x4;
+                CWantedTimeHiddenEvasionStartedOffset = CWantedTimeSearchLastRefocusedOffset + 0xC;
             }
             address = FindPatternBmh("\xEB\x26\x8B\x87\x00\x00\x00\x00\x25\x00\xF8\xFF\xFF\xC1\xE0\x12", "xxxx????xxxxxxxx");
             if (address != null)
@@ -4400,12 +4401,20 @@ namespace SHVDN
         public static int CPlayerPedTargetingOfffset { get; }
 
         public static int CurrentWantedLevelOffset { get; }
+        /// <remarks>
+        /// "current crime value" is a name we named. The canonical name of the corresponding name on `CWanted` is
+        /// `m_nWantedLevel` (do not confuse with `m_WantedLevel`, which is basically the number of stars).
+        /// </remarks>
         public static int CurrentCrimeValueOffset { get; }
-        public static int PendingCrimeValueOffset { get; }
-        public static int TimeToApplyPendingCrimeValueOffset { get; }
-        public static int CWantedLastTimeSearchAreaRefocusedOffset { get; }
-        public static int CWantedLastTimeSpottedByPoliceOffset { get; }
-        public static int CWantedStartTimeOfHiddenEvasionOffset { get; }
+        /// <remarks>
+        /// "pending crime value" is a name we named. The canonical name of the corresponding name on `CWanted` is
+        /// `m_nNewWantedLevel`.
+        /// </remarks>
+        public static int NewCrimeValueOffset { get; }
+        public static int TimeWhenNewCrimeValueTakesEffectOffset { get; }
+        public static int CWantedTimeSearchLastRefocusedOffset { get; }
+        public static int CWantedTimeLastSpottedOffset { get; }
+        public static int CWantedTimeHiddenEvasionStartedOffset { get; }
         public static int CWantedIgnorePlayerFlagOffset { get; }
 
         private static delegate* unmanaged[Stdcall]<IntPtr, void> s_activateSpecialAbilityFunc;
@@ -4508,7 +4517,7 @@ namespace SHVDN
             return new IntPtr((long)((ulong)cPlayerInfoAddr + (uint)CWantedOffset));
         }
 
-        public static int GetTargetedBuildingHandleOfPlayer(int playerIndex)
+        public static int GetFreeAimBuildingTargetHandleOfPlayer(int playerIndex)
         {
             IntPtr playerPedTargetingAddr = GetCPlayerPedTargetingAddress(playerIndex);
             if (playerPedTargetingAddr == IntPtr.Zero)
@@ -4516,15 +4525,17 @@ namespace SHVDN
                 return 0;
             }
 
-            ulong targetedCEntityAddr = *(ulong*)(playerPedTargetingAddr + 0x110);
-            // Return zero if the targeted CEntity address is null or is not null but not a CBuilding instance
-            // Should be a CPhysical address in that case since the value is null if the player is aiming a CAnimatedBuilding instance (e.g. the fan at Ammu-Nation in Little Seoul)
-            if (targetedCEntityAddr == 0 || *(byte*)(targetedCEntityAddr + 0x28) != 1)
+            // Return zero if the targeted `CEntity` address is null or is not null but an instance other than
+            // `CBuilding`.
+            // Should be a `CPhysical` address in that case since the value is null if the player is aiming a
+            // `CAnimatedBuilding` instance (e.g. the fan at Ammu-Nation in Little Seoul).
+            ulong freeAimTargetAddr = *(ulong*)(playerPedTargetingAddr + 0x110);
+            if (freeAimTargetAddr == 0 || *(byte*)(freeAimTargetAddr + 0x28) != 1)
             {
                 return 0;
             }
 
-            return GetBuildingHandleFromAddress(new IntPtr((long)targetedCEntityAddr));
+            return GetBuildingHandleFromAddress(new IntPtr((long)freeAimTargetAddr));
         }
 
         /// <summary>
