@@ -10,9 +10,14 @@ on:
   workflow_dispatch:
     inputs:
       semver_name:
-        description: 'Custom version tag name without v prefix'
+        description: 'Custom semver name without pre-release identifiers'
         required: false
         type: string
+      prerelease_build_number:
+        description: 'Custom pre-release build number'
+        required: false
+        type: string
+        default: '0'
 
 permissions:
   contents: read
@@ -28,15 +33,16 @@ jobs:
           path: nightly-repo
           fetch-depth: 0
         env:
-          CUSTOM_TAG_NAME: ${{ github.event_name != workflow_dispatch && github.event.inputs.tag_name || '' }}
+          CUSTOM_VERSION_NAME: ${{ github.event_name != workflow_dispatch && github.event.inputs.tag_name || '' }}
+          PRERELEASE_BUILD_NO: ${{ github.event_name != workflow_dispatch && github.event.inputs.prerelease_build_number || '0' }}
         run: |
           if [ "$CUSTOM_VERSION_NAME" != "" ]; then
-            echo "next_version_name=$CUSTOM_VERSION_NAME" >> "$GITHUB_OUTPUT"
+            echo "next_version_name=${CUSTOM_VERSION_NAME}-nightly.${PRERELEASE_BUILD_NO}" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           if [[ "$GITHUB_REF" = refs/tags/* ]]; then
             # we've already checked that the ref is a tag with the v prefix
-            next_version_name=$(echo "$GITHUB_REF_NAME" | cut -c2-)
+            next_version_name=$(echo "${GITHUB_REF_NAME}-nightly.0" | cut -c2-)
             echo "next_version_name=$next_version_name" >> "$GITHUB_OUTPUT"
            exit 0
           fi
