@@ -75,8 +75,8 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app_id: ${{ vars.SHVDN_APP_ID }}
-          private_key: ${{ secrets.SHVDN_APP_PRIVATE_KEY }}
+          app-id: ${{ vars.SHVDN_APP_ID }}
+          private-key: ${{ secrets.SHVDN_APP_PRIVATE_KEY }}
           owner: 'scripthookvdotnet'
           repositories: 'scripthookvdotnet-nightly'
       - name: Push New Tag
@@ -173,8 +173,8 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app_id: ${{ vars.SHVDN_APP_ID }}
-          private_key: ${{ secrets.SHVDN_APP_PRIVATE_KEY }}
+          app-id: ${{ vars.SHVDN_APP_ID }}
+          private-key: ${{ secrets.SHVDN_APP_PRIVATE_KEY }}
           owner: 'scripthookvdotnet'
           repositories: 'scripthookvdotnet-nightly'
       - name: Push New Release
