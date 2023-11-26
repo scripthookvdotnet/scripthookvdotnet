@@ -19,10 +19,9 @@ The issues page should be primarily used for bug reports and focused enhancement
 The stable builds can be downloaded from the [Releases](https://github.com/scripthookvdotnet/scripthookvdotnet/releases) page.
 You need to use the ASI file and the DLL files for APIs in an archive of the same version as internal structure can be changed without notices.
 
-For newer builds, check out the [Nightly Builds](https://github.com/scripthookvdotnet/scripthookvdotnet/actions/workflows/build.yml?query=branch%3Amain). Click some build you want to try and download the artifact zip file from the Artifacts section.
-You'll need your GitHub account to download nightly artifacts at the moment, but nightly releases will also be released via GitHub releases in the future so your GitHub account is not required to download nightly artifacts (at least for the latest one).
+For newer builds, check out the [Nightly Builds](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases). You don't have to sign in to GitHub to download nightly releases.
 
-For script developers, please note that new APIs included in new nightly builds but not included in any stable versions are subject to change without notice, so it is not advisable to use any of them for public builds of your scripts.
+For script developers, please note that new APIs included in new nightly builds but not included in any stable versions are subject to change without notice, so it is not advisable to use any of them for public/production builds of your scripts.
 
 ## Installation
 * Extract all the files except for .txt and .xml files from the zip file into your game folder.
