@@ -137,7 +137,8 @@ jobs:
               ref: commitSha,
             });
 
-            return `- [${commit.commit.message}](${commit.html_url})\n`;
+            const commitTitle = commit.commit.message.split('\r\n')[0].split('\n')[0];
+            return `- [${commitTitle}](${commit.html_url})\n`;
           result-encoding: string
 
   build:
