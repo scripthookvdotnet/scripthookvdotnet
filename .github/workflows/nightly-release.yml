@@ -71,13 +71,22 @@ jobs:
     outputs:
       tag_name: ${{ steps.tag-output.outputs.result }}
     steps:
-      - uses: actions/github-script@v7
+      - name: Generate Access Token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app_id: ${{ vars.SHVDN_APP_ID }}
+          private_key: ${{ secrets.SHVDN_APP_PRIVATE_KEY }}
+          owner: 'scripthookvdotnet'
+          repositories: 'scripthookvdotnet-nightly'
+      - name: Push New Tag
+        uses: actions/github-script@v7
         id: tag-output
         env:
           SHA_NIGHTLY_REPO: ${{ needs.calc-next-tag-name.outputs.sha_on_main_branch_in_nightly_repo }}
           TAG_NAME: ${{ needs.calc-next-tag-name.outputs.next_version_name }}
         with:
-          github-token: ${{ secrets.RELEASE_TOKEN_NIGHTLY }}
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             const owner = process.env.GITHUB_REPOSITORY_OWNER;
             const repo = 'scripthookvdotnet-nightly';
@@ -144,7 +153,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Download artifact from build Workflow
+      - name: Download Artifact from Build Workflow
         uses: actions/download-artifact@v3
         with:
           name: ScriptHookVDotNet
@@ -160,13 +169,21 @@ jobs:
           echo "artifact_name=${artifact_name}" >> $GITHUB_ENV
           echo "artifact_filename=${artifact_file_name}" >> $GITHUB_ENV
           zip "$artifact_file_name" ${{ github.workspace }}/bin/Release/*
-      - name: Push new release
+      - name: Generate Access Token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app_id: ${{ vars.SHVDN_APP_ID }}
+          private_key: ${{ secrets.SHVDN_APP_PRIVATE_KEY }}
+          owner: 'scripthookvdotnet'
+          repositories: 'scripthookvdotnet-nightly'
+      - name: Push New Release
         uses: ncipollo/release-action@v1.13.0
         with:
           repo: scripthookvdotnet-nightly
           name: ${{ env.artifact_name }}
           tag: ${{ needs.create-new-tag.outputs.tag_name }}
-          token: ${{ secrets.RELEASE_TOKEN_NIGHTLY }}
+          token: ${{ steps.app-token.outputs.token }}
           body: ${{ needs.create-release-note-body-text.outputs.body_text }}
           artifacts: |
             ${{ env.artifact_filename }}
