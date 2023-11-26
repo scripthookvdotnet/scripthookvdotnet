@@ -1,0 +1,192 @@
+name: 🌕🏭 Create Nightly Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      # create nightly releases for
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      semver_name:
+        description: 'Custom semver name without pre-release identifiers'
+        required: false
+        type: string
+      prerelease_build_number:
+        description: 'Custom pre-release build number'
+        required: false
+        type: string
+        default: '0'
+
+permissions:
+  contents: read
+
+jobs:
+  calc-next-tag-name:
+    name: Get Latest commit hash on Nightly Repo and Calculate New Version Tag
+    runs-on: ubuntu-latest
+    outputs:
+      sha_on_main_branch_in_nightly_repo: ${{ steps.calc-next-tag-name.outputs.sha_nightly_repo }}
+      next_version_name: ${{ steps.calc-next-tag-name.outputs.next_version_name }}
+    steps:
+      - name: Checkout Nightly Release Repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ format('{0}/scripthookvdotnet-nightly', github.repository_owner) }}
+          path: nightly-repo
+          fetch-depth: 0
+      - name: Calculate New Tag
+        id: calc-next-tag-name
+        working-directory: nightly-repo
+        env:
+          CUSTOM_VERSION_NAME: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.semver_name || '' }}
+          PRERELEASE_BUILD_NO: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.prerelease_build_number || '0' }}
+        run: |
+          echo "sha_nightly_repo=$(git log -n 1 --pretty=format:"%H")" >> "$GITHUB_OUTPUT"
+
+          if [ "$CUSTOM_VERSION_NAME" != "" ]; then
+            echo "next_version_name=${CUSTOM_VERSION_NAME}-nightly.${PRERELEASE_BUILD_NO}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [[ "$GITHUB_REF" = refs/tags/* ]]; then
+            # we've already checked that the ref is a tag with the v prefix
+            next_version_name=$(echo "${GITHUB_REF_NAME}-nightly.0" | cut -c2-)
+            echo "next_version_name=${next_version_name}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if latest_tag_name=$(git describe --tags `git rev-list --tags --max-count=1`); then
+            next_version_name=$(npx semver "$latest_tag_name" -i prerelease)
+            echo "next_version_name=${next_version_name}" >> "$GITHUB_OUTPUT"
+          else
+            echo "There's no tags on the nightly repo. Please specify a custom version tag."
+            exit 1
+          fi
+
+  create-new-tag:
+    name: Push New Version Tag
+    needs: calc-next-tag-name
+    runs-on: ubuntu-latest
+    outputs:
+      tag_name: ${{ steps.tag-output.outputs.result }}
+    steps:
+      - name: Generate Access Token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.SHVDN_APP_ID }}
+          private-key: ${{ secrets.SHVDN_APP_PRIVATE_KEY }}
+          owner: 'scripthookvdotnet'
+          repositories: 'scripthookvdotnet-nightly'
+      - name: Push New Tag
+        uses: actions/github-script@v7
+        id: tag-output
+        env:
+          SHA_NIGHTLY_REPO: ${{ needs.calc-next-tag-name.outputs.sha_on_main_branch_in_nightly_repo }}
+          TAG_NAME: ${{ needs.calc-next-tag-name.outputs.next_version_name }}
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            const owner = process.env.GITHUB_REPOSITORY_OWNER;
+            const repo = 'scripthookvdotnet-nightly';
+            const tag = `v${ process.env.TAG_NAME }`;
+            const message = `${ process.env.GITHUB_REF_NAME }_${tag}`;
+
+            const annotatedTag = await github.rest.git.createTag({
+              owner,
+              repo,
+              tag,
+              message,
+              object: process.env.SHA_NIGHTLY_REPO,
+              type: 'commit',
+            });
+
+            if (annotatedTag.status !== 201) {
+              console.log(`Could not create tag. Received ${annotatedTag.status} from API`);
+              process.exit(1);
+            }
+
+            await github.rest.git.createRef({
+              owner,
+              repo,
+              ref: `refs/tags/${tag}`,
+              sha: annotatedTag.data.sha,
+            });
+
+            return tag;
+          result-encoding: string
+
+  create-release-note-body-text:
+    name: Create Body Text for Release
+    runs-on: ubuntu-latest
+    outputs:
+      body_text: ${{ steps.body-text.outputs.result }}
+    steps:
+      - uses: actions/github-script@v7
+        id: body-text
+        with:
+          script: |
+            const commitSha = '${{ github.sha }}';
+
+            console.log(`Searching for Commit - ${commitSha}`);
+
+            const { data: commit } = await github.rest.repos.getCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: commitSha,
+            });
+
+            return `- [${commit.commit.message}](${commit.html_url})\n`;
+          result-encoding: string
+
+  build:
+    name: Build Solution
+    uses: ./.github/workflows/build.yml
+    # can't (directly) pass property values of the env var for reusable workflows, so build workflow takes care
+
+  create-release:
+    name: Publish Release
+    needs: [create-new-tag, create-release-note-body-text, build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Artifact from Build Workflow
+        uses: actions/download-artifact@v3
+        with:
+          name: ScriptHookVDotNet
+          path: bin/Release
+      - run: ls -g
+        working-directory: bin/Release
+      - name: Pack build
+        env:
+          TAG_NAME: ${{ needs.create-new-tag.outputs.tag_name }}
+        run: |
+          artifact_name="ScriptHookVDotNet-${TAG_NAME}"
+          artifact_file_name="${artifact_name}.zip"
+          echo "artifact_name=${artifact_name}" >> $GITHUB_ENV
+          echo "artifact_filename=${artifact_file_name}" >> $GITHUB_ENV
+          zip "$artifact_file_name" ${{ github.workspace }}/bin/Release/*
+      - name: Generate Access Token
+        uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.SHVDN_APP_ID }}
+          private-key: ${{ secrets.SHVDN_APP_PRIVATE_KEY }}
+          owner: 'scripthookvdotnet'
+          repositories: 'scripthookvdotnet-nightly'
+      - name: Push New Release
+        uses: ncipollo/release-action@v1.13.0
+        with:
+          repo: scripthookvdotnet-nightly
+          name: ${{ env.artifact_name }}
+          tag: ${{ needs.create-new-tag.outputs.tag_name }}
+          token: ${{ steps.app-token.outputs.token }}
+          body: ${{ needs.create-release-note-body-text.outputs.body_text }}
+          artifacts: |
+            ${{ env.artifact_filename }}
+          artifactErrorsFailBuild: true
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
