@@ -3614,6 +3614,8 @@ namespace SHVDN
 
         #region -- Entity Pools --
 
+        // Note: actually this struct is supposed to point the same struct type as `FwBasePool` in this source code
+        // file, but needs to be careful when refactoring.
         [StructLayout(LayoutKind.Explicit)]
         private struct FwScriptGuidPool
         {
@@ -3638,15 +3640,29 @@ namespace SHVDN
             }
         }
 
+        /// <summary>
+        /// Represents <c>rage::sysMemPoolAllocator</c>, which all of the
+        /// <c>rage::sysMemPoolAllocator::PoolWrapper&lt;typename T&gt;</c> have as the sole field via an pointer.
+        /// </summary>
+        /// <remarks>
+        /// Possible (without limitation) <c>typename T</c>s of
+        /// <c>rage::sysMemPoolAllocator::PoolWrapper&lt;typename T&gt;</c> are <c>CTask</c>, <c>CTaskInfo</c>,
+        /// <c>CVehicle</c>, <c>audVehicleAudioEntity</c>, and <c>void *</c>.
+        /// </remarks>
         [StructLayout(LayoutKind.Explicit)]
-        private struct VehiclePool
+        private struct RageSysMemPoolAllocator
         {
+            // m_pool at offset 0x0 takes 0x60 byte
+            // (type: "rage::atIteratablePool<rage::sysMemPoolAllocator::PoolNode>").
             [FieldOffset(0x00)]
             internal ulong* poolAddress;
             [FieldOffset(0x08)]
             internal uint size;
             [FieldOffset(0x30)]
             internal uint* bitArray;
+
+            // m_freeList at 0x60 takes 0x18 bytes (type: "rage::inlist<rage::sysMemPoolAllocator::FreeNode,8>").
+            // The struct contains m_head, m_tail and m_size fields.
             [FieldOffset(0x60)]
             internal uint itemCount;
 
@@ -3663,8 +3679,22 @@ namespace SHVDN
             }
         }
 
+        /// <summary>
+        /// Represents <c>rage::fwBasePool</c>, which all of the <c>rage::fwPool&lt;typename T&gt;</c> types has as
+        /// the sole field.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The <c>rage::fwBasePool</c> takes 0x30 bytes without a vtable pointer in production builds, but that in
+        /// a debug build around v1.0.2699.0 takes 0x68 bytes with a vtable pointer and additional debug fields.
+        /// </para>
+        /// <para>
+        /// All of <c>rage::fwPool&lt;typename T&gt;</c> types (at least 243 types) has the same layout but with
+        /// different element type (at least the return type of <c>GetSlot(int)</c> differs by type parameter).
+        /// </para>
+        /// </remarks>
         [StructLayout(LayoutKind.Explicit)]
-        private struct GenericPool
+        private struct FwBasePool
         {
             [FieldOffset(0x00)]
             public ulong poolStartAddress;
@@ -3674,6 +3704,14 @@ namespace SHVDN
             public uint size;
             [FieldOffset(0x14)]
             public uint itemSize;
+
+            // The "first" index should be at 0x18 and The "last" index should be at 0x1C in production builds
+            // according to the layout in a debug build around v1.0.2699.0, but the "first" and the "last" aren't
+            // related to about the order.
+
+            // WARNING: according to `rage::fwBasePoolTracker::GetNoOfUsedSpaces`, this field is supposed to be read
+            // by reading as a 4-byte value, applying left shift by 2 and SIGNED right shift (`SAR` in assembly code)
+            // by 2, and then return the calculated value.
             [FieldOffset(0x20)]
             public ushort itemCount;
 
@@ -3831,13 +3869,13 @@ namespace SHVDN
                 switch (_poolType)
                 {
                     case PoolType.Generic:
-                        var genericPool = (GenericPool*)_poolAddress;
-                        _resultHandles = GetGuidHandlesFromGenericPool(fwScriptGuidPool, genericPool);
+                        var fwBasePool = (FwBasePool*)_poolAddress;
+                        _resultHandles = GetGuidHandlesFromFwBasePool(fwScriptGuidPool, fwBasePool);
                         break;
 
                     case PoolType.Vehicle:
-                        var vehiclePool = (VehiclePool*)_poolAddress;
-                        _resultHandles = GetGuidHandlesFromVehiclePool(fwScriptGuidPool, vehiclePool);
+                        var poolAllocator = (RageSysMemPoolAllocator*)_poolAddress;
+                        _resultHandles = GetGuidHandlesFromRageSysMemPoolAllocator(fwScriptGuidPool, poolAllocator);
                         break;
 
                     case PoolType.Projectile:
@@ -3850,24 +3888,24 @@ namespace SHVDN
                 }
             }
 
-            private int[] GetGuidHandlesFromGenericPool(FwScriptGuidPool* fwScriptGuidPool, GenericPool* genericPool)
+            private int[] GetGuidHandlesFromFwBasePool(FwScriptGuidPool* fwScriptGuidPool, FwBasePool* fwBasePool)
             {
-                var resultList = new List<int>(genericPool->itemCount);
+                var resultList = new List<int>(fwBasePool->itemCount);
 
-                uint genericPoolSize = genericPool->size;
-                for (uint i = 0; i < genericPoolSize; i++)
+                uint fwBasePoolSize = fwBasePool->size;
+                for (uint i = 0; i < fwBasePoolSize; i++)
                 {
                     if (fwScriptGuidPool->IsFull())
                     {
                         throw new InvalidOperationException("The fwScriptGuid pool is full. The pool must be extended to retrieve all entity handles.");
                     }
 
-                    if (!genericPool->IsValid(i))
+                    if (!fwBasePool->IsValid(i))
                     {
                         continue;
                     }
 
-                    ulong address = genericPool->GetAddress(i);
+                    ulong address = fwBasePool->GetAddress(i);
 
                     if (_doPosCheck && !CheckEntityDistance(address, _position.GetValueOrDefault(), _radiusSquared))
                     {
@@ -3886,11 +3924,11 @@ namespace SHVDN
                 return resultList.ToArray();
             }
 
-            private int[] GetGuidHandlesFromVehiclePool(FwScriptGuidPool* fwScriptGuidPool, VehiclePool* vehiclePool)
+            private int[] GetGuidHandlesFromRageSysMemPoolAllocator(FwScriptGuidPool* fwScriptGuidPool, RageSysMemPoolAllocator* poolAllocator)
             {
-                var resultList = new List<int>((int)vehiclePool->itemCount);
+                var resultList = new List<int>((int)poolAllocator->itemCount);
 
-                uint poolSize = vehiclePool->size;
+                uint poolSize = poolAllocator->size;
                 for (uint i = 0; i < poolSize; i++)
                 {
                     if (fwScriptGuidPool->IsFull())
@@ -3898,12 +3936,12 @@ namespace SHVDN
                         throw new InvalidOperationException("The fwScriptGuid pool is full. The pool must be extended to retrieve all vehicle handles.");
                     }
 
-                    if (!vehiclePool->IsValid(i))
+                    if (!poolAllocator->IsValid(i))
                     {
                         continue;
                     }
 
-                    ulong address = vehiclePool->GetAddress(i);
+                    ulong address = poolAllocator->GetAddress(i);
 
                     if (_doPosCheck && !CheckEntityDistance(address, _position.GetValueOrDefault(), _radiusSquared))
                     {
@@ -4017,22 +4055,22 @@ namespace SHVDN
                 return 0;
             }
 
-            VehiclePool* pool = *(VehiclePool**)(*s_vehiclePoolAddress);
+            RageSysMemPoolAllocator* pool = *(RageSysMemPoolAllocator**)(*s_vehiclePoolAddress);
             return (int)pool->itemCount;
         }
 
-        public static int GetPedCount() => s_pedPoolAddress != null ? GetGenericPoolCount(*s_pedPoolAddress) : 0;
-        public static int GetObjectCount() => s_objectPoolAddress != null ? GetGenericPoolCount(*s_objectPoolAddress) : 0;
-        public static int GetPickupObjectCount() => s_pickupObjectPoolAddress != null ? GetGenericPoolCount(*s_pickupObjectPoolAddress) : 0;
-        public static int GetBuildingCount() => s_buildingPoolAddress != null ? GetGenericPoolCount(*s_buildingPoolAddress) : 0;
-        public static int GetAnimatedBuildingCount() => s_animatedBuildingPoolAddress != null ? GetGenericPoolCount(*s_animatedBuildingPoolAddress) : 0;
-        public static int GetInteriorInstCount() => s_interiorInstPoolAddress != null ? GetGenericPoolCount(*s_interiorInstPoolAddress) : 0;
-        public static int GetInteriorProxyCount() => s_interiorProxyPoolAddress != null ? GetGenericPoolCount(*s_interiorProxyPoolAddress) : 0;
+        public static int GetPedCount() => s_pedPoolAddress != null ? GetFwBasePoolCount(*s_pedPoolAddress) : 0;
+        public static int GetObjectCount() => s_objectPoolAddress != null ? GetFwBasePoolCount(*s_objectPoolAddress) : 0;
+        public static int GetPickupObjectCount() => s_pickupObjectPoolAddress != null ? GetFwBasePoolCount(*s_pickupObjectPoolAddress) : 0;
+        public static int GetBuildingCount() => s_buildingPoolAddress != null ? GetFwBasePoolCount(*s_buildingPoolAddress) : 0;
+        public static int GetAnimatedBuildingCount() => s_animatedBuildingPoolAddress != null ? GetFwBasePoolCount(*s_animatedBuildingPoolAddress) : 0;
+        public static int GetInteriorInstCount() => s_interiorInstPoolAddress != null ? GetFwBasePoolCount(*s_interiorInstPoolAddress) : 0;
+        public static int GetInteriorProxyCount() => s_interiorProxyPoolAddress != null ? GetFwBasePoolCount(*s_interiorProxyPoolAddress) : 0;
         public static int GetProjectileCount() => s_projectileCountAddress != null ? *s_projectileCountAddress : 0;
 
-        private static int GetGenericPoolCount(ulong address)
+        private static int GetFwBasePoolCount(ulong address)
         {
-            var pool = (GenericPool*)(address);
+            var pool = (FwBasePool*)(address);
             return (int)pool->itemCount;
         }
 
@@ -4043,41 +4081,41 @@ namespace SHVDN
                 return 0;
             }
 
-            VehiclePool* pool = *(VehiclePool**)(*s_vehiclePoolAddress);
+            RageSysMemPoolAllocator* pool = *(RageSysMemPoolAllocator**)(*s_vehiclePoolAddress);
             return (int)pool->size;
         }
-        public static int GetPedCapacity() => s_pedPoolAddress != null ? GetGenericPoolCapacity(*s_pedPoolAddress) : 0;
-        public static int GetObjectCapacity() => s_objectPoolAddress != null ? GetGenericPoolCapacity(*s_objectPoolAddress) : 0;
-        public static int GetPickupObjectCapacity() => s_pickupObjectPoolAddress != null ? GetGenericPoolCapacity(*s_pickupObjectPoolAddress) : 0;
-        public static int GetBuildingCapacity() => s_buildingPoolAddress != null ? GetGenericPoolCapacity(*s_buildingPoolAddress) : 0;
-        public static int GetAnimatedBuildingCapacity() => s_animatedBuildingPoolAddress != null ? GetGenericPoolCapacity(*s_animatedBuildingPoolAddress) : 0;
-        public static int GetInteriorInstCapacity() => s_interiorInstPoolAddress != null ? GetGenericPoolCapacity(*s_interiorInstPoolAddress) : 0;
-        public static int GetInteriorProxyCapacity() => s_interiorProxyPoolAddress != null ? GetGenericPoolCapacity(*s_interiorProxyPoolAddress) : 0;
+        public static int GetPedCapacity() => s_pedPoolAddress != null ? GetFwBasePoolCapacity(*s_pedPoolAddress) : 0;
+        public static int GetObjectCapacity() => s_objectPoolAddress != null ? GetFwBasePoolCapacity(*s_objectPoolAddress) : 0;
+        public static int GetPickupObjectCapacity() => s_pickupObjectPoolAddress != null ? GetFwBasePoolCapacity(*s_pickupObjectPoolAddress) : 0;
+        public static int GetBuildingCapacity() => s_buildingPoolAddress != null ? GetFwBasePoolCapacity(*s_buildingPoolAddress) : 0;
+        public static int GetAnimatedBuildingCapacity() => s_animatedBuildingPoolAddress != null ? GetFwBasePoolCapacity(*s_animatedBuildingPoolAddress) : 0;
+        public static int GetInteriorInstCapacity() => s_interiorInstPoolAddress != null ? GetFwBasePoolCapacity(*s_interiorInstPoolAddress) : 0;
+        public static int GetInteriorProxyCapacity() => s_interiorProxyPoolAddress != null ? GetFwBasePoolCapacity(*s_interiorProxyPoolAddress) : 0;
         //the max number of projectile has not been changed from 50
         public static int GetProjectileCapacity() => 50;
 
-        private static int GetGenericPoolCapacity(ulong address)
+        private static int GetFwBasePoolCapacity(ulong address)
         {
-            var pool = (GenericPool*)(address);
+            var pool = (FwBasePool*)(address);
             return (int)pool->size;
         }
 
         public static int[] GetPedHandles(int[] modelHashes = null)
         {
-            return GetGuidsInGenericPool(NativeMemory.s_pedPoolAddress, modelHashes);
+            return GetGuidsInFwBasePool(NativeMemory.s_pedPoolAddress, modelHashes);
         }
         public static int[] GetPedHandles(FVector3 position, float radius, int[] modelHashes = null)
         {
-            return GetGuidsInGenericPool(NativeMemory.s_pedPoolAddress, position, radius, modelHashes);
+            return GetGuidsInFwBasePool(NativeMemory.s_pedPoolAddress, position, radius, modelHashes);
         }
 
         public static int[] GetPropHandles(int[] modelHashes = null)
         {
-            return GetGuidsInGenericPool(NativeMemory.s_objectPoolAddress, modelHashes);
+            return GetGuidsInFwBasePool(NativeMemory.s_objectPoolAddress, modelHashes);
         }
         public static int[] GetPropHandles(FVector3 position, float radius, int[] modelHashes = null)
         {
-            return GetGuidsInGenericPool(NativeMemory.s_objectPoolAddress, position, radius, modelHashes);
+            return GetGuidsInFwBasePool(NativeMemory.s_objectPoolAddress, position, radius, modelHashes);
         }
 
         public static int[] GetEntityHandles()
@@ -4116,9 +4154,9 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            var vehiclePool = new IntPtr(*(VehiclePool**)(*NativeMemory.s_vehiclePoolAddress));
+            var poolAllocator = new IntPtr(*(RageSysMemPoolAllocator**)(*NativeMemory.s_vehiclePoolAddress));
 
-            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, vehiclePool, modelHashes);
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, poolAllocator, modelHashes);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
             return task._resultHandles;
@@ -4130,9 +4168,9 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            var vehiclePool = new IntPtr(*(VehiclePool**)(*NativeMemory.s_vehiclePoolAddress));
+            var poolAllocator = new IntPtr(*(RageSysMemPoolAllocator**)(*NativeMemory.s_vehiclePoolAddress));
 
-            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, vehiclePool, position, radius * radius, modelHashes);
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Vehicle, poolAllocator, position, radius * radius, modelHashes);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
             return task._resultHandles;
@@ -4140,11 +4178,11 @@ namespace SHVDN
 
         public static int[] GetPickupObjectHandles()
         {
-            return GetGuidsInGenericPool(NativeMemory.s_pickupObjectPoolAddress);
+            return GetGuidsInFwBasePool(NativeMemory.s_pickupObjectPoolAddress);
         }
         public static int[] GetPickupObjectHandles(FVector3 position, float radius)
         {
-            return GetGuidsInGenericPool(NativeMemory.s_pickupObjectPoolAddress, position, radius);
+            return GetGuidsInFwBasePool(NativeMemory.s_pickupObjectPoolAddress, position, radius);
         }
         public static int[] GetProjectileHandles()
         {
@@ -4171,44 +4209,44 @@ namespace SHVDN
             return task._resultHandles;
         }
 
-        private static int[] GetGuidsInGenericPool(ulong* ptrOfPoolPtr)
+        private static int[] GetGuidsInFwBasePool(ulong* ptrOfPoolPtr)
         {
-            var genericPool = new IntPtr((GenericPool*)(*ptrOfPoolPtr));
+            var fwBasePool = new IntPtr((FwBasePool*)(*ptrOfPoolPtr));
 
-            if (genericPool == IntPtr.Zero)
+            if (fwBasePool == IntPtr.Zero)
             {
                 return Array.Empty<int>();
             }
 
-            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, genericPool);
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, fwBasePool);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
             return task._resultHandles;
         }
-        private static int[] GetGuidsInGenericPool(ulong* ptrOfPoolPtr, int[] modelHashes)
+        private static int[] GetGuidsInFwBasePool(ulong* ptrOfPoolPtr, int[] modelHashes)
         {
-            var genericPool = new IntPtr((GenericPool*)(*ptrOfPoolPtr));
+            var fwBasePool = new IntPtr((FwBasePool*)(*ptrOfPoolPtr));
 
-            if (genericPool == IntPtr.Zero)
+            if (fwBasePool == IntPtr.Zero)
             {
                 return Array.Empty<int>();
             }
 
-            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, genericPool, modelHashes);
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, fwBasePool, modelHashes);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
             return task._resultHandles;
         }
-        private static int[] GetGuidsInGenericPool(ulong* ptrOfPoolPtr, FVector3 position, float radius, int[] modelHashes = null)
+        private static int[] GetGuidsInFwBasePool(ulong* ptrOfPoolPtr, FVector3 position, float radius, int[] modelHashes = null)
         {
-            var genericPool = new IntPtr((GenericPool*)(*ptrOfPoolPtr));
+            var fwBasePool = new IntPtr((FwBasePool*)(*ptrOfPoolPtr));
 
-            if (genericPool == IntPtr.Zero)
+            if (fwBasePool == IntPtr.Zero)
             {
                 return Array.Empty<int>();
             }
 
-            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, genericPool, position, radius * radius, modelHashes);
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Generic, fwBasePool, position, radius * radius, modelHashes);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
             return task._resultHandles;
@@ -4221,7 +4259,7 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            return GetHandlesInGenericPool(*NativeMemory.s_buildingPoolAddress);
+            return GetHandlesInFwBasePool(*NativeMemory.s_buildingPoolAddress);
         }
 
         public static int[] GetBuildingHandles(FVector3 position, float radius)
@@ -4241,7 +4279,7 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            return GetHandlesInGenericPool(*NativeMemory.s_animatedBuildingPoolAddress);
+            return GetHandlesInFwBasePool(*NativeMemory.s_animatedBuildingPoolAddress);
         }
 
         public static int[] GetAnimatedBuildingHandles(FVector3 position, float radius)
@@ -4261,7 +4299,7 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            return GetHandlesInGenericPool(*NativeMemory.s_interiorInstPoolAddress);
+            return GetHandlesInFwBasePool(*NativeMemory.s_interiorInstPoolAddress);
         }
 
         public static int[] GetInteriorInstHandles(FVector3 position, float radius)
@@ -4281,7 +4319,7 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            return GetHandlesInGenericPool(*NativeMemory.s_interiorProxyPoolAddress);
+            return GetHandlesInFwBasePool(*NativeMemory.s_interiorProxyPoolAddress);
         }
 
         public static int[] GetInteriorProxyHandles(FVector3 position, float radius)
@@ -4291,7 +4329,7 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            var pool = (GenericPool*)(*NativeMemory.s_interiorProxyPoolAddress);
+            var pool = (FwBasePool*)(*NativeMemory.s_interiorProxyPoolAddress);
 
             // CInteriorProxy is not a subclass of CEntity and position data is placed at different offset
             var returnHandles = new List<int>();
@@ -4322,14 +4360,14 @@ namespace SHVDN
             return returnHandles.ToArray();
         }
 
-        public static bool BuildingHandleExists(int handle) => s_buildingPoolAddress != null ? ((GenericPool*)(*s_buildingPoolAddress))->IsHandleValid(handle) : false;
-        public static bool AnimatedBuildingHandleExists(int handle) => s_animatedBuildingPoolAddress != null ? ((GenericPool*)(*s_animatedBuildingPoolAddress))->IsHandleValid(handle) : false;
-        public static bool InteriorInstHandleExists(int handle) => s_interiorInstPoolAddress != null ? ((GenericPool*)(*s_interiorInstPoolAddress))->IsHandleValid(handle) : false;
-        public static bool InteriorProxyHandleExists(int handle) => s_interiorProxyPoolAddress != null ? ((GenericPool*)(*s_interiorProxyPoolAddress))->IsHandleValid(handle) : false;
+        public static bool BuildingHandleExists(int handle) => s_buildingPoolAddress != null ? ((FwBasePool*)(*s_buildingPoolAddress))->IsHandleValid(handle) : false;
+        public static bool AnimatedBuildingHandleExists(int handle) => s_animatedBuildingPoolAddress != null ? ((FwBasePool*)(*s_animatedBuildingPoolAddress))->IsHandleValid(handle) : false;
+        public static bool InteriorInstHandleExists(int handle) => s_interiorInstPoolAddress != null ? ((FwBasePool*)(*s_interiorInstPoolAddress))->IsHandleValid(handle) : false;
+        public static bool InteriorProxyHandleExists(int handle) => s_interiorProxyPoolAddress != null ? ((FwBasePool*)(*s_interiorProxyPoolAddress))->IsHandleValid(handle) : false;
 
-        private static int[] GetHandlesInGenericPool(ulong poolAddress)
+        private static int[] GetHandlesInFwBasePool(ulong poolAddress)
         {
-            var pool = (GenericPool*)poolAddress;
+            var pool = (FwBasePool*)poolAddress;
 
             var returnHandles = new List<int>(pool->itemCount);
             uint poolSize = pool->size;
@@ -4346,7 +4384,7 @@ namespace SHVDN
 
         private static int[] GetCEntityHandlesInRange(ulong poolAddress, FVector3 position, float radius)
         {
-            var pool = (GenericPool*)poolAddress;
+            var pool = (FwBasePool*)poolAddress;
 
             var returnHandles = new List<int>();
             uint poolSize = pool->size;
@@ -5728,7 +5766,7 @@ namespace SHVDN
                 return IntPtr.Zero;
             }
 
-            return ((GenericPool*)(*NativeMemory.s_buildingPoolAddress))->GetAddressFromHandle(handle);
+            return ((FwBasePool*)(*NativeMemory.s_buildingPoolAddress))->GetAddressFromHandle(handle);
         }
         public static IntPtr GetAnimatedBuildingAddress(int handle)
         {
@@ -5737,7 +5775,7 @@ namespace SHVDN
                 return IntPtr.Zero;
             }
 
-            return ((GenericPool*)(*NativeMemory.s_animatedBuildingPoolAddress))->GetAddressFromHandle(handle);
+            return ((FwBasePool*)(*NativeMemory.s_animatedBuildingPoolAddress))->GetAddressFromHandle(handle);
         }
         public static IntPtr GetInteriorInstAddress(int handle)
         {
@@ -5746,7 +5784,7 @@ namespace SHVDN
                 return IntPtr.Zero;
             }
 
-            return ((GenericPool*)(*NativeMemory.s_interiorInstPoolAddress))->GetAddressFromHandle(handle);
+            return ((FwBasePool*)(*NativeMemory.s_interiorInstPoolAddress))->GetAddressFromHandle(handle);
         }
         public static IntPtr GetInteriorProxyAddress(int handle)
         {
@@ -5755,7 +5793,7 @@ namespace SHVDN
                 return IntPtr.Zero;
             }
 
-            return ((GenericPool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetAddressFromHandle(handle);
+            return ((FwBasePool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetAddressFromHandle(handle);
         }
 
         #endregion
@@ -5818,7 +5856,7 @@ namespace SHVDN
                 return 0;
             }
 
-            return ((GenericPool*)(*NativeMemory.s_interiorInstPoolAddress))->GetGuidHandleFromAddress(interiorInstAddress);
+            return ((FwBasePool*)(*NativeMemory.s_interiorInstPoolAddress))->GetGuidHandleFromAddress(interiorInstAddress);
         }
         public static int GetInteriorProxyHandleFromInteriorInst(int interiorInstHandle)
         {
@@ -5839,7 +5877,7 @@ namespace SHVDN
                 return 0;
             }
 
-            return ((GenericPool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
+            return ((FwBasePool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
         }
         public static int GetInteriorProxyHandleFromGameplayCam()
         {
@@ -5854,7 +5892,7 @@ namespace SHVDN
                 return 0;
             }
 
-            return ((GenericPool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
+            return ((FwBasePool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
         }
 
         public static int GetEntityHandleFromAddress(IntPtr address)
@@ -5873,10 +5911,10 @@ namespace SHVDN
                 return 0;
             }
 
-            return GetHandleForGenericPoolFromAddress(*s_buildingPoolAddress, address);
+            return GetHandleForFwBasePoolFromAddress(*s_buildingPoolAddress, address);
         }
 
-        private static int GetHandleForGenericPoolFromAddress(ulong poolAddress, IntPtr instanceAddress) => ((GenericPool*)poolAddress)->GetGuidHandleFromAddress((ulong)instanceAddress);
+        private static int GetHandleForFwBasePoolFromAddress(ulong poolAddress, IntPtr instanceAddress) => ((FwBasePool*)poolAddress)->GetGuidHandleFromAddress((ulong)instanceAddress);
 
         #endregion
 
