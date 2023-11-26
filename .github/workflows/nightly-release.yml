@@ -181,6 +181,7 @@ jobs:
           repositories: 'scripthookvdotnet-nightly'
       - name: Push New Release
         uses: ncipollo/release-action@v1.13.0
+        working-directory: bin/Release
         with:
           repo: scripthookvdotnet-nightly
           name: ${{ env.artifact_name }}
