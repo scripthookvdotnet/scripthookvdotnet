@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      # create nightly releases for
+      # create nightly releases for tag pushes so you can easily track the first nightly release on a certain stable release
       - 'v[0-9]+.[0-9]+.[0-9]+'
   workflow_dispatch:
     inputs:
@@ -64,9 +64,39 @@ jobs:
             exit 1
           fi
 
+  create-release-note-body-text:
+    name: Create Body Text for Release
+    runs-on: ubuntu-latest
+    outputs:
+      body_text: ${{ steps.body-text.outputs.result }}
+    steps:
+      - uses: actions/github-script@v7
+        id: body-text
+        with:
+          script: |
+            const commitSha = '${{ github.sha }}';
+
+            console.log(`Searching for Commit - ${commitSha}`);
+
+            const { data: commit } = await github.rest.repos.getCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: commitSha,
+            });
+
+            const commitTitle = commit.commit.message.split('\r\n')[0].split('\n')[0];
+            return `- [${commitTitle}](${commit.html_url})\n`;
+          result-encoding: string
+
+  build:
+    name: Build Solution
+    uses: ./.github/workflows/build.yml
+    # can't (directly) pass property values of the env var for reusable workflows, so build workflow takes care
+
   create-new-tag:
     name: Push New Version Tag
-    needs: calc-next-tag-name
+    # wait for the build job so the new tag won't be pushed if the build job fails
+    needs: [calc-next-tag-name, build]
     runs-on: ubuntu-latest
     outputs:
       tag_name: ${{ steps.tag-output.outputs.result }}
@@ -116,35 +146,6 @@ jobs:
 
             return tag;
           result-encoding: string
-
-  create-release-note-body-text:
-    name: Create Body Text for Release
-    runs-on: ubuntu-latest
-    outputs:
-      body_text: ${{ steps.body-text.outputs.result }}
-    steps:
-      - uses: actions/github-script@v7
-        id: body-text
-        with:
-          script: |
-            const commitSha = '${{ github.sha }}';
-
-            console.log(`Searching for Commit - ${commitSha}`);
-
-            const { data: commit } = await github.rest.repos.getCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: commitSha,
-            });
-
-            const commitTitle = commit.commit.message.split('\r\n')[0].split('\n')[0];
-            return `- [${commitTitle}](${commit.html_url})\n`;
-          result-encoding: string
-
-  build:
-    name: Build Solution
-    uses: ./.github/workflows/build.yml
-    # can't (directly) pass property values of the env var for reusable workflows, so build workflow takes care
 
   create-release:
     name: Publish Release
