@@ -162,6 +162,7 @@ jobs:
       - run: ls -g
         working-directory: bin/Release
       - name: Pack build
+        working-directory: bin/Release
         env:
           TAG_NAME: ${{ needs.create-new-tag.outputs.tag_name }}
         run: |
@@ -169,7 +170,7 @@ jobs:
           artifact_file_name="${artifact_name}.zip"
           echo "artifact_name=${artifact_name}" >> $GITHUB_ENV
           echo "artifact_filename=${artifact_file_name}" >> $GITHUB_ENV
-          zip "$artifact_file_name" ${{ github.workspace }}/bin/Release/*
+          zip -j "$artifact_file_name" *
       - name: Generate Access Token
         uses: actions/create-github-app-token@v1
         id: app-token
