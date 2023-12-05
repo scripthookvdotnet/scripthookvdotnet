@@ -64,6 +64,7 @@ namespace GTA
         MURRI,
         NCHU,
         NOOSE,
+        OBSERV,
         OCEANA,
         PALCOV,
         PALETO,

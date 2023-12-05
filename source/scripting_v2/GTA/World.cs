@@ -1339,6 +1339,8 @@ namespace GTA
                         return "North Chumash";
                     case ZoneID.NOOSE:
                         return "N.O.O.S.E.";
+                    case ZoneID.OBSERV:
+                        return "Galileo Observatory";
                     case ZoneID.OCEANA:
                         return "Pacific Ocean";
                     case ZoneID.PALCOV:
