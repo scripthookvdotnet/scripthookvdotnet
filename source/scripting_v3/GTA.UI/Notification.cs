@@ -68,37 +68,37 @@ namespace GTA.UI
         /// If set to <see langword="true"/>, the message will be cached in the pause menu.
         /// </param>
         /// <returns>
-        /// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+        /// A <see cref="FeedPost"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
         /// </returns>
-        public static FeedItem PostTicker(string message, bool isImportant, bool cacheMessage = true)
+        public static FeedPost PostTicker(string message, bool isImportant, bool cacheMessage = true)
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
 
             int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER, isImportant, cacheMessage);
-            return handle != -1 ? new FeedItem(handle) : null;
+            return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
         /// Displays the ticker message string in the top left of the HUD even if feed is paused.
         /// </summary>
         /// <inheritdoc cref="PostTicker(string, bool, bool)"/>
-        public static FeedItem PostTickerForced(string message, bool isImportant, bool cacheMessage = true)
+        public static FeedPost PostTickerForced(string message, bool isImportant, bool cacheMessage = true)
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
 
             int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER_FORCED, isImportant, cacheMessage);
-            return handle != -1 ? new FeedItem(handle) : null;
+            return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
         /// Displays the ticker message string in the top left of the HUD
         /// containing tokens (i.e. <c>~BLIP_INFO_ICON~</c>).
         /// </summary>
         /// <inheritdoc cref="PostTicker(string, bool, bool)"/>
-        public static FeedItem PostTickerWithTokens(string message, bool isImportant, bool cacheMessage = true)
+        public static FeedPost PostTickerWithTokens(string message, bool isImportant, bool cacheMessage = true)
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
 
             int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_TICKER_WITH_TOKENS, isImportant, cacheMessage);
-            return handle != -1 ? new FeedItem(handle) : null;
+            return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
         /// Displays the text message contact image and localised text message string in the top left of the HUD.
@@ -124,9 +124,9 @@ namespace GTA.UI
         /// The subtitle (subject) of the text message.
         /// </param>
         /// <returns>
-        /// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+        /// A <see cref="FeedPost"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
         /// </returns>
-        public static FeedItem PostMessageText(string message, TextureAsset texAsset, bool isImportant, FeedTextIcon icon,
+        public static FeedPost PostMessageText(string message, TextureAsset texAsset, bool isImportant, FeedTextIcon icon,
             string characterName, string subtitle = null)
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
@@ -134,23 +134,23 @@ namespace GTA.UI
             (Txd txd, string texName) = texAsset;
             int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT, txd, texName,
                 isImportant, (int)icon, characterName, subtitle);
-            return handle != -1 ? new FeedItem(handle) : null;
+            return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <inheritdoc cref="PostUnlockTitleUpdateWithColor(string, string, FeedUnlockIcon, bool, HudColor, bool)"/>
-        public static FeedItem PostUnlock(string message, string title, FeedUnlockIcon iconType)
+        public static FeedPost PostUnlock(string message, string title, FeedUnlockIcon iconType)
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
 
             int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK, title, (int)iconType, null);
-            return handle != -1 ? new FeedItem(handle) : null;
+            return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <inheritdoc cref="PostUnlockTitleUpdateWithColor(string, string, FeedUnlockIcon, bool, HudColor, bool)"/>
-        public static FeedItem PostUnlockTitleUpdate(string message, string title, FeedUnlockIcon iconType, bool isImportant = true)
+        public static FeedPost PostUnlockTitleUpdate(string message, string title, FeedUnlockIcon iconType, bool isImportant = true)
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
 
             int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK, title, (int)iconType, null, isImportant);
-            return handle != -1 ? new FeedItem(handle) : null;
+            return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
         /// Displays the unlock component.
@@ -177,15 +177,15 @@ namespace GTA.UI
         /// <see cref="PostUnlockTitleUpdate(string, string, FeedUnlockIcon, bool)"/>.
         /// </param>
         /// <returns>
-        /// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+        /// A <see cref="FeedPost"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
         /// </returns>
-        public static FeedItem PostUnlockTitleUpdateWithColor(string message, string title, FeedUnlockIcon iconType, bool isImportant = true, HudColor titleColor = HudColor.PureWhite, bool titleIsLiteral = true)
+        public static FeedPost PostUnlockTitleUpdateWithColor(string message, string title, FeedUnlockIcon iconType, bool isImportant = true, HudColor titleColor = HudColor.PureWhite, bool titleIsLiteral = true)
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
 
             int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK, title, (int)iconType, null, isImportant,
                 (int)titleColor, titleIsLiteral);
-            return handle != -1 ? new FeedItem(handle) : null;
+            return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
         /// Displays the MP Versus feed component used when you die in multiplayer.
@@ -205,9 +205,9 @@ namespace GTA.UI
         /// The custom color for the character 2 (right side) if set to a valid HUD color.
         /// </param>
         /// <returns>
-        /// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+        /// A <see cref="FeedPost"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
         /// </returns>
-        public static FeedItem PostVersusTitleUpdate(TextureAsset char1TexAsset, int val1,
+        public static FeedPost PostVersusTitleUpdate(TextureAsset char1TexAsset, int val1,
             TextureAsset char2TexAsset, int val2, HudColor customColor1 = HudColor.Invalid,
             HudColor customColor2 = HudColor.Invalid)
         {
@@ -219,7 +219,7 @@ namespace GTA.UI
             (Txd char2Txd, string char2Txn) = char2TexAsset;
             int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_VERSUS_TU, char1Txd, char1Txn, val1,
                 char2Txd, char2Txn, val2, (int)customColor1, (int)customColor2);
-            return handle != -1 ? new FeedItem(handle) : null;
+            return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
         /// Displays the award component.
@@ -242,16 +242,16 @@ namespace GTA.UI
         /// shown as HTML tags.
         /// </param>
         /// <returns>
-        /// A <see cref="FeedItem"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
+        /// A <see cref="FeedPost"/> if successfully posted a feed item; otherwise, <see langword="null"/>.
         /// </returns>
-        public static FeedItem PostAward(string message, TextureAsset texAsset, int xp,
+        public static FeedPost PostAward(string message, TextureAsset texAsset, int xp,
             HudColor awardColor, string title = null)
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
 
             (Txd txd, string txn) = texAsset;
             int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_AWARD, txd, txn, xp, (int)awardColor, title);
-            return handle != -1 ? new FeedItem(handle) : null;
+            return handle != -1 ? new FeedPost(handle) : null;
         }
 
         private static void BeginTextCommandForFeedPostAndPushLongString(string message)
