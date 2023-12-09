@@ -1291,7 +1291,7 @@ namespace GTA
                         return "Galilee";
                     case ZoneID.GALLI:
                         return "Galileo Park";
-                    case ZoneID.golf:
+                    case ZoneID.GOLF:
                         return "GWC and Golfing Society";
                     case ZoneID.GRAPES:
                         return "Grapeseed";
@@ -1373,7 +1373,7 @@ namespace GTA
                         return "Rockford Hills";
                     case ZoneID.RTRAK:
                         return "Redwood Lights Track";
-                    case ZoneID.SanAnd:
+                    case ZoneID.SANAND:
                         return "San Andreas";
                     case ZoneID.SANCHIA:
                         return "San Chianski Mountain Range";
