@@ -1305,6 +1305,8 @@ namespace GTA
                         return "Vinewood Racetrack";
                     case ZoneID.HUMLAB:
                         return "Humane Labs and Research";
+                    case ZoneID.ISHEISTZONE:
+                        return "Island";
                     case ZoneID.JAIL:
                         return "Bolingbroke Penitentiary";
                     case ZoneID.KOREAT:

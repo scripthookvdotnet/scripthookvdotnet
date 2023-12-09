@@ -5,6 +5,9 @@
 
 namespace GTA
 {
+    /// <summary>
+    /// An enumeration of all gxt entry names of pop zones, which are listed in <c>popzone.ipl</c>.
+    /// </summary>
     internal enum ZoneID
     {
         AIRP,
@@ -12,6 +15,7 @@ namespace GTA
         ALTA,
         ARMYB,
         BANHAMC,
+        /* `BANHAMCA` is skipped because there is no GXT entry for it and this enum is internal */
         BANNING,
         BAYTRE,
         BEACH,
@@ -47,6 +51,14 @@ namespace GTA
         HAWICK,
         HORS,
         HUMLAB,
+        /// <summary>
+        /// The member for the zone <c>IsHeist</c> and its GXT name entry <c>IsHeistZone</c>, for Cayo Perico.
+        /// </summary>
+        /// <remarks>
+        /// The zone is first added in "The Cayo Perico Heist" update (first introduced into update.rpf in the online
+        /// version 1.52, whose build number is 2189 for PC version).
+        /// </remarks>
+        ISHEISTZONE,
         JAIL,
         KOREAT,
         LACT,
