@@ -74,6 +74,7 @@ namespace GTA
         PBLUFF,
         PBOX,
         PROCOB,
+        PROL,
         RANCHO,
         RGLEN,
         RICHM,

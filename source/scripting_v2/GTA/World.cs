@@ -1359,6 +1359,8 @@ namespace GTA
                         return "Pillbox Hill";
                     case ZoneID.PROCOB:
                         return "Procopio Beach";
+                    case ZoneID.PROL:
+                        return "North Yankton";
                     case ZoneID.RANCHO:
                         return "Rancho";
                     case ZoneID.RGLEN:
