@@ -9,7 +9,7 @@ using Xunit;
 
 namespace ScriptHookVDotNet_APIv3_Tests
 {
-    public class DurationTests
+    public class GameClockDurationTests
     {
         /// The max safe integer value out of f64 (double) where the gap between the given value and the next up value is
         /// 1.0 or less.
