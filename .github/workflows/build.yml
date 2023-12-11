@@ -61,7 +61,7 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
         # Set verbosity to `minimal` so only failed tests would print (set to `normal` by default in VSTest.Console)
-        vstest.console "source\scripting_v3_tests\bin\x64\Release\net48\ScriptHookVDotNet_APIv3_Tests.dll" /logger:console;verbosity=minimal
+        vstest.console "source\scripting_v3_tests\bin\x64\Release\net48\ScriptHookVDotNet_APIv3_Tests.dll" "/logger:console;verbosity=minimal"
     - name: Put misc files for packing
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
