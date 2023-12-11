@@ -24,6 +24,7 @@ jobs:
         {
           throw "Failed to find the parent path of VSTest.Console."
         }
+        echo $vstest_parent_path
         Add-Content $env:GITHUB_PATH $vstest_parent_path
     - name: Install ScriptHookV SDK
       working-directory: ${{env.SOLUTION_FILE_PATH}}
