@@ -34,14 +34,15 @@ namespace GTA
         /// </summary>
         ExternalImpulse,
         /// <summary>
-        /// Angular velocity will be changed with this value used, but it is unknown what kind of vector should be used.
+        /// Add a torque to the entity.
         /// </summary>
-        ForceNoRot,
+        Torque,
         /// <summary>
-        /// Angular velocity will be changed with this value used, but it is unknown what kind of vector should be used.
-        /// Basically works just like <see cref="ForceNoRot"/>, but the force will be multiplied by 102.931, which is calculated by <c>1.75f / (0.0340035 / 2.0f)</c>.
+        /// Add an angular impulse to the entity.
+        /// Basically works just like <see cref="Torque"/>, but the force will be multiplied by 102.931, which is
+        /// calculated by <c>1.75f / (0.0340035 / 2.0f)</c>.
         /// </summary>
-        ForceRotPlusForce,
+        AngularImpulse,
 
         [Obsolete("ForceType.MinForce is obsolete because it is incorrect, use ForceType.InternalForce instead."),
         EditorBrowsable(EditorBrowsableState.Never)]
@@ -55,5 +56,11 @@ namespace GTA
         [Obsolete("ForceType.MaxForceRot2 is obsolete because it is incorrect, use ForceType.ExternalImpulse instead."),
         EditorBrowsable(EditorBrowsableState.Never)]
         MaxForceRot2 = ExternalImpulse,
+        [Obsolete("ForceType.ForceNoRot is obsolete because it is incorrect, use ForceType.Torque instead."),
+         EditorBrowsable(EditorBrowsableState.Never)]
+        ForceNoRot = Torque,
+        [Obsolete("ForceType.ForceRotPlusForce is obsolete because it is incorrect, use ForceType.AngularImpulse instead."),
+         EditorBrowsable(EditorBrowsableState.Never)]
+        ForceRotPlusForce = AngularImpulse,
     }
 }
