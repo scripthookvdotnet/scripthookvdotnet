@@ -13,8 +13,13 @@ namespace GTA
         /// Synchronously loads a location (could be inside an interior, or not).
         /// </summary>
         /// <remarks>
+        /// <para>
+        /// Stops an asynchronous load scene (<c>CLoadScene</c>) if there is an active one.
+        /// </para>
+        /// <para>
         /// Since this method blocks the game until the location is loaded,
         /// the script may be terminated for timeout at the tick this method is executed.
+        /// </para>
         /// </remarks>
         public static void LoadScene(Vector3 position) =>
             Function.Call(Hash.LOAD_SCENE, position.X, position.Y, position.Z);
@@ -95,13 +100,20 @@ namespace GTA
         /// </summary>
         /// <param name="position">The position to load around.</param>
         /// <param name="direction">
-        /// The direction to stream for <see cref="Ped"/>s and <see cref="Vehicle"/>s
-        /// (probably in meters).
+        /// The direction to stream for <see cref="Ped"/>s and <see cref="Vehicle"/>s (probably in meters).
+        /// Should be non-zero.
         /// </param>
         /// <param name="farClip">The far clip.</param>
         /// <param name="controlFlags">The control flags.</param>
         /// <returns><see langword="true"/> if load scene has started successfully; otherwise, <see langword="false"/>.</returns>
-        /// <remarks>You cannot use a new load scene during a player switch.</remarks>
+        /// <remarks>
+        /// <para>
+        /// You cannot use a new load scene during a player switch.
+        /// </para>
+        /// <para>
+        /// The game stops a load scene when SHVDN runtime terminates if it holds one for SHVDN script thread.
+        /// </para>
+        /// </remarks>
         public static bool StartNewFrustumLoadScene(Vector3 position, Vector3 direction, float farClip,
             NewLoadSceneFlags controlFlags = 0)
             => Function.Call<bool>(Hash.NEW_LOAD_SCENE_START, position.X, position.Y, position.Z, direction.X,
@@ -114,22 +126,34 @@ namespace GTA
         /// <param name="radius">The radius for the load scene in meters.</param>
         /// <param name="controlFlags">The control flags.</param>
         /// <returns><see langword="true"/> if load scene has started successfully; otherwise, <see langword="false"/>.</returns>
-        /// <remarks>You cannot use a new load scene during a player switch.</remarks>
+        /// <remarks>
+        /// <para>
+        /// You cannot use a new load scene during a player switch.
+        /// </para>
+        /// <para>
+        /// The game stops a load scene when SHVDN runtime terminates if it holds one for SHVDN script thread.
+        /// </para>
+        /// </remarks>
         public static bool StartNewSphereLoadScene(Vector3 position, float radius, NewLoadSceneFlags controlFlags = 0)
             => Function.Call<bool>(Hash.NEW_LOAD_SCENE_START_SPHERE, position.X, position.Y, position.Z, radius, (int)controlFlags);
         /// <summary>
-        /// stops the new load scene, if it is active.
+        /// stops the global asynchronous load scene, if it is active.
         /// </summary>
         public static void StopNewLoadScene() => Function.Call(Hash.NEW_LOAD_SCENE_STOP);
         /// <summary>
-        /// Gets the value that indicates whether a new load scene is currently running.
+        /// Gets the value that indicates whether the global asynchronous load scene is currently running.
         /// </summary>
-        /// <returns><see langword="true"/> if if a new load scene is active; otherwise, <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if if an asynchronous load scene is active; otherwise, <see langword="false"/>.
+        /// </returns>
         public static bool IsNewLoadSceneActive => Function.Call<bool>(Hash.IS_NEW_LOAD_SCENE_ACTIVE);
         /// <summary>
-        /// Gets the value that indicates whether a new load scene is fully loaded.
+        /// Gets the value that indicates whether the global asynchronous load scene is fully loaded.
         /// </summary>
-        /// <returns><see langword="true"/> if if the new load scene is active and fully loaded; otherwise, <see langword="false"/>.</returns>
+        /// <returns>
+        /// <see langword="true"/> if the global asynchronous load scene is active and fully loaded; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
         /// <remarks>
         /// A new load scene is never guaranteed to eventually return <see langword="true"/> if memory is under heavy load.
         /// Therefore, you might want to set up a custom timeout so you can do some alternative actions
