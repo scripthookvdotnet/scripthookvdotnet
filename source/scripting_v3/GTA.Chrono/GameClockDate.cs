@@ -44,7 +44,7 @@ namespace GTA.Chrono
     /// </para>
     /// </remarks>
     public readonly struct GameClockDate : IEquatable<GameClockDate>, IComparable<GameClockDate>, IComparable,
-        Datelike<GameClockDate>
+        IDatelike<GameClockDate>
     {
         private readonly int _year;
         private readonly OrdFlags _ordFlags;

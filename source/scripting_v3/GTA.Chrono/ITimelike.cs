@@ -8,7 +8,7 @@ namespace GTA.Chrono
     /// <summary>
     /// Defines the common set of methods for time component.
     /// </summary>
-    public interface Timelike<T>
+    public interface ITimelike<T>
     {
         /// <summary>
         /// Gets the hour component of the time represented by this interface.
@@ -43,7 +43,7 @@ namespace GTA.Chrono
         public bool GetHour12(out int hour);
 
         /// <summary>
-        /// Makes a new <see cref="Timelike{T}"/> with the hour number changed.
+        /// Makes a new <see cref="ITimelike{T}"/> with the hour number changed.
         /// </summary>
         /// <param name="hour">The new hour.</param>
         /// <returns>
@@ -53,7 +53,7 @@ namespace GTA.Chrono
         public T WithHour(int hour);
 
         /// <summary>
-        /// Makes a new <see cref="Timelike{T}"/> with the minute number changed.
+        /// Makes a new <see cref="ITimelike{T}"/> with the minute number changed.
         /// </summary>
         /// <param name="minute">The new minute.</param>
         /// <returns>
@@ -63,7 +63,7 @@ namespace GTA.Chrono
         public T WithMinute(int minute);
 
         /// <summary>
-        /// Makes a new <see cref="Timelike{T}"/> with the second number changed.
+        /// Makes a new <see cref="ITimelike{T}"/> with the second number changed.
         /// </summary>
         /// <param name="second">The new second.</param>
         /// <returns>

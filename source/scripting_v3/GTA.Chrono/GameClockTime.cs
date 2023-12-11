@@ -19,7 +19,7 @@ namespace GTA.Chrono
     /// can calculate the pseudo-millisecond component, the last time is volatile and it will be set to the same value
     /// as <see cref="Game.GameTime"/> every frame when the clock is paused.
     /// </remarks>
-    public readonly struct GameClockTime : IEquatable<GameClockTime>, IComparable<GameClockTime>, IComparable, Timelike<GameClockTime>
+    public readonly struct GameClockTime : IEquatable<GameClockTime>, IComparable<GameClockTime>, IComparable, ITimelike<GameClockTime>
     {
         private readonly int _secs;
 

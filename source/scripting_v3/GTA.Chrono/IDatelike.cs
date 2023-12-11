@@ -35,11 +35,11 @@ namespace GTA.Chrono
     /// </description>
     /// </item>
     /// </list>
-    /// For more complex changes to a date, it is best to create a new <see cref="Datelike{T}"/> value instead of
+    /// For more complex changes to a date, it is best to create a new <see cref="IDatelike{T}"/> value instead of
     /// altering an existing date.
     /// </para>
     /// </remarks>
-    public interface Datelike<T>
+    public interface IDatelike<T>
     {
         /// <summary>
         /// Returns the year part of this interface. The returned value is an integer in the range of <see langword="int"/>.
@@ -96,7 +96,7 @@ namespace GTA.Chrono
         public IsoDayOfWeek IsoDayOfWeek { get; }
 
         /// <summary>
-        /// Makes a new <see cref="Datelike{T}"/> with the year number changed, while keeping the same month and day.
+        /// Makes a new <see cref="IDatelike{T}"/> with the year number changed, while keeping the same month and day.
         /// </summary>
         /// <param name="year">The new year.</param>
         /// <returns>
@@ -113,7 +113,7 @@ namespace GTA.Chrono
         public T WithYear(int year);
 
         /// <summary>
-        /// Makes a new <see cref="Datelike{T}"/> with the month number (starting from 1) changed.
+        /// Makes a new <see cref="IDatelike{T}"/> with the month number (starting from 1) changed.
         /// </summary>
         /// <param name="month">The new month.</param>
         /// <returns>
@@ -126,7 +126,7 @@ namespace GTA.Chrono
         public T WithMonth(int month);
 
         /// <summary>
-        /// Makes a new <see cref="Datelike{T}"/> with the month number (starting from 0) changed.
+        /// Makes a new <see cref="IDatelike{T}"/> with the month number (starting from 0) changed.
         /// </summary>
         /// <param name="month0">The new month.</param>
         /// <returns>
@@ -139,7 +139,7 @@ namespace GTA.Chrono
         public T WithMonth0(int month0);
 
         /// <summary>
-        /// Makes a new <see cref="Datelike{T}"/> with the day of month (starting from 1) changed.
+        /// Makes a new <see cref="IDatelike{T}"/> with the day of month (starting from 1) changed.
         /// </summary>
         /// <param name="day">The new day of month.</param>
         /// <returns>
@@ -152,7 +152,7 @@ namespace GTA.Chrono
         public T WithDay(int day);
 
         /// <summary>
-        /// Makes a new <see cref="Datelike{T}"/> with the day of month (starting from 0) changed.
+        /// Makes a new <see cref="IDatelike{T}"/> with the day of month (starting from 0) changed.
         /// </summary>
         /// <param name="day0">The new day of month.</param>
         /// <returns>
@@ -165,7 +165,7 @@ namespace GTA.Chrono
         public T WithDay0(int day0);
 
         /// <summary>
-        /// Makes a new <see cref="Datelike{T}"/> with the day of year (starting from 1) changed.
+        /// Makes a new <see cref="IDatelike{T}"/> with the day of year (starting from 1) changed.
         /// </summary>
         /// <param name="dayOfYear">The day of year.</param>
         /// <returns>
@@ -178,7 +178,7 @@ namespace GTA.Chrono
         public T WithDayOfYear(int dayOfYear);
 
         /// <summary>
-        /// Makes a new <see cref="Datelike{T}"/> with the day of year (starting from 0) changed.
+        /// Makes a new <see cref="IDatelike{T}"/> with the day of year (starting from 0) changed.
         /// </summary>
         /// <param name="dayOfYear0">The day of year.</param>
         /// <returns>

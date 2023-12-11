@@ -41,7 +41,7 @@ namespace GTA.Chrono
     /// result in undefined behaviors.
     /// </para>
     /// </remarks>
-    public readonly struct GameClockDateTime : IEquatable<GameClockDateTime>, IComparable<GameClockDateTime>, IComparable, Datelike<GameClockDateTime>, Timelike<GameClockDateTime>
+    public readonly struct GameClockDateTime : IEquatable<GameClockDateTime>, IComparable<GameClockDateTime>, IComparable, IDatelike<GameClockDateTime>, ITimelike<GameClockDateTime>
     {
         private readonly GameClockDate _date;
         private readonly GameClockTime _time;
