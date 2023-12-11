@@ -10,11 +10,12 @@ using System;
 namespace GTA
 {
     /// <summary>
-    /// Represents a script sound id, which is used for script audio sounds processed via the static <c>audScriptAudioEntity</c> instance.
+    /// Represents a script sound, which is for <c>audScriptSound</c>. It is used for script audio sounds processed
+    /// via the static <c>audScriptAudioEntity</c> instance.
     /// </summary>
-    public class ScriptSoundId : IEquatable<ScriptSoundId>
+    public class ScriptSound : IEquatable<ScriptSound>
     {
-        internal ScriptSoundId(int id)
+        internal ScriptSound(int id)
         {
             Id = id;
         }
@@ -29,7 +30,7 @@ namespace GTA
 
         /// <summary>
         /// Returns <see langword="true"/> if the sound <see cref="Id"/> is negative,
-        /// which indicates this <see cref="ScriptSoundId"/> is not valid.
+        /// which indicates this <see cref="ScriptSound"/> is not valid.
         /// </summary>
         public bool IsNull => Id < 0;
 
@@ -113,7 +114,7 @@ namespace GTA
         {
             if (Game.Version < GameVersion.v1_0_678_1_Steam)
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_678_1_Steam), nameof(ScriptSoundId), nameof(UpdatePosition));
+                GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_678_1_Steam), nameof(ScriptSound), nameof(UpdatePosition));
             }
 
             Function.Call(Hash.UPDATE_SOUND_COORD, Id, position.X, position.Y, position.Z);
@@ -129,16 +130,16 @@ namespace GTA
 
         /// <summary>
         /// Stops a playing sound.
-        /// Calling this method on this <see cref="ScriptSoundId"/> that has finished playing will have no ill effects in any case
-        /// as long as the <see cref="ScriptSoundId"/> has not been released.
+        /// Calling this method on this <see cref="ScriptSound"/> that has finished playing will have no ill effects in any case
+        /// as long as the <see cref="ScriptSound"/> has not been released.
         /// </summary>
         public void Stop()
         {
             Function.Call(Hash.STOP_SOUND, Id);
         }
         /// <summary>
-        /// Releases this <see cref="ScriptSoundId"/>.
-        /// This should be called once a sound has finished being manipulated by the script so that its <see cref="ScriptSoundId"/>
+        /// Releases this <see cref="ScriptSound"/>.
+        /// This should be called once a sound has finished being manipulated by the script so that its <see cref="ScriptSound"/>
         /// can be released and re-used.
         /// </summary>
         public void Release()
@@ -146,13 +147,13 @@ namespace GTA
             Function.Call(Hash.RELEASE_SOUND_ID, Id);
         }
 
-        public bool Equals(ScriptSoundId other)
+        public bool Equals(ScriptSound other)
         {
             return Id == other.Id;
         }
         public override bool Equals(object obj)
         {
-            if (obj is ScriptSoundId model)
+            if (obj is ScriptSound model)
             {
                 return Equals(model);
             }
@@ -160,16 +161,16 @@ namespace GTA
             return false;
         }
 
-        public static bool operator ==(ScriptSoundId left, ScriptSoundId right)
+        public static bool operator ==(ScriptSound left, ScriptSound right)
         {
             return left.Equals(right);
         }
-        public static bool operator !=(ScriptSoundId left, ScriptSoundId right)
+        public static bool operator !=(ScriptSound left, ScriptSound right)
         {
             return !left.Equals(right);
         }
 
-        public static implicit operator InputArgument(ScriptSoundId value)
+        public static implicit operator InputArgument(ScriptSound value)
         {
             return new InputArgument((ulong)value.Id);
         }
