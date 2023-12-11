@@ -16,6 +16,16 @@ jobs:
       with:
         msbuild-architecture: x64
         vs-version: 17.7.6
+    - name: Add VSTest.Console to PATH
+      working-directory: ${{env.SOLUTION_FILE_PATH}}
+      run: |
+        $vstest_parent_path = (.github/workflows/find-vstest-path.ps1)
+        if ($vstest_parent_path -eq "")
+        {
+          throw "Failed to find the parent path of VSTest.Console."
+        }
+        Add-Content $env:GITHUB_PATH $vstest_parent_path
+
     - name: Install ScriptHookV SDK
       working-directory: ${{env.SOLUTION_FILE_PATH}}
       run: ./tools/install_sdk.ps1
@@ -48,6 +58,13 @@ jobs:
       run: |
         msbuild /m /p:configuration=Release /p:platform=x64 ScriptHookVDotNet.sln `
         && del bin\Release\ScriptHookVDotNet*.metagen
+    - name: Run tests
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: |
+        # Set verbosity to `minimal` so only failed tests would print (set to `normal` by default in VSTest.Console)
+        vstest.console "source\scripting_v3_tests\bin\x64\Release\net48\ScriptHookVDotNet_APIv3_Tests.dll" /logger:console;verbosity=minimal
+    - name: Put misc files for packing
+      working-directory: ${{env.GITHUB_WORKSPACE}}
         $robocopy_process = Start-Process "robocopy" -ArgumentList ". bin\Release README.md LICENSE.txt COPYRIGHT.md THIRD-PARTY-NOTICES.md" -PassThru -Wait
         if ($robocopy_process.ExitCode -ne 1) { exit 1 }
         cd bin\Release `
