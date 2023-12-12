@@ -409,7 +409,7 @@ namespace GTA
         /// <param name="offset">The offset from the <paramref name="target"/> to point at</param>
         public void PointAt(PedBone target, Vector3 offset = default)
         {
-            Function.Call(Hash.POINT_CAM_AT_PED_BONE, Handle, target.Owner.Handle, target, offset.X, offset.Y, offset.Z, true);
+            Function.Call(Hash.POINT_CAM_AT_PED_BONE, Handle, target.Owner.Handle, target.Tag, offset.X, offset.Y, offset.Z, true);
         }
         /// <summary>
         /// Points this <see cref="Camera"/> at a specified position.
@@ -478,7 +478,7 @@ namespace GTA
         /// <param name="offset">The relative offset from the <paramref name="pedBone"/> to attach to.</param>
         public void AttachTo(PedBone pedBone, Vector3 offset)
         {
-            Function.Call(Hash.ATTACH_CAM_TO_PED_BONE, Handle, pedBone.Owner.Handle, pedBone, offset.X, offset.Y, offset.Z, true);
+            Function.Call(Hash.ATTACH_CAM_TO_PED_BONE, Handle, pedBone.Owner.Handle, pedBone.Tag, offset.X, offset.Y, offset.Z, true);
         }
 
         /// <summary>
