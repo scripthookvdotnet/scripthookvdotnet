@@ -47,10 +47,12 @@ namespace GTA
         /// If in combat and in a <see cref="Vehicle"/>, the <see cref="Ped"/> will flee rather than attacking.
         /// </summary>
         FleeWhilstInVehicle,
+        /* Unused_3, */
         /// <summary>
         /// <see cref="Ped"/>s will scan for and react to dead <see cref="Ped"/>s found
         /// </summary>
         WillScanForDeadPeds = 9,
+        /* Unused_1, */
         /// <summary>
         /// The <see cref="Ped"/> will seek cover only.
         /// </summary>
@@ -71,23 +73,26 @@ namespace GTA
         /// <see cref="Ped"/> can use a radio to call for backup (happens after a reaction).
         /// </summary>
         HasRadio,
+        /* Unused_2, */
         /// <summary>
         /// <see cref="Ped"/> will always flee upon getting threat response task.
         /// </summary>
         AlwaysFlee = 17,
+        ForceInjuredOnGround,
+        DisableInjuredOnGround,
         /// <summary>
         /// <see cref="Ped"/> can do unarmed taunts in <see cref="Vehicle"/>.
         /// </summary>
-        CanTauntInVehicle = 20,
+        CanTauntInVehicle,
         /// <summary>
         /// <see cref="Ped"/> will be able to chase their targets if both are on foot
         /// and the target is running away.
         /// </summary>
-        CanChaseTargetOnFoot = 21,
+        CanChaseTargetOnFoot,
         /// <summary>
         /// <see cref="Ped"/> can drag injured <see cref="Ped"/>s to safety.
         /// </summary>
-        WillDragInjuredPedsToSafety = 22,
+        WillDragInjuredPedsToSafety,
         /// <summary>
         /// <see cref="Ped"/> will require LOS to the target it is aiming at before shooting.
         /// </summary>
@@ -121,27 +126,31 @@ namespace GTA
         /// before performing the cover search.
         /// </summary>
         MoveToLocationBeforeCoverSearch,
+        CanShootWithoutLos, // CanShootWithoutLOS
         /// <summary>
         /// <see cref="Ped"/> will try to maintain a min distance to the target, even if using defensive areas
         /// (currently only for cover finding + usage).
         /// </summary>
-        MaintainMinDistanceToTarget = 31,
+        MaintainMinDistanceToTarget,
+        IgnoreHatedPedsInFastMovingVehicles,
+        UseProximityAccuracy,
         /// <summary>
         /// Allows <see cref="Ped"/> to use steamed variations of peeking anims.
         /// </summary>
-        CanUsePeekingVariations = 34,
+        CanUsePeekingVariations,
         /// <summary>
         /// Disables pinned down behaviors.
         /// </summary>
-        DisablePinnedDown = 35,
+        DisablePinnedDown,
         /// <summary>
         /// Disables pinning down others.
         /// </summary>
         DisablePinDownOthers,
+        ClearAreaSetDefensiveIfDefensiveAreaReached,
         /// <summary>
         /// Disables bullet reactions.
         /// </summary>
-        DisableBulletReactions = 38,
+        DisableBulletReactions,
         /// <summary>
         /// Allows <see cref="Ped"/> to bust the player.
         /// </summary>
@@ -191,10 +200,11 @@ namespace GTA
         /// <see cref="Ped"/> is allowed to charge the enemy position.
         /// </summary>
         CanCharge,
+        ClearAreaSetAdvanceIfDefensiveAreaReached,
         /// <summary>
         /// Use the vehicle attack mission during combat (only works on driver).
         /// </summary>
-        UseVehicleAttack = 52,
+        UseVehicleAttack,
         /// <summary>
         /// Use the vehicle attack mission during combat if the <see cref="Vehicle"/> has mounted guns (only works on driver).
         /// </summary>
@@ -279,7 +289,8 @@ namespace GTA
         /// Disables pull alongside during vehicle chase.
         /// </summary>
         DisablePullAlongsideDuringVehicleChase,
-        SetDisableShoutTargetPositionOnCombatStart = 76,
+        DisableShoutTargetPosition,
+        SetDisableShoutTargetPositionOnCombatStart,
         DisableRespondedToThreatBroadcast,
         /// <summary>
         /// If set on a <see cref="Ped"/>, they will not flee when all random <see cref="Ped"/>s flee is
@@ -305,10 +316,11 @@ namespace GTA
         /// </summary>
         UseDefaultBlockedLosPositionAndDirection,
         RequiresLosToAim,
+        CruiseAndBlockInVehicle,
         /// <summary>
         /// <see cref="Ped"/>s flying aircraft will prefer to target other aircraft over entities on the ground.
         /// </summary>
-        PreferAirCombatWhenInAircraft = 85,
+        PreferAirCombatWhenInAircraft,
         /// <summary>
         /// Allow <see cref="Ped"/>s flying aircraft to use dog fighting behaviours.
         /// </summary>
