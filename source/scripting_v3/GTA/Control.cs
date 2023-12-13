@@ -5,6 +5,14 @@
 
 namespace GTA
 {
+    /// <summary>
+    /// An enumeration of control input types.
+    /// </summary>
+    /// <remarks>
+    /// The corresponding enum name in the exe is <c>rage__InputType</c>. The joaat hash value is 0xCE566A0F, where
+    /// the original name is <c>rage::InputType</c> but ':' characters are replaced with '_'. You can find the enum
+    /// name hash by searching for the hash value in the exe.
+    /// </remarks>
     public enum Control
     {
         NextCamera,
@@ -370,5 +378,7 @@ namespace GTA
         HudmarkerSelect,
         EatSnack,
         UseArmor,
+        VehicleShiftGearUp,
+        VehicleShiftGearDown,
     }
 }
