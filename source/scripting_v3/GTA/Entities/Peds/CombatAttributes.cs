@@ -13,8 +13,9 @@ namespace GTA
     /// You can check if names of this enum are included in the exe by searching the dumped exe for hashed values
     /// of names like <c>BF_[enum name]</c> without case conversion (for example, search the dumped exe for 0x61C7368E,
     /// which is the hashed value of <c>BF_CanUseCover</c>).
-    /// Although there is a enum whose hash is 0x0E8E7201 and where contains most of the member listed in this enum
-    /// <see cref="CombatAttributes"/> in the exe, the enum name for 0x0E8E7201 is unknown.
+    /// The corresponding enum name in the exe is <c>CCombatData__BehaviourFlags</c> (the joaat hash value is
+    /// 0xE8E7201, where the original name is <c>CCombatData::BehaviourFlags</c> but ':' characters are replaced with
+    /// '_').
     /// </remarks>
     public enum CombatAttributes
     {
@@ -342,9 +343,11 @@ namespace GTA
         ForceCheckAttackAngleForMountedGuns,
         /// <summary>
         /// Blocks the firing state for passenger-controlled mounted weapons.
-        /// Existing flags <see cref="UseVehicleAttack"/> and <see cref="UseVehicleAttackIfVehicleHasMountedGuns"/>
-        /// only work for drivers.
         /// </summary>
+        /// <remarks>
+        /// The flags <see cref="UseVehicleAttack"/> and <see cref="UseVehicleAttackIfVehicleHasMountedGuns"/>
+        /// only work for drivers.
+        /// </remarks>
         BlockFireForVehiclePassengerMountedGuns,
     }
 }
