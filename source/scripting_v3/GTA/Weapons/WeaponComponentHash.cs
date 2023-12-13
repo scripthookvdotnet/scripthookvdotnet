@@ -104,6 +104,8 @@ namespace GTA
         AtSrBarrel02 = 0x108AB09E,
         AtSrSupp = 0xE608B35E,
         AtSrSupp03 = 0xAC42DF71,
+        BattleRifleClip01 = 0xEE91D10E,
+        BattleRifleClip02 = 0x1D7E2EEA,
         BullpupRifleClip01 = 0xC5A12F80,
         BullpupRifleClip02 = 0xB3688B0F,
         BullpupRifleVarmodLow = 0xA857BC78,
