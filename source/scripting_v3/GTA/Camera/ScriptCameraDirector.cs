@@ -127,7 +127,7 @@ namespace GTA
         public static void StopRenderingUsingCatchUp(bool shouldApplyAcrossAllThreads = false,
             float distanceToBlend = 0f, CamSplineSmoothingMode blendType = CamSplineSmoothingMode.SlowInOutSmooth)
             => Function.Call(Hash.STOP_RENDERING_SCRIPT_CAMS_USING_CATCH_UP, shouldApplyAcrossAllThreads,
-                distanceToBlend, blendType, 0);
+                distanceToBlend, (int)blendType, 0);
 
         /// <summary>
         /// Gets a value that indicates whether an interpolation is occuring from a script cam to a gameplay cam.

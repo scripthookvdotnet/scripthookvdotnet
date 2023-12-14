@@ -875,7 +875,7 @@ namespace GTA
         /// </param>
         public void SetVehicleChaseBehaviorFlags(VehicleChaseBehaviorFlags flags, bool value)
         {
-            Function.Call(Hash.SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG, Handle, flags, value);
+            Function.Call(Hash.SET_TASK_VEHICLE_CHASE_BEHAVIOR_FLAG, Handle, (int)flags, value);
         }
 
         /// <summary>
