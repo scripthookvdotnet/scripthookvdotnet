@@ -1126,7 +1126,7 @@ namespace SHVDN
                 return;
             }
 
-            Log.Message(Log.Level.Error, "The exception was thrown while executing the script ", script.Name, ".");
+            Log.Message(Log.Level.Error, $"The exception was thrown while executing the script {script.Name} from \"{script.Filename}\".");
 
             if (GetScriptAttribute(script.ScriptInstance.GetType(), "SupportURL") is string supportURL)
             {
