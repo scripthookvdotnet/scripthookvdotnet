@@ -52,7 +52,7 @@ namespace GTA.Math
         /// <summary>
         /// Returns this vector with a magnitude of 1.
         /// </summary>
-        public Vector2 Normalized => Normalize(new Vector2(X, Y));
+        public readonly Vector2 Normalized => Normalize(new Vector2(X, Y));
 
         /// <summary>
         /// Returns a null vector. (0,0)
@@ -88,7 +88,7 @@ namespace GTA.Math
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 1].</exception>
         public float this[int index]
         {
-            get
+            readonly get
             {
                 switch (index)
                 {
@@ -114,7 +114,7 @@ namespace GTA.Math
         /// Calculates the length of the vector.
         /// </summary>
         /// <returns>The length of the vector.</returns>
-        public float Length()
+        public readonly float Length()
         {
             return (float)System.Math.Sqrt((X * X) + (Y * Y));
         }
@@ -123,7 +123,7 @@ namespace GTA.Math
         /// Calculates the squared length of the vector.
         /// </summary>
         /// <returns>The squared length of the vector.</returns>
-        public float LengthSquared()
+        public readonly float LengthSquared()
         {
             return (X * X) + (Y * Y);
         }
@@ -149,7 +149,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="position">The second vector to calculate the distance to.</param>
         /// <returns>The distance to the other vector.</returns>
-        public float DistanceTo(Vector2 position)
+        public readonly float DistanceTo(Vector2 position)
         {
             return (position - this).Length();
         }
@@ -159,7 +159,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="position">The second vector to calculate the squared distance to.</param>
         /// <returns>The squared distance to the other vector.</returns>
-        public float DistanceToSquared(Vector2 position)
+        public readonly float DistanceToSquared(Vector2 position)
         {
             return DistanceSquared(position, this);
         }
@@ -206,7 +206,7 @@ namespace GTA.Math
         /// <summary>
         /// Converts a vector to a heading.
         /// </summary>
-        public float ToHeading()
+        public readonly float ToHeading()
         {
             return (float)((System.Math.Atan2(X, -Y) + System.Math.PI) * (180.0 / System.Math.PI));
         }
@@ -451,7 +451,7 @@ namespace GTA.Math
         /// Converts the value of the object to its equivalent string representation.
         /// </summary>
         /// <returns>The string representation of the value of this instance.</returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             return $"X:{X.ToString()} Y:{Y.ToString()}";
         }
@@ -461,7 +461,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="format">The format.</param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public string ToString(string format)
+        public readonly string ToString(string format)
         {
             if (format == null)
             {
@@ -475,7 +475,7 @@ namespace GTA.Math
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             unchecked
             {
@@ -488,7 +488,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="obj">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; otherwise, <see langword="false" />.</returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
             {
@@ -503,7 +503,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="other">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public bool Equals(Vector2 other) => (X == other.X && Y == other.Y);
+        public readonly bool Equals(Vector2 other) => (X == other.X && Y == other.Y);
 
         /// <summary>
         /// Determines whether the specified object instances are considered equal.

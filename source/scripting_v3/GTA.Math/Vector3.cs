@@ -80,7 +80,7 @@ namespace GTA.Math
         /// <summary>
         /// Returns this vector with a magnitude of 1.
         /// </summary>
-        public Vector3 Normalized => Normalize(new Vector3(X, Y, Z));
+        public readonly Vector3 Normalized => Normalize(new Vector3(X, Y, Z));
 
         /// <summary>
         /// Returns a null vector. (0,0,0)
@@ -171,7 +171,7 @@ namespace GTA.Math
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 2].</exception>
         public float this[int index]
         {
-            get
+            readonly get
             {
                 switch (index)
                 {
@@ -209,13 +209,13 @@ namespace GTA.Math
         /// Calculates the length of the vector.
         /// </summary>
         /// <returns>The length of the vector.</returns>
-        public float Length() => (float)(System.Math.Sqrt((X * X) + (Y * Y) + (Z * Z)));
+        public readonly float Length() => (float)(System.Math.Sqrt((X * X) + (Y * Y) + (Z * Z)));
 
         /// <summary>
         /// Calculates the squared length of the vector.
         /// </summary>
         /// <returns>The squared length of the vector.</returns>
-        public float LengthSquared() => (X * X) + (Y * Y) + (Z * Z);
+        public readonly float LengthSquared() => (X * X) + (Y * Y) + (Z * Z);
 
         /// <summary>
         /// Converts the vector into a unit vector.
@@ -239,21 +239,21 @@ namespace GTA.Math
         /// </summary>
         /// <param name="position">The second vector to calculate the distance to.</param>
         /// <returns>The distance to the other vector.</returns>
-        public float DistanceTo(Vector3 position) => (position - this).Length();
+        public readonly float DistanceTo(Vector3 position) => (position - this).Length();
 
         /// <summary>
         /// Calculates the squared distance between two vectors.
         /// </summary>
         /// <param name="position">The second vector to calculate the distance to.</param>
         /// <returns>The distance to the other vector.</returns>
-        public float DistanceToSquared(Vector3 position) => DistanceSquared(position, this);
+        public readonly float DistanceToSquared(Vector3 position) => DistanceSquared(position, this);
 
         /// <summary>
         /// Calculates the distance between two vectors, ignoring the Z-component.
         /// </summary>
         /// <param name="position">The second vector to calculate the distance to.</param>
         /// <returns>The distance to the other vector.</returns>
-        public float DistanceTo2D(Vector3 position)
+        public readonly float DistanceTo2D(Vector3 position)
         {
             var lhs = new Vector3(X, Y, 0.0f);
             var rhs = new Vector3(position.X, position.Y, 0.0f);
@@ -266,7 +266,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="position">The second vector to calculate the squared distance to.</param>
         /// <returns>The distance to the other vector.</returns>
-        public float DistanceToSquared2D(Vector3 position)
+        public readonly float DistanceToSquared2D(Vector3 position)
         {
             var lhs = new Vector3(X, Y, 0.0f);
             var rhs = new Vector3(position.X, position.Y, 0.0f);
@@ -348,19 +348,19 @@ namespace GTA.Math
         /// <summary>
         /// Converts a vector to a heading.
         /// </summary>
-        public float ToHeading() => (float)((System.Math.Atan2(X, -Y) + System.Math.PI) * (180.0 / System.Math.PI));
+        public readonly float ToHeading() => (float)((System.Math.Atan2(X, -Y) + System.Math.PI) * (180.0 / System.Math.PI));
 
         /// <summary>
         /// Creates a random vector inside the circle around this position.
         /// </summary>
-        public Vector3 Around(float distance) => this + (RandomXY() * distance);
+        public readonly Vector3 Around(float distance) => this + (RandomXY() * distance);
 
         /// <summary>
         /// Rounds each float inside the vector to a select amount of decimal places (2 by default).
         /// </summary>
         /// <param name="decimalPlaces">Number of decimal places to round to</param>
         /// <returns>The vector containing rounded values</returns>
-        public Vector3 Round(int decimalPlaces = 2)
+        public readonly Vector3 Round(int decimalPlaces = 2)
         {
             return new Vector3((float)System.Math.Round(X, decimalPlaces), (float)System.Math.Round(Y, decimalPlaces), (float)System.Math.Round(Z, decimalPlaces));
         }
@@ -664,13 +664,13 @@ namespace GTA.Math
         /// <summary>
         /// Converts the matrix to an array of floats.
         /// </summary>
-        public float[] ToArray() => new[] { X, Y, Z };
+        public readonly float[] ToArray() => new[] { X, Y, Z };
 
         /// <summary>
         /// Converts the value of the object to its equivalent string representation.
         /// </summary>
         /// <returns>The string representation of the value of this instance.</returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             CultureInfo culture = CultureInfo.CurrentCulture;
             return string.Format(culture, "X:{0} Y:{1} Z:{2}", X.ToString(culture), Y.ToString(culture),
@@ -682,7 +682,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="format">The number format.</param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public string ToString(string format)
+        public readonly string ToString(string format)
         {
             if (format == null)
             {
@@ -705,7 +705,7 @@ namespace GTA.Math
         /// A format provider that supplies culture-specific formatting information.
         /// </param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public string ToString(string format, IFormatProvider provider)
+        public readonly string ToString(string format, IFormatProvider provider)
             => string.Format("X:{0} Y:{1} Z:{2}", X.ToString(format, provider), Y.ToString(format, provider),
                 Z.ToString(format, provider));
 
@@ -713,7 +713,7 @@ namespace GTA.Math
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             unchecked
             {
@@ -729,7 +729,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="obj">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
             {
@@ -744,9 +744,9 @@ namespace GTA.Math
         /// </summary>
         /// <param name="other">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public bool Equals(Vector3 other) => (X == other.X && Y == other.Y && Z == other.Z);
+        public readonly bool Equals(Vector3 other) => (X == other.X && Y == other.Y && Z == other.Z);
 
-        internal SHVDN.NativeMemory.FVector3 ToInternalFVector3() => new SHVDN.NativeMemory.FVector3(X, Y, Z);
+        internal readonly SHVDN.NativeMemory.FVector3 ToInternalFVector3() => new SHVDN.NativeMemory.FVector3(X, Y, Z);
     }
 
     // For natives that require pointers to vectors and are called internally in the scripting section.

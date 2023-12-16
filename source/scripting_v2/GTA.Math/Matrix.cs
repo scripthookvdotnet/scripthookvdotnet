@@ -164,7 +164,7 @@ namespace GTA.Math
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="row"/> or <paramref name="column"/>is out of the range [0, 3].</exception>
         public float this[int row, int column]
         {
-            get
+            readonly get
             {
                 if (row < 0 || row > 3)
                 {
@@ -247,18 +247,18 @@ namespace GTA.Math
         /// <value>
         /// <see langword="true" /> if this instance is an identity matrix; otherwise, <see langword="false" />.
         /// </value>
-        public bool IsIdentity => Equals(Identity);
+        public readonly bool IsIdentity => Equals(Identity);
 
         /// <summary>
         /// Gets a value indicating whether this instance has an inverse matrix.
         /// </summary>
-        public bool HasInverse => Determinant() != 0.0f;
+        public readonly bool HasInverse => Determinant() != 0.0f;
 
         /// <summary>
         /// Calculates the determinant of the matrix.
         /// </summary>
         /// <returns>The determinant of the matrix.</returns>
-        public float Determinant()
+        public readonly float Determinant()
         {
             float temp1 = (M33 * M44) - (M34 * M43);
             float temp2 = (M32 * M44) - (M34 * M42);
@@ -272,7 +272,7 @@ namespace GTA.Math
                 (M14 * (((M21 * temp3) - (M22 * temp5)) + (M23 * temp6))));
         }
 
-        private float Det3x3(float M11, float M12, float M13, float M21, float M22, float M23, float M31, float M32, float M33)
+        private readonly float Det3x3(float M11, float M12, float M13, float M21, float M22, float M23, float M31, float M32, float M33)
         {
             return M11 * (M22 * M33 - M23 * M32) - M12 * (M21 * M33 - M23 * M31) + M13 * (M21 * M32 - M22 * M31);
         }
@@ -1124,13 +1124,13 @@ namespace GTA.Math
         /// <summary>
         /// Converts the matrix to an array of floats.
         /// </summary>
-        public float[] ToArray() => new[] { M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44 };
+        public readonly float[] ToArray() => new[] { M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44 };
 
         /// <summary>
         /// Converts the value of the object to its equivalent string representation.
         /// </summary>
         /// <returns>The string representation of the value of this instance.</returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             CultureInfo currentCulture = CultureInfo.CurrentCulture;
             string m11Str = M11.ToString(currentCulture);
@@ -1160,7 +1160,7 @@ namespace GTA.Math
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             unchecked
             {
@@ -1189,7 +1189,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="obj">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
             {
@@ -1204,7 +1204,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="other">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public bool Equals(Matrix other)
+        public readonly bool Equals(Matrix other)
         {
             return (M11 == other.M11 && M12 == other.M12 && M13 == other.M13 && M14 == other.M14 &&
                 M21 == other.M21 && M22 == other.M22 && M23 == other.M23 && M24 == other.M24 &&

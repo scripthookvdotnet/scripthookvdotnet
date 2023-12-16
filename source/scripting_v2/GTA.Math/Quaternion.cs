@@ -93,7 +93,7 @@ namespace GTA.Math
         /// <summary>
         /// Gets the axis components of the quaternion.
         /// </summary>
-        public Vector3 Axis
+        public readonly Vector3 Axis
         {
             get
             {
@@ -120,19 +120,19 @@ namespace GTA.Math
         /// <summary>
         /// Gets the angle of the quaternion.
         /// </summary>
-        public float Angle => ((System.Math.Abs(W) <= 1.0f) ? 2.0f * (float)(System.Math.Acos(W)) : 0.0f);
+        public readonly float Angle => ((System.Math.Abs(W) <= 1.0f) ? 2.0f * (float)(System.Math.Acos(W)) : 0.0f);
 
         /// <summary>
         /// Calculates the length of the quaternion.
         /// </summary>
         /// <returns>The length of the quaternion.</returns>
-        public float Length() => (float)System.Math.Sqrt((X * X) + (Y * Y) + (Z * Z) + (W * W));
+        public readonly float Length() => (float)System.Math.Sqrt((X * X) + (Y * Y) + (Z * Z) + (W * W));
 
         /// <summary>
         /// Calculates the squared length of the quaternion.
         /// </summary>
         /// <returns>The squared length of the quaternion.</returns>
-        public float LengthSquared() => (X * X) + (Y * Y) + (Z * Z) + (W * W);
+        public readonly float LengthSquared() => (X * X) + (Y * Y) + (Z * Z) + (W * W);
 
         /// <summary>
         /// Converts the quaternion into a unit quaternion.
@@ -820,7 +820,7 @@ namespace GTA.Math
         /// Converts the value of the object to its equivalent string representation.
         /// </summary>
         /// <returns>The string representation of the value of this instance.</returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             return $"X:{X.ToString()} Y:{Y.ToString()} Z:{Z.ToString()} W:{W.ToString()}";
         }
@@ -830,7 +830,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="format">The format.</param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public string ToString(string format)
+        public readonly string ToString(string format)
         {
             CultureInfo invariantCulture = CultureInfo.InvariantCulture;
             return $"X:{X.ToString(format, invariantCulture)} Y:{Y.ToString(format, invariantCulture)} Z:{Z.ToString(format, invariantCulture)} W:{W.ToString(format, invariantCulture)}";
@@ -840,14 +840,14 @@ namespace GTA.Math
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() => X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
+        public override readonly int GetHashCode() => X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
 
         /// <summary>
         /// Returns a value that indicates whether the current instance is equal to a specified object.
         /// </summary>
         /// <param name="obj">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
             {
@@ -862,7 +862,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="other">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public bool Equals(Quaternion other) => (X == other.X && Y == other.Y && Z == other.Z && W == other.W);
+        public readonly bool Equals(Quaternion other) => (X == other.X && Y == other.Y && Z == other.Z && W == other.W);
 
         /// <summary>
         /// Determines whether the specified object instances are considered equal.

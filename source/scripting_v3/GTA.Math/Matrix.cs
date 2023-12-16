@@ -168,7 +168,7 @@ namespace GTA.Math
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="index"/> is out of the range [0, 15].</exception>
         public float this[int index]
         {
-            get
+            readonly get
             {
                 switch (index)
                 {
@@ -277,7 +277,7 @@ namespace GTA.Math
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when the <paramref name="row"/> or <paramref name="column"/>is out of the range [0, 3].</exception>
         public float this[int row, int column]
         {
-            get
+            readonly get
             {
                 if (row < 0 || row > 3)
                 {
@@ -312,7 +312,7 @@ namespace GTA.Math
 
         /// <summary>Gets the origin of the coordinate system.</summary>
         /// <returns>The origin of the coordinate system.</returns>
-        public Vector3 GetOrigin() => new(M41, M42, M43);
+        public readonly Vector3 GetOrigin() => new(M41, M42, M43);
 
         /// <summary>Sets the origin of the coordinate system to the given vector.</summary>
         /// <param name="newOrigin">The new origin of the coordinate system.</param>
@@ -323,10 +323,10 @@ namespace GTA.Math
             M43 = newOrigin.Z;
         }
 
-        public Vector3 GetScaleVector() => GetScaleVector(F32Epsilon);
+        public readonly Vector3 GetScaleVector() => GetScaleVector(F32Epsilon);
 
         /// <summary>Returns a 3D scale vector calculated from this matrix (where each component is the magnitude of a row vector) with error tolerance.</summary>
-        public Vector3 GetScaleVector(float tolerance)
+        public readonly Vector3 GetScaleVector(float tolerance)
         {
             Vector3 scale = default;
 
@@ -352,18 +352,18 @@ namespace GTA.Math
         /// <value>
         /// <see langword="true" /> if this instance is an identity matrix; otherwise, <see langword="false" />.
         /// </value>
-        public bool IsIdentity => Equals(Identity);
+        public readonly bool IsIdentity => Equals(Identity);
 
         /// <summary>
         /// Gets a value indicating whether this instance has an inverse matrix.
         /// </summary>
-        public bool HasInverse => Determinant() != 0.0f;
+        public readonly bool HasInverse => Determinant() != 0.0f;
 
         /// <summary>
         /// Calculates the determinant of the matrix.
         /// </summary>
         /// <returns>The determinant of the matrix.</returns>
-        public float Determinant()
+        public readonly float Determinant()
         {
             float temp1 = (M33 * M44) - (M34 * M43);
             float temp2 = (M32 * M44) - (M34 * M42);
@@ -377,7 +377,7 @@ namespace GTA.Math
                 (M14 * (((M21 * temp3) - (M22 * temp5)) + (M23 * temp6))));
         }
 
-        float Det3x3(float M11, float M12, float M13, float M21, float M22, float M23, float M31, float M32, float M33)
+        readonly float Det3x3(float M11, float M12, float M13, float M21, float M22, float M23, float M31, float M32, float M33)
         {
             return M11 * (M22 * M33 - M23 * M32) - M12 * (M21 * M33 - M23 * M31) + M13 * (M21 * M32 - M22 * M31);
         }
@@ -441,7 +441,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="point">The original vertex location</param>
         /// <returns>The vertex location transformed by the given <see cref="Matrix"/></returns>
-        public Vector3 TransformPoint(Vector3 point)
+        public readonly Vector3 TransformPoint(Vector3 point)
         {
             unsafe
             {
@@ -484,7 +484,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="point">The transformed vertex location</param>
         /// <returns>The original vertex location before being transformed by the given <see cref="Matrix"/></returns>
-        public Vector3 InverseTransformPoint(Vector3 point) => InverseTransformVector(point - new Vector3(M41, M42, M43));
+        public readonly Vector3 InverseTransformPoint(Vector3 point) => InverseTransformVector(point - new Vector3(M41, M42, M43));
 
         /// <summary>
         /// Transform a vector with this transformation <see cref="Matrix"/>.
@@ -492,7 +492,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="vector">The vector.</param>
         /// <returns>The vector transformed by the given <see cref="Matrix"/>.</returns>
-        public Vector3 TransformVector(Vector3 vector)
+        public readonly Vector3 TransformVector(Vector3 vector)
         {
             unsafe
             {
@@ -523,7 +523,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="vector">The vector.</param>
         /// <returns>The vector transformed by the inverse of the given <see cref="Matrix"/>.</returns>
-        public Vector3 InverseTransformVector(Vector3 vector)
+        public readonly Vector3 InverseTransformVector(Vector3 vector)
         {
             float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
             float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
@@ -543,7 +543,7 @@ namespace GTA.Math
             return new Vector3(vectorUnrotated.X, vectorUnrotated.Y, vectorUnrotated.Z);
         }
 
-        private Vector3 InverseTransformVectorWithScale(Vector3 vector, float squaredScaleX, float squaredScaleY, float squaredScaleZ)
+        private readonly Vector3 InverseTransformVectorWithScale(Vector3 vector, float squaredScaleX, float squaredScaleY, float squaredScaleZ)
         {
             float safeScaleX = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleX));
             float safeScaleY = GetSafeScaleReciprocal((float)System.Math.Sqrt(squaredScaleY));
@@ -566,7 +566,7 @@ namespace GTA.Math
         /// <param name="direction">The direction vector.</param>
         /// <returns>The direction vector transformed by the given <see cref="Matrix"/>.</returns>
         /// <remarks>You should use <see cref="TransformPoint(Vector3)"/> for the conversion if the vector represents a position rather than a direction.</remarks>
-        public Vector3 TransformDirection(Vector3 direction)
+        public readonly Vector3 TransformDirection(Vector3 direction)
         {
             Matrix matrixNoScaling = GetMatrixWithoutScale();
             var inverseRotation = Quaternion.RotationMatrix(matrixNoScaling);
@@ -583,7 +583,7 @@ namespace GTA.Math
         /// <param name="direction">The direction vector.</param>
         /// <returns>The vector transformed by the inverse of the given <see cref="Matrix"/>.</returns>
         /// <remarks>You should use <see cref="InverseTransformPoint(Vector3)"/> for the conversion if the vector represents a position rather than a direction.</remarks>
-        public Vector3 InverseTransformDirection(Vector3 direction)
+        public readonly Vector3 InverseTransformDirection(Vector3 direction)
         {
             Matrix matrixNoScaling = GetMatrixWithoutScale();
             var inverseRotation = Quaternion.RotationMatrix(matrixNoScaling);
@@ -597,7 +597,7 @@ namespace GTA.Math
         // because you should be instead of showing gigantic infinite mesh
         // also returning a big number like 3.4e+38f causes sequential NaN issues by multiplying
         // so we hardcode as 0
-        private float GetSafeScaleReciprocal(float scale, float tolerance = F32Epsilon)
+        private readonly float GetSafeScaleReciprocal(float scale, float tolerance = F32Epsilon)
         {
             if (System.Math.Abs(scale) <= tolerance)
             {
@@ -1182,20 +1182,20 @@ namespace GTA.Math
         /// </summary>
         /// <param name="scale">The scale.</param>
         /// <returns>The matrix applied the scale.</returns>
-        public Matrix ApplyScale(float scale) => Scaling(new Vector3(scale, scale, scale)) * this;
+        public readonly Matrix ApplyScale(float scale) => Scaling(new Vector3(scale, scale, scale)) * this;
 
         /// <summary>
         /// Applies scale to this matrix.
         /// </summary>
         /// <param name="scale">The scale vector.</param>
         /// <returns>The matrix applied the scale.</returns>
-        public Matrix ApplyScale(Vector3 scale) => Scaling(scale) * this;
+        public readonly Matrix ApplyScale(Vector3 scale) => Scaling(scale) * this;
 
         /// <summary>
         /// Returns matrix after RemoveScaling.
         /// </summary>
         /// <returns>The matrix without scale information.</returns>
-        public Matrix GetMatrixWithoutScale()
+        public readonly Matrix GetMatrixWithoutScale()
         {
             Matrix result = this;
             result.RemoveScaling(F32Epsilon);
@@ -1207,7 +1207,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="tolerance">The error tolerance.</param>
         /// <returns>The matrix without scale information.</returns>
-        public Matrix GetMatrixWithoutScale(float tolerance)
+        public readonly Matrix GetMatrixWithoutScale(float tolerance)
         {
             Matrix result = this;
             result.RemoveScaling(tolerance);
@@ -1218,7 +1218,7 @@ namespace GTA.Math
         /// Returns the same matrix but without translation.
         /// </summary>
         /// <returns>The matrix without translation information.</returns>
-        public Matrix RemoveTranslation()
+        public readonly Matrix RemoveTranslation()
         {
             Matrix result = this;
             result.M41 = 0f;
@@ -1491,13 +1491,13 @@ namespace GTA.Math
         /// <summary>
         /// Converts the matrix to an array of floats.
         /// </summary>
-        public float[] ToArray() => new[] { M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44 };
+        public readonly float[] ToArray() => new[] { M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44 };
 
         /// <summary>
         /// Converts the value of the object to its equivalent string representation.
         /// </summary>
         /// <returns>The string representation of the value of this instance.</returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             CultureInfo culture = CultureInfo.CurrentCulture;
             return string.Format(culture,
@@ -1515,7 +1515,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="format">The format.</param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public string ToString(string format)
+        public readonly string ToString(string format)
         {
             if (format == null)
             {
@@ -1552,7 +1552,7 @@ namespace GTA.Math
         /// A format provider that supplies culture-specific formatting information.
         /// </param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public string ToString(string format, IFormatProvider provider)
+        public readonly string ToString(string format, IFormatProvider provider)
         {
             return string.Format(format, provider,
                 "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}]" +
@@ -1575,7 +1575,7 @@ namespace GTA.Math
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             unchecked
             {
@@ -1604,7 +1604,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="obj">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public override bool Equals(object obj)
+        public override readonly bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != GetType())
             {
@@ -1619,7 +1619,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="other">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public bool Equals(Matrix other)
+        public readonly bool Equals(Matrix other)
         {
             return (M11 == other.M11 && M12 == other.M12 && M13 == other.M13 && M14 == other.M14 &&
                 M21 == other.M21 && M22 == other.M22 && M23 == other.M23 && M24 == other.M24 &&
