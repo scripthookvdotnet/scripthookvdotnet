@@ -545,12 +545,59 @@ namespace GTA
         }
 
         /// <summary>
-        /// Determines the speed at redline in high gear; Controls the final drive of the vehicle's gearbox.
-        /// Setting this value does not guarantee the vehicle will reach this speed.
+        /// Determines the speed at redline in high gear in m/s that provides <c>CTransmission</c> of new
+        /// <see cref="Vehicle"/>s with this <see cref="HandlingData"/>; Controls the final drive of the vehicle's
+        /// gearbox.
         /// </summary>
         /// <value>
         /// the speed at redline in high gear.
         /// </value>
+        /// <remarks>
+        /// <para>
+        /// This value is initially set to <c>[the value of `fInitialDriveMaxFlatVel`] / 3.6f * 1.2f</c>, where
+        /// <c>fInitialDriveMaxFlatVel</c> is read from a <c>handling.meta</c>.
+        /// </para>
+        /// <para>
+        /// Setting this value does not guarantee the vehicle will reach this speed. Setting this value does not
+        /// change the speed at redline in high gear of existing <see cref="Vehicle"/>s with this
+        /// <see cref="HandlingData"/>, as it is the <c>CTransmission</c> on a <c>CVehicle</c> that actually
+        /// determines the speed at redline in high gear of a <see cref="Vehicle"/>.
+        /// </para>
+        /// </remarks>
+        public float InitialDriveMaxVelocity
+        {
+            get
+            {
+                if (!IsValid)
+                {
+                    return 0;
+                }
+
+                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x64);
+            }
+            set
+            {
+                if (!IsValid)
+                {
+                    return;
+                }
+
+                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x64, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the initial drive max velocity in m/s.
+        /// This is read when <see cref="Vehicle"/>s are driving, but it is unknown that how exactly this value
+        /// affects.
+        /// </summary>
+        /// <value>
+        /// the speed at redline in high gear in m/s.
+        /// </value>
+        /// <remarks>
+        /// This value is initially set to <c>[the value of `fInitialDriveMaxFlatVel`] / 3.6f</c>, where
+        /// <c>fInitialDriveMaxFlatVel</c> is read from a <c>handling.meta</c>.
+        /// </remarks>
         public float InitialDriveMaxFlatVelocity
         {
             get
