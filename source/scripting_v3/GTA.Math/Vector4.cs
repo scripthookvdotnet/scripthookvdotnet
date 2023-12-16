@@ -12,7 +12,7 @@ namespace GTA.Math
     /// coordinates or any other quadruplet of numeric values.
     /// </summary>
     /// <remarks>
-    /// Guaranteed to be 16-byte aligned, which has the same memory layout as <c>rage::Vector4</c> and
+    /// Guaranteed to be a 16-byte aligned struct, which has the same memory layout as <c>rage::Vector4</c> and
     /// <c>rage::Vec4V</c>. You can use this struct to read these kinds of data using memory dereference.
     /// </remarks>
     public struct Vector4 : IEquatable<Vector4>, IFormattable
@@ -30,9 +30,9 @@ namespace GTA.Math
         public float Y;
 
         /// <summary>
-        /// Gets or sets the W component of the vector.
+        /// Gets or sets the Z component of the vector.
         /// </summary>
-        /// <value>The W component of the vector.</value>
+        /// <value>The Z component of the vector.</value>
         public float Z;
 
         /// <summary>
