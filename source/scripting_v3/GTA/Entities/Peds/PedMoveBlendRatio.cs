@@ -18,7 +18,7 @@ namespace GTA
         {
             if (value < 0)
             {
-                throw new ArgumentException("The value should be positive.", nameof(value));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), "The value should not be negative.");
             }
 
             Value = value;

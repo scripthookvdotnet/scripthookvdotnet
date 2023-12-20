@@ -108,7 +108,8 @@ namespace GTA.Math
                         return Y;
                 }
 
-                throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
+                return 0f;
             }
 
             set
@@ -122,7 +123,8 @@ namespace GTA.Math
                         Y = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
+                        ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "Indices for Vector2 run from 0 to 1, inclusive.");
+                        break;
                 }
             }
         }

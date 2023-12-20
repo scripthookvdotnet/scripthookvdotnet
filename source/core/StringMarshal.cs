@@ -39,7 +39,7 @@ namespace SHVDN
         {
             if (len < 0)
             {
-                throw new ArgumentException(null, nameof(len));
+                ThrowArgumentOutOfRangeException_NegativeStrLength(len, nameof(len));
             }
 
             if (ptr == IntPtr.Zero)
@@ -85,6 +85,11 @@ namespace SHVDN
 
                 return dest;
             }
+        }
+
+        private static void ThrowArgumentOutOfRangeException_NegativeStrLength(int value, string paramName)
+        {
+            throw new ArgumentOutOfRangeException(paramName, $"{value.ToString()} ('{paramName}') must be a non-negative value.");
         }
     }
 }

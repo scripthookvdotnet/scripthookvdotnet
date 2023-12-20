@@ -149,7 +149,7 @@ namespace GTA
 
             if (!_wheelNames.ContainsKey(wheelType))
             {
-                throw new ArgumentException("Wheel Type is undefined", nameof(wheelType));
+                ThrowHelper.ThrowArgumentException("Wheel Type is undefined", nameof(wheelType));
             }
 
             if (!string.IsNullOrEmpty(Game.GetLocalizedString(_wheelNames[wheelType].Item1)))

@@ -17,9 +17,29 @@ namespace GTA
     internal static class ThrowHelper
     {
         /// <summary>
+        /// Throws an <see cref="NullReferenceException"/>.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
+        /// <exception cref="NullReferenceException"/>
+        internal static void ThrowArgumentNullException(string paramName)
+        {
+            throw new ArgumentNullException(paramName);
+        }
+        /// <summary>
+        /// Throws an <see cref="NullReferenceException"/>.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
+        /// <param name="message">A message that describes the error.</param>
+        /// <exception cref="NullReferenceException"/>
+        internal static void ThrowArgumentNullException(string paramName, string message)
+        {
+            throw new ArgumentNullException(paramName, message);
+        }
+
+        /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException"/>.
         /// </summary>
-        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
         internal static void ThrowArgumentOutOfRangeException(string paramName)
         {
@@ -27,9 +47,50 @@ namespace GTA
         }
 
         /// <summary>
+        /// Throws an <see cref="ArgumentException"/>.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
+        /// <param name="message">The message that describes the error.</param>
+        /// <exception cref="ArgumentException"/>
+        internal static void ThrowArgumentOutOfRangeException(string paramName, string message)
+        {
+            throw new ArgumentOutOfRangeException(paramName, message);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/>.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        internal static void ThrowArgumentException()
+        {
+            throw new ArgumentException();
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/>.
+        /// </summary>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <exception cref="ArgumentException"/>
+        internal static void ThrowArgumentException(string message)
+        {
+            throw new ArgumentException(message);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/>.
+        /// </summary>
+        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="paramName">The name of the parameter that caused the current exception.</param>
+        /// <exception cref="ArgumentException"/>
+        internal static void ThrowArgumentException(string message, string paramName)
+        {
+            throw new ArgumentException(message, paramName);
+        }
+
+        /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info.
         /// </summary>
-        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
         /// <param name="value">The value.</param>
         /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
         /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
@@ -42,7 +103,7 @@ namespace GTA
         /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info.
         /// </summary>
-        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="paramName">The name of the parameter that caused the exception.</param>
         /// <param name="value">The value.</param>
         /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
         /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
@@ -102,6 +163,16 @@ namespace GTA
         internal static void ArgumentOutOfRangeException_Enum_Value(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, "Enum value was out of legal range.");
+        }
+
+        /// <summary>
+        /// Throws an <see cref="InvalidOperationException"/>.
+        /// </summary>
+        /// <param name="message">The message that describes the error.</param>
+        /// <exception cref="InvalidOperationException"/>
+        internal static void ThrowInvalidOperationException(string message)
+        {
+            throw new InvalidOperationException(message);
         }
     }
 }

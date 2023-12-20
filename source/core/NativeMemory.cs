@@ -1062,7 +1062,8 @@ namespace SHVDN
         {
             if (bit < 0 || bit > 31)
             {
-                throw new ArgumentOutOfRangeException(nameof(bit), "The bit index has to be between 0 and 31");
+                ThrowArgumentOutOfRangeException_InvalidBitRange(nameof(bit));
+                return;
             }
 
             int* data = (int*)address.ToPointer();
@@ -1085,11 +1086,17 @@ namespace SHVDN
         {
             if (bit < 0 || bit > 31)
             {
-                throw new ArgumentOutOfRangeException(nameof(bit), "The bit index has to be between 0 and 31");
+                ThrowArgumentOutOfRangeException_InvalidBitRange(nameof(bit));
+                return false;
             }
 
             int* data = (int*)address.ToPointer();
             return (*data & (1 << bit)) != 0;
+        }
+
+        private static void ThrowArgumentOutOfRangeException_InvalidBitRange(string paramName)
+        {
+            throw new ArgumentOutOfRangeException(paramName, "The bit index has to be between 0 and 31");
         }
 
         public static IntPtr String { get; private set; } // "~a~"

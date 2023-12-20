@@ -782,7 +782,8 @@ namespace GTA
                 case VehicleWheelBoneId.WheelRightMiddle1:
                     return;
                 default:
-                    throw new InvalidOperationException($"VehicleWheel.{methodName} does not support for wheels of LeftMiddle2, RightMiddle2, LeftMiddle3, or RightMiddle3.");
+                    ThrowHelper.ThrowInvalidOperationException($"VehicleWheel.{methodName} does not support for wheels of LeftMiddle2, RightMiddle2, LeftMiddle3, or RightMiddle3.");
+                    return;
             }
         }
     }

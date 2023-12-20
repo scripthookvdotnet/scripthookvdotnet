@@ -29,7 +29,7 @@ namespace GTA
             {
                 if (!VehicleWheel.IsBoneIdValid(boneId))
                 {
-                    throw new ArgumentOutOfRangeException(nameof(boneId));
+                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(boneId));
                 }
 
                 int boneIndexZeroBased = (int)boneId - 11;
@@ -43,7 +43,7 @@ namespace GTA
                 int indexInt = (int)index;
                 if (indexInt < 0 || indexInt > 7)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index));
                 }
 
                 VehicleWheelBoneId boneId = VehicleWheel.vehicleWheelBoneIndexTableForNatives[indexInt];
@@ -79,7 +79,7 @@ namespace GTA
         {
             if (index < 0 || index >= Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index));
             }
 
             IntPtr vehicleAddr = Vehicle.MemoryAddress;

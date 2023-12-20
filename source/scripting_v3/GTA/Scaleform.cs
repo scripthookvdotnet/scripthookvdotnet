@@ -132,8 +132,8 @@ namespace GTA
                         Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_TEXTURE_NAME_STRING, argTxd._txd);
                         break;
                     default:
-                        throw new ArgumentException(
-                            $"Unknown argument type {argument.GetType().Name} passed to scaleform with handle {Handle.ToString()}.", nameof(arguments));
+                        ThrowHelper.ThrowArgumentException($"Unknown argument type {argument.GetType().Name} passed to scaleform with handle {Handle.ToString()}.", nameof(arguments));
+                        break;
                 }
             }
         }

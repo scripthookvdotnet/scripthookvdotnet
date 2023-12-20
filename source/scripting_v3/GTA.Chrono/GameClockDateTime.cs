@@ -318,7 +318,7 @@ namespace GTA.Chrono
         {
             if (!dateTime.TryAdd(duration, out GameClockDateTime result))
             {
-                throw new ArgumentOutOfRangeException(nameof(duration));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(duration));
             }
 
             return result;
@@ -414,7 +414,7 @@ namespace GTA.Chrono
         {
             if (!dateTime.TrySubtract(duration, out GameClockDateTime result))
             {
-                throw new ArgumentOutOfRangeException(nameof(duration));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(duration));
             }
 
             return result;
@@ -467,7 +467,7 @@ namespace GTA.Chrono
         {
             if (!TrySubtractMonths(months, out GameClockDateTime dateTime))
             {
-                throw new ArgumentOutOfRangeException(nameof(months));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(months));
             }
 
             return dateTime;

@@ -71,7 +71,7 @@ namespace GTA
             {
                 if (value.Length > s_elemCountForWeaponPropertyArrays)
                 {
-                    throw new ArgumentException($"The amount of {nameof(WeaponHash)} values values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
+                    ThrowHelper.ThrowArgumentException($"The amount of {nameof(WeaponHash)} values values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
                 }
                 if (!IsValid)
                 {
@@ -135,7 +135,7 @@ namespace GTA
             {
                 if (value.Length > s_elemCountForWeaponPropertyArrays)
                 {
-                    throw new ArgumentException($"The amount of {nameof(VehicleSeat)} values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
+                    ThrowHelper.ThrowArgumentException($"The amount of {nameof(VehicleSeat)} values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
                 }
                 if (!IsValid)
                 {
@@ -206,7 +206,7 @@ namespace GTA
                 }
                 if (value.Length > s_elemCountForWeaponPropertyArrays)
                 {
-                    throw new ArgumentException($"The amount of {nameof(VehicleModType)} values values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
+                    ThrowHelper.ThrowArgumentException($"The amount of {nameof(VehicleModType)} values values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
                 }
                 if (!IsValid)
                 {
@@ -272,7 +272,7 @@ namespace GTA
             {
                 if (value.Length > s_elemCountActuallyUsedForTurretPropertyArrays)
                 {
-                    throw new ArgumentException($"The amount of turret speed values must be between 0 and {s_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
+                    ThrowHelper.ThrowArgumentException($"The amount of turret speed values must be between 0 and {s_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
                 }
                 if (!IsValid)
                 {
@@ -344,7 +344,7 @@ namespace GTA
             {
                 if (value.Length > s_elemCountActuallyUsedForTurretPropertyArrays)
                 {
-                    throw new ArgumentException($"The amount of minimum turret pitch values must be between 0 and {s_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
+                    ThrowHelper.ThrowArgumentException($"The amount of minimum turret pitch values must be between 0 and {s_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
                 }
                 if (!IsValid)
                 {
@@ -416,7 +416,7 @@ namespace GTA
             {
                 if (value.Length > s_elemCountActuallyUsedForTurretPropertyArrays)
                 {
-                    throw new ArgumentException($"The amount of maximum turret pitch values must be between 0 and {s_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
+                    ThrowHelper.ThrowArgumentException($"The amount of maximum turret pitch values must be between 0 and {s_elemCountActuallyUsedForTurretPropertyArrays.ToString()}.", nameof(value));
                 }
                 if (!IsValid)
                 {

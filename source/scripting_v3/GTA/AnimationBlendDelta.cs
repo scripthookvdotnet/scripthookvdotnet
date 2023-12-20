@@ -13,8 +13,9 @@ namespace GTA
     /// The blend duration in seconds is equal to <c>1.0f / (the blend delta value)</c>.
     /// </summary>
     /// <remarks>
-    /// To prevent animation blending not getting finished forever, this struct throws an <see cref="ArgumentException"/>
-    /// if the passed value is not more than zero when the constructor is called.
+    /// To prevent animation blending not getting finished forever, this struct throws
+    /// an <see cref="ArgumentOutOfRangeException"/> if the passed value is not more than zero when the constructor is
+    /// called.
     /// </remarks>
     public readonly struct AnimationBlendDelta : IEquatable<AnimationBlendDelta>
     {
@@ -24,7 +25,7 @@ namespace GTA
             // because of infinity duration (which will be made by division of 1.0 by 0).
             if (value <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(value), "The value should be positive.");
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), "The value should be positive.");
             }
 
             Value = value;

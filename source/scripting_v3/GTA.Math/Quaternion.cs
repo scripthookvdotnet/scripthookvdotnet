@@ -679,7 +679,8 @@ namespace GTA.Math
                     result.W = (cosY * cosX * cosZ) - (sinY * sinX * sinZ);
                     break;
                 default:
-                    throw new ArgumentException(nameof(rotationOrder));
+                    ThrowHelper.ThrowArgumentException("Enum value was out of legal range.", nameof(rotationOrder));
+                    break;
             }
 
             return result;
@@ -722,7 +723,8 @@ namespace GTA.Math
                 case EulerRotationOrder.ZYX:
                     return ToEulerZYX();
                 default:
-                    throw new ArgumentException(nameof(rotationOrder));
+                    ThrowHelper.ThrowArgumentException("Enum value was out of legal range.", nameof(rotationOrder));
+                    return default;
             }
         }
 

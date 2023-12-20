@@ -926,12 +926,12 @@ namespace GTA
                 {
                     if (value > 10)
                     {
-                        throw new ArgumentOutOfRangeException(nameof(value), "Values must be between 0 and 10, inclusive.");
+                        ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), "Values must be between 0 and 10, inclusive.");
                     }
                 }
                 else if (value > 7)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value), "Values must be between 0 and 7, inclusive.");
+                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), "Values must be between 0 and 7, inclusive.");
                 }
 
                 SHVDN.NativeMemory.WriteByte(address + SHVDN.NativeMemory.Vehicle.HighGearOffset, (byte)value);
@@ -2026,7 +2026,7 @@ namespace GTA
         {
             if (!IsSeatFree(seat))
             {
-                throw new ArgumentException("The VehicleSeat selected was not free", nameof(seat));
+                ThrowHelper.ThrowArgumentException("The VehicleSeat selected was not free", nameof(seat));
             }
 
             if (!model.IsPed || !model.Request(1000))
@@ -2046,7 +2046,7 @@ namespace GTA
         {
             if (!IsSeatFree(seat))
             {
-                throw new ArgumentException("The VehicleSeat selected was not free", nameof(seat));
+                ThrowHelper.ThrowArgumentException("The VehicleSeat selected was not free", nameof(seat));
             }
 
             if (seat == VehicleSeat.Driver)

@@ -725,12 +725,13 @@ namespace GTA
         {
             if (!(Owner?.HasSkeleton ?? false))
             {
-                throw new InvalidOperationException("The entity of this bone does not have a skeleton.");
+
+                ThrowHelper.ThrowInvalidOperationException("The entity of this bone does not have a skeleton.");
             }
 
             if (!(secondEntity?.HasSkeleton ?? false))
             {
-                throw new ArgumentException("The entity of passed bone does not have a skeleton.", nameof(secondEntity));
+                ThrowHelper.ThrowArgumentException("The entity of passed bone does not have a skeleton.", nameof(secondEntity));
             }
         }
 

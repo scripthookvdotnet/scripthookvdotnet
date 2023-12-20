@@ -968,11 +968,11 @@ namespace GTA
         {
             if (eventType == EventType.Incapacitated)
             {
-                throw new ArgumentException("EventType.Incapacitated is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
+                ThrowHelper.ThrowArgumentException("EventType.Incapacitated is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
             }
             if (eventType == EventType.ShockingBrokenGlass)
             {
-                throw new ArgumentException("EventType.ShockingBrokenGlass is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
+                ThrowHelper.ThrowArgumentException("EventType.ShockingBrokenGlass is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
             }
 
             int eventTypeCorrected = (int)eventType;
@@ -2460,7 +2460,7 @@ namespace GTA
         {
             if (modifier < 0 || (int)modifier >= _speechModifierNames.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(modifier));
+                ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(modifier));
             }
 
             Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_NATIVE, Handle, speechName, _speechModifierNames[(int)modifier]);
@@ -2469,7 +2469,7 @@ namespace GTA
         {
             if (modifier < 0 || (int)modifier >= _speechModifierNames.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(modifier));
+                ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(modifier));
             }
 
             Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_WITH_VOICE_NATIVE, Handle, speechName, voiceName, _speechModifierNames[(int)modifier], 0);
@@ -2681,7 +2681,7 @@ namespace GTA
             // The native doesn't check the current frag type child count when access to the frag type child for the corresponding component index if the entity is ped
             if ((int)component < (int)RagdollComponent.Buttocks || (int)component > (int)RagdollComponent.Head)
             {
-                throw new ArgumentOutOfRangeException(nameof(component));
+                ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(component));
             }
 
             Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, (int)component, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
@@ -2733,13 +2733,13 @@ namespace GTA
             // The native won't apply the force if apply force type is one of the external types
             if (forceType == ForceType.ExternalForce && forceType == ForceType.ExternalImpulse)
             {
-                throw new ArgumentException(nameof(forceType), "ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.");
+                ThrowHelper.ThrowArgumentException(nameof(forceType), "ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.");
             }
             // The game can crash the game if component value is out of bound
             // The native doesn't check the current frag type child count when access to the frag type child for the corresponding component index if the entity is ped
             if ((int)component < (int)RagdollComponent.Buttocks || (int)component > (int)RagdollComponent.Head)
             {
-                throw new ArgumentOutOfRangeException(nameof(component));
+                ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(component));
             }
 
             Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, (int)forceType, force.X, force.Y, force.Z, (int)component, relativeForce, scaleByMass, applyToChildren);

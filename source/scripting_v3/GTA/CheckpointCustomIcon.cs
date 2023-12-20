@@ -45,7 +45,7 @@ namespace GTA
             {
                 if (value > 219)
                 {
-                    throw new ArgumentOutOfRangeException("The Range of possible values is 0 to 219");
+                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), "The Range of possible values is 0 to 219");
                 }
 
                 if (value < 100)
@@ -76,7 +76,7 @@ namespace GTA
                 {
                     if (value > 99)
                     {
-                        throw new ArgumentOutOfRangeException("The maximum number value is 99");
+                        ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), "The maximum number value is 99");
                     }
 
                     _number = value;
@@ -85,7 +85,7 @@ namespace GTA
                 {
                     if (value > 9)
                     {
-                        throw new ArgumentOutOfRangeException("The maximum number value when not using CheckpointCustomIconStyle.Number is 9");
+                        ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), "The maximum number value when not using CheckpointCustomIconStyle.Number is 9");
                     }
 
                     _number = value;

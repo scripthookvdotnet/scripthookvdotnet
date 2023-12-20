@@ -120,12 +120,12 @@ namespace GTA.Math
         {
             if (values == null)
             {
-                throw new ArgumentNullException(nameof(values));
+                ThrowHelper.ThrowArgumentNullException(nameof(values));
             }
 
             if (values.Length != 16)
             {
-                throw new ArgumentOutOfRangeException(nameof(values), "There must be sixteen and only sixteen input values for Matrix.");
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(values), "There must be sixteen and only sixteen input values for Matrix.");
             }
 
             M11 = values[0];
@@ -206,7 +206,8 @@ namespace GTA.Math
                         return M44;
                 }
 
-                throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
+                return 0f;
             }
 
             set
@@ -262,7 +263,8 @@ namespace GTA.Math
                         M44 = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
+                        ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "Indices for Matrix run from 0 to 15, inclusive.");
+                        break;
                 }
             }
         }
@@ -281,12 +283,12 @@ namespace GTA.Math
             {
                 if (row < 0 || row > 3)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
+                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
                 }
 
                 if (column < 0 || column > 3)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
+                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
                 }
 
                 return this[(row * 4) + column];
@@ -296,12 +298,12 @@ namespace GTA.Math
             {
                 if (row < 0 || row > 3)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
+                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
                 }
 
                 if (column < 0 || column > 3)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(column), "Rows and columns for matrices run from 0 to 3, inclusive.");
+                    ThrowHelper.ThrowArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
                 }
 
                 this[(row * 4) + column] = value;

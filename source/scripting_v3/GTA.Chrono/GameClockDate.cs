@@ -406,7 +406,7 @@ namespace GTA.Chrono
         {
             if (!date.TryAdd(duration, out GameClockDate result))
             {
-                throw new ArgumentOutOfRangeException(nameof(duration));
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(duration));
             }
 
             return result;
@@ -694,7 +694,7 @@ namespace GTA.Chrono
 
             if (mdf.Month == 2 && mdf.Day == 29 && !YearFlags.FromYear(year).IsLeapYear)
             {
-                ThrowArgumentException_NoFeb29NonLeapYear();
+                ThrowHelper.ThrowArgumentException("cannot create GameClockDate that represents February 29 in a non-leap year.");
             }
 
             YearFlags flags = YearFlags.FromYear(year);
@@ -703,15 +703,10 @@ namespace GTA.Chrono
             GameClockDate? newDate = FromMdf(year, mdf);
             if (newDate == null)
             {
-                ThrowInvalidOperation_CannotCallWithMethodWithInvalidInternalState();
+                ThrowHelper.ThrowInvalidOperationException("Cannot create a new GameClockDate with a GameClockDate with invalid state (e.g. the default value).");
             }
 
             return newDate.GetValueOrDefault();
-
-            static void ThrowArgumentException_NoFeb29NonLeapYear()
-            {
-                throw new ArgumentException("cannot create GameClockDate that represents February 29 in a non-leap year.");
-            }
         }
 
         /// <summary>
@@ -833,11 +828,6 @@ namespace GTA.Chrono
         private GameClockDate WithMonthDayFlags(MonthDayFlags mdf)
             => WithOrdFlags(mdf.ToOrdFlags().GetValueOrDefault());
 
-        private void ThrowInvalidOperation_CannotCallWithMethodWithInvalidInternalState()
-        {
-            throw new InvalidOperationException("Cannot create a new GameClockDate with a GameClockDate with invalid state (e.g. the default value).");
-        }
-
         /// <summary>
         /// Returns a duration subtracted from this instance by <paramref name="value"/>.
         /// This does not throw an exception in any cases, as all possible output fits in the range of
@@ -865,7 +855,7 @@ namespace GTA.Chrono
         /// </summary>
         /// <param name="other">The other date.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="other"/> is later than this instance.
         /// </exception>
         public int YearsSince(GameClockDate other)
@@ -877,11 +867,11 @@ namespace GTA.Chrono
                 years -= 1;
             }
 
-            return (years >= 0) switch
+            if (years < 0)
             {
-                true => years,
-                false => throw new ArgumentException(nameof(other)),
-            };
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(other));
+            }
+            return years;
         }
 
         /// <summary>

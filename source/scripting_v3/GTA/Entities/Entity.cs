@@ -2583,7 +2583,7 @@ namespace GTA
             // The native won't apply the force if apply force type is one of the external types
             if (forceType is ForceType.ExternalForce or ForceType.ExternalImpulse)
             {
-                throw new ArgumentException("ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.", nameof(forceType));
+                ThrowHelper.ThrowArgumentException("ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.", nameof(forceType));
             }
 
             // 6th parameter is component index (not bone index), which matters only if the entity is a ped

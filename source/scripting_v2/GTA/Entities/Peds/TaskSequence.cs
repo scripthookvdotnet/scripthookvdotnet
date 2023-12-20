@@ -97,12 +97,17 @@ namespace GTA
             {
                 if (IsClosed)
                 {
-                    throw new Exception("You can't add tasks to a closed sequence!");
+                    ThrowException_AddTaskCalledOnClosedSeq();
                 }
 
                 Count++;
                 return s_nullPed.Task;
             }
+        }
+
+        static void ThrowException_AddTaskCalledOnClosedSeq()
+        {
+            throw new Exception("You can't add tasks to a closed sequence!");
         }
 
         /// <inheritdoc cref="Close(bool)"/>

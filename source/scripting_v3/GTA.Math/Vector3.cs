@@ -183,7 +183,8 @@ namespace GTA.Math
                         return Z;
                 }
 
-                throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector3 run from 0 to 2, inclusive.");
+                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "Indices for Vector3 run from 0 to 2, inclusive.");
+                return 0f;
             }
 
             set
@@ -200,7 +201,8 @@ namespace GTA.Math
                         Z = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(index), "Indices for Vector3 run from 0 to 2, inclusive.");
+                        ThrowHelper.ThrowArgumentOutOfRangeException(nameof(index), "Indices for Vector3 run from 0 to 2, inclusive.");
+                        break;
                 }
             }
         }

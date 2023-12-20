@@ -152,7 +152,7 @@ namespace GTA.Chrono
 
         private static void ThrowOutOfRange_TooLongDuration()
         {
-            throw new ArgumentOutOfRangeException(null, "GameClockDuration overflowed because the duration is too long.");
+            ThrowHelper.ThrowArgumentOutOfRangeException(null, "GameClockDuration overflowed because the duration is too long.");
         }
 
         private static void ThrowIfOverflowedFromInt32YearMonthDay(long secs)

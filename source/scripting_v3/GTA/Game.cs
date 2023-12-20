@@ -381,7 +381,7 @@ namespace GTA
         {
             if (buttons.Length < 6 || buttons.Length > 29)
             {
-                throw new ArgumentException("The amount of buttons must be between 6 and 29", nameof(buttons));
+                ThrowHelper.ThrowArgumentException("The amount of buttons must be between 6 and 29", nameof(buttons));
             }
 
             uint hash = 0;

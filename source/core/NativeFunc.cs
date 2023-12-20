@@ -81,7 +81,8 @@ namespace SHVDN
             ScriptDomain domain = SHVDN.ScriptDomain.CurrentDomain;
             if (domain == null)
             {
-                throw new InvalidOperationException("Illegal scripting call outside script domain.");
+                ThrowInvalidOperationException_IllegalScriptingCall();
+                return;
             }
 
             IntPtr strUtf8 = domain.PinString(str);
@@ -247,7 +248,8 @@ namespace SHVDN
             ScriptDomain domain = ScriptDomain.CurrentDomain;
             if (domain == null)
             {
-                throw new InvalidOperationException("Illegal scripting call outside script domain.");
+                ThrowInvalidOperationException_IllegalScriptingCall();
+                return null;
             }
 
             var task = new NativeTaskPtrArgs { _hash = hash, _argumentPtr = argPtr, _argumentCount = argCount };
@@ -266,7 +268,8 @@ namespace SHVDN
             ScriptDomain domain = ScriptDomain.CurrentDomain;
             if (domain == null)
             {
-                throw new InvalidOperationException("Illegal scripting call outside script domain.");
+                ThrowInvalidOperationException_IllegalScriptingCall();
+                return null;
             }
 
             var task = new NativeTask { _hash = hash, _arguments = args };
@@ -277,6 +280,11 @@ namespace SHVDN
         public static ulong* Invoke(ulong hash, params object[] args)
         {
             return Invoke(hash, ConvertPrimitiveArguments(args));
+        }
+
+        private static void ThrowInvalidOperationException_IllegalScriptingCall()
+        {
+            throw new InvalidOperationException("Illegal scripting call outside script domain.");
         }
 
         /// <summary>

@@ -268,10 +268,15 @@ namespace GTA
             SHVDN.Script script = SHVDN.ScriptDomain.ExecutingScript;
             if (script == null || !script.IsRunning)
             {
-                throw new InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
+                ThrowInvalidOperationException_IllegalWaitCall();
             }
 
             script.Wait(ms);
+
+            static void ThrowInvalidOperationException_IllegalWaitCall()
+            {
+                throw new InvalidOperationException("Illegal call to 'Script.Wait()' outside main loop!");
+            }
         }
         /// <summary>
         /// Yields the execution of the script for 1 frame.
