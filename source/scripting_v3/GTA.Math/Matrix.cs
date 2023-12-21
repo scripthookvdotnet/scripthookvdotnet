@@ -1526,7 +1526,7 @@ namespace GTA.Math
 
             CultureInfo culture = CultureInfo.CurrentCulture;
 
-            return string.Format(format, culture,
+            return string.Format(culture,
                 "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}]" +
                 "[M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
                 M11.ToString(format, culture), M12.ToString(format, culture),
@@ -1556,7 +1556,7 @@ namespace GTA.Math
         /// <returns>The string representation of the value of this instance.</returns>
         public readonly string ToString(string format, IFormatProvider provider)
         {
-            return string.Format(format, provider,
+            return string.Format(provider,
                 "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}]" +
                 "[M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
                 M11.ToString(format, provider), M12.ToString(format, provider),
