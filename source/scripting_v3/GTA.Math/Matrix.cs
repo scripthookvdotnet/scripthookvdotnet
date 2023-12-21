@@ -439,6 +439,68 @@ namespace GTA.Math
         }
 
         /// <summary>
+        /// Returns the invertse matrix.
+        /// result.
+        /// </summary>
+        public readonly Matrix Inverse()
+        {
+            Matrix res = this;
+            res.Invert();
+            return res;
+        }
+
+        /// <summary>
+        /// Fast inverts the matrix. All the scale must be uniform to calculate the approximately correct result.
+        /// </summary>
+        /// <inheritdoc cref="FastInverse()" path="/remarks"/>
+        public void FastInvert()
+        {
+            this = FastInverse();
+        }
+
+        /// <summary>
+        /// Returns the fast invertse matrix of this matrix. All the scales must be uniform to calculate
+        /// the approximately correct result.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// </para>
+        /// Affine translation will be set to none, which is the same as that of <see cref="Identity"/>.
+        /// <para>
+        /// Idential to how <c>rage::Matrix44::FastInverse(rage::Matrix44 *this, rage::Matrix44 const &amp;m)</c>
+        /// calculates, where the prameter <c>m</c> is the source matrix and the prameter <c>this</c> is the
+        /// destination matrix.
+        /// </para>
+        /// </remarks>
+        public readonly Matrix FastInverse()
+        {
+            // Transpose rotation part
+            Matrix res = default;
+            res.M11 = M11;
+            res.M21 = M12;
+            res.M31 = M13;
+            res.M12 = M21;
+            res.M22 = M22;
+            res.M32 = M23;
+            res.M13 = M31;
+            res.M23 = M32;
+            res.M33 = M33;
+
+            // Set translation to: `transpose([original rotation]) * (-[original translation])`
+            res.M41 = ((M13 * M43) + (M11 * M41) + (M12 * M42)) * -1f;
+            res.M42 = ((M23 * M43) + (M21 * M41) + (M22 * M42)) * -1f;
+            res.M43 = ((M33 * M43) + (M31 * M41) + (M32 * M42)) * -1f;
+
+            // Set affine translation to none
+            res.M14 = 0f;
+            res.M24 = 0f;
+            res.M34 = 0f;
+            res.M44 = 1f;
+
+            return res;
+        }
+
+        /// <summary>
         /// Apply the transformation matrix to a point in world space
         /// </summary>
         /// <param name="point">The original vertex location</param>
