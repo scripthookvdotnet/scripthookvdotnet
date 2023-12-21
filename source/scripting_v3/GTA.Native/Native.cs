@@ -1947,7 +1947,8 @@ namespace GTA.Native
                 return InstanceCreator<int, T>.Create((int)*value);
             }
 
-            throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", typeof(T), "'"));
+            ThrowInvalidCastException_FailedForUnknownScritingType(typeof(T));
+            return default;
         }
 
         /// <summary>
@@ -1976,7 +1977,13 @@ namespace GTA.Native
                 return result;
             }
 
-            throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", type.FullName, "'"));
+            ThrowInvalidCastException_FailedForUnknownScritingType(type);
+            return null;
+        }
+
+        private static void ThrowInvalidCastException_FailedForUnknownScritingType(Type t)
+        {
+            throw new InvalidCastException(string.Concat($"Unable to cast native value to object of type '{t.FullName}'"));
         }
     }
     #endregion

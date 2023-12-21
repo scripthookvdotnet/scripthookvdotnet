@@ -1406,7 +1406,8 @@ namespace GTA.Native
                 return NativeHelper<T>.Convert(*(NativeVector3*)value);
             }
 
-            throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", typeof(T), "'"));
+            ThrowInvalidCastException_FailedForUnknownScritingType(typeof(T));
+            return default;
         }
 
         internal static unsafe object ObjectFromNative(Type type, ulong* value)
@@ -1454,7 +1455,13 @@ namespace GTA.Native
                 return new Vehicle(*(int*)value);
             }
 
-            throw new InvalidCastException(string.Concat("Unable to cast native value to object of type '", type, "'"));
+            ThrowInvalidCastException_FailedForUnknownScritingType(type);
+            return null;
+        }
+
+        private static void ThrowInvalidCastException_FailedForUnknownScritingType(Type t)
+        {
+            throw new InvalidCastException(string.Concat($"Unable to cast native value to object of type '{t.FullName}'"));
         }
     }
 }
