@@ -46,6 +46,7 @@ namespace GTA
         #region Time & Day
 
         /// <inheritdoc cref="GTA.Chrono.GameClock.IsPaused"/>
+        [Obsolete("World.IsClockPaused is obsolete, use GTA.Chrono.IsPaused instead.")]
         public static bool IsClockPaused
         {
             get => SHVDN.NativeMemory.IsClockPaused;
@@ -106,6 +107,7 @@ namespace GTA
         /// <remarks>
         /// The resolution of the value is 1 second.
         /// </remarks>
+        [Obsolete("World.CurrentTimeOfDay is obsolete, use GTA.Chrono.GameClock.Today instead.")]
         public static TimeSpan CurrentTimeOfDay
         {
             get
@@ -120,6 +122,7 @@ namespace GTA
         }
 
         /// <inheritdoc cref="GTA.Chrono.GameClock.MillisecondsPerGameMinute"/>
+        [Obsolete("World.MillisecondsPerGameMinute is obsolete, use GTA.Chrono.GameClock.MillisecondsPerGameMinute instead.")]
         public static int MillisecondsPerGameMinute
         {
             get => Function.Call<int>(Hash.GET_MILLISECONDS_PER_GAME_MINUTE);
