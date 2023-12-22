@@ -450,7 +450,9 @@ namespace GTA.Math
         }
 
         /// <summary>
-        /// Fast inverts the matrix. All the scale must be uniform to calculate the approximately correct result.
+        /// Fast inverts the matrix.
+        /// All the scales must be uniform and the matrix must be orthogonal to calculate the approximately
+        /// correct result.
         /// </summary>
         /// <inheritdoc cref="FastInverse()" path="/remarks"/>
         public void FastInvert()
@@ -459,13 +461,15 @@ namespace GTA.Math
         }
 
         /// <summary>
-        /// Returns the fast invertse matrix of this matrix. All the scales must be uniform to calculate
-        /// the approximately correct result.
+        /// Returns the fast invertse matrix of this matrix.
+        /// All the scales must be uniform and the matrix must be orthogonal to calculate the approximately
+        /// correct result.
         /// </summary>
         /// <remarks>
         /// <para>
         /// </para>
         /// Affine translation will be set to none, which is the same as that of <see cref="Identity"/>.
+        /// The result will be a bit inaccurate than <see cref="Inverse()"/>.
         /// <para>
         /// Idential to how <c>rage::Matrix44::FastInverse(rage::Matrix44 *this, rage::Matrix44 const &amp;m)</c>
         /// calculates, where the prameter <c>m</c> is the source matrix and the prameter <c>this</c> is the
