@@ -7,17 +7,17 @@ Community Script Hook V .NET (SHVDN)
 
 This is an ASI plugin for Grand Theft Auto V, based on the C++ ScriptHook by Alexander Blade, which allows running scripts written in any .NET language in-game.
 
-The issues page should be primarily used for bug reports and focused enhancement ideas. Questions related to GTA V scripting in general are better off in [Discussions page](https://github.com/scripthookvdotnet/scripthookvdotnet/discussions/categories/q-a) or forums dedicated to this purpose, like [gta5-mods.com](https://forums.gta5-mods.com/category/5/general-modding-discussion).
+The issues page should be primarily used for bug reports and focused enhancement ideas. Questions related to GTA V scripting, in general, are better off in [Discussions page](https://github.com/scripthookvdotnet/scripthookvdotnet/discussions/categories/q-a) or forums dedicated to this purpose, like [gta5-mods.com](https://forums.gta5-mods.com/category/5/general-modding-discussion).
 
 ## Requirements
 
-* [C++ ScriptHook by Alexander Blade](http://www.dev-c.com/gtav/scripthookv/)
+* [C++ ScriptHook V by Alexander Blade](http://www.dev-c.com/gtav/scripthookv/)
 * [.NET Framework ≥ 4.8](https://dotnet.microsoft.com/download/dotnet-framework/net48)
 * [Visual C++ Redistributable for Visual Studio 2019 x64](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
 
 ## Downloads
 The stable builds can be downloaded from the [Releases](https://github.com/scripthookvdotnet/scripthookvdotnet/releases) page.
-You need to use the ASI file and the DLL files for APIs in an archive of the same version as internal structure can be changed without notices.
+You need to use the ASI file and the DLL files for APIs in an archive of the same version as the internal structure can be changed without notice.
 
 For newer builds, check out the [Nightly Builds](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases). You don't have to sign in to GitHub to download nightly releases.
 
@@ -25,7 +25,7 @@ For script developers, please note that new APIs included in new nightly builds 
 
 ## Installation
 * Extract all the files except for .txt and .xml files from the zip file into your game folder.
-    * The XML files are provided solely as API documentations for script developers. The .pdb files are not mandatory to run ScriptHookVDotNet as they are provided for easier diagnosing.
+    * The XML files are provided solely as API documentation for script developers. The .pdb files are not mandatory to run ScriptHookVDotNet as they are provided for easier diagnosing.
 
 ## Contributing
 
