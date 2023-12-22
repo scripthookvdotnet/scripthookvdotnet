@@ -74,6 +74,7 @@ jobs:
         && echo ReloadKeyBinding=None > bin\Release\ScriptHookVDotNet.ini `
         && echo ConsoleKeyBinding=F4 >> bin\Release\ScriptHookVDotNet.ini `
         && echo ScriptTimeoutThreshold=5000 >> bin\Release\ScriptHookVDotNet.ini `
+        && echo ScriptsLocation="scripts" >> bin\Release\ScriptHookVDotNet.ini `
         && echo WarnOfDeprecatedScriptsWithTicker=true >> bin\Release\ScriptHookVDotNet.ini
     - name: Upload artifact
       uses: actions/upload-artifact@v3
