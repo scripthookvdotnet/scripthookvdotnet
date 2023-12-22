@@ -91,7 +91,7 @@ namespace ScriptHookVDotNet_APIv3_Tests.Math
 
         [Theory]
         [MemberData(nameof(Inverse_And_Fast_Inverse_Comparison_Data))]
-        public void FastInverse_returns_approx_the_same_value_as_regular_inverse_matrix_if_no_scale_or_affine_transform_is_applied(Matrix mat)
+        public void FastInverse_returns_approx_the_same_value_as_regular_inverse_matrix_if_the_matrix_is_orthogonal_and_no_affine_transform_is_applied(Matrix mat)
         {
             Assert.True(IsOrthonormal(mat, 1e-5f),
                 "The matrix must be nearly orthonormal for FastInverse() to calculate the approximately correct value.");

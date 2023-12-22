@@ -439,8 +439,7 @@ namespace GTA.Math
         }
 
         /// <summary>
-        /// Returns the invertse matrix.
-        /// result.
+        /// Returns the inverted matrix.
         /// </summary>
         public readonly Matrix Inverse()
         {
@@ -451,8 +450,7 @@ namespace GTA.Math
 
         /// <summary>
         /// Fast inverts the matrix.
-        /// All the scales must be uniform and the matrix must be orthogonal to calculate the approximately
-        /// correct result.
+        /// The matrix must be orthogonal to calculate the approximately correct result.
         /// </summary>
         /// <inheritdoc cref="FastInverse()" path="/remarks"/>
         public void FastInvert()
@@ -461,9 +459,8 @@ namespace GTA.Math
         }
 
         /// <summary>
-        /// Returns the fast invertse matrix of this matrix.
-        /// All the scales must be uniform and the matrix must be orthogonal to calculate the approximately
-        /// correct result.
+        /// Returns the inverted matrix fast.
+        /// The matrix must be orthogonal to calculate the approximately correct result.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -478,7 +475,8 @@ namespace GTA.Math
         /// </remarks>
         public readonly Matrix FastInverse()
         {
-            // Transpose rotation part
+            // Transpose rotation part. Nearly same as calculating the inverse of the rotation matrix because the matrix
+            // is assumed to be nearly orthogonal.
             Matrix res = default;
             res.M11 = M11;
             res.M21 = M12;
@@ -495,7 +493,7 @@ namespace GTA.Math
             res.M42 = ((M23 * M43) + (M21 * M41) + (M22 * M42)) * -1f;
             res.M43 = ((M33 * M43) + (M31 * M41) + (M32 * M42)) * -1f;
 
-            // Set affine translation to none
+            // Set affine transform to none
             res.M14 = 0f;
             res.M24 = 0f;
             res.M34 = 0f;
