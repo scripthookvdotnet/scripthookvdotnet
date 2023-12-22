@@ -2691,7 +2691,7 @@ namespace SHVDN
                 address = FindPatternBmh("\x84\xC0\x0F\x84\x2C\x01\x00\x00\x48\x8D\x9F\x00\x00\x00\x00\x48\x8B\x0B\x48\x3B\xCE\x74\x1B\x48\x85\xC9\x74\x08\x48\x8B\xD3\xE8", "xxxxxxxxxxx????xxxxxxxxxxxxxxxxx");
                 if (address != null)
                 {
-                    VehicleStandingOnOffset = *(int*)(address + 11);
+                    GroundPhysicalOffset = *(int*)(address + 11);
                 }
 
                 address = FindPatternBmh("\xC1\xE8\x11\xA8\x01\x75\x10\x48\x8B\xCB\xE8\x00\x00\x00\x00\x84\xC0\x0F\x84", "xxxxxxxxxxx????xxxx");
@@ -2818,17 +2818,17 @@ namespace SHVDN
             }
 
             /// <summary>
-            /// Gets the vehicle the ped is standing on.
+            /// Gets the physical entity handle the ped is standing on.
             /// </summary>
-            public static int GetVehicleHandlePedIsStandingOn(IntPtr pedAddress)
+            public static int GetGroundPhysicalOfCPed(IntPtr pedAddress)
             {
-                if (VehicleStandingOnOffset == 0)
+                if (GroundPhysicalOffset == 0)
                 {
                     return 0;
                 }
 
-                var vehicleStandingOnAddress = new IntPtr(*(long*)(pedAddress + VehicleStandingOnOffset));
-                return vehicleStandingOnAddress != IntPtr.Zero ? GetEntityHandleFromAddress(vehicleStandingOnAddress) : 0;
+                var groundPhysicalAddress = new IntPtr(*(long*)(pedAddress + GroundPhysicalOffset));
+                return groundPhysicalAddress != IntPtr.Zero ? GetEntityHandleFromAddress(groundPhysicalAddress) : 0;
             }
 
             #endregion
@@ -2868,7 +2868,14 @@ namespace SHVDN
             /// </summary>
             public static int AttachCarSeatIndexOffset { get; }
 
-            public static int VehicleStandingOnOffset { get; }
+            /// <summary>
+            /// Contains the offset of <c>CPed.m_pGroundPhysical</c>, which is supposed to be
+            /// <c>rage::fwRegdRef&lt;CPhysical,rage::fwRefAwareBase&gt;</c> (a pointer).
+            /// </summary>
+            /// <remarks>
+            /// The next field should be <c>CPed.m_pLastValidGroundPhysical</c>.
+            /// </remarks>
+            public static int GroundPhysicalOffset { get; }
 
             public static int SourceOfDeathOffset { get; }
             public static int CauseOfDeathOffset { get; }

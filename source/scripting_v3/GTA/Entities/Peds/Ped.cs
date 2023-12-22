@@ -1561,10 +1561,12 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the current <see cref="Vehicle"/> this <see cref="Ped"/> is standing on.
+        /// Gets the current ground <see cref="Entity"/> this <see cref="Ped"/> is standing on.
         /// </summary>
-        /// <remarks>returns <see langword="null" /> if this <see cref="Ped"/> is not standing on a <see cref="Vehicle"/>.</remarks>
-        public Vehicle VehicleStandingOn
+        /// <remarks>
+        /// returns <see langword="null" /> if this <see cref="Ped"/> is not standing on a <see cref="Entity"/>.
+        /// </remarks>
+        public Entity GroundEntity
         {
             get
             {
@@ -1574,8 +1576,8 @@ namespace GTA
                     return null;
                 }
 
-                int vehicleHandle = SHVDN.NativeMemory.Ped.GetVehicleHandlePedIsStandingOn(address);
-                return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
+                int entityHandle = SHVDN.NativeMemory.Ped.GetGroundPhysicalOfCPed(address);
+                return entityHandle != 0 ? FromHandle(entityHandle) : null;
             }
         }
 
