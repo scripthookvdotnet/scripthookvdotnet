@@ -7,7 +7,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace GTA
+namespace GTA.Chrono
 {
     /// <summary>
     /// The exception that is thrown when an invoked method tries to return the normalized current date or date time

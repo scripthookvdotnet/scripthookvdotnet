@@ -5,9 +5,8 @@
 
 using System;
 using GTA.Native;
-using GTA.Chrono;
 
-namespace GTA
+namespace GTA.Chrono
 {
     /// <summary>
     /// Represents the global game clock.
