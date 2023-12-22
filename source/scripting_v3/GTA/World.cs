@@ -45,7 +45,7 @@ namespace GTA
 
         #region Time & Day
 
-        /// <inheritdoc cref="GameClock.IsPaused"/>
+        /// <inheritdoc cref="GTA.Chrono.GameClock.IsPaused"/>
         public static bool IsClockPaused
         {
             get => SHVDN.NativeMemory.IsClockPaused;
@@ -56,7 +56,7 @@ namespace GTA
         /// Pauses or resumes the in-game clock.
         /// </summary>
         /// <param name="value">Pauses the game clock if set to <see langword="true" />; otherwise, resumes the game clock.</param>
-        [Obsolete("The World.PauseClock is obsolete, use World.IsClockPaused instead.")]
+        [Obsolete("The World.PauseClock is obsolete, use GTA.Chrono.IsPaused instead.")]
         public static void PauseClock(bool value)
         {
             IsClockPaused = value;
@@ -72,7 +72,7 @@ namespace GTA
         /// The internal date is not valid for the Gregorian calendar or the internal time of day is not normalized.
         /// </exception>
         [Obsolete("World.CurrentDate is obsolete because DateTime can represent the years only in the range of 1 to 9999, while the game supports wider range of years." +
-            "Use properties or methods of GTA.GameClock instead."), EditorBrowsable(EditorBrowsableState.Never)]
+            "Use properties or methods of GTA.Chrono.GameClock instead."), EditorBrowsable(EditorBrowsableState.Never)]
         public static DateTime CurrentDate
         {
             get
@@ -119,7 +119,7 @@ namespace GTA
             set => Function.Call(Hash.SET_CLOCK_TIME, value.Hours, value.Minutes, value.Seconds);
         }
 
-        /// <inheritdoc cref="GameClock.MillisecondsPerGameMinute"/>
+        /// <inheritdoc cref="GTA.Chrono.GameClock.MillisecondsPerGameMinute"/>
         public static int MillisecondsPerGameMinute
         {
             get => Function.Call<int>(Hash.GET_MILLISECONDS_PER_GAME_MINUTE);
