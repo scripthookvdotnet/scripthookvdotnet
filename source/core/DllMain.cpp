@@ -428,7 +428,7 @@ static void ScriptHookVDotNet_ManagedInit()
         {
             // Perform some very basic key/value parsing
             line = line->Trim();
-            if (line->StartsWith("//"))
+            if (line->StartsWith(";") || line->StartsWith("#") || line->StartsWith("//"))
                 continue;
             array<String ^> ^data = line->Split('=');
             if (data->Length != 2)
