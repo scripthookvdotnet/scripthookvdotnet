@@ -1,0 +1,25 @@
+# Lines starting with a semicolon, a number sign, or two slash characters will be ignored.
+# For settings that accept a `Keys` enum name, you can use one of the names listed in the left
+# column of the "Fields" table in the document link below, such as `OemSemicolon`.
+# https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.keys?view=netframework-4.8
+
+; Specifies the key to immediately reload scripts. Accepts a `Keys` enum name.
+ReloadKeyBinding=None
+
+; Specifies the key to open or close the SHVDN console. Accepts a `Keys` enum name.
+ConsoleKeyBinding=F4
+
+; Specifies the timeout threshold in milliseconds for a script per one tick.
+ScriptTimeoutThreshold=5000
+
+; Specifies the script location to load scripts. Must be relative to the root directory
+; (where GTA5.exe is).
+; Double quotes can be used to specify a script location.
+; In most cases, However, you will have to set 'ScriptsLocation' to "scripts" to make them work
+; since a lot of scripts assume the script location to be "scripts".
+ScriptsLocation="scripts"
+
+; Specifies whether a warning feed post (notification) should be posted when SHVDN finds scripts
+; that is build against a deprecated version of scripting APIs.
+; Acceptable value: "true" or "false" (case-insensitive)
+WarnOfDeprecatedScriptsWithTicker=true
