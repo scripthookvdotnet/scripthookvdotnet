@@ -2685,7 +2685,7 @@ namespace SHVDN
                 address = FindPatternBmh("\x24\x3F\x0F\xB6\xC0\x66\x89\x87", "xxxxxxxx");
                 if (address != null)
                 {
-                    SeatIndexOffset = *(int*)(address + 8);
+                    AttachCarSeatIndexOffset = *(int*)(address + 8);
                 }
 
                 address = FindPatternBmh("\x84\xC0\x0F\x84\x2C\x01\x00\x00\x48\x8D\x9F\x00\x00\x00\x00\x48\x8B\x0B\x48\x3B\xCE\x74\x1B\x48\x85\xC9\x74\x08\x48\x8B\xD3\xE8", "xxxxxxxxxxx????xxxxxxxxxxxxxxxxx");
@@ -2863,7 +2863,10 @@ namespace SHVDN
 
             public static int IsInVehicleOffset { get; }
             public static int LastVehicleOffset { get; }
-            public static int SeatIndexOffset { get; }
+            /// <summary>
+            /// Contains the offset of <c>CPed.m_nAttachCarSeatIndex</c>, which is supposed to be <c>int16_t</c>.
+            /// </summary>
+            public static int AttachCarSeatIndexOffset { get; }
 
             public static int VehicleStandingOnOffset { get; }
 

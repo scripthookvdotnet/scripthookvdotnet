@@ -1590,12 +1590,12 @@ namespace GTA
             get
             {
                 IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.SeatIndexOffset == 0)
+                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset == 0)
                 {
                     return VehicleSeat.None;
                 }
 
-                int seatIndex = (sbyte)SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Ped.SeatIndexOffset);
+                int seatIndex = SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset);
                 return (seatIndex >= 0 && IsInVehicle()) ? (VehicleSeat)(seatIndex - 1) : VehicleSeat.None;
             }
         }
