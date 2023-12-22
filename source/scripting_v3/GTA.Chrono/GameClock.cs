@@ -23,15 +23,17 @@ namespace GTA.Chrono
         }
 
         /// <summary>
-        /// Gets or sets the last game time the clock is ticked.
+        /// Gets or sets the last game time minutes are added to the clock.
         /// You can use this value to calculate pseudo milliseconds along with <see cref="Game.GameTime"/>
         /// and <see cref="MillisecondsPerGameMinute"/> when the clock is not paused.
         /// You can also set a value to this property to shift the clock minute when the clock is not paused.
         /// </summary>
         /// <remarks>
-        /// If <see cref="IsPaused"/> is set to <see langword="true"/>, this value will be updated to <see cref="Game.GameTime"/> every frame.
+        /// If <see cref="IsPaused"/> is set to <see langword="true"/>, this value will be updated to
+        /// <see cref="Game.GameTime"/> every frame. This property accesses <c>CClock::ms_timeLastMinAdded</c>
+        /// internally.
         /// </remarks>
-        public static int LastTimeTicked
+        public static int LastTimeMinAdded
         {
             get => SHVDN.NativeMemory.LastTimeClockTicked;
             set => SHVDN.NativeMemory.LastTimeClockTicked = value;
