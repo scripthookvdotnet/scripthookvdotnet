@@ -118,6 +118,8 @@ namespace SHVDN
                 }
             }
 
+            LogMemPatternNotFound(pattern, mask, startAddress, size);
+
             return null;
         }
 
@@ -183,7 +185,22 @@ namespace SHVDN
                 }
             }
 
+            LogMemPatternNotFound(pattern, mask, startAddress, size);
+
             return null;
+        }
+
+        [Conditional("DEBUG")]
+        private static void LogMemPatternNotFound(string pattern, string mask, IntPtr startAddr, ulong searchSize)
+        {
+            string patternFormatted = pattern.ToCharArray().Aggregate(new StringBuilder("\"", pattern.Length * 3 + 2),
+                    (a, b) => a.Append(((byte)b).ToString("X2")).Append(" "),
+                    (a) => a.Remove(a.Length - 1, 1).Append("\"").ToString());
+
+            Log.Message(Log.Level.Warning, $"Memory pattern not found. " +
+                $"Pattern: {patternFormatted}, Mask: {mask}, Start Address: 0x{startAddr.ToString("X")}, " +
+                $"Search Size: 0x{searchSize.ToString("X")}"
+                );
         }
 
         private static short[] CreateShiftTableForBmh(short[] pattern)
