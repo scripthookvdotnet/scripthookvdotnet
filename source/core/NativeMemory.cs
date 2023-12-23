@@ -2076,7 +2076,8 @@ namespace SHVDN
                     AccelerationOffset = *(int*)(address + 10) + 0x10;
                 }
 
-                address = FindPatternBmh("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxxx????xx");
+                // Ignore the register to read as the base address, it got changed from `rbx` to `rdi` in b3095
+                address = FindPatternBmh("\x74\x0A\xF3\x0F\x11\xB3\x1C\x09\x00\x00\xEB\x25", "xxxxx?????xx");
                 if (address != null)
                 {
                     SteeringScaleOffset = *(int*)(address + 6);
