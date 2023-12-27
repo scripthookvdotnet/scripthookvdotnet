@@ -159,7 +159,7 @@ namespace GTA
 
         /// <summary>
         /// Gets a value that indicates whether this <see cref="Entity"/> has a skeleton.
-        /// <see cref="HasAnimationEventFired(int)"/> requires the <see cref="Entity"/> to have a skeleton.
+        /// <see cref="HasAnimationEventFired(AtHashValue)"/> requires the <see cref="Entity"/> to have a skeleton.
         /// You can use this property to check that the entity has a skeleton before calling that method.
         /// </summary>
         /// <value>
@@ -178,7 +178,7 @@ namespace GTA
         /// <summary>
         /// Gets a value that indicates whether this <see cref="Entity"/> has an animation director
         /// (<c>rage::fwAnimDirector</c>).
-        /// <see cref="HasAnimationEventFired(int)"/> requires the <see cref="Entity"/> to have an animation director.
+        /// <see cref="HasAnimationEventFired(AtHashValue)"/> requires the <see cref="Entity"/> to have an animation director.
         /// You can use this property to check that the entity has an animation director before calling that method.
         /// </summary>
         /// <value>
@@ -2656,13 +2656,14 @@ namespace GTA
         ///	Others may have duration, which means that this function may continuously return <see langword="true"/> for a range of values.
         /// </summary>
         /// <param name="eventHash">The event hash.
-        /// Use <see cref="Game.GenerateHash(string)"/> or <see cref="Game.GenerateHashAscii(string)"/> to convert the original event name to the hash.
+        /// Use <see cref="StringHash.AtStringHash(string, uint)"/> to convert the original event name to the hash.
         /// </param>
         /// <remarks>
         /// The event must have been tagged with the <c>VisibleToScript</c> attribute (joaat hash: <c>0xF301E135</c>) in the ycd animation file to make it detectable with this method.
         /// Events can include one or more attributes of different types that can be used to get data from the animation.
         /// </remarks>
-        public bool HasAnimationEventFired(int eventHash) => Function.Call<bool>(Hash.HAS_ANIM_EVENT_FIRED, Handle, eventHash);
+        public bool HasAnimationEventFired(AtHashValue eventHash)
+            => Function.Call<bool>(Hash.HAS_ANIM_EVENT_FIRED, Handle, eventHash);
 
         /// <summary>
         /// Sets the speed of the anim task matching the given <see cref="CrClipAsset"/> on the <see cref="Ped"/> to

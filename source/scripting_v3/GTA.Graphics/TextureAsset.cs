@@ -44,12 +44,12 @@ namespace GTA.Graphics
         /// <summary>
         /// Computes the hash of <see cref="TextureName"/> in the same way as how the game calculates hashes for
         /// texture names to store in a <c>rage::fwAssetStore&lt;rage::pgDictionary&lt;rage::grcTexture&gt;,rage::fwTxdDef&gt;</c>
-        /// and as how <see cref="Game.GenerateHash(string)"/> calculates.
+        /// and as how <see cref="StringHash.AtStringHash(string, uint)"/> calculates.
         /// May be useful when you want to get the identifier in the same way as how the game handles texture
         /// dictionaries or when you investigate game memory to see how textures are stored in the texture dictionary.
         /// </summary>
         /// <returns>The hash value calculated from <see cref="TextureName"/>.</returns>
-        public int HashTextureName() => Game.GenerateHash(TextureName);
+        public AtHashValue HashTextureName() => AtHashValue.FromString(TextureName);
 
         public bool Equals(TextureAsset other)
             => Txd == other.Txd && HashTextureName() == other.HashTextureName();
@@ -68,7 +68,7 @@ namespace GTA.Graphics
         public static bool operator !=(TextureAsset left, TextureAsset right)
             => !left.Equals(right);
 
-        public override int GetHashCode() => Txd.GetHashCode() * 17 + HashTextureName();
+        public override int GetHashCode() => Txd.GetHashCode() * 17 + (int)HashTextureName();
 
         public void Deconstruct(out Txd txd, out string texName)
         {

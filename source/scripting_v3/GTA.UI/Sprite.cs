@@ -85,7 +85,7 @@ namespace GTA.UI
 
             Function.Call(Hash.REQUEST_STREAMED_TEXTURE_DICT, _pinnedDict);
 
-            int hashedDictName = Game.GenerateHash(textureDict);
+            int hashedDictName = (int)StringHash.AtStringHashUtf8(textureDict);
             if (s_activeTextures.ContainsKey(hashedDictName))
             {
                 s_activeTextures[hashedDictName] += 1;
@@ -120,7 +120,7 @@ namespace GTA.UI
                 return;
             }
 
-            int hashedDictName = Game.GenerateHash(_textureDict);
+            int hashedDictName = (int)StringHash.AtStringHashUtf8(_textureDict);
             if (s_activeTextures.TryGetValue(hashedDictName, out int currentCount))
             {
                 if (currentCount == 1)

@@ -16,7 +16,7 @@ namespace GTA
     {
         DecisionMaker(string name) : this()
         {
-            Hash = (DecisionMakerTypeHash)Game.GenerateHash(name);
+            Hash = (DecisionMakerTypeHash)StringHash.AtStringHash(name);
         }
         public DecisionMaker(DecisionMakerTypeHash hash) : this()
         {

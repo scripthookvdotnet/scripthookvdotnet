@@ -36,12 +36,12 @@ namespace GTA
         /// <summary>
         /// Computes the hash of <see cref="Name"/> in the same way as how the game calculates hashes for clip
         /// dictionaries to store in the global <c>rage::fwClipDictionaryStore</c> and as how
-        /// <see cref="Game.GenerateHash(string)"/> calculates.
+        /// <see cref="StringHash.AtStringHash(string, uint)"/> calculates.
         /// May be useful when you want to get the identifier in the same way as how the game handles texture
         /// dictionaries or when you investigate game memory to see how clips are stored in clip dictionaries.
         /// </summary>
         /// <returns>The hash value calculated from <see cref="Name"/>.</returns>
-        public int HashName() => Game.GenerateHash(Name);
+        public AtHashValue HashName() => AtHashValue.FromString(Name);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="CrClipDictionary"/> exists
@@ -138,7 +138,7 @@ namespace GTA
 
         public override int GetHashCode()
         {
-            return HashName();
+            return (int)HashName();
         }
 
         public override string ToString() => Name;

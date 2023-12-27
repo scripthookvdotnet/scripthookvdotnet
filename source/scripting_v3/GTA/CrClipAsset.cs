@@ -57,13 +57,13 @@ namespace GTA
 
         /// <summary>
         /// Computes the hash of <see cref="ClipName"/> in the same way as how the game calculates hashes for clip
-        /// names to store in a <c>rage::crClipDictionary</c> and as how <see cref="Game.GenerateHash(string)"/>
-        /// calculates.
+        /// names to store in a <c>rage::crClipDictionary</c> and as how
+        /// <see cref="StringHash.AtStringHash(string, uint)"/> calculates.
         /// May be useful when you want to get the identifier in the same way as how the game handles texture
         /// dictionaries or when you investigate game memory to see how clips are stored in the clip dictionary.
         /// </summary>
-        /// <returns>The hash value calculated from <see cref="ClipName"/>.</returns>
-        public int HashClipName() => Game.GenerateHash(ClipName);
+        /// <returns>A <see cref="AtHashValue"/> that has the calculated hash.</returns>
+        public AtHashValue HashClipName() => AtHashValue.FromString(ClipName);
 
         /// <summary>
         /// Returns <see langword="true"/> if the Jenkins-one-at-a-time (joaat) hash values of both
@@ -87,7 +87,7 @@ namespace GTA
         public static bool operator !=(CrClipAsset left, CrClipAsset right)
             => !left.Equals(right);
 
-        public override int GetHashCode() => ClipDictionary.GetHashCode() * 17 + HashClipName();
+        public override int GetHashCode() => ClipDictionary.GetHashCode() * 17 + (int)HashClipName();
 
         public void Deconstruct(out CrClipDictionary clipDict, out string clipName)
         {

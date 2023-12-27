@@ -366,7 +366,7 @@ namespace GTA
         /// <returns><see langword="true" /> if the cheat was just entered; otherwise, <see langword="false" /></returns>
         public static bool WasCheatStringJustEntered(string cheat)
         {
-            return Function.Call<bool>(Hash.HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED, GenerateHash(cheat));
+            return Function.Call<bool>(Hash.HAS_PC_CHEAT_WITH_HASH_BEEN_ACTIVATED, StringHash.AtStringHashUtf8(cheat));
         }
         /// <summary>
         /// Gets whether a specific sequence of <see cref="Button"/>s has been pressed.
@@ -584,61 +584,14 @@ namespace GTA
         /// <param name="input">The input <see cref="string"/> to hash.</param>
         /// <returns>The Jenkins hash of the input <see cref="string"/>.</returns>
         /// <remarks>
-        /// <para>Converts ASCII uppercase characters to lowercase ones and backslash characters to slash ones before converting into a hash.</para>
-        /// <para>
-        /// Although the <c>GET_HASH_KEY</c> native compute hash from the substring between two double quotes if the first character is a double quote character,
-        /// This method does not consider such case since no practical occurrences of such edge case are found.
-        /// </para>
+        /// Converts ASCII uppercase characters to lowercase ones and backslash characters to slash ones before
+        /// converting into a hash. Computes the hash from the substring between two double quotes if the first
+        /// character is a double quote character.
         /// </remarks>
-        public static int GenerateHash(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                return 0;
-            }
-
-            return unchecked((int)SHVDN.NativeMemory.GetHashKey(input));
-        }
-        /// <summary>
-        /// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> which can then be used by any native function that takes a hash.
-        /// Can be called in any thread and performs much faster than <see cref="GenerateHash(string)"/> and the return value will be the same as long as the input contains only ASCII characters.
-        /// </summary>
-        /// <param name="input">The input <see cref="string"/> to hash.</param>
-        /// <remarks>
-        /// <para>Converts uppercase characters to lowercase ones and backslash characters to slash ones before converting into a hash.</para>
-        /// <para>
-        /// Although the <c>GET_HASH_KEY</c> native compute hash from the substring between two double quotes if the first character is a double quote character,
-        /// This method does not consider such case since no practical occurrences of such edge case are found.
-        /// </para>
-        /// <para>
-        /// The behavior is undefined except no exception will be thrown if input has some non-ASCII characters.
-        /// </para>
-        /// </remarks>
-        public static int GenerateHashAscii(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                return 0;
-            }
-
-            return unchecked((int)SHVDN.NativeMemory.GetHashKeyAscii(input));
-        }
-        /// <summary>
-        /// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> without pre conversion before hashing.
-        /// This converts strings just like how the RAGE parser converts the strings, which is used for config files such as <c>.meta</c> files.
-        /// For example, <c>EVENT_ACQUAINTANCE_PED_HATE</c>, which is used in <c>events.meta</c>, will be converted into <c>0xEB92D4DF</c>.
-        /// Can be called in any thread.
-        /// </summary>
-        /// <inheritdoc cref="GenerateHashAscii(string)"/>
-        public static int GenerateHashAsciiNoPreConversion(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                return 0;
-            }
-
-            return unchecked((int)SHVDN.NativeMemory.GetHashKeyAsciiNoPreConversion(input));
-        }
+        [Obsolete("Use StringHash.AtStringHash(string, uint), StringHash.AtStringHashUtf8(string, uint), " +
+            "AtHashValue.FromString(string, uint), or StringHash.AtStringHashUtf8(string, uint) instead.")]
+        // Use AtStringHashUtf8 for compatibility reasons
+        public static int GenerateHash(string input) => (int)StringHash.AtStringHashUtf8(input);
 
         /// <summary>
         /// Returns a localized <see cref="string"/> from the games language files with a specified GXT key.

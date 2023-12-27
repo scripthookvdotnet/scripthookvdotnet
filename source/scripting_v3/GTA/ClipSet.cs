@@ -32,14 +32,14 @@ namespace GTA
 
         /// <summary>
         /// Computes the hash of <see cref="Name"/> in the same way as how the game calculates hashes for clip sets to
-        /// store in the global <c>rage::fwClipSetManager</c> and as how <see cref="Game.GenerateHash(string)"/>
-        /// calculates.
+        /// store in the global <c>rage::fwClipSetManager</c> and as how
+        /// <see cref="StringHash.AtStringHash(string, uint)"/> calculates.
         /// May be useful when you want to get the identifier in the same way as how the game handles clip sets or when
         /// you investigate game memory to see how clip sets (<c>rage::fwClipSet</c>) are stored in the
         /// <c>rage::fwClipSetManager</c>.
         /// </summary>
         /// <returns>The hash value calculated from <see cref="Name"/>.</returns>
-        public int HashName() => Game.GenerateHash(Name);
+        public AtHashValue HashName() => AtHashValue.FromString(Name);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="ClipSet"/> is loaded
@@ -126,7 +126,7 @@ namespace GTA
 
         public override int GetHashCode()
         {
-            return HashName();
+            return (int)HashName();
         }
 
         public override string ToString() => Name;

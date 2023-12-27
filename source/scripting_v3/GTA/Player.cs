@@ -74,18 +74,18 @@ namespace GTA
         {
             get
             {
-                int stat;
+                uint stat;
 
                 switch ((PedHash)Character.Model.Hash)
                 {
                     case PedHash.Michael:
-                        stat = Game.GenerateHash("SP0_TOTAL_CASH");
+                        stat = StringHash.AtStringHash("SP0_TOTAL_CASH");
                         break;
                     case PedHash.Franklin:
-                        stat = Game.GenerateHash("SP1_TOTAL_CASH");
+                        stat = StringHash.AtStringHash("SP1_TOTAL_CASH");
                         break;
                     case PedHash.Trevor:
-                        stat = Game.GenerateHash("SP2_TOTAL_CASH");
+                        stat = StringHash.AtStringHash("SP2_TOTAL_CASH");
                         break;
                     default:
                         return 0;
@@ -101,18 +101,18 @@ namespace GTA
             }
             set
             {
-                int stat;
+                uint stat;
 
                 switch ((PedHash)Character.Model.Hash)
                 {
                     case PedHash.Michael:
-                        stat = Game.GenerateHash("SP0_TOTAL_CASH");
+                        stat = StringHash.AtStringHash("SP0_TOTAL_CASH");
                         break;
                     case PedHash.Franklin:
-                        stat = Game.GenerateHash("SP1_TOTAL_CASH");
+                        stat = StringHash.AtStringHash("SP1_TOTAL_CASH");
                         break;
                     case PedHash.Trevor:
-                        stat = Game.GenerateHash("SP2_TOTAL_CASH");
+                        stat = StringHash.AtStringHash("SP2_TOTAL_CASH");
                         break;
                     default:
                         return;
