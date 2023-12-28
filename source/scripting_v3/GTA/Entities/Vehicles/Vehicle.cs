@@ -142,7 +142,7 @@ namespace GTA
         /// <param name="gameObjectName">
         /// <para>
         /// The audio game object name. Case insensitive in ASCII characters since the string will be hashed using
-        /// (almost) the same function as <see cref="Game.GenerateHash(string)"/> uses.
+        /// (almost) the same function as <see cref="StringHash.AtStringHash(string, uint)"/> uses.
         /// </para>
         /// <para>
         /// Generally accepts the internal game name of the <see cref="Vehicle"/> to source an audio profile from,
@@ -1484,7 +1484,7 @@ namespace GTA
         /// <param name="duration">The duration in milliseconds to sound the horn for.</param>
         public void SoundHorn(int duration)
         {
-            Function.Call(Hash.START_VEHICLE_HORN, Handle, duration, Game.GenerateHash("HELDDOWN"), 0);
+            Function.Call(Hash.START_VEHICLE_HORN, Handle, duration, StringHash.AtStringHash("HELDDOWN"), 0);
         }
 
         #endregion

@@ -12,7 +12,7 @@ namespace GTA
     /// </summary>
     /// <remarks>
     /// <para>
-    /// Decorator names are hashed in the same way as <see cref="Game.GenerateHash(string)"/> before being used.
+    /// Decorator names are hashed in the same way as <see cref="StringHash.AtStringHashUtf8(string, uint)"/> before being used.
     /// </para>
     /// <para>
     /// Despite get/set methods only accepts <see cref="Entity"/>s at the moment in this class, the relevant native functions 

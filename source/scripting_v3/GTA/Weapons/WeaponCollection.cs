@@ -50,7 +50,7 @@ namespace GTA
                 return weapon;
             }
         }
-        public Weapon this[string weaponName] => this[(WeaponHash)Game.GenerateHash(weaponName)];
+        public Weapon this[string weaponName] => this[(WeaponHash)StringHash.AtStringHashUtf8(weaponName)];
 
         /// <summary>
         /// Gets the number of <see cref="Weapon"/> items contained in the <see cref="WeaponCollection"/>.
@@ -208,7 +208,7 @@ namespace GTA
         /// <remarks>
         /// Returns <see langword="true"/> for <see cref="WeaponHash.Unarmed"/> unless the item for the hash is removed from <c>CWeaponInventory</c> of the owner <see cref="Ped"/>.
         /// </remarks>
-        public bool HasWeapon(string weaponName) => HasWeapon((WeaponHash)Game.GenerateHash(weaponName));
+        public bool HasWeapon(string weaponName) => HasWeapon((WeaponHash)StringHash.AtStringHashUtf8(weaponName));
 
         /// <summary>
         /// Gets the value that indicates whether <paramref name="hash"/> is valid.
@@ -222,7 +222,7 @@ namespace GTA
         /// Gets the value that indicates whether <paramref name="weaponName"/> is valid.
         /// Strictly, this method checks whether the array for <c>CWeaponInfo</c> contains an CWeaponInfo instance with the hash generated from <paramref name="weaponName"/>.
         /// </summary>
-        public bool IsWeaponValid(string weaponName) => IsWeaponValid((WeaponHash)Game.GenerateHash(weaponName));
+        public bool IsWeaponValid(string weaponName) => IsWeaponValid((WeaponHash)StringHash.AtStringHashUtf8(weaponName));
 
         /// <summary>
         /// Gets the current weapon <see cref="Prop"/>.
@@ -284,7 +284,7 @@ namespace GTA
         /// <param name="weaponName">The weapon name.</param>
         /// <param name="forceInHand">Specifies if the owner ped will equip in hands immediately.</param>
         /// <returns><see langword="true"/> if the ped has the weapon; otherwise, <see langword="false"/>.</returns>
-        public bool IsWeaponValid(string weaponName, bool forceInHand) => Select((WeaponHash)Game.GenerateHash(weaponName), forceInHand);
+        public bool IsWeaponValid(string weaponName, bool forceInHand) => Select((WeaponHash)StringHash.AtStringHashUtf8(weaponName), forceInHand);
 
         /// <summary>
         /// Gives the specified weapon if the owner <see cref="Ped"/> does not have one, or selects the weapon if they have one and <paramref name="equipNow"/> is set to <see langword="true" />.
@@ -333,7 +333,7 @@ namespace GTA
         /// </param>
         public Weapon Give(string name, int ammoCount, bool equipNow, bool isAmmoLoaded)
         {
-            return Give((WeaponHash)Game.GenerateHash(name), ammoCount, equipNow, isAmmoLoaded);
+            return Give((WeaponHash)StringHash.AtStringHashUtf8(name), ammoCount, equipNow, isAmmoLoaded);
         }
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace GTA
             Function.Call(Hash.REMOVE_WEAPON_FROM_PED, owner.Handle, (uint)weaponHash);
         }
         /// <inheritdoc cref="Remove(Weapon)"/>
-        public void Remove(string weaponName) => Remove((WeaponHash)Game.GenerateHash(weaponName));
+        public void Remove(string weaponName) => Remove((WeaponHash)StringHash.AtStringHashUtf8(weaponName));
 
         /// <summary>
         /// Removes all weapons from the weapon inventory except for <see cref="WeaponHash.Unarmed"/>.

@@ -15,7 +15,7 @@ namespace GTA
         {
             Hash = hash;
         }
-        public Model(string name) : this(Game.GenerateHash(name))
+        public Model(string name) : this((int)StringHash.AtStringHashUtf8(name))
         {
         }
         public Model(PedHash hash) : this((int)hash)

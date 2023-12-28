@@ -28,14 +28,14 @@ namespace GTA.Graphics
 
         /// <summary>
         /// Computes the hash of <see cref="Name"/> in the same way as how the game calculates hashes for texture
-        /// dictionaries to store in the global <c>rage::fwTxdStore</c> and as how <see cref="Game.GenerateHash(string)"/>
-        /// calculates.
+        /// dictionaries to store in the global <c>rage::fwTxdStore</c> and as how
+        /// <see cref="StringHash.AtStringHashUtf8(string, uint)"/> calculates.
         /// May be useful when you want to get the identifier in the same way as how the game handles texture
         /// dictionaries or when you investigate game memory to see how textures are stored in texture dictionaries
         /// (should be in a <c>rage::pgDictionary&lt;rage::grcTexturePC&gt;</c> instance).
         /// </summary>
         /// <returns>The hash value calculated from <see cref="Name"/>.</returns>
-        public int HashName() => Game.GenerateHash(Name);
+        public AtHashValue HashName() => AtHashValue.FromString(Name);
 
         /// <summary>
         /// Gets a value indicating whether the textures of this <see cref="Txd"/> are loaded
@@ -151,7 +151,7 @@ namespace GTA.Graphics
 
         public override int GetHashCode()
         {
-            return HashName();
+            return (int)HashName();
         }
 
         public override string ToString() => Name;

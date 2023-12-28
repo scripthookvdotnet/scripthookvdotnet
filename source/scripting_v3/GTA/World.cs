@@ -156,7 +156,7 @@ namespace GTA
             {
                 for (int i = 0; i < s_weatherNames.Length; i++)
                 {
-                    if (Function.Call<int>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == Game.GenerateHash(s_weatherNames[i]))
+                    if (Function.Call<uint>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == StringHash.AtStringHash(s_weatherNames[i]))
                     {
                         return (Weather)i;
                     }
@@ -205,7 +205,7 @@ namespace GTA
                 {
                     Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
                 }
-                Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, Game.GenerateHash(s_weatherNames[(int)value]), 0.0f);
+                Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, StringHash.AtStringHash(s_weatherNames[(int)value]), 0.0f);
             }
         }
 
