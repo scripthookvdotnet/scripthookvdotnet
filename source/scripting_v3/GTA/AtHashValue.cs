@@ -47,6 +47,17 @@ namespace GTA
         public uint GetJoaatHash() => Hash;
 
         /// <summary>
+        /// Gets the null value of <see cref="AtHashValue"/>, whose hash is zero.
+        /// </summary>
+        public static AtHashValue Null => new AtHashValue(0);
+
+        /// <summary>
+        /// Returns a value that indicates whether this instance is the null <see cref="AtHashValue"/>, whose hash is
+        /// zero.
+        /// </summary>
+        public bool IsNull => Hash == 0;
+
+        /// <summary>
         /// Computes an <see cref="AtHashValue"/> from a <see cref="string"/> that contains only ASCII characters.
         /// </summary>
         /// <param name="input">A <see cref="string"/> that contains only ASCII characters.</param>
