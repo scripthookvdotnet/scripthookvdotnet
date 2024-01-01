@@ -305,14 +305,6 @@ namespace GTA.Native
             _storage = Marshal.AllocCoTaskMem(24);
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="OutputArgument"/> class for script functions that output data into pointers.
-        /// Allocates a block of memory of specified size.
-        /// </summary>
-        public OutputArgument(int size)
-        {
-            _storage = Marshal.AllocCoTaskMem(size);
-        }
-        /// <summary>
         /// Initializes a new instance of the <see cref="OutputArgument"/> class with an initial value for script functions
         /// that require the pointer to data instead of the actual data.
         /// </summary>
@@ -327,6 +319,12 @@ namespace GTA.Native
             {
                 *(ulong*)(_storage) = Function.ObjectToNative(value);
             }
+        }
+        // Specify the private visibility to avoid breaking changes for scripts built against v3.6.0 or earlier,
+        // where `new OutputArgument(24)` is resolved to `OutputArgument(object value)`
+        private OutputArgument(int size)
+        {
+            _storage = Marshal.AllocCoTaskMem(size);
         }
 
         /// <summary>
@@ -355,9 +353,22 @@ namespace GTA.Native
         }
 
         /// <summary>
-        /// Allocates a <see cref="OutputArgument"/> instance where the storage has a block of memory of the specified struct type.
+        /// Initializes a new instance of the <see cref="OutputArgument"/> class for script functions that output data
+        /// into pointers.
+        /// Allocates a block of memory of specified size.
         /// </summary>
-        public static OutputArgument Alloc<T>() where T : unmanaged
+        public static OutputArgument Alloc(int size)
+        {
+            unsafe
+            {
+                return new OutputArgument(size);
+            }
+        }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OutputArgument"/> where the storage has a block of memory of
+        /// the blittable struct type specified by the type parameter.
+        /// </summary>
+        public static OutputArgument AllocForType<T>() where T : unmanaged
         {
             unsafe
             {
@@ -378,19 +389,21 @@ namespace GTA.Native
             }
         }
         /// <summary>
-        /// Initializes a <see cref="OutputArgument"/> instance with the specified bittable struct.
+        /// Initializes a <see cref="OutputArgument"/> instance with the specified blittable struct by reference.
         /// </summary>
-        public static OutputArgument Init<T>(ref T value) where T : unmanaged
+        /// <remarks>
+        /// You don't have to use <see cref="GetResultAsBittableStruct{T}"/>, since the content of
+        /// <paramref name="value"/> will be mutated when the <see cref="OutputArgument"/> is passed to
+        /// a native function and the function writes some value in the storage of <see cref="OutputArgument"/>.
+        /// </remarks>
+        public static unsafe OutputArgument InitByRef<T>(ref T value) where T : unmanaged
         {
-            unsafe
-            {
-                var outArg = new OutputArgument(sizeof(T));
-                // since the byte size is the same between the passed struct and the strage in the OutputArgument instance,
-                // it is safe to initalize the storage with the passed value
-                *(T*)(void*)outArg._storage = *(T*)AsPointer(ref value);
+            var outArg = new OutputArgument(sizeof(T));
+            // since the byte size is the same between the passed struct and the strage in the OutputArgument instance,
+            // it is safe to initalize the storage with the passed value
+            *(T*)(void*)outArg._storage = *(T*)AsPointer(ref value);
 
-                return outArg;
-            }
+            return outArg;
         }
 
         /// <summary>
