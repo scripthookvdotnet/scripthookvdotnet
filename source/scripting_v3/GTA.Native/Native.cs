@@ -376,7 +376,7 @@ namespace GTA.Native
             }
         }
         /// <summary>
-        /// Initializes a <see cref="OutputArgument"/> instance with the specified bittable struct.
+        /// Initializes a <see cref="OutputArgument"/> instance with the specified blittable struct.
         /// </summary>
         public static OutputArgument Init<T>(T value) where T : unmanaged
         {
@@ -431,7 +431,7 @@ namespace GTA.Native
         }
 
         /// <summary>
-        /// Gets the value of data stored in this <see cref="OutputArgument"/> as a bittable struct without any conversion.
+        /// Gets the value of data stored in this <see cref="OutputArgument"/> as a blittable struct without any conversion.
         /// Do not use this method for scripting types defined in the SDK/API such as <see cref="Vector3"/>.
         /// Use <see cref="GetResult{T}"/> for scipting types instead.
         /// </summary>
