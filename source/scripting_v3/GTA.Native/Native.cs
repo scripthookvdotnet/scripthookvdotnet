@@ -392,7 +392,7 @@ namespace GTA.Native
         /// Initializes a <see cref="OutputArgument"/> instance with the specified blittable struct by reference.
         /// </summary>
         /// <remarks>
-        /// You don't have to use <see cref="GetResultAsBittableStruct{T}"/>, since the content of
+        /// You don't have to use <see cref="GetResultAsBlittableStruct{T}"/>, since the content of
         /// <paramref name="value"/> will be mutated when the <see cref="OutputArgument"/> is passed to
         /// a native function and the function writes some value in the storage of <see cref="OutputArgument"/>.
         /// </remarks>
@@ -409,7 +409,7 @@ namespace GTA.Native
         /// <summary>
         /// Gets the value of data stored in this <see cref="OutputArgument"/>.
         /// Do not use this method for custom struct types that are not primitives or defined in the SDK/API.
-        /// Use <see cref="GetResultAsBittableStruct{T}"/> for custom struct types instead.
+        /// Use <see cref="GetResultAsBlittableStruct{T}"/> for custom struct types instead.
         /// </summary>
         /// <exception cref="InvalidCastException">Thrown when failed to get the result for unsupported type.</exception>
         /// <exception cref="NullReferenceException">Thrown when the internal storage is already disposed.</exception>
@@ -436,7 +436,7 @@ namespace GTA.Native
         /// Use <see cref="GetResult{T}"/> for scipting types instead.
         /// </summary>
         /// <exception cref="NullReferenceException">Thrown when the internal storage is already disposed.</exception>
-        public T GetResultAsBittableStruct<T>() where T : unmanaged => Marshal.PtrToStructure<T>(_storage);
+        public T GetResultAsBlittableStruct<T>() where T : unmanaged => Marshal.PtrToStructure<T>(_storage);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #pragma warning disable IDE0060 // Remove unused parameter
