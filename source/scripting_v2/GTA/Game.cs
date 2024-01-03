@@ -381,14 +381,16 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets an analog value of a <see cref="Control"/> input.
+        /// Gets an analog value of a <see cref="Control"/> input in the range of [0, 255].
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns>The <see cref="Control"/> value.</returns>
+        /// <returns>The <see cref="Control"/> value in the range of [0, 255].</returns>
         public static int GetControlValue(int index, Control control)
         {
             return Function.Call<int>(Hash.GET_CONTROL_VALUE, index, (int)control);
@@ -397,171 +399,302 @@ namespace GTA
         /// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns>The <see cref="Control"/> value.</returns>
+        /// <returns>The <see cref="Control"/> value between -1.0f and 1.0f.</returns>
+        /// <remarks>
+        /// Tests whether the control is disabled before getting an analog value of a given <see cref="Control"/>.
+        /// Will return zero if the control is disabled.
+        /// </remarks>
         public static float GetControlNormal(int index, Control control)
         {
             return Function.Call<float>(Hash.GET_CONTROL_NORMAL, index, (int)control);
         }
         /// <summary>
-        /// Gets an analog value of a disabled <see cref="Control"/> input between -1.0f and 1.0f.
+        /// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f even if
+        /// the <see cref="Control"/> is disabled.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns>The normalized <see cref="Control"/> value.</returns>
+        /// <returns>The normalized <see cref="Control"/> value between -1.0f and 1.0f.</returns>
         public static float GetDisabledControlNormal(int index, Control control)
         {
             return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, index, (int)control);
         }
         /// <summary>
-        /// Override a <see cref="Control"/> by giving it a user-defined value this frame.
+        /// Sets the value of a <see cref="Control"/> for the next frame (not this frame) if the control is enabled.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <param name="value">the value to set the control to.</param>
+        /// <param name="value">the value to set the control to for the next frame.</param>
+        /// <remarks>
+        /// Does not set a value for the next frame if the control is disabled.
+        /// Does not return a bool value despite the fact <c>SET_CONTROL_VALUE_NEXT_FRAME</c> returns
+        /// <see langword="true"/> if the control is enabled and returns <see langword="false"/> otherwise.
+        /// </remarks>
         public static void SetControlNormal(int index, Control control, float value)
         {
             Function.Call(Hash._SET_CONTROL_NORMAL, index, (int)control, value);
         }
 
+        /// <summary>
+        /// Gets whether the specified key is currently held down.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
         public static bool IsKeyPressed(Keys key)
         {
             return SHVDN.ScriptDomain.CurrentDomain.IsKeyPressed(key);
         }
+
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is currently pressed.
+        /// Gets whether a <see cref="Control"/> is currently pressed/down.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is pressed/down; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetDisabledControlNormal(int, Control)"/>
+        /// returns <c>0.5f</c> or more; otherwise, returns <see langword="false"/>.
+        /// </para>
+        /// </returns>
         /// <remarks>
-        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> is currently pressed.
-        /// like <c>IS_CONTROL_PRESSED</c> does.
+        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> is currently
+        /// pressed like how <c>IS_CONTROL_PRESSED</c> does.
         /// </remarks>
         public static bool IsControlPressed(int index, Control control)
         {
             return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, index, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> was just pressed this frame.
+        /// Gets whether a <see cref="Control"/> was just pressed/down this frame and was not pressed/down last frame.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true" /> if the <see cref="Control"/> was pressed/down this frame and was not pressed/down
+        /// last frame;  otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetDisabledControlNormal(int, Control)"/>
+        /// returns <c>0.5f</c> or more this frame and it returns a value less than <c>0.5f</c> last frame; otherwise,
+        /// returns <see langword="false"/>.
+        /// </para>
+        /// </returns>
         /// <remarks>
-        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just pressed this frame
-        /// like <c>IS_CONTROL_JUST_PRESSED</c> does.
+        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just
+        /// pressed this frame like <c>IS_CONTROL_JUST_PRESSED</c> does.
         /// </remarks>
         public static bool IsControlJustPressed(int index, Control control)
         {
             return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, index, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> was just released this frame.
+        /// Gets whether a <see cref="Control"/> was just released/up this frame and was not released/up last frame.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true" /> if the <see cref="Control"/> was just released/up this frame and was not
+        /// released/up last frame; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetDisabledControlNormal(int, Control)"/>
+        /// returns a value less than <c>0.5f</c> and it returns <c>0.5f</c> last frame; otherwise, returns
+        /// <see langword="false"/>.
+        /// </para>
+        /// </returns>
         /// <remarks>
-        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just released this frame
-        /// like <c>IS_CONTROL_JUST_RELEASED</c> does.
+        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just
+        /// released this frame like <c>IS_CONTROL_JUST_RELEASED</c> does.
         /// </remarks>
         public static bool IsControlJustReleased(int index, Control control)
         {
             return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, index, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is disabled and currently pressed.
+        /// Gets whether a <see cref="Control"/> is disabled and currently pressed/down.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is disabled and currently pressed/down; otherwise,
+        /// <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="IsControlEnabled(int, Control)"/> returns
+        /// <see langword="false"/> and <see cref="GetControlNormal(int, Control)"/> returns <c>0.5f</c> or more;
+        /// otherwise, returns <see langword="false"/>.
+        /// </para>
+        /// </returns>
         public static bool IsDisabledControlPressed(int index, Control control)
         {
             return IsControlPressed(index, control) && !IsControlEnabled(index, control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is disabled and was just pressed this frame.
+        /// Gets whether a <see cref="Control"/> is disabled and pressed/down this frame and was not pressed/down
+        /// last frame.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is disabled and pressed/down this frame, and was
+        /// not pressed/down last frame; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="IsControlEnabled(int, Control)"/> returns
+        /// <see langword="false"/> and <see cref="GetControlNormal(int, Control)"/> returns <c>0.5f</c> or more and
+        /// it returns a value less than <c>0.5f</c> last frame; otherwise, returns
+        /// <see langword="false"/>.
+        /// </para>
+        /// </returns>
         public static bool IsDisabledControlJustPressed(int index, Control control)
         {
             return IsControlJustPressed(index, control) && !IsControlEnabled(index, control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is enabled and was just released this frame.
+        /// Gets whether a <see cref="Control"/> is disabled and was just released/up this frame and was not released/up
+        /// last frame.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is disabled and released/up this frame, and was not
+        /// released/up last frame; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="IsControlEnabled(int, Control)"/> returns
+        /// <see langword="false"/> and <see cref="GetDisabledControlNormal(int, Control)"/> returns a value less than
+        /// <c>0.5f</c> and it returns <c>0.5f</c> or more last frame; otherwise, returns <see langword="false"/>.
+        /// </para>
+        /// </returns>
         public static bool IsDisabledControlJustReleased(int index, Control control)
         {
             return IsControlJustReleased(index, control) && !IsControlEnabled(index, control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is enabled and currently pressed.
+        /// Gets whether a <see cref="Control"/> is enabled and currently pressed/down.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is enabled and currently pressed/down; otherwise,
+        /// <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetControlNormal(int, Control)"/> returns
+        /// <c>0.5f</c> or more; otherwise, returns <see langword="false"/>.
+        /// </para>
+        /// </returns>
         public static bool IsEnabledControlPressed(int index, Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, index, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is enabled and was just pressed this frame.
+        /// Gets whether a <see cref="Control"/> is enabled and pressed/down this frame and was not pressed/down
+        /// last frame.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is enabled and pressed/down this frame, and was
+        /// not pressed/down last frame; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetControlNormal(int, Control)"/> returns
+        /// <c>0.5f</c> or more and it returns a value less than <c>0.5f</c> last frame; otherwise, returns
+        /// <see langword="false"/>.
+        /// </para>
+        /// </returns>
         public static bool IsEnabledControlJustPressed(int index, Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, index, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is enabled and was just released this frame.
+        /// Gets whether a <see cref="Control"/> is enabled and was just released/up this frame and was not released/up
+        /// last frame.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is enabled and released/up this frame, and was not
+        /// released/up last frame; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetControlNormal(int, Control)"/> returns
+        /// a value less than <c>0.5f</c> and it returns <c>0.5f</c> or more last frame; otherwise, returns
+        /// <see langword="false"/>.
+        /// </para>
+        /// </returns>
         public static bool IsEnabledControlJustReleased(int index, Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, index, (int)control);
@@ -571,8 +704,10 @@ namespace GTA
         /// Gets whether a <see cref="Control"/> is enabled or disabled this frame.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         /// <param name="control">The <see cref="Control"/> to check.</param>
         /// <returns><see langword="true" /> if the <see cref="Control"/> is Enabled; otherwise, <see langword="false" /></returns>
@@ -587,13 +722,19 @@ namespace GTA
             EnableControlThisFrame(index, control);
         }
         /// <summary>
-        /// Makes the engine respond to the given <see cref="Control"/> this frame.
+        /// Enables the action input for the given <see cref="Control"/> and related action inputs in the control
+        /// system for the main player  so enabled control variants of control (action input) methods and script
+        /// commands (native functions) will accept the given <see cref="Control"/>.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
-        /// <param name="control">The <see cref="Control"/> to enable.</param>
+        /// <param name="control">
+        /// The <see cref="Control"/> to disable. Related action inputs will also be enabled.
+        /// </param>
         public static void EnableControlThisFrame(int index, Control control)
         {
             Function.Call(Hash.ENABLE_CONTROL_ACTION, index, (int)control, true);
@@ -605,13 +746,19 @@ namespace GTA
             DisableControlThisFrame(index, control);
         }
         /// <summary>
-        /// Makes the engine ignore input from the given <see cref="Control"/> this frame.
+        /// Disables the action input for the given <see cref="Control"/> and related action inputs in the control
+        /// system for the main player so enabled control variants of control (action input) methods and script
+        /// commands (native functions) will not accept the given <see cref="Control"/>.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
-        /// <param name="control">The <see cref="Control"/>.</param>
+        /// <param name="control">
+        /// The <see cref="Control"/> to disable. Related action inputs will also be disabled.
+        /// </param>
         public static void DisableControlThisFrame(int index, Control control)
         {
             Function.Call(Hash.DISABLE_CONTROL_ACTION, index, (int)control, true);
@@ -620,8 +767,10 @@ namespace GTA
         /// Enables all <see cref="Control"/>s this frame.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         public static void EnableAllControlsThisFrame(int index)
         {
@@ -631,8 +780,10 @@ namespace GTA
         /// Disables all <see cref="Control"/>s this frame.
         /// </summary>
         /// <param name="index">
-        /// Supposed to be the control type index. 0 means player control, 1 means camera control, and 2 means frontend control.
-        /// However, this value has no practical effect as control native functions eventually use the same CControl instance in any cases.
+        /// The control type index. 0 means player control, 1 means camera control (the same as 0 in practice),
+        /// and 2 means frontend control.
+        /// The empty control is used when the warning screen is being displayed or the player is arrested (not when dead),
+        /// if the control type index is 0 or 1.
         /// </param>
         public static void DisableAllControlsThisFrame(int index)
         {

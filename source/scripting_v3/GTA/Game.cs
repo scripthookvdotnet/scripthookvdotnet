@@ -416,21 +416,29 @@ namespace GTA
         public static bool IsVibrationEnabled => GetProfileSetting(2) != 0;
 
         /// <summary>
-        /// Gets an analog value of a <see cref="Control"/> input.
+        /// Gets an analog value of a <see cref="Control"/> input in the range of [0, 255].
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns>The <see cref="Control"/> value.</returns>
+        /// <returns>The <see cref="Control"/> value in the range of [0, 255].</returns>
         public static int GetControlValue(Control control)
         {
-            // The 1st parameter is supposed to be the control type index, but it has no practical effect
-            // as control native functions eventually use the same CControl instance in any cases (applies to all the control natives)
+            // The 1st parameter is supposed to be the control type index, but the value 1 (for `CAMERA_CONTROL`) works
+            // the same as 0 (`PLAYER_CONTROL`) for the 1st argument.
+            // Both call `CControlMgr::GetMainPlayerControl(bool bAllowDisabling)` with the argument `false` for
+            // `bAllowDisabling`. The empty `CControl` will be used if the warning screen is being displayed or
+            // the player is arrested (not when dead).
+
+            // If the 1st parameter of control natives/commands is a value other than 0 or 1,
+            // `CControlMgr::GetMainFrontendControl(bool bAllowDisabling)` is called with the argument `false`,
+            // where the function returns the main player (actual) `CControl` for almost all cases as `bAllowDisabling`
+            // is set to `false`.
             return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, (int)control);
         }
         /// <summary>
         /// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns>The normalized <see cref="Control"/> value.</returns>
+        /// <returns>The normalized <see cref="Control"/> value between -1.0f and 1.0f.</returns>
         /// <remarks>
         /// Tests whether the control is disabled before getting an analog value of a given <see cref="Control"/>.
         /// Will return zero if the control is disabled.
@@ -440,22 +448,24 @@ namespace GTA
             return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, (int)control);
         }
         /// <summary>
-        /// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f even if the <see cref="Control"/> is disabled.
+        /// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f even if
+        /// the <see cref="Control"/> is disabled.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns>The normalized <see cref="Control"/> value.</returns>
+        /// <returns>The normalized <see cref="Control"/> value between -1.0f and 1.0f.</returns>
         public static float GetDisabledControlValueNormalized(Control control)
         {
             return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, (int)control);
         }
         /// <summary>
-        /// Override a <see cref="Control"/> by giving it a user-defined value this frame.
+        /// Sets the value of a <see cref="Control"/> for the next frame (not this frame) if the control is enabled.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <param name="value">the value to set the control to.</param>
+        /// <param name="value">the value to set the control to for the next frame.</param>
         /// <remarks>
-        /// Tests whether the control is disabled before setting a control value for a given <see cref="Control"/>.
-        /// Does not return a bool value despite the fact <c>SET_CONTROL_VALUE_NEXT_FRAME</c> returns <see langword="true"/> if the value was set.
+        /// Does not set a value for the next frame if the control is disabled.
+        /// Does not return a bool value despite the fact <c>SET_CONTROL_VALUE_NEXT_FRAME</c> returns
+        /// <see langword="true"/> if the control is enabled and returns <see langword="false"/> otherwise.
         /// </remarks>
         public static void SetControlValueNormalized(Control control, float value)
         {
@@ -471,67 +481,126 @@ namespace GTA
             return SHVDN.ScriptDomain.CurrentDomain.IsKeyPressed(key);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is currently pressed.
+        /// Gets whether a <see cref="Control"/> is currently pressed/down.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is pressed/down; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetDisabledControlValueNormalized(Control)"/>
+        /// returns <c>0.5f</c> or more; otherwise, returns <see langword="false"/>.
+        /// </para>
+        /// </returns>
         /// <remarks>
-        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> is currently pressed.
-        /// like <c>IS_CONTROL_PRESSED</c> does.
+        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> is currently
+        /// pressed like how <c>IS_CONTROL_PRESSED</c> does.
         /// </remarks>
         public static bool IsControlPressed(Control control)
         {
             return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> was just pressed this frame.
+        /// Gets whether a <see cref="Control"/> was just pressed/down this frame and was not pressed/down last frame.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true" /> if the <see cref="Control"/> was pressed/down this frame and was not pressed/down
+        /// last frame;  otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetDisabledControlValueNormalized(Control)"/>
+        /// returns <c>0.5f</c> or more this frame and it returns a value less than <c>0.5f</c> last frame; otherwise,
+        /// returns <see langword="false"/>.
+        /// </para>
+        /// </returns>
         /// <remarks>
-        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just pressed this frame
-        /// like <c>IS_CONTROL_JUST_PRESSED</c> does.
+        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just
+        /// pressed this frame like <c>IS_CONTROL_JUST_PRESSED</c> does.
         /// </remarks>
         public static bool IsControlJustPressed(Control control)
         {
             return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> was just released this frame.
+        /// Gets whether a <see cref="Control"/> was just released/up this frame and was not released/up last frame.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true" /> if the <see cref="Control"/> was just released/up this frame and was not
+        /// released/up last frame; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetDisabledControlValueNormalized(Control)"/>
+        /// returns a value less than <c>0.5f</c> and it returns <c>0.5f</c> last frame; otherwise, returns
+        /// <see langword="false"/>.
+        /// </para>
+        /// </returns>
         /// <remarks>
-        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just released this frame
-        /// like <c>IS_CONTROL_JUST_RELEASED</c> does.
+        /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just
+        /// released this frame like <c>IS_CONTROL_JUST_RELEASED</c> does.
         /// </remarks>
         public static bool IsControlJustReleased(Control control)
         {
             return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is enabled and currently pressed.
+        /// Gets whether a <see cref="Control"/> is enabled and currently pressed/down.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> is pressed; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is enabled and currently pressed/down; otherwise,
+        /// <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetControlValueNormalized(Control)"/> returns
+        /// <c>0.5f</c> or more; otherwise, returns <see langword="false"/>.
+        /// </para>
+        /// </returns>
         public static bool IsEnabledControlPressed(Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is enabled and was just pressed this frame.
+        /// Gets whether a <see cref="Control"/> is enabled and pressed/down this frame and was not pressed/down
+        /// last frame.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just pressed this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is enabled and pressed/down this frame, and was
+        /// not pressed/down last frame; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetControlValueNormalized(Control)"/> returns
+        /// <c>0.5f</c> or more and it returns a value less than <c>0.5f</c> last frame; otherwise, returns
+        /// <see langword="false"/>.
+        /// </para>
+        /// </returns>
         public static bool IsEnabledControlJustPressed(Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, (int)control);
         }
         /// <summary>
-        /// Gets whether a <see cref="Control"/> is enabled and was just released this frame.
+        /// Gets whether a <see cref="Control"/> is enabled and was just released/up this frame and was not released/up
+        /// last frame.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> was just released this frame; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <para>
+        /// <see langword="true"/> if the <see cref="Control"/> is enabled and released/up this frame, and was not
+        /// released/up last frame; otherwise, <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Strictly, returns <see langword="true"/> when <see cref="GetControlValueNormalized(Control)"/> returns
+        /// a value less than <c>0.5f</c> and it returns <c>0.5f</c> or more last frame; otherwise, returns
+        /// <see langword="false"/>.
+        /// </para>
+        /// </returns>
         public static bool IsEnabledControlJustReleased(Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, (int)control);
@@ -541,23 +610,33 @@ namespace GTA
         /// Gets whether a <see cref="Control"/> is enabled or disabled this frame.
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
-        /// <returns><see langword="true" /> if the <see cref="Control"/> is Enabled; otherwise, <see langword="false" /></returns>
+        /// <returns>
+        /// <see langword="true"/> if the <see cref="Control"/> is enabled; otherwise, <see langword="false"/>.
+        /// </returns>
         public static bool IsControlEnabled(Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, (int)control);
         }
         /// <summary>
-        /// Makes the engine respond to the given <see cref="Control"/> this frame.
+        /// Enables the action input for the given <see cref="Control"/> and related action inputs in the control
+        /// system for the main player  so enabled control variants of control (action input) methods and script
+        /// commands (native functions) will accept the given <see cref="Control"/>.
         /// </summary>
-        /// <param name="control">The <see cref="Control"/> to enable.</param>
+        /// <param name="control">
+        /// The <see cref="Control"/> to disable. Related action inputs will also be enabled.
+        /// </param>
         public static void EnableControlThisFrame(Control control)
         {
             Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)control, true);
         }
         /// <summary>
-        /// Makes the engine ignore input from the given <see cref="Control"/> this frame.
+        /// Disables the action input for the given <see cref="Control"/> and related action inputs in the control
+        /// system for the main player so enabled control variants of control (action input) methods and script
+        /// commands (native functions) will not accept the given <see cref="Control"/>.
         /// </summary>
-        /// <param name="control">The <see cref="Control"/>.</param>
+        /// <param name="control">
+        /// The <see cref="Control"/> to disable. Related action inputs will also be disabled.
+        /// </param>
         public static void DisableControlThisFrame(Control control)
         {
             Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, (int)control, true);
