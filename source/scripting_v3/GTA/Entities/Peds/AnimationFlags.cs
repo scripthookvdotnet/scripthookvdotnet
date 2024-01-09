@@ -39,9 +39,13 @@ namespace GTA
         /// </summary>
         Secondary = 32,
         /// <summary>
-        /// When the animation finishes pop the peds physical reprsentation direction to match the visual representations direction.
-        /// Note that the animator of the animation must not unwind the animation and must have an independent mover node.
+        /// The task will run in the secondary task slot on Upper body only. This means it can be used aswell as a movement task (for instance).
         /// </summary>
+        SecondaryUpper = 49,
+		/// <summary>
+		/// When the animation finishes pop the peds physical reprsentation direction to match the visual representations direction.
+		/// Note that the animator of the animation must not unwind the animation and must have an independent mover node.
+		/// </summary>
         ReorientWhenFinished = 64,
         /// <summary>
         /// Ends the animation early if the ped attemps to move e.g. if the player tries to move using the controller.
