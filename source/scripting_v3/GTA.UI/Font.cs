@@ -3,6 +3,9 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
+using System.ComponentModel;
+
 namespace GTA.UI
 {
     /// <summary>
@@ -27,10 +30,10 @@ namespace GTA.UI
         /// </summary>
         HouseScript,
         /// <summary>
-        /// <para>This font contains upper ASCII characters and some other shapes such as ones for tags.</para>
+        /// <para>This font contains upper ASCII characters and some other shapes for crew tags in GTA Online.</para>
         /// <para>This font style specifies the same font unless the player have custom font files installed.</para>
         /// </summary>
-        Monospace,
+        RockstarTag,
         /// <summary>
         /// <para>This font contains only Chevron arrows, some shield symbols, and hexagons.</para>
         /// <para>This font style specifies the same font unless the player have custom font files installed.</para>
@@ -75,5 +78,9 @@ namespace GTA.UI
         /// The standard font, which is the same as <see cref="ChaletLondon"/>, will be used when the game language is set to a CJK language unless the player have custom font files installed.
         /// </summary>
         Taxi,
+
+        [Obsolete("Font.Monospace is obsolete because it is incorrect, use Font.RockstarTag instead."),
+        EditorBrowsable(EditorBrowsableState.Never)]
+        Monospace = RockstarTag,
     }
 }
