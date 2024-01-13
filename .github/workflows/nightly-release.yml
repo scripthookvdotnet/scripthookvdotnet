@@ -85,7 +85,7 @@ jobs:
             });
 
             const commitTitle = commit.commit.message.split('\r\n')[0].split('\n')[0];
-            return `- [${commitTitle}](${commit.html_url})\n    - Short commit hash: ${commitSha.substring(0, 7)}\n    - Full commit hash: ${commitSha}`;
+            return `- [${commitTitle}](${commit.html_url})\n    - Short commit hash: \`${commitSha.substring(0, 7)}\`\n    - Full commit hash: \`${commitSha}\``;
           result-encoding: string
 
   build:
