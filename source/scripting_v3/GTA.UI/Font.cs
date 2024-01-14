@@ -9,7 +9,7 @@ using System.ComponentModel;
 namespace GTA.UI
 {
     /// <summary>
-    /// An enumeration of fonts the game supports.
+    /// An enumeration of all the font styles that script text draw commands support.
     /// </summary>
     public enum Font
     {

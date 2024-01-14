@@ -8,6 +8,10 @@ using System.ComponentModel;
 
 namespace GTA
 {
+    /// <summary>
+    /// An enumeration of all the non-IK flags that the scripted animation task class (<c>CTaskScriptedAnimation</c>)
+    /// uses.
+    /// </summary>
     [Flags]
     public enum AnimationFlags
     {

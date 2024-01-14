@@ -3,6 +3,8 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+// The namespace is incorrectly specified to be `GTA` instead of `GTA.Math`.
+// For compatibility reasons, do not change this in v3 API!
 namespace GTA
 {
     /// <summary>

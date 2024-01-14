@@ -7,6 +7,9 @@ using System;
 
 namespace GTA
 {
+    /// <summary>
+    /// An enumeration of all the IK flags that the scripted animation task class (<c>CTaskScriptedAnimation</c>) uses.
+    /// </summary>
     [Flags]
     public enum AnimationIKControlFlags
     {
