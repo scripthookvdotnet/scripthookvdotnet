@@ -148,7 +148,7 @@ internal:
     static array<WinForms::Keys>^ consoleKeyBinding = { WinForms::Keys::F4 };
     static unsigned int scriptTimeoutThreshold = 5000;
     static bool shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = true;
-    static Object^ unloadLock = gcnew Object();
+    static Object^ keyboardMessageLock = gcnew Object();
     static array<bool>^ _keyboardStatePool = gcnew array<bool>(256);
     static ModifierKeyState _modKeyState = ModifierKeyState::None;
 
@@ -397,7 +397,7 @@ static void ScriptHookVDotNet_ManagedInit()
 
     // Unload previous domain (this unloads all script assemblies too)
     {
-        msclr::lock l(ScriptHookVDotNet::unloadLock);
+        msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
 
         if (domain != nullptr)
         {
@@ -411,7 +411,6 @@ static void ScriptHookVDotNet_ManagedInit()
             SHVDN::ScriptDomain::Unload(domain);
             domain = nullptr;
         }
-
     }
 
     // Clear log from previous runs
@@ -608,7 +607,8 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
     if (alt)   keys = keys | WinForms::Keys::Alt;
 
     // Protect against race condition during reload
-    msclr::lock l(ScriptHookVDotNet::unloadLock);
+    msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
+
     SHVDN::Console^ console = ScriptHookVDotNet::console;
     if (console != nullptr)
     {
@@ -648,9 +648,9 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 // solely for detection for recreation of the game session
 PVOID sOldGameFiber = nullptr;
 
-HANDLE hClrThread;
-HANDLE hClrWaitEvent;
-HANDLE hClrContinueEvent;
+std::atomic<HANDLE> hClrThread;
+std::atomic<HANDLE> hClrWaitEvent;
+std::atomic<HANDLE> hClrContinueEvent;
 
 // proper synchronization with event objects would cause a deadlock or timeout (for executing longer than 2 seconds)
 // in DllMain, so use a bool variable to tell procedures that the asi wants to get freed
@@ -662,7 +662,7 @@ std::atomic_bool sClrThreadRequestedToExit(false);
 static DWORD ClrThreadProc(LPVOID lparam)
 {
     // DllMain gets called before ScriptHookV starts script fibers, so wait until getting signaled by ScriptMain
-    WaitForSingleObject(hClrContinueEvent, INFINITE);
+    WaitForSingleObject(hClrContinueEvent.load(), INFINITE);
 
     while (!sClrThreadRequestedToExit) {
         ScriptHookVDotNet_ManagedInit();
@@ -672,7 +672,7 @@ static DWORD ClrThreadProc(LPVOID lparam)
         // exiting the loop after letting the main fiber execute
         while (!sScriptDomainRequestedToReload.load() && !sClrThreadRequestedToExit.load()) {
             ScriptHookVDotNet_ManagedTick();
-            SetEvent(hClrWaitEvent);
+            SetEvent(hClrWaitEvent.load());
             WaitForSingleObject(hClrContinueEvent, INFINITE);
         }
     }
@@ -710,14 +710,16 @@ static void ScriptMain()
             break;
         }
 
-        SetEvent(hClrContinueEvent);
+        SetEvent(hClrContinueEvent.load());
         // This call blocks the main thread so GtaThread instances (which ysc or external scripts internally rely on)
         // won't be executed except for one for the SHVDN runtime as long as it is executing
-        WaitForSingleObject(hClrWaitEvent, INFINITE);
+        WaitForSingleObject(hClrWaitEvent.load(), INFINITE);
         scriptWait(0);
     }
 }
 
+// Keyboard event runs in a thread different from where tick event runs in Script Hook V, so we may want to synchronize
+// data between them!
 static void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
     ScriptHookVDotNet_ManagedKeyboardMessage(
@@ -740,8 +742,8 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
         // Register handler for keyboard messages
         keyboardHandlerRegister(ScriptKeyboardMessage);
 
-        hClrContinueEvent = CreateEvent(NULL, false, false, NULL);
-        hClrWaitEvent = CreateEvent(NULL, false, false, NULL);
+        hClrContinueEvent.store(CreateEvent(NULL, false, false, NULL));
+        hClrWaitEvent.store(CreateEvent(NULL, false, false, NULL));
 
         // Create a seperate thread to run CLR so in .NET runtime won't panic for (false) stack overflow by a cached stack
         // limit in .NET runtime
@@ -758,13 +760,13 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
 
         // Gracefully let the CLR thread procedure and the script fiber exit (CloseHandle does not set events)
         // Probably these calls do not wake up ClrThreadProc however
-        SetEvent(hClrContinueEvent);
-        SetEvent(hClrWaitEvent);
+        SetEvent(hClrContinueEvent.load());
+        SetEvent(hClrWaitEvent.load());
 
         // Cleanup events and thread handles so the exe can exit
-        CloseHandle(hClrContinueEvent);
-        CloseHandle(hClrWaitEvent);
-        CloseHandle(hClrThread);
+        CloseHandle(hClrContinueEvent.load());
+        CloseHandle(hClrWaitEvent.load());
+        CloseHandle(hClrThread.load());
         // Unregister ScriptHookVDotNet native script
         scriptUnregister(hModule);
         // Unregister handler for keyboard messages

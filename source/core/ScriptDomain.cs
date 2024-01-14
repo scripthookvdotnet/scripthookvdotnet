@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Text;
+using System.Collections.ObjectModel;
 
 namespace SHVDN
 {
@@ -37,16 +38,22 @@ namespace SHVDN
         [DllImport("kernel32.dll")]
         private static extern uint GetCurrentThreadId();
 
+        private static ScriptDomain s_currentDomain;
+        // `Dispose` won't be called in this instance because it may be too difficult to call correctly due to how
+        // separate `AppDomain`s have different static variables, but it's acceptable since `ReaderWriterLockSlim` uses
+        // `EventWaitHandle`, which uses `SafeHandle`.
+        private static readonly ReaderWriterLockSlim s_currentDomainPropertyLock = new();
+
         private int _executingThreadId = Thread.CurrentThread.ManagedThreadId;
         private Script _executingScript = null;
-        private List<IntPtr> _pinnedStrings = new();
-        private List<Script> _runningScripts = new();
-        private Queue<IScriptTask> _taskQueue = new();
-        private Dictionary<string, int> _scriptInstances = new();
-        private SortedList<string, Tuple<string, Type>> _scriptTypes = new();
+        private readonly List<IntPtr> _pinnedStrings = new();
+        private readonly List<Script> _runningScripts = new();
+        private readonly Queue<IScriptTask> _taskQueue = new();
+        private readonly Dictionary<string, int> _scriptInstances = new();
+        private readonly SortedList<string, Tuple<string, Type>> _scriptTypes = new();
         private bool _recordKeyboardEvents = true;
         private bool[] _keyboardState = new bool[256];
-        private List<Assembly> _scriptApis = new List<Assembly>();
+        private readonly List<Assembly> _scriptApis = new List<Assembly>();
 
         private unsafe delegate* unmanaged[Cdecl]<IntPtr> _getTlsContext;
         private unsafe delegate* unmanaged[Cdecl]<IntPtr, void> _setTlsContext;
@@ -54,7 +61,10 @@ namespace SHVDN
         private IntPtr _tlsContextOfMainThread;
         private uint _gameMainThreadIdUnmanaged;
 
-        private ReaderWriterLockSlim _lockForTlsVariables = new ReaderWriterLockSlim();
+        // Since we read `_pinnedStrings` sequentially to dispose pinned strings and `ConcurrentQueue` doesn't have
+        // `Clear` method in .NET Framework where the head and tail will be set to a new segment instance,
+        private readonly object _pinnedStrListLock = new();
+        private readonly ReaderWriterLockSlim _tlsVariablesLock = new();
 
         /// <summary>
         /// The byte array that contains "CELL_EMAIL_BCON", which is used when SHVDN logs unhandled exceptions
@@ -68,7 +78,7 @@ namespace SHVDN
         internal unsafe void InitTlsStuffForTlsContextSwitch(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc,
             IntPtr tlsAddr, uint threadId)
         {
-            _lockForTlsVariables.EnterWriteLock();
+            _tlsVariablesLock.EnterWriteLock();
             try
             {
                 _getTlsContext = (delegate* unmanaged[Cdecl]<IntPtr>)getTlsContextFunc;
@@ -78,7 +88,7 @@ namespace SHVDN
             }
             finally
             {
-                _lockForTlsVariables.ExitWriteLock();
+                _tlsVariablesLock.ExitWriteLock();
             }
         }
 
@@ -112,7 +122,33 @@ namespace SHVDN
         /// <summary>
         /// Gets the scripting domain for the current application domain.
         /// </summary>
-        public static ScriptDomain CurrentDomain { get; private set; }
+        public static ScriptDomain CurrentDomain
+        {
+            get
+            {
+                s_currentDomainPropertyLock.EnterReadLock();
+                try
+                {
+                    return s_currentDomain;
+                }
+                finally
+                {
+                    s_currentDomainPropertyLock.ExitReadLock();
+                }
+            }
+            set
+            {
+                s_currentDomainPropertyLock.EnterWriteLock();
+                try
+                {
+                    s_currentDomain = value;
+                }
+                finally
+                {
+                    s_currentDomainPropertyLock.ExitWriteLock();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the list of currently running scripts in this script domain. This is used by the console implementation.
@@ -186,7 +222,7 @@ namespace SHVDN
 
         private void DisposeUnmanagedResource()
         {
-            _lockForTlsVariables.Dispose();
+            _tlsVariablesLock.Dispose();
             // Need to free native strings when disposing the script domain
             CleanupStrings();
             // Need to free unmanaged resources in NativeMemory
@@ -706,7 +742,7 @@ namespace SHVDN
         /// <param name="task">The task to execute.</param>
         public void ExecuteTaskWithGameThreadTlsContext(IScriptTask task)
         {
-            _lockForTlsVariables.EnterReadLock();
+            _tlsVariablesLock.EnterReadLock();
             try
             {
                 if (_gameMainThreadIdUnmanaged == GetCurrentThreadId())
@@ -735,7 +771,7 @@ namespace SHVDN
             }
             finally
             {
-                _lockForTlsVariables.ExitReadLock();
+                _tlsVariablesLock.ExitReadLock();
             }
         }
 
@@ -870,12 +906,15 @@ namespace SHVDN
         /// </summary>
         private void CleanupStrings()
         {
-            foreach (IntPtr handle in _pinnedStrings)
+            lock (_pinnedStrListLock)
             {
-                Marshal.FreeCoTaskMem(handle);
-            }
+                foreach (IntPtr handle in _pinnedStrings)
+                {
+                    Marshal.FreeCoTaskMem(handle);
+                }
 
-            _pinnedStrings.Clear();
+                _pinnedStrings.Clear();
+            }
         }
         /// <summary>
         /// Pins the memory of a string so that it can be used in native calls without worrying about the GC invalidating its pointer.
@@ -891,7 +930,11 @@ namespace SHVDN
                 return NativeMemory.NullString;
             }
 
-            _pinnedStrings.Add(handle);
+            lock (_pinnedStrListLock)
+            {
+                _pinnedStrings.Add(handle);
+            }
+
             return handle;
         }
 
