@@ -7,9 +7,11 @@
 
 #include <Windows.h>
 #include <atomic>
+#include <mutex>
 
-std::atomic<LPVOID> sTlsContextAddrOfGameMainThread(nullptr);
-std::atomic<DWORD> sGameMainThreadId(0);
+LPVOID sTlsContextAddrOfGameMainThread = nullptr;
+DWORD sGameMainThreadId = 0;
+std::mutex sGameMainThradVarsMutex;
 
 // Use atomic to guarantee its visibility
 // Script domain should be reloaded as soon as getting requested to reload, so this should be used with std::memory_order_seq_cst
@@ -27,11 +29,21 @@ static LPVOID GetTlsContext()
 
 static LPVOID GetTlsContextAddrOfGameMainThread()
 {
-    return sTlsContextAddrOfGameMainThread.load();
+    LPVOID val;
+    {
+        std::lock_guard<std::mutex> lock(sGameMainThradVarsMutex);
+        val = sTlsContextAddrOfGameMainThread;
+    }
+    return val;
 }
 static DWORD GetGameMainThreadId()
 {
-    return sGameMainThreadId.load();
+    DWORD val;
+    {
+        std::lock_guard<std::mutex> lock(sGameMainThradVarsMutex);
+        val = sGameMainThreadId;
+    }
+    return val;
 }
 
 static void RequestScriptDomainToReload()
@@ -684,8 +696,11 @@ static void ScriptMain()
 {
     // We need these info to swap the TLS context of the main thread when necessary to access a lot of game stuff
     // such as a rage::SysMemAllocator instance
-    sTlsContextAddrOfGameMainThread.store(GetTlsContext());
-    sGameMainThreadId.store(GetCurrentThreadId());
+    {
+        std::lock_guard<std::mutex> lock(sGameMainThradVarsMutex);
+        sTlsContextAddrOfGameMainThread = GetTlsContext();
+        sGameMainThreadId = GetCurrentThreadId();
+    }
 
     // ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
     const PVOID initialGameFiber = GetCurrentFiber();
