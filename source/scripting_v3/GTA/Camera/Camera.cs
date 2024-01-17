@@ -30,13 +30,15 @@ namespace GTA
         public static Camera Create(ScriptedCameraNameHash cameraNameHash, bool startActivated = false)
         {
             int handle = Function.Call<int>(Hash.CREATE_CAMERA, (uint)cameraNameHash, startActivated);
-            return handle > 0 ? new Camera(handle) : null;
+            // `CREATE_CAMERA` and `CREATE_CAM` returns -1 if the functions fail to create a new camera, and only
+            // non-negative values are valid camera handles
+            return handle >= 0 ? new Camera(handle) : null;
         }
         /// <inheritdoc cref="Create(string, Vector3, Vector3, float, bool, EulerRotationOrder)"/>
         public static Camera Create(string cameraName, bool startActivated = false)
         {
             int handle = Function.Call<int>(Hash.CREATE_CAM, cameraName, startActivated);
-            return handle > 0 ? new Camera(handle) : null;
+            return handle >= 0 ? new Camera(handle) : null;
         }
         /// <summary>
         /// Creates a scripted <see cref="Camera"/> of a given name hash.
@@ -67,7 +69,7 @@ namespace GTA
         {
             int handle = Function.Call<int>(Hash.CREATE_CAMERA_WITH_PARAMS, (uint)cameraNameHash, position.X,
                 position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, startActivated, (int)rotOrder);
-            return handle > 0 ? new Camera(handle) : null;
+            return handle >= 0 ? new Camera(handle) : null;
         }
         /// <summary>
         /// Creates a scripted <see cref="Camera"/> of a given name.
@@ -98,7 +100,7 @@ namespace GTA
         {
             int handle = Function.Call<int>(Hash.CREATE_CAM_WITH_PARAMS, cameraName, position.X,
                 position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, startActivated, (int)rotOrder);
-            return handle > 0 ? new Camera(handle) : null;
+            return handle >= 0 ? new Camera(handle) : null;
         }
 
         /// <summary>
