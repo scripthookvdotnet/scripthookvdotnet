@@ -273,8 +273,8 @@ namespace GTA
         /// <param name="rotOrder">The rotation order in world space.</param>
         /// <remarks>The <see cref="Camera"/> stops any existing interpolation.</remarks>
         public void SetCamFrameParameters(Vector3 position, Vector3 rotation, float fov,
-            CameraGraphType graphTypePos = CameraGraphType.SinAccelDecel,
-            CameraGraphType graphTypeRot = CameraGraphType.SinAccelDecel,
+            CamFrameInterpolatorCurveType graphTypePos = CamFrameInterpolatorCurveType.SinAccelDecel,
+            CamFrameInterpolatorCurveType graphTypeRot = CamFrameInterpolatorCurveType.SinAccelDecel,
             EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
         {
             // The duration must be zero to guarantee that setting to the new cam frame params won't fail due to
@@ -295,7 +295,7 @@ namespace GTA
         /// <param name="duration">
         /// The duration of the interpolation in milliseconds.
         /// Setting to zero will make the method set the cam frame parameters immediately as how
-        /// <see cref="SetCamFrameParameters(Vector3, Vector3, float, CameraGraphType, CameraGraphType, EulerRotationOrder)"/>
+        /// <see cref="SetCamFrameParameters(Vector3, Vector3, float, CamFrameInterpolatorCurveType, CamFrameInterpolatorCurveType, EulerRotationOrder)"/>
         /// works.
         /// </param>
         /// <param name="graphTypePos">The camera graph type for position transition.</param>
@@ -308,8 +308,8 @@ namespace GTA
         /// The camera will be deactivated if this method successfully starts an camera interpolation.
         /// </remarks>
         public void InterpolateToNewCamFrame(Vector3 position, Vector3 rotation, float fov, uint duration,
-            CameraGraphType graphTypePos = CameraGraphType.SinAccelDecel,
-            CameraGraphType graphTypeRot = CameraGraphType.SinAccelDecel,
+            CamFrameInterpolatorCurveType graphTypePos = CamFrameInterpolatorCurveType.SinAccelDecel,
+            CamFrameInterpolatorCurveType graphTypeRot = CamFrameInterpolatorCurveType.SinAccelDecel,
             EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
         {
             // `camFrameInterpolator` defines the duration field as `u32`
@@ -474,8 +474,8 @@ namespace GTA
         /// <param name="graphTypeRot">The camera graph type for rotation transition.</param>
         /// <param name="rotOrder">The rotation order in world space.</param>
         public void InterpTo(Camera destinationCam, int duration,
-            CameraGraphType graphTypePos = CameraGraphType.SinAccelDecel,
-            CameraGraphType graphTypeRot = CameraGraphType.SinAccelDecel,
+            CamFrameInterpolatorCurveType graphTypePos = CamFrameInterpolatorCurveType.SinAccelDecel,
+            CamFrameInterpolatorCurveType graphTypeRot = CamFrameInterpolatorCurveType.SinAccelDecel,
             EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
         {
             Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, destinationCam.Handle, Handle, duration, (int)graphTypePos,
@@ -484,7 +484,7 @@ namespace GTA
         /// <summary>
         /// Sets a cam active which will be interpolated too from this <see cref="Camera"/>.
         /// </summary>
-        [Obsolete("Use Camera.InterpTo(Camera, int, CameraGraphType, CameraGraphType, EulerRotationOrder) instead."),
+        [Obsolete("Use Camera.InterpTo(Camera, int, CamFrameInterpolatorCurveType, CamFrameInterpolatorCurveType, EulerRotationOrder) instead."),
         EditorBrowsable(EditorBrowsableState.Never)]
         public void InterpTo(Camera to, int duration, int easePosition, int easeRotation)
         {

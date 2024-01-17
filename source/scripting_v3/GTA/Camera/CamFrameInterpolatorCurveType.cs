@@ -8,7 +8,7 @@ namespace GTA
     /// <summary>
     /// An enumeration of camera graphs which apply as a modifier to the default speed OR time of some motion.
     /// </summary>
-    public enum CameraGraphType
+    public enum CamFrameInterpolatorCurveType
     {
         Linear,
         SinAccelDecel,
