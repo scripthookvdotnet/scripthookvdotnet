@@ -263,22 +263,56 @@ namespace GTA
             return Matrix.InverseTransformPoint(worldCoords);
         }
         /// <summary>
-        /// Sets the camera's position, rotation and field of view.
-        /// If <paramref name="duration"/> is greater than zero,
-        /// the <see cref="Camera"/> will interp to the specified settings.
+        /// Sets the camera frame of this <see cref="Camera"/> to specified parameters.
         /// </summary>
         /// <param name="position">The target position.</param>
         /// <param name="rotation">The target rotation.</param>
         /// <param name="fov">The target field of view.</param>
-        /// <param name="duration">The duration of any interpolation in milliseconds.</param>
         /// <param name="graphTypePos">The camera graph type for position transition.</param>
         /// <param name="graphTypeRot">The camera graph type for rotation transition.</param>
         /// <param name="rotOrder">The rotation order in world space.</param>
-        public void TransitionTo(Vector3 position, Vector3 rotation, float fov, int duration,
+        /// <remarks>The <see cref="Camera"/> stops any existing interpolation.</remarks>
+        public void SetCamFrameParameters(Vector3 position, Vector3 rotation, float fov,
             CameraGraphType graphTypePos = CameraGraphType.SinAccelDecel,
             CameraGraphType graphTypeRot = CameraGraphType.SinAccelDecel,
             EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
         {
+            // The duration must be zero to guarantee that setting to the new cam frame params won't fail due to
+            // the scripted cam not being active or the camera pool being full
+            const uint DurationNoInterpolation = 0;
+            Function.Call(Hash.SET_CAM_PARAMS, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y,
+                rotation.Z,
+                fov, DurationNoInterpolation, (int)graphTypePos, (int)graphTypeRot, (int)rotOrder);
+        }
+        /// <summary>
+        /// Interpolates this <see cref="Camera"/> to a cam frame consisted of specified camera frame parameters.
+        /// The <see cref="Camera"/> must be active for this method to work, or it will not interpolate (unless
+        /// <paramref name="duration"/> is zero).
+        /// </summary>
+        /// <param name="position">The target position.</param>
+        /// <param name="rotation">The target rotation.</param>
+        /// <param name="fov">The target field of view.</param>
+        /// <param name="duration">
+        /// The duration of the interpolation in milliseconds.
+        /// Setting to zero will make the method set the cam frame parameters immediately as how
+        /// <see cref="SetCamFrameParameters(Vector3, Vector3, float, CameraGraphType, CameraGraphType, EulerRotationOrder)"/>
+        /// works.
+        /// </param>
+        /// <param name="graphTypePos">The camera graph type for position transition.</param>
+        /// <param name="graphTypeRot">The camera graph type for rotation transition.</param>
+        /// <param name="rotOrder">The rotation order in world space.</param>
+        /// <remarks>
+        /// This method fails to interpolate if there is no space for a new camera so the method cannot add a new
+        /// camera cloned from this camera, which gets deleted on completion of the interpolation (unless
+        /// <paramref name="duration"/> is zero).
+        /// The camera will be deactivated if this method successfully starts an camera interpolation.
+        /// </remarks>
+        public void InterpolateToNewCamFrame(Vector3 position, Vector3 rotation, float fov, uint duration,
+            CameraGraphType graphTypePos = CameraGraphType.SinAccelDecel,
+            CameraGraphType graphTypeRot = CameraGraphType.SinAccelDecel,
+            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
+        {
+            // `camFrameInterpolator` defines the duration field as `u32`
             Function.Call(Hash.SET_CAM_PARAMS, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y,
                 rotation.Z,
                 fov, duration, (int)graphTypePos, (int)graphTypeRot, (int)rotOrder);
