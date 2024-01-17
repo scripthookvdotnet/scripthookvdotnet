@@ -19,59 +19,69 @@ namespace GTA
         public static void InvalidateIdleCam() => Function.Call(Hash.INVALIDATE_IDLE_CAM);
 
         /// <summary>
-        /// Invalidates the vehicle cinematic idle camera, restarting the associated idle counter.
+        /// Invalidates the vehicle cinematic idle mode, restarting the associated idle counter.
         /// </summary>
-        public static void InvalidateVehicleIdleCam() => Function.Call(Hash.INVALIDATE_CINEMATIC_VEHICLE_IDLE_MODE);
+        public static void InvalidateVehicleIdleMode() => Function.Call(Hash.INVALIDATE_CINEMATIC_VEHICLE_IDLE_MODE);
 
         /// <summary>
-        /// Gets a value indicating whether a first person vehicle interior camera is active.
+        /// Gets a value indicating whether the <see cref="CinematicCameraDirector"/> is rendering a cinematic point
+        /// of view camera (used as a first person vehicle interior cam).
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> is a first person vehicle camera; otherwise, <see langword="false" />.
+        /// <see langword="true"/> if the <see cref="CinematicCameraDirector"/> is rendering a cinematic point of view
+        /// camera; otherwise, <see langword="false"/>.
         /// </value>
-        public static bool IsFirstPersonVehicleInteriorCamRendering => Function.Call<bool>(Hash.IS_CINEMATIC_FIRST_PERSON_VEHICLE_INTERIOR_CAM_RENDERING);
+        public static bool IsRenderingPointOfViewCam => Function.Call<bool>(Hash.IS_CINEMATIC_FIRST_PERSON_VEHICLE_INTERIOR_CAM_RENDERING);
 
         /// <summary>
-        /// Gets a value indicating whether the vehicle bonnet cam is rendering.
+        /// Gets a value indicating whether the <see cref="CinematicCameraDirector"/> is rendering a cinematic mounted
+        /// camera (used as a vehicle bonnet cam).
         /// For example, this will return true if using the weapon cam on the Hydra.
         /// Only available in v1.0.372.2 or later versions.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> is a vehicle bonnet camera; otherwise, <see langword="false" />.
+        /// <see langword="true"/> if the <see cref="CinematicCameraDirector"/> is a cinematic mounted camera;
+        /// otherwise, <see langword="false"/>.
         /// </value>
         /// <exception cref="GameVersionNotSupportedException">
         /// Thrown if called in game versions earlier than v1.0.372.2.
         /// </exception>
-        public static bool IsVehicleBonnetCamRendering
+        public static bool IsRenderingMountedCam
         {
             get
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_372_2_Steam, nameof(CinematicCameraDirector), nameof(IsVehicleBonnetCamRendering));
+                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_372_2_Steam,
+                    nameof(CinematicCameraDirector), nameof(IsRenderingMountedCam));
 
+                // This function internally calls `camCinematicDirector::IsRenderingCinematicMountedCamera()`, hence
+                // the property name being `IsRenderingMountedCam` instead of `IsBonnetCamRendering`.
                 return Function.Call<bool>(Hash.IS_BONNET_CINEMATIC_CAM_RENDERING);
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether any cinematic camera is rendering.
-        /// Note that this will also return true if in first-person view while inside a vehicle.
+        /// Note that this will also return <see langword="true"/> if in first-person view while inside a vehicle.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> is a cinematic camera; otherwise, <see langword="false" />.
+        /// <see langword="true"/> if the <see cref="CinematicCameraDirector"/> is a cinematic camera; otherwise,
+        /// <see langword="false"/>.
         /// </value>
         public static bool IsRendering => Function.Call<bool>(Hash.IS_CINEMATIC_CAM_RENDERING);
 
         /// <summary>
-        /// Gets a value indicating whether an idle cinematic camera is rendering.
+        /// Gets a value indicating whether the <see cref="CinematicCameraDirector"/> is rendering an idle cinematic
+        /// camera.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> is an idle cinematic camera; otherwise, <see langword="false" />.
+        /// <see langword="true"/> if the <see cref="CinematicCameraDirector"/> is rendering an idle cinematic camera;
+        /// otherwise, <see langword="false"/>.
         /// </value>
-        public static bool IsIdleCamRendering => Function.Call<bool>(Hash.IS_CINEMATIC_IDLE_CAM_RENDERING);
+        public static bool IsRenderingIdleCam => Function.Call<bool>(Hash.IS_CINEMATIC_IDLE_CAM_RENDERING);
 
         /// <summary>
         /// Gets a value indicating whether the cinematic camera mode switch is active.
-        /// Only available in v1.0.1493.0 or later game versions.
+        /// Currently only available in v1.0.1493.0 or later game versions.
         /// </summary>
         /// <value>
         /// <see langword="true" /> if the <see cref="CinematicCameraDirector"/> mode switch is active; otherwise, <see langword="false" />.
@@ -79,11 +89,16 @@ namespace GTA
         /// <exception cref="GameVersionNotSupportedException">
         /// Thrown if called in game versions earlier than v1.0.1493.0.
         /// </exception>
-        public static bool IsCinematicModeActive
+        public static bool IsCinematicCamInputActive
         {
             get
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1493_0_Steam, nameof(CinematicCameraDirector), nameof(IsCinematicModeActive));
+                // Several subclasses of `camBaseCinematicContext` such as `camCinematicInVehicleContext` calls
+                // `camCinematicDirector::IsCinematicInputActive()`, so probably we can to create custom functions
+                // to call `IsCinematicInputActive()` in versions earlier than v1.0.1493.0. It may be doubtful that is
+                // worth it, though...
+                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1493_0_Steam,
+                    nameof(CinematicCameraDirector), nameof(IsCinematicCamInputActive));
 
                 return Function.Call<bool>(Hash.IS_CINEMATIC_CAM_INPUT_ACTIVE);
             }
