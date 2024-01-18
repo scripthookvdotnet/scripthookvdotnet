@@ -69,7 +69,15 @@ jobs:
         $robocopy_process = Start-Process "robocopy" -ArgumentList ". bin\Release README.md ScriptHookVDotNet.ini.example.txt LICENSE.txt COPYRIGHT.md THIRD-PARTY-NOTICES.md" -PassThru -Wait
         if ($robocopy_process.ExitCode -ne 1) { exit 1 }
         cd bin\Release `
-        && Get-ChildItem -File -Filter *.md | Rename-Item -NewName { $_.Name -replace '.md','.txt' } `
+        && Get-ChildItem -File -Filter *.md | Rename-Item -NewName { $_.Name -replace '.md','.txt' }
+
+        mkdir "Docs","Licenses"
+        $shvdn_xml_docs_arg = (Get-ChildItem -File -Path "./" | Where-Object { $_.Name -match "^ScriptHookVDotNet[0-9]{1,2}.xml`$" } | ForEach-Object { $_.Name }) -join " "
+        $robocopy_process = Start-Process "robocopy" -ArgumentList ". Docs ${shvdn_xml_docs_arg} /move" -PassThru -Wait
+        if ($robocopy_process.ExitCode -ne 1) { exit 1 }
+        $robocopy_process = Start-Process "robocopy" -ArgumentList ". Licenses LICENSE.txt COPYRIGHT.txt THIRD-PARTY-NOTICES.txt /move" -PassThru -Wait
+        if ($robocopy_process.ExitCode -ne 1) { exit 1 }
+
         && cd ..\..\ `
         && echo ReloadKeyBinding=None > bin\Release\ScriptHookVDotNet.ini `
         && echo ConsoleKeyBinding=F4 >> bin\Release\ScriptHookVDotNet.ini `
