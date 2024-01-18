@@ -78,7 +78,7 @@ jobs:
         $robocopy_process = Start-Process "robocopy" -ArgumentList ". Licenses LICENSE.txt COPYRIGHT.txt THIRD-PARTY-NOTICES.txt /move" -PassThru -Wait
         if ($robocopy_process.ExitCode -ne 1) { exit 1 }
 
-        && cd ..\..\ `
+        cd ..\..\ `
         && echo ReloadKeyBinding=None > bin\Release\ScriptHookVDotNet.ini `
         && echo ConsoleKeyBinding=F4 >> bin\Release\ScriptHookVDotNet.ini `
         && echo ScriptTimeoutThreshold=5000 >> bin\Release\ScriptHookVDotNet.ini `
