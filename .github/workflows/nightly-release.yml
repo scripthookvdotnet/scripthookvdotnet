@@ -170,7 +170,8 @@ jobs:
           artifact_file_name="${artifact_name}.zip"
           echo "artifact_name=${artifact_name}" >> $GITHUB_ENV
           echo "artifact_filename=${artifact_file_name}" >> $GITHUB_ENV
-          zip -j "$artifact_file_name" ${{ github.workspace }}/bin/Release/*
+          cd "{$GITHUB_WORKSPACE}/bin/Release"
+          zip -r "{$GITHUB_WORKSPACE}/{$artifact_file_name}" *
       - name: Generate Access Token
         uses: actions/create-github-app-token@v1
         id: app-token
