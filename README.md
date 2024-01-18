@@ -25,7 +25,7 @@ For script developers, please note that new APIs included in new nightly builds 
 
 ## Installation
 * Extract all the files in the root folder from the zip file into your game folder except for `README.txt` and `ScriptHookVDotNet.ini.example.txt`.
-    * The XML files in the `Docs` folder are provided solely as API documentation for script developers. The .pdb files are not mandatory to run ScriptHookVDotNet, but they are provided for easier diagnosing.
+    * The XML files in the `Docs` folder are provided solely as API documentation for script developers.
 
 ## Contributing
 
