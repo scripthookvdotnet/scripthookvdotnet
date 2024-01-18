@@ -66,7 +66,7 @@ jobs:
     - name: Put misc files for packing
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        $robocopy_process = Start-Process "robocopy" -ArgumentList ". bin\Release README.md ScriptHookVDotNet.ini.example.txt LICENSE.txt COPYRIGHT.md THIRD-PARTY-NOTICES.md" -PassThru -Wait
+        $robocopy_process = Start-Process "robocopy" -ArgumentList ". bin\Release README.md ScriptHookVDotNet.ini LICENSE.txt COPYRIGHT.md THIRD-PARTY-NOTICES.md" -PassThru -Wait
         if ($robocopy_process.ExitCode -ne 1) { exit 1 }
         cd bin\Release `
         && Get-ChildItem -File -Filter *.md | Rename-Item -NewName { $_.Name -replace '.md','.txt' }
@@ -78,12 +78,7 @@ jobs:
         $robocopy_process = Start-Process "robocopy" -ArgumentList ". Licenses LICENSE.txt COPYRIGHT.txt THIRD-PARTY-NOTICES.txt /move" -PassThru -Wait
         if ($robocopy_process.ExitCode -ne 1) { exit 1 }
 
-        cd ..\..\ `
-        && echo ReloadKeyBinding=None > bin\Release\ScriptHookVDotNet.ini `
-        && echo ConsoleKeyBinding=F4 >> bin\Release\ScriptHookVDotNet.ini `
-        && echo ScriptTimeoutThreshold=5000 >> bin\Release\ScriptHookVDotNet.ini `
-        && echo ScriptsLocation="scripts" >> bin\Release\ScriptHookVDotNet.ini `
-        && echo WarnOfDeprecatedScriptsWithTicker=true >> bin\Release\ScriptHookVDotNet.ini
+        cd ..\..\
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
