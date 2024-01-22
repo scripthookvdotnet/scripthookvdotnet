@@ -11,7 +11,7 @@ using GTA.Native;
 namespace GTA.UI
 {
     /// <summary>
-    /// Methods to manage the display of notifications above the minimap.
+    /// Methods to manage the display of notifications.
     /// </summary>
     public static class Notification
     {
@@ -55,7 +55,7 @@ namespace GTA.UI
         #endregion
 
         /// <summary>
-        /// Displays the ticker message string in the top left of the HUD.
+        /// Displays the ticker message string above the top left of the minimap.
         /// </summary>
         /// <param name="message">
         /// The message body.
@@ -78,7 +78,7 @@ namespace GTA.UI
             return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
-        /// Displays the ticker message string in the top left of the HUD even if feed is paused.
+        /// Displays the ticker message string above the top left of the minimap even if feed is paused.
         /// </summary>
         /// <inheritdoc cref="PostTicker(string, bool, bool)"/>
         public static FeedPost PostTickerForced(string message, bool isImportant, bool cacheMessage = true)
@@ -89,7 +89,7 @@ namespace GTA.UI
             return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
-        /// Displays the ticker message string in the top left of the HUD
+        /// Displays the ticker message string above the top left of the minimap
         /// containing tokens (i.e. <c>~BLIP_INFO_ICON~</c>).
         /// </summary>
         /// <inheritdoc cref="PostTicker(string, bool, bool)"/>
@@ -101,7 +101,7 @@ namespace GTA.UI
             return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
-        /// Displays the text message contact image and localised text message string in the top left of the HUD.
+        /// Displays the text message contact image and localised text message string above the top left of the minimap.
         /// </summary>
         /// <param name="message">
         /// The message body.
