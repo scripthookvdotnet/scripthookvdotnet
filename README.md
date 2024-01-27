@@ -24,7 +24,7 @@ For newer builds, check out the [Nightly Builds](https://github.com/scripthookvd
 For script developers, please note that new APIs included in new nightly builds but not included in any stable versions are subject to change without notice, so it is not advisable to use any of them for public/production builds of your scripts.
 
 ## Installation
-* Extract all the files in the root folder from the zip file into your game folder except for `README.txt` and `ScriptHookVDotNet.ini.example.txt`.
+* Extract all the files in the root folder from the zip file into your game folder except for `README.txt` and the 2 folders.
     * The XML files in the `Docs` folder are provided solely as API documentation for script developers.
 
 ## Contributing
