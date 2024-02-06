@@ -300,7 +300,7 @@ namespace GTA
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> is a boat.
         /// </summary>
-        public bool IsBoat => Type == VehicleType.Motorcycle;
+        public bool IsBoat => Type == VehicleType.Boat;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> is a train.
