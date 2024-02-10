@@ -657,13 +657,11 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 
 #include <Main.h>
 
-// solely for detection for recreation of the game session
-PVOID sOldGameFiber = nullptr;
-
 std::atomic<HANDLE> hClrThread;
-std::atomic<HANDLE> hClrWaitEvent;
-std::atomic<HANDLE> hClrContinueEvent;
+std::atomic<HANDLE> hClrWaitEvent{ nullptr };
+std::atomic<HANDLE> hClrContinueEvent{ nullptr };
 
+std::atomic_bool sClrEventsInitialized(false);
 // proper synchronization with event objects would cause a deadlock or timeout (for executing longer than 2 seconds)
 // in DllMain, so use a bool variable to tell procedures that the asi wants to get freed
 // use atomic_bool to avoid unnecessary optimization, with std::memory_order_seq_cst just in case for a xchg instruction
@@ -673,6 +671,10 @@ std::atomic_bool sClrThreadRequestedToExit(false);
 // (false) stack overflow that can be caused by running managed code in a custom fiber (with a custom fiber data in other words)
 static DWORD ClrThreadProc(LPVOID lparam)
 {
+    while (!sClrEventsInitialized.load(std::memory_order_acquire)) {
+        Sleep(0);
+    }
+
     // DllMain gets called before ScriptHookV starts script fibers, so wait until getting signaled by ScriptMain
     WaitForSingleObject(hClrContinueEvent.load(), INFINITE);
 
@@ -691,6 +693,9 @@ static DWORD ClrThreadProc(LPVOID lparam)
 
     return 0;
 }
+
+// solely for detection for recreation of the game session
+PVOID sOldGameFiber = nullptr;
 
 static void ScriptMain()
 {
@@ -750,15 +755,16 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
     switch (fdwReason)
     {
     case DLL_PROCESS_ATTACH:
+        hClrContinueEvent.store(CreateEvent(NULL, false, false, NULL), std::memory_order_relaxed);
+        hClrWaitEvent.store(CreateEvent(NULL, false, false, NULL), std::memory_order_relaxed);
+        sClrEventsInitialized.store(true, std::memory_order_release);
+
         // Avoid unnecessary DLL_THREAD_ATTACH and DLL_THREAD_DETACH notifications
         DisableThreadLibraryCalls(hModule);
         // Register ScriptHookVDotNet native script
         scriptRegister(hModule, ScriptMain);
         // Register handler for keyboard messages
         keyboardHandlerRegister(ScriptKeyboardMessage);
-
-        hClrContinueEvent.store(CreateEvent(NULL, false, false, NULL));
-        hClrWaitEvent.store(CreateEvent(NULL, false, false, NULL));
 
         // Create a seperate thread to run CLR so in .NET runtime won't panic for (false) stack overflow by a cached stack
         // limit in .NET runtime
@@ -768,7 +774,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
         // .NET exceptions or regular C++ exceptions: https://github.com/scripthookvdotnet/scripthookvdotnet/issues/976
         // The place that may cause the exception: https://github.com/dotnet/coreclr/blob/ef1e2ab328087c61a6878c1e84f4fc5d710aebce/src/vm/excep.cpp#L7763
         // The code for stack space detection: https://github.com/dotnet/coreclr/blob/ef1e2ab328087c61a6878c1e84f4fc5d710aebce/src/vm/threads.cpp#L7912
-        hClrThread = CreateThread(NULL, NULL, ClrThreadProc, NULL, NULL, NULL);
+        hClrThread.store(CreateThread(NULL, NULL, ClrThreadProc, NULL, NULL, NULL), std::memory_order_release);
         break;
     case DLL_PROCESS_DETACH:
         sClrThreadRequestedToExit.store(true);
