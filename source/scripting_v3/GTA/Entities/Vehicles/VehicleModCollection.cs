@@ -31,7 +31,10 @@ namespace GTA
                 {VehicleWheelType.SUV, new Tuple<string, string>("CMOD_WHE1_6", "SUV")},
                 {VehicleWheelType.Tuner, new Tuple<string, string>("CMOD_WHE1_7", "Tuner")},
                 {VehicleWheelType.BennysOriginals, new Tuple<string, string>("CMOD_WHE1_8", "Benny's Originals")},
-                {VehicleWheelType.BennysBespoke, new Tuple<string, string>("CMOD_WHE1_9", "Benny's Bespoke")}
+                {VehicleWheelType.BennysBespoke, new Tuple<string, string>("CMOD_WHE1_9", "Benny's Bespoke")},
+                {VehicleWheelType.OpenWheel, new Tuple<string, string>("CMOD_WHE1_10", "Open Wheel")},
+                {VehicleWheelType.Street, new Tuple<string, string>("CMOD_WHE1_11", "Street")},
+                {VehicleWheelType.Track, new Tuple<string, string>("CMOD_WHE1_12", "Track")}
             });
         #endregion
 
