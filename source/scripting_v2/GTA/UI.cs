@@ -13,7 +13,9 @@ namespace GTA
 {
     public static class UI
     {
-        // These two definitions need to have 'modopt(System.Runtime.CompilerServices.IsConst)'
+        // These two definitions need to have 'modopt(System.Runtime.CompilerServices.IsConst)'.
+        // The project configuration should do the job by disassembling the binary with `ildasm.exe` into
+        // the intermediate language files, adding the attribute in one of them, then reassembling them into the dll.
         public static int WIDTH = 1280;
         public static int HEIGHT = 720;
 

@@ -242,24 +242,20 @@ namespace GTA
         /// <remarks>
         /// This property will return <see langword="null"/> if no script owns this <see cref="Entity"/>.
         /// If some Script Hook V script (including SHVDN) owns this <see cref="Entity"/>, this property should return
-        /// "audiotest" (or "AudioTest").
-        /// If some RAGE Plugin Hook plugin owns this <see cref="Entity"/>, this property should return "RagePluginHook".
+        /// "<c>audiotest</c>" (or "<c>AudioTest</c>").
+        /// If some RAGE Plugin Hook plugin owns this <see cref="Entity"/>, this property should return
+        /// "<c>RagePluginHook</c>".
         /// </remarks>
         public string OwnerScriptName
         {
             get
             {
-                // Get the string address so we can make sure if GET_ENTITY_SCRIPT returns a valid string address
+                // Get the string address so we can make sure if GET_ENTITY_SCRIPT returns a valid string address.
                 // Unfortunately, Function.Call returns the empty string even if the address is null for compatibility
-                // reasons in v3 and v2, while Marshal.PtrToStringUTF8 in .NET Core/5+ returns null in this case
-                // The 2nd argument InstanceId (a pointer value) is eventually always unused, so just set to null
+                // reasons in v3 and v2, while Marshal.PtrToStringUTF8 in .NET Core/5+ returns null in this case.
+                // The 2nd argument InstanceId (a pointer value) is marked as unused, so just set to null.
                 IntPtr strAddr = Function.Call<IntPtr>(Hash.GET_ENTITY_SCRIPT, Handle, null);
-                if (strAddr == IntPtr.Zero)
-                {
-                    return null;
-                }
-
-                return SHVDN.StringMarshal.PtrToStringUtf8(strAddr);
+                return strAddr == IntPtr.Zero ? null : SHVDN.StringMarshal.PtrToStringUtf8(strAddr);
             }
         }
 
@@ -1460,16 +1456,32 @@ namespace GTA
         public bool HasCollidedWithBuildingOrAnimatedBuilding => SHVDN.NativeMemory.HasEntityCollidedWithBuildingOrAnimatedBuilding(Handle);
 
         /// <summary>
-        /// Gets the material this <see cref="Entity"/> is pushing up against.
+        /// Gets the material the entity of which this <see cref="Entity"/> is pushing up against with the largest
+        /// accumulated impulse this frame.
         /// </summary>
         /// <value>
         /// A material hash if this <see cref = "Entity"/> has collision; otherwise, <see cref = "MaterialHash.None"/>.
         /// </value>
         /// <remarks>
-        /// <para>This returns <see cref = "MaterialHash.None"/> in some cases, although this entity is internally considered touched with something.
-        /// For example, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> is a <see cref = "Ped"/> and this <see cref = "Entity"/> doesn't push none of the touching entities, including buildings.
-        /// However, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> touches any ragdolled peds.</para>
-        /// <para>Note that when this <see cref = "Entity"/> is a this <see cref = "Vehicle"/> and only its wheels touches something, the game will consider the entity touching nothing and this returns <see cref = "MaterialHash.None"/>.</para>
+        /// <para>
+        /// Despite this property using <c>GET_LAST_MATERIAL_HIT_BY_ENTITY</c>, it returns the material of the entity
+        /// that this <see cref="Entity"/> is pushing up against with the largest accumulated impulse this frame (among
+        /// all of <c>CEntity</c>s that this <see cref="Entity"/> is pushing up).
+        /// </para>
+        /// <para>
+        /// This returns <see cref = "MaterialHash.None"/> in some cases even if this entity is internally
+        /// pushing up against something.
+        /// For example, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> is
+        /// a <see cref = "Ped"/> and the <see cref = "Entity"/> doesn't push none of the touching entities, including
+        /// static or animated buildings, since the <see cref = "Entity"/> doesn't have any collision records at that
+        /// time.
+        /// However, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> touches any
+        /// ragdolled ped with the largest accumulated impulse.
+        /// </para>
+        /// <para>
+        /// Note that when this <see cref = "Entity"/> is a this <see cref = "Vehicle"/> and its wheels touch something
+        /// but the <see cref = "Vehicle"/> does not, the game will consider the entity touching nothing and this
+        /// returns <see cref = "MaterialHash.None"/>.</para>
         /// </remarks>
         public MaterialHash MaterialCollidingWith => (MaterialHash)Function.Call<uint>(Hash.GET_LAST_MATERIAL_HIT_BY_ENTITY, Handle);
 
