@@ -107,6 +107,18 @@ namespace SHVDN
             PushLongString(str, PushString, maxLengthUtf8);
         }
         /// <summary>
+        /// Splits up a string into manageable components and adds them as text components to the current text command.
+        /// This requires that a text command that accepts multiple text components is active (e.g. "CELL_EMAIL_BCON").
+        /// </summary>
+        /// <param name="str">The string to split up.</param>
+        /// <param name="startPos">The start pos.</param>
+        /// <param name="count">The length to slice string.</param>
+        /// <param name="maxLengthUtf8">The max byte length per chunk in UTF-8.</param>
+        public static void PushLongString(string str, int startPos, int count, int maxLengthUtf8 = 99)
+        {
+            PushLongString(str, PushString, maxLengthUtf8);
+        }
+        /// <summary>
         /// Splits up a string into manageable components and performs an <paramref name="action"/> on them.
         /// </summary>
         /// <param name="str">The string to split up.</param>
@@ -194,6 +206,141 @@ namespace SHVDN
                 action(str.Substring(startPos, str.Length - startPos));
             }
         }
+        /// <summary>
+        /// Splits up a string into manageable components and performs an <paramref name="action"/> on them.
+        /// </summary>
+        /// <param name="str">The string to split up.</param>
+        /// <param name="action">The action to perform on the component.</param>
+        /// <param name="startPos">The start pos.</param>
+        /// <param name="count">The length to slice string.</param>
+        /// <param name="maxLengthUtf8">The max byte length per chunk in UTF-8.</param>
+        public static void PushLongString(string str, Action<string> action, int startPos, int count, int maxLengthUtf8 = 99)
+        {
+            if (str == null || GetByteCountUTF8(str, startPos, count) <= maxLengthUtf8)
+            {
+                action(str);
+                return;
+            }
+
+            int currentUtf8StrLength = 0;
+            int currentIndex = startPos;
+            int endPos = startPos + count;
+            int startPosForStringSlice = startPos;
+
+            while (currentIndex < endPos)
+            {
+                int codePointSize = 0;
+
+                // Calculate the UTF-8 code point size of the current character
+                char chr = str[currentIndex];
+                if (chr < 0x80)
+                {
+                    codePointSize = 1;
+                }
+                else if (chr < 0x800)
+                {
+                    codePointSize = 2;
+                }
+                else if (chr < 0x10000)
+                {
+                    codePointSize = 3;
+                }
+                else
+                {
+                    #region Surrogate check
+                    const int lowSurrogateStart = 0xD800;
+                    const int highSurrogateStart = 0xD800;
+
+                    int temp1 = (int)chr - highSurrogateStart;
+                    if (temp1 >= 0 && temp1 <= 0x7ff)
+                    {
+                        // Found a high surrogate
+                        if (currentIndex < str.Length - 1)
+                        {
+                            int temp2 = str[currentIndex + 1] - lowSurrogateStart;
+                            if (temp2 >= 0 && temp2 <= 0x3ff)
+                            {
+                                // Found a low surrogate
+                                codePointSize = 4;
+                            }
+                        }
+                    }
+                    #endregion
+                }
+
+                if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
+                {
+                    action(str.Substring(startPosForStringSlice, currentIndex - startPosForStringSlice));
+
+                    startPosForStringSlice = currentIndex;
+                    currentUtf8StrLength = 0;
+                }
+                else
+                {
+                    currentIndex++;
+                    currentUtf8StrLength += codePointSize;
+                }
+
+                // Additional increment is needed for surrogate
+                if (codePointSize == 4)
+                {
+                    currentIndex++;
+                }
+            }
+
+            if (startPos == 0)
+            {
+                action(str);
+            }
+            else
+            {
+                action(str.Substring(startPosForStringSlice, str.Length - startPosForStringSlice));
+            }
+        }
+
+        internal static int GetByteCountUTF8(string s, int index, int count)
+        {
+            ThrowIfNull(s);
+            ThrowIfNegative(index);
+            ThrowIfNegative(count);
+            ThrowIfGreaterThan(index, s.Length - count);
+
+            unsafe
+            {
+                fixed (char* pChar = s)
+                {
+                    return Encoding.UTF8.GetByteCount(pChar + index, count);
+                }
+            }
+        }
+
+        public static void ThrowIfGreaterThan<T>(T value, T other, string paramName = null) where T : IComparable<T>
+        {
+            if (value.CompareTo(other) > 0)
+                ThrowGreater(value, other, paramName);
+        }
+
+        public static void ThrowIfNegative(int value, string paramName = null)
+        {
+            if (value < 0)
+                ThrowNegative(value, paramName);
+        }
+
+        public static void ThrowIfNull(object argument, string paramName = null)
+        {
+            if (argument is null)
+            {
+                ThrowArgNull(paramName);
+            }
+        }
+
+        private static void ThrowGreater<T>(T value, T other, string paramName) =>
+            throw new ArgumentOutOfRangeException(paramName, value, $"'{value}' must be less than or equal to '{other}'.");
+
+        private static void ThrowNegative<T>(T value, string paramName) =>
+            throw new ArgumentOutOfRangeException(paramName, value, $"'{value}' must be a non-negative and non-zero value.");
+
+        internal static void ThrowArgNull(string paramName) => throw new ArgumentNullException(paramName);
 
         /// <summary>
         /// Helper function that converts an array of primitive values to a native stack.

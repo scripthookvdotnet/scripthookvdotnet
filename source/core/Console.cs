@@ -21,9 +21,10 @@ namespace SHVDN
     {
         private int _cursorPos = 0;
         private int _commandPos = -1;
-        private int _currentPage = 1;
+        private int _currentLineOffset = 0;
         private bool _isOpen = false;
         private string _input = string.Empty;
+        private List<LineHistoryEntry> _lineHistoryEntry = new();
         private List<string> _lineHistory = new();
         private List<string> _commandHistory; // This must be set via CommandHistory property
         private ConcurrentQueue<string[]> _outputQueue = new();
@@ -31,12 +32,17 @@ namespace SHVDN
         private int _lastClosedTickCount;
         private bool _shouldBlockControls;
         private Task<MethodInfo> _compilerTask;
+
         private const int BaseWidth = 1280;
         private const int BaseHeight = 720;
         private const int ConsoleWidth = BaseWidth;
         private const int ConsoleHeight = BaseHeight / 3;
         private const int InputHeight = 20;
         private const int LinesPerPage = 16;
+
+        private const int OutputBottomHeight = 224;
+
+        private static readonly PointF s_baseOutputLineDrawPos = new PointF((2 / BaseWidth), (0 / BaseHeight));
 
         private static readonly Color s_inputColor = Color.White;
         private static readonly Color s_inputColorBusy = Color.DarkGray;
@@ -202,8 +208,8 @@ namespace SHVDN
         /// </summary>
         public void Clear()
         {
-            _lineHistory.Clear();
-            _currentPage = 1;
+            _lineHistoryEntry.Clear();
+            _currentLineOffset = 0;
         }
 
         /// <summary>
@@ -366,7 +372,10 @@ namespace SHVDN
             {
                 foreach (string line in lines)
                 {
-                    _lineHistory.Add(line);
+                    SetRegularTextStyle();
+                    LineHistoryEntry lineHistory = new LineHistoryEntry(line);
+                    lineHistory.MemoizeTotalLineCount(s_baseOutputLineDrawPos);
+                    _lineHistoryEntry.Add(lineHistory);
                 }
             }
 
@@ -397,25 +406,92 @@ namespace SHVDN
             DrawRect(0, ConsoleHeight, ConsoleWidth, InputHeight, s_altBackgroundColor);
             DrawRect(0, ConsoleHeight + InputHeight, 80, InputHeight, s_altBackgroundColor);
             // Draw input prefix
+            SetRegularTextStyle();
             DrawText(0, ConsoleHeight, "$>", s_prefixColor);
             // Draw input text
+            SetRegularTextStyle();
             DrawText(25, ConsoleHeight, _input, _compilerTask == null ? s_inputColor : s_inputColorBusy);
-            // Draw page information
-            DrawText(5, ConsoleHeight + InputHeight, "Page " + _currentPage + "/" + System.Math.Max(1, ((_lineHistory.Count + (LinesPerPage - 1)) / LinesPerPage)), s_inputColor);
 
             // Draw blinking cursor
             if (nowTickCount % 1000 < 500)
             {
+                SetRegularTextStyle();
                 float lengthBetweenInputStartAndCursor = GetTextLength(_input.Substring(0, _cursorPos)) - GetMarginLength();
                 DrawRect(26 + (lengthBetweenInputStartAndCursor * ConsoleWidth), ConsoleHeight + 2, 2, InputHeight - 4, Color.White);
             }
 
-            // Draw console history text
-            int historyOffset = _lineHistory.Count - (LinesPerPage * _currentPage);
-            int historyLength = historyOffset + LinesPerPage;
-            for (int i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
+            int currentLineOffsetUInt = (int)_currentLineOffset;
+
+            int curLineCount = 0;
+            int prevLineCount = 0;
+            for (int i = _lineHistoryEntry.Count - 1; i >= 0; i--)
             {
-                DrawText(2, (float)((i - historyOffset) * 14), _lineHistory[i], s_outputColor);
+                prevLineCount = curLineCount;
+
+                LineHistoryEntry curHistEntry = _lineHistoryEntry[i];
+                SetRegularTextStyle();
+                int lineCountForCurHistEntry = curHistEntry.MemoizeTotalLineCount(s_baseOutputLineDrawPos);
+
+                if (lineCountForCurHistEntry == 0)
+                {
+                    curLineCount++;
+                    continue;
+                }
+
+                curLineCount += lineCountForCurHistEntry;
+                // check if the current line history would get clipped before the upper side.
+                // Note: the draw command does not seem to draw anything if more than 4 substrings are pushed
+                if (prevLineCount < currentLineOffsetUInt)
+                {
+                    if (curLineCount < currentLineOffsetUInt)
+                    {
+                        continue;
+                    }
+
+                    int lineNumUpperBound = System.Math.Min(lineCountForCurHistEntry - (currentLineOffsetUInt - prevLineCount), lineCountForCurHistEntry);
+                    int lineNumLowerBound = System.Math.Max(lineNumUpperBound - 16, 0);
+                    int lineCountForCurString = lineNumUpperBound - lineNumLowerBound;
+
+                    SetRegularTextStyle();
+                    var aa = curHistEntry.MemoizeLowerSplitPoint(s_baseOutputLineDrawPos, lineNumLowerBound, curHistEntry.FullBody.Length);
+                    SetRegularTextStyle();
+                    var bb = curHistEntry.MemoizeUpperSplitPoint(s_baseOutputLineDrawPos, lineNumUpperBound, curHistEntry.FullBody.Length);
+
+                    // calc start offset correctly!
+                    int drawHeight = -14 * lineCountForCurString + OutputBottomHeight;
+                    SetRegularTextStyle();
+                    DrawText(2, (float)(drawHeight), curHistEntry.FullBody, s_outputColor, aa.Value, lineCountForCurString);
+                }
+                else
+                {
+                    // the current line history will not get clipped before the upper side in this path
+                    int startLineOffsetNum = (prevLineCount - currentLineOffsetUInt);
+
+                    int lineNumUpperBound = lineCountForCurHistEntry;
+                    int lineNumLowerBound = System.Math.Max(lineNumUpperBound - 16, 0);
+                    int lineCountForCurString = lineNumUpperBound - lineNumLowerBound;
+
+                    SetRegularTextStyle();
+                    var aa = curHistEntry.MemoizeLowerSplitPoint(s_baseOutputLineDrawPos, lineNumLowerBound, curHistEntry.FullBody.Length);
+                    SetRegularTextStyle();
+                    var bb = curHistEntry.MemoizeUpperSplitPoint(s_baseOutputLineDrawPos, lineNumUpperBound, curHistEntry.FullBody.Length);
+
+                    // calc start offset correctly!
+                    int drawHeight = -14 * (lineCountForCurString + (int)startLineOffsetNum) + OutputBottomHeight;
+                    SetRegularTextStyle();
+                    DrawText(2, (float)(drawHeight), curHistEntry.FullBody, s_outputColor, aa.Value, lineCountForCurString);
+
+                    if (curLineCount >= currentLineOffsetUInt + LinesPerPage)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // don't let the history go up too much
+            if (_currentLineOffset > 0 && _currentLineOffset >= curLineCount)
+            {
+                _currentLineOffset = (int)curLineCount - 1;
             }
         }
         /// <summary>
@@ -703,18 +779,13 @@ namespace SHVDN
 
         private void PageUp()
         {
-            if (_currentPage < ((_lineHistory.Count + LinesPerPage - 1) / LinesPerPage))
-            {
-                _currentPage++;
-            }
+            // if gone too far, will be corrected in the next frame
+            _currentLineOffset += LinesPerPage;
         }
 
         private void PageDown()
         {
-            if (_currentPage > 1)
-            {
-                _currentPage--;
-            }
+            _currentLineOffset = System.Math.Max(_currentLineOffset - LinesPerPage, 0);
         }
 
         private void GoUpCommandList()
@@ -1129,13 +1200,28 @@ namespace SHVDN
                 color.R, color.G, color.B, color.A);
         }
 
+        private static void SetRegularTextStyle()
+        {
+            unsafe
+            {
+                NativeFunc.Invoke(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0); // Chalet London :>
+                NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
+            }
+        }
+
         private static unsafe void DrawText(float x, float y, string text, Color color)
         {
-            NativeFunc.Invoke(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0); // Chalet London :>
-            NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
             NativeFunc.Invoke(0xBE6B23FFA53FB442 /* SET_TEXT_COLOUR */, color.R, color.G, color.B, color.A);
             NativeFunc.Invoke(0x25FBB336DF1804CB /* BEGIN_TEXT_COMMAND_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
             NativeFunc.PushLongString(text, 99);
+            NativeFunc.Invoke(0xCD015E5BB0D96A57 /* END_TEXT_COMMAND_DISPLAY_TEXT */, (x / BaseWidth), (y / BaseHeight));
+        }
+
+        private static unsafe void DrawText(float x, float y, string text, Color color, int strIndex, int strCount)
+        {
+            NativeFunc.Invoke(0xBE6B23FFA53FB442 /* SET_TEXT_COLOUR */, color.R, color.G, color.B, color.A);
+            NativeFunc.Invoke(0x25FBB336DF1804CB /* BEGIN_TEXT_COMMAND_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
+            NativeFunc.PushLongString(text, strIndex, strCount, 99);
             NativeFunc.Invoke(0xCD015E5BB0D96A57 /* END_TEXT_COMMAND_DISPLAY_TEXT */, (x / BaseWidth), (y / BaseHeight));
         }
 
@@ -1152,8 +1238,6 @@ namespace SHVDN
 
         private static unsafe float GetTextLength(string text)
         {
-            NativeFunc.Invoke(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0);
-            NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
             NativeFunc.Invoke(0x54CE8AC98E120CAB /* BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
             NativeFunc.PushLongString(text, 98); // 99 byte string chunks don't process properly in END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT
             return *(float*)NativeFunc.Invoke(0x85F061DA64ED2F67 /* END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT */, true);
@@ -1165,7 +1249,198 @@ namespace SHVDN
             float len2 = GetTextLength("AA");
             return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
         }
+
+        private static int GetLineCount(string str, float x, float y)
+        {
+            unsafe
+            {
+                NativeFunc.Invoke(0x521FB041D93DD0E4 /* BEGIN_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING */, NativeMemory.CellEmailBcon);
+                NativeFunc.PushLongString(str, 98);
+                return *(int*)NativeFunc.Invoke(0x9040DFB09BE75706 /* END_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING */, x, y);
+            }
+        }
+
+        private static int GetLineCount(string str, float x, float y, int strIndex, int strCount)
+        {
+            unsafe
+            {
+                NativeFunc.Invoke(0x521FB041D93DD0E4 /* BEGIN_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING */, NativeMemory.CellEmailBcon);
+                NativeFunc.PushLongString(str, strIndex, strCount, 98);
+                return *(int*)NativeFunc.Invoke(0x9040DFB09BE75706 /* END_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING */, x, y);
+            }
+        }
+
+        internal sealed class LineHistoryEntry
+        {
+            internal LineHistoryEntry(string fullBody)
+            {
+                FullBody = fullBody;
+            }
+
+            internal string FullBody { get; }
+
+            private int? _totalLineCount = null;
+            private Dictionary<int, int> _splitPoints = new Dictionary<int, int>() { { 0, 0 } };
+
+            internal int? GetTotalLineCount()
+            {
+                return _totalLineCount;
+            }
+            internal int MemoizeTotalLineCount(PointF drawPos)
+            {
+                CalcTotalLineCountIfNotCached(drawPos);
+                return _totalLineCount.GetValueOrDefault();
+            }
+            internal int? MemoizeUpperSplitPoint(PointF drawPos, int targetUpperBoundLineCount, int maxStrLength)
+            {
+                if (_splitPoints.TryGetValue(targetUpperBoundLineCount, out int cachedSplitPoint))
+                {
+                    return cachedSplitPoint;
+                }
+
+                int? aa = BinarySearchHelper.FindUpperBound(
+                    (x) => GetLineCount(FullBody, drawPos.X, drawPos.Y, 0, x) <= targetUpperBoundLineCount,
+                    -1, maxStrLength);
+                if (aa == null)
+                {
+                    return null;
+                }
+
+                int res = aa.GetValueOrDefault() + 1;
+                _splitPoints.Add(targetUpperBoundLineCount, res);
+                return res;
+            }
+            internal int? MemoizeLowerSplitPoint(PointF drawPos, int targetLowerBoundLineCount, int maxStrLength)
+            {
+                if (_splitPoints.TryGetValue(targetLowerBoundLineCount, out int cachedSplitPoint))
+                {
+                    return cachedSplitPoint;
+                }
+
+                int? aa = BinarySearchHelper.FindLowerBound(
+                    (x) => GetLineCount(FullBody, drawPos.X, drawPos.Y, 0, x) >= targetLowerBoundLineCount,
+                    -1, maxStrLength);
+                if (aa == null)
+                {
+                    return null;
+                }
+
+                _splitPoints.Add(targetLowerBoundLineCount, aa.GetValueOrDefault());
+                return aa;
+            }
+
+            internal void InvalidateCache()
+            {
+                _totalLineCount = null;
+                _splitPoints.Clear();
+                _splitPoints.Add(0, 0);
+            }
+
+            private void CalcTotalLineCountIfNotCached(PointF drawPos)
+            {
+                if (_totalLineCount == null)
+                {
+                    int lineCount = GetLineCount(FullBody, drawPos.X, drawPos.Y);
+                    _totalLineCount = lineCount;
+                    _splitPoints.Add(lineCount, FullBody.Length);
+                }
+            }
+        }
     }
+
+    internal static class BinarySearchHelper
+    {
+        /// <summary>
+        /// Finds the upper bound using a predicate where it returns true for the upper bound variable or all
+        /// the values below the bound.
+        /// </summary>
+        /// <param name="pred">
+        /// The predicate to test variables. Must not return <see langword="true"/> for the variable to test if any
+        /// variable below it evaluates to <see langword="false"/>, or this method may return an incorrect value.
+        /// </param>
+        /// <param name="leftEndpoint">
+        /// The left open endpoint. This method will not evaluate <paramref name="pred"/> with this value.
+        /// </param>
+        /// <param name="rightEndpoint">
+        /// The right open endpoint. This method will not evaluate <paramref name="pred"/> with this value.
+        /// </param>
+        /// <returns>
+        /// The largest variable in the range <c>(leftEndpoint, rightEndpoint)</c> such that <c>pred(x)</c> is
+        /// evaluated to <see langword="true"/> if there is any; otherwise, <see langword="null"/>.
+        /// </returns>
+        public static int? FindUpperBound(Func<int, bool> pred, int leftEndpoint, int rightEndpoint)
+        {
+            if (leftEndpoint > rightEndpoint)
+                return null;
+
+            int good = leftEndpoint;
+            int bad = rightEndpoint;
+
+            while ((bad - good) > 1)
+            {
+                int mid = (good + bad) / 2;
+
+                if (pred(mid))
+                {
+                    good = mid;
+                }
+                else
+                {
+                    bad = mid;
+                }
+            }
+
+            return good != leftEndpoint ? good : null;
+        }
+
+        /// <summary>
+        /// Finds the upper bound using a predicate where it returns false for the lower bound variable or all
+        /// the values above the bound.
+        /// </summary>
+        /// <param name="pred">
+        /// The predicate to test variables. Must not return <see langword="false"/> for the variable to test if any
+        /// variable above it evaluates to <see langword="true"/>, or this method may return an incorrect value.
+        /// </param>
+        /// <param name="leftEndpoint">
+        /// The left open endpoint. This method will not evaluate <paramref name="pred"/> with this value.
+        /// </param>
+        /// <param name="rightEndpoint">
+        /// The right open endpoint. This method will not evaluate <paramref name="pred"/> with this value.
+        /// </param>
+        /// <returns>
+        /// The smallest variable in the range <c>(leftEndpoint, rightEndpoint)</c> such that <c>pred(x)</c> is
+        /// evaluated to <see langword="true"/> if there is any; otherwise, <see langword="null"/>.
+        /// </returns>
+        public static int? FindLowerBound(Func<int, bool> pred, int leftEndpoint, int rightEndpoint)
+        {
+            if (leftEndpoint > rightEndpoint)
+                return null;
+
+            int bad = leftEndpoint;
+            int good = rightEndpoint;
+
+            while ((good - bad) > 1)
+            {
+                int mid = (good + bad) / 2;
+
+                if (pred(mid))
+                {
+                    good = mid;
+                }
+                else
+                {
+                    bad = mid;
+                }
+            }
+
+            return good != rightEndpoint ? good : null;
+        }
+    }
+
+    /// <summary>
+    /// Record cache class for total line count and split points calculated by END_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING,
+    /// which may take significant time (like 100 us per call for a string with 700 ASCII characters).
+    /// </summary>
 
     public sealed class ConsoleCommand : Attribute
     {
