@@ -779,7 +779,64 @@ namespace GTA
         /// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="Projectile"/>s.</param>
         public static Projectile[] GetNearbyProjectiles(Vector3 position, float radius)
         {
-            return Array.ConvertAll(SHVDN.NativeMemory.GetProjectileHandles(position.ToInternalFVector3(), radius), handle => new Projectile(handle));
+            return Array.ConvertAll(SHVDN.NativeMemory.GetProjectileHandles(position.ToInternalFVector3(),
+                radius), handle => new Projectile(handle));
+        }
+        /// <summary>
+        /// Gets the closest <see cref="ProjectileRocket"/> to a given position in the World.
+        /// </summary>
+        /// <param name="position">The position to find the nearest <see cref="ProjectileRocket"/>.</param>
+        /// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="ProjectileRocket"/>s.</param>
+        /// <remarks>Returns <see langword="null" /> if no <see cref="ProjectileRocket"/> was in the given region.</remarks>
+        public static ProjectileRocket GetClosestRocketProjectile(Vector3 position, float radius)
+        {
+            return GetClosest(position, GetNearbyRocketProjectiles(position, radius));
+        }
+        /// <summary>
+        /// Gets an <c>array</c> of all <see cref="ProjectileRocket"/>s in the World.
+        /// </summary>
+        public static ProjectileRocket[] GetAllRocketProjectiles()
+        {
+            return Array.ConvertAll(SHVDN.NativeMemory.GetRocketProjectileHandles(), handle => new
+                ProjectileRocket(handle));
+        }
+        /// <summary>
+        /// Gets an <c>array</c> of all <see cref="ProjectileRocket"/>s in a given region in the World.
+        /// </summary>
+        /// <param name="position">The position to check the <see cref="ProjectileRocket"/> against.</param>
+        /// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="ProjectileRocket"/>s.</param>
+        public static ProjectileRocket[] GetNearbyRocketProjectiles(Vector3 position, float radius)
+        {
+            return Array.ConvertAll(SHVDN.NativeMemory.GetRocketProjectileHandles(position.ToInternalFVector3(),
+                radius), handle => new ProjectileRocket(handle));
+        }
+        /// <summary>
+        /// Gets the closest <see cref="ProjectileThrown"/> to a given position in the World.
+        /// </summary>
+        /// <param name="position">The position to find the nearest <see cref="ProjectileThrown"/>.</param>
+        /// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="ProjectileThrown"/>s.</param>
+        /// <remarks>Returns <see langword="null" /> if no <see cref="ProjectileThrown"/> was in the given region.</remarks>
+        public static ProjectileThrown GetClosestThrownProjectile(Vector3 position, float radius)
+        {
+            return GetClosest(position, GetNearbyThrownProjectiles(position, radius));
+        }
+        /// <summary>
+        /// Gets an <c>array</c> of all <see cref="ProjectileRocket"/>s in the World.
+        /// </summary>
+        public static ProjectileThrown[] GetAllThrownProjectiles()
+        {
+            return Array.ConvertAll(SHVDN.NativeMemory.GetThrownProjectileHandles(), handle
+                => new ProjectileThrown(handle));
+        }
+        /// <summary>
+        /// Gets an <c>array</c> of all <see cref="ProjectileThrown"/>s in a given region in the World.
+        /// </summary>
+        /// <param name="position">The position to check the <see cref="ProjectileThrown"/> against.</param>
+        /// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="ProjectileThrown"/>s.</param>
+        public static ProjectileThrown[] GetNearbyThrownProjectiles(Vector3 position, float radius)
+        {
+            return Array.ConvertAll(SHVDN.NativeMemory.GetThrownProjectileHandles(position.ToInternalFVector3(),
+                radius), handle => new ProjectileThrown(handle));
         }
 
         /// <summary>

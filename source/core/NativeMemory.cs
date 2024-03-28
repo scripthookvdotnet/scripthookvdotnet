@@ -682,6 +682,19 @@ namespace SHVDN
             {
                 ProjectileAmmoInfoOffset = *(int*)(address + 8);
             }
+            address = FindPatternBmh("\x0F\x84\xBE\x00\x00\x00\x48\x8B\x0E\x48\x39\x88\x00\x00\x00\x00\x0F\x85\xAE\x00\x00\x00", "xxxxxxxxxxxx??xxxxxxxx");
+            if (address != null)
+            {
+                s_getAsCProjectileRocketConstVFuncOffset = *(int*)(address - 7);
+                s_getAsCProjectileConstVFuncOffset = s_getAsCProjectileRocketConstVFuncOffset - 0x10;
+                s_getAsCProjectileThrownConstVFuncOffset = s_getAsCProjectileRocketConstVFuncOffset + 0x10;
+            }
+            address = FindPatternBmh("\x74\x33\x48\x39\x98\x00\x00\x00\x00\x75\x2A\x48\x8B\x0F\x48\x3B\xCB", "xxxxx??xxxxxxxxxx");
+            if (address != null)
+            {
+                ProjectileRocketTargetOffset = *(int*)(address + 5);
+            }
+
             address = FindPatternBmh("\x39\x70\x10\x75\x17\x40\x84\xED\x74\x09\x33\xD2\xE8", "xxxxxxxxxxxxx");
             if (address != null)
             {
@@ -3762,6 +3775,7 @@ namespace SHVDN
             internal float _radiusSquared;
             internal FVector3? _position;
             internal HashSet<int> _modelHashes;
+            internal Func<IntPtr, bool> _predicate;
             internal int[] _resultHandles = Array.Empty<int>();
 
             #endregion
@@ -3781,11 +3795,18 @@ namespace SHVDN
                 _doModelCheck = true;
                 this._modelHashes = new HashSet<int>(modelHashes);
             }
-            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, FVector3 position, float radiusSquared, int[] modelHashes = null) : this(type, poolAddress)
+            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, Func<IntPtr, bool> predicate) : this(type, poolAddress)
+            {
+                _predicate = predicate;
+            }
+            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, FVector3 position, float radiusSquared,
+                int[] modelHashes = null, Func<IntPtr, bool> predicate = null) : this(type, poolAddress)
             {
                 _doPosCheck = true;
                 this._radiusSquared = radiusSquared;
                 this._position = position;
+
+                _predicate = predicate;
 
                 if (modelHashes == null || modelHashes.Length <= 0)
                 {
@@ -3822,7 +3843,7 @@ namespace SHVDN
                         int projectileCapacity = NativeMemory.GetProjectileCapacity();
                         ulong* projectilePoolAddress = (ulong*)_poolAddress;
 
-                        _resultHandles = GetGuidHandlesFromProjectilePool(fwScriptGuidPool, projectilePoolAddress, projectilesCount, projectileCapacity);
+                        _resultHandles = GetGuidHandlesFromProjectilePool(fwScriptGuidPool, projectilePoolAddress, projectilesCount, projectileCapacity, _predicate);
                         break;
                 }
             }
@@ -3899,7 +3920,8 @@ namespace SHVDN
                 return resultList.ToArray();
             }
 
-            private int[] GetGuidHandlesFromProjectilePool(FwScriptGuidPool* fwScriptGuidPool, ulong* projectilePool, int itemCount, int maxItemCount)
+            private int[] GetGuidHandlesFromProjectilePool(FwScriptGuidPool* fwScriptGuidPool,
+                ulong* projectilePool, int itemCount, int maxItemCount, Func<IntPtr, bool> predicate)
             {
                 int projectilesLeft = itemCount;
                 int projectileCapacity = maxItemCount;
@@ -3927,6 +3949,11 @@ namespace SHVDN
                     }
 
                     if (_doModelCheck && !CheckEntityModel(entityAddress, _modelHashes))
+                    {
+                        continue;
+                    }
+
+                    if (predicate != null && !predicate((IntPtr)entityAddress))
                     {
                         continue;
                     }
@@ -4142,7 +4169,64 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile, new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius);
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+
+            return task._resultHandles;
+        }
+        public static int[] GetRocketProjectileHandles()
+        {
+            if (NativeMemory.s_projectilePoolAddress == null)
+            {
+                return Array.Empty<int>();
+            }
+
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress),
+                address => GetAsCProjectileRocket(address) != IntPtr.Zero);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+
+            return task._resultHandles;
+        }
+        public static int[] GetRocketProjectileHandles(FVector3 position, float radius)
+        {
+            if (NativeMemory.s_projectilePoolAddress == null)
+            {
+                return Array.Empty<int>();
+            }
+
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius,
+                predicate: address => GetAsCProjectileRocket(address) != IntPtr.Zero);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+
+            return task._resultHandles;
+        }
+        public static int[] GetThrownProjectileHandles()
+        {
+            if (NativeMemory.s_projectilePoolAddress == null)
+            {
+                return Array.Empty<int>();
+            }
+
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress),
+                address => GetAsCProjectileThrown(address) != IntPtr.Zero);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+
+            return task._resultHandles;
+        }
+        public static int[] GetThrownProjectileHandles(FVector3 position, float radius)
+        {
+            if (NativeMemory.s_projectilePoolAddress == null)
+            {
+                return Array.Empty<int>();
+            }
+
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius,
+                predicate: address => GetAsCProjectileThrown(address) != IntPtr.Zero);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
             return task._resultHandles;
@@ -5737,9 +5821,93 @@ namespace SHVDN
 
         #endregion
 
+        #region  -- CObject Functions --
+
+        // Although there are non-const variants of `GetAsProjectile*`, the vfuncs will use the same function in
+        // final/production builds (with the function that returns the `this` argument and one that returns null/zero).
+        private static int s_getAsCProjectileConstVFuncOffset;
+        private static int s_getAsCProjectileRocketConstVFuncOffset;
+        private static int s_getAsCProjectileThrownConstVFuncOffset;
+
+        /// <summary>
+        /// Returns the same address as the passed <c>CObject</c> address if the instance is a <c>CProjectile</c> or
+        /// its subclass.
+        /// </summary>
+        /// <param name="cObjectAddress">The <c>CObject</c> address to test.</param>
+        /// <returns>
+        /// The same address as the passed <c>CObject</c> address if the instance is a <c>CProjectile</c> or
+        /// its subclass; otherwise, <see cref="IntPtr.Zero"/>
+        /// </returns>
+        public static IntPtr GetAsCProjectile(IntPtr cObjectAddress)
+        {
+            if (s_getAsCProjectileConstVFuncOffset == 0)
+            {
+                return IntPtr.Zero;
+            }
+
+            ulong vFuncAddr = *(ulong*)(*(ulong*)cObjectAddress + (uint)s_getAsCProjectileConstVFuncOffset);
+            var getAsCProjectileConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(vFuncAddr);
+
+            return getAsCProjectileConstVFunc(cObjectAddress);
+        }
+        /// <summary>
+        /// Returns the same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>.
+        /// </summary>
+        /// <param name="cObjectAddress">The <c>CObject</c> address to test.</param>
+        /// <returns>
+        /// The same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>;
+        /// otherwise, <see cref="IntPtr.Zero"/>
+        /// </returns>
+        public static IntPtr GetAsCProjectileRocket(IntPtr cObjectAddress)
+        {
+            if (s_getAsCProjectileRocketConstVFuncOffset == 0)
+            {
+                return IntPtr.Zero;
+            }
+
+            ulong vFuncAddr = *(ulong*)(*(ulong*)cObjectAddress + (uint)s_getAsCProjectileRocketConstVFuncOffset);
+            var getAsCProjectileRocketConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(vFuncAddr);
+
+            return getAsCProjectileRocketConstVFunc(cObjectAddress);
+        }
+        /// <summary>
+        /// Returns the same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>.
+        /// </summary>
+        /// <param name="cObjectAddress">The <c>CObject</c> address to test.</param>
+        /// <returns>
+        /// The same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>;
+        /// otherwise, <see cref="IntPtr.Zero"/>
+        /// </returns>
+        public static IntPtr GetAsCProjectileThrown(IntPtr cObjectAddress)
+        {
+            if (s_getAsCProjectileThrownConstVFuncOffset == 0)
+            {
+                return IntPtr.Zero;
+            }
+
+            ulong vFuncAddr = *(ulong*)(*(ulong*)cObjectAddress + (uint)s_getAsCProjectileThrownConstVFuncOffset);
+            var getAsCProjectileThrownConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(vFuncAddr);
+
+            return getAsCProjectileThrownConstVFunc(cObjectAddress);
+        }
+
+        public static int GetTargetEntityOfCProjectileRocket(IntPtr cProjectileRocketAddress)
+        {
+            if (ProjectileRocketTargetOffset == 0)
+            {
+                return 0;
+            }
+
+            var targetAddress = new IntPtr(*(long*)(cProjectileRocketAddress + ProjectileRocketTargetOffset));
+            return targetAddress != IntPtr.Zero ? GetEntityHandleFromAddress(targetAddress) : 0;
+        }
+
+        #endregion
+
         #region -- Projectile Offsets --
         public static int ProjectileAmmoInfoOffset { get; }
         public static int ProjectileOwnerOffset { get; }
+        public static int ProjectileRocketTargetOffset { get; }
         #endregion
 
         #region -- Projectile Functions --
