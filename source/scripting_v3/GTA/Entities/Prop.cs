@@ -3,6 +3,7 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
 using SHVDN;
 
 namespace GTA
@@ -51,6 +52,68 @@ namespace GTA
         public new bool Exists()
         {
             return EntityType == EntityType.Prop;
+        }
+
+        /// <summary>
+        /// Get as a <see cref="Projectile"/> instance if this <see cref="Prop"/> is a <see cref="Projectile"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Projectile"/> if the <see cref="Prop"/> exists and is a <see cref="Projectile"/>;
+        /// otherwise, <see langword="null"/>.
+        /// </returns>
+        public Projectile AsProjectile()
+        {
+            IntPtr address = MemoryAddress;
+            if (address == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            // `CObject::GetAsCProjectile` should return the same address if the vfunc is overridden by `CProjectile`'s
+            // implementation and it should return false otherwise
+            return NativeMemory.GetAsCProjectile(address) != address ? null : new Projectile(Handle);
+        }
+
+        /// <summary>
+        /// Get as a <see cref="ProjectileRocket"/> instance if this <see cref="Prop"/> is
+        /// a <see cref="ProjectileRocket"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ProjectileRocket"/> if the <see cref="Prop"/> exists and is a <see cref="ProjectileRocket"/>;
+        /// otherwise, <see langword="null"/>.
+        /// </returns>
+        public ProjectileRocket AsProjectileRocket()
+        {
+            IntPtr address = MemoryAddress;
+            if (address == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            // `CObject::GetAsCProjectileRocket` should return the same address if the vfunc is overridden by
+            // `CProjectileRocket`'s implementation and it should return false otherwise
+            return NativeMemory.GetAsCProjectileRocket(address) != address ? null : new ProjectileRocket(Handle);
+        }
+
+        /// <summary>
+        /// Get as a <see cref="ProjectileThrown"/> instance if this <see cref="Prop"/> is
+        /// a <see cref="ProjectileThrown"/>.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ProjectileThrown"/> if the <see cref="Prop"/> exists and is a <see cref="ProjectileThrown"/>;
+        /// otherwise, <see langword="null"/>.
+        /// </returns>
+        public ProjectileThrown AsProjectileThrown()
+        {
+            IntPtr address = MemoryAddress;
+            if (address == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            // `CObject::GetAsCProjectileThrown` should return the same address if the vfunc is overridden by
+            // `CProjectileThrown`'s implementation and it should return false otherwise
+            return NativeMemory.GetAsCProjectileThrown(address) != address ? null : new ProjectileThrown(Handle);
         }
     }
 }

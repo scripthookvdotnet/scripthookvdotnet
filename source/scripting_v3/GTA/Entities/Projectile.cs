@@ -8,8 +8,7 @@ using System.ComponentModel;
 
 namespace GTA
 {
-    // Actually there's CProjectileRocket and CProjectileThrown, but mark this class as sealed until wrapper classes are implemented for either of them
-    public sealed class Projectile : Prop
+    public class Projectile : Prop
     {
         internal Projectile(int handle) : base(handle)
         {
@@ -91,27 +90,25 @@ namespace GTA
         }
 
         /// <summary>
-        /// Get a <see cref="Projectile"/> instance by its handle
+        /// Get a <see cref="Projectile"/> instance by its handle.
         /// </summary>
-        /// <param name="handle"></param>
-        /// <returns>Null if not found or the entity is not a <see cref="Prop"/>, otherwise, a <see cref="Projectile"/></returns>
+        /// <param name="handle">The handle to test.</param>
+        /// <returns>
+        /// A <see cref="Projectile"/> if the handle is assigned for a <see cref="Projectile"/>;
+        /// otherwise, <see langword="null"/>.
+        /// </returns>
         public static new Projectile FromHandle(int handle)
         {
             IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
-            if (address == IntPtr.Zero || SHVDN.NativeMemory.ReadByte(address + 0x28) != 5)
+            if (address == IntPtr.Zero
+                || (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(address + 0x28) != EntityTypeInternal.Object)
             {
                 return null;
             }
 
-            // We can use some of Rockstar's RTTI info to ensure if this CObject is CProjectile or one of its subclasses
-            // CProjectileRocket and CProjectileThrown also return the hash of CProjectile in this class id function
-            const uint cProjectileNameHash = 0x49DC4195;
-            if (SHVDN.NativeMemory.GetRageClassId(address) != cProjectileNameHash)
-            {
-                return null;
-            }
-
-            return new Projectile(handle);
+            // `CObject::GetAsCProjectile` should return the same address if the vfunc is overridden by `CProjectile`'s
+            // implementation and it should return false otherwise
+            return SHVDN.NativeMemory.GetAsCProjectile(address) != address ? null : new Projectile(handle);
         }
     }
 }
