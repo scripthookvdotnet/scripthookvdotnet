@@ -364,7 +364,7 @@ namespace GTA
         }
         /// <summary>
         /// <para>
-        /// Tasks the <see cref="Ped"/> to stand still for the specified amount of miliseconds.
+        /// Tasks the <see cref="Ped"/> to stand still for the specified amount of milliseconds.
         /// Typically used as a part of <see cref="TaskSequence"/> to add a stand still task (internally <c>CTaskDoNothing</c> will always be issued).
         /// </para>
         /// <para>
@@ -435,7 +435,7 @@ namespace GTA
         }
         /// <summary>
         /// <para>
-        /// Tasks the <see cref="Ped"/> to do nothing for the specified amount of miliseconds.
+        /// Tasks the <see cref="Ped"/> to do nothing for the specified amount of milliseconds.
         /// Typically used as a part of <see cref="TaskSequence"/> to add a delay.
         /// <c>CTaskDoNothing</c> will be issued when this method is called as a standalone task and <c>CTaskPause</c> will be issued when this method is called as a part of <see cref="TaskSequence"/>.
         /// </para>

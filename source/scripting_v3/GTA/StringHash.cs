@@ -13,7 +13,7 @@ namespace GTA
     /// </summary>
     public static class StringHash
     {
-        // Performs ASCII uppercase to ASCII lowercase and backslash to slash conversion, does not perform any convertions to non-ASCII characters.
+        // Performs ASCII uppercase to ASCII lowercase and backslash to slash conversion, does not perform any conversions to non-ASCII characters.
         // Use this table because character conversion with this table performs faster than calculating converted characters using branch jump instructions.
         // The former method is used in GTA5.exe and the latter one is used in GTAIV.exe.
         private static readonly byte[] s_normalizeCaseAndSlashLookup =
@@ -47,11 +47,11 @@ namespace GTA
         /// <summary>
         /// Partially computes a jenkins-one-at-a-time (joaat) hash as an <see langword="uint"/> from a
         /// <see cref="string"/> that contains only ASCII characters. Does not finalize the hash.
-        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes resprectively.
+        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes respectively.
         /// </summary>
         /// <param name="input">A <see cref="string"/> that contains only ASCII characters.</param>
         /// <param name="initValue">The initial value when hashing starts.</param>
-        /// <returns>The patially calculated joaat hash.</returns>
+        /// <returns>The partially calculated joaat hash.</returns>
         /// <remarks>
         /// <para>
         /// The following conversions will be performed before hashing the original string:
@@ -74,7 +74,7 @@ namespace GTA
         /// </item>
         /// </list>
         /// </para>
-        /// 
+        ///
         /// <para>
         /// This method only expects ASCII characters in <paramref name="input"/>.
         /// This is because the lookup table used by the joaat hash function used in <c>GET_HASH_KEY</c> expects
@@ -97,7 +97,7 @@ namespace GTA
         /// <summary>
         /// Partially computes a jenkins-one-at-a-time (joaat) hash as an <see langword="uint"/> from an array of
         /// <see cref="byte"/>. Does not finalize the hash.
-        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes resprectively.
+        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes respectively.
         /// </summary>
         /// <param name="input">An array of <see cref="byte"/>.</param>
         /// <param name="initValue">The initial value when hashing starts.</param>
@@ -147,16 +147,16 @@ namespace GTA
         }
 
         /// <summary>
-        /// Paritally computes a jenkins-one-at-a-time (joaat) hash as an <see langword="uint"/> from
+        /// Partially computes a jenkins-one-at-a-time (joaat) hash as an <see langword="uint"/> from
         /// <paramref name="input"/>. Does not finalize the hash.
         /// <paramref name="input"/> will be converted to a UTF-8 sequence before hashing.
-        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes resprectively.
+        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes respectively.
         /// </summary>
         /// <param name="input">
         /// A <see cref="string"/> to hash. Will be converted to a UTF-8 sequence before hashing.
         /// </param>
         /// <param name="initValue">The initial value when hashing starts.</param>
-        /// <returns>The paritally calculated joaat hash.</returns>
+        /// <returns>The partially calculated joaat hash.</returns>
         /// <remarks>
         /// The following conversions will be performed before hashing the original string:
         /// <list type="bullet">
@@ -191,7 +191,7 @@ namespace GTA
         /// <summary>
         /// Computes a jenkins-one-at-a-time (joaat) hash as an <see langword="uint"/> from a <see cref="string"/> that
         /// contains only ASCII characters.
-        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes resprectively.
+        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes respectively.
         /// </summary>
         /// <param name="input">A <see cref="string"/> that contains only ASCII characters.</param>
         /// <param name="initValue">The initial value when hashing starts.</param>
@@ -218,7 +218,7 @@ namespace GTA
         /// </item>
         /// </list>
         /// </para>
-        /// 
+        ///
         /// <para>
         /// This method only expects ASCII characters in <paramref name="input"/>.
         /// This is because the lookup table used by the joaat hash function used in <c>GET_HASH_KEY</c> expects
@@ -234,7 +234,7 @@ namespace GTA
         /// <summary>
         /// Computes a jenkins-one-at-a-time (joaat) hash as an <see langword="uint"/> from an array of
         /// <see cref="byte"/>.
-        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes resprectively.
+        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes respectively.
         /// </summary>
         /// <param name="input">An array of <see cref="byte"/>.</param>
         /// <param name="initValue">The initial value when hashing starts.</param>
@@ -266,7 +266,7 @@ namespace GTA
         /// <summary>
         /// Computes a jenkins-one-at-a-time (joaat) hash as an <see langword="uint"/> from <paramref name="input"/>.
         /// <paramref name="input"/> will be converted to a UTF-8 sequence before hashing.
-        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes resprectively.
+        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes respectively.
         /// </summary>
         /// <param name="input">
         /// A <see cref="string"/> to hash. Will be converted to a UTF-8 sequence before hashing.

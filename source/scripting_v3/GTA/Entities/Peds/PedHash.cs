@@ -25,11 +25,11 @@ namespace GTA
         AmandaTownley = 1830688247u,
         Andreas = 1206185632u,
         /// <summary>
-        /// The first in-game model of Andre Romelle Young, known professionally as Dr. Dre.
+        /// The first in-game model of Andre Romell Young, known professionally as Dr. Dre.
         /// </summary>
         ARY = 3473698871u,
         /// <summary>
-        /// The second in-game model of Andre Romelle Young, known professionally as Dr. Dre.
+        /// The second in-game model of Andre Romell Young, known professionally as Dr. Dre.
         /// </summary>
         ARY02 = 2275358319u,
         Ashley = 2129936603u,
@@ -277,11 +277,11 @@ namespace GTA
         AnitaCutscene = 117698822u,
         AntonCutscene = 2781317046u,
         /// <summary>
-        /// The first cutscene model of Andre Romelle Young, known professionally as Dr. Dre.
+        /// The first cutscene model of Andre Romell Young, known professionally as Dr. Dre.
         /// </summary>
         ARYCutscene = 3059505486u,
         /// <summary>
-        /// The second cutscene model of Andre Romelle Young, known professionally as Dr. Dre.
+        /// The second cutscene model of Andre Romell Young, known professionally as Dr. Dre.
         /// </summary>
         ARY02Cutscene = 3927407837u,
         AshleyCutscene = 650367097u,

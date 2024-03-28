@@ -34,7 +34,7 @@ namespace GTA
         /// </summary>
         WarpIfDoorIsBlocked = 512,
         /// <summary>
-        /// Jump out of the vehicle regardness of its speed.
+        /// Jump out of the vehicle regardless of its speed.
         /// </summary>
         BailOut = 4096,
         /// <summary>

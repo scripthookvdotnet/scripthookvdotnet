@@ -525,7 +525,7 @@ namespace GTA.Chrono
         /// <summary>
         /// Returns a new Double value that's the result of dividing <paramref name="d1"/> by <paramref name="d2"/>.
         /// </summary>
-        /// <param name="d1">The divident or the value to be divided.</param>
+        /// <param name="d1">The dividend or the value to be divided.</param>
         /// <param name="d2">The value to be divided by.</param>
         /// <returns>
         /// A new value that represents result of dividing <paramref name="d1"/> by the value of

@@ -14,7 +14,7 @@ namespace GTA
     /// <c>clip_sets.ymt</c> or <c>clip_sets.xml</c> files (you can request clip sets with <see cref="ClipSet"/>).
     /// </summary>
     /// <remarks>
-    /// Alghough some natives have the string "ANIM_DICT" but there's no ones that have "CLIP_DICT" on the other hand,
+    /// Although some natives have the string "ANIM_DICT" but there's no ones that have "CLIP_DICT" on the other hand,
     /// GTA V doesn't have game classes for animation dictionaries different from clip dictionaries
     /// while the exe has <c>rage::crClipDictionary</c> and <c>rage::fwClipDictionaryStore</c> classes.
     /// </remarks>

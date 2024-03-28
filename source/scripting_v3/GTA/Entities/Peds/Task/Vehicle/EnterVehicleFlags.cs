@@ -17,7 +17,7 @@ namespace GTA
     {
         None = 0,
         /// <summary>
-        /// Resume the enter vehicle task even if the task is interupted (bumped, shot).
+        /// Resume the enter vehicle task even if the task is interrupted (bumped, shot).
         /// </summary>
         ResumeIfInterupted = 1,
         /// <summary>

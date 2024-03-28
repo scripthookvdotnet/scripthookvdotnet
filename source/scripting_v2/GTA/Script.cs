@@ -221,7 +221,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets the minumum interval in ms between <see cref="Tick"/> for this <see cref="Script"/>.
+        /// Gets or sets the minimum interval in ms between <see cref="Tick"/> for this <see cref="Script"/>.
         /// Default value is 0 meaning the event will execute once each frame.
         /// </summary>
         protected int Interval

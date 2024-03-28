@@ -468,8 +468,8 @@ namespace GTA.Math
         /// Affine translation will be set to none, which is the same as that of <see cref="Identity"/>.
         /// The result will be a bit inaccurate than <see cref="Inverse()"/>.
         /// <para>
-        /// Idential to how <c>rage::Matrix44::FastInverse(rage::Matrix44 *this, rage::Matrix44 const &amp;m)</c>
-        /// calculates, where the prameter <c>m</c> is the source matrix and the prameter <c>this</c> is the
+        /// Identical to how <c>rage::Matrix44::FastInverse(rage::Matrix44 *this, rage::Matrix44 const &amp;m)</c>
+        /// calculates, where the prameter <c>m</c> is the source matrix and the parameter <c>this</c> is the
         /// destination matrix.
         /// </para>
         /// </remarks>

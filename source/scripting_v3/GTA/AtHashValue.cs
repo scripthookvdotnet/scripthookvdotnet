@@ -82,7 +82,7 @@ namespace GTA
         /// <summary>
         /// Computes an <see cref="AtHashValue"/> from a <see cref="string"/>.
         /// <paramref name="input"/> will be converted to a UTF-8 sequence before hashing.
-        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes resprectively.
+        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes respectively.
         /// </summary>
         /// <param name="input">
         /// A <see cref="string"/> to hash. Will be converted to a UTF-8 sequence before hashing.
@@ -125,7 +125,7 @@ namespace GTA
         /// </summary>
         /// <param name="other">
         /// A struct that represents a jenkins-one-at-a-time hash to compare to this instance, where certain ASCII
-        /// characters of the original string are converted to other chracters in a certain manner.
+        /// characters of the original string are converted to other characters in a certain manner.
         /// </param>
         /// <returns>
         /// <see langword="true"/> if the current object is equal to <paramref name="other"/>; otherwise,

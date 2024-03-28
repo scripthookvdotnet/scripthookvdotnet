@@ -65,7 +65,7 @@ namespace GTA
         /// If the corresponding bone is not found, the <see cref="EntityBone.Index"/> of the returned instance will return <c>-1</c>.
         /// </para>
         /// <para>
-        /// This method will try to find the corresponding bone by the hash calcutated with <c>(ElfHashUppercased(string) % 0xFE8F + 0x170)</c>,
+        /// This method will try to find the corresponding bone by the hash calculated with <c>(ElfHashUppercased(string) % 0xFE8F + 0x170)</c>,
         /// where <c>ElfHashUppercased(string)</c> will convert ASCII lowercase characters to uppercase ones before hashing characters.
         /// </para>
         /// </summary>

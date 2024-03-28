@@ -11,7 +11,7 @@
 
 LPVOID sTlsContextAddrOfGameMainThread = nullptr;
 DWORD sGameMainThreadId = 0;
-std::mutex sGameMainThradVarsMutex;
+std::mutex sGameMainThreadVarsMutex;
 
 // Use atomic to guarantee its visibility
 // Script domain should be reloaded as soon as getting requested to reload, so this should be used with std::memory_order_seq_cst
@@ -31,7 +31,7 @@ static LPVOID GetTlsContextAddrOfGameMainThread()
 {
     LPVOID val;
     {
-        std::lock_guard<std::mutex> lock(sGameMainThradVarsMutex);
+        std::lock_guard<std::mutex> lock(sGameMainThreadVarsMutex);
         val = sTlsContextAddrOfGameMainThread;
     }
     return val;
@@ -40,7 +40,7 @@ static DWORD GetGameMainThreadId()
 {
     DWORD val;
     {
-        std::lock_guard<std::mutex> lock(sGameMainThradVarsMutex);
+        std::lock_guard<std::mutex> lock(sGameMainThreadVarsMutex);
         val = sGameMainThreadId;
     }
     return val;
@@ -288,7 +288,7 @@ public:
     }
 };
 
-// This is for internel use, so use a System.Array for faster iteration
+// This is for internal use, so use a System.Array for faster iteration
 static ValueTuple<array<WinForms::Keys>^, InvalidKeysFoundError^> ParseKeyBinding(String^ input)
 {
     InvalidKeysFoundErrorBuilder^ errorBuilder = nullptr;
@@ -702,7 +702,7 @@ static void ScriptMain()
     // We need these info to swap the TLS context of the main thread when necessary to access a lot of game stuff
     // such as a rage::SysMemAllocator instance
     {
-        std::lock_guard<std::mutex> lock(sGameMainThradVarsMutex);
+        std::lock_guard<std::mutex> lock(sGameMainThreadVarsMutex);
         sTlsContextAddrOfGameMainThread = GetTlsContext();
         sGameMainThreadId = GetCurrentThreadId();
     }
@@ -766,7 +766,7 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
         // Register handler for keyboard messages
         keyboardHandlerRegister(ScriptKeyboardMessage);
 
-        // Create a seperate thread to run CLR so in .NET runtime won't panic for (false) stack overflow by a cached stack
+        // Create a separate thread to run CLR so in .NET runtime won't panic for (false) stack overflow by a cached stack
         // limit in .NET runtime
         // ScriptHookV runs script fibers in the main thread, but our managed code needs to run in without a fiber data
         // to avoid (false) stack overflow exceptions

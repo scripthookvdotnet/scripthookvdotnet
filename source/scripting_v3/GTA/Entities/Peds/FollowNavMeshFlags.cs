@@ -66,8 +66,8 @@ namespace GTA
         /// </summary>
         DontAvoidPeds = 2048,
         /// <summary>
-        /// If target pos is inside the boundingbox of an object it will otherwise be pushed out.
-        /// This flag should be used with extreme caution. Use only if asked specificly to use this.
+        /// If target pos is inside the bounding box of an object it will otherwise be pushed out.
+        /// This flag should be used with extreme caution. Use only if asked specifically to use this.
         /// </summary>
         DontAdjustTargetPosition = 4096,
         /// <summary>

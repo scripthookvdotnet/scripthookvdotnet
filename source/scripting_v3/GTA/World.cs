@@ -2208,7 +2208,7 @@ namespace GTA
         /// <param name="drawOnEntity">if set to <see langword="true" /> draw on any <see cref="Entity"/> that intersects the marker.</param>
         /// <remarks>
         /// There is no overload that takes <see cref="Nullable{T}"/> <see cref="TextureAsset"/> as a default
-        /// parameter, since trying to provide one will result in ambiguious call resolution.
+        /// parameter, since trying to provide one will result in ambiguous call resolution.
         /// </remarks>
         public static void DrawMarker(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale, Color color, bool bobUpAndDown = false, bool faceCamera = false, bool rotateY = false, string textueDict = null, string textureName = null, bool drawOnEntity = false)
         {

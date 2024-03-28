@@ -405,7 +405,7 @@ namespace GTA
             }
         }
         /// <summary>
-        /// Gets or sets the suspention health.
+        /// Gets or sets the suspension health.
         /// </summary>
         public float Health
         {
@@ -672,7 +672,7 @@ namespace GTA
             SHVDN.NativeMemory.Vehicle.BurstTireOnRim(address, Vehicle.MemoryAddress);
         }
 
-        // Property doesn't make much sense for hydraulic suspention raise factor,
+        // Property doesn't make much sense for hydraulic suspension raise factor,
         // as `SET_HYDRAULIC_SUSPENSION_RAISE_FACTOR` implicitly changes some other lowrider control states on
         // a `CWheel` and `CVehicle` if the native successfully changes the raise factor
         /// <summary>

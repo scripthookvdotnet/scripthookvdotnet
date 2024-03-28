@@ -68,7 +68,7 @@ namespace ScriptHookVDotNet_APIv3_Tests.Math
             EqualsApprox(actual, expected, 1e-5f);
         }
 
-        public static TheoryData<Plane, Plane, Plane, Vector3> Intersect3_Sucessful_Data =>
+        public static TheoryData<Plane, Plane, Plane, Vector3> Intersect3_Successful_Data =>
             new TheoryData<Plane, Plane, Plane, Vector3>
             {
                 {
@@ -90,7 +90,7 @@ namespace ScriptHookVDotNet_APIv3_Tests.Math
             };
 
         [Theory]
-        [MemberData(nameof(Intersect3_Sucessful_Data))]
+        [MemberData(nameof(PlaneTests.Intersect3_Successful_Data))]
         public void Intersect3_successfully_calculates_intersection_if_determinant_of_3_planes_is_nonzero(
             Plane a, Plane b, Plane c, Vector3 expected)
         {

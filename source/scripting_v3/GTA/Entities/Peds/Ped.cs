@@ -1263,7 +1263,7 @@ namespace GTA
         /// Gets the vehicle weapon this <see cref="Ped"/> is using on <see cref="CurrentVehicle"/>.
         /// </summary>
         /// <returns>
-        /// The vehicle weapon this <see cref="Ped"/> is currently using ifsuccessfully found a vehicle weapon;
+        /// The vehicle weapon this <see cref="Ped"/> is currently using if successfully found a vehicle weapon;
         /// otherwise, <see cref="VehicleWeaponHash.Invalid"/>
         /// </returns>
         /// <remarks>
@@ -2371,7 +2371,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets how far the perhiperal vision of this <see cref="Ped"/> extends.
+        /// Gets or sets how far the peripheral vision of this <see cref="Ped"/> extends.
         /// </summary>
         public float VisualFieldPeripheralRange
         {

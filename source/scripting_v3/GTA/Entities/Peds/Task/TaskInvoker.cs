@@ -93,7 +93,7 @@ namespace GTA
         /// </param>
         public void Jump(bool doSuperJump, bool useFullSuperJumpForce)
         {
-            // 2nd arugment is unused
+            // 2nd argument is unused
             Function.Call(Hash.TASK_JUMP, _ped.Handle, false, doSuperJump, useFullSuperJumpForce);
         }
 
@@ -107,7 +107,7 @@ namespace GTA
         /// </remarks>
         public void Climb()
         {
-            // 2nd arugment is unused
+            // 2nd argument is unused
             Function.Call(Hash.TASK_CLIMB, _ped.Handle, true);
         }
 
@@ -271,7 +271,7 @@ namespace GTA
         /// <param name="blendInDuration">
         /// The blend time in second. Zero or negative value will make the <see cref="Ped"/> into melee instantly
         /// from the previous motion such as walking.
-        /// To presicely mimic how long general game code blends a <see cref="Ped"/> into melee, use <c>0.25f</c>.
+        /// To precisely mimic how long general game code blends a <see cref="Ped"/> into melee, use <c>0.25f</c>.
         /// </param>
         /// <param name="strafePhaseSync">
         /// <para>
@@ -888,7 +888,7 @@ namespace GTA
 
         /// <summary>
         /// <para>
-        /// Tasks the <see cref="Ped"/> to do nothing for the specified amount of miliseconds.
+        /// Tasks the <see cref="Ped"/> to do nothing for the specified amount of milliseconds.
         /// Typically used as a part of <see cref="TaskSequence"/> to add a delay.
         /// <c>CTaskDoNothing</c> will be issued when this method is called as a standalone task and <c>CTaskPause</c> will be issued when this method is called as a part of <see cref="TaskSequence"/>.
         /// </para>
@@ -910,7 +910,7 @@ namespace GTA
 
         /// <summary>
         /// <para>
-        /// Tasks the <see cref="Ped"/> to stand still for the specified amount of miliseconds.
+        /// Tasks the <see cref="Ped"/> to stand still for the specified amount of milliseconds.
         /// Typically used as a part of <see cref="TaskSequence"/> to add a stand still task (internally <c>CTaskDoNothing</c> will always be issued).
         /// </para>
         /// <para>

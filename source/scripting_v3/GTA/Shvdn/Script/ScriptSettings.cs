@@ -108,10 +108,10 @@ namespace GTA
         {
             var result = new Dictionary<string, List<Tuple<string, string>>>(StringComparer.Ordinal);
 
-            foreach (KeyValuePair<string, Dictionary<string, List<string>>> sectonAndKeyValuePairs in _values)
+            foreach (KeyValuePair<string, Dictionary<string, List<string>>> sectionAndKeyValuePairs in _values)
             {
-                string sectionName = sectonAndKeyValuePairs.Key;
-                foreach (KeyValuePair<string, List<string>> keyValuePairs in sectonAndKeyValuePairs.Value)
+                string sectionName = sectionAndKeyValuePairs.Key;
+                foreach (KeyValuePair<string, List<string>> keyValuePairs in sectionAndKeyValuePairs.Value)
                 {
                     string keyName = keyValuePairs.Key;
                     List<string> valueList = keyValuePairs.Value;

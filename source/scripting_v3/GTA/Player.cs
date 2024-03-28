@@ -516,7 +516,7 @@ namespace GTA
         /// <remarks>
         /// The game will set to zero when this <see cref="Player"/> is spotted by the police each frame,
         /// but you can set small value (but not zero) to clear the wanted level when the <see cref="Player"/> is in the hidden evasion phase
-        /// if not supressed by <c>SUPPRESS_LOSING_WANTED_LEVEL_IF_HIDDEN_THIS_FRAME</c>.
+        /// if not suppressed by <c>SUPPRESS_LOSING_WANTED_LEVEL_IF_HIDDEN_THIS_FRAME</c>.
         /// </remarks>
         public int TimeHiddenEvasionStarted
         {
@@ -838,7 +838,7 @@ namespace GTA
         /// </summary>
         /// <param name="absoluteAmount">The absolute amount.</param>
         /// <param name="ignoreActive">
-        /// If <see langword="true"/>, thid method will do nothing if the special ability is active.
+        /// If <see langword="true"/>, this method will do nothing if the special ability is active.
         /// </param>
         public void ChargeSpecialAbility(int absoluteAmount, bool ignoreActive)
         {
@@ -852,7 +852,7 @@ namespace GTA
         /// </summary>
         /// <param name="normalizedRatio">The amount between <c>0.0f</c> and <c>1.0f</c></param>
         /// <param name="ignoreActive">
-        /// If <see langword="false"/>, thid method will do nothing if the special ability is active.
+        /// If <see langword="false"/>, this method will do nothing if the special ability is active.
         /// </param>
         public void ChargeSpecialAbility(float normalizedRatio, bool ignoreActive)
         {
@@ -865,7 +865,7 @@ namespace GTA
         /// Refills the special ability for this <see cref="Player"/>.
         /// </summary>
         /// <param name="ignoreActive">
-        /// If <see langword="false"/>, thid method will do nothing if the special ability is active.
+        /// If <see langword="false"/>, this method will do nothing if the special ability is active.
         /// </param>
         public void RefillSpecialAbility(bool ignoreActive)
         {

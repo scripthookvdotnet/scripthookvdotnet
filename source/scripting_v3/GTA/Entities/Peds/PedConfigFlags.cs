@@ -346,7 +346,7 @@ namespace GTA
         /// <remarks>
         /// The original name is <c>CPED_CONFIG_FLAG_Avoidance_Ignored_by_All</c> in the exe.
         /// </remarks>
-        AvoidanceIgnoredbyAll = 203,
+        AvoidanceIgnoredByAll = 203,
         /// <summary>
         /// True if the <see cref="Ped"/> steer around other <see cref="Ped"/>s that are members of group 1.
         /// </summary>
@@ -508,7 +508,7 @@ namespace GTA
         AvoidTearGas = 279,
         StoppedSpeechUponFreezing = 280,
         /// <summary>
-        /// If set, CPed::DAMAGED_GOTOWRITHE will no longer get set.  In particular, tazer hits wil no longer kill the <see cref="Ped"/> in one hit.
+        /// If set, CPed::DAMAGED_GOTOWRITHE will no longer get set. In particular, tazer hits will no longer kill the <see cref="Ped"/> in one hit.
         /// </summary>
         DisableGoToWritheWhenInjured = 281,
         /// <summary>

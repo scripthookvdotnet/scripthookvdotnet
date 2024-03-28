@@ -48,7 +48,7 @@ namespace GTA
             "RADIO_OFF"
         };
 
-        // Performs ASCII uppercase to ASCII lowercase and backslash to slash conversion, does not perform any convertions to non-ASCII characters.
+        // Performs ASCII uppercase to ASCII lowercase and backslash to slash conversion, does not perform any conversions to non-ASCII characters.
         // Use this table because character conversion with this table performs faster than calculating converted characters using branch jump instructions.
         // The former method is used in GTA5.exe and the latter one is used in GTAIV.exe.
         private static readonly byte[] s_lookupTableForGetHashKey =

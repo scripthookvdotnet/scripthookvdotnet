@@ -44,7 +44,7 @@ namespace GTA.Graphics
         /// <remarks>
         /// You might want to check if this property returns <see langword="true"/> before calling
         /// <see cref="Request()"/>. If already, you should not want to call <see cref="MarkAsNoLongerNeeded()"/>
-        /// after your script finished using the texutre dictionary.
+        /// after your script finished using the texture dictionary.
         /// Another SHVDN script will crash the game for access violation during some texture
         /// operation if you call <see cref="MarkAsNoLongerNeeded()"/> on a <see cref="Txd"/>
         /// that is loaded before your script tried to use and if the game tries to unload the textures of the texture

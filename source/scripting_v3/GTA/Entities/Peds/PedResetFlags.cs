@@ -462,7 +462,10 @@ namespace GTA
         /// <summary>
         /// Don't target friendly players in MP.
         /// </summary>
-        DisableMPFriendlyLockon = 356,
+        /// <remarks>
+        /// The original name is <c>CPED_RESET_FLAG_DisableMPFriendlyLockon</c> in the exe.
+        /// </remarks>
+        DisableMPFriendlyLockOn = 356,
         /// <summary>
         /// Don't melee kill friendly players in MP.
         /// </summary>

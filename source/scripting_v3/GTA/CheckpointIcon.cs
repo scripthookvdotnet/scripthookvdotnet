@@ -54,8 +54,17 @@ namespace GTA
         //CylinderCustomShape,
         //CylinderCustomShape2,
         //CylinderCustomShape3,
+        /// <remarks>
+        /// Should have been <c>Cylinder</c> but the name is kept for compatibility reasons.
+        /// </remarks>
         Cyclinder = 47,
+        /// <remarks>
+        /// Should have been <c>Cylinder2</c> but the name is kept for compatibility reasons.
+        /// </remarks>
         Cyclinder2,
+        /// <remarks>
+        /// Should have been <c>Cylinder3</c> but the name is kept for compatibility reasons.
+        /// </remarks>
         Cyclinder3,
     }
 }

@@ -13,6 +13,9 @@ namespace GTA
         ThinChevronUp,
         CheckeredFlagRect,
         CheckeredFlagCircle,
+        /// <summary>
+        /// Vehicle Circle
+        /// </summary>
         VerticleCircle,
         PlaneModel,
         LostMCDark,

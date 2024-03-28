@@ -14,7 +14,7 @@ namespace GTA
         /// </summary>
         Relax = 0,
         /// <summary>
-        /// You can control <see cref="Ped"/>s' ragdoll behaviors by additional configrations. Consider using the <see cref="NaturalMotion.Euphoria"/> class for advanced and easier ragdoll configrations.
+        /// You can control <see cref="Ped"/>s' ragdoll behaviors by additional configurations. Consider using the <see cref="NaturalMotion.Euphoria"/> class for advanced and easier ragdoll configurations.
         /// </summary>
         ScriptControl = 1,
         /// <summary>

@@ -41,7 +41,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the handle for native funtions for vehicle path nodes.
+        /// Gets the handle for native functions for vehicle path nodes.
         /// </summary>
         public int Handle
         {

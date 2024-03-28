@@ -100,7 +100,7 @@ namespace GTA.Chrono
         }
 
         // Use ref values rather than ValueTuple. This method is internal use only and ValueTuple's performance is
-        // noticably worse than returning via ref values, which is different from how ValueTuple is handled in CoreCLR.
+        // noticeably worse than returning via ref values, which is different from how ValueTuple is handled in CoreCLR.
         internal void GetIsoWeekDateRaw(out uint ord, out IsoDayOfWeek weekday)
         {
             uint weekOrd = Ordinal + (uint)Flags.CalcIsoWeekDelta();

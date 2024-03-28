@@ -271,7 +271,7 @@ namespace GTA
                         cur = Game.GetLocalizedString("CMOD_WHE0_1");
                         break;
 
-                    //Bennys
+                    //Benny's
                     case VehicleModType.PlateHolder:
                         cur = Game.GetLocalizedString("CMM_MOD_S0");
                         break;
@@ -432,7 +432,7 @@ namespace GTA
                 }
                 if (cur == string.Empty)
                 {
-                    cur = Type.ToString();  //would only happen if the text isnt loaded
+                    cur = Type.ToString();  //would only happen if the text isn't loaded
                 }
                 return cur;
 

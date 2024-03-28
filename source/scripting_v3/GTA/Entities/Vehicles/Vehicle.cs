@@ -136,7 +136,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Overrides this <see cref="Vehicle"/>'s audio game object with another so the vehicle has different verious
+        /// Overrides this <see cref="Vehicle"/>'s audio game object with another so the vehicle has different various
         /// vehicle sounds such as horn, door, suspension, and start sequences.
         /// </summary>
         /// <param name="gameObjectName">
@@ -146,7 +146,7 @@ namespace GTA
         /// </para>
         /// <para>
         /// Generally accepts the internal game name of the <see cref="Vehicle"/> to source an audio profile from,
-        /// such as "sentinel" or "deluxo". All valilla vehicles use unique game audio objects as of v1.0.2944.0
+        /// such as "sentinel" or "deluxe". All vanilla vehicles use unique game audio objects as of v1.0.2944.0
         /// because none of them have <c>audioNameHash</c> override in vehicles.meta. For mod vehicles, you might
         /// want to check if <c>audioNameHash</c> is overridden.
         /// </para>
@@ -1706,7 +1706,7 @@ namespace GTA
         /// For the setter, it behaves in the same way as <see cref="IsUndriveable"/> except that this setter negates the value.
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the <see cref="Vehicle"/> is not destoryed (<see cref="IsConsideredDestroyed"/>
+        /// <see langword="true"/> if the <see cref="Vehicle"/> is not destroyed (<see cref="IsConsideredDestroyed"/>
         /// returns <see langword="false"/>) and both <see cref="PetrolTankHealth"/> and <see cref="EngineHealth"/> is
         /// greater than 0.0f; otherwise, <see langword="false"/>.
         /// </returns>
@@ -2311,14 +2311,14 @@ namespace GTA
 
         /// <summary>
         /// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
-        /// pick-up magent gadget.
+        /// pick-up magnet gadget.
         /// </summary>
         public bool IsCargobobHookActive()
             => Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle) || Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
 
         /// <summary>
         /// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
-        /// pick-up magent gadget.
+        /// pick-up magnet gadget.
         /// </summary>
         public bool IsCargobobHookActive(CargobobHook hook)
         {
@@ -2481,7 +2481,7 @@ namespace GTA
         /// Attaches this <see cref="Vehicle"/> to a trailer using a trailer attach point instantly.
         /// </summary>
         /// <remarks>
-        /// Requires a <c>CVehicleTrailerAttachPoint</c> to sucessfully attach the <see cref="Vehicle"/> to a trailer.
+        /// Requires a <c>CVehicleTrailerAttachPoint</c> to successfully attach the <see cref="Vehicle"/> to a trailer.
         /// </remarks>
         public void AttachToTrailer(Vehicle trailer, float inverseMassScale = 1f)
             => Function.Call(Hash.ATTACH_VEHICLE_TO_TRAILER, Handle, trailer, inverseMassScale);

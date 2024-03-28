@@ -25,12 +25,12 @@ namespace GTA
         /// </summary>
         StayInEndFrame = 2,
         /// <summary>
-        /// When the animation finishes pop the peds physical reprsentation position to match the visual representations position.
+        /// When the animation finishes pop the peds physical representation position to match the visual representations position.
         /// Note that the animator of the animation must not unwind the animation and must have an independent mover node.
         /// </summary>
         RepositionWhenFinished = 4,
         /// <summary>
-        /// The task cannot be interupted by extenal events.
+        /// The task cannot be interrupted by external events.
         /// </summary>
         NotInterruptable = 8,
         /// <summary>
@@ -39,16 +39,16 @@ namespace GTA
         /// </summary>
         UpperBodyOnly = 16,
         /// <summary>
-        /// The task will run in the secondary task slot. This means it can be used aswell as a movement task (for instance).
+        /// The task will run in the secondary task slot. This means it can be used as well as a movement task (for instance).
         /// </summary>
         Secondary = 32,
         /// <summary>
-        /// When the animation finishes pop the peds physical reprsentation direction to match the visual representations direction.
+        /// When the animation finishes pop the peds physical representation direction to match the visual representations direction.
         /// Note that the animator of the animation must not unwind the animation and must have an independent mover node.
         /// </summary>
         ReorientWhenFinished = 64,
         /// <summary>
-        /// Ends the animation early if the ped attemps to move e.g. if the player tries to move using the controller.
+        /// Ends the animation early if the ped attempts to move e.g. if the player tries to move using the controller.
         /// Can also be used to blend out automatically when an AI ped starts moving by combining it with the <see cref="Secondary"/> flag.
         /// </summary>
         AbortOnPedMovement = 128,
@@ -90,7 +90,7 @@ namespace GTA
         /// <remarks>Tag synchronizer flags are for syncing the anim against ped movement (walking / running / etc).</remarks>
         TagSyncOut = 32768,
         /// <summary>
-        /// Sync all the time (Only usefull to synchronize a partial anim e.g. an upper body).
+        /// Sync all the time (Only useful to synchronize a partial anim e.g. an upper body).
         /// </summary>
         /// <remarks>Tag synchronizer flags are for syncing the anim against ped movement (walking / running / etc).</remarks>
         TagSyncContinuous = 65536,

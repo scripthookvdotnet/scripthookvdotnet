@@ -65,7 +65,7 @@ namespace GTA
         /// <summary>
         /// Computes an <see cref="AtLiteralHashValue"/> from a <see cref="string"/>.
         /// <paramref name="input"/> will be converted to a UTF-8 sequence before hashing.
-        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes resprectively.
+        /// Uppercase letters and backslashes will be converted to lowercase letters and slashes respectively.
         /// </summary>
         /// <param name="input">
         /// A <see cref="string"/> to hash. Will be converted to a UTF-8 sequence before hashing.

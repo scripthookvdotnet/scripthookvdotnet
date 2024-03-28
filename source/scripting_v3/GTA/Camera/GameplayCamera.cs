@@ -253,7 +253,7 @@ namespace GTA
         /// This value will be cleared after a hint is finished.
         /// </para>
         /// </remarks>
-        public static float HintFollowDistanceScaler
+        public static float HintFollowDistanceScalar
         {
             set => Function.Call(Hash.SET_GAMEPLAY_HINT_FOLLOW_DISTANCE_SCALAR, value);
         }

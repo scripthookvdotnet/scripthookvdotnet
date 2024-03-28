@@ -250,7 +250,7 @@ namespace GTA
             get
             {
                 // Get the string address so we can make sure if GET_ENTITY_SCRIPT returns a valid string address
-                // Unfortunately, Fucntion.Call returns the empty string even if the address is null for compatibility
+                // Unfortunately, Function.Call returns the empty string even if the address is null for compatibility
                 // reasons in v3 and v2, while Marshal.PtrToStringUTF8 in .NET Core/5+ returns null in this case
                 // The 2nd argument InstanceId (a pointer value) is eventually always unused, so just set to null
                 IntPtr strAddr = Function.Call<IntPtr>(Hash.GET_ENTITY_SCRIPT, Handle, null);
@@ -1466,7 +1466,7 @@ namespace GTA
         /// A material hash if this <see cref = "Entity"/> has collision; otherwise, <see cref = "MaterialHash.None"/>.
         /// </value>
         /// <remarks>
-        /// <para>This returns <see cref = "MaterialHash.None"/> in some cases, although this enrity is internally considered touched with something.
+        /// <para>This returns <see cref = "MaterialHash.None"/> in some cases, although this entity is internally considered touched with something.
         /// For example, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> is a <see cref = "Ped"/> and this <see cref = "Entity"/> doesn't push none of the touching entities, including buildings.
         /// However, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> touches any ragdolled peds.</para>
         /// <para>Note that when this <see cref = "Entity"/> is a this <see cref = "Vehicle"/> and only its wheels touches something, the game will consider the entity touching nothing and this returns <see cref = "MaterialHash.None"/>.</para>
@@ -1827,7 +1827,7 @@ namespace GTA
         /// </param>
         /// <param name="detachWhenRagdoll">
         /// If <see langword="true"/> and this <see cref="Entity"/> is a <see cref="Ped"/>, the <see cref="Ped"/>
-        /// will be detached when they ragdolls.
+        /// will be detached when they ragdoll.
         /// </param>
         /// <param name="activeCollisions">
         /// Specifies whether the collision of this <see cref="Entity"/> will be left activated for other

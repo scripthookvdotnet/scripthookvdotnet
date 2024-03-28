@@ -49,7 +49,7 @@ namespace GTA.Chrono
         /// <remarks>
         /// <para>
         /// Normalizes the day of the date and the time when getting the current value if they are not normalized.
-        /// For example, "Semptember 47th, 2013 30:64:90" will be normalized to "October 18th, 2013 04:65:30".
+        /// For example, "September 47th, 2013 30:64:90" will be normalized to "October 18th, 2013 04:65:30".
         /// </para>
         /// <para>
         /// The game may get considerably heavier if you set the value to a value with a large year value such as
@@ -106,7 +106,7 @@ namespace GTA.Chrono
         /// <remarks>
         /// <para>
         /// The getter normalizes the day of the date if it is not normalized.
-        /// For example, "Semptember 47th, 2013" will be normalized to "October 17th, 2013".
+        /// For example, "September 47th, 2013" will be normalized to "October 17th, 2013".
         /// </para>
         /// <para>
         /// The setter normalizes the time of day if it is not normalized so the getter will be guaranteed to return
@@ -367,7 +367,7 @@ namespace GTA.Chrono
         }
 
         /// <summary>
-        /// Normalizes an date just like how the game clock normilizes the date if the day value is not normalized.
+        /// Normalizes an date just like how the game clock normalizes the date if the day value is not normalized.
         /// Cannot normalize if month0 is not in the range of 0 to 11 since the method can't determine how many days
         /// to add or subtract.
         /// </summary>
@@ -426,9 +426,9 @@ namespace GTA.Chrono
         }
 
         /// <summary>
-        /// Normalizes an time in the almost same way from how the game clock normilizes the hour, minute, and second
+        /// Normalizes an time in the almost same way from how the game clock normalizes the hour, minute, and second
         /// (which is done by shifting them by one at the same time). Returns the number of day to add for the
-        /// noramlized date.
+        /// normalized date.
         /// </summary>
         private static int NormalizeTime(ref int second, ref int minute, ref int hour)
         {

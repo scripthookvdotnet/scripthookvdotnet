@@ -185,7 +185,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
 
         [Theory]
         [MemberData(nameof(Overflowing_Add_Duration_Data))]
-        public static void Overflowing_subtraction_of_GameClockDuration_returns_the_same_time_as_overflowing_addition_of_negated_duration_and_rnegated_wrapped_days
+        public static void Overflowing_subtraction_of_GameClockDuration_returns_the_same_time_as_overflowing_addition_of_negated_duration_and_negated_wrapped_days
             (GameClockTime origTime, GameClockDuration duration, GameClockTime expectedTime,
             long expectedWrappedDaysForOverflowingAddSigned)
         {

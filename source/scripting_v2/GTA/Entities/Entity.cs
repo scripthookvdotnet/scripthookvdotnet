@@ -685,7 +685,7 @@ namespace GTA
         public bool IsInWater => Function.Call<bool>(Hash.IS_ENTITY_IN_WATER, Handle);
 
         /// <summary>
-        /// Ssets a value indicating whether this <see cref="Entity"/> has gravity.
+        /// Sets a value indicating whether this <see cref="Entity"/> has gravity.
         /// </summary>
         /// <value>
         /// <see langword="true" /> if this <see cref="Entity"/> has gravity; otherwise, <see langword="false" />.

@@ -87,7 +87,7 @@ namespace GTA
         /// <summary>
         /// Gets the number of forward and backward lanes this <see cref="PathNodeLink"/> has.
         /// </summary>
-        /// <returns>The numbers of forward and backward lanes this <see cref="PathNodeLink"/> has if loaded; otherwise, the tuples with both values filled fith zero.</returns>
+        /// <returns>The numbers of forward and backward lanes this <see cref="PathNodeLink"/> has if loaded; otherwise, the tuples with both values filled with zero.</returns>
         public (int forwardLaneCount, int backwardLaneCount) GetForwardAndBackwardLaneCounts()
         {
             GetForwardAndBackwardLaneCounts(out int forwardLaneCount, out int backwardLaneCount);

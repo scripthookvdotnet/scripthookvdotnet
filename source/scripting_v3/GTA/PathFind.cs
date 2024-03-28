@@ -51,7 +51,7 @@ namespace GTA
         /// Gets the closest vehicle <see cref="PathNode"/> among the ones and that meet <paramref name="predicate"/>.
         /// </summary>
         /// <param name="position">The position to check the <see cref="Ped"/> against.</param>
-        /// <param name="radius">The maximun distance from the <paramref name="position"/> to detect <see cref="PathNode"/>s.</param>
+        /// <param name="radius">The maximum distance from the <paramref name="position"/> to detect <see cref="PathNode"/>s.</param>
         /// <param name="predicate">The predicate the node must meet to consider.</param>
         public static PathNode GetClosestVehicleNode(Vector3 position, float radius, Func<VehiclePathNodePropertyFlags, bool> predicate = null)
         {
@@ -300,14 +300,14 @@ namespace GTA
         /// <param name="min">The minimum position of the region.</param>
         /// <param name="max">The maximum position of the region.</param>
         /// <param name="active">
-        /// Specifies wheter ped nodes in area should be switched on or off. If <see langword="true"/>, they will be
+        /// Specifies whether ped nodes in area should be switched on or off. If <see langword="true"/>, they will be
         /// switched on.
         /// </param>
         /// <param name="forceAbortCurrentPath">
         /// If <see langword="true"/>, this method will avoid possible stalls by forcing any active pathfinding request
         /// to be aborted before switching ped navmeshes.
         /// Use this if there are reports of this method causing brief hangs waiting for navmesh data to be accessible,
-        /// but be aware that if timing-critical pathfinding is occuring, that it can be interruped by this.
+        /// but be aware that if timing-critical pathfinding is occuring, that it can be interrupted by this.
         /// </param>
         public static void SwitchPedPathsInArea(Vector3 min, Vector3 max, bool active, bool forceAbortCurrentPath) =>
             Function.Call(Hash.SET_PED_PATHS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, forceAbortCurrentPath);
@@ -320,7 +320,7 @@ namespace GTA
         /// If <see langword="true"/>, this method will avoid possible stalls by forcing any active pathfinding request
         /// to be aborted before switching ped navmeshes.
         /// Use this if there are reports of this method causing brief hangs waiting for navmesh data to be accessible,
-        /// but be aware that if timing-critical pathfinding is occuring, that it can be interruped by this.
+        /// but be aware that if timing-critical pathfinding is occuring, that it can be interrupted by this.
         /// </param>
         public static void SetPedPathsBackToOriginal(Vector3 min, Vector3 max, bool forceAbortCurrentPath) =>
             Function.Call(Hash.SET_PED_PATHS_BACK_TO_ORIGINAL, min.X, min.Y, min.Z, max.X, max.Y, max.Z, forceAbortCurrentPath);
@@ -332,7 +332,7 @@ namespace GTA
         /// </summary>
         /// <param name="min">The minimum position of the region.</param>
         /// <param name="max">The maximum position of the region.</param>
-        /// <param name="active">Specifies wheter vehicle nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
+        /// <param name="active">Specifies whether vehicle nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
         public static void SwitchVehicleNodesInArea(Vector3 min, Vector3 max, bool active) => Function.Call(Hash.SET_ROADS_IN_AREA, min.X, min.Y, min.Z, max.X, max.Y, max.Z, active, false);
         /// <summary>
         /// <para>
@@ -347,7 +347,7 @@ namespace GTA
         /// <param name="position1">One of the midpoints of two parallel sides, which should be different from <paramref name="position2"/>.</param>
         /// <param name="position2">One of the midpoints of two parallel sides, which should be different from <paramref name="position1"/>.</param>
         /// <param name="areaWidth">The width of these sides that defines <paramref name="position1"/> and <paramref name="position2"/>.</param>
-        /// <param name="active">Specifies wheter vehicle nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
+        /// <param name="active">Specifies whether vehicle nodes in area should be switched on or off. If <see langword="true"/>, they will be switched on.</param>
         public static void SwitchVehicleNodesInAngledArea(Vector3 position1, Vector3 position2, float areaWidth, bool active)
             => Function.Call(Hash.SET_ROADS_IN_ANGLED_AREA, position1.X, position1.Y, position1.Z, position2.X, position2.Y, position2.Z, areaWidth, false, active, false);
         /// <summary>

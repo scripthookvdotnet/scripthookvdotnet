@@ -399,8 +399,8 @@ namespace GTA.Native
         public static unsafe OutputArgument InitByRef<T>(ref T value) where T : unmanaged
         {
             var outArg = new OutputArgument(sizeof(T));
-            // since the byte size is the same between the passed struct and the strage in the OutputArgument instance,
-            // it is safe to initalize the storage with the passed value
+            // since the byte size is the same between the passed struct and the storage in the OutputArgument instance,
+            // it is safe to initialize the storage with the passed value
             *(T*)(void*)outArg._storage = *(T*)AsPointer(ref value);
 
             return outArg;
@@ -433,7 +433,7 @@ namespace GTA.Native
         /// <summary>
         /// Gets the value of data stored in this <see cref="OutputArgument"/> as a blittable struct without any conversion.
         /// Do not use this method for scripting types defined in the SDK/API such as <see cref="Vector3"/>.
-        /// Use <see cref="GetResult{T}"/> for scipting types instead.
+        /// Use <see cref="GetResult{T}"/> for scripting types instead.
         /// </summary>
         /// <exception cref="NullReferenceException">Thrown when the internal storage is already disposed.</exception>
         public T GetResultAsBlittableStruct<T>() where T : unmanaged => Marshal.PtrToStructure<T>(_storage);
@@ -1964,7 +1964,7 @@ namespace GTA.Native
                 return InstanceCreator<int, T>.Create((int)*value);
             }
 
-            ThrowInvalidCastException_FailedForUnknownScritingType(typeof(T));
+            ThrowInvalidCastException_FailedForUnknownScriptingType(typeof(T));
             return default;
         }
 
@@ -1994,11 +1994,11 @@ namespace GTA.Native
                 return result;
             }
 
-            ThrowInvalidCastException_FailedForUnknownScritingType(type);
+            ThrowInvalidCastException_FailedForUnknownScriptingType(type);
             return null;
         }
 
-        private static void ThrowInvalidCastException_FailedForUnknownScritingType(Type t)
+        private static void ThrowInvalidCastException_FailedForUnknownScriptingType(Type t)
         {
             throw new InvalidCastException(string.Concat($"Unable to cast native value to object of type '{t.FullName}'"));
         }

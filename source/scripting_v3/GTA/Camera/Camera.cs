@@ -394,10 +394,10 @@ namespace GTA
         /// The shake name to apply.
         /// You can find shake names in cameras.ymt, search for <c>camShakeMetadata</c>.
         /// </param>
-        /// <param name="amplitudeScaler">The amplitude of the shaking.</param>
-        public void Shake(string shakeName, float amplitudeScaler)
+        /// <param name="amplitudeScalar">The amplitude of the shaking.</param>
+        public void Shake(string shakeName, float amplitudeScalar)
         {
-            Function.Call(Hash.SHAKE_CAM, Handle, shakeName, amplitudeScaler);
+            Function.Call(Hash.SHAKE_CAM, Handle, shakeName, amplitudeScalar);
         }
 
         /// <summary>
@@ -544,7 +544,7 @@ namespace GTA
 
         /// <summary>
         /// Attaches this <see cref="Camera"/> to a specific bone on a specific <see cref="Vehicle"/>.
-        /// Tthe camera will have both translation and rotation vector components of its transformation matrix match
+        /// The camera will have both translation and rotation vector components of its transformation matrix match
         /// that of <paramref name="vehicleBone"/>.
         /// </summary>
         /// <param name="vehicleBone">The <see cref="Vehicle"/> bone to attach the camera to.</param>

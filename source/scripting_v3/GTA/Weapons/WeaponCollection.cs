@@ -97,7 +97,7 @@ namespace GTA
 
         /// <summary>
         /// Gets the <see cref="WeaponHash"/> associated with the slot hash in the weapon inventory of the owner <see cref="Ped"/>.
-        /// Can fetch the weapon hash faster than <see cref="this[WeaponHash]"/> since the internal weapon inventory array is sorted in acsending order by slot hashes.
+        /// Can fetch the weapon hash faster than <see cref="this[WeaponHash]"/> since the internal weapon inventory array is sorted in ascending order by slot hashes.
         /// </summary>
         /// <param name="slotHash">The slot hash key of the value to get.</param>
         /// <param name="weaponHash">
@@ -115,7 +115,7 @@ namespace GTA
         }
         /// <summary>
         /// Gets the <see cref="Weapon"/> associated with the slot hash in the weapon inventory of the owner <see cref="Ped"/>.
-        /// Can fetch the weapon hash faster than <see cref="this[WeaponHash]"/> since the internal weapon inventory array is sorted in acsending order by slot hashes.
+        /// Can fetch the weapon hash faster than <see cref="this[WeaponHash]"/> since the internal weapon inventory array is sorted in ascending order by slot hashes.
         /// </summary>
         /// <param name="slotHash">The slot hash key of the value to get.</param>
         /// <param name="weapon">

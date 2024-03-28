@@ -242,7 +242,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
                 { GameClockDate.FromYmd(int.MaxValue, 12, 31), GameClockDuration.MinValue, GameClockDate.FromYmd(int.MinValue, 1, 1) },
             };
 
-        public static TheoryData<GameClockDate, GameClockDuration> Add_Duration_Invald_Data =>
+        public static TheoryData<GameClockDate, GameClockDuration> Add_Duration_Invalid_Data =>
             new TheoryData<GameClockDate, GameClockDuration>
             {
                 { GameClockDate.FromYmd(0, 1, 1), GameClockDuration.FromDays(MaxDayFromMinDate) },
@@ -283,7 +283,7 @@ namespace ScriptHookVDotNet_APIv3_Tests
         }
 
         [Theory]
-        [MemberData(nameof(Add_Duration_Invald_Data))]
+        [MemberData(nameof(GameClockDateTests.Add_Duration_Invalid_Data))]
         public void Adding_excessive_duration_fails(GameClockDate date, GameClockDuration duration)
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => date + duration);

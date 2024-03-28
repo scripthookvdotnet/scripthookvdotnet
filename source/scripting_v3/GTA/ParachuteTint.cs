@@ -16,10 +16,16 @@ namespace GTA
         Blue,
         Black,
         Hornet,
+        /// <summary>
+        /// Air Force Chute
+        /// </summary>
         AirFocce,
         Desert,
         Shadow,
         HighAltitude,
+        /// <summary>
+        /// Airborne Chute
+        /// </summary>
         Airbone,
         Sunrise,
     }

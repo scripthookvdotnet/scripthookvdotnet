@@ -194,7 +194,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets the minumum interval in ms between <see cref="Tick"/> for this <see cref="Script"/>.
+        /// Gets or sets the minimum interval in ms between <see cref="Tick"/> for this <see cref="Script"/>.
         /// Default value is 0 meaning the event will execute once each frame.
         /// </summary>
         protected int Interval
@@ -284,7 +284,7 @@ namespace GTA
         /// Spawns a new <see cref="Script"/> instance of the specified type.
         /// </summary>
         /// <remarks>
-        /// You need to call this method on the main script thread so instantiation can suceeed.
+        /// You need to call this method on the main script thread so instantiation can succeed.
         /// Do not call this method in field initializers or your script constructor, and doing so
         /// will result in failure to instantiate a new script instance.
         /// </remarks>

@@ -12,12 +12,12 @@ namespace GTA
         /// <para>Does not increase the crime value without providing a custom crime value.</para>
         /// <para>Does not refocus the search area.</para>
         /// </remarks>
-        PosessionGun,
+        PossessionGun,
         /// <remarks>
         /// <para>Will increase the crime value by 5 when a custom crime value is not provided.</para>
         /// <para>Does not refocus the search area.</para>
         /// </remarks>
-        RunRedlight,
+        RunRedLight,
         /// <remarks>
         /// <para>Will increase the crime value by 5 when a custom crime value is not provided.</para>
         /// <para>Does not refocus the search area.</para>

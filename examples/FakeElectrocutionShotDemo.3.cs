@@ -46,7 +46,7 @@ public class FakeElectrocutionShotDemo : Script
 
     // normal in WeaponSets (priority: 5)
     // NmShotTuningSet is set to normal in WEAPON_STUNGUN config in weapons.meta.
-    private static void StartNormalWeapomNmMessages(Ped ped)
+    private static void StartNormalWeaponNmMessages(Ped ped)
     {
         ConfigureBalanceHelper ConfigureBalanceNM = ped.Euphoria.ConfigureBalance;
         ConfigureBalanceNM.StableLinSpeedThresh = 0.7f;
@@ -489,14 +489,14 @@ public class FakeElectrocutionShotDemo : Script
 
         if (e.KeyCode == System.Windows.Forms.Keys.J)
         {
-            // Switch the player ped to a ragdoll so they can recieve NaturalMotion messages.
+            // Switch the player ped to a ragdoll so they can receive NaturalMotion messages.
             // This method starts a new ragdoll task.
             playerPed.Ragdoll(5000, RagdollType.ScriptControl);
 
             // Send the player ped message so they will move like when a stun gun bullet hits them in the chest
             playerPed.ApplyRelativeForceRelativeOffset(new Vector3(0f, -1.5f, 0f), Vector3.Zero, ForceType.ExternalImpulse, RagdollComponent.Spine3, true, false, false);
             StartShotBaseNmMessages(playerPed);
-            StartNormalWeapomNmMessages(playerPed);
+            StartNormalWeaponNmMessages(playerPed);
             StartShotElectrocuteMessages(playerPed);
         }
         else if (e.KeyCode == System.Windows.Forms.Keys.K)

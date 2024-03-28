@@ -19,7 +19,7 @@ namespace GTA
         Performing = 1,
         /// <summary>
         /// The task is dormant because it's temporarily interrupted by some events or other tasks.
-        /// Eg. When the <see cref="Ped"/> is srumbling since another <see cref="Entity"/> bumped them after the task had started at all.
+        /// Eg. When the <see cref="Ped"/> is stumbling since another <see cref="Entity"/> bumped them after the task had started at all.
         /// </summary>
         Dormant = 2,
         /// <summary>

@@ -22,7 +22,7 @@ namespace GTA
         /// Registers a <see cref="Ped"/> to have their headshot taken (64x64 by default).
         /// </summary>
         /// <param name="ped">The <see cref="Ped"/> to have their headshot taken.</param>
-        /// <returns>A <see cref="PedHeadshot"/> instance if sucessfully requested; otherwise, <see langword="null"/>.</returns>
+        /// <returns>A <see cref="PedHeadshot"/> instance if successfully requested; otherwise, <see langword="null"/>.</returns>
         /// <remarks>
         /// There are 26 slots available for this regular <see cref="PedHeadshot"/> (31 in the game versions prior to v1.0.877.1);
         /// if it's already in use, this request will fail and return <see langword="null"/>.
@@ -38,7 +38,7 @@ namespace GTA
         /// </summary>
         /// <param name="ped">The <see cref="Ped"/> to have their headshot taken.</param>
         /// <returns>
-        /// A <see cref="PedHeadshot"/> instance if sucessfully requested; otherwise, <see langword="null"/>.
+        /// A <see cref="PedHeadshot"/> instance if successfully requested; otherwise, <see langword="null"/>.
         /// </returns>
         /// <remarks>
         /// There are 7 slot available for transparent <see cref="PedHeadshot"/>; if it's already in use,
@@ -56,7 +56,7 @@ namespace GTA
         /// </summary>
         /// <param name="ped">The <see cref="Ped"/> to have their headshot taken with a transparent background.</param>
         /// <returns>
-        /// A <see cref="PedHeadshot"/> instance if sucessfully requested; otherwise, <see langword="null"/>.
+        /// A <see cref="PedHeadshot"/> instance if successfully requested; otherwise, <see langword="null"/>.
         /// </returns>
         /// <remarks>
         /// There is only one slot available for transparent <see cref="PedHeadshot"/>; if it's already in use,
