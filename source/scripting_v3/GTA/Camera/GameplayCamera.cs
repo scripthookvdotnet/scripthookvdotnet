@@ -299,7 +299,7 @@ namespace GTA
         /// </para>
         /// <para>
         /// This will cause the camera to pull back to frame the player correctly,
-        /// may need to use in conjunction with the <see cref="HintFollowDistanceScaler"/>.
+        /// may need to use in conjunction with the <see cref="HintFollowDistanceScalar"/>.
         /// </para>
         /// </remarks>
         public static float HintCameraRelativeVerticalOffset
