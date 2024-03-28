@@ -578,7 +578,7 @@ namespace GTA
         /// <summary>
         /// allow FPS vehicle anims even if FPS camera isn't dominant.
         /// </summary>
-        UseFirstPersonVehicleAnimsIfFPSCamNotDominant = 435,
+        UseFirstPersonVehicleAnimsIfFpsCamNotDominant = 435,
         /// <summary>
         /// allow FPS vehicle anims even if FPS camera isn't dominant.
         /// </summary>
