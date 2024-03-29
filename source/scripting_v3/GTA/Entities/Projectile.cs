@@ -8,6 +8,9 @@ using System.ComponentModel;
 
 namespace GTA
 {
+    /// <summary>
+    /// Represents a projectile, which is for `<c>CProjectile</c>`.
+    /// </summary>
     public class Projectile : Prop
     {
         internal Projectile(int handle) : base(handle)
