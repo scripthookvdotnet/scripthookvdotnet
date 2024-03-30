@@ -21,7 +21,7 @@ namespace GTA
         {
         }
 
-        private enum EntityTypeInternal
+        internal enum EntityTypeInternal
         {
             Building = 1,
             Vehicle = 3,

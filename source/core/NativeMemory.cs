@@ -258,6 +258,15 @@ namespace SHVDN
             IntPtr startAddressToSearch;
 
             // Get relative address and add it to the instruction address.
+
+            address = FindPatternBmh("\x74\x27\x48\x8D\x7E\x18\x48\x8B\x0F\x48\x3B\xCB\x74\x1B", "xxxxxxxxxxxxxx");
+            // Fetch the address of `AddKnownRef` first, as the offset is at like plus 0xA5 in any builds,
+            // while that of `RemoveKnownRef` is at like plus 0x18EB4.
+            s_fwRefAwareBaseImpl__AddKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr(
+                *(int*)(address + 0x25) + address + 0x29));
+            s_fwRefAwareBaseImpl__RemoveKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr(
+                *(int*)(address + 0x17) + address + 0x1B));
+
             address = FindPatternBmh("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
             s_getPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
                 new IntPtr(*(int*)(address) + address + 4));
@@ -682,6 +691,32 @@ namespace SHVDN
             {
                 ProjectileAmmoInfoOffset = *(int*)(address + 8);
             }
+            address = FindPatternBmh("\x0F\x84\xBE\x00\x00\x00\x48\x8B\x0E\x48\x39\x88\x00\x00\x00\x00\x0F\x85\xAE\x00\x00\x00", "xxxxxxxxxxxx??xxxxxxxx");
+            if (address != null)
+            {
+                s_getAsCProjectileRocketConstVFuncOffset = *(int*)(address - 7);
+                s_getAsCProjectileConstVFuncOffset = s_getAsCProjectileRocketConstVFuncOffset - 0x10;
+                s_getAsCProjectileThrownConstVFuncOffset = s_getAsCProjectileRocketConstVFuncOffset + 0x10;
+            }
+            address = FindPatternBmh("\x74\x33\x48\x39\x98\x00\x00\x00\x00\x75\x2A\x48\x8B\x0F\x48\x3B\xCB", "xxxxx??xxxxxxxxxx");
+            if (address != null)
+            {
+                ProjectileRocketTargetOffset = *(int*)(address + 5);
+
+                ProjectileRocketCachedTargetPosOffset = ProjectileRocketTargetOffset - 0x20;
+                ProjectileRocketLaunchDirOffset = ProjectileRocketTargetOffset - 0x10;
+                ProjectileRocketFlightModelInputPitchOffset = ProjectileRocketTargetOffset + 0x8;
+                ProjectileRocketFlightModelInputRollOffset = ProjectileRocketTargetOffset + 0xC;
+                ProjectileRocketFlightModelInputYawOffset = ProjectileRocketTargetOffset + 0x10;
+
+                ProjectileRocketTimeBeforeHomingOffset = ProjectileRocketTargetOffset + 0x18;
+                ProjectileRocketTimeBeforeHomingAngleBreakOffset = ProjectileRocketTargetOffset + 0x1C;
+                ProjectileRocketLauncherSpeedOffset = ProjectileRocketTargetOffset + 0x20;
+                ProjectileRocketTimeSinceLaunchOffset = ProjectileRocketTargetOffset + 0x24;
+                ProjectileRocketFlagsOffset = ProjectileRocketTargetOffset + 0x30;
+                ProjectileRocketCachedDirectionOffset = ProjectileRocketTargetOffset + 0x40;
+            }
+
             address = FindPatternBmh("\x39\x70\x10\x75\x17\x40\x84\xED\x74\x09\x33\xD2\xE8", "xxxxxxxxxxxxx");
             if (address != null)
             {
@@ -1147,6 +1182,85 @@ namespace SHVDN
 
             return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
         }
+
+        #region -- fwRefAwareBaseImpl Functions --
+
+        private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_fwRefAwareBaseImpl__AddKnownRef;
+        private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_fwRefAwareBaseImpl__RemoveKnownRef;
+
+        #endregion
+
+        #region -- fwRegdRef Functions --
+
+        internal sealed class ResetFwRegdRefTask : IScriptTask
+        {
+            #region Fields
+            private IntPtr _lhs;
+            private IntPtr _rhs;
+            #endregion
+
+            internal ResetFwRegdRefTask(IntPtr lhs, IntPtr rhs)
+            {
+                _lhs = lhs;
+                _rhs = rhs;
+            }
+
+            public void Run()
+            {
+                AssignToFwRegdRefInternal(_lhs, _rhs);
+            }
+        }
+
+        /// <summary>
+        /// Assigns a `<c>fwRegdRef</c>`.
+        /// </summary>
+        /// <param name="lhs">
+        /// The <c>fwRegdRef</c> address to put the copy to. Must be one of the subclasses of
+        /// `<c>fwRefAwareBaseImpl</c>`.
+        /// </param>
+        /// <param name="rhs">The other <c>fwRegdRef</c> to copy reference.</param>
+        public static void AssignToFwRegdRef(IntPtr lhs, IntPtr rhs)
+        {
+            var task = new ResetFwRegdRefTask(lhs, rhs);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+        }
+
+        /// <summary>
+        /// Assigns a `<c>fwRegdRef</c>`.
+        /// </summary>
+        /// <param name="lhs">
+        /// The <c>fwRegdRef</c> address to put the copy to. Must be one of the subclasses of
+        /// `<c>fwRefAwareBaseImpl</c>`.
+        /// </param>
+        /// <param name="rhs">The other <c>fwRegdRef</c> to copy reference.</param>
+        private static void AssignToFwRegdRefInternal(IntPtr lhs, IntPtr rhs)
+        {
+            if (lhs == IntPtr.Zero)
+            {
+                return;
+            }
+
+            IntPtr oldFwRegdRef = (IntPtr)(*(long*)(lhs));
+            if (oldFwRegdRef == rhs)
+            {
+                return;
+            }
+
+            if (oldFwRegdRef != IntPtr.Zero)
+            {
+                s_fwRefAwareBaseImpl__RemoveKnownRef(oldFwRegdRef, lhs);
+            }
+
+            *(ulong*)lhs = (ulong)rhs;
+
+            IntPtr newFwRegdRef = (IntPtr)(*(long*)(lhs));
+            if (newFwRegdRef != IntPtr.Zero)
+            {
+                s_fwRefAwareBaseImpl__AddKnownRef(newFwRegdRef, lhs);
+            }
+        }
+
+        #endregion
 
         #region -- fwExtensibleBase RTTI Sytem --
 
@@ -3762,6 +3876,7 @@ namespace SHVDN
             internal float _radiusSquared;
             internal FVector3? _position;
             internal HashSet<int> _modelHashes;
+            internal Func<IntPtr, bool> _predicate;
             internal int[] _resultHandles = Array.Empty<int>();
 
             #endregion
@@ -3781,11 +3896,18 @@ namespace SHVDN
                 _doModelCheck = true;
                 this._modelHashes = new HashSet<int>(modelHashes);
             }
-            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, FVector3 position, float radiusSquared, int[] modelHashes = null) : this(type, poolAddress)
+            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, Func<IntPtr, bool> predicate) : this(type, poolAddress)
+            {
+                _predicate = predicate;
+            }
+            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, FVector3 position, float radiusSquared,
+                int[] modelHashes = null, Func<IntPtr, bool> predicate = null) : this(type, poolAddress)
             {
                 _doPosCheck = true;
                 this._radiusSquared = radiusSquared;
                 this._position = position;
+
+                _predicate = predicate;
 
                 if (modelHashes == null || modelHashes.Length <= 0)
                 {
@@ -3822,7 +3944,7 @@ namespace SHVDN
                         int projectileCapacity = NativeMemory.GetProjectileCapacity();
                         ulong* projectilePoolAddress = (ulong*)_poolAddress;
 
-                        _resultHandles = GetGuidHandlesFromProjectilePool(fwScriptGuidPool, projectilePoolAddress, projectilesCount, projectileCapacity);
+                        _resultHandles = GetGuidHandlesFromProjectilePool(fwScriptGuidPool, projectilePoolAddress, projectilesCount, projectileCapacity, _predicate);
                         break;
                 }
             }
@@ -3899,7 +4021,8 @@ namespace SHVDN
                 return resultList.ToArray();
             }
 
-            private int[] GetGuidHandlesFromProjectilePool(FwScriptGuidPool* fwScriptGuidPool, ulong* projectilePool, int itemCount, int maxItemCount)
+            private int[] GetGuidHandlesFromProjectilePool(FwScriptGuidPool* fwScriptGuidPool,
+                ulong* projectilePool, int itemCount, int maxItemCount, Func<IntPtr, bool> predicate)
             {
                 int projectilesLeft = itemCount;
                 int projectileCapacity = maxItemCount;
@@ -3927,6 +4050,11 @@ namespace SHVDN
                     }
 
                     if (_doModelCheck && !CheckEntityModel(entityAddress, _modelHashes))
+                    {
+                        continue;
+                    }
+
+                    if (predicate != null && !predicate((IntPtr)entityAddress))
                     {
                         continue;
                     }
@@ -4142,7 +4270,64 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile, new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius);
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+
+            return task._resultHandles;
+        }
+        public static int[] GetRocketProjectileHandles()
+        {
+            if (NativeMemory.s_projectilePoolAddress == null)
+            {
+                return Array.Empty<int>();
+            }
+
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress),
+                address => GetAsCProjectileRocket(address) != IntPtr.Zero);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+
+            return task._resultHandles;
+        }
+        public static int[] GetRocketProjectileHandles(FVector3 position, float radius)
+        {
+            if (NativeMemory.s_projectilePoolAddress == null)
+            {
+                return Array.Empty<int>();
+            }
+
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius,
+                predicate: address => GetAsCProjectileRocket(address) != IntPtr.Zero);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+
+            return task._resultHandles;
+        }
+        public static int[] GetThrownProjectileHandles()
+        {
+            if (NativeMemory.s_projectilePoolAddress == null)
+            {
+                return Array.Empty<int>();
+            }
+
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress),
+                address => GetAsCProjectileThrown(address) != IntPtr.Zero);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+
+            return task._resultHandles;
+        }
+        public static int[] GetThrownProjectileHandles(FVector3 position, float radius)
+        {
+            if (NativeMemory.s_projectilePoolAddress == null)
+            {
+                return Array.Empty<int>();
+            }
+
+            var task = new FwScriptGuidPoolTask(FwScriptGuidPoolTask.PoolType.Projectile,
+                new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius,
+                predicate: address => GetAsCProjectileThrown(address) != IntPtr.Zero);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
             return task._resultHandles;
@@ -5737,9 +5922,137 @@ namespace SHVDN
 
         #endregion
 
+        #region  -- CObject Functions --
+
+        // Although there are non-const variants of `GetAsProjectile*`, the vfuncs will use the same function in
+        // final/production builds (with the function that returns the `this` argument and one that returns null/zero).
+        private static int s_getAsCProjectileConstVFuncOffset;
+        private static int s_getAsCProjectileRocketConstVFuncOffset;
+        private static int s_getAsCProjectileThrownConstVFuncOffset;
+
+        /// <summary>
+        /// Returns the same address as the passed <c>CObject</c> address if the instance is a <c>CProjectile</c> or
+        /// its subclass.
+        /// </summary>
+        /// <param name="cObjectAddress">The <c>CObject</c> address to test.</param>
+        /// <returns>
+        /// The same address as the passed <c>CObject</c> address if the instance is a <c>CProjectile</c> or
+        /// its subclass; otherwise, <see cref="IntPtr.Zero"/>
+        /// </returns>
+        public static IntPtr GetAsCProjectile(IntPtr cObjectAddress)
+        {
+            if (s_getAsCProjectileConstVFuncOffset == 0)
+            {
+                return IntPtr.Zero;
+            }
+
+            ulong vFuncAddr = *(ulong*)(*(ulong*)cObjectAddress + (uint)s_getAsCProjectileConstVFuncOffset);
+            var getAsCProjectileConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(vFuncAddr);
+
+            return getAsCProjectileConstVFunc(cObjectAddress);
+        }
+        /// <summary>
+        /// Returns the same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>.
+        /// </summary>
+        /// <param name="cObjectAddress">The <c>CObject</c> address to test.</param>
+        /// <returns>
+        /// The same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>;
+        /// otherwise, <see cref="IntPtr.Zero"/>
+        /// </returns>
+        public static IntPtr GetAsCProjectileRocket(IntPtr cObjectAddress)
+        {
+            if (s_getAsCProjectileRocketConstVFuncOffset == 0)
+            {
+                return IntPtr.Zero;
+            }
+
+            ulong vFuncAddr = *(ulong*)(*(ulong*)cObjectAddress + (uint)s_getAsCProjectileRocketConstVFuncOffset);
+            var getAsCProjectileRocketConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(vFuncAddr);
+
+            return getAsCProjectileRocketConstVFunc(cObjectAddress);
+        }
+        /// <summary>
+        /// Returns the same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>.
+        /// </summary>
+        /// <param name="cObjectAddress">The <c>CObject</c> address to test.</param>
+        /// <returns>
+        /// The same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>;
+        /// otherwise, <see cref="IntPtr.Zero"/>
+        /// </returns>
+        public static IntPtr GetAsCProjectileThrown(IntPtr cObjectAddress)
+        {
+            if (s_getAsCProjectileThrownConstVFuncOffset == 0)
+            {
+                return IntPtr.Zero;
+            }
+
+            ulong vFuncAddr = *(ulong*)(*(ulong*)cObjectAddress + (uint)s_getAsCProjectileThrownConstVFuncOffset);
+            var getAsCProjectileThrownConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(vFuncAddr);
+
+            return getAsCProjectileThrownConstVFunc(cObjectAddress);
+        }
+
+        public static int GetTargetEntityOfCProjectileRocket(IntPtr cProjectileRocketAddress)
+        {
+            if (ProjectileRocketTargetOffset == 0)
+            {
+                return 0;
+            }
+
+            var targetAddress = new IntPtr(*(long*)(cProjectileRocketAddress + ProjectileRocketTargetOffset));
+            return targetAddress != IntPtr.Zero ? GetEntityHandleFromAddress(targetAddress) : 0;
+        }
+
+        #endregion
+
         #region -- Projectile Offsets --
+
         public static int ProjectileAmmoInfoOffset { get; }
         public static int ProjectileOwnerOffset { get; }
+
+        #region -- Projectile Rocket Offsets --
+
+        // `CProjectileRocket` has additional members and the layout of `CProjectileRocket` self hasn't changed
+        // between b372 and b3095
+
+        public static int ProjectileRocketCachedTargetPosOffset { get; }
+        public static int ProjectileRocketLaunchDirOffset { get; }
+        public static int ProjectileRocketTargetOffset { get; }
+
+        // We should provide an option to access individual flight model inputs, as the yaw field may be in a different
+        // cache line from one that the pitch and roll fields are in. `m_fPitch` and `m_fYaw` are at
+        // [`CProjectileRocket` + 0x648] and [`CProjectileRocket` + 0x650] respectively but the first digits are
+        // the same in all builds between b372 and b3095.
+        public static int ProjectileRocketFlightModelInputPitchOffset { get; }
+        public static int ProjectileRocketFlightModelInputRollOffset { get; }
+        public static int ProjectileRocketFlightModelInputYawOffset { get; }
+
+        /*
+         * `ProjectileRocketSpeedOffset` would be inserted in this position for `CProjectileRocket::m_fSpeed`
+         * but it is unused
+         */
+
+        public static int ProjectileRocketTimeBeforeHomingOffset { get; }
+        public static int ProjectileRocketTimeBeforeHomingAngleBreakOffset { get; }
+        public static int ProjectileRocketLauncherSpeedOffset { get; }
+        public static int ProjectileRocketTimeSinceLaunchOffset { get; }
+
+        /*
+         * `ProjectileWhistleSoundAddressOffset` would be inserted for `audSound* m_pWhistleSound` here, but `audSound`
+         * needs to be investigated before adding the member
+         */
+
+        /// <summary>
+        /// The offset of the `<c>CProjectileRocket</c>` flags, which are consist of `<c>m_bIsAccurate</c>`,
+        /// `<c>m_bLerpToLaunchDir</c>`, `<c>m_bApplyThrust</c>`, `<c>m_bOnFootHomingWeaponLockedOn</c>`,
+        /// `<c>m_bWasHoming</c>`, `<c>m_bStopHoming</c>`, `<c>m_bHasBeenRedirected</c>`, and
+        /// `<c>m_bTorpHasBeenOutOfWater</c>` (in said order).
+        /// </summary>
+        public static int ProjectileRocketFlagsOffset { get; }
+        public static int ProjectileRocketCachedDirectionOffset { get; }
+
+        #endregion
+
         #endregion
 
         #region -- Projectile Functions --
