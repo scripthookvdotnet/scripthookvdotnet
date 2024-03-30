@@ -87,6 +87,7 @@
       <LangVersion>latest</LangVersion>
       <DebugType>pdbonly</DebugType>
       <DebugSymbols>true</DebugSymbols>
+      <DefineConstants>DEBUG</DefineConstants>
     </CsCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -156,6 +157,7 @@
       Sources="@(CsCompile)"
       AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)"
       DebugType="%(CsCompile.DebugType)"
+      DefineConstants="%(CsCompile.DefineConstants)"
       DisabledWarnings="%(CsCompile.NoWarn)"
       DocumentationFile="$(IntDir)$(TargetName).xdc"
       EmitDebugInformation="%(CsCompile.DebugSymbols)"
