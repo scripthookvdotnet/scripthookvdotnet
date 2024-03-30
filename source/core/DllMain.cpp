@@ -15,6 +15,7 @@
 LPVOID sTlsContextAddrOfGameMainThread = nullptr;
 DWORD sGameMainThreadId = 0;
 std::shared_mutex sGameMainThreadVarsMutex;
+std::atomic_bool sGameMainThreadVarsInitialized(false);
 
 // Use atomic to guarantee its visibility
 // Script domain should be reloaded as soon as getting requested to reload, so this should be used with std::memory_order_seq_cst
@@ -683,11 +684,12 @@ static DWORD ClrThreadProc(LPVOID lparam)
 
     while (!sClrThreadRequestedToExit) {
         ScriptHookVDotNet_ManagedInit();
-        sScriptDomainRequestedToReload.store(false);
+        sScriptDomainRequestedToReload.store(false, std::memory_order_release);
 
         // ScriptHookV's script fibers will be executed in the main thread, so we assume this code won't have trouble
         // exiting the loop after letting the main fiber execute
-        while (!sScriptDomainRequestedToReload.load() && !sClrThreadRequestedToExit.load()) {
+        while (!sScriptDomainRequestedToReload.load(std::memory_order_relaxed)
+            && !sClrThreadRequestedToExit.load(std::memory_order_relaxed)) {
             ScriptHookVDotNet_ManagedTick();
             SetEvent(hClrWaitEvent.load());
             WaitForSingleObject(hClrContinueEvent, INFINITE);
@@ -704,10 +706,12 @@ static void ScriptMain()
 {
     // We need these info to swap the TLS context of the main thread when necessary to access a lot of game stuff
     // such as a rage::SysMemAllocator instance
+    if (!sGameMainThreadVarsInitialized.load(std::memory_order_acquire))
     {
         std::lock_guard<std::shared_mutex> lock(sGameMainThreadVarsMutex);
         sTlsContextAddrOfGameMainThread = GetTlsContext();
         sGameMainThreadId = GetCurrentThreadId();
+        sGameMainThreadVarsInitialized.store(true, std::memory_order_release);
     }
 
     // ScriptHookV already turned the current thread into a fiber, so can safely retrieve it
@@ -745,6 +749,13 @@ static void ScriptMain()
 // data between them!
 static void ScriptKeyboardMessage(DWORD key, WORD repeats, BYTE scanCode, BOOL isExtended, BOOL isWithAlt, BOOL wasDownBefore, BOOL isUpNow)
 {
+    // Too dangerous to access the key events of our domains before the TLS address of the main thread is initialized,
+    // as they may want info about the main thread TLS.
+    if (!sGameMainThreadVarsInitialized.load(std::memory_order_acquire))
+    {
+        return;
+    }
+
     ScriptHookVDotNet_ManagedKeyboardMessage(
         key,
         !isUpNow,
