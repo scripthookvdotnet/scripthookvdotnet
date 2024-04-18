@@ -128,6 +128,7 @@ public:
     [SHVDN::ConsoleCommand("Load all scripts in the scripts folder")]
     static void StartAllScripts()
     {
+        console->PrintInfo("~y~Loading all scripts ...");
         domain->Start();
     }
     [SHVDN::ConsoleCommand("Abort all scripts from a file")]
@@ -439,19 +440,19 @@ static void ScriptHookVDotNet_ManagedInit()
     SHVDN::Log::Clear();
 
     // Load configuration
-    String ^scriptPath = "scripts";
+    String^ scriptPath = "scripts";
 
     try
     {
-        array<String ^> ^config = IO::File::ReadAllLines(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
+        array<String^>^ config = IO::File::ReadAllLines(IO::Path::ChangeExtension(Assembly::GetExecutingAssembly()->Location, ".ini"));
 
-        for each (String ^line in config)
+        for each (String ^ line in config)
         {
             // Perform some very basic key/value parsing
             line = line->Trim();
             if (line->StartsWith(";") || line->StartsWith("#") || line->StartsWith("//"))
                 continue;
-            array<String ^> ^data = line->Split('=');
+            array<String^>^ data = line->Split('=');
             if (data->Length != 2)
                 continue;
 
@@ -514,7 +515,7 @@ static void ScriptHookVDotNet_ManagedInit()
             }
         }
     }
-    catch (Exception ^ex)
+    catch (Exception^ ex)
     {
         SHVDN::Log::Message(SHVDN::Log::Level::Error, "Failed to load config: ", ex->ToString());
     }
@@ -544,7 +545,7 @@ static void ScriptHookVDotNet_ManagedInit()
     try
     {
         // Instantiate console inside script domain, so that it can access the scripting API
-        console = (SHVDN::Console ^)domain->AppDomain->CreateInstanceFromAndUnwrap(
+        console = (SHVDN::Console^)domain->AppDomain->CreateInstanceFromAndUnwrap(
             SHVDN::Console::typeid->Assembly->Location, SHVDN::Console::typeid->FullName);
 
         // Restore the console command history (set a empty history for the first time)
@@ -563,7 +564,7 @@ static void ScriptHookVDotNet_ManagedInit()
         // Add default console commands
         console->RegisterCommands(ScriptHookVDotNet::typeid);
     }
-    catch (Exception ^ex)
+    catch (Exception^ ex)
     {
         SHVDN::Log::Message(SHVDN::Log::Level::Error, "Failed to create console: ", ex->ToString());
     }
@@ -572,6 +573,11 @@ static void ScriptHookVDotNet_ManagedInit()
     {
         // Start scripts in the newly created domain
         domain->Start();
+    }
+    else
+    {
+        SHVDN::Log::Message(SHVDN::Log::Level::Debug, "AutoLoadScripts is set to false, skipping auto loading scripts. " +
+            "You can start scripts with specific console commands such as `StartAllScripts()`.");
     }
 }
 
