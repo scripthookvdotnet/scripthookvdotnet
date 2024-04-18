@@ -125,6 +125,11 @@ public:
 
         domain->StartScripts(filename);
     }
+    [SHVDN::ConsoleCommand("Load all scripts in the scripts folder")]
+    static void StartAllScripts()
+    {
+        domain->Start();
+    }
     [SHVDN::ConsoleCommand("Abort all scripts from a file")]
     static void Abort(String ^filename)
     {
