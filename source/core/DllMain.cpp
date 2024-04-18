@@ -164,6 +164,7 @@ internal:
     static array<WinForms::Keys>^ consoleKeyBinding = { WinForms::Keys::F4 };
     static unsigned int scriptTimeoutThreshold = 5000;
     static bool shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = true;
+    static bool AutoLoadScripts = true;
     static Object^ keyboardMessageLock = gcnew Object();
     static array<bool>^ _keyboardStatePool = gcnew array<bool>(256);
     static ModifierKeyState _modKeyState = ModifierKeyState::None;
@@ -498,6 +499,14 @@ static void ScriptHookVDotNet_ManagedInit()
                     ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = outVal;
                 }
             }
+            else if (String::Equals(keyStr, "AutoLoadScripts", StringComparison::OrdinalIgnoreCase))
+            {
+                bool outVal;
+                if (Boolean::TryParse(valueStr, outVal))
+                {
+                    ScriptHookVDotNet::AutoLoadScripts = outVal;
+                }
+            }
         }
     }
     catch (Exception ^ex)
@@ -554,8 +563,11 @@ static void ScriptHookVDotNet_ManagedInit()
         SHVDN::Log::Message(SHVDN::Log::Level::Error, "Failed to create console: ", ex->ToString());
     }
 
-    // Start scripts in the newly created domain
-    domain->Start();
+    if (ScriptHookVDotNet::AutoLoadScripts)
+    {
+        // Start scripts in the newly created domain
+        domain->Start();
+    }
 }
 
 static void ScriptHookVDotNet_ManagedTick()
