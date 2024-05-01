@@ -6,6 +6,7 @@
 using GTA.Math;
 using GTA.Native;
 using System;
+using System.ComponentModel;
 using System.Linq;
 
 namespace GTA
@@ -1166,8 +1167,12 @@ namespace GTA
         /// <value>
         /// <see langword="true" /> if this <see cref="Entity"/> is water cannon proof; otherwise, <see langword="false" />.
         /// </value>
+        [Obsolete("Entity.IsWaterCannonProof is obsolete because CPhysical has no flags that makes it " +
+            "water cannon proof.", true)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsWaterCannonProof
         {
+            // The 13th bit of [CPhysical + 0x188] actually points to `bOnlyDamagedByRelGroup`, which is incorrect!
             get
             {
                 IntPtr address = MemoryAddress;
