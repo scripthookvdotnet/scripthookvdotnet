@@ -1115,7 +1115,8 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 392, 11);
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 11 : 10;
+                return SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
             }
             set
             {
@@ -1125,7 +1126,8 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + 392, 11, value);
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 11 : 10;
+                SHVDN.NativeMemory.SetBit(address + 392, bitOffset, value);
             }
         }
 
@@ -1211,7 +1213,8 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 392, 15);
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 15 : 14;
+                return SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
             }
             set
             {
@@ -1221,7 +1224,8 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + 392, 15, value);
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 15 : 14;
+                SHVDN.NativeMemory.SetBit(address + 392, bitOffset, value);
             }
         }
 
@@ -1241,7 +1245,8 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 392, 16);
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 16 : 15;
+                return SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
             }
             set
             {
@@ -1251,7 +1256,8 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + 392, 16, value);
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 16 : 15;
+                SHVDN.NativeMemory.SetBit(address + 392, bitOffset, value);
             }
         }
 
@@ -1294,7 +1300,8 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 392, 10);
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 10 : 9;
+                return SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
             }
             set => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
         }
