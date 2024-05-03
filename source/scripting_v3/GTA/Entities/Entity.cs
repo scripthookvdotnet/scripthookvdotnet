@@ -1004,11 +1004,255 @@ namespace GTA
 
         #endregion
 
+        #region CPhysicalFlags
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Entity"/> is in water.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this <see cref="Entity"/> is in water; otherwise, <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// For <see cref="Ped"/>s, this property returns <see langword="true"/> if;
+        /// <list type="bullet">
+        /// <item>
+        /// <description>
+        /// or the <see cref="Ped"/> is in a <see cref="Vehicle"/> and the <see cref="Vehicle"/> is drowning
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// or the <see cref="Ped"/> is swimming where <see cref="PedConfigFlags.IsSwimming"/> is set
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// or the <see cref="Ped"/> is dead (where <see cref="Entity.IsDead"/> returns <see langword="true"/>, not
+        /// <see cref="Ped.IsInjured"/>) or a network clone, and then `<c>CPED_RESET_FLAG_IsDrowning</c>` (the 3rd one,
+        /// whose index is 2) is set
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// or <see cref="IsInWaterStrict"/> returns <see langword="true"/>
+        /// </description>
+        /// </item>
+        /// </list>
+        /// `<c>IS_ENTITY_IN_WATER</c>` evaluates in the order listed above.
+        /// </para>
+        /// <para>
+        /// For <see cref="Vehicle"/>s, this property returns <see langword="true"/> if;
+        /// <list type="bullet">
+        /// <item>
+        /// <description>
+        /// the vehicle type is <see cref="VehicleType.Boat"/> and the boat's boat handling instance has
+        /// the "boat in water" flag set
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// or the vehicle type inherits from <see cref="VehicleType.AmphibiousAutomobile"/> and the automobile's boat
+        /// handling instance has the "boat in water" flag set
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// or the vehicle type inherits from <see cref="VehicleType.Trailer"/>, and then <see cref="IsInWaterStrict"/>
+        /// or <see cref="WasInWater"/> returns <see langword="true"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// or <see cref="IsInWaterStrict"/> returns <see langword="true"/>
+        /// </description>
+        /// </item>
+        /// </list>
+        /// `<c>IS_ENTITY_IN_WATER</c>` evaluates in the order listed above.
+        /// </para>
+        /// <para>
+        /// For <see cref="Prop"/>s, always returns what <see cref="IsInWaterStrict"/> returns.
+        /// </para>
+        /// </remarks>
+        public bool IsInWater => Function.Call<bool>(Hash.IS_ENTITY_IN_WATER, Handle);
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Entity"/> is in water by only testing a single specific
+        /// flag of `<c>CPhysical</c>`, where the property would return <see langword="false"/> for <see cref="Ped"/>s
+        /// in <see cref="Vehicle"/>s.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this <see cref="Entity"/> has the "is in water" flag set in its
+        /// `<c>CPhysical</c>` instance; otherwise, <see langword="false"/>.
+        /// </value>
+        public bool IsInWaterStrict
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                return SHVDN.NativeMemory.IsBitSet(address + 392, 0);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Entity"/> was in water last frame.
+        /// This property is exactly as strict as <see cref="IsInWaterStrict"/> but for last frame.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this <see cref="Entity"/> was in water last frame; otherwise,
+        /// <see langword="false"/>.
+        /// </value>
+        public bool WasInWater
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                return SHVDN.NativeMemory.IsBitSet(address + 392, 1);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the game should not try to load collision for this
+        /// <see cref="Entity"/>.
+        /// Sets to <see langword="true"/> when <see cref="Entity"/>s created and when their mission state is cleaned
+        /// up (e.g. by calling <see cref="MarkAsNoLongerNeeded"/>).
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if the game should not try to load collision for this <see cref="Entity"/>; otherwise,
+        /// <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// Setting this property to <see langword="false"/> does not always make the game try to load collision for
+        /// this <see cref="Entity"/>, as the game relies on the const virtual function
+        /// `<c>CPhysical::ShouldLoadCollision()</c>`. `<c>CVehicle</c>`, which <see cref="Vehicle"/> is for, overrides
+        /// it with a function where `<c>CVehicle::IsDummy()</c>` (which tests the vehicle's lod flags) must also return
+        /// <see langword="false"/> before the overriding function can return <see langword="true"/>.
+        /// </para>
+        /// <para>
+        /// When the const virtual function `<c>CPhysical::ShouldLoadCollision()</c>` returns <see langword="true"/> on
+        /// the <see cref="Entity"/>, the 2 following effects can happen:
+        /// <list type="bullet">
+        /// <item>
+        /// <description>
+        /// <para>
+        /// The game requests static bounds (mover) for mission <see cref="Entity"/>s.
+        /// <see cref="IsPositionFrozen"/> must not return <see langword="true"/> before the game can request
+        /// static bounds.
+        /// For <see cref="Vehicle"/>s and <see cref="Ped"/>s, <see cref="Vehicle.IsConsideredDestroyed"/> or
+        /// `<c>CPed::GetIsDeadOrDying()</c>` (which `<c>IS_PED_DEAD_OR_DYING</c>` native checks) must not return
+        /// <see langword="true"/> respectively, either.
+        /// </para>
+        /// <para>
+        /// `<c>CPhysical::ShouldLoadCollision()</c>` will be evaluated after static-casting to `<c>CPhysical</c>`,
+        /// and any overridden functions will not be used. Despite the fact that static-cast will not be done for
+        /// <see cref="Prop"/>s, `<c>CPhysical</c>` one will be used in that case as `<c>CObject</c>` does not have
+        /// overriding one.
+        /// </para>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <para>
+        /// A `<c>CPortalTracker</c>` instance can trigger activation of interiors mission <see cref="Entity"/>s,
+        /// using `<c>CPhysical::ShouldLoadCollision()</c>` without upcasting.
+        /// For <see cref="Vehicle"/>s and <see cref="Ped"/>s except for the local player <see cref="Ped"/>,
+        /// <see cref="PopulationType"/> must also be <see cref="EntityPopulationType.Mission"/> before
+        /// a `<c>CPortalTracker</c>` can trigger activation of interiors.
+        /// For <see cref="Prop"/>s, they must also be owned by a script.
+        /// </para>
+        /// </description>
+        /// </item>
+        /// </list>
+        /// </para>
+        /// </remarks>
+        public bool DontLoadCollision
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                return SHVDN.NativeMemory.IsBitSet(address + 392, 2);
+            }
+            set
+            {
+                const bool doDeadCheck = false;
+                Function.Call(Hash.SET_ENTITY_LOAD_COLLISION_FLAG, Handle, value, doDeadCheck);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Entity"/> should be allowed to have its physics
+        /// frozen if collision has not streamed in around its position.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> the <see cref="Entity"/> should be allowed to have its physics frozen if collision
+        /// has not streamed in around its position; otherwise, <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// You should set vehicle fix/freeze properties via <see cref="SetShouldFreezeWaitingOnCollision"/> when
+        /// you want to some <see cref="Vehicle"/>s to be allowed to have its physics frozen if collision has not
+        /// streamed in around them. For <see cref="Ped"/>s and <see cref="Prop"/>s, setting a value via this property
+        /// has the same visible effect as the said method.
+        /// </remarks>
+        public bool AllowFreezeWaitingOnCollision
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                return SHVDN.NativeMemory.IsBitSet(address + 392, 3);
+            }
+            set
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                SHVDN.NativeMemory.SetBit(address + 392, 3, value);
+            }
+        }
+
+        /// <summary>
+        /// Sets a value indicating whether this <see cref="Entity"/> should be allowed to have its physics
+        /// frozen if collision has not streamed in around its position. A specific vehicle flag is set if
+        /// the <see cref="Entity"/> is a <see cref="Vehicle"/> to ensure that it should be fixed.
+        /// </summary>
+        /// <param name="shouldFreeze"></param>
+        /// <remarks>
+        /// if the <see cref="Entity"/> is a <see cref="Vehicle"/>, the method also changes
+        /// `<c>CVehicle::VehicleFlags::bShouldFixIfNoCollision</c>`, which much more internal game functions for
+        /// vehicles rely on than the bit field <see cref="AllowFreezeWaitingOnCollision"/> and this method set.
+        /// </remarks>
+        public void SetShouldFreezeWaitingOnCollision(bool shouldFreeze)
+            => Function.Call(Hash.SET_ENTITY_SHOULD_FREEZE_WAITING_ON_COLLISION, Handle, shouldFreeze);
+
         #region Invincibility
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Entity"/> is fire proof.
-        /// This <see cref="Entity"/> does not catch fire naturally and <see cref="Ped"/>s do not getting ragdolled for being burned when this property is set to <see langword="true" />.
+        /// This <see cref="Entity"/> does not catch fire naturally and <see cref="Ped"/>s do not getting ragdolled
+        /// for being burned when this property is set to <see langword="true" />.
         /// </summary>
         /// <value>
         /// <see langword="true" /> if this <see cref="Entity"/> is fire proof; otherwise, <see langword="false" />.
@@ -1263,7 +1507,8 @@ namespace GTA
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Entity"/> is invincible.
-        /// Setting this property to <see langword="true" /> does not prevent <see cref="Ped"/>s from doing the reactions for getting hit with melee attacks.
+        /// Setting this property to <see langword="true" /> does not prevent <see cref="Ped"/>s from doing the
+        /// reactions for getting hit with melee attacks.
         /// </summary>
         /// <value>
         /// <see langword="true" /> if this <see cref="Entity"/> is invincible; otherwise, <see langword="false" />.
@@ -1282,13 +1527,61 @@ namespace GTA
             }
             set => Function.Call(Hash.SET_ENTITY_INVINCIBLE, Handle, value);
         }
+        /// <summary>
+        /// <para>
+        /// Gets or sets a value indicating whether this <see cref="Entity"/> will not take any damage but will react
+        /// to any explosion/flame etc.
+        /// </para>
+        /// <para>
+        /// Not available in any versions prior to v1.0.463.1, and both getter and setter throws
+        /// a <see cref="GameVersionNotSupportedException"/> if called in unsupported game version.
+        /// </para>
+        /// </summary>
+        /// <value>
+        /// <see langword="true" /> if this <see cref="Entity"/> is will not take any damage but will react
+        /// to any explosion/flame etc; otherwise, <see langword="false"/>.
+        /// </value>
+        /// <exception cref="GameVersionNotSupportedException">
+        /// The running game version is prior to v1.0.463.1.
+        /// </exception>
+        public bool BlocksAnyDamageButHasReactions
+        {
+            get
+            {
+                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_463_1_Steam,
+                    nameof(Entity), nameof(BlocksAnyDamageButHasReactions));
+
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                return SHVDN.NativeMemory.IsBitSet(address + 392, 9);
+            }
+            set
+            {
+                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_463_1_Steam,
+                    nameof(Entity), nameof(BlocksAnyDamageButHasReactions));
+
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                SHVDN.NativeMemory.SetBit(address + 392, 9, value);
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s.
-        /// <see cref="Ped"/>s are not susceptible to the reactions of melee attacks when this property is set to <see langword="true" />, unlike <see cref="IsInvincible"/>.
+        /// <see cref="Ped"/>s are not susceptible to the reactions of melee attacks when this property is set to
+        /// <see langword="true"/>, unlike <see cref="IsInvincible"/>.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s;
+        /// otherwise, <see langword="false" />.
         /// </value>
         public bool IsOnlyDamagedByPlayer
         {
@@ -1306,7 +1599,417 @@ namespace GTA
             set => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Entity"/> can only be damaged by
+        /// the <see cref="Ped"/>s in a specific relationship group, which is
+        /// <see cref="SpecificRelGroupForInflictorChecks"/>.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this <see cref="Entity"/> can only be damaged by the <see cref="Ped"/>s in
+        /// <see cref="SpecificRelGroupForInflictorChecks"/>; otherwise, <see langword="false" />.
+        /// </value>
+        /// <remarks>
+        /// This property should not be set to <see langword="true"/> when <see cref="BlocksDamageByRelGroup"/> is set
+        /// to <see langword="true"/>, as both of them setting to <see langword="true"/> does not make any sense, which
+        /// will result in the <see cref="Entity"/> rejecting to take any damage inflicted by any <see cref="Ped"/>s
+        /// and any <see cref="Vehicle"/>s with drivers.
+        /// </remarks>
+        public bool CanOnlyBeDamagedByRelGroup
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 12 : 11;
+                return SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
+            }
+            set
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 12 : 11;
+                SHVDN.NativeMemory.SetBit(address + 392, bitOffset, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Entity"/> cannot be damaged by
+        /// the <see cref="Ped"/>s in a specific relationship group, which is
+        /// <see cref="SpecificRelGroupForInflictorChecks"/>.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this <see cref="Entity"/> cannot be damaged by the <see cref="Ped"/>s in
+        /// <see cref="SpecificRelGroupForInflictorChecks"/>; otherwise, <see langword="false" />.
+        /// </value>
+        /// <remarks>
+        /// This property should not be set to <see langword="true"/> when <see cref="CanOnlyBeDamagedByRelGroup"/> is
+        /// set to <see langword="true"/>, as both of them setting to <see langword="true"/> does not make any sense,
+        /// which will result in the <see cref="Entity"/> rejecting to take any damage inflicted by any
+        /// <see cref="Ped"/>s and any <see cref="Vehicle"/>s with drivers.
+        /// </remarks>
+        public bool BlocksDamageByRelGroup
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 13 : 12;
+                return SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
+            }
+            set
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 13 : 12;
+                SHVDN.NativeMemory.SetBit(address + 392, bitOffset, value);
+            }
+        }
+
+        /// <summary>
+        /// Sets the relationship group that this <see cref="Entity"/> should take damage only by <see cref="Ped"/>s
+        /// in.
+        /// </summary>
+        /// <param name="relGroup">
+        /// The relationship group that the <see cref="Entity"/> should take damage inflicted only by
+        /// <see cref="Ped"/>s in and by <see cref="Vehicle"/>s with drivers in.
+        /// </param>
+        /// <remarks>
+        /// This method will not do anything if <see cref="BlocksDamageByRelGroup"/> is set to <see langword="true"/>.
+        /// In that case, you will need call <see cref="ClearNotDamagedByRelGroup()"/> or change
+        /// <see cref="BlocksDamageByRelGroup"/> to <see langword="false"/> before this method can have effects.
+        /// </remarks>
+        public void SetOnlyDamagedByRelGroup(RelationshipGroup relGroup)
+            => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_RELATIONSHIP_GROUP, Handle, true, relGroup.Hash);
+
+        /// <summary>
+        /// Clears the properties that makes this <see cref="Entity"/> take damage only by <see cref="Ped"/>s in
+        /// the given relationship group.
+        /// </summary>
+        /// <remarks>
+        /// This method sets <see cref="CanOnlyBeDamagedByRelGroup"/> to <see langword="false"/> and
+        /// <see cref="SpecificRelGroupForInflictorChecks"/> to zero.
+        /// </remarks>
+        public void ClearOnlyDamagedByRelGroup()
+            // `SET_ENTITY_ONLY_DAMAGED_BY_RELATIONSHIP_GROUP` clears the specific relationship group hash to zero
+            // anyway (without reading the 3rd arg) when the second argument is set to `false`
+            => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_RELATIONSHIP_GROUP, Handle, true, 0);
+
+
+        /// <summary>
+        /// Sets the relationship group that this <see cref="Entity"/> should not take damage by <see cref="Ped"/>s in.
+        /// </summary>
+        /// <param name="relGroup">
+        /// The relationship group that the <see cref="Entity"/> should not take damage inflicted by
+        /// <see cref="Ped"/>s in or by <see cref="Vehicle"/>s with drivers in.
+        /// </param>
+        /// <remarks>
+        /// This method will not do anything if <see cref="CanOnlyBeDamagedByRelGroup"/> is set to <see langword="true"/>.
+        /// In that case, you will need call <see cref="ClearOnlyDamagedByRelGroup()"/> or change
+        /// <see cref="CanOnlyBeDamagedByRelGroup"/> to <see langword="false"/> before this method can have effects.
+        /// </remarks>
+        public void SetNotDamagedByRelGroup(RelationshipGroup relGroup)
+            => Function.Call(Hash.SET_ENTITY_CAN_BE_DAMAGED_BY_RELATIONSHIP_GROUP, Handle, false, relGroup.Hash);
+
+        /// <summary>
+        /// Clears the properties that makes this <see cref="Entity"/> not take damage by <see cref="Ped"/>s in
+        /// the given relationship group.
+        /// </summary>
+        /// <remarks>
+        /// This method sets <see cref="BlocksDamageByRelGroup"/> to <see langword="false"/> and
+        /// <see cref="SpecificRelGroupForInflictorChecks"/> to zero.
+        /// </remarks>
+        public void ClearNotDamagedByRelGroup()
+            // `SET_ENTITY_CAN_BE_DAMAGED_BY_RELATIONSHIP_GROUP` clears the specific relationship group hash to zero
+            // anyway (without reading the 3rd arg) when the second argument is set to `true`
+            => Function.Call(Hash.SET_ENTITY_CAN_BE_DAMAGED_BY_RELATIONSHIP_GROUP, Handle, true, 0);
+
         #endregion
+
+        /// <summary>
+        /// Gets or sets the value that indicates whether this <see cref="Entity"/> should be rendered scorched.
+        /// Only useful for <see cref="Ped"/>s for <see cref="Vehicle"/>s, and the setter will do nothing otherwise.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this <see cref="Entity"/> should be rendered scorched; otherwise,
+        /// <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// This property affects not only <see cref="Ped"/> and <see cref="Vehicle"/> shaders but also game logic.
+        /// For example, <see cref="Ped"/>s with this property <see langword="true"/> do not catch fire, and
+        /// <see cref="Vehicle"/> with this property <see langword="true"/> will never be marked to removed by ai
+        /// <see cref="Ped"/>s.
+        /// </remarks>
+        public bool ShouldRenderScorched
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 19 : 17;
+                return SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
+            }
+            set => Function.Call(Hash.SET_ENTITY_RENDER_SCORCHED, Handle, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the value that indicates whether this <see cref="Entity"/> can be auto-vaulted.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this <see cref="Entity"/> can be auto-vaulted; otherwise,
+        /// <see langword="false"/>.
+        /// </value>
+        public bool CanBeAutoVaulted
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 29 : 27;
+                return !SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
+            }
+            set => Function.Call(Hash.SET_CAN_AUTO_VAULT_ON_ENTITY, Handle, value);
+        }
+
+        /// <summary>
+        /// Gets or sets the value that indicates whether this <see cref="Entity"/> can be climbed.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this <see cref="Entity"/> can be climbed; otherwise,
+        /// <see langword="false"/>.
+        /// </value>
+        public bool CanBeClimbed
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 30 : 28;
+                return !SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
+            }
+            set => Function.Call(Hash.SET_CAN_CLIMB_ON_ENTITY, Handle, value);
+        }
+
+        /// <summary>
+        /// <para>
+        /// Gets or sets a value indicating whether this <see cref="Entity"/> is disabled being able to be picked up by
+        /// the cargobob.
+        /// </para>
+        /// <para>
+        /// Not available in any versions prior to v1.0.1180.2, and both getter and setter throws
+        /// a <see cref="GameVersionNotSupportedException"/> if called in unsupported game version.
+        /// </para>
+        /// </summary>
+        /// <value>
+        /// <see langword="true" /> if this <see cref="Entity"/> is disabled being able to be picked up by
+        /// the cargobob; otherwise, <see langword="false"/>.
+        /// </value>
+        /// <exception cref="GameVersionNotSupportedException">
+        /// The running game version is prior to v1.0.1180.2.
+        /// </exception>
+        public bool IsPickupByCargobobDisabled
+        {
+            get
+            {
+                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam,
+                    nameof(Entity), nameof(IsPickupByCargobobDisabled));
+
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                return SHVDN.NativeMemory.IsBitSet(address + 392, 31);
+            }
+            set
+            {
+                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam,
+                    nameof(Entity), nameof(IsPickupByCargobobDisabled));
+
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                SHVDN.NativeMemory.SetBit(address + 392, 31, value);
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Gets or sets the value that indicates whether this <see cref="Entity"/> keeps damage flags rather
+        /// than setting them to default when its mission state is cleaned up (e.g. by calling
+        /// <see cref="MarkAsNoLongerNeeded"/>).
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> if this <see cref="Entity"/> keeps damage flags; otherwise,
+        /// <see langword="false"/>.
+        /// </value>
+        /// <remarks>
+        /// If set to <see langword="true"/>, the following properties will be kept when its mission state is cleaned
+        /// up;
+        /// <list type="bullet">
+        /// <item>
+        /// <description>
+        /// <see cref="IsExplosionProof"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="IsOnlyDamagedByPlayer"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="CanOnlyBeDamagedByRelGroup"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="BlocksDamageByRelGroup"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// `<c>bOnlyDamagedWhenRunningScript</c>`, which does not have any effect in singleplayer (only read when
+        /// `<c>NetworkInterface::IsGameInProgress()</c>` returns <see langword="true"/> in
+        /// `<c>CPhysical::CanPhysicalBeDamaged</c>`)
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="IsBulletProof"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="IsFireProof"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="IsCollisionProof"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="IsMeleeProof"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="IsInvincible"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="BlocksAnyDamageButHasReactions"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="IsSteamProof"/>
+        /// </description>
+        /// </item>
+        /// <item>
+        /// <description>
+        /// <see cref="IsSmokeProof"/>
+        /// </description>
+        /// </item>
+        /// </list>
+        /// </remarks>
+        public bool KeepsDamageFlagsOnCleanupMissionState
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 400 : 396;
+                return SHVDN.NativeMemory.IsBitSet(address + offset, 0);
+            }
+            set
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 400 : 396;
+                SHVDN.NativeMemory.SetBit(address + offset, 0, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a <see cref="RelationshipGroup"/> in which this <see cref="Entity"/> can only be or cannot be
+        /// damaged by the <see cref="Ped"/>s.
+        /// </summary>
+        /// <value>
+        /// The relationship group if this <see cref="Entity"/> has the relation ship group hash for inflictor
+        /// checks; otherwise, zero.
+        /// </value>
+        public RelationshipGroup SpecificRelGroupForInflictorChecks
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return 0;
+                }
+
+                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 400 : 396;
+                return new RelationshipGroup(SHVDN.NativeMemory.ReadInt32(address + offset));
+            }
+            set
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 400 : 396;
+                SHVDN.NativeMemory.WriteInt32(address + offset, value.Hash);
+            }
+        }
+
+
+
 
         #region Status Effects
 
@@ -1389,14 +2092,6 @@ namespace GTA
         ///   <see langword="true" /> if this <see cref="Entity"/> is in the air; otherwise, <see langword="false" />.
         /// </value>
         public bool IsInAir => Function.Call<bool>(Hash.IS_ENTITY_IN_AIR, Handle);
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Entity"/> is in water.
-        /// </summary>
-        /// <value>
-        /// <see langword="true" /> if this <see cref="Entity"/> is in water; otherwise, <see langword="false" />.
-        /// </value>
-        public bool IsInWater => Function.Call<bool>(Hash.IS_ENTITY_IN_WATER, Handle);
 
         /// <summary>
         /// Gets an upright value for this <see cref="Entity"/> between 1.0 being upright and -1.0 being upside down.
