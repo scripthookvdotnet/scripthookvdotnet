@@ -1856,13 +1856,7 @@ namespace GTA
                 GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam,
                     nameof(Entity), nameof(IsPickupByCargobobDisabled));
 
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
-                    return;
-                }
-
-                SHVDN.NativeMemory.SetBit(address + 392, 31, value);
+                Function.Call(Hash.SET_PICK_UP_BY_CARGOBOB_DISABLED, Handle, value);
             }
         }
 
