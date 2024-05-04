@@ -1238,7 +1238,10 @@ namespace GTA
         /// frozen if collision has not streamed in around its position. A specific vehicle flag is set if
         /// the <see cref="Entity"/> is a <see cref="Vehicle"/> to ensure that it should be fixed.
         /// </summary>
-        /// <param name="shouldFreeze"></param>
+        /// <param name="shouldFreeze">
+        /// Specifies whether this <see cref="Entity"/> should be allowed to have its physics frozen if collision has
+        /// not streamed in around its position.
+        /// </param>
         /// <remarks>
         /// if the <see cref="Entity"/> is a <see cref="Vehicle"/>, the method also changes
         /// `<c>CVehicle::VehicleFlags::bShouldFixIfNoCollision</c>`, which much more internal game functions for
@@ -1538,7 +1541,7 @@ namespace GTA
         /// </para>
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Entity"/> is will not take any damage but will react
+        /// <see langword="true"/> if this <see cref="Entity"/> is will not take any damage but will react
         /// to any explosion/flame etc; otherwise, <see langword="false"/>.
         /// </value>
         /// <exception cref="GameVersionNotSupportedException">
@@ -1580,8 +1583,8 @@ namespace GTA
         /// <see langword="true"/>, unlike <see cref="IsInvincible"/>.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s;
-        /// otherwise, <see langword="false" />.
+        /// <see langword="true"/> if this <see cref="Entity"/> can only be damaged by <see cref="Player"/>s;
+        /// otherwise, <see langword="false"/>.
         /// </value>
         public bool IsOnlyDamagedByPlayer
         {
@@ -1710,7 +1713,6 @@ namespace GTA
             // anyway (without reading the 3rd arg) when the second argument is set to `false`
             => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_RELATIONSHIP_GROUP, Handle, false, 0);
 
-
         /// <summary>
         /// Sets the relationship group that this <see cref="Entity"/> should not take damage by <see cref="Ped"/>s in.
         /// </summary>
@@ -1752,7 +1754,7 @@ namespace GTA
         /// <remarks>
         /// This property affects not only <see cref="Ped"/> and <see cref="Vehicle"/> shaders but also game logic.
         /// For example, <see cref="Ped"/>s with this property <see langword="true"/> do not catch fire, and
-        /// <see cref="Vehicle"/> with this property <see langword="true"/> will never be marked to removed by ai
+        /// <see cref="Vehicle"/> with this property <see langword="true"/> will never be marked to removed by AI
         /// <see cref="Ped"/>s.
         /// </remarks>
         public bool ShouldRenderScorched
