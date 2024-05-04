@@ -1910,6 +1910,7 @@ namespace GTA
         /// <see langword="false"/>.
         /// </value>
         /// <remarks>
+        /// <para>
         /// If set to <see langword="true"/>, the following properties will be kept when its mission state is cleaned
         /// up;
         /// <list type="bullet">
@@ -1981,6 +1982,11 @@ namespace GTA
         /// </description>
         /// </item>
         /// </list>
+        /// </para>
+        /// <para>
+        /// This property reads or writes the same flag as what `<c>SET_ENTITY_PROOFS</c>` sets and
+        /// `<c>GET_ENTITY_PROOFS</c>` returns using the 8th argument.
+        /// </para>
         /// </remarks>
         public bool KeepsDamageFlagsOnCleanupMissionState
         {
