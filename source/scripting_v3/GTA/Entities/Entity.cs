@@ -1209,7 +1209,7 @@ namespace GTA
         /// streamed in around them. For <see cref="Ped"/>s and <see cref="Prop"/>s, setting a value via this property
         /// has the same visible effect as the said method.
         /// </remarks>
-        public bool AllowFreezeWaitingOnCollision
+        public bool AllowsFreezeWaitingOnCollision
         {
             get
             {
@@ -1245,7 +1245,7 @@ namespace GTA
         /// <remarks>
         /// if the <see cref="Entity"/> is a <see cref="Vehicle"/>, the method also changes
         /// `<c>CVehicle::VehicleFlags::bShouldFixIfNoCollision</c>`, which much more internal game functions for
-        /// vehicles rely on than the bit field <see cref="AllowFreezeWaitingOnCollision"/> and this method set.
+        /// vehicles rely on than the bit field <see cref="AllowsFreezeWaitingOnCollision"/> and this method set.
         /// </remarks>
         public void SetShouldFreezeWaitingOnCollision(bool shouldFreeze)
             => Function.Call(Hash.SET_ENTITY_SHOULD_FREEZE_WAITING_ON_COLLISION, Handle, shouldFreeze);
