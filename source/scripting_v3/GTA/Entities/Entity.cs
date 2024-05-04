@@ -1708,7 +1708,7 @@ namespace GTA
         public void ClearOnlyDamagedByRelGroup()
             // `SET_ENTITY_ONLY_DAMAGED_BY_RELATIONSHIP_GROUP` clears the specific relationship group hash to zero
             // anyway (without reading the 3rd arg) when the second argument is set to `false`
-            => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_RELATIONSHIP_GROUP, Handle, true, 0);
+            => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_RELATIONSHIP_GROUP, Handle, false, 0);
 
 
         /// <summary>
@@ -1992,7 +1992,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 400 : 396;
+                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 404 : 400;
                 return new RelationshipGroup(SHVDN.NativeMemory.ReadInt32(address + offset));
             }
             set
@@ -2003,13 +2003,10 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 400 : 396;
+                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 404 : 400;
                 SHVDN.NativeMemory.WriteInt32(address + offset, value.Hash);
             }
         }
-
-
-
 
         #region Status Effects
 
