@@ -1547,6 +1547,10 @@ namespace GTA
         /// <exception cref="GameVersionNotSupportedException">
         /// The running game version is prior to v1.0.463.1.
         /// </exception>
+        /// <remarks>
+        /// This property reads or writes the same flag as the one that
+        /// `<c>SET_PLAYER_INVINCIBLE_BUT_HAS_REACTIONS</c>` changes.
+        /// </remarks>
         public bool BlocksAnyDamageButHasReactions
         {
             get
@@ -1612,10 +1616,19 @@ namespace GTA
         /// <see cref="SpecificRelGroupForInflictorChecks"/>; otherwise, <see langword="false" />.
         /// </value>
         /// <remarks>
+        /// <para>
         /// This property should not be set to <see langword="true"/> when <see cref="BlocksDamageByRelGroup"/> is set
         /// to <see langword="true"/>, as both of them setting to <see langword="true"/> does not make any sense, which
         /// will result in the <see cref="Entity"/> rejecting to take any damage inflicted by any <see cref="Ped"/>s
         /// and any <see cref="Vehicle"/>s with drivers.
+        /// </para>
+        /// <para>
+        /// This property does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`
+        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. The property does not
+        /// make the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
+        /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
+        /// from catching fire at all.
+        /// </para>
         /// </remarks>
         public bool CanOnlyBeDamagedByRelGroup
         {
@@ -1653,10 +1666,19 @@ namespace GTA
         /// <see cref="SpecificRelGroupForInflictorChecks"/>; otherwise, <see langword="false" />.
         /// </value>
         /// <remarks>
+        /// <para>
         /// This property should not be set to <see langword="true"/> when <see cref="CanOnlyBeDamagedByRelGroup"/> is
         /// set to <see langword="true"/>, as both of them setting to <see langword="true"/> does not make any sense,
         /// which will result in the <see cref="Entity"/> rejecting to take any damage inflicted by any
         /// <see cref="Ped"/>s and any <see cref="Vehicle"/>s with drivers.
+        /// </para>
+        /// <para>
+        /// This property does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`
+        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. The property does not
+        /// make the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
+        /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
+        /// from catching fire at all.
+        /// </para>
         /// </remarks>
         public bool BlocksDamageByRelGroup
         {
@@ -1693,9 +1715,18 @@ namespace GTA
         /// <see cref="Ped"/>s in and by <see cref="Vehicle"/>s with drivers in.
         /// </param>
         /// <remarks>
+        /// <para>
         /// This method will not do anything if <see cref="BlocksDamageByRelGroup"/> is set to <see langword="true"/>.
         /// In that case, you will need call <see cref="ClearNotDamagedByRelGroup()"/> or change
         /// <see cref="BlocksDamageByRelGroup"/> to <see langword="false"/> before this method can have effects.
+        /// </para>
+        /// <para>
+        /// Calling this method does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`
+        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. The property does not
+        /// make the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
+        /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
+        /// from catching fire at all.
+        /// </para>
         /// </remarks>
         public void SetOnlyDamagedByRelGroup(RelationshipGroup relGroup)
             => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_RELATIONSHIP_GROUP, Handle, true, relGroup.Hash);
@@ -1721,9 +1752,18 @@ namespace GTA
         /// <see cref="Ped"/>s in or by <see cref="Vehicle"/>s with drivers in.
         /// </param>
         /// <remarks>
+        /// <para>
         /// This method will not do anything if <see cref="CanOnlyBeDamagedByRelGroup"/> is set to <see langword="true"/>.
         /// In that case, you will need call <see cref="ClearOnlyDamagedByRelGroup()"/> or change
         /// <see cref="CanOnlyBeDamagedByRelGroup"/> to <see langword="false"/> before this method can have effects.
+        /// </para>
+        /// <para>
+        /// Calling this method does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`
+        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. The property does not
+        /// make the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
+        /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
+        /// from catching fire at all.
+        /// </para>
         /// </remarks>
         public void SetNotDamagedByRelGroup(RelationshipGroup relGroup)
             => Function.Call(Hash.SET_ENTITY_CAN_BE_DAMAGED_BY_RELATIONSHIP_GROUP, Handle, false, relGroup.Hash);
