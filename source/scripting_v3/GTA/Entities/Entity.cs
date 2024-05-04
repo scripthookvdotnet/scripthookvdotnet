@@ -1623,9 +1623,9 @@ namespace GTA
         /// and any <see cref="Vehicle"/>s with drivers.
         /// </para>
         /// <para>
-        /// This property does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`
-        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. The property does not
-        /// make the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
+        /// This property does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`,
+        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. It does not make
+        /// the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
         /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
         /// from catching fire at all.
         /// </para>
@@ -1673,11 +1673,10 @@ namespace GTA
         /// <see cref="Ped"/>s and any <see cref="Vehicle"/>s with drivers.
         /// </para>
         /// <para>
-        /// This property does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`
-        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. The property does not
-        /// make the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
-        /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
-        /// from catching fire at all.
+        /// This property does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`,
+        /// `<c>WEAPON_EXPLOSION</c>`, `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, `<c>WEAPON_BLEEDING</c>`, or
+        /// `<c>WEAPON_FIRE</c>` at all. This property does not prevent the <see cref="Entity"/> from catching fire
+        /// at all.
         /// </para>
         /// </remarks>
         public bool BlocksDamageByRelGroup
@@ -1721,9 +1720,9 @@ namespace GTA
         /// <see cref="BlocksDamageByRelGroup"/> to <see langword="false"/> before this method can have effects.
         /// </para>
         /// <para>
-        /// Calling this method does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`
-        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. The property does not
-        /// make the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
+        /// Calling this method does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`,
+        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. It does not make
+        /// the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
         /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
         /// from catching fire at all.
         /// </para>
@@ -1758,11 +1757,10 @@ namespace GTA
         /// <see cref="CanOnlyBeDamagedByRelGroup"/> to <see langword="false"/> before this method can have effects.
         /// </para>
         /// <para>
-        /// Calling this method does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`
-        /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. The property does not
-        /// make the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
-        /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
-        /// from catching fire at all.
+        /// Calling this method does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`,
+        /// `<c>WEAPON_EXPLOSION</c>`, `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, `<c>WEAPON_BLEEDING</c>`, or
+        /// `<c>WEAPON_FIRE</c>` at all. This property does not prevent the <see cref="Entity"/> from catching fire
+        /// at all.
         /// </para>
         /// </remarks>
         public void SetNotDamagedByRelGroup(RelationshipGroup relGroup)
