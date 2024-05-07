@@ -114,7 +114,7 @@ namespace GTA
         MaxDistanceToHearEvents,
         /// <summary>
         /// Max distance <see cref="Ped"/>s can hear an event from, even if the sound is louder if the <see cref="Ped"/>
-        /// is using LOS to hear events (<see cref="PedConfigFlags.CheckLoSForSoundEvents"/>).
+        /// is using LOS to hear events (<see cref="PedConfigFlagToggles.CheckLoSForSoundEvents"/>).
         /// </summary>
         MaxDistanceToHearEventsUsingLOS,
         /// <summary>
