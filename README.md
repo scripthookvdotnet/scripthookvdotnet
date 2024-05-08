@@ -7,7 +7,7 @@ Community Script Hook V .NET (SHVDN)
 
 This is an ASI plugin for Grand Theft Auto V, based on the C++ ScriptHook by Alexander Blade, which allows running scripts written in any .NET language in-game.
 
-The issues page should be primarily used for bug reports and focused enhancement ideas. Questions related to GTA V scripting, in general, are better off in [Discussions page](https://github.com/scripthookvdotnet/scripthookvdotnet/discussions/categories/q-a) or forums dedicated to this purpose, like [gta5-mods.com](https://forums.gta5-mods.com/category/5/general-modding-discussion).
+The issues page should be primarily used for bug reports and focused enhancement ideas. Questions related to GTA V scripting in general, are better off on the [Discussions page](https://github.com/scripthookvdotnet/scripthookvdotnet/discussions/categories/q-a) or in forums dedicated to this purpose.
 
 ## Requirements
 
