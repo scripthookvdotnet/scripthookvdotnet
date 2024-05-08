@@ -5,7 +5,6 @@
 
 using GTA.Native;
 using System;
-using System.ComponentModel;
 using SHVDN;
 
 namespace GTA
@@ -44,9 +43,8 @@ namespace GTA
                     return KnockOffVehicleType.Default;
                 }
 
-                // The knock off vehicle type value uses the first 2 bits
-                return (KnockOffVehicleType)(
-                    NativeMemory.ReadByte(address + NativeMemory.Ped.KnockOffVehicleTypeOffset) & 3
+                return (KnockOffVehicleType)NativeMemory.ReadUInt32BitField(
+                    address + NativeMemory.Ped.KnockOffVehicleTypeOffset, 0, 2
                     );
             }
             set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, _ped.Handle, (int)value);
@@ -70,10 +68,9 @@ namespace GTA
                     return PedLegIKMode.Off;
                 }
 
-                // The ped leg ik mode type value uses the 3rd and 4th bits
-                int val = (int)((uint)(NativeMemory.ReadByte(address +
-                    NativeMemory.Ped.KnockOffVehicleTypeOffset) & 12) >> 2);
-                return (PedLegIKMode)(val);
+                return (PedLegIKMode)NativeMemory.ReadUInt32BitField(
+                    address + NativeMemory.Ped.KnockOffVehicleTypeOffset, 2, 2
+                );
             }
             set => Function.Call(Hash.SET_PED_LEG_IK_MODE, _ped.Handle, (int)value);
         }
@@ -117,12 +114,12 @@ namespace GTA
                 }
 
                 // Needs to right shift by 2 bits if `CPedConfigFlags::nPedGestureMode` is removed
-                const int AccumulatedUsedBits = 64 + 128 + 256 + 512 + 1024;
-                int val = (int)((uint)(NativeMemory.ReadInt32(address +
-                    NativeMemory.Ped.KnockOffVehicleTypeOffset) & AccumulatedUsedBits) >> 6);
+                int val = NativeMemory.ReadInt32BitField(
+                    address + NativeMemory.Ped.KnockOffVehicleTypeOffset, 6, 5
+                );
 
-                // Fast path for the default value (this is supposed to be read as -1 btw)
-                if (val == 31)
+                // Fast path for the default value
+                if (val == -1)
                 {
                     return VehicleSeat.Any;
                 }
@@ -137,7 +134,7 @@ namespace GTA
                 // `CEventLeaderEnteredCarAsDriver::CreateResponseTask` will have this ped start a `CTaskEnterVehicle`
                 // with a negative seat index (which is always invalid in functions outside scripting natives) when
                 // the leader enters a vehicle as a driver.
-                if (val >= 16)
+                if (val < 0)
                 {
                     return VehicleSeat.None;
                 }
