@@ -155,7 +155,7 @@ namespace GTA
                     ThrowHelper.ThrowArgumentOutOfRangeException(
                         nameof(value),
                         "The value must be one of the members of the passenger seats or `VehicleSeat.Any` " +
-                        "(`VehicleSeat.Driver` is also acceptable for implemetaion comvenience)."
+                        "(`VehicleSeat.Driver` is also acceptable for implementaion convenience)."
                     );
                 }
 
@@ -168,12 +168,12 @@ namespace GTA
                 // 15).
                 if (value == VehicleSeat.Any)
                 {
-                    const int PassengerIndexToResetToDefault = 31;
+                    const int PassengerIndexToResetToDefault = 30;
                     valToPass = PassengerIndexToResetToDefault;
                 }
                 else if (value == VehicleSeat.Driver)
                 {
-                    const int PassengerIndexToSetToDriver = 32;
+                    const int PassengerIndexToSetToDriver = 31;
                     valToPass = PassengerIndexToSetToDriver;
                 }
 

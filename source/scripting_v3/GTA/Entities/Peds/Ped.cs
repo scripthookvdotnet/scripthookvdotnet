@@ -20,7 +20,8 @@ namespace GTA
         WeaponCollection _weapons;
         Style _style;
         PedBoneCollection _pedBones;
-        private PedConfigFlags _pedConfigFlags;
+        PedConfigFlags _pedConfigFlags;
+        PedResetFlags _pedResetFlags;
 
         internal static readonly string[] _speechModifierNames = {
             "SPEECH_PARAMS_STANDARD",
@@ -587,6 +588,8 @@ namespace GTA
 
         public PedConfigFlags PedConfigFlags => _pedConfigFlags ?? (_pedConfigFlags = new PedConfigFlags(this));
 
+        public PedResetFlags PedResetFlags => _pedResetFlags ?? (_pedResetFlags = new PedResetFlags(this));
+
         /// <summary>
         /// Gets the value of a config flag toggle on this <see cref="Ped"/>.
         /// </summary>
@@ -603,18 +606,20 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the reset flag bit on this <see cref="Ped"/>.
-        /// You will need to call this method every frame you want to get, since the values of <see cref="PedConfigFlagToggles"/> are reset every frame.
+        /// Gets the value of a reset flag toggle on this <see cref="Ped"/>.
+        /// You will need to call this method every frame you want to get, since the values of
+        /// <see cref="PedConfigFlagToggles"/> are reset every frame.
         /// </summary>
-        public bool GetResetFlag(PedResetFlags configFlag)
+        public bool GetResetFlag(PedResetFlagToggles configFlag)
         {
             return Function.Call<bool>(Hash.GET_PED_RESET_FLAG, Handle, (int)configFlag, false);
         }
         /// <summary>
-        /// Sets the reset flag bit on this <see cref="Ped"/>.
-        /// You will need to call this method every frame you want to set, since the values of <see cref="PedConfigFlagToggles"/> are reset every frame.
+        /// Sets the value of a reset flag toggle on this <see cref="Ped"/>.
+        /// You will need to call this method every frame you want to set, since the values of
+        /// <see cref="PedConfigFlagToggles"/> are reset every frame.
         /// </summary>
-        public void SetResetFlag(PedResetFlags configFlag, bool value)
+        public void SetResetFlag(PedResetFlagToggles configFlag, bool value)
         {
             Function.Call(Hash.SET_PED_RESET_FLAG, Handle, (int)configFlag, value);
         }
@@ -627,7 +632,7 @@ namespace GTA
         public void SetConfigFlag(int flagID, bool value) => SetConfigFlag((PedConfigFlagToggles)flagID, value);
 
         /// <summary>
-        /// Do not use this method and use <see cref="Ped.SetResetFlag(PedResetFlags, bool)"/> or <see cref="Ped.GetResetFlag(PedResetFlags)"/> instead,
+        /// Do not use this method and use <see cref="Ped.SetResetFlag(PedResetFlagToggles, bool)"/> or <see cref="Ped.GetResetFlag(PedResetFlagToggles)"/> instead,
         /// because <c>SET_PED_RESET_FLAG</c> uses different flag IDs from the IDs <see cref="GetConfigFlag(int)"/> and <see cref="SetConfigFlag(int, bool)"/> use.
         /// </summary>
         [Obsolete("Ped.ResetConfigFlag is obsolete since SET_PED_RESET_FLAG uses different flag IDs from the IDs GET_PED_CONFIG_FLAG and SET_PED_CONFIG_FLAG use " +
