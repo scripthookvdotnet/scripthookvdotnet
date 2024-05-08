@@ -1536,8 +1536,9 @@ namespace GTA
         /// to any explosion/flame etc.
         /// </para>
         /// <para>
-        /// Not available in any versions prior to v1.0.463.1, and both getter and setter throws
-        /// a <see cref="GameVersionNotSupportedException"/> if called in unsupported game version.
+        /// Not available in any versions prior to v1.0.463.1, and the setter throws
+        /// a <see cref="GameVersionNotSupportedException"/> if called in unsupported game version (the getter always
+        /// returns false in unsupported game versions).
         /// </para>
         /// </summary>
         /// <value>
@@ -1545,7 +1546,7 @@ namespace GTA
         /// to any explosion/flame etc; otherwise, <see langword="false"/>.
         /// </value>
         /// <exception cref="GameVersionNotSupportedException">
-        /// The running game version is prior to v1.0.463.1.
+        /// The running game version is prior to v1.0.463.1. Can only be thrown from the setter.
         /// </exception>
         /// <remarks>
         /// This property reads or writes the same flag as the one that
@@ -1555,8 +1556,10 @@ namespace GTA
         {
             get
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_463_1_Steam,
-                    nameof(Entity), nameof(BlocksAnyDamageButHasReactions));
+                if (Game.Version < GameVersion.v1_0_463_1_Steam)
+                {
+                    return false;
+                }
 
                 IntPtr address = MemoryAddress;
                 if (address == IntPtr.Zero)
@@ -1863,8 +1866,9 @@ namespace GTA
         /// the cargobob.
         /// </para>
         /// <para>
-        /// Not available in any versions prior to v1.0.1180.2, and both getter and setter throws
-        /// a <see cref="GameVersionNotSupportedException"/> if called in unsupported game version.
+        /// Not available in any versions prior to v1.0.1180.2, and the setter throws
+        /// a <see cref="GameVersionNotSupportedException"/> if called in unsupported game version (the getter always
+        /// returns false in unsupported game versions).
         /// </para>
         /// </summary>
         /// <value>
@@ -1872,14 +1876,16 @@ namespace GTA
         /// the cargobob; otherwise, <see langword="false"/>.
         /// </value>
         /// <exception cref="GameVersionNotSupportedException">
-        /// The running game version is prior to v1.0.1180.2.
+        /// The running game version is prior to v1.0.1180.2. Can only be thrown from the setter.
         /// </exception>
         public bool IsPickupByCargobobDisabled
         {
             get
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam,
-                    nameof(Entity), nameof(IsPickupByCargobobDisabled));
+                if (Game.Version < GameVersion.v1_0_1180_2_Steam)
+                {
+                    return false;
+                }
 
                 IntPtr address = MemoryAddress;
                 if (address == IntPtr.Zero)
