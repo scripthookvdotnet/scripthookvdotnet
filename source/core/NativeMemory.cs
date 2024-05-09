@@ -1175,13 +1175,18 @@ namespace SHVDN
             return (*data & (1 << bit)) != 0;
         }
 
+        /// <summary>
+        /// Sign extends the value to a 32-bit integer so <paramref name="value"/> will be read as the intended value.
+        /// </summary>
+        /// <param name="value">The value to interpret as the intended value.</param>
+        /// <param name="bitWidth">The bit width.</param>
+        /// <returns>The sign-extended value.</returns>
         public static int SignExtendInt32(int value, int bitWidth)
         {
             const int MaxI32BitWidth = 32;
             // Right shift must be arithmetic shift to calculate the correct result
             return ((value << (MaxI32BitWidth - bitWidth)) >> (MaxI32BitWidth - bitWidth));
         }
-
         public static uint RemoveSignExtensionInt32(int value, int bitWidth)
         {
             return ((uint)value & CreateFirstNBitMaskUInt32(bitWidth));
