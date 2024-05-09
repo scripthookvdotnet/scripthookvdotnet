@@ -63,6 +63,35 @@ namespace GTA
             }
         }
 
+        /*
+         * There's the following members between `m_nIsInCover` and `m_fEntityZFromGroundZHeight` in
+         * `CPedResetFlag`:
+         * ```
+         * // Rotation modifier, which is used to allow tasks to override the amount of rotation applied from anims.
+         * // Resets each frame to 1.
+         * float m_fAnimRotationModifier;
+         *
+         * // Root correction modifier, how much of the root correction is applied to the ped.
+         * // Resets to 1 each frame.
+         * float m_fRootCorrectionModifer;
+         *
+         * // Overall control of speed at which movement anims play.
+         * // Default is 1.0f.
+         * float m_fMoveAnimRate;
+         *
+         * // Modifier set each frame by script, sets a distance a ped should be between seats to be applied when in
+         * // a vehicle.
+         * float m_fScriptedScaleBetweenSeatsDefaultDistance;
+         * ```
+         *
+         * `SET_SCRIPTED_ANIM_SEAT_OFFSET` calls `SetScriptedScaleBetweenSeatsDefaultDistance(const float f)`, but
+         * There's no `GetScriptedScaleBetweenSeatsDefaultDistance()` calls in the game, and thus there's no need to
+         * provide our property for `m_fScriptedScaleBetweenSeatsDefaultDistance` in SHVDN until the game start using
+         * the getter method.
+         * For `m_fAnimRotationModifier`, `m_fRootCorrectionModifer`, and `m_fMoveAnimRate`, the game doesn't actually
+         * call any of the 3 public setter methods at all.
+         */
+
         /// <summary>
         /// Gets or sets the number of frames where the the game can snap the height of the ped to the correct distance
         /// above the ground.

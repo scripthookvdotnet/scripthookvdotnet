@@ -75,6 +75,25 @@ namespace GTA
             set => Function.Call(Hash.SET_PED_LEG_IK_MODE, _ped.Handle, (int)value);
         }
 
+        /*
+         * There's `unsigned int    nPedGestureMode : 2` defined at between `nPedLegIkMode` and
+         * `m_iPassengerIndexToUseInAGroup` in `CPedConfigFlags`, but the game doesn't call the setter at all.
+         * For those who want to what `SetPedGestureMode(unsigned int)` expects, it's a `eGestureModes` value.
+         * The definition of `eGestureModes`:
+         * ```cpp
+         * enum eGestureModes
+           {
+               // if gesturing is enabled*, gestures will blended in and out based on audio
+	           GESTURE_MODE_DEFAULT,
+               // if gesturing is enabled*, gestures will only be blended in during gesture allow tags
+	           GESTURE_MODE_USE_ANIM_ALLOW_TAGS,
+               // if gesturing is enabled*, gestures will be blended out during gesture block tags
+	           GESTURE_MODE_USE_ANIM_BLOCK_TAGS,
+	           GESTURE_MODE_NUM	        // *if the conditions in BlockGestures are met
+	        };
+           ```
+         */
+
         /// <summary>
         /// Gets or sets the passenger index the <see cref="Ped"/> should want to be in use when they are in
         /// a <see cref="PedGroup"/> as a follower.
@@ -177,6 +196,11 @@ namespace GTA
                 Function.Call(Hash.SET_PED_GROUP_MEMBER_PASSENGER_INDEX, _ped.Handle, valToPass);               
             }
         }
+
+        /*
+         * There's `float fClimbRateOverride` defined at between `m_iPassengerIndexToUseInAGroup` and
+         * `m_Flags` in `CPedConfigFlags`, but the game doesn't call the setter at all.
+         */
 
         /// <summary>
         /// Gets the value of a config flag toggle on this <see cref="Ped"/>.
