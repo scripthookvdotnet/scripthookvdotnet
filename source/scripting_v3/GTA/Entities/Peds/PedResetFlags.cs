@@ -104,6 +104,100 @@ namespace GTA
         }
 
         /// <summary>
+        /// Gets or sets the number of frames the <see cref="Ped"/> should not accept any IK look ats.
+        /// The value takes any number between 0 and 3.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// The value is not within the range of 0 to 3. Can only be thrown from the setter.
+        /// </exception>
+        public uint NumFramesNotToAcceptIKLookAts
+        {
+            get
+            {
+                if (NativeMemory.Ped.CPed__PedResetFlagsOffset == 0)
+                {
+                    return 0;
+                }
+
+                IntPtr address = _ped.MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return 0;
+                }
+
+                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                return NativeMemory.ReadUInt32BitField(address + offset, 0, 2);
+            }
+            set
+            {
+                ThrowHelper.CheckArgumentRange(nameof(value), value, 0, 3);
+
+                if (NativeMemory.Ped.CPed__PedResetFlagsOffset == 0)
+                {
+                    return;
+                }
+
+                IntPtr address = _ped.MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                NativeMemory.WriteBitFieldAsUInt32(address + offset, value, 0, 2);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the number of frames the <see cref="Ped"/> should not accept script IK look ats.
+        /// The value takes any number between 0 and 3.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// The value is not within the range of 0 to 3. Can only be thrown from the setter.
+        /// </exception>
+        /// <remarks>
+        /// This property having a value more than zero does not prevent the <see cref="Ped"/> from looking at
+        /// initiated by a script, or by some of the game code that's not called via native functions.
+        /// </remarks>
+        public uint NumFramesNotToAcceptCodeIKLookAts
+        {
+            get
+            {
+                if (NativeMemory.Ped.CPed__PedResetFlagsOffset == 0)
+                {
+                    return 0;
+                }
+
+                IntPtr address = _ped.MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return 0;
+                }
+
+                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                return NativeMemory.ReadUInt32BitField(address + offset, 2, 2);
+            }
+            set
+            {
+                ThrowHelper.CheckArgumentRange(nameof(value), value, 0, 3);
+
+                if (NativeMemory.Ped.CPed__PedResetFlagsOffset == 0)
+                {
+                    return;
+                }
+
+                IntPtr address = _ped.MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                NativeMemory.WriteBitFieldAsUInt32(address + offset, value, 2, 2);
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the number of frames the <see cref="Ped"/> should be considered to have just left
         /// a <see cref="Vehicle"/>. The value takes any number between 0 and 15.
         /// </summary>
@@ -274,6 +368,18 @@ namespace GTA
                 NativeMemory.WriteFloat(address + offset, value);
             }
         }
+
+        /// <summary>
+        /// Gets a value that indicates whether the head IK is blocked for both game code and scripts in
+        /// this <see cref="Ped"/>.
+        /// </summary>
+        public bool IsHeadIKBlocked => NumFramesNotToAcceptIKLookAts > 0;
+
+        /// <summary>
+        /// Gets a value that indicates whether the head IK is blocked for scripts in this <see cref="Ped"/>.
+        /// </summary>
+        public bool IsCodeHeadIKBlocked => NumFramesNotToAcceptCodeIKLookAts > 0;
+
         /// <summary>
         /// Gets a value that indicates whether this <see cref="Ped"/> should be considered as have just left
         /// a <see cref="Vehicle"/> by testing if <see cref="NumFramesToConsiderInCover"/> is not zero.
@@ -290,6 +396,30 @@ namespace GTA
         /// a `<c>TaskCover</c>` is running on the <see cref="Ped"/>'s intelligence.
         /// </remarks>
         public bool IsInCover => NumFramesToConsiderInCover > 0;
+
+        /// <summary>
+        /// Sets the head IK of this <see cref="Ped"/> as blocked.
+        /// </summary>
+        /// <remarks>
+        /// Sets <see cref="NumFramesNotToAcceptIKLookAts"/> to the max value, which is 3 at least in the game versions
+        /// between v1.0.372.2 and v1.0.3179.0.
+        /// </remarks>
+        public void SetIsHeadIKBlocked()
+        {
+            NumFramesNotToAcceptIKLookAts = 3;
+        }
+
+        /// <summary>
+        /// Sets the head IK of this <see cref="Ped"/> as blocked for scripts.
+        /// </summary>
+        /// <remarks>
+        /// Sets <see cref="NumFramesNotToAcceptIKLookAts"/> to the max value, which is 3 at least in the game versions
+        /// between v1.0.372.2 and v1.0.3179.0.
+        /// </remarks>
+        public void SetIsCodeHeadIKBlocked()
+        {
+            NumFramesNotToAcceptCodeIKLookAts = 3;
+        }
 
         /// <summary>
         /// Sets the Z coordinate of the ground height and the threshold, which determine if the <see cref="Ped"/>
