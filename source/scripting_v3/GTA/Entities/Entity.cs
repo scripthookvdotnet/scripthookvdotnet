@@ -1023,7 +1023,7 @@ namespace GTA
         /// </item>
         /// <item>
         /// <description>
-        /// or the <see cref="Ped"/> is swimming where <see cref="PedConfigFlags.IsSwimming"/> is set
+        /// or the <see cref="Ped"/> is swimming where <see cref="PedConfigFlagToggles.IsSwimming"/> is set
         /// </description>
         /// </item>
         /// <item>

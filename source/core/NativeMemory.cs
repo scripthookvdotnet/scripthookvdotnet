@@ -1021,6 +1021,35 @@ namespace SHVDN
             return *(FVector3*)address.ToPointer();
         }
 
+        public static uint CreateFirstNBitMaskUInt32(int n)
+        {
+            int condCheckMask = -((n != 32) ? 1 : 0);
+            return (uint)(((1 << (int)((uint)n & 0x1F)) & condCheckMask) - 1);
+        }
+        public static uint ReadUInt32BitField(IntPtr address, int startBitIndex, int bitWidth)
+        {
+            uint valU32 = (uint)ReadInt32(address);
+            return ((valU32 >> startBitIndex) & CreateFirstNBitMaskUInt32(bitWidth));
+        }
+        public static int ReadInt32BitField(IntPtr address, int startBitIndex, int bitWidth)
+        {
+            return SignExtendInt32((int)ReadUInt32BitField(address, startBitIndex, bitWidth), bitWidth);
+        }
+        public static void WriteBitFieldAsUInt32(IntPtr address, uint value, int startBitIndex, int bitWidth)
+        {
+            uint bitMaskToModify = CreateFirstNBitMaskUInt32(bitWidth) << startBitIndex;
+            uint bitMaskToKeep = ~bitMaskToModify;
+
+            uint valU32 = (uint)ReadInt32(address);
+            valU32 = (valU32 & bitMaskToKeep) | ((value << startBitIndex) & bitMaskToModify);
+            WriteInt32(address, (int)valU32);
+        }
+        public static void WriteBitFieldAsInt32(IntPtr address, int value, int startBitIndex, int bitWidth)
+        {
+            uint valuesToWrite = RemoveSignExtensionInt32(value, bitWidth);
+            WriteBitFieldAsUInt32(address, (uint)value, startBitIndex, bitWidth);
+        }
+
         /// <summary>
         /// Writes a single 8-bit value to the specified <paramref name="address"/>.
         /// </summary>
@@ -1144,6 +1173,23 @@ namespace SHVDN
 
             int* data = (int*)address.ToPointer();
             return (*data & (1 << bit)) != 0;
+        }
+
+        /// <summary>
+        /// Sign extends the value to a 32-bit integer so <paramref name="value"/> will be read as the intended value.
+        /// </summary>
+        /// <param name="value">The value to interpret as the intended value.</param>
+        /// <param name="bitWidth">The bit width.</param>
+        /// <returns>The sign-extended value.</returns>
+        public static int SignExtendInt32(int value, int bitWidth)
+        {
+            const int MaxI32BitWidth = 32;
+            // Right shift must be arithmetic shift to calculate the correct result
+            return ((value << (MaxI32BitWidth - bitWidth)) >> (MaxI32BitWidth - bitWidth));
+        }
+        public static uint RemoveSignExtensionInt32(int value, int bitWidth)
+        {
+            return ((uint)value & CreateFirstNBitMaskUInt32(bitWidth));
         }
 
         private static void ThrowArgumentOutOfRangeException_InvalidBitRange(string paramName)
@@ -2690,8 +2736,19 @@ namespace SHVDN
                 address = FindPatternNaive("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
                 if (address != null)
                 {
-                    int fragInstNmGtaOffset = *(int*)(address + 16);
+                    int fragInstNmGtaOffset = *(int*)(address + 0x24);
                     KnockOffVehicleTypeOffset = s_fragInstNmGtaOffset + 0xC;
+                }
+
+                // Find a piece of code inside `CTaskMotionBase::CalcVelChangeLimitAndClamp(const CPed& ped,
+                // Vec3V_In changeInV, ScalarV_In timestepV, const CPhysical* pGroundPhysical)`.
+                // The cmp instruction is a part of the compiled code of CPhysical::GetIsTypeVehicle() call on
+                // `pGroundPhysical`, and the internal enum map of `ENTITY_TYPE_*` (`eEntityType`) is not likely to be
+                // changed by game updates.
+                address = FindPatternBmh("\x76\x20\x48\x85\xFF\x74\x1B\x80\x7F\x28\x03\x75\x15\x48\x8B\xCF", "xxxxxxxxxxxxxxxx");
+                if (address != null)
+                {
+                    CPed__PedResetFlagsOffset = *(int*)(address + 0x24);
                 }
 
                 address = FindPatternBmh("\x76\x20\xEB\x17\x76\x1C\xF3\x0F\x59\xE1\xF3\x0F\x5C\xC4\x0F\x2F\xC2", "xxxxxxxxxxxxxxxxx");
@@ -2918,6 +2975,12 @@ namespace SHVDN
             public static int TimeOfDeathOffset { get; }
 
             public static int KnockOffVehicleTypeOffset { get; }
+
+            /// <summary>
+            /// This offset is for `<c>CPed::m_PedResetFlags</c>`, not the offset of bit sets of reset flags is stored
+            /// on `<c>CPed</c>` (as a `<c>CPedResetFlags::ePedResetFlagsBitSet</c>`).
+            /// </summary>
+            public static int CPed__PedResetFlagsOffset { get; }
 
             #region -- Ped Intelligence Offsets --
 
