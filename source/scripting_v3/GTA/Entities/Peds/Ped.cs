@@ -898,6 +898,31 @@ namespace GTA
             Function.Call(Hash.SET_TASK_VEHICLE_CHASE_IDEAL_PURSUIT_DISTANCE, Handle, distance);
         }
 
+        /// <summary>
+        /// Forces a known motion state on this <see cref="Ped"/> by rebuilding its motion task tree in a known state.
+        /// </summary>
+        /// <param name="state">The <see cref="PedMotionState"/> to set.</param>
+        /// <param name="restartState">
+        /// If <see langword="true"/>, the <see cref="Ped"/> will perform an new appropriate motion task
+        /// even if the current primary motion task is in the specified motion state (<paramref name="state"/>).
+        /// </param>
+        /// <param name="exitState">Specifies how to exit the current primary motion task.</param>
+        /// <param name="forceAIPreCameraUpdate">
+        /// If <see langword="true"/>, the <see cref="Ped"/> will be forced PreCameraAIUpdate instead of
+        /// PostCameraAIUpdate. Only has effect if <paramref name="forceAIPreCameraUpdate"/> is set to
+        /// <see cref="ForceAnimAIUpdateState.CutsceneExit"/> currently.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if the state force was supported on the <see cref="Ped"/> and was successful;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        public bool ForceMotionStateThisFrame(PedMotionState state, bool restartState = false,
+            ForceAnimAIUpdateState exitState = ForceAnimAIUpdateState.Default, bool forceAIPreCameraUpdate = false)
+        {
+            return Function.Call<bool>(Hash.FORCE_PED_MOTION_STATE, Handle, (int)state, restartState, (int)exitState,
+                forceAIPreCameraUpdate);
+        }
+
         #endregion
 
         #region Events

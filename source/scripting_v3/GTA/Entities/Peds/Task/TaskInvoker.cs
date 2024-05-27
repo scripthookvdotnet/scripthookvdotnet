@@ -1891,6 +1891,21 @@ namespace GTA
 
         public void WarpOutOfVehicle(Vehicle vehicle) => LeaveVehicle(vehicle, LeaveVehicleFlags.WarpOut);
 
+        /// <summary>
+        /// Taskes to the peds motion state so it can be sequenced.
+        /// Forces a known motion state on this <see cref="Ped"/> by rebuilding its motion task tree in a known state
+        /// on performing the task.
+        /// </summary>
+        /// <param name="state">The <see cref="PedMotionState"/> to set.</param>
+        /// <param name="restartState">
+        /// If <see langword="true"/>, the <see cref="Ped"/> will perform an new appropriate motion task
+        /// even if the current primary motion task is in the specified motion state (<paramref name="state"/>).
+        /// </param>
+        public void ForceMotionState(PedMotionState state, bool restartState = false)
+        {
+            Function.Call(Hash.TASK_FORCE_MOTION_STATE, _ped.Handle, state, restartState);
+        }
+
         public void ClearAll()
         {
             Function.Call(Hash.CLEAR_PED_TASKS, _ped.Handle);
