@@ -832,7 +832,7 @@ namespace GTA
         DisableSeatShuffleDueToInjuredDriver,
         DisableParachuting,
         /// <summary>
-        /// Tells `<c>CGameWorld::ProcessAfterAllMovement()</c>` to call `<c>`ProcessPostMovement</c>` for tasks on
+        /// Tells `<c>CGameWorld::ProcessAfterAllMovement()</c>` to call `<c>ProcessPostMovement</c>` for tasks on
         /// the <see cref="Ped"/>.
         /// </summary>
         ProcessPostMovement,
@@ -1202,8 +1202,8 @@ namespace GTA
         /// </summary>
         VisemeAnimsAudioBlocked,
         /// <summary>
-        /// This overrides PV_FLAG_NOT_IN_CAR set on any head prop and stops it from being removed when getting into
-        /// the <see cref="Vehicle"/>.
+        /// This overrides <see cref="HelmetPropFlags.NotInCar"/> set on any head prop and stops it from being removed
+        /// when getting into the <see cref="Vehicle"/>.
         /// </summary>
         AllowHeadPropInVehicle,
         IsInVehicleChase,
@@ -1348,7 +1348,7 @@ namespace GTA
         IsSeatShuffling,
         /// <summary>
         /// <see langword="true"/> if the <see cref="Ped"/> are running `<c>TASK_AIM_AND_THROW_PROJECTILE</c>` as
-        /// a subtask of `<c>`TASK_AIM_GUN_ON_FOOT</c>`.
+        /// a subtask of `<c>TASK_AIM_GUN_ON_FOOT</c>`.
         /// </summary>
         IsThrowingProjectileWhileAiming,
         /// <summary>
@@ -1363,7 +1363,7 @@ namespace GTA
         /// Blocks <see cref="Ped"/> from manually transforming spycar to/from car/sub modes.
         /// </summary>
         /// <remarks>
-        /// The canonical name is <c>CPED_RESET_FLAG_DisableSpycarTransformation</c>.
+        /// The canonical name is `<c>CPED_RESET_FLAG_DisableSpycarTransformation</c>`.
         /// </remarks>
         DisableSpyCarTransformation,
         /// <summary>
@@ -1466,7 +1466,7 @@ namespace GTA
         /// </summary>
         NeverDieFromCapsuleRagdollSettings,
         /// <summary>
-        /// <see cref="Ped"/> is in contact with `<c>`GTA_DEEP_SURFACE_TYPE</c>` bounds
+        /// <see cref="Ped"/> is in contact with `<c>GTA_DEEP_SURFACE_TYPE</c>` bounds
         /// </summary>
         InContactWithDeepSurface,
         DontSuppressUseNavMeshToNavigateToVehicleDoorWhenVehicleInWater,
@@ -1482,8 +1482,8 @@ namespace GTA
         /// </summary>
         ForcePreCameraAnimUpdate,
         /// <summary>
-        /// Disables `<c>`PV_FLAG_HIDE_IN_FIRST_PERSON</c>` from culling the prop in
-        /// `<c>`CPedPropsMgr::RenderPropsInternal</c>`.
+        /// Disables <see cref="HelmetPropFlags.HideInFirstPerson"/> from culling the prop in
+        /// `<c>CPedPropsMgr::RenderPropsInternal</c>`.
         /// </summary>
         /// <remarks>
         /// The canonical name is `<c>CPED_RESET_FLAG_DisableHelmetCullFPS</c>`.
@@ -1494,7 +1494,7 @@ namespace GTA
         ForceScriptedCameraLowCoverAngleWhenEnteringCover,
         DisableCameraConstraintFallBackThisFrame,
         /// <summary>
-        /// Disables FPS arm IK in `<c>`CTaskPlayerOnFoot::IsStateValidForFPSIK</c>`.
+        /// Disables FPS arm IK in `<c>CTaskPlayerOnFoot::IsStateValidForFPSIK</c>`.
         /// </summary>
         /// <remarks>
         /// The canonical name is `<c>CPED_RESET_FLAG_DisableFPSArmIK</c>`.
@@ -1658,7 +1658,7 @@ namespace GTA
         /// </summary>
         InAirDefenceSphere,
         /// <summary>
-        /// This will suppress all takedown melee actions (`<c>`RA_IS_TAKEDOWN</c>` or <c>`RA_IS_STEALTH_KILL</c>`,
+        /// This will suppress all takedown melee actions (`<c>RA_IS_TAKEDOWN</c>` or `<c>RA_IS_STEALTH_KILL</c>`,
         /// defined in `<c>`action_table.meta</c>`).
         /// </summary>
         SuppressTakedownMeleeActions,
@@ -1685,7 +1685,7 @@ namespace GTA
         /// </summary>
         WasHitByVehicleMelee,
         /// <summary>
-        /// Don't allow <see cref="Ped"/> to use navmesh when navigating in `<c>`CTaskEnterVehicle</c>`.
+        /// Don't allow <see cref="Ped"/> to use navmesh when navigating in `<c>CTaskEnterVehicle</c>`.
         /// Will use goto-point or bail if they cannot use that.
         /// </summary>
         SuppressNavmeshForEnterVehicleTask,
