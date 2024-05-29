@@ -11,23 +11,12 @@ namespace GTA
     /// <summary>
     /// Represents an animation blend delta that determines the rate at which the animation task will blend in or out.
     /// The blend duration in seconds is equal to <c>1.0f / (the blend delta value)</c>.
+    /// Positive values are used for blending in, while negative values are used for blending out.
     /// </summary>
-    /// <remarks>
-    /// To prevent animation blending not getting finished forever, this struct throws
-    /// an <see cref="ArgumentOutOfRangeException"/> if the passed value is not more than zero when the constructor is
-    /// called.
-    /// </remarks>
     public readonly struct AnimationBlendDelta : IEquatable<AnimationBlendDelta>
     {
         public AnimationBlendDelta(float value)
         {
-            // Don't accept zero. If the blend delta is zero, CTaskScriptedAnimation can't finish animation blending
-            // because of infinity duration (which will be made by division of 1.0 by 0).
-            if (value <= 0)
-            {
-                ThrowHelper.ThrowArgumentOutOfRangeException(nameof(value), "The value should be positive.");
-            }
-
             Value = value;
         }
 
@@ -37,30 +26,57 @@ namespace GTA
         public float Value { get; }
 
         /// <summary>
-        /// The slowest predefined value. Returns the same struct as <c>new AnimationBlendDelta(1.5f)</c>.
+        /// The slowest predefined value for blend out.
+        /// Returns the same struct as <c>new AnimationBlendDelta(1.5f)</c>.
         /// </summary>
         // commands_task.h (leaked code) defines the const value WALK_BLEND_IN (1.5) and WALK_BLEND_OUT (-1.5)
-        public static AnimationBlendDelta Walk => new(1.5f);
+        public static AnimationBlendDelta WalkBlendIn => new(1.5f);
         /// <summary>
         /// Returns the same struct as <c>new AnimationBlendDelta(2.0f)</c>.
         /// </summary>
-        public static AnimationBlendDelta VerySlow => new(2.0f);
+        public static AnimationBlendDelta VerySlowBlendIn => new(2.0f);
         /// <summary>
         /// Returns the same struct as <c>new AnimationBlendDelta(4.0f)</c>.
         /// </summary>
-        public static AnimationBlendDelta Slow => new(4.0f);
+        public static AnimationBlendDelta SlowBlendIn => new(4.0f);
         /// <summary>
         /// Returns the same struct as <c>new AnimationBlendDelta(8.0f)</c>.
         /// </summary>
-        public static AnimationBlendDelta Normal => new(8.0f);
+        public static AnimationBlendDelta NormalBlendIn => new(8.0f);
         /// <summary>
         /// Returns the same struct as <c>new AnimationBlendDelta(16.0f)</c>.
         /// </summary>
-        public static AnimationBlendDelta Fast => new(16.0f);
+        public static AnimationBlendDelta FastBlendIn => new(16.0f);
         /// <summary>
         /// Returns the same struct as <c>new AnimationBlendDelta(1000.0f)</c>.
         /// </summary>
-        public static AnimationBlendDelta Instant => new(1000.0f);
+        public static AnimationBlendDelta InstantBlendIn => new(1000.0f);
+
+        /// <summary>
+        /// The slowest predefined value for blend out.
+        /// Returns the same struct as <c>new AnimationBlendDelta(-1.5f)</c>.
+        /// </summary>
+        public static AnimationBlendDelta WalkBlendOut => new(-1.5f);
+        /// <summary>
+        /// Returns the same struct as <c>new AnimationBlendDelta(-2.0f)</c>.
+        /// </summary>
+        public static AnimationBlendDelta VerySlowBlendOut => new(-2.0f);
+        /// <summary>
+        /// Returns the same struct as <c>new AnimationBlendDelta(-4.0f)</c>.
+        /// </summary>
+        public static AnimationBlendDelta SlowBlendOut => new(-4.0f);
+        /// <summary>
+        /// Returns the same struct as <c>new AnimationBlendDelta(-8.0f)</c>.
+        /// </summary>
+        public static AnimationBlendDelta NormalBlendOut => new(-8.0f);
+        /// <summary>
+        /// Returns the same struct as <c>new AnimationBlendDelta(-16.0f)</c>.
+        /// </summary>
+        public static AnimationBlendDelta FastBlendOut => new(-16.0f);
+        /// <summary>
+        /// Returns the same struct as <c>new AnimationBlendDelta(-1000.0f)</c>.
+        /// </summary>
+        public static AnimationBlendDelta InstantBlendOut => new(-1000.0f);
 
         public static explicit operator AnimationBlendDelta(float value) => new(value);
         public static explicit operator float(AnimationBlendDelta value) => value.Value;

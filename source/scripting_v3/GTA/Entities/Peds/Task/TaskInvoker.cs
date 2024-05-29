@@ -734,7 +734,9 @@ namespace GTA
         }
         public void PlayAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendSpeed, int duration, float startPhase)
         {
-            PlayAnimationInternal(crClipAsset, blendSpeed.Value, -blendSpeed.Value, duration, AnimationFlags.None,
+            float blendIn = System.Math.Abs(blendSpeed.Value);
+            float blendOut = -blendIn;
+            PlayAnimationInternal(crClipAsset, blendIn, blendOut, duration, AnimationFlags.None,
                 startPhase, false, AnimationIKControlFlags.None);
         }
         public void PlayAnimation(string animDict, string animName, float blendInSpeed, int duration, AnimationFlags flags)
@@ -752,7 +754,7 @@ namespace GTA
         }
         public void PlayAnimation(CrClipAsset crClipAsset, AnimationBlendDelta blendInSpeed, AnimationBlendDelta blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
         {
-            PlayAnimationInternal(crClipAsset, blendInSpeed.Value, -blendOutSpeed.Value, duration, flags, startPhase, phaseControlled, ikFlags);
+            PlayAnimationInternal(crClipAsset, blendInSpeed.Value, blendOutSpeed.Value, duration, flags, startPhase, phaseControlled, ikFlags);
         }
 
         private void PlayAnimationInternal(CrClipAsset crClipAsset, float blendInSpeed, float blendOutSpeed, int duration, AnimationFlags flags, float startPhase, bool phaseControlled, AnimationIKControlFlags ikFlags)
@@ -821,8 +823,8 @@ namespace GTA
             AnimationIKControlFlags ikFlags = AnimationIKControlFlags.None)
         {
             (CrClipDictionary clipDict, string clipName) = crClipAsset;
-            float blendInDeltaArg = blendInDelta?.Value ?? AnimationBlendDelta.Normal.Value;
-            float blendOutDeltaArg = -(blendOutDelta?.Value ?? AnimationBlendDelta.Normal.Value);
+            float blendInDeltaArg = blendInDelta?.Value ?? AnimationBlendDelta.NormalBlendIn.Value;
+            float blendOutDeltaArg = blendOutDelta?.Value ?? AnimationBlendDelta.NormalBlendOut.Value;
 
             Function.Call(Hash.TASK_PLAY_ANIM_ADVANCED, _ped.Handle, clipDict, clipName, position.X, position.Y, position.Z,
                 rotation.X, rotation.Y, rotation.Z, blendInDeltaArg, blendOutDeltaArg, timeToPlay, (int)flags,
@@ -1934,14 +1936,15 @@ namespace GTA
         /// The <see cref="CrClipAsset"/> to find the corresponding clip.
         /// </param>
         /// <param name="blendOutDelta">
-        /// The blend out delta. if set to <see langword="null"/>, <see cref="AnimationBlendDelta.Normal"/> will be used.
+        /// The blend out delta. if set to <see langword="null"/>, <see cref="AnimationBlendDelta.NormalBlendOut"/>
+        /// will be used.
         /// </param>
         public void StopScriptedAnimationTask(CrClipAsset crClipAsset, AnimationBlendDelta? blendOutDelta = null)
         {
             (CrClipDictionary clipDict, string clipName) = crClipAsset;
             float deltaArg = blendOutDelta.HasValue
-                ? -(float)(blendOutDelta.Value)
-                : -(AnimationBlendDelta.Normal.Value);
+                ? (float)(blendOutDelta.GetValueOrDefault())
+                : (AnimationBlendDelta.NormalBlendOut.Value);
 
             Function.Call(Hash.STOP_ANIM_TASK, _ped.Handle, clipDict, clipName, deltaArg);
         }
