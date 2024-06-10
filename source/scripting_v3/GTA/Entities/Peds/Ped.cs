@@ -2791,8 +2791,14 @@ namespace GTA
         /// <param name="targetBone">The target <see cref="EntityBone"/>.</param>
         /// <param name="targetOffset">The target offset relative to the bone.</param>
         /// <param name="flags">The flags.</param>
-        /// <param name="blendInTimeMS">The blend in time in milliseconds.</param>
-        /// <param name="blendOutTimeMS">The blend out time in milliseconds.</param>
+        /// <param name="blendInTimeMS">
+        /// The blend in time in milliseconds.
+        /// Set to -1 for default blend in time. Set to 0 for instant blend in time.
+        /// </param>
+        /// <param name="blendOutTimeMS">
+        /// The blend out time in milliseconds.
+        /// Set to -1 for default blend out time. Set to 0 for instant blend out time.
+        /// </param>
         /// <remarks>
         /// The IK target will only be valid for one update, so it needs to be set for as long as it is needed (to
         /// avoid IK targets not being cleared and getting stuck enabled).
@@ -2814,8 +2820,14 @@ namespace GTA
         /// <param name="targetBone">The target <see cref="EntityBone"/>.</param>
         /// <param name="targetOffset">The target offset relative to the bone.</param>
         /// <param name="flags">The flags.</param>
-        /// <param name="blendInTimeMS">The blend in time in milliseconds.</param>
-        /// <param name="blendOutTimeMS">The blend out time in milliseconds.</param>
+        /// <param name="blendInTimeMS">
+        /// The blend in time in milliseconds.
+        /// Set to -1 for default blend in time. Set to 0 for instant blend in time.
+        /// </param>
+        /// <param name="blendOutTimeMS">
+        /// The blend out time in milliseconds.
+        /// Set to -1 for default blend out time. Set to 0 for instant blend out time.
+        /// </param>
         /// <remarks>
         /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/remarks"/>
         /// </remarks>
@@ -2840,14 +2852,21 @@ namespace GTA
         /// Set to -1 for no target bone.
         /// </param>
         /// <param name="targetOffset">
-        /// If target entity is <see langword="null"/>, this is assumed to be world coordinates.
-        /// If target entity is not <see langword="null"/>, this is an offset from the target entity.
-        /// If target entity is not <see langword="null"/> and <paramref name="boneTag"/> is not -1, this is an offset
-        /// relative to the bone.
+        /// If <paramref name="targetEntity"/> is <see langword="null"/>, this is assumed to be world coordinates.
+        /// If <paramref name="targetEntity"/> is not <see langword="null"/>, this is an offset from
+        /// <paramref name="targetEntity"/>.
+        /// If <paramref name="targetEntity"/> is not <see langword="null"/> and <paramref name="boneTag"/> is not -1,
+        /// this is an offset relative to the bone.
         /// </param>
         /// <param name="flags">The flags.</param>
-        /// <param name="blendInTimeMS">The blend in time in milliseconds.</param>
-        /// <param name="blendOutTimeMS">The blend out time in milliseconds.</param>
+        /// <param name="blendInTimeMS">
+        /// The blend in time in milliseconds.
+        /// Set to -1 for default blend in time. Set to 0 for instant blend in time.
+        /// </param>
+        /// <param name="blendOutTimeMS">
+        /// The blend out time in milliseconds.
+        /// Set to -1 for default blend out time. Set to 0 for instant blend out time.
+        /// </param>
         /// <remarks>
         /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/remarks"/>
         /// </remarks>
@@ -2864,12 +2883,19 @@ namespace GTA
         /// <param name="ikPart">The IK Part to set.</param>
         /// <param name="target">The world position/coordinates to target.</param>
         /// <param name="flags">The flags.</param>
-        /// <param name="blendInTimeMS">The blend in time in milliseconds.</param>
-        /// <param name="blendOutTimeMS">The blend out time in milliseconds.</param>
+        /// <param name="blendInTimeMS">
+        /// The blend in time in milliseconds.
+        /// Set to -1 for default blend in time. Set to 0 for instant blend in time.
+        /// </param>
+        /// <param name="blendOutTimeMS">
+        /// The blend out time in milliseconds.
+        /// Set to -1 for default blend out time. Set to 0 for instant blend out time.
+        /// </param>
         /// <remarks>
         /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/remarks"/>
         /// </remarks>
-        public void SetIKTarget(IKPart ikPart, Vector3 target, IKTargetFlags flags, int blendInTimeMS = -1, int blendOutTimeMS = -1)
+        public void SetIKTarget(IKPart ikPart, Vector3 target, IKTargetFlags flags, int blendInTimeMS = -1,
+            int blendOutTimeMS = -1)
         {
             Function.Call(Hash.SET_IK_TARGET, (int)ikPart, 0, -1, target.X, target.Y, target.Z, (int)flags,
                 blendInTimeMS, blendOutTimeMS);
