@@ -578,6 +578,68 @@ namespace GTA
         }
 
         /// <summary>
+        /// Plays a camera animation on this <see cref="Camera"/>.
+        /// </summary>
+        /// <param name="anim">
+        /// The animation clip to play. Must be loaded before this method can start playing the anim.
+        /// </param>
+        /// <param name="originPosition">
+        /// The position of the origin in world coordinates to playback the anim from.
+        /// Any local scene origin/offset specified in the animation clip will be applied in addition to this.
+        /// </param>
+        /// <param name="originRotation">
+        /// The rotation of the origin in degrees to playback the anim from.
+        /// Any local scene origin/offset specified in the animation clip will be applied in addition to this.
+        /// </param>
+        /// <param name="animFlags">The animation flags to be used for playback.</param>
+        /// <param name="rotOrder">
+        /// The rotation order to be used when composing a matrix from the Euler angles specified in
+        /// <paramref name="originRotation"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if the method successfully starts the animation; otherwise, <see langword="false"/>.
+        /// </returns>
+        public bool PlayAnim(CrClipAsset anim, Vector3 originPosition, Vector3 originRotation, CamAnimationFlags
+            animFlags = CamAnimationFlags.None, EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
+        {
+            return Function.Call<bool>(Hash.PLAY_CAM_ANIM, Handle, anim.ClipName, anim.ClipDictionary,
+                originPosition.X, originPosition.Y, originPosition.Z, originRotation.X, originRotation.Y,
+                originRotation.Z, (int)animFlags, (int)rotOrder);
+        }
+
+        /// <summary>
+        /// Plays a camera animation on this <see cref="Camera"/> attached to the specified
+        /// <see cref="FwSyncedScene"/>.
+        /// </summary>
+        /// <param name="scene">The <see cref="FwSyncedScene"/> to attach this camera to.</param>
+        /// <param name="anim">
+        /// The animation clip to play. Must be loaded before this method can start playing the anim.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if the method successfully starts the animation; otherwise, <see langword="false"/>.
+        /// </returns>
+        public bool PlaySynchronizedAnim(FwSyncedScene scene, CrClipAsset anim)
+            => Function.Call<bool>(Hash.PLAY_SYNCHRONIZED_CAM_ANIM, Handle, scene, anim.ClipName, anim.ClipDictionary);
+
+        /// <summary>
+        /// Gets a value that indicates whether this <see cref="Camera"/> is currently playing the animation specified
+        /// by a <see cref="CrClipAsset"/>.
+        /// </summary>
+        /// <param name="anim">The animation clip to be queried on the <see cref="Camera"/>.</param>
+        /// <returns></returns>
+        public bool IsPlayingAnim(CrClipAsset anim)
+            => Function.Call<bool>(Hash.IS_CAM_PLAYING_ANIM, Handle, anim.ClipName, anim.ClipDictionary);
+
+        /// <summary>
+        /// Gets or sets the phase of the animation that is currently playing on this <see cref="Camera"/>.
+        /// </summary>
+        public float AnimPhase
+        {
+            get => Function.Call<float>(Hash.GET_CAM_ANIM_CURRENT_PHASE, Handle);
+            set => Function.Call(Hash.SET_CAM_ANIM_CURRENT_PHASE, Handle, value);
+        }
+
+        /// <summary>
         /// Destroys this <see cref="Camera"/>.
         /// </summary>
         public override void Delete()

@@ -831,6 +831,34 @@ namespace GTA
                 startPhase, (int)rotOrder, (int)ikFlags);
         }
 
+        /// <summary>
+        /// Starts a synchronized scene task to play a synchronized animation.
+        /// </summary>
+        /// <param name="scene">The <see cref="FwSyncedScene"/> to start on.</param>
+        /// <param name="anim">The clip asset to play. Must be loaded before calling this method.</param>
+        /// <param name="blendIn">The rate at which the task will blend in.</param>
+        /// <param name="blendOut">The rate at which the task will blend out.</param>
+        /// <param name="flags">A set of flags allowing for different playback options.</param>
+        /// <param name="ragdollFlags">
+        /// Determines which ragdoll reactions to disable while the scene is running.
+        /// </param>
+        /// <param name="moverBlendIn">
+        /// Determines how fast the peds position will be interpolated into the synchronized scene
+        /// (helps to remove pops, and to allow blending into scenes from a walk, etc.)
+        /// If set to <see langword="null"/>, <see cref="AnimationBlendDelta.InstantBlendIn"/> will be used instead.
+        /// </param>
+        /// <param name="ikFlags">The IK flags.</param>
+        public void PlaySynchronizedScene(FwSyncedScene scene, CrClipAsset anim, AnimationBlendDelta blendIn,
+            AnimationBlendDelta blendOut, SyncedSceneFlags flags = SyncedSceneFlags.None, RagdollBlockingFlags
+                ragdollFlags = RagdollBlockingFlags.None, AnimationBlendDelta? moverBlendIn = null,
+            AnimationIKControlFlags ikFlags = AnimationIKControlFlags.None)
+        {
+            AnimationBlendDelta moverBlendInArg = moverBlendIn ?? AnimationBlendDelta.InstantBlendIn;
+
+            Function.Call(Hash.TASK_SYNCHRONIZED_SCENE, _ped.Handle, scene, anim.ClipDictionary, anim.ClipName,
+                blendIn, blendOut, (int)flags, (int)ragdollFlags, moverBlendInArg, (int)ikFlags);
+        }
+
         public void RappelFromHelicopter()
         {
             Function.Call(Hash.TASK_RAPPEL_FROM_HELI, _ped.Handle, 0x41200000);
