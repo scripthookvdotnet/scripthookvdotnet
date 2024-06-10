@@ -69,7 +69,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Creates a new <see cref="Ped"/> by cloning this <see cref="Ped"/>.
+        /// Creates a new <see cref="Ped"/> at where this <see cref="Ped"/> is by cloning this <see cref="Ped"/>.
         /// </summary>
         /// <param name="linkBlends">
         /// If <see langword="true"/> the method will create a link between the two <see cref="Ped"/>s for the head
@@ -128,7 +128,7 @@ namespace GTA
 
         /// <summary>
         /// <para>
-        /// Creates a new <see cref="Ped"/> by cloning this <see cref="Ped"/>.
+        /// Creates a new <see cref="Ped"/> at where this <see cref="Ped"/> is by cloning this <see cref="Ped"/>.
         /// </para>
         /// <para>
         /// Not available in the game versions earlier than v1.0.463.1.
