@@ -2782,6 +2782,127 @@ namespace GTA
 
         #endregion
 
+        #region IK
+
+        /// <summary>
+        /// Sets the IK target for a given IK part belonging to this <see cref="Ped"/>.
+        /// </summary>
+        /// <param name="ikPart">The IK Part to set.</param>
+        /// <param name="targetBone">The target <see cref="EntityBone"/>.</param>
+        /// <param name="targetOffset">The target offset relative to the bone.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="blendInTimeMS">
+        /// The blend in time in milliseconds.
+        /// Set to -1 for default blend in time. Set to 0 for instant blend in time.
+        /// </param>
+        /// <param name="blendOutTimeMS">
+        /// The blend out time in milliseconds.
+        /// Set to -1 for default blend out time. Set to 0 for instant blend out time.
+        /// </param>
+        /// <remarks>
+        /// The IK target will only be valid for one update, so it needs to be set for as long as it is needed (to
+        /// avoid IK targets not being cleared and getting stuck enabled).
+        /// </remarks>
+        public void SetIKTarget(IKPart ikPart, PedBone targetBone, Vector3 targetOffset, IKTargetFlags flags,
+            int blendInTimeMS = -1, int blendOutTimeMS = -1)
+        {
+            Function.Call(Hash.SET_IK_TARGET, (int)ikPart, targetBone.Owner, targetBone.Tag, targetOffset.X,
+                targetOffset.Y, targetOffset.Z, (int)flags, blendInTimeMS, blendOutTimeMS);
+        }
+
+        // This overload is intentionally separated to reduce issues with ped bones if some game update breaks our bone
+        // memory stuff and thus we struggle to find a new solution. We have to use our memory stuff when we want to
+        // find a bone tag by a sequential index.
+        /// <summary>
+        /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/summary"/>
+        /// </summary>
+        /// <param name="ikPart">The IK Part to set.</param>
+        /// <param name="targetBone">The target <see cref="EntityBone"/>.</param>
+        /// <param name="targetOffset">The target offset relative to the bone.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="blendInTimeMS">
+        /// The blend in time in milliseconds.
+        /// Set to -1 for default blend in time. Set to 0 for instant blend in time.
+        /// </param>
+        /// <param name="blendOutTimeMS">
+        /// The blend out time in milliseconds.
+        /// Set to -1 for default blend out time. Set to 0 for instant blend out time.
+        /// </param>
+        /// <remarks>
+        /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/remarks"/>
+        /// </remarks>
+        public void SetIKTarget(IKPart ikPart, EntityBone targetBone, Vector3 targetOffset, IKTargetFlags flags,
+            int blendInTimeMS = -1, int blendOutTimeMS = -1)
+        {
+            Function.Call(Hash.SET_IK_TARGET, (int)ikPart, targetBone.Owner, targetBone.Tag, targetOffset.X,
+                targetOffset.Y, targetOffset.Z, (int)flags, blendInTimeMS, blendOutTimeMS);
+        }
+
+        // This overload is provided to let users specify without using our `EntityBone` stuff when they know the bone
+        // tag to specify as the target bone. `finale_heist2A.sc` and `finale_heist2B.sc` call the native with target
+        // objects whose model is either `prop_large_gold` or `prop_large_gold_alt_a`, and hard coded bone tags
+        // (the grip left and grip right bones, whose bone tag values are 14991 and 50415 respectively).
+        /// <summary>
+        /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/summary"/>
+        /// </summary>
+        /// <param name="ikPart">The IK Part to set.</param>
+        /// <param name="targetEntity">The target <see cref="Entity"/>.</param>
+        /// <param name="boneTag">
+        /// The target bone tag (an identifier, not a sequential index).
+        /// Set to -1 for no target bone.
+        /// </param>
+        /// <param name="targetOffset">
+        /// If <paramref name="targetEntity"/> is <see langword="null"/>, this is assumed to be world coordinates.
+        /// If <paramref name="targetEntity"/> is not <see langword="null"/>, this is an offset from
+        /// <paramref name="targetEntity"/>.
+        /// If <paramref name="targetEntity"/> is not <see langword="null"/> and <paramref name="boneTag"/> is not -1,
+        /// this is an offset relative to the bone.
+        /// </param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="blendInTimeMS">
+        /// The blend in time in milliseconds.
+        /// Set to -1 for default blend in time. Set to 0 for instant blend in time.
+        /// </param>
+        /// <param name="blendOutTimeMS">
+        /// The blend out time in milliseconds.
+        /// Set to -1 for default blend out time. Set to 0 for instant blend out time.
+        /// </param>
+        /// <remarks>
+        /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/remarks"/>
+        /// </remarks>
+        public void SetIKTarget(IKPart ikPart, Entity targetEntity, int boneTag, Vector3 targetOffset,
+            IKTargetFlags flags, int blendInTimeMS = -1, int blendOutTimeMS = -1)
+        {
+            Function.Call(Hash.SET_IK_TARGET, (int)ikPart, targetEntity, boneTag, targetOffset.X, targetOffset.Y,
+                targetOffset.Z, (int)flags, blendInTimeMS, blendOutTimeMS);
+        }
+
+        /// <summary>
+        /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/summary"/>
+        /// </summary>
+        /// <param name="ikPart">The IK Part to set.</param>
+        /// <param name="target">The world position/coordinates to target.</param>
+        /// <param name="flags">The flags.</param>
+        /// <param name="blendInTimeMS">
+        /// The blend in time in milliseconds.
+        /// Set to -1 for default blend in time. Set to 0 for instant blend in time.
+        /// </param>
+        /// <param name="blendOutTimeMS">
+        /// The blend out time in milliseconds.
+        /// Set to -1 for default blend out time. Set to 0 for instant blend out time.
+        /// </param>
+        /// <remarks>
+        /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/remarks"/>
+        /// </remarks>
+        public void SetIKTarget(IKPart ikPart, Vector3 target, IKTargetFlags flags, int blendInTimeMS = -1,
+            int blendOutTimeMS = -1)
+        {
+            Function.Call(Hash.SET_IK_TARGET, (int)ikPart, 0, -1, target.X, target.Y, target.Z, (int)flags,
+                blendInTimeMS, blendOutTimeMS);
+        }
+
+        #endregion
+
         public static PedHash[] GetAllModels()
         {
             return SHVDN.NativeMemory.PedModels.Select(x => (PedHash)x).ToArray();
