@@ -268,15 +268,16 @@ namespace GTA
         /// Puts the <see cref="Ped"/> into melee.
         /// </summary>
         /// <param name="target">The target.</param>
-        /// <param name="blendInDuration">
-        /// The blend time in second. Zero or negative value will make the <see cref="Ped"/> into melee instantly
-        /// from the previous motion such as walking.
-        /// To precisely mimic how long general game code blends a <see cref="Ped"/> into melee, use <c>0.25f</c>.
+        /// <param name="blendIn">
+        /// The blend time in second. <see cref="AnimationBlendDuration.Instant"/> will make the <see cref="Ped"/> into
+        /// melee instantly from the previous motion such as walking.
+        /// To precisely mimic how long general game code blends a <see cref="Ped"/> into melee, use
+        /// <see cref="AnimationBlendDuration.Normal"/>.
         /// </param>
         /// <param name="strafePhaseSync">
         /// <para>
         /// Typically <c>0f</c> is used, but <c>10f</c> is used in all of the occurrences where <c>8f</c> is used for
-        /// <paramref name="blendInDuration"/> in <c>fbi4_prep1.ysc</c>.
+        /// <paramref name="blendIn"/> in <c>fbi4_prep1.ysc</c>.
         /// </para>
         /// <para>
         /// Not exactly known how this parameter affects the motion strafing task (<c>CTaskMotionStrafing</c>), but
@@ -289,41 +290,42 @@ namespace GTA
         /// Implicitly sets <see cref="TaskThreatResponseFlags.CanFightArmedPedsWhenNotArmed"/> for the created
         /// <c>CTaskThreatResponse</c> if called on an AI/NPC <see cref="Ped"/>.
         /// </remarks>
-        public void PutDirectlyIntoMelee(Ped target, float blendInDuration, float strafePhaseSync)
-            => Function.Call(Hash.TASK_PUT_PED_DIRECTLY_INTO_MELEE, _ped.Handle, target, blendInDuration, -1,
+        public void PutDirectlyIntoMelee(Ped target, AnimationBlendDuration blendIn, float strafePhaseSync)
+            => Function.Call(Hash.TASK_PUT_PED_DIRECTLY_INTO_MELEE, _ped.Handle, target, blendIn, -1,
                 strafePhaseSync, 0);
         /// <summary>
         /// Puts the <see cref="Ped"/> into melee, but allow to specify the task time that only applies for a player
         /// <see cref="Ped"/>. Not intended to use with an AI/NPC <see cref="Ped"/>.
         /// </summary>
         /// <param name="target">
-        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, float, float)" path="/param[@name='target']"/>
+        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, AnimationBlendDuration, float)" path="/param[@name='target']"/>
         /// </param>
-        /// <param name="blendInDuration">
-        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, float, float)" path="/param[@name='blendInDuration']"/>
+        /// <param name="blendIn">
+        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, AnimationBlendDuration, float)" path="/param[@name='blendIn']"/>
         /// </param>
         /// <param name="strafePhaseSync">
-        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, float, float)" path="/param[@name='strafePhaseSync']"/>
+        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, AnimationBlendDuration, float)" path="/param[@name='strafePhaseSync']"/>
         /// </param>
         /// <param name="timeInTask">
         /// The time in seconds for the newly created <c>CTaskMelee</c>.
         /// Only applies when the <see cref="Ped"/> being given the task is a player one.
         /// </param>
-        public void PutDirectlyIntoMelee(Ped target, float blendInDuration, float strafePhaseSync, float timeInTask)
-            => Function.Call(Hash.TASK_PUT_PED_DIRECTLY_INTO_MELEE, _ped.Handle, target, blendInDuration, timeInTask,
+        public void PutDirectlyIntoMelee(Ped target, AnimationBlendDuration blendIn, float strafePhaseSync,
+            float timeInTask)
+            => Function.Call(Hash.TASK_PUT_PED_DIRECTLY_INTO_MELEE, _ped.Handle, target, blendIn, timeInTask,
                 strafePhaseSync, 0);
         /// <summary>
         /// Puts the <see cref="Ped"/> into melee, but allow to specify the combat flags that only applies for an
         /// AI/NPC <see cref="Ped"/>. Not intended to use with a player <see cref="Ped"/>.
         /// </summary>
         /// <param name="target">
-        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, float, float)" path="/param[@name='target']"/>
+        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, AnimationBlendDuration, float)" path="/param[@name='target']"/>
         /// </param>
-        /// <param name="blendInDuration">
-        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, float, float)" path="/param[@name='blendInDuration']"/>
+        /// <param name="blendIn">
+        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, AnimationBlendDuration, float)" path="/param[@name='blendIn']"/>
         /// </param>
         /// <param name="strafePhaseSync">
-        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, float, float)" path="/param[@name='strafePhaseSync']"/>
+        /// <inheritdoc cref="PutDirectlyIntoMelee(Ped, AnimationBlendDuration, float)" path="/param[@name='strafePhaseSync']"/>
         /// </param>
         /// <param name="aiCombatFlags">
         /// The combat flags for the newly created <c>CTaskThreatResponse</c> to use.
@@ -335,8 +337,9 @@ namespace GTA
         /// Implicitly sets <see cref="TaskThreatResponseFlags.CanFightArmedPedsWhenNotArmed"/> for the created
         /// <c>CTaskThreatResponse</c> if called on an AI/NPC <see cref="Ped"/>.
         /// </remarks>
-        public void PutDirectlyIntoMelee(Ped target, float blendInDuration, float strafePhaseSync, TaskCombatFlags aiCombatFlags)
-            => Function.Call(Hash.TASK_PUT_PED_DIRECTLY_INTO_MELEE, _ped.Handle, target, blendInDuration, -1f,
+        public void PutDirectlyIntoMelee(Ped target, AnimationBlendDuration blendIn, float strafePhaseSync,
+            TaskCombatFlags aiCombatFlags)
+            => Function.Call(Hash.TASK_PUT_PED_DIRECTLY_INTO_MELEE, _ped.Handle, target, blendIn, -1f,
                 strafePhaseSync, (uint)aiCombatFlags);
 
         [Obsolete("Use TaskInvoker.Combat instead.")]

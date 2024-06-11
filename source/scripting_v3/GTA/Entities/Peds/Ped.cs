@@ -2716,19 +2716,38 @@ namespace GTA
         /// Sets the movement clipset this <see cref="Ped"/> should use.
         /// Do not forget to stream in/load the clipset you want to load, or the method silently will fail.
         /// </summary>
+        /// <param name="clipSet">
+        /// The new movement clip set.
+        /// </param>
+        /// <param name="blendDuration">
+        /// The blend duration. If <see langword="null"/>, <see cref="AnimationBlendDuration.Normal"/> will be used
+        /// as the duration.
+        /// </param>
         /// <remarks>
-        /// Unlike any methods that requires some resource to be loaded before the main operation and that are present in v3.6.0,
-        /// this method does not load the clipset automatically. Load the clipset you want to load beforehand.
+        /// Unlike any methods that requires some resource to be loaded before the main operation and that are present
+        /// in v3.6.0, this method does not load the clipset automatically. Load the clipset you want to load
+        /// beforehand.
         /// </remarks>
-        public void SetMovementClipSet(ClipSet clipSet, float blendDuration = 0.25f)
-            => Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, Handle, clipSet, blendDuration);
+        public void SetMovementClipSet(ClipSet clipSet, AnimationBlendDuration? blendDuration = null)
+        {
+            AnimationBlendDuration durationArg = blendDuration ?? AnimationBlendDuration.Normal;
+            Function.Call(Hash.SET_PED_MOVEMENT_CLIPSET, Handle, clipSet, durationArg);
+        }
 
         /// <summary>
-        /// Resets the movement clipset to the default value defined in <c>peds.meta</c> under <c>&lt;MovementClipSet&gt;</c>.
+        /// Resets the movement clipset to the default value defined in <c>peds.meta</c> under
+        /// <c>&lt;MovementClipSet&gt;</c>.
         /// Do not forget to unstream the clipset if no longer needed.
         /// </summary>
-        public void ResetMovementClipSet(float blendDuration = 0.25f)
-            => Function.Call(Hash.RESET_PED_MOVEMENT_CLIPSET, Handle, blendDuration);
+        /// <param name="blendDuration">
+        /// The blend duration. If <see langword="null"/>, <see cref="AnimationBlendDuration.Normal"/> will be used
+        /// as the duration.
+        /// </param>
+        public void ResetMovementClipSet(AnimationBlendDuration? blendDuration = null)
+        {
+            AnimationBlendDuration durationArg = blendDuration ?? AnimationBlendDuration.Normal;
+            Function.Call(Hash.RESET_PED_MOVEMENT_CLIPSET, Handle, durationArg);
+        }
 
         /// <summary>
         /// Sets the strafe clipset this <see cref="Ped"/> should use.
