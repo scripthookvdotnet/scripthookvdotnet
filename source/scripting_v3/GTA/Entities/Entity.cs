@@ -3500,6 +3500,130 @@ namespace GTA
             }
         }
 
+        /// <summary>
+        /// Plays a synchronized anim on this <see cref="Entity"/> using a synchronized scene.
+        /// </summary>
+        /// <param name="scene">The <see cref="FwSyncedScene"/> to start on.</param>
+        /// <param name="anim">The clip asset to play. Must be loaded before calling this method.</param>
+        /// <param name="blendIn">The rate at which the task will blend in.</param>
+        /// <param name="blendOut">The rate at which the task will blend out.</param>
+        /// <param name="flags">A set of flags allowing for different playback options.</param>
+        /// <param name="moverBlendIn">
+        /// Determines how fast the peds position will be interpolated into the synchronized scene
+        /// (helps to remove pops, and to allow blending into scenes from a walk, etc.)
+        /// If set to <see langword="null"/>, <see cref="AnimationBlendDelta.InstantBlendIn"/> will be used instead.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if the method successfully starts the animation; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// as part of this process the entity's collision will be deactivated. To turn it back on again, use
+        /// <see cref="IsCollisionEnabled"/> or pass <see langword="true"/> to the `<c>activateCollision</c>` parameter
+        /// of <see cref="StopSynchronizedAnim"/>.
+        /// </para>
+        /// <para>
+        /// Use <see cref="TaskInvoker.PlaySynchronizedScene"/> for <see cref="Ped"/>s, as this method will not start
+        /// an animation if the <see cref="Entity"/> is a <see cref="Ped"/>.
+        /// </para>
+        /// <para>
+        /// The entity must not be attached, and must have a drawable with a skeleton data when calling this method, or
+        /// this method will fail to start an animation. The method will lazily create a skeleton and an anim director
+        /// on the <see cref="Entity"/> if either of them does not exist, but the method will fail if the lazy creation
+        /// fails.
+        /// </para>
+        /// </remarks>
+        public bool PlaySynchronizedAnim(FwSyncedScene scene, CrClipAsset anim, AnimationBlendDelta blendIn,
+            AnimationBlendDelta? blendOut = null, SyncedSceneFlags flags = SyncedSceneFlags.None,
+            AnimationBlendDelta? moverBlendIn = null)
+        {
+            AnimationBlendDelta moverBlendInArg = moverBlendIn ?? AnimationBlendDelta.InstantBlendIn;
+            AnimationBlendDelta blendOutArg = blendOut ?? AnimationBlendDelta.NormalBlendOut;
+
+            return Function.Call<bool>(Hash.PLAY_SYNCHRONIZED_ENTITY_ANIM, Handle, scene, anim.ClipName,
+                anim.ClipDictionary, blendIn, blendOutArg, (int)flags, moverBlendInArg);
+        }
+
+        /// <summary>
+        /// Stops a synchronized anim on this <see cref="Entity"/>.
+        /// </summary>
+        /// <param name="blendOut"></param>
+        /// <param name="activateCollision"></param>
+        /// <returns>
+        /// <see langword="true"/> if the method successfully stops the animation; otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// Use <see cref="TaskInvoker.ClearAll"/> for <see cref="Ped"/>s, as this method will not stop
+        /// an animation if the <see cref="Entity"/> is a <see cref="Ped"/>.
+        /// </para>
+        /// <para>
+        /// The entity must not be attached, must not be missing a drawable with a skeleton data, a skeleton, or
+        /// an anim director. Otherwise, the method will fail.
+        /// </para>
+        /// </remarks>
+        public bool StopSynchronizedAnim(AnimationBlendDelta blendOut, bool activateCollision)
+        {
+            return Function.Call<bool>(Hash.STOP_SYNCHRONIZED_ENTITY_ANIM, Handle, blendOut, activateCollision);
+        }
+
+        /// <summary>
+        /// Plays a synchronized anim on the closest map <see cref="Prop"/> within a test sphere using a synchronized
+        /// scene.
+        /// </summary>
+        /// <param name="newPos">The center position for the test sphere.</param>
+        /// <param name="radius">The radius for the test sphere.</param>
+        /// <param name="propModel">The prop model to consider.</param>
+        /// <param name="scene">The <see cref="FwSyncedScene"/> to start on.</param>
+        /// <param name="anim">The clip asset to play. Must be loaded before calling this method.</param>
+        /// <param name="blendIn">The rate at which the animation will blend in.</param>
+        /// <param name="blendOut">The rate at which the animation will blend out.</param>
+        /// <param name="flags">A set of flags allowing for different playback options.</param>
+        /// <param name="moverBlendIn">
+        /// Determines how fast the peds position will be interpolated into the synchronized scene
+        /// (helps to remove pops, and to allow blending into scenes from a walk, etc.)
+        /// If set to <see langword="null"/>, <see cref="AnimationBlendDelta.InstantBlendIn"/> will be used instead.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if the method successfully finds a <see cref="Prop"/> and starts the animation;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        /// <remarks>
+        /// The entity must not be attached, and must have a drawable with a skeleton data when calling this method, or
+        /// this method will fail to start an animation. The method will lazily create a skeleton and an anim director
+        /// on the <see cref="Entity"/> if either of them does not exist, but the method will fail if the lazy creation
+        /// fails.
+        /// </remarks>
+        public static bool PlaySynchronizedMapEntityAnim(Vector3 newPos, float radius, Model propModel,
+            FwSyncedScene scene, CrClipAsset anim, AnimationBlendDelta blendIn, AnimationBlendDelta? blendOut = null,
+            SyncedSceneFlags flags = SyncedSceneFlags.None, AnimationBlendDelta? moverBlendIn = null)
+        {
+            AnimationBlendDelta moverBlendInArg = moverBlendIn ?? AnimationBlendDelta.InstantBlendIn;
+            AnimationBlendDelta blendOutArg = blendOut ?? AnimationBlendDelta.NormalBlendOut;
+
+            return Function.Call<bool>(Hash.PLAY_SYNCHRONIZED_MAP_ENTITY_ANIM, newPos.X, newPos.Y, newPos.Z, radius,
+                propModel, scene, anim.ClipName, anim.ClipDictionary, blendIn, blendOutArg, (int)flags,
+                moverBlendInArg);
+        }
+
+        /// <summary>
+        /// Stops a synchronized anim on the closest map <see cref="Prop"/> within a test sphere.
+        /// </summary>
+        /// <param name="newPos">The center position for the test sphere.</param>
+        /// <param name="radius">The radius for the test sphere.</param>
+        /// <param name="propModel">The prop model to consider.</param>
+        /// <param name="blendOut">The rate at which the animation will blend out.</param>
+        /// <returns>
+        /// <see langword="true"/> if the method successfully finds a <see cref="Prop"/> and stops the animation;
+        /// otherwise, <see langword="false"/>.
+        /// </returns>
+        public static bool StopSynchronizedMapEntityAnim(Vector3 newPos, float radius, Model propModel,
+            AnimationBlendDelta blendOut)
+        {
+            return Function.Call<bool>(Hash.STOP_SYNCHRONIZED_MAP_ENTITY_ANIM, newPos.X, newPos.Y, newPos.Z, radius,
+                propModel, blendOut);
+        }
+
         #endregion
 
         #region Line Of Sight

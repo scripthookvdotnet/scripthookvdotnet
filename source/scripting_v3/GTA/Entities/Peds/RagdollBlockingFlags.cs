@@ -13,6 +13,7 @@ namespace GTA
     [Flags]
     public enum RagdollBlockingFlags
     {
+        None = 0,
         BulletImpact = 1,
         VehicleImpact = 2,
         Fire = 4,
