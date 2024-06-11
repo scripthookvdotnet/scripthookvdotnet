@@ -3601,7 +3601,7 @@ namespace GTA
             AnimationBlendDelta moverBlendInArg = moverBlendIn ?? AnimationBlendDelta.InstantBlendIn;
             AnimationBlendDelta blendOutArg = blendOut ?? AnimationBlendDelta.NormalBlendOut;
 
-            return Function.Call<bool>(Hash.PLAY_SYNCHRONIZED_ENTITY_ANIM, newPos.X, newPos.Y, newPos.Z, radius,
+            return Function.Call<bool>(Hash.PLAY_SYNCHRONIZED_MAP_ENTITY_ANIM, newPos.X, newPos.Y, newPos.Z, radius,
                 propModel, scene, anim.ClipName, anim.ClipDictionary, blendIn, blendOutArg, (int)flags,
                 moverBlendInArg);
         }
