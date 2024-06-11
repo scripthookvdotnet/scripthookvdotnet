@@ -85,7 +85,7 @@ namespace GTA
         /// <remarks>
         /// <para>
         /// This method clones compressed damage, and this works the same as how <see cref="CloneAlt"/> works
-        /// when the 2nd bool parameter `<c>cloneCompressedDamage</c>` is set to <see langword="true"/>.
+        /// with the 2nd bool parameter `<c>cloneCompressedDamage</c>` set to <see langword="true"/>.
         /// </para>
         /// <para>
         /// This overload was supposed to be have <paramref name="linkBlends"/> as an optional argument with
@@ -169,7 +169,7 @@ namespace GTA
         /// </param>
         /// <remarks>
         /// This method clones compressed damage, and this works the same as how <see cref="CloneToTargetAlt"/> works
-        /// when the bool parameter `<c>cloneCompressedDamage</c>` is set to <see langword="true"/>.
+        /// with the bool parameter `<c>cloneCompressedDamage</c>` set to <see langword="true"/>.
         /// </remarks>
         public void CloneToTarget(Ped target)
         {
