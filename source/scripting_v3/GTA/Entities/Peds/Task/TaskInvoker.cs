@@ -862,6 +862,123 @@ namespace GTA
                 blendIn, blendOut, (int)flags, (int)ragdollFlags, moverBlendInArg, (int)ikFlags);
         }
 
+        /// <summary>
+        /// Tasks the <see cref="Ped"/> to start a move network with the passed network name.
+        /// </summary>
+        /// <param name="networkName">
+        /// The move network name. This should match some mrf file name without the extension `<c>.mrf</c>`.
+        /// </param>
+        /// <param name="blendDuration">The blend duration in seconds.</param>
+        /// <param name="flags">The move network flags.</param>
+        public void StartMoveNetworkByName(string networkName, float blendDuration = 0f,
+            MoveNetworkFlags flags = MoveNetworkFlags.Default)
+        {
+            // There must be a network clone before `allowOverrideCloneUpdate` param can have actual effect, but we
+            // don't know how to create one without the game being online/networked.
+            const bool allowOverrideCloneUpdate = false;
+            // The clip dict string *may* have actual effect if we're missing something with `CTaskMoVEScripted`...
+            const string clipDictStr = null;
+
+            Function.Call(Hash.TASK_MOVE_NETWORK_BY_NAME_WITH_INIT_PARAMS, _ped.Handle, networkName,
+                blendDuration, allowOverrideCloneUpdate, clipDictStr, (int)flags);
+        }
+
+        /// <summary>
+        /// Tasks the <see cref="Ped"/> to start a move network with the passed network and with custom start pos and
+        /// orientation.
+        /// </summary>
+        /// <param name="networkName">
+        /// The move network name. This should match some mrf file name without the extension `<c>.mrf</c>`.
+        /// </param>
+        /// <param name="pos">The start position.</param>
+        /// <param name="rot">The start rotation.</param>
+        /// <param name="rotOrder">The rotation order in world space.</param>
+        /// <param name="blendDuration">The blend duration in seconds.</param>
+        /// <param name="flags">The move network flags.</param>
+        public void StartMoveNetworkAdvancedByName(string networkName, Vector3 pos, Vector3 rot,
+            EulerRotationOrder rotOrder, float blendDuration = 0f, MoveNetworkFlags flags = MoveNetworkFlags.Default)
+        {
+            const bool allowOverrideCloneUpdate = false;
+            const string clipDictStr = null;
+
+            Function.Call(Hash.TASK_MOVE_NETWORK_ADVANCED_BY_NAME, _ped.Handle, networkName, pos.X, pos.Y, pos.Z,
+                rot.X, rot.Y, rot.Z, (int)rotOrder, blendDuration, allowOverrideCloneUpdate, clipDictStr, (int)flags);
+        }
+
+        /// <summary>
+        /// <para>
+        /// Tasks the <see cref="Ped"/> to start a move network with the passed network name.
+        /// </para>
+        /// <para>
+        /// Only available in the game version v1.0.1493.0 and later.
+        /// </para>
+        /// </summary>
+        /// <param name="networkName">
+        /// The move network name. This should match some mrf file name without the extension `<c>.mrf</c>`.
+        /// </param>
+        /// <param name="initParams">The initial parameters.</param>
+        /// <param name="blendDuration">The blend duration in seconds.</param>
+        /// <param name="flags">The move network flags.</param>
+        public void StartMoveNetworkByNameWithInitParams(string networkName,
+            TaskMoVEScriptedInitialParameters initParams, float blendDuration = 0f,
+            MoveNetworkFlags flags = MoveNetworkFlags.Default)
+        {
+            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1493_0_Steam, nameof(TaskInvoker),
+                nameof(StartMoveNetworkByNameWithInitParams));
+
+            unsafe
+            {
+                using (TaskMoVEScriptedInitialParametersStruct paramStruct = initParams.BuildStructForNatives())
+                {
+                    const bool allowOverrideCloneUpdate = false;
+                    const string clipDictStr = null;
+
+                    Function.Call(Hash.TASK_MOVE_NETWORK_BY_NAME_WITH_INIT_PARAMS, _ped.Handle, networkName,
+                        &paramStruct, blendDuration, allowOverrideCloneUpdate, clipDictStr, (int)flags);
+                }
+            }
+        }
+
+        /// <summary>
+        /// <para>
+        /// Tasks the <see cref="Ped"/> to start a move network with the passed network and with custom start pos and
+        /// orientation.
+        /// </para>
+        /// <para>
+        /// Only available in the game version v1.0.1868.0 and later.
+        /// </para>
+        /// </summary>
+        /// <param name="networkName">
+        /// The move network name. This should match some mrf file name without the extension `<c>.mrf</c>`.
+        /// </param>
+        /// <param name="initParams">The initial parameters.</param>
+        /// <param name="pos">The start position.</param>
+        /// <param name="rot">The start rotation.</param>
+        /// <param name="rotOrder">The rotation order in world space.</param>
+        /// <param name="blendDuration">The blend duration in seconds.</param>
+        /// <param name="flags">The move network flags.</param>
+        public void StartMoveNetworkByNameAdvancedWithInitParams(string networkName,
+            TaskMoVEScriptedInitialParameters initParams, Vector3 pos, Vector3 rot,
+            EulerRotationOrder rotOrder, float blendDuration = 0f,
+            MoveNetworkFlags flags = MoveNetworkFlags.Default)
+        {
+            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1868_0_Steam, nameof(TaskInvoker),
+                nameof(StartMoveNetworkByNameWithInitParams));
+
+            unsafe
+            {
+                using (TaskMoVEScriptedInitialParametersStruct paramStruct = initParams.BuildStructForNatives())
+                {
+                    const bool allowOverrideCloneUpdate = false;
+                    const string clipDictStr = null;
+
+                    Function.Call(Hash.TASK_MOVE_NETWORK_ADVANCED_BY_NAME_WITH_INIT_PARAMS, _ped.Handle, networkName,
+                        &paramStruct, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, (int)rotOrder, blendDuration,
+                        allowOverrideCloneUpdate, clipDictStr, (int)flags);
+                }
+            }
+        }
+
         public void RappelFromHelicopter()
         {
             Function.Call(Hash.TASK_RAPPEL_FROM_HELI, _ped.Handle, 0x41200000);
