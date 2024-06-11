@@ -100,15 +100,15 @@ namespace GTA
         /// <returns><see langword="true" /> if <paramref name="left"/> has a different value than <paramref name="right"/>; otherwise, <see langword="false" />.</returns>
         public static bool operator !=(AnimationBlendDelta left, AnimationBlendDelta right) => !left.Equals(right);
 
-        public bool Equals(AnimationBlendDelta moveBlendRatio)
+        public bool Equals(AnimationBlendDelta blendDelta)
         {
-            return Value == moveBlendRatio.Value;
+            return Value == blendDelta.Value;
         }
         public override bool Equals(object obj)
         {
-            if (obj is AnimationBlendDelta asset)
+            if (obj is AnimationBlendDelta blendDelta)
             {
-                return Equals(asset);
+                return Equals(blendDelta);
             }
 
             return false;
