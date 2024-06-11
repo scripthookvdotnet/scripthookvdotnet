@@ -69,12 +69,134 @@ namespace GTA
         }
 
         /// <summary>
+        /// Creates a new <see cref="Ped"/> at where this <see cref="Ped"/> is by cloning this <see cref="Ped"/>.
+        /// </summary>
+        /// <param name="linkBlends">
+        /// If <see langword="true"/> the method will create a link between the two <see cref="Ped"/>s for the head
+        /// blend.
+        /// If <see langword="false"/>, the method will clone the head blend to the cloned <see cref="Ped"/> but does
+        /// not create the link between the two <see cref="Ped"/>s for the head blend.
+        /// </param>
+        /// <returns>
+        /// A new <see cref="Ped"/> instance if successfully cloned; otherwise, <see langword="null"/>.
+        /// Do note that the old overload <see cref="Ped.Clone(float)"/> always returns a new <see cref="Ped"/>
+        /// instance even if cloning fails.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This method clones compressed damage, and this works the same as how <see cref="CloneAlt"/> works
+        /// with the 2nd bool parameter `<c>cloneCompressedDamage</c>` set to <see langword="true"/>.
+        /// </para>
+        /// <para>
+        /// This overload was supposed to be have <paramref name="linkBlends"/> as an optional argument with
+        /// the default value <see langword="true"/>, but it is not the case due to the call `<c>Ped.Clone()</c>` being
+        /// ambiguous for CS0121 if the parameter was optional.
+        /// </para>
+        /// </remarks>
+        public Ped Clone(bool linkBlends)
+        {
+            // These 2 arguments are specified as the default arguments in the native header, and they do not have
+            // any effect if the game is not networked.
+            const bool registerAsNetworkObject = true;
+            const bool scriptHostObject = true;
+
+            int handle = Function.Call<int>(Hash.CLONE_PED, Handle, registerAsNetworkObject, scriptHostObject,
+                linkBlends);
+
+            return MakePedInstIfHandleIsNotZero(handle);
+        }
+
+        /// <summary>
         /// Spawn an identical clone of this <see cref="Ped"/>.
         /// </summary>
-        /// <param name="heading">The direction the clone should be facing.</param>
+        /// <param name="heading">
+        /// This was meant to be the direction the clone should be facing, but has no effect.
+        /// </param>
+        [Obsolete("`Ped.Clone(float)` is obsolete because the float parameter does not make any sense. " +
+                  "Use `Ped.Clone(bool)` instead.", true)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public Ped Clone(float heading = 0.0f)
         {
-            return new Ped(Function.Call<int>(Hash.CLONE_PED, Handle, heading, false, false));
+            const bool registerAsNetworkObject = true;
+            const bool scriptHostObject = true;
+
+            // Do not return null even if the native function returns 0, this overload always returns a new `Ped`
+            // instance in v3.6.0 and earlier.
+            return new Ped(Function.Call<int>(Hash.CLONE_PED, Handle, registerAsNetworkObject, scriptHostObject,
+                false));
+        }
+
+        /// <summary>
+        /// <para>
+        /// Creates a new <see cref="Ped"/> at where this <see cref="Ped"/> is by cloning this <see cref="Ped"/>.
+        /// </para>
+        /// <para>
+        /// Not available in the game versions earlier than v1.0.463.1.
+        /// </para>
+        /// </summary>
+        /// <param name="linkBlends">
+        /// If <see langword="true"/> the method will create a link between the two <see cref="Ped"/>s for the head
+        /// blend.
+        /// If <see langword="false"/>, the method will clone the head blend to the cloned <see cref="Ped"/> but does
+        /// not create the link between the two <see cref="Ped"/>s for the head blend.
+        /// </param>
+        /// <param name="cloneCompressedDamage">
+        /// If <see langword="true"/> clone shares compressed damage.
+        /// If <see langword="false"/>, clone has no compressed damage.
+        /// </param>
+        /// <returns>
+        /// A new <see cref="Ped"/> instance if successfully cloned; otherwise, <see langword="null"/>.
+        /// </returns>
+        public Ped CloneAlt(bool linkBlends = true, bool cloneCompressedDamage = true)
+        {
+            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_463_1_Steam, nameof(Ped),
+                nameof(CloneAlt));
+
+            const bool registerAsNetworkObject = true;
+            const bool scriptHostObject = true;
+
+            int handle = Function.Call<int>(Hash.CLONE_PED_ALT, Handle, registerAsNetworkObject, scriptHostObject,
+                linkBlends, cloneCompressedDamage);
+
+            return MakePedInstIfHandleIsNotZero(handle);
+        }
+
+        /// <summary>
+        /// Copies variation and head blend settings from this <see cref="Ped"/> to another.
+        /// </summary>
+        /// <param name="target">
+        /// The <see cref="Ped"/> to copy settings to.
+        /// </param>
+        /// <remarks>
+        /// This method clones compressed damage, and this works the same as how <see cref="CloneToTargetAlt"/> works
+        /// with the bool parameter `<c>cloneCompressedDamage</c>` set to <see langword="true"/>.
+        /// </remarks>
+        public void CloneToTarget(Ped target)
+        {
+            Function.Call(Hash.CLONE_PED_TO_TARGET, Handle, target);
+        }
+
+        /// <summary>
+        /// <para>
+        /// Copies variation and head blend settings from this <see cref="Ped"/> to another.
+        /// </para>
+        /// <para>
+        /// Not available in the game versions earlier than v1.0.463.1.
+        /// </para>
+        /// </summary>
+        /// <param name="target">
+        /// The <see cref="Ped"/> to copy settings to.
+        /// </param>
+        /// <param name="cloneCompressedDamage">
+        /// If <see langword="true"/> clone shares compressed damage.
+        /// If <see langword="false"/>, clone has no compressed damage.
+        /// </param>
+        public void CloneToTargetAlt(Ped target, bool cloneCompressedDamage = true)
+        {
+            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_463_1_Steam, nameof(Ped),
+                nameof(CloneToTargetAlt));
+
+            Function.Call(Hash.CLONE_PED_TO_TARGET_ALT, Handle, target, cloneCompressedDamage);
         }
 
         /// <summary>
@@ -2918,5 +3040,16 @@ namespace GTA
                 .Select(x => (PedHash)x)
                 .ToArray();
         }
+
+        /// <summary>
+        /// Returns a <see cref="Ped"/> instance with the specified handle if the handle is not zero.
+        /// Much more cheaper than calling <see cref="Entity.FromHandle(int)"/>, but be sure to use this only if we
+        /// know what we are using always returns the zero handle when it does not return a valid ped handle.
+        /// </summary>
+        /// <param name="handle">The handle to test.</param>
+        /// <returns>
+        /// A <see cref="Ped"/> instance if <paramref name="handle"/> is not zero; otherwise, <see langword="null"/>.
+        /// </returns>
+        internal static Ped MakePedInstIfHandleIsNotZero(int handle) => handle != 0 ? new Ped(handle) : null;
     }
 }
