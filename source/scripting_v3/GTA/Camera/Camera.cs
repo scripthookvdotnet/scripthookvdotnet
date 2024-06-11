@@ -599,6 +599,12 @@ namespace GTA
         /// <returns>
         /// <see langword="true"/> if the method successfully starts the animation; otherwise, <see langword="false"/>.
         /// </returns>
+        /// <remarks>
+        /// The <see cref="Camera"/> must have been created using the camera name hash
+        /// <see cref="ScriptedCameraNameHash.DefaultAnimatedCamera"/> or the camera name
+        /// `<c>DEFAULT_ANIMATED_CAMERA</c>` (both specify the same camera metadata). Otherwise, the method will fail
+        /// to start the animation.
+        /// </remarks>
         public bool PlayAnim(CrClipAsset anim, Vector3 originPosition, Vector3 originRotation, CamAnimationFlags
             animFlags = CamAnimationFlags.None, EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
         {
@@ -618,6 +624,9 @@ namespace GTA
         /// <returns>
         /// <see langword="true"/> if the method successfully starts the animation; otherwise, <see langword="false"/>.
         /// </returns>
+        /// <remarks>
+        /// <inheritdoc cref="PlayAnim" path="/remarks"/>
+        /// </remarks>
         public bool PlaySynchronizedAnim(FwSyncedScene scene, CrClipAsset anim)
             => Function.Call<bool>(Hash.PLAY_SYNCHRONIZED_CAM_ANIM, Handle, scene, anim.ClipName, anim.ClipDictionary);
 
@@ -626,13 +635,22 @@ namespace GTA
         /// by a <see cref="CrClipAsset"/>.
         /// </summary>
         /// <param name="anim">The animation clip to be queried on the <see cref="Camera"/>.</param>
-        /// <returns></returns>
+        /// <remarks>
+        /// The <see cref="Camera"/> must have been created using the camera name hash
+        /// <see cref="ScriptedCameraNameHash.DefaultAnimatedCamera"/> or the camera name
+        /// `<c>DEFAULT_ANIMATED_CAMERA</c>` (both specify the same camera metadata).
+        /// </remarks>
         public bool IsPlayingAnim(CrClipAsset anim)
             => Function.Call<bool>(Hash.IS_CAM_PLAYING_ANIM, Handle, anim.ClipName, anim.ClipDictionary);
 
         /// <summary>
         /// Gets or sets the phase of the animation that is currently playing on this <see cref="Camera"/>.
         /// </summary>
+        /// <remarks>
+        /// The <see cref="Camera"/> must have been created using the camera name hash
+        /// <see cref="ScriptedCameraNameHash.DefaultAnimatedCamera"/> or the camera name
+        /// `<c>DEFAULT_ANIMATED_CAMERA</c>` (both specify the same camera metadata).
+        /// </remarks>
         public float AnimPhase
         {
             get => Function.Call<float>(Hash.GET_CAM_ANIM_CURRENT_PHASE, Handle);

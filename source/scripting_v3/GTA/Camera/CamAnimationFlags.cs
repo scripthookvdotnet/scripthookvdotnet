@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2015 crosire & kagikn & contributors
+// Copyright (C) 2024 kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
