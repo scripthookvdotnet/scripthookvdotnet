@@ -7,6 +7,10 @@ using GTA.Native;
 
 namespace GTA
 {
+    /// <summary>
+    /// Represents a move network task interface/facade class.
+    /// </summary>
+    // There is no classes that has the substring "Facade" as a part of class names in the game's codebase.
     public sealed class PedMoveNetworkTaskInterface
     {
         internal PedMoveNetworkTaskInterface(Ped p)
