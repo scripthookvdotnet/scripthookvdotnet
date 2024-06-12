@@ -866,16 +866,16 @@ namespace GTA
         /// Tasks the <see cref="Ped"/> to start a move network with the passed network name.
         /// </summary>
         /// <param name="networkName">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='networkName']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='networkName']"/>
         /// </param>
         /// <param name="blendDuration">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='blendDuration']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='blendDuration']"/>
         /// </param>
         /// <param name="flags">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='flags']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='flags']"/>
         /// </param>
         /// <remarks>
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/remarks"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/remarks"/>
         /// </remarks>
         public void StartMoveNetworkByName(string networkName, float blendDuration = 0f,
             MoveNetworkFlags flags = MoveNetworkFlags.Default)
@@ -897,25 +897,25 @@ namespace GTA
         /// and orientation.
         /// </summary>
         /// <param name="networkName">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='networkName']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='networkName']"/>
         /// </param>
         /// <param name="pos">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='pos']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='pos']"/>
         /// </param>
         /// <param name="rot">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='rot']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='rot']"/>
         /// </param>
         /// <param name="rotOrder">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='rotOrder']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='rotOrder']"/>
         /// </param>
         /// <param name="blendDuration">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='blendDuration']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='blendDuration']"/>
         /// </param>
         /// <param name="flags">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='flags']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='flags']"/>
         /// </param>
         /// <remarks>
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/remarks"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/remarks"/>
         /// </remarks>
         public void StartMoveNetworkAdvancedByName(string networkName, Vector3 pos, Vector3 rot,
             EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, float blendDuration = 0f,
@@ -938,19 +938,19 @@ namespace GTA
         /// </para>
         /// </summary>
         /// <param name="networkName">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='networkName']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='networkName']"/>
         /// </param>
         /// <param name="initParams">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='initParams']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='initParams']"/>
         /// </param>
         /// <param name="blendDuration">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='blendDuration']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='blendDuration']"/>
         /// </param>
         /// <param name="flags">
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/param[@name='flags']"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/param[@name='flags']"/>
         /// </param>
         /// <remarks>
-        /// <inheritdoc cref="StartMoveNetworkByNameAdvancedWithInitParams" path="/remarks"/>
+        /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/remarks"/>
         /// </remarks>
         public void StartMoveNetworkByNameWithInitParams(string networkName,
             TaskMoVEScriptedInitialParameters initParams, float blendDuration = 0f,
@@ -998,13 +998,13 @@ namespace GTA
         /// set signal parameters to the task using <see cref="PedMoveNetworkTaskInterface"/> in some states
         /// before the <see cref="Ped"/> can perform the animations defined in the state structure.
         /// </remarks>
-        public void StartMoveNetworkByNameAdvancedWithInitParams(string networkName,
+        public void StartMoveNetworkAdvancedByNameWithInitParams(string networkName,
             TaskMoVEScriptedInitialParameters initParams, Vector3 pos, Vector3 rot,
             EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, float blendDuration = 0f,
             MoveNetworkFlags flags = MoveNetworkFlags.Default)
         {
             GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1868_0_Steam, nameof(TaskInvoker),
-                nameof(StartMoveNetworkByNameWithInitParams));
+                nameof(StartMoveNetworkAdvancedByNameWithInitParams));
 
             unsafe
             {
