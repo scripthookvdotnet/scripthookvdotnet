@@ -896,7 +896,8 @@ namespace GTA
         /// <param name="blendDuration">The blend duration in seconds.</param>
         /// <param name="flags">The move network flags.</param>
         public void StartMoveNetworkAdvancedByName(string networkName, Vector3 pos, Vector3 rot,
-            EulerRotationOrder rotOrder, float blendDuration = 0f, MoveNetworkFlags flags = MoveNetworkFlags.Default)
+            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, float blendDuration = 0f,
+            MoveNetworkFlags flags = MoveNetworkFlags.Default)
         {
             const bool allowOverrideCloneUpdate = false;
             const string clipDictStr = null;
@@ -959,7 +960,7 @@ namespace GTA
         /// <param name="flags">The move network flags.</param>
         public void StartMoveNetworkByNameAdvancedWithInitParams(string networkName,
             TaskMoVEScriptedInitialParameters initParams, Vector3 pos, Vector3 rot,
-            EulerRotationOrder rotOrder, float blendDuration = 0f,
+            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, float blendDuration = 0f,
             MoveNetworkFlags flags = MoveNetworkFlags.Default)
         {
             GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1868_0_Steam, nameof(TaskInvoker),
