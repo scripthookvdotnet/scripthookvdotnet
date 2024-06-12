@@ -9,6 +9,9 @@ using System.Runtime.InteropServices;
 
 namespace GTA
 {
+    /// <summary>
+    /// Represents an immutable set of initial parameters for scripted move network tasks.
+    /// </summary>
     public sealed class TaskMoVEScriptedInitialParameters
     {
         internal TaskMoVEScriptedInitialParameters(AtHashValue clipSet0, AtHashValue varclipSet0,
@@ -62,6 +65,9 @@ namespace GTA
 
         public bool BoolParamValue1 { get; }
 
+        /// <remarks>
+        /// Builds a new <see cref="TaskMoVEScriptedInitialParametersStruct"/> instance to pass to native functions.
+        /// </remarks>
         internal TaskMoVEScriptedInitialParametersStruct BuildStructForNatives()
         {
             IntPtr floatParamNamePtr0 = FloatParamName0 != null
@@ -84,6 +90,9 @@ namespace GTA
         }
     }
 
+    /// <summary>
+    /// Represents a builder that builds <see cref="TaskMoVEScriptedInitialParameters"/>.
+    /// </summary>
     public sealed class TaskMoVEScriptedInitialParametersBuilder
     {
         public TaskMoVEScriptedInitialParametersBuilder()
@@ -158,6 +167,9 @@ namespace GTA
             return this;
         }
 
+        /// <remarks>
+        /// The default value is -1.0f.
+        /// </remarks>
         public TaskMoVEScriptedInitialParametersBuilder FloatParamLerpValue0(float floatParamLerpValue0)
         {
             _floatParamLerpValue0 = floatParamLerpValue0;
@@ -176,6 +188,9 @@ namespace GTA
             return this;
         }
 
+        /// <remarks>
+        /// The default value is -1.0f.
+        /// </remarks>
         public TaskMoVEScriptedInitialParametersBuilder FloatParamLerpValue1(float floatParamLerpValue1)
         {
             _floatParamLerpValue1 = floatParamLerpValue1;
@@ -206,6 +221,9 @@ namespace GTA
             return this;
         }
 
+        /// <remarks>
+        /// Builds a new <see cref="TaskMoVEScriptedInitialParameters"/> instance.
+        /// </remarks>
         public TaskMoVEScriptedInitialParameters Build()
         {
             return new TaskMoVEScriptedInitialParameters(_clipSet0, _varClipSet0, _clipSet1, _varClipSet1,
@@ -215,6 +233,13 @@ namespace GTA
         }
     }
 
+    /// <summary>
+    /// Represents an immutable struct that has a set of initial parameters and for scripted move network tasks.
+    /// Intended to be used to pass the data to native functions.
+    /// </summary>
+    /// <remarks>
+    /// Since this struct has a private disposed field, this struct should not be passed by value as a argument.
+    /// </remarks>
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
     internal ref struct TaskMoVEScriptedInitialParametersStruct
     {
