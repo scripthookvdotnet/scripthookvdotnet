@@ -23,6 +23,8 @@ namespace GTA
         PedConfigFlags _pedConfigFlags;
         PedResetFlags _pedResetFlags;
 
+        PedMoveNetworkTaskInterface _moveNetworkInterface;
+
         internal static readonly string[] _speechModifierNames = {
             "SPEECH_PARAMS_STANDARD",
             "SPEECH_PARAMS_ALLOW_REPEAT",
@@ -2784,6 +2786,9 @@ namespace GTA
         /// </summary>
         public void ResetWeaponMovementClipSet()
             => Function.Call(Hash.RESET_PED_WEAPON_MOVEMENT_CLIPSET, Handle);
+
+        public PedMoveNetworkTaskInterface MoveNetworkTaskInterface
+            => _moveNetworkInterface ?? (_moveNetworkInterface = new PedMoveNetworkTaskInterface(this));
 
         #endregion
 
