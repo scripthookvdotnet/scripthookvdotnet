@@ -71,7 +71,7 @@ namespace GTA
         /// <param name="varClipSet">
         /// The hash of the name of the variable clip set you are setting.
         /// </param>
-        public void SetNetworkClipSet(AtHashValue clipSet, AtHashValue varClipSet)
+        public void SetNetworkClipSet(AtHashValue clipSet, AtHashValue varClipSet = default)
         {
             GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1493_0_Steam,
                 nameof(PedMoveNetworkTaskInterface), nameof(SetNetworkClipSet));
