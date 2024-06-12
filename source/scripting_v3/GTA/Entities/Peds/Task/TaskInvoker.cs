@@ -877,7 +877,7 @@ namespace GTA
         /// <remarks>
         /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/remarks"/>
         /// </remarks>
-        public void StartMoveNetworkByName(string networkName, float blendDuration = 0f,
+        public void StartMoveNetworkByName(string networkName, AnimationBlendDuration? blendDuration = null,
             MoveNetworkFlags flags = MoveNetworkFlags.Default)
         {
             // There must be a network clone before the 2 params below can have actual effect, but we
@@ -888,8 +888,10 @@ namespace GTA
             // have peds properly perform the animations.
             const string clipDictStr = null;
 
+            AnimationBlendDuration durationArg = blendDuration ?? AnimationBlendDuration.Instant;
+
             Function.Call(Hash.TASK_MOVE_NETWORK_BY_NAME_WITH_INIT_PARAMS, _ped.Handle, networkName,
-                blendDuration, allowOverrideCloneUpdate, clipDictStr, (int)flags);
+                durationArg, allowOverrideCloneUpdate, clipDictStr, (int)flags);
         }
 
         /// <summary>
@@ -918,14 +920,16 @@ namespace GTA
         /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/remarks"/>
         /// </remarks>
         public void StartMoveNetworkAdvancedByName(string networkName, Vector3 pos, Vector3 rot,
-            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, float blendDuration = 0f,
+            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, AnimationBlendDuration? blendDuration = null,
             MoveNetworkFlags flags = MoveNetworkFlags.Default)
         {
             const bool allowOverrideCloneUpdate = false;
             const string clipDictStr = null;
 
+            AnimationBlendDuration durationArg = blendDuration ?? AnimationBlendDuration.Instant;
+
             Function.Call(Hash.TASK_MOVE_NETWORK_ADVANCED_BY_NAME, _ped.Handle, networkName, pos.X, pos.Y, pos.Z,
-                rot.X, rot.Y, rot.Z, (int)rotOrder, blendDuration, allowOverrideCloneUpdate, clipDictStr, (int)flags);
+                rot.X, rot.Y, rot.Z, (int)rotOrder, durationArg, allowOverrideCloneUpdate, clipDictStr, (int)flags);
         }
 
         /// <summary>
@@ -953,7 +957,7 @@ namespace GTA
         /// <inheritdoc cref="StartMoveNetworkAdvancedByNameWithInitParams" path="/remarks"/>
         /// </remarks>
         public void StartMoveNetworkByNameWithInitParams(string networkName,
-            TaskMoVEScriptedInitialParameters initParams, float blendDuration = 0f,
+            TaskMoVEScriptedInitialParameters initParams, AnimationBlendDuration? blendDuration = null,
             MoveNetworkFlags flags = MoveNetworkFlags.Default)
         {
             GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1493_0_Steam, nameof(TaskInvoker),
@@ -966,8 +970,10 @@ namespace GTA
                     const bool allowOverrideCloneUpdate = false;
                     const string clipDictStr = null;
 
+                    AnimationBlendDuration durationArg = blendDuration ?? AnimationBlendDuration.Instant;
+
                     Function.Call(Hash.TASK_MOVE_NETWORK_BY_NAME_WITH_INIT_PARAMS, _ped.Handle, networkName,
-                        &paramStruct, blendDuration, allowOverrideCloneUpdate, clipDictStr, (int)flags);
+                        &paramStruct, durationArg, allowOverrideCloneUpdate, clipDictStr, (int)flags);
                 }
             }
         }
@@ -989,7 +995,10 @@ namespace GTA
         /// <param name="pos">The start position.</param>
         /// <param name="rot">The start rotation.</param>
         /// <param name="rotOrder">The rotation order in world space.</param>
-        /// <param name="blendDuration">The blend duration in seconds.</param>
+        /// <param name="blendDuration">
+        /// The blend duration in seconds. If set to <see langword="null"/>,
+        /// <see cref="AnimationBlendDuration.Instant"/> will be used.
+        /// </param>
         /// <param name="flags">The move network flags.</param>
         /// <remarks>
         /// You will need to request the <see cref="CrClipDictionary"/>s specified in the mrf file that
@@ -1000,7 +1009,7 @@ namespace GTA
         /// </remarks>
         public void StartMoveNetworkAdvancedByNameWithInitParams(string networkName,
             TaskMoVEScriptedInitialParameters initParams, Vector3 pos, Vector3 rot,
-            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, float blendDuration = 0f,
+            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, AnimationBlendDuration? blendDuration = null,
             MoveNetworkFlags flags = MoveNetworkFlags.Default)
         {
             GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1868_0_Steam, nameof(TaskInvoker),
@@ -1013,8 +1022,10 @@ namespace GTA
                     const bool allowOverrideCloneUpdate = false;
                     const string clipDictStr = null;
 
+                    AnimationBlendDuration durationArg = blendDuration ?? AnimationBlendDuration.Instant;
+
                     Function.Call(Hash.TASK_MOVE_NETWORK_ADVANCED_BY_NAME_WITH_INIT_PARAMS, _ped.Handle, networkName,
-                        &paramStruct, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, (int)rotOrder, blendDuration,
+                        &paramStruct, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, (int)rotOrder, durationArg,
                         allowOverrideCloneUpdate, clipDictStr, (int)flags);
                 }
             }
