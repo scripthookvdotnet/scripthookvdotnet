@@ -1236,7 +1236,8 @@ namespace GTA
                 return null;
             }
 
-            IEnumerable<Model> loadedAppropriatePedModels = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
+            IEnumerable<Model> loadedAppropriatePedModels
+                = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
             Model[] filteredPedModels = predicate != null
                 ? loadedAppropriatePedModels.Where(predicate).ToArray()
                 : loadedAppropriatePedModels.Where(s_defaultPredicateForCreateRandomPed).ToArray();
@@ -1249,12 +1250,13 @@ namespace GTA
             Random rand = Math.Random.Instance;
             Model pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
 
-            // the model should be loaded at this moment, so call CREATE_PED immediately
-            var createdPed = new Ped(Function.Call<int>(Hash.CREATE_PED, 26, pickedModel, position.X, position.Y, position.Z, heading, false, false));
+            // the model should be loaded at this moment, so call `CREATE_PED` immediately
+            var createdPed = new Ped(Function.Call<int>(Hash.CREATE_PED, 26, pickedModel, position.X, position.Y,
+                position.Z, heading, false, false));
 
-            // Randomize clothes and ped props just like CREATE_RANDOM_PED does
-            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, 0);
-            Function.Call(Hash.SET_PED_RANDOM_PROPS, createdPed.Handle);
+            // Randomize variation but not ped props, just like `CREATE_RANDOM_PED` does.
+            const int race = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
+            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, race);
 
             return createdPed;
         }
