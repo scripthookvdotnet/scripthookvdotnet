@@ -69,6 +69,28 @@ namespace GTA
         }
 
         /// <summary>
+        /// Returns the <see cref="PedType"/> of this <see cref="Ped"/>.
+        /// </summary>
+        public PedType PedType => Function.Call<PedType>(Hash.GET_PED_TYPE, Handle);
+
+        /// <summary>
+        /// Sets up this <see cref="Ped"/> so that they are treated as a cop.
+        /// </summary>
+        /// <param name="setRelationshipGroup">
+        /// If <see langword="true"/>, this <see cref="Ped"/>'s <see cref="RelationshipGroup"/> will be changed to
+        /// <see cref="RelationshipGroupHash.Cop"/>.
+        /// </param>
+        /// <remarks>
+        /// Adjusts an appropriate population count of the population counts for non-cop <see cref="Ped"/>s and
+        /// one for cop <see cref="Ped"/>s. Sets <see cref="DecisionMaker"/> to
+        /// <see cref="DecisionMakerTypeHash.Cop"/>.
+        /// </remarks>
+        public void SetAsCop(bool setRelationshipGroup = true)
+        {
+            Function.Call(Hash.SET_PED_AS_COP, Handle, setRelationshipGroup);
+        }
+
+        /// <summary>
         /// Creates a new <see cref="Ped"/> at where this <see cref="Ped"/> is by cloning this <see cref="Ped"/>.
         /// </summary>
         /// <param name="linkBlends">
