@@ -99,7 +99,7 @@ namespace GTA
         /// <param name="linkBlends">
         /// If <see langword="true"/> the method will create a link between the two <see cref="Ped"/>s for the head
         /// blend.
-        /// If <see langword="false"/>, the method will clone the head blend to the cloned <see cref="Ped"/> but does
+        /// If <see langword="false"/>, the method will clone the head blend to the cloned <see cref="Ped"/> but will
         /// not create the link between the two <see cref="Ped"/>s for the head blend.
         /// </param>
         /// <returns>
@@ -162,7 +162,7 @@ namespace GTA
         /// <param name="linkBlends">
         /// If <see langword="true"/> the method will create a link between the two <see cref="Ped"/>s for the head
         /// blend.
-        /// If <see langword="false"/>, the method will clone the head blend to the cloned <see cref="Ped"/> but does
+        /// If <see langword="false"/>, the method will clone the head blend to the cloned <see cref="Ped"/> but will
         /// not create the link between the two <see cref="Ped"/>s for the head blend.
         /// </param>
         /// <param name="cloneCompressedDamage">
