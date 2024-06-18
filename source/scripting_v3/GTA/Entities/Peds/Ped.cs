@@ -356,8 +356,12 @@ namespace GTA
         public Style Style => _style ?? (_style = new Style(this));
 
         /// <summary>
-        /// Gets the gender of this <see cref="Ped"/>.
+        /// Gets the gender of this <see cref="Ped"/> by <see cref="GTA.PedType"/>.
         /// </summary>
+        /// <remarks>
+        /// If you need to test if the <see cref="Ped"/> is male or female by using a value other than
+        /// <see cref="GTA.PedType"/>, use <see cref="Model.IsMalePed"/> or <see cref="Model.IsFemalePed"/>.
+        /// </remarks>
         public Gender Gender => Function.Call<bool>(Hash.IS_PED_MALE, Handle) ? Gender.Male : Gender.Female;
 
         /// <summary>

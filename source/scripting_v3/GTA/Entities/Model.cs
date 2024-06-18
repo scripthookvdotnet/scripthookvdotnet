@@ -192,11 +192,19 @@ namespace GTA
         /// </value>
         public bool IsEmergencyVehicle => SHVDN.NativeMemory.HasVehicleFlag(Hash, SHVDN.NativeMemory.VehicleFlag1.EmergencyService);
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Model"/> is a female pedestrian.
+        /// Gets a value indicating whether this <see cref="Model"/> is a female <see cref="Ped"/> model.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Model"/> is a female pedestrian; otherwise, <see langword="false" />.
+        /// <see langword="true"/> if this <see cref="Model"/> is a female <see cref="Ped"/> model; otherwise,
+        /// <see langword="false"/>.
         /// </value>
+        /// <remarks>
+        /// The return value varies by the gender value of the ped personality struct associated to the ped model if
+        /// this model is a <see cref="Ped"/> model (always <see langword="false"/> if the model is not
+        /// a <see cref="Ped"/> model).
+        /// Without modding <c>pedpersonality.ymt</c>, this property returns <see langword="false"/> if
+        /// <see cref="Hash"/> is an animal hash.
+        /// </remarks>
         public bool IsFemalePed => SHVDN.NativeMemory.IsModelAFemalePed(Hash);
         /// <summary>
         /// Gets a value indicating whether this <see cref="Model"/> is a fragment model.
@@ -255,12 +263,19 @@ namespace GTA
         /// </value>
         public bool IsMlo => SHVDN.NativeMemory.IsModelAMlo(Hash);
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Model"/> is a male pedestrian.
-        /// Without modding <c>pedpersonality.ymt</c>, returns <see langword="true" /> if the <see cref="Hash"/> is one of the animal hashes.
+        /// Gets a value indicating whether this <see cref="Model"/> is a male <see cref="Ped"/> model.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Model"/> is a male pedestrian; otherwise, <see langword="false" />.
+        /// <see langword="true"/> if this <see cref="Model"/> is a male pedestrian;
+        /// otherwise, <see langword="false"/>.
         /// </value>
+        /// <remarks>
+        /// The return value varies by the gender value of the ped personality struct associated to the ped model if
+        /// this model is a <see cref="Ped"/> model (always <see langword="false"/> if the model is not
+        /// a <see cref="Ped"/> model).
+        /// Without modding <c>pedpersonality.ymt</c>, this property returns <see langword="true"/> if
+        /// <see cref="Hash"/> is an animal hash.
+        /// </remarks>
         public bool IsMalePed => SHVDN.NativeMemory.IsModelAMalePed(Hash);
         /// <summary>
         /// Gets a value indicating whether this <see cref="Model"/> is a motorcycle.
