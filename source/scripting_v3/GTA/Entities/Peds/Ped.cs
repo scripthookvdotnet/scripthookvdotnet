@@ -76,7 +76,8 @@ namespace GTA
         public PedType PedType => Function.Call<PedType>(Hash.GET_PED_TYPE, Handle);
 
         /// <summary>
-        /// Sets up this <see cref="Ped"/> so that they are treated as a cop.
+        /// Sets up this <see cref="Ped"/> so that they are treated as a cop by changing <see cref="PedType"/> to
+        /// <see cref="PedType.Cop"/>.
         /// </summary>
         /// <param name="setRelationshipGroup">
         /// If <see langword="true"/>, this <see cref="Ped"/>'s <see cref="RelationshipGroup"/> will be changed to
