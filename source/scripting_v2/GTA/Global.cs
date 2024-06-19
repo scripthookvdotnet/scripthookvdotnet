@@ -23,11 +23,11 @@ namespace GTA
 
         public void SetInt(int value)
         {
-            SHVDN.NativeMemory.WriteInt32(_address, value);
+            SHVDN.MemDataMarshal.WriteInt32(_address, value);
         }
         public void SetFloat(float value)
         {
-            SHVDN.NativeMemory.WriteFloat(_address, value);
+            SHVDN.MemDataMarshal.WriteFloat(_address, value);
         }
         public void SetString(string value)
         {
@@ -37,16 +37,16 @@ namespace GTA
         }
         public void SetVector3(Vector3 value)
         {
-            SHVDN.NativeMemory.WriteVector3(_address, value.ToInternalFVector3());
+            SHVDN.MemDataMarshal.WriteVector3(_address, value.ToInternalFVector3());
         }
 
         public int GetInt()
         {
-            return SHVDN.NativeMemory.ReadInt32(_address);
+            return SHVDN.MemDataMarshal.ReadInt32(_address);
         }
         public float GetFloat()
         {
-            return SHVDN.NativeMemory.ReadFloat(_address);
+            return SHVDN.MemDataMarshal.ReadFloat(_address);
         }
         public string GetString()
         {
@@ -54,7 +54,7 @@ namespace GTA
         }
         public Vector3 GetVector3()
         {
-            return new Vector3(SHVDN.NativeMemory.ReadVector3(_address));
+            return new Vector3(SHVDN.MemDataMarshal.ReadVector3(_address));
         }
     }
 }

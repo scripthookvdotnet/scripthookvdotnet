@@ -67,7 +67,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x70));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x70));
             }
         }
 
@@ -104,7 +104,7 @@ namespace GTA
                     return default;
                 }
 
-                return new Model(SHVDN.NativeMemory.ReadInt32(address + 0xE4));
+                return new Model(SHVDN.MemDataMarshal.ReadInt32(address + 0xE4));
             }
         }
 

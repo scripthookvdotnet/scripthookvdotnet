@@ -61,7 +61,7 @@ namespace GTA.Math
             Y = y;
             Z = z;
         }
-        internal Vector3(SHVDN.NativeMemory.FVector3 value) : this(value.X, value.Y, value.Z)
+        internal Vector3(SHVDN.FVector3 value) : this(value.X, value.Y, value.Z)
         {
         }
 
@@ -671,6 +671,6 @@ namespace GTA.Math
         /// if both are <see langword="null" /> references or if <c>value1.Equals(value2)</c> returns <see langword="true" />; otherwise, <see langword="false" />.</returns>
         public static bool Equals(ref Vector3 value1, ref Vector3 value2) => value1.Equals(value2);
 
-        internal readonly SHVDN.NativeMemory.FVector3 ToInternalFVector3() => new SHVDN.NativeMemory.FVector3(X, Y, Z);
+        internal readonly SHVDN.FVector3 ToInternalFVector3() => new SHVDN.FVector3(X, Y, Z);
     }
 }

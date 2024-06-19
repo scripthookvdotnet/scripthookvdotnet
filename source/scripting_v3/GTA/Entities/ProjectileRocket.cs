@@ -70,7 +70,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(NativeMemory.ReadVector3(address + NativeMemory.ProjectileRocketCachedTargetPosOffset));
+                return new Vector3(MemDataMarshal.ReadVector3(address + NativeMemory.ProjectileRocketCachedTargetPosOffset));
             }
             set
             {
@@ -80,7 +80,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteVector3(address + NativeMemory.ProjectileRocketCachedTargetPosOffset,
+                MemDataMarshal.WriteVector3(address + NativeMemory.ProjectileRocketCachedTargetPosOffset,
                     value.ToInternalFVector3());
             }
         }
@@ -99,7 +99,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(NativeMemory.ReadVector3(address + NativeMemory.ProjectileRocketLaunchDirOffset));
+                return new Vector3(MemDataMarshal.ReadVector3(address + NativeMemory.ProjectileRocketLaunchDirOffset));
             }
             set
             {
@@ -109,7 +109,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteVector3(address + NativeMemory.ProjectileRocketLaunchDirOffset,
+                MemDataMarshal.WriteVector3(address + NativeMemory.ProjectileRocketLaunchDirOffset,
                     value.ToInternalFVector3());
             }
         }
@@ -134,7 +134,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(NativeMemory.ReadVector3(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset));
+                return new Vector3(MemDataMarshal.ReadVector3(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset));
             }
             set
             {
@@ -144,7 +144,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteVector3(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset,
+                MemDataMarshal.WriteVector3(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset,
                     value.ToInternalFVector3());
             }
         }
@@ -162,7 +162,7 @@ namespace GTA
                     return 0;
                 }
 
-                return NativeMemory.ReadFloat(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset);
+                return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset);
             }
             set
             {
@@ -172,7 +172,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteFloat(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset, value);
+                MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset, value);
             }
         }
 
@@ -189,7 +189,7 @@ namespace GTA
                     return 0;
                 }
 
-                return NativeMemory.ReadFloat(address + NativeMemory.ProjectileRocketFlightModelInputRollOffset);
+                return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketFlightModelInputRollOffset);
             }
             set
             {
@@ -199,7 +199,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteFloat(address + NativeMemory.ProjectileRocketFlightModelInputRollOffset, value);
+                MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketFlightModelInputRollOffset, value);
             }
         }
 
@@ -216,7 +216,7 @@ namespace GTA
                     return 0;
                 }
 
-                return NativeMemory.ReadFloat(address + NativeMemory.ProjectileRocketFlightModelInputYawOffset);
+                return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketFlightModelInputYawOffset);
             }
             set
             {
@@ -226,7 +226,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteFloat(address + NativeMemory.ProjectileRocketFlightModelInputYawOffset, value);
+                MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketFlightModelInputYawOffset, value);
             }
         }
 
@@ -243,7 +243,7 @@ namespace GTA
                     return 0;
                 }
 
-                return NativeMemory.ReadFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingOffset);
+                return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingOffset);
             }
             set
             {
@@ -253,7 +253,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingOffset, value);
+                MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingOffset, value);
             }
         }
 
@@ -272,7 +272,7 @@ namespace GTA
                     return 0;
                 }
 
-                return NativeMemory.ReadFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset);
+                return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset);
             }
             set
             {
@@ -282,7 +282,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset, value);
+                MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset, value);
             }
         }
 
@@ -299,7 +299,7 @@ namespace GTA
                     return 0;
                 }
 
-                return NativeMemory.ReadFloat(address + NativeMemory.ProjectileRocketLauncherSpeedOffset);
+                return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketLauncherSpeedOffset);
             }
             set
             {
@@ -309,7 +309,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteFloat(address + NativeMemory.ProjectileRocketLauncherSpeedOffset, value);
+                MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketLauncherSpeedOffset, value);
             }
         }
 
@@ -328,7 +328,7 @@ namespace GTA
                     return 0;
                 }
 
-                return NativeMemory.ReadFloat(address + NativeMemory.ProjectileRocketTimeSinceLaunchOffset);
+                return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketTimeSinceLaunchOffset);
             }
             set
             {
@@ -338,7 +338,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteFloat(address + NativeMemory.ProjectileRocketTimeSinceLaunchOffset, value);
+                MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketTimeSinceLaunchOffset, value);
             }
         }
 
@@ -443,7 +443,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(NativeMemory.ReadVector3(address + NativeMemory.ProjectileRocketCachedDirectionOffset));
+                return new Vector3(MemDataMarshal.ReadVector3(address + NativeMemory.ProjectileRocketCachedDirectionOffset));
             }
             set
             {
@@ -453,7 +453,7 @@ namespace GTA
                     return;
                 }
 
-                NativeMemory.WriteVector3(address + NativeMemory.ProjectileRocketCachedDirectionOffset,
+                MemDataMarshal.WriteVector3(address + NativeMemory.ProjectileRocketCachedDirectionOffset,
                     value.ToInternalFVector3());
             }
         }
@@ -470,7 +470,7 @@ namespace GTA
         {
             IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
             if (address == IntPtr.Zero
-                || (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(address + 0x28) != EntityTypeInternal.Object)
+                || (EntityTypeInternal)SHVDN.MemDataMarshal.ReadByte(address + 0x28) != EntityTypeInternal.Object)
             {
                 return null;
             }
@@ -488,7 +488,7 @@ namespace GTA
                 return false;
             }
 
-            return NativeMemory.IsBitSet(address + NativeMemory.ProjectileRocketFlagsOffset, bit);
+            return MemDataMarshal.IsBitSet(address + NativeMemory.ProjectileRocketFlagsOffset, bit);
         }
         private void SetProjectileRocketFlag(byte bit, bool value)
         {
@@ -498,7 +498,7 @@ namespace GTA
                 return;
             }
 
-            NativeMemory.SetBit(address + NativeMemory.ProjectileRocketFlagsOffset, bit, value);
+            MemDataMarshal.SetBit(address + NativeMemory.ProjectileRocketFlagsOffset, bit, value);
         }
     }
 }

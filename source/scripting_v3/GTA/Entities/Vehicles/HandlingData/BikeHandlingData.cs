@@ -32,7 +32,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x8);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x8);
             }
             set
             {
@@ -41,7 +41,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x8, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x8, value);
             }
         }
         /// <summary>
@@ -59,7 +59,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0xC);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0xC);
             }
             set
             {
@@ -68,7 +68,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0xC, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0xC, value);
             }
         }
         /// <summary>
@@ -86,7 +86,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x10);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x10);
             }
             set
             {
@@ -95,7 +95,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x10, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x10, value);
             }
         }
         /// <summary>
@@ -113,7 +113,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x14);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x14);
             }
             set
             {
@@ -122,7 +122,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x14, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x14, value);
             }
         }
         /// <summary>
@@ -140,7 +140,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x18);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x18);
             }
             set
             {
@@ -149,7 +149,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x18, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x18, value);
             }
         }
         /// <summary>
@@ -167,7 +167,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x1C);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x1C);
             }
             set
             {
@@ -176,7 +176,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x1C, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x1C, value);
             }
         }
         /// <summary>
@@ -194,7 +194,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x24);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x24);
             }
             set
             {
@@ -203,7 +203,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x24, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x24, value);
             }
         }
 
@@ -222,7 +222,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x28);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x28);
             }
             set
             {
@@ -231,7 +231,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x28, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x28, value);
             }
         }
 
@@ -251,7 +251,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x2C);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x2C);
             }
             set
             {
@@ -260,7 +260,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x2C, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x2C, value);
             }
         }
 
@@ -281,7 +281,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x30);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x30);
             }
             set
             {
@@ -290,7 +290,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x30, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x30, value);
             }
         }
 
@@ -315,7 +315,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x34);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x34);
             }
             set
             {
@@ -324,7 +324,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x34, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x34, value);
             }
         }
         /// <summary>
@@ -348,7 +348,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x38);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x38);
             }
             set
             {
@@ -357,7 +357,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x38, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x38, value);
             }
         }
 
@@ -376,7 +376,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x3C);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x3C);
             }
             set
             {
@@ -385,7 +385,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x3C, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x3C, value);
             }
         }
 
@@ -404,7 +404,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x40);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x40);
             }
             set
             {
@@ -413,7 +413,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x40, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x40, value);
             }
         }
 
@@ -432,7 +432,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x44);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x44);
             }
             set
             {
@@ -441,7 +441,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x44, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x44, value);
             }
         }
 
@@ -460,7 +460,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(MemoryAddress + 0x50);
+                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + 0x50);
             }
             set
             {
@@ -469,7 +469,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(MemoryAddress + 0x50, value);
+                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + 0x50, value);
             }
         }
 

@@ -119,7 +119,7 @@ namespace GTA
                     return Matrix.Zero;
                 }
 
-                return new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+                return new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address));
             }
             set
             {
@@ -129,7 +129,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteMatrix(address, value.ToArray());
+                SHVDN.MemDataMarshal.WriteMatrix(address, value.ToArray());
             }
         }
 
@@ -150,7 +150,7 @@ namespace GTA
                     return Matrix.Zero;
                 }
 
-                return new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+                return new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address));
             }
             set
             {
@@ -160,7 +160,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteMatrix(address, value.ToArray());
+                SHVDN.MemDataMarshal.WriteMatrix(address, value.ToArray());
             }
         }
 
@@ -181,7 +181,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x30));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x30));
             }
             set
             {
@@ -191,7 +191,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteVector3(address + 0x30, value.ToInternalFVector3());
+                SHVDN.MemDataMarshal.WriteVector3(address + 0x30, value.ToInternalFVector3());
             }
         }
 
@@ -234,12 +234,12 @@ namespace GTA
                     return;
                 }
 
-                var matrixToWrite = new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+                var matrixToWrite = new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address));
                 Vector3 scale = matrixToWrite.GetScaleVector();
                 var translation = new Vector3(matrixToWrite.M41, matrixToWrite.M42, matrixToWrite.M43);
 
                 matrixToWrite = Matrix.Scaling(scale) * Matrix.RotationQuaternion(value) * Matrix.Translation(translation);
-                SHVDN.NativeMemory.WriteMatrix(address, matrixToWrite.ToArray());
+                SHVDN.MemDataMarshal.WriteMatrix(address, matrixToWrite.ToArray());
             }
         }
 
@@ -290,7 +290,7 @@ namespace GTA
                     return Quaternion.Zero;
                 }
 
-                var relativeBoneQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(relativeMatrixAddress)));
+                var relativeBoneQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.MemDataMarshal.ReadMatrix(relativeMatrixAddress)));
 
                 IntPtr transformMatrixAddress = SHVDN.NativeMemory.GetEntityBoneTransformMatrixAddress(Owner.Handle);
                 if (transformMatrixAddress == IntPtr.Zero)
@@ -299,7 +299,7 @@ namespace GTA
                     return relativeBoneQuaternion;
                 }
 
-                var globalTransformQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.NativeMemory.ReadMatrix(transformMatrixAddress)));
+                var globalTransformQuaternion = Quaternion.RotationMatrix(new Matrix(SHVDN.MemDataMarshal.ReadMatrix(transformMatrixAddress)));
 
                 return globalTransformQuaternion * relativeBoneQuaternion;
             }
@@ -340,7 +340,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x30));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x30));
             }
             set
             {
@@ -350,7 +350,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteVector3((address + 0x30), value.ToInternalFVector3());
+                SHVDN.MemDataMarshal.WriteVector3((address + 0x30), value.ToInternalFVector3());
             }
         }
 
@@ -393,12 +393,12 @@ namespace GTA
                     return;
                 }
 
-                var matrixToWrite = new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+                var matrixToWrite = new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address));
                 Vector3 scale = matrixToWrite.GetScaleVector();
                 var translation = new Vector3(matrixToWrite.M41, matrixToWrite.M42, matrixToWrite.M43);
 
                 matrixToWrite = Matrix.Scaling(scale) * Matrix.RotationQuaternion(value) * Matrix.Translation(translation);
-                SHVDN.NativeMemory.WriteMatrix(address, matrixToWrite.ToArray());
+                SHVDN.MemDataMarshal.WriteMatrix(address, matrixToWrite.ToArray());
             }
         }
 
@@ -442,7 +442,7 @@ namespace GTA
                 {
                     return Owner.UpVector;
                 }
-                return Owner.Matrix.TransformPoint(new Matrix(SHVDN.NativeMemory.ReadMatrix(address)).TransformPoint(Vector3.RelativeTop)) - Position;
+                return Owner.Matrix.TransformPoint(new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address)).TransformPoint(Vector3.RelativeTop)) - Position;
             }
         }
 
@@ -458,7 +458,7 @@ namespace GTA
                 {
                     return Owner.RightVector;
                 }
-                return Owner.Matrix.TransformPoint(new Matrix(SHVDN.NativeMemory.ReadMatrix(address)).TransformPoint(Vector3.RelativeRight)) - Position;
+                return Owner.Matrix.TransformPoint(new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address)).TransformPoint(Vector3.RelativeRight)) - Position;
             }
         }
 
@@ -474,7 +474,7 @@ namespace GTA
                 {
                     return Owner.ForwardVector;
                 }
-                return Owner.Matrix.TransformPoint(new Matrix(SHVDN.NativeMemory.ReadMatrix(address)).TransformPoint(Vector3.RelativeFront)) - Position;
+                return Owner.Matrix.TransformPoint(new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address)).TransformPoint(Vector3.RelativeFront)) - Position;
             }
         }
 
@@ -490,7 +490,7 @@ namespace GTA
                 {
                     return Vector3.RelativeTop;
                 }
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x20));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x20));
             }
         }
 
@@ -506,7 +506,7 @@ namespace GTA
                 {
                     return Vector3.RelativeRight;
                 }
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address));
             }
         }
 
@@ -522,7 +522,7 @@ namespace GTA
                 {
                     return Vector3.RelativeFront;
                 }
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x10));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x10));
             }
         }
 
@@ -554,7 +554,7 @@ namespace GTA
             {
                 return Owner.Matrix.TransformPoint(offset);
             }
-            return Owner.Matrix.TransformPoint(new Matrix(SHVDN.NativeMemory.ReadMatrix(address)).TransformPoint(offset));
+            return Owner.Matrix.TransformPoint(new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address)).TransformPoint(offset));
         }
 
         /// <summary>
@@ -568,7 +568,7 @@ namespace GTA
             {
                 return offset;
             }
-            return new Matrix(SHVDN.NativeMemory.ReadMatrix(address)).TransformPoint(offset);
+            return new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address)).TransformPoint(offset);
         }
 
         /// <summary>
@@ -582,7 +582,7 @@ namespace GTA
             {
                 return Owner.Matrix.InverseTransformPoint(worldCoords);
             }
-            return new Matrix(SHVDN.NativeMemory.ReadMatrix(address)).InverseTransformPoint(Owner.Matrix.InverseTransformPoint(worldCoords));
+            return new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address)).InverseTransformPoint(Owner.Matrix.InverseTransformPoint(worldCoords));
         }
 
         /// <summary>
@@ -596,7 +596,7 @@ namespace GTA
             {
                 return entityOffset;
             }
-            return new Matrix(SHVDN.NativeMemory.ReadMatrix(address)).InverseTransformPoint(entityOffset);
+            return new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address)).InverseTransformPoint(entityOffset);
         }
 
         #region Attaching

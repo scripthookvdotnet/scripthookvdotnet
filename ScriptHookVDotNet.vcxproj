@@ -133,7 +133,10 @@
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="source\core\Console.cs" />
+    <CsCompile Include="source\core\FVector3.cs" />
     <CsCompile Include="source\core\Log.cs" />
+    <CsCompile Include="source\core\MemDataMarshal.cs" />
+    <CsCompile Include="source\core\MemScanner.cs" />
     <CsCompile Include="source\core\NativeFunc.cs" />
     <CsCompile Include="source\core\NativeMemory.cs" />
     <CsCompile Include="source\core\Script.cs" />

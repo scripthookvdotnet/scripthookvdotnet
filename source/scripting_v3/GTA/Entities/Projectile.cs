@@ -52,7 +52,7 @@ namespace GTA
                 return 0;
             }
 
-            IntPtr entityAddress = SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
+            IntPtr entityAddress = SHVDN.MemDataMarshal.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
             if (entityAddress == IntPtr.Zero)
             {
                 return 0;
@@ -74,7 +74,7 @@ namespace GTA
                     return 0;
                 }
 
-                return (WeaponHash)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.ProjectileAmmoInfoOffset + 0x8);
+                return (WeaponHash)SHVDN.MemDataMarshal.ReadInt32(address + SHVDN.NativeMemory.ProjectileAmmoInfoOffset + 0x8);
             }
         }
 
@@ -104,7 +104,7 @@ namespace GTA
         {
             IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
             if (address == IntPtr.Zero
-                || (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(address + 0x28) != EntityTypeInternal.Object)
+                || (EntityTypeInternal)SHVDN.MemDataMarshal.ReadByte(address + 0x28) != EntityTypeInternal.Object)
             {
                 return null;
             }

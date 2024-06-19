@@ -169,7 +169,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x40));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x40));
             }
         }
 
@@ -186,7 +186,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x70));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x70));
             }
         }
 
@@ -203,7 +203,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelFrontRearSelectorOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelFrontRearSelectorOffset);
             }
             set
             {
@@ -213,7 +213,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelFrontRearSelectorOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelFrontRearSelectorOffset, value);
             }
         }
 
@@ -232,7 +232,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelStaticForceOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelStaticForceOffset);
             }
             set
             {
@@ -242,7 +242,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelStaticForceOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelStaticForceOffset, value);
             }
         }
 
@@ -261,7 +261,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireTemperatureOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireTemperatureOffset);
             }
             set
             {
@@ -271,7 +271,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireTemperatureOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireTemperatureOffset, value);
             }
         }
 
@@ -304,7 +304,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset, 3);
+                return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset, 3);
             }
             set
             {
@@ -314,7 +314,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset, 3, value);
+                SHVDN.MemDataMarshal.SetBit(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset, 3, value);
             }
         }
 
@@ -331,7 +331,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 3);
+                return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 3);
             }
             set
             {
@@ -341,7 +341,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 3, value);
+                SHVDN.MemDataMarshal.SetBit(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 3, value);
             }
         }
 
@@ -358,7 +358,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 4);
+                return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 4);
             }
             set
             {
@@ -368,7 +368,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 4, value);
+                SHVDN.MemDataMarshal.SetBit(address + SHVDN.NativeMemory.Vehicle.CWheelDynamicFlagsOffset + 4, 4, value);
             }
         }
 
@@ -385,7 +385,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset) < 1000f;
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset) < 1000f;
             }
         }
         /// <summary>
@@ -401,7 +401,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset) <= 0f;
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset) <= 0f;
             }
         }
         /// <summary>
@@ -417,7 +417,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelSuspensionHealthOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelSuspensionHealthOffset);
             }
             set
             {
@@ -427,7 +427,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelSuspensionHealthOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelSuspensionHealthOffset, value);
             }
         }
         /// <summary>
@@ -444,7 +444,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset);
             }
             set
             {
@@ -461,7 +461,7 @@ namespace GTA
                     value = 0f;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireHealthOffset, value);
             }
         }
         /// <summary>
@@ -502,7 +502,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireWearRateOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireWearRateOffset);
             }
             set
             {
@@ -514,7 +514,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireWearRateOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelTireWearRateOffset, value);
             }
         }
         /// <summary>
@@ -546,7 +546,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelMaxGripDiffFromWearRateOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelMaxGripDiffFromWearRateOffset);
             }
             set
             {
@@ -558,7 +558,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelMaxGripDiffFromWearRateOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelMaxGripDiffFromWearRateOffset, value);
             }
         }
         /// <summary>
@@ -593,7 +593,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelWearRateScaleOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CWheelWearRateScaleOffset);
             }
             set
             {
@@ -605,7 +605,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelWearRateScaleOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CWheelWearRateScaleOffset, value);
             }
         }
 
@@ -636,8 +636,8 @@ namespace GTA
                 return;
             }
 
-            IntPtr customShaderEffectVehicleAddr = SHVDN.NativeMemory.ReadAddress(SHVDN.NativeMemory.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
-            SHVDN.NativeMemory.SetBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.Vehicle.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1, false);
+            IntPtr customShaderEffectVehicleAddr = SHVDN.MemDataMarshal.ReadAddress(SHVDN.MemDataMarshal.ReadAddress(Vehicle.MemoryAddress + 0x48) + 0x20);
+            SHVDN.MemDataMarshal.SetBit(customShaderEffectVehicleAddr + SHVDN.NativeMemory.Vehicle.ShouldShowOnlyVehicleTiresWithPositiveHealthOffset, 1, false);
         }
 
         /// <summary>
@@ -739,14 +739,14 @@ namespace GTA
         {
             IntPtr vehicleAddr = Vehicle.MemoryAddress;
 
-            byte wheelIndexOfArrayPtr = SHVDN.NativeMemory.ReadByte(vehicleAddr + SHVDN.NativeMemory.Vehicle.WheelBoneIdToPtrArrayIndexOffset + ((int)BoneId - 11));
+            byte wheelIndexOfArrayPtr = SHVDN.MemDataMarshal.ReadByte(vehicleAddr + SHVDN.NativeMemory.Vehicle.WheelBoneIdToPtrArrayIndexOffset + ((int)BoneId - 11));
             if (wheelIndexOfArrayPtr == 0xFF)
             {
                 return IntPtr.Zero;
             }
 
-            IntPtr vehicleWheelArrayAddr = SHVDN.NativeMemory.ReadAddress(vehicleAddr + SHVDN.NativeMemory.Vehicle.WheelPtrArrayOffset);
-            _cachedAddress = SHVDN.NativeMemory.ReadAddress(vehicleWheelArrayAddr + 0x8 * wheelIndexOfArrayPtr);
+            IntPtr vehicleWheelArrayAddr = SHVDN.MemDataMarshal.ReadAddress(vehicleAddr + SHVDN.NativeMemory.Vehicle.WheelPtrArrayOffset);
+            _cachedAddress = SHVDN.MemDataMarshal.ReadAddress(vehicleWheelArrayAddr + 0x8 * wheelIndexOfArrayPtr);
 
             return _cachedAddress;
         }

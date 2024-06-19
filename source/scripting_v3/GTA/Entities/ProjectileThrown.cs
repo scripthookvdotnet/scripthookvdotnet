@@ -34,7 +34,7 @@ namespace GTA
         {
             IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
             if (address == IntPtr.Zero
-                || (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(address + 0x28) != EntityTypeInternal.Object)
+                || (EntityTypeInternal)SHVDN.MemDataMarshal.ReadByte(address + 0x28) != EntityTypeInternal.Object)
             {
                 return null;
             }

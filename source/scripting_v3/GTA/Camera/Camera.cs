@@ -121,7 +121,7 @@ namespace GTA
                     return IntPtr.Zero;
                 }
 
-                return (SHVDN.NativeMemory.ReadByte(address + 0x220) & 1) == 0 ? address + 0x30 : address + 0x110;
+                return (SHVDN.MemDataMarshal.ReadByte(address + 0x220) & 1) == 0 ? address + 0x30 : address + 0x110;
             }
         }
 
@@ -152,7 +152,7 @@ namespace GTA
                     return new Matrix();
                 }
 
-                return new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+                return new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address));
             }
         }
 
@@ -207,7 +207,7 @@ namespace GTA
                     return Vector3.RelativeTop;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x20));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x20));
             }
         }
 
@@ -224,7 +224,7 @@ namespace GTA
                     return Vector3.RelativeRight;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address));
             }
         }
 
@@ -241,7 +241,7 @@ namespace GTA
                     return Vector3.RelativeFront;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x10));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x10));
             }
         }
 

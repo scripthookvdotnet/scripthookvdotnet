@@ -103,7 +103,7 @@ namespace GTA
                     return Matrix.Zero;
                 }
 
-                return new Matrix(SHVDN.NativeMemory.ReadMatrix(address));
+                return new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address));
             }
         }
 

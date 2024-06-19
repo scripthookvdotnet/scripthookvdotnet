@@ -62,7 +62,7 @@ namespace GTA
                 const int memberOffset = 0x8;
                 for (int i = 0; i < result.Length; i++)
                 {
-                    result[i] = (VehicleWeaponHash)SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
+                    result[i] = (VehicleWeaponHash)SHVDN.MemDataMarshal.ReadInt32(MemoryAddress + memberOffset + i * 4);
                 }
 
                 return result;
@@ -93,7 +93,7 @@ namespace GTA
                 const int memberOffset = 0x8;
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
-                    SHVDN.NativeMemory.WriteInt32(MemoryAddress + memberOffset + i * 4, (int)arrayToFill[i]);
+                    SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + memberOffset + i * 4, (int)arrayToFill[i]);
                 }
             }
         }
@@ -120,7 +120,7 @@ namespace GTA
                 int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
                 for (int i = 0; i < result.Length; i++)
                 {
-                    result[i] = (VehicleSeat)SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
+                    result[i] = (VehicleSeat)SHVDN.MemDataMarshal.ReadInt32(MemoryAddress + memberOffset + i * 4);
                 }
 
                 // Make values match what native functions uses for vehicle seats
@@ -152,7 +152,7 @@ namespace GTA
                 int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
-                    SHVDN.NativeMemory.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
+                    SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
                 }
             }
         }
@@ -186,7 +186,7 @@ namespace GTA
                 int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
                 for (int i = 0; i < result.Length; i++)
                 {
-                    int modTypeForNative = SHVDN.NativeMemory.ReadInt32(MemoryAddress + memberOffset + i * 4);
+                    int modTypeForNative = SHVDN.MemDataMarshal.ReadInt32(MemoryAddress + memberOffset + i * 4);
                     if (modTypeForNative == (int)VehicleModType.None)
                     {
                         result[i] = VehicleModType.None;
@@ -229,7 +229,7 @@ namespace GTA
                 int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
-                    SHVDN.NativeMemory.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
+                    SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
                 }
             }
         }
@@ -263,7 +263,7 @@ namespace GTA
                 float[] result = new float[s_elemCountActuallyUsedForTurretPropertyArrays];
                 for (int i = 0; i < result.Length; i++)
                 {
-                    result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
+                    result[i] = SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + memberOffset + i * 4);
                 }
 
                 return result;
@@ -301,7 +301,7 @@ namespace GTA
 
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
-                    SHVDN.NativeMemory.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
+                    SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
                 }
             }
         }
@@ -335,7 +335,7 @@ namespace GTA
                 float[] result = new float[s_elemCountActuallyUsedForTurretPropertyArrays];
                 for (int i = 0; i < result.Length; i++)
                 {
-                    result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
+                    result[i] = SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + memberOffset + i * 4);
                 }
 
                 return result;
@@ -373,7 +373,7 @@ namespace GTA
 
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
-                    SHVDN.NativeMemory.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
+                    SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
                 }
             }
         }
@@ -407,7 +407,7 @@ namespace GTA
                 float[] result = new float[s_elemCountActuallyUsedForTurretPropertyArrays];
                 for (int i = 0; i < result.Length; i++)
                 {
-                    result[i] = SHVDN.NativeMemory.ReadFloat(MemoryAddress + memberOffset + i * 4);
+                    result[i] = SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + memberOffset + i * 4);
                 }
 
                 return result;
@@ -445,7 +445,7 @@ namespace GTA
 
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
-                    SHVDN.NativeMemory.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
+                    SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
                 }
             }
         }

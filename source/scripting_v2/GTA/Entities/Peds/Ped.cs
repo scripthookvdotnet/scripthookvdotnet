@@ -656,7 +656,7 @@ namespace GTA
                     return VehicleSeat.None;
                 }
 
-                int seatIndex = SHVDN.NativeMemory.ReadInt16(address + SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset);
+                int seatIndex = SHVDN.MemDataMarshal.ReadInt16(address + SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset);
                 return (seatIndex >= 0 && IsInVehicle()) ? (VehicleSeat)(seatIndex - 1) : VehicleSeat.None;
             }
         }
@@ -904,7 +904,7 @@ namespace GTA
                     return false;
                 }
 
-                return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset, 2);
+                return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset, 2);
             }
             set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
         }
@@ -965,7 +965,7 @@ namespace GTA
                     return false;
                 }
 
-                return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 14);
+                return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 14);
             }
             set => Function.Call(Hash.SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
         }

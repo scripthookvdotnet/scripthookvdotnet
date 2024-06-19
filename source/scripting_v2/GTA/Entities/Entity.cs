@@ -43,7 +43,7 @@ namespace GTA
             }
 
             // Read the same field as GET_ENTITY_TYPE does
-            var entityType = (EntityTypeInternal)SHVDN.NativeMemory.ReadByte(address + 0x28);
+            var entityType = (EntityTypeInternal)SHVDN.MemDataMarshal.ReadByte(address + 0x28);
 
             switch (entityType)
             {
@@ -181,7 +181,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 0x2E, 1);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x2E, 1);
             }
             set => Function.Call(Hash.FREEZE_ENTITY_POSITION, Handle, value);
         }
@@ -422,7 +422,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 392, 5);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 392, 5);
             }
             set
             {
@@ -432,7 +432,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + 392, 5, value);
+                SHVDN.MemDataMarshal.SetBit(address + 392, 5, value);
             }
         }
 
@@ -453,7 +453,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 392, 7);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 392, 7);
             }
             set
             {
@@ -463,7 +463,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + 392, 7, value);
+                SHVDN.MemDataMarshal.SetBit(address + 392, 7, value);
             }
         }
 
@@ -483,7 +483,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 392, 4);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 392, 4);
             }
             set
             {
@@ -493,7 +493,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + 392, 4, value);
+                SHVDN.MemDataMarshal.SetBit(address + 392, 4, value);
             }
         }
 
@@ -515,7 +515,7 @@ namespace GTA
                 }
 
                 int bitOffset = Game.Version >= GameVersion.VER_1_0_463_1_STEAM ? 11 : 10;
-                return SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set
             {
@@ -526,7 +526,7 @@ namespace GTA
                 }
 
                 int bitOffset = Game.Version >= GameVersion.VER_1_0_463_1_STEAM ? 11 : 10;
-                SHVDN.NativeMemory.SetBit(address + 392, bitOffset, value);
+                SHVDN.MemDataMarshal.SetBit(address + 392, bitOffset, value);
             }
         }
 
@@ -547,7 +547,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 392, 6);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 392, 6);
             }
             set
             {
@@ -557,7 +557,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.SetBit(address + 392, 6, value);
+                SHVDN.MemDataMarshal.SetBit(address + 392, 6, value);
             }
         }
 
@@ -578,7 +578,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 392, 8);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 392, 8);
             }
             set => Function.Call(Hash.SET_ENTITY_INVINCIBLE, Handle, value);
         }
@@ -601,7 +601,7 @@ namespace GTA
                 }
 
                 int bitOffset = Game.Version >= GameVersion.VER_1_0_463_1_STEAM ? 10 : 9;
-                return SHVDN.NativeMemory.IsBitSet(address + 392, bitOffset);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
         }
@@ -718,7 +718,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 0x29, 1);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x29, 1);
             }
             set => Function.Call(Hash.SET_ENTITY_COLLISION, Handle, value, false);
         }

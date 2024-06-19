@@ -68,13 +68,13 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                address = SHVDN.NativeMemory.ReadAddress(address + 32);
+                address = SHVDN.MemDataMarshal.ReadAddress(address + 32);
                 if (address == IntPtr.Zero)
                 {
                     return Vector3.Zero;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 144));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 144));
             }
             set
             {
@@ -84,13 +84,13 @@ namespace GTA
                     return;
                 }
 
-                address = SHVDN.NativeMemory.ReadAddress(address + 32);
+                address = SHVDN.MemDataMarshal.ReadAddress(address + 32);
                 if (address == IntPtr.Zero)
                 {
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteVector3(address + 144, value.ToInternalFVector3());
+                SHVDN.MemDataMarshal.WriteVector3(address + 144, value.ToInternalFVector3());
             }
         }
 
@@ -120,11 +120,11 @@ namespace GTA
                     return default;
                 }
 
-                address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
-                byte r = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address) * 255f);
-                byte g = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 4) * 255f);
-                byte b = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 8) * 255f);
-                byte a = Convert.ToByte(SHVDN.NativeMemory.ReadFloat(address + 12) * 255f);
+                address = SHVDN.MemDataMarshal.ReadAddress(address + 32) + 320;
+                byte r = Convert.ToByte(SHVDN.MemDataMarshal.ReadFloat(address) * 255f);
+                byte g = Convert.ToByte(SHVDN.MemDataMarshal.ReadFloat(address + 4) * 255f);
+                byte b = Convert.ToByte(SHVDN.MemDataMarshal.ReadFloat(address + 8) * 255f);
+                byte a = Convert.ToByte(SHVDN.MemDataMarshal.ReadFloat(address + 12) * 255f);
                 return Color.FromArgb(a, r, g, b);
             }
             set
@@ -135,11 +135,11 @@ namespace GTA
                     return;
                 }
 
-                address = SHVDN.NativeMemory.ReadAddress(address + 32) + 320;
-                SHVDN.NativeMemory.WriteFloat(address, value.R / 255f);
-                SHVDN.NativeMemory.WriteFloat(address + 4, value.G / 255f);
-                SHVDN.NativeMemory.WriteFloat(address + 8, value.B / 255f);
-                SHVDN.NativeMemory.WriteFloat(address + 12, value.A / 255f);
+                address = SHVDN.MemDataMarshal.ReadAddress(address + 32) + 320;
+                SHVDN.MemDataMarshal.WriteFloat(address, value.R / 255f);
+                SHVDN.MemDataMarshal.WriteFloat(address + 4, value.G / 255f);
+                SHVDN.MemDataMarshal.WriteFloat(address + 8, value.B / 255f);
+                SHVDN.MemDataMarshal.WriteFloat(address + 12, value.A / 255f);
             }
         }
 
@@ -161,7 +161,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336);
+                return SHVDN.MemDataMarshal.ReadFloat(SHVDN.MemDataMarshal.ReadAddress(address + 32) + 336);
             }
             set
             {
@@ -171,7 +171,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 336, value);
+                SHVDN.MemDataMarshal.WriteFloat(SHVDN.MemDataMarshal.ReadAddress(address + 32) + 336, value);
             }
         }
 
@@ -188,7 +188,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(SHVDN.NativeMemory.ReadAddress(address + 32) + 384);
+                return SHVDN.MemDataMarshal.ReadFloat(SHVDN.MemDataMarshal.ReadAddress(address + 32) + 384);
             }
             set => Function.Call(Hash.SET_PARTICLE_FX_LOOPED_FAR_CLIP_DIST, Handle, value);
         }

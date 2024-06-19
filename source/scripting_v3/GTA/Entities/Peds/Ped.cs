@@ -268,7 +268,7 @@ namespace GTA
                     return IntPtr.Zero;
                 }
 
-                return SHVDN.NativeMemory.ReadAddress(address + SHVDN.NativeMemory.Ped.PedIntelligenceOffset);
+                return SHVDN.MemDataMarshal.ReadAddress(address + SHVDN.NativeMemory.Ped.PedIntelligenceOffset);
             }
         }
 
@@ -380,7 +380,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.SweatOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.SweatOffset);
             }
             set
             {
@@ -449,7 +449,7 @@ namespace GTA
                     return -2f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset);
             }
             set
             {
@@ -459,7 +459,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset, value);
             }
         }
         /// <summary>
@@ -476,7 +476,7 @@ namespace GTA
                     return -2f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset);
             }
             set
             {
@@ -486,7 +486,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset, value);
             }
         }
         /// <summary>
@@ -519,7 +519,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset);
             }
             set
             {
@@ -529,7 +529,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset, value);
             }
         }
         /// <summary>
@@ -560,7 +560,7 @@ namespace GTA
                     return 0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset);
             }
             set
             {
@@ -570,7 +570,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset, value);
             }
         }
 
@@ -588,7 +588,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.IsUsingWetEffectOffset, 0);
+                return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.IsUsingWetEffectOffset, 0);
             }
         }
 
@@ -635,7 +635,7 @@ namespace GTA
 
             if (SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset != 0)
             {
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset, wetLevel);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset, wetLevel);
             }
         }
         /// <summary>
@@ -685,7 +685,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.ArmorOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.ArmorOffset);
             }
             set
             {
@@ -695,7 +695,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.ArmorOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.ArmorOffset, value);
             }
         }
 
@@ -1091,7 +1091,7 @@ namespace GTA
                     return default;
                 }
 
-                return new DecisionMaker(SHVDN.NativeMemory.ReadInt32(PedIntelligenceAddress + SHVDN.NativeMemory.Ped.PedIntelligenceDecisionMakerHashOffset));
+                return new DecisionMaker(SHVDN.MemDataMarshal.ReadInt32(PedIntelligenceAddress + SHVDN.NativeMemory.Ped.PedIntelligenceDecisionMakerHashOffset));
             }
             set => Function.Call(Hash.SET_DECISION_MAKER, Handle, (uint)value.Hash);
         }
@@ -1383,7 +1383,7 @@ namespace GTA
                     return 0;
                 }
 
-                return (FiringPattern)SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.Ped.FiringPatternOffset);
+                return (FiringPattern)SHVDN.MemDataMarshal.ReadInt32(address + SHVDN.NativeMemory.Ped.FiringPatternOffset);
             }
             set => Function.Call(Hash.SET_PED_FIRING_PATTERN, Handle, (uint)value);
         }
@@ -1605,7 +1605,7 @@ namespace GTA
                 }
 
                 // The knock off vehicle type value uses the first 2 bits
-                return (KnockOffVehicleType)(SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Ped.KnockOffVehicleTypeOffset) & 3);
+                return (KnockOffVehicleType)(SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Ped.KnockOffVehicleTypeOffset) & 3);
             }
             set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, (int)value);
         }
@@ -1781,7 +1781,7 @@ namespace GTA
                     return VehicleSeat.None;
                 }
 
-                int seatIndex = SHVDN.NativeMemory.ReadByte(address + SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset);
+                int seatIndex = SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset);
                 return (seatIndex >= 0 && IsInVehicle()) ? (VehicleSeat)(seatIndex - 1) : VehicleSeat.None;
             }
         }
@@ -2020,7 +2020,7 @@ namespace GTA
                     return false;
                 }
 
-                return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 9);
+                return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 9);
             }
             set => Function.Call(Hash.SET_PED_CAN_BE_TARGETTED, Handle, value);
         }
@@ -2140,7 +2140,7 @@ namespace GTA
                 return;
             }
 
-            SHVDN.NativeMemory.WriteAddress(address + SHVDN.NativeMemory.Ped.SourceOfDeathOffset, IntPtr.Zero);
+            SHVDN.MemDataMarshal.WriteAddress(address + SHVDN.NativeMemory.Ped.SourceOfDeathOffset, IntPtr.Zero);
         }
 
         /// <summary>
@@ -2155,7 +2155,7 @@ namespace GTA
                 return;
             }
 
-            SHVDN.NativeMemory.WriteInt32(address + SHVDN.NativeMemory.Ped.CauseOfDeathOffset, 0);
+            SHVDN.MemDataMarshal.WriteInt32(address + SHVDN.NativeMemory.Ped.CauseOfDeathOffset, 0);
         }
 
         /// <summary>
@@ -2170,7 +2170,7 @@ namespace GTA
                 return;
             }
 
-            SHVDN.NativeMemory.WriteInt32(address + SHVDN.NativeMemory.Ped.TimeOfDeathOffset, 0);
+            SHVDN.MemDataMarshal.WriteInt32(address + SHVDN.NativeMemory.Ped.TimeOfDeathOffset, 0);
         }
 
         #endregion
@@ -2200,7 +2200,7 @@ namespace GTA
                     return false;
                 }
 
-                return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset, 2);
+                return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset, 2);
             }
             set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
         }
@@ -2261,7 +2261,7 @@ namespace GTA
                     return false;
                 }
 
-                return !SHVDN.NativeMemory.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 14);
+                return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 14);
             }
             set => Function.Call(Hash.SET_PED_DROPS_WEAPONS_WHEN_DEAD, Handle, value);
         }
@@ -2312,7 +2312,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset);
             }
             set
             {
@@ -2322,7 +2322,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset, value);
             }
         }
 
@@ -2346,7 +2346,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset);
             }
             set
             {
@@ -2356,7 +2356,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset, value);
             }
         }
 
@@ -2430,7 +2430,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.SeeingRangeOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.SeeingRangeOffset);
             }
             set => Function.Call(Hash.SET_PED_SEEING_RANGE, Handle, value);
         }
@@ -2453,7 +2453,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.HearingRangeOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.HearingRangeOffset);
             }
             set => Function.Call(Hash.SET_PED_HEARING_RANGE, Handle, value);
         }
@@ -2477,7 +2477,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldMinAngleOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldMinAngleOffset);
             }
             set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MIN_ANGLE, Handle, value);
         }
@@ -2501,7 +2501,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldMaxAngleOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldMaxAngleOffset);
             }
             set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MAX_ANGLE, Handle, value);
         }
@@ -2525,7 +2525,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldMinElevationAngleOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldMinElevationAngleOffset);
             }
             set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MIN_ELEVATION_ANGLE, Handle, value);
         }
@@ -2549,7 +2549,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldMaxElevationAngleOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldMaxElevationAngleOffset);
             }
             set => Function.Call(Hash.SET_PED_VISUAL_FIELD_MAX_ELEVATION_ANGLE, Handle, value);
         }
@@ -2572,7 +2572,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldPeripheralRangeOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldPeripheralRangeOffset);
             }
             set => Function.Call(Hash.SET_PED_VISUAL_FIELD_PERIPHERAL_RANGE, Handle, value);
         }
@@ -2595,7 +2595,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldCenterAngleOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.VisualFieldCenterAngleOffset);
             }
             set => Function.Call(Hash.SET_PED_VISUAL_FIELD_CENTER_ANGLE, Handle, value);
         }

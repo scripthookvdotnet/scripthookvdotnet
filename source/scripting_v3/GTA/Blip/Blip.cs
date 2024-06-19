@@ -42,7 +42,7 @@ namespace GTA
                 GameVersion gameVersion = Game.Version;
                 int offset = gameVersion >= GameVersion.v1_0_944_2_Steam ? 0x5E : gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x5C : 0x58;
 
-                return (BlipDisplayType)SHVDN.NativeMemory.ReadByte(address + offset);
+                return (BlipDisplayType)SHVDN.MemDataMarshal.ReadByte(address + offset);
             }
             set => Function.Call<int>(Hash.SET_BLIP_DISPLAY, Handle, (int)value);
         }
@@ -63,7 +63,7 @@ namespace GTA
                 GameVersion gameVersion = Game.Version;
                 int offset = gameVersion >= GameVersion.v1_0_944_2_Steam ? 0x60 : gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x5E : 0x5A;
 
-                return (BlipCategoryType)SHVDN.NativeMemory.ReadByte(address + offset);
+                return (BlipCategoryType)SHVDN.MemDataMarshal.ReadByte(address + offset);
             }
             set => Function.Call<int>(Hash.SET_BLIP_CATEGORY, Handle, (int)value);
         }
@@ -96,7 +96,7 @@ namespace GTA
                 GameVersion gameVersion = Game.Version;
                 int offset = gameVersion >= GameVersion.v1_0_944_2_Steam ? 0x5D : gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x5B : 0x57;
 
-                return SHVDN.NativeMemory.ReadByte(address + offset);
+                return SHVDN.MemDataMarshal.ReadByte(address + offset);
             }
             set => Function.Call(Hash.SET_BLIP_PRIORITY, Handle, value);
         }
@@ -118,7 +118,7 @@ namespace GTA
                 GameVersion gameVersion = Game.Version;
                 int offset = gameVersion >= GameVersion.v1_0_944_2_Steam ? 0x61 : gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x5F : 0x5B;
 
-                int returnValue = (int)SHVDN.NativeMemory.ReadByte(address + offset);
+                int returnValue = (int)SHVDN.MemDataMarshal.ReadByte(address + offset);
 
                 // the game does not show a number label on the blip if the value is between 0x80 to 0xFF
                 if ((returnValue & 0x80) != 0)
@@ -162,7 +162,7 @@ namespace GTA
                     return System.Drawing.Color.FromArgb(unchecked((int)0xFF5DB6E5));
                 }
 
-                return System.Drawing.Color.FromArgb(SHVDN.NativeMemory.ReadInt32(address + 0x4C));
+                return System.Drawing.Color.FromArgb(SHVDN.MemDataMarshal.ReadInt32(address + 0x4C));
             }
             set => Function.Call(Hash.SET_BLIP_SECONDARY_COLOUR, Handle, value.R, value.G, value.B);
         }
@@ -195,12 +195,12 @@ namespace GTA
                     return null;
                 }
 
-                ushort nameLength = (ushort)SHVDN.NativeMemory.ReadInt16(address + 0x30);
+                ushort nameLength = (ushort)SHVDN.MemDataMarshal.ReadInt16(address + 0x30);
 
                 // Assume the name string pointer is accessible, since the game will crash if the name length is not 0 and does not have access to the name string pointer
                 if (nameLength != 0)
                 {
-                    return SHVDN.StringMarshal.PtrToStringUtf8(SHVDN.NativeMemory.ReadAddress(address + 0x28));
+                    return SHVDN.StringMarshal.PtrToStringUtf8(SHVDN.MemDataMarshal.ReadAddress(address + 0x28));
                 }
 
                 return string.Empty;
@@ -228,7 +228,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadInt32(address + 0x38);
+                return SHVDN.MemDataMarshal.ReadInt32(address + 0x38);
             }
             set
             {
@@ -238,7 +238,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteInt32(address + 0x38, value);
+                SHVDN.MemDataMarshal.WriteInt32(address + 0x38, value);
             }
         }
 
@@ -280,12 +280,12 @@ namespace GTA
                 GameVersion gameVersion = Game.Version;
                 if (gameVersion >= GameVersion.v1_0_944_2_Steam)
                 {
-                    return (int)SHVDN.NativeMemory.ReadFloat(address + 0x58);
+                    return (int)SHVDN.MemDataMarshal.ReadFloat(address + 0x58);
                 }
                 else
                 {
                     int offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
-                    return SHVDN.NativeMemory.ReadInt16(address + offset);
+                    return SHVDN.MemDataMarshal.ReadInt16(address + offset);
                 }
             }
             set => Function.Call(Hash.SET_BLIP_ROTATION, Handle, value);
@@ -311,12 +311,12 @@ namespace GTA
                 GameVersion gameVersion = Game.Version;
                 if (gameVersion >= GameVersion.v1_0_944_2_Steam)
                 {
-                    return SHVDN.NativeMemory.ReadFloat(address + 0x58);
+                    return SHVDN.MemDataMarshal.ReadFloat(address + 0x58);
                 }
                 else
                 {
                     int offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
-                    return (float)SHVDN.NativeMemory.ReadInt16(address + offset);
+                    return (float)SHVDN.MemDataMarshal.ReadInt16(address + offset);
                 }
             }
             set
@@ -336,13 +336,13 @@ namespace GTA
                 GameVersion gameVersion = Game.Version;
                 if (gameVersion >= GameVersion.v1_0_944_2_Steam)
                 {
-                    SHVDN.NativeMemory.WriteFloat(address + 0x58, valueNormalized);
+                    SHVDN.MemDataMarshal.WriteFloat(address + 0x58, valueNormalized);
                     return;
                 }
                 else
                 {
                     int offset = gameVersion >= GameVersion.v1_0_463_1_Steam ? 0x58 : 0x54;
-                    SHVDN.NativeMemory.WriteInt16(address + offset, (short)valueNormalized);
+                    SHVDN.MemDataMarshal.WriteInt16(address + offset, (short)valueNormalized);
                 }
             }
         }
@@ -369,7 +369,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(address + 0x50);
+                return SHVDN.MemDataMarshal.ReadFloat(address + 0x50);
             }
             set
             {
@@ -379,7 +379,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(address + 0x50, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + 0x50, value);
             }
         }
 
@@ -398,7 +398,7 @@ namespace GTA
                 }
 
                 int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 0x54 : 0x50;
-                return SHVDN.NativeMemory.ReadFloat(address + offset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + offset);
             }
             set
             {
@@ -409,7 +409,7 @@ namespace GTA
                 }
 
                 int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 0x54 : 0x50;
-                SHVDN.NativeMemory.WriteFloat(address + offset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + offset, value);
             }
         }
 
@@ -427,7 +427,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadInt16(address + 0x44);
+                return SHVDN.MemDataMarshal.ReadInt16(address + 0x44);
             }
             set => Function.Call(Hash.SET_BLIP_FLASH_INTERVAL, Handle, value);
         }
@@ -448,7 +448,7 @@ namespace GTA
                     return 0;
                 }
 
-                int returnValue = SHVDN.NativeMemory.ReadInt16(address + 0x44);
+                int returnValue = SHVDN.MemDataMarshal.ReadInt16(address + 0x44);
                 if (returnValue == 0xFFFF)
                 {
                     return -1;
@@ -480,7 +480,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 0x20, 4);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 4);
             }
             set => Function.Call(Hash.SET_BLIP_ROUTE, Handle, value);
         }
@@ -501,7 +501,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 0x20, 16);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 16);
             }
             set => Function.Call(Hash.SHOW_TICK_ON_BLIP, Handle, value);
         }
@@ -522,7 +522,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 0x20, 17);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 17);
             }
             set => Function.Call(Hash.SHOW_HEADING_INDICATOR_ON_BLIP, Handle, value);
         }
@@ -544,7 +544,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 0x20, 18);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 18);
             }
             set => Function.Call(Hash.SHOW_HEADING_INDICATOR_ON_BLIP, Handle, value);
         }
@@ -566,7 +566,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 0x20, 19);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 19);
             }
             set => Function.Call(Hash.SHOW_FRIEND_INDICATOR_ON_BLIP, Handle, value);
         }
@@ -588,7 +588,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 0x20, 20);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 20);
             }
             set => Function.Call(Hash.SHOW_CREW_INDICATOR_ON_BLIP, Handle, value);
         }
@@ -652,7 +652,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(address + 0x20, 14);
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 14);
             }
             set => Function.Call(Hash.SET_BLIP_HIDDEN_ON_LEGEND, Handle, value);
         }
@@ -673,15 +673,15 @@ namespace GTA
                 return null;
             }
 
-            ushort nameLength = (ushort)SHVDN.NativeMemory.ReadInt16(address + 0x30);
+            ushort nameLength = (ushort)SHVDN.MemDataMarshal.ReadInt16(address + 0x30);
 
             // Assume the name string pointer is accessible, since the game will crash if the name length is not 0 and does not have access to the name string pointer
             if (nameLength != 0)
             {
-                return SHVDN.StringMarshal.PtrToStringUtf8(SHVDN.NativeMemory.ReadAddress(address + 0x28));
+                return SHVDN.StringMarshal.PtrToStringUtf8(SHVDN.MemDataMarshal.ReadAddress(address + 0x28));
             }
 
-            return Game.GetLocalizedString(SHVDN.NativeMemory.ReadInt32(address + 0x38));
+            return Game.GetLocalizedString(SHVDN.MemDataMarshal.ReadInt32(address + 0x38));
         }
 
         /// <summary>

@@ -71,7 +71,7 @@ namespace GTA
                     return Matrix.Zero;
                 }
 
-                return new Matrix(SHVDN.NativeMemory.ReadMatrix(address + 0x60));
+                return new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address + 0x60));
             }
         }
 
@@ -140,7 +140,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(address + 0x90));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x90));
             }
         }
 

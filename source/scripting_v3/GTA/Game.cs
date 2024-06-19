@@ -748,7 +748,7 @@ namespace GTA
         {
             unsafe
             {
-                byte* address = (startAddress == IntPtr.Zero ? SHVDN.NativeMemory.FindPatternNaive(pattern, mask) : SHVDN.NativeMemory.FindPatternNaive(pattern, mask, startAddress));
+                byte* address = (startAddress == IntPtr.Zero ? SHVDN.MemScanner.FindPatternNaive(pattern, mask) : SHVDN.MemScanner.FindPatternNaive(pattern, mask, startAddress));
                 return address == null ? IntPtr.Zero : new IntPtr(address);
             }
         }

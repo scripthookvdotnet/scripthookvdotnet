@@ -210,7 +210,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(cPlayerPedTargetingAddr + 0x60));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(cPlayerPedTargetingAddr + 0x60));
             }
         }
 
@@ -252,7 +252,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                return new Vector3(SHVDN.NativeMemory.ReadVector3(cPlayerPedTargetingAddr + 0x40));
+                return new Vector3(SHVDN.MemDataMarshal.ReadVector3(cPlayerPedTargetingAddr + 0x40));
             }
         }
 
@@ -320,7 +320,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CurrentCrimeValueOffset);
+                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CurrentCrimeValueOffset);
             }
             set
             {
@@ -335,7 +335,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentCrimeValueOffset, value);
+                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentCrimeValueOffset, value);
             }
         }
         /// <summary>
@@ -364,7 +364,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.NewCrimeValueOffset);
+                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.NewCrimeValueOffset);
             }
             set
             {
@@ -379,7 +379,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.NewCrimeValueOffset, value);
+                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.NewCrimeValueOffset, value);
             }
         }
         /// <summary>
@@ -408,7 +408,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset);
+                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset);
             }
             set
             {
@@ -423,7 +423,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset, value);
+                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset, value);
             }
         }
 
@@ -449,7 +449,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeSearchLastRefocusedOffset);
+                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeSearchLastRefocusedOffset);
             }
             set
             {
@@ -464,7 +464,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeSearchLastRefocusedOffset, value);
+                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeSearchLastRefocusedOffset, value);
             }
         }
 
@@ -491,7 +491,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeLastSpottedOffset);
+                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeLastSpottedOffset);
             }
             set
             {
@@ -506,7 +506,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeLastSpottedOffset, value);
+                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeLastSpottedOffset, value);
             }
         }
 
@@ -533,7 +533,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeHiddenEvasionStartedOffset);
+                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeHiddenEvasionStartedOffset);
             }
             set
             {
@@ -548,7 +548,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeHiddenEvasionStartedOffset, value);
+                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeHiddenEvasionStartedOffset, value);
             }
         }
         /// <summary>
@@ -582,7 +582,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(cWantedAddress + SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset, 16);
+                return SHVDN.MemDataMarshal.IsBitSet(cWantedAddress + SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset, 16);
             }
             set => Function.Call(Hash.SET_POLICE_IGNORE_PLAYER, Handle, value);
         }
@@ -608,7 +608,7 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.NativeMemory.IsBitSet(cWantedAddress + SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset, 18);
+                return SHVDN.MemDataMarshal.IsBitSet(cWantedAddress + SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset, 18);
             }
             set => Function.Call(Hash.SET_EVERYONE_IGNORE_PLAYER, Handle, value);
         }
@@ -634,7 +634,7 @@ namespace GTA
                     return false;
                 }
 
-                return !SHVDN.NativeMemory.IsBitSet(cWantedAddress + SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset, 23);
+                return !SHVDN.MemDataMarshal.IsBitSet(cWantedAddress + SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset, 23);
             }
             set => Function.Call(Hash.SET_DISPATCH_COPS_FOR_PLAYER, Handle, value);
         }
@@ -675,7 +675,7 @@ namespace GTA
                 return;
             }
 
-            int currentWantedLevel = SHVDN.NativeMemory.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset);
+            int currentWantedLevel = SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset);
 
             if (wantedLevel <= 0 || wantedLevel >= currentWantedLevel)
             {
@@ -697,7 +697,7 @@ namespace GTA
             int threshold = Function.Call<int>(Hash.GET_WANTED_LEVEL_THRESHOLD, Handle, wantedLevelToApply);
 
             CurrentCrimeValue = threshold + ADDITIONAL_CRIME_VALUE;
-            SHVDN.NativeMemory.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset, wantedLevelToApply);
+            SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset, wantedLevelToApply);
 
             // Set the pending crime value just like SET_PLAYER_WANTED_LEVEL does (SET_PLAYER_WANTED_LEVEL_NOW does not clear the value)
             NewCrimeValue = threshold + ADDITIONAL_CRIME_VALUE;
@@ -752,7 +752,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(specialAbilityStructAddr + 0x34);
+                return SHVDN.MemDataMarshal.ReadFloat(specialAbilityStructAddr + 0x34);
             }
             set
             {
@@ -762,7 +762,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(specialAbilityStructAddr + 0x34, value);
+                SHVDN.MemDataMarshal.WriteFloat(specialAbilityStructAddr + 0x34, value);
             }
         }
 
@@ -785,7 +785,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                return SHVDN.NativeMemory.ReadFloat(specialAbilityStructAddr + 0x3C);
+                return SHVDN.MemDataMarshal.ReadFloat(specialAbilityStructAddr + 0x3C);
             }
             set
             {
@@ -795,7 +795,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteFloat(specialAbilityStructAddr + 0x3C, value);
+                SHVDN.MemDataMarshal.WriteFloat(specialAbilityStructAddr + 0x3C, value);
             }
         }
 
@@ -947,7 +947,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadUInt16(cPlayerInfoAddress + SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset);
+                return SHVDN.MemDataMarshal.ReadUInt16(cPlayerInfoAddress + SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset);
             }
             set
             {
@@ -962,7 +962,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.NativeMemory.WriteUInt16(cPlayerInfoAddress + SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset, (ushort)value);
+                SHVDN.MemDataMarshal.WriteUInt16(cPlayerInfoAddress + SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset, (ushort)value);
             }
         }
 

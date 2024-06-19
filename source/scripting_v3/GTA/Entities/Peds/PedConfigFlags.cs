@@ -43,7 +43,7 @@ namespace GTA
                     return KnockOffVehicleType.Default;
                 }
 
-                return (KnockOffVehicleType)NativeMemory.ReadUInt32BitField(
+                return (KnockOffVehicleType)MemDataMarshal.ReadUInt32BitField(
                     address + NativeMemory.Ped.KnockOffVehicleTypeOffset, 0, 2
                     );
             }
@@ -68,7 +68,7 @@ namespace GTA
                     return PedLegIKMode.Off;
                 }
 
-                return (PedLegIKMode)NativeMemory.ReadUInt32BitField(
+                return (PedLegIKMode)MemDataMarshal.ReadUInt32BitField(
                     address + NativeMemory.Ped.KnockOffVehicleTypeOffset, 2, 2
                 );
             }
@@ -133,7 +133,7 @@ namespace GTA
                 }
 
                 // Needs to right shift by 2 bits if `CPedConfigFlags::nPedGestureMode` is removed
-                int val = NativeMemory.ReadInt32BitField(
+                int val = MemDataMarshal.ReadInt32BitField(
                     address + NativeMemory.Ped.KnockOffVehicleTypeOffset, 6, 5
                 );
 

@@ -24,7 +24,7 @@ namespace GTA
         /// <summary>
         /// Gets the matrix of the <see cref="GameplayCamera"/> director.
         /// </summary>
-        public static Matrix Matrix => new(SHVDN.NativeMemory.ReadMatrix(MemoryAddress + 0x1F0));
+        public static Matrix Matrix => new(SHVDN.MemDataMarshal.ReadMatrix(MemoryAddress + 0x1F0));
 
         /// <summary>
         /// Gets the position of the <see cref="GameplayCamera"/> director.
@@ -47,17 +47,17 @@ namespace GTA
         /// <summary>
         /// Gets the up vector of the <see cref="GameplayCamera"/> director.
         /// </summary>
-        public static Vector3 UpVector => new(SHVDN.NativeMemory.ReadVector3(MemoryAddress + 0x210));
+        public static Vector3 UpVector => new(SHVDN.MemDataMarshal.ReadVector3(MemoryAddress + 0x210));
 
         /// <summary>
         /// Gets the right vector of the <see cref="GameplayCamera"/> director.
         /// </summary>
-        public static Vector3 RightVector => new(SHVDN.NativeMemory.ReadVector3(MemoryAddress + 0x1F0));
+        public static Vector3 RightVector => new(SHVDN.MemDataMarshal.ReadVector3(MemoryAddress + 0x1F0));
 
         /// <summary>
         /// Gets the forward vector of the <see cref="GameplayCamera"/> director, see also <seealso cref="Direction"/>.
         /// </summary>
-        public static Vector3 ForwardVector => new(SHVDN.NativeMemory.ReadVector3(MemoryAddress + 0x200));
+        public static Vector3 ForwardVector => new(SHVDN.MemDataMarshal.ReadVector3(MemoryAddress + 0x200));
 
         /// <summary>
         /// Gets the position in world coordinates of an offset relative to the <see cref="GameplayCamera"/> director.

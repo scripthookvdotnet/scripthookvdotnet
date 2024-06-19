@@ -94,7 +94,7 @@ namespace GTA
                 return null;
             }
 
-            var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddr + SHVDN.NativeMemory.Vehicle.WheelIdOffset);
+            var boneId = (VehicleWheelBoneId)SHVDN.MemDataMarshal.ReadInt32(wheelAddr + SHVDN.NativeMemory.Vehicle.WheelIdOffset);
             int boneIndexZeroBased = (int)boneId - 11;
             return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(Vehicle, boneId, wheelAddr));
         }
@@ -118,7 +118,7 @@ namespace GTA
 
                 IntPtr wheelAddress = SHVDN.NativeMemory.Vehicle.GetVehicleWheelAddressByIndexOfWheelArray(vehicleAddr, i);
 
-                var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.Vehicle.WheelIdOffset);
+                var boneId = (VehicleWheelBoneId)SHVDN.MemDataMarshal.ReadInt32(wheelAddress + SHVDN.NativeMemory.Vehicle.WheelIdOffset);
                 int boneIndexZeroBased = (int)boneId - 11;
                 yield return _vehicleWheels[boneIndexZeroBased] ?? (_vehicleWheels[boneIndexZeroBased] = new VehicleWheel(Vehicle, boneId, wheelAddress));
             }
@@ -147,7 +147,7 @@ namespace GTA
                     return 0;
                 }
 
-                return SHVDN.NativeMemory.ReadInt32(address + SHVDN.NativeMemory.Vehicle.WheelCountOffset);
+                return SHVDN.MemDataMarshal.ReadInt32(address + SHVDN.NativeMemory.Vehicle.WheelCountOffset);
             }
         }
 
@@ -167,13 +167,13 @@ namespace GTA
                 return Array.Empty<VehicleWheel>();
             }
 
-            int wheelCount = SHVDN.NativeMemory.ReadInt32(vehicleAddress + SHVDN.NativeMemory.Vehicle.WheelCountOffset);
+            int wheelCount = SHVDN.MemDataMarshal.ReadInt32(vehicleAddress + SHVDN.NativeMemory.Vehicle.WheelCountOffset);
             var returnWheelArray = new VehicleWheel[wheelCount];
 
             for (int i = 0; i < returnWheelArray.Length; i++)
             {
                 IntPtr wheelAddress = SHVDN.NativeMemory.Vehicle.GetVehicleWheelAddressByIndexOfWheelArray(vehicleAddress, i);
-                var boneId = (VehicleWheelBoneId)SHVDN.NativeMemory.ReadInt32(wheelAddress + SHVDN.NativeMemory.Vehicle.WheelIdOffset);
+                var boneId = (VehicleWheelBoneId)SHVDN.MemDataMarshal.ReadInt32(wheelAddress + SHVDN.NativeMemory.Vehicle.WheelIdOffset);
                 var vehicleWheelInstance = new VehicleWheel(Vehicle, boneId, wheelAddress);
                 returnWheelArray[i] = vehicleWheelInstance;
 
