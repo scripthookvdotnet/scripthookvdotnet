@@ -66,6 +66,8 @@ namespace GTA
             {
                 shapeTestStatus = Function.Call<ShapeTestStatus>(Hash.GET_SHAPE_TEST_RESULT, Handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &guidHandleArg);
             }
+            ReleaseGuidIfNotZeroButNotACPhysicalOne(guidHandleArg);
+
             result = new ShapeTestResult(hitSomethingArg, hitPositionArg, surfaceNormalArg, guidHandleArg);
 
             return shapeTestStatus;
@@ -106,6 +108,8 @@ namespace GTA
             {
                 shapeTestStatus = Function.Call<ShapeTestStatus>(Hash.GET_SHAPE_TEST_RESULT_INCLUDING_MATERIAL, Handle, &hitSomethingArg, &hitPositionArg, &surfaceNormalArg, &materialHashArg, &guidHandleArg);
             }
+            ReleaseGuidIfNotZeroButNotACPhysicalOne(guidHandleArg);
+
             result = new ShapeTestResult(hitSomethingArg, hitPositionArg, surfaceNormalArg, guidHandleArg);
             materialHash = (MaterialHash)materialHashArg;
 
@@ -124,6 +128,37 @@ namespace GTA
         {
             ShapeTestStatus status = GetResultIncludingMaterial(out ShapeTestResult result, out MaterialHash materialHash);
             return (status, result, materialHash);
+        }
+
+        internal static void ReleaseGuid(int guid)
+        {
+            // The native won't delete the GUID from the script GUID pool if it is registered
+            // as a mission entity by some script (strictly when the found `CEntity` has
+            // a `CScriptEntityExtension`), though `SET_ENTITY_AS_MISSION_ENTITY` does nothing if the GUID
+            // isn't associated with a `CPhysical`.
+            Function.Call<int>(Hash.RELEASE_SCRIPT_GUID_FROM_ENTITY, guid);
+        }
+
+        private static void ReleaseGuidIfNotZeroButNotACPhysicalOne(int guid)
+        {
+            // The result natives return 0 to the guid/handle arg if shape test didn't hit a `CEntity` or they failed
+            // to create a GUID. In such case, there's no need to test if the entity handle is associated with
+            // a `CPhysical` even.
+            if (guid == 0)
+            {
+                return;
+            }
+
+            Entity.EntityTypeInternal entType = Entity.PeekEntityTypeInternal(guid);
+            if (entType is not (Entity.EntityTypeInternal.Ped or Entity.EntityTypeInternal.Vehicle
+                or Entity.EntityTypeInternal.Object))
+            {
+                // The grabbed GUID/handle is associated with a `CEntity` but the instance isn't a `CPhysical`,
+                // so we should try to release the GUID so the script GUID pool will be less likely to crash
+                // the game for overflowing. We won't handle non-physical `CEntity`s with script GUIDs in the v3
+                // API.
+                ReleaseGuid(guid);
+            }
         }
 
         public bool Equals(ShapeTestHandle model)

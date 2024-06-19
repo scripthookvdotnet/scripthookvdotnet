@@ -115,6 +115,17 @@ namespace GTA
             }
         }
 
+        internal static EntityTypeInternal PeekEntityTypeInternal(int handle)
+        {
+            IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
+            if (address == IntPtr.Zero)
+            {
+                return (EntityTypeInternal)0 /* ENTITY_TYPE_MASK_NOTHING */;
+            }
+
+            return (EntityTypeInternal)SHVDN.MemDataMarshal.ReadByte(address + 0x28);
+        }
+
         /// <summary>
         /// Gets or sets the population type of the current <see cref="Entity"/>.
         /// This property can also be used to add or remove <see cref="Entity"/> persistence.
