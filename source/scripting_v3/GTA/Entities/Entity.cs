@@ -11,6 +11,16 @@ using System.Linq;
 
 namespace GTA
 {
+    /// <summary>
+    /// Represents a physical entity.
+    /// </summary>
+    /// <remarks>
+    /// Although there are natives that can work with any `<c>CEntity</c>`s including non-`<c>CPhysical</c>` instances,
+    /// such as `<c>DOES_ENTITY_EXIST</c>`, `<c>HAS_ENTITY_CLEAR_LOS_TO_ENTITY</c>`, this type can safely handle only
+    /// for `<c>CPhysical</c>`s due to historical reasons. Despite the name, this class also has methods and properties
+    /// that can work only with physical entities (`<c>CPhysical</c>`s) but not with non-physical entities such as
+    /// buildings (`<c>CBuilding</c>`s).
+    /// </remarks>
     public abstract class Entity : PoolObject, ISpatial
     {
         #region Fields
@@ -35,10 +45,12 @@ namespace GTA
         /// </summary>
         /// <param name="handle">The entity handle.</param>
         /// <returns>
-        /// Returns a <see cref="Ped"/> if this handle corresponds to a Ped.
-        /// Returns a <see cref="Vehicle"/> if this handle corresponds to a Vehicle.
-        /// Returns a <see cref="Prop"/> if this handle corresponds to a Prop.
-        /// Returns <see langword="null" /> if no <see cref="Entity"/> exists this the specified <paramref name="handle"/>.
+        /// Returns a <see cref="Ped"/> if this handle corresponds to a <see cref="Ped"/> (`<c>CPed</c>`).
+        /// Returns a <see cref="Vehicle"/> if this handle corresponds to a <see cref="Vehicle"/> (`<c>CVehicle</c>`).
+        /// Returns a <see cref="Prop"/> if this handle corresponds to a <see cref="Prop"/> (`<c>CProp</c>`).
+        /// Returns <see langword="null"/> if no <see cref="Entity"/> associated with <paramref name="handle"/> exists,
+        /// or if there is a `<c>CEntity</c>` associated with <paramref name="handle"/> but it is not `<c>CPed</c>`,
+        /// `<c>CVehicle</c>`, or `<c>CProp</c>`.
         /// </returns>
         public static Entity FromHandle(int handle)
         {
@@ -48,9 +60,13 @@ namespace GTA
                 return null;
             }
 
-            // Read the same field as GET_ENTITY_TYPE does
+            // Read the same field as how `GET_ENTITY_TYPE` does
             var entityType = (EntityTypeInternal)SHVDN.MemDataMarshal.ReadByte(address + 0x28);
 
+            // Do not add cases in v2 or v3 APIs.
+            // Though there are natives that can work with any `CEntity`s (e.g. `DOES_ENTITY_EXIST`,
+            // `HAS_ENTITY_CLEAR_LOS_TO_ENTITY`), we used `GET_ENTITY_TYPE` in v3.1.0 and earlier SHVDN versions, which
+            // can return a valid entity type only for peds, vehicles, and objects/props.
             switch (entityType)
             {
                 case EntityTypeInternal.Ped:
