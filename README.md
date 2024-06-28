@@ -20,6 +20,13 @@ The stable builds can be downloaded from the [Releases](https://github.com/scrip
 You need to use the ASI file and the DLL files for APIs in an archive of the same version as the internal structure can be changed without notice.
 
 For newer builds, check out the [Nightly Builds](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases). You don't have to sign in to GitHub to download nightly releases.
+Here is some of the notes you should be aware of when using a nightly version (from v3.6.0):
+* The default API version for raw scripts is changed from v2 from v3.
+    * If you have raw scripts without an API version notation by file name, you will need to specify in nightly versions. You can specify a API version by adding a dot and a version number right before the extention name (e.g. `Script.cs` to `Script.2.cs`).
+* The ini settings are changed. You should use the ini file that comes from a nightly release. SHVDN does not add missing settings currently.
+* Warning messages are added for scripts built against the v2 API, which is not as maintained as the v3 one and will not have any new features. This does not mean the v2 API will not be even receiving compatibility fixes for new game updates in the *near* future. These messages are printed to urge users to ask the script authors to migrate to the v3 API.
+* Some scripts *may* not be working that rely on the main thread of the game process (for game logic).
+    * This is because we had to use a dedicated thread other than the main thread to avoid using ScriptHookV's fiber, so users won't have crutial compatibility problems with RAGE Plugin Hook and C++ scripts that use try catch blocks. Although we are still searching for how to have SHVDN tick in the main game thread by hooking a function in the game process, we have not found one.
 
 For script developers, please note that new APIs included in new nightly builds but not included in any stable versions are subject to change without notice, so it is not advisable to use any of them for public/production builds of your scripts.
 
