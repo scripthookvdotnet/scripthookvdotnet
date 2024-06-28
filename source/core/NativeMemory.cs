@@ -474,7 +474,7 @@ namespace SHVDN
             {
                 vehicleClassOffset = *(uint*)(address + 0x10);
 
-                address = address + *(int*)(address) + 4;
+                address = (*(int*)(address - 0x21) + address - 0x1D);
                 s_modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
                 s_modelNum2 = *(UInt64*)(*(int*)(address + 0x63) + address + 0x67);
                 s_modelNum3 = *(UInt64*)(*(int*)(address + 0x7A) + address + 0x7E);
