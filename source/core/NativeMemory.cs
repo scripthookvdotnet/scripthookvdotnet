@@ -260,8 +260,8 @@ namespace SHVDN
             s_radarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
             address = MemScanner.FindPatternBmh("\xFF\xC6\x49\x83\xC6\x08\x3B\x35\x00\x00\x00\x00\x7C\x9B", "xxxxxxxx????xx");
             s_possibleRadarBlipCountAddress = (int*)(*(int*)(address + 8) + address + 12);
-            address = MemScanner.FindPatternBmh("\x3B\x35\x00\x00\x00\x00\x74\x2E\x48\x81\xFD\xDB\x05\x00\x00", "xx????xxxxxxxxx");
-            s_unkFirstRadarBlipIndexAddress = (int*)(*(int*)(address + 2) + address + 6);
+            address = MemScanner.FindPatternBmh("\x8B\x44\x0A\x20\x89\x01\x48\x8D\x49\x04\x49\xFF\xC8\x75\xF1\xF3\xC3\x48\x63\x05", "xxxxxxxxxxxxxxxxxxxx");
+            s_unkFirstRadarBlipIndexAddress = (int*)(*(int*)(address + 20) + address + 24);
             address = MemScanner.FindPatternBmh("\x41\xB8\x07\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFC", "xxxxxxxxxx????xxxx");
             s_northRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
             address = MemScanner.FindPatternBmh("\x41\xB8\x06\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFD", "xxxxxxxxxx????xxxx");
