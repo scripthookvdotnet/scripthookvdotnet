@@ -468,10 +468,11 @@ namespace SHVDN
                 s_vehicleTypeOffsetInModelInfo = *(int*)(address + 6);
             }
 
+            uint vehicleClassOffset = 0;
             address = MemScanner.FindPatternBmh("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx");
             if (address != null)
             {
-                uint vehicleClassOffset = *(uint*)(address + 0x10);
+                vehicleClassOffset = *(uint*)(address + 0x10);
 
                 address = address + *(int*)(address) + 4;
                 s_modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
@@ -764,54 +765,57 @@ namespace SHVDN
                 0x438F6593, /* s95 */
             };
 
-            for (int i = 0; i < s_modelHashEntries; i++)
+            if (vehicleClassOffset != 0)
             {
-                for (HashNode* cur = ((HashNode**)s_modelHashTable)[i]; cur != null; cur = cur->next)
+                for (int i = 0; i < s_modelHashEntries; i++)
                 {
-                    ushort data = cur->data;
-                    bool bitTest = ((*(int*)(s_modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
-                    if (data >= s_modelNum1 || !bitTest)
+                    for (HashNode* cur = ((HashNode**)s_modelHashTable)[i]; cur != null; cur = cur->next)
                     {
-                        continue;
-                    }
-
-                    ulong addr1 = s_modelNum4 + s_modelNum3 * data;
-                    if (addr1 == 0)
-                    {
-                        continue;
-                    }
-
-                    ulong addr2 = *(ulong*)(addr1);
-                    if (addr2 != 0)
-                    {
-                        switch ((ModelInfoClassType)(*(byte*)(addr2 + 157) & 0x1F))
+                        ushort data = cur->data;
+                        bool bitTest = ((*(int*)(s_modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
+                        if (data >= s_modelNum1 || !bitTest)
                         {
-                            case ModelInfoClassType.Weapon:
-                                weaponObjectHashes.Add(cur->hash);
-                                break;
-                            case ModelInfoClassType.Vehicle:
-                                // Avoid loading stub vehicles since it will crash the game
-                                if (stubVehicles.Contains((uint)cur->hash))
-                                {
-                                    continue;
-                                }
+                            continue;
+                        }
 
-                                vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
+                        ulong addr1 = s_modelNum4 + s_modelNum3 * data;
+                        if (addr1 == 0)
+                        {
+                            continue;
+                        }
 
-                                // Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
-                                // The values for CAmphibiousAutomobile and CAmphibiousQuadBike were inserted between those for CSubmarineCar and CHeli in b944.
-                                int vehicleTypeInt = *(int*)((byte*)addr2 + s_vehicleTypeOffsetInModelInfo);
-                                if (gameVersion < 28 && vehicleTypeInt >= 6)
-                                {
-                                    vehicleTypeInt += 2;
-                                }
+                        ulong addr2 = *(ulong*)(addr1);
+                        if (addr2 != 0)
+                        {
+                            switch ((ModelInfoClassType)(*(byte*)(addr2 + 157) & 0x1F))
+                            {
+                                case ModelInfoClassType.Weapon:
+                                    weaponObjectHashes.Add(cur->hash);
+                                    break;
+                                case ModelInfoClassType.Vehicle:
+                                    // Avoid loading stub vehicles since it will crash the game
+                                    if (stubVehicles.Contains((uint)cur->hash))
+                                    {
+                                        continue;
+                                    }
 
-                                vehicleHashesGroupedByType[vehicleTypeInt].Add(cur->hash);
+                                    vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
 
-                                break;
-                            case ModelInfoClassType.Ped:
-                                pedHashes.Add(cur->hash);
-                                break;
+                                    // Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
+                                    // The values for CAmphibiousAutomobile and CAmphibiousQuadBike were inserted between those for CSubmarineCar and CHeli in b944.
+                                    int vehicleTypeInt = *(int*)((byte*)addr2 + s_vehicleTypeOffsetInModelInfo);
+                                    if (gameVersion < 28 && vehicleTypeInt >= 6)
+                                    {
+                                        vehicleTypeInt += 2;
+                                    }
+
+                                    vehicleHashesGroupedByType[vehicleTypeInt].Add(cur->hash);
+
+                                    break;
+                                case ModelInfoClassType.Ped:
+                                    pedHashes.Add(cur->hash);
+                                    break;
+                            }
                         }
                     }
                 }
