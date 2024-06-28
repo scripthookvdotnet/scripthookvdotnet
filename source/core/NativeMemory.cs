@@ -97,24 +97,36 @@ namespace SHVDN
             // Get relative address and add it to the instruction address.
 
             address = MemScanner.FindPatternBmh("\x74\x27\x48\x8D\x7E\x18\x48\x8B\x0F\x48\x3B\xCB\x74\x1B", "xxxxxxxxxxxxxx");
-            // Fetch the address of `AddKnownRef` first, as the offset is at like plus 0xA5 in any builds,
-            // while that of `RemoveKnownRef` is at like plus 0x18EB4.
-            s_fwRefAwareBaseImpl__AddKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr(
-                *(int*)(address + 0x25) + address + 0x29));
-            s_fwRefAwareBaseImpl__RemoveKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr(
-                *(int*)(address + 0x17) + address + 0x1B));
+            if (address != null)
+            {
+                // Fetch the address of `AddKnownRef` first, as the offset is at like plus 0xA5 in any builds,
+                // while that of `RemoveKnownRef` is at like plus 0x18EB4.
+                s_fwRefAwareBaseImpl__AddKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr(
+                    *(int*)(address + 0x25) + address + 0x29));
+                s_fwRefAwareBaseImpl__RemoveKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr(
+                    *(int*)(address + 0x17) + address + 0x1B));
+            }
 
-            address = MemScanner.FindPatternBmh("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx") - 10;
-            s_getPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
-                new IntPtr(*(int*)(address) + address + 4));
+            address = MemScanner.FindPatternBmh("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx");
+            if (address != null)
+            {
+                s_getPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
+                    new IntPtr(*(int*)(address - 10) + address - 6));
+            }
 
             address = MemScanner.FindPatternBmh("\x85\xED\x74\x0F\x8B\xCD\xE8\x00\x00\x00\x00\x48\x8B\xF8\x48\x85\xC0\x74\x2E", "xxxxxxx????xxxxxxxx");
-            s_getScriptEntity = (delegate* unmanaged[Stdcall]<int, ulong>)(
-                new IntPtr(*(int*)(address + 7) + address + 11));
+            if (address != null)
+            {
+                s_getScriptEntity = (delegate* unmanaged[Stdcall]<int, ulong>)(
+                    new IntPtr(*(int*)(address + 7) + address + 11));
+            }
 
             address = MemScanner.FindPatternBmh("\x8B\xC2\xB2\x01\x8B\xC8\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x53\x8A\x88\x00\x00\x00\x00\xF6\xC1\x01\x75\x05\xF6\xC1\x02\x75\x43\x48", "xxxxxxx????xxxxxxx????xxxxxxxxxxx");
-            s_getPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
-            new IntPtr(*(int*)(address + 7) + address + 11));
+            if (address != null)
+            {
+                s_getPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(
+                new IntPtr(*(int*)(address + 7) + address + 11));
+            }
 
             address = MemScanner.FindPatternBmh("\x0F\x84\xA1\x00\x00\x00\x33\xC9\x48\x89\x35", "xxxxxxxxxxx");
             if (address != null)
@@ -123,36 +135,63 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
-            s_createGuid = (delegate* unmanaged[Stdcall]<ulong, int>)(
-                new IntPtr(address - 0x68));
+            if (address != null)
+            {
+                s_createGuid = (delegate* unmanaged[Stdcall]<ulong, int>)(
+                    new IntPtr(address - 0x68));
+            }
 
             address = MemScanner.FindPatternBmh("\x40\x53\x48\x83\xEC\x30\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24\x2C\x33\xC9\xF3\x0F\x11\x43\x0C\x48\x89\x0B\x89\x4B\x08\x48\x85\xC0\x74\x2C", "xxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxxxxx");
-            s_entityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)(address);
+            if (address != null)
+            {
+                s_entityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)(address);
+            }
 
             // Find handling data functions
             address = MemScanner.FindPatternBmh("\x8B\xF7\x83\xF8\x01\x77\x08\x44\x8B\xF7\x8D\x77\xFF\xEB\x06\x41\xBE\x03\x00\x00\x00\x8B\x8B", "xxxxxxxxxxxxxxxxxxxxxxx");
-            s_getHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)(new IntPtr(*(int*)(address + 28) + address + 32));
-            s_handlingIndexOffsetInModelInfo = *(int*)(address + 23);
+            if (address != null)
+            {
+                s_getHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)(new IntPtr(*(int*)(address + 28) + address + 32));
+                s_handlingIndexOffsetInModelInfo = *(int*)(address + 23);
+            }
 
             address = MemScanner.FindPatternBmh("\x75\x5A\xB2\x01\x48\x8B\xCB\xE8\x00\x00\x00\x00\x41\x8B\xF5\x66\x44\x3B\xAB", "xxxxxxxx????xxxxxxx");
-            s_getHandlingDataByHash = (delegate* unmanaged[Stdcall]<IntPtr, ulong>)(
-                new IntPtr(*(int*)(address - 7) + address - 3));
+            if (address != null)
+            {
+                s_getHandlingDataByHash = (delegate* unmanaged[Stdcall]<IntPtr, ulong>)(
+                    new IntPtr(*(int*)(address - 7) + address - 3));
+            }
 
             // Find entity pools and interior proxy pool
             address = MemScanner.FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x41\x0F\xBF\xC8\x0F\xBF\x40\x10", "xxx????xxxxxxxx");
-            s_pedPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            if (address != null)
+            {
+                s_pedPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            }
 
             address = MemScanner.FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x8B\x78\x10\x85\xFF", "xxx????xxxxx");
-            s_objectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            if (address != null)
+            {
+                s_objectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            }
 
             address = MemScanner.FindPatternBmh("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
-            s_fwScriptGuidPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            if (address != null)
+            {
+                s_fwScriptGuidPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            }
 
             address = MemScanner.FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\xF3\x0F\x59\xF6\x48\x8B\x08", "xxx????xxxxxxx");
-            s_vehiclePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            if (address != null)
+            {
+                s_vehiclePoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            }
 
             address = MemScanner.FindPatternBmh("\x4C\x8B\x05\x00\x00\x00\x00\x40\x8A\xF2\x8B\xE9", "xxx????xxxxx");
-            s_pickupObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            if (address != null)
+            {
+                s_pickupObjectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            }
 
             address = MemScanner.FindPatternBmh("\x83\x38\xFF\x74\x27\xD1\xEA\xF6\xC2\x01\x74\x20", "xxxxxxxxxxxx");
             if (address != null)
@@ -185,28 +224,52 @@ namespace SHVDN
 
             // Find euphoria functions
             address = MemScanner.FindPatternBmh("\x40\x53\x48\x83\xEC\x20\x83\x61\x0C\x00\x44\x89\x41\x08\x49\x63\xC0", "xxxxxxxxxxxxxxxxx");
-            s_initMessageMemoryFunc = (delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong>)(new IntPtr(address));
+            if (address != null)
+            {
+                s_initMessageMemoryFunc = (delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong>)(new IntPtr(address));
+            }
 
             address = MemScanner.FindPatternBmh("\x0F\x84\x8B\x00\x00\x00\x48\x8B\x47\x30\x48\x8B\x48\x10\x48\x8B\x51\x20\x80\x7A\x10\x0A", "xxxxxxxxxxxxxxxxxxxxxx");
-            s_sendNmMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)((ulong*)(*(int*)(address - 0x1E) + address - 0x1A));
+            if (address != null)
+            {
+                s_sendNmMessageToPedFunc = (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)((ulong*)(*(int*)(address - 0x1E) + address - 0x1A));
+            }
 
             address = MemScanner.FindPatternBmh("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
-            s_setNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
+            if (address != null)
+            {
+                s_setNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
+            }
 
             address = MemScanner.FindPatternBmh("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8A\xF8", "xxxx?xxxxxxxxxxxxxxx");
-            s_setNmParameterBool = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
+            if (address != null)
+            {
+                s_setNmParameterBool = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
+            }
 
             address = MemScanner.FindPatternBmh("\x40\x53\x48\x83\xEC\x30\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-            s_setNmParameterFloat = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
+            if (address != null)
+            {
+                s_setNmParameterFloat = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
+            }
 
-            address = MemScanner.FindPatternBmh("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx") - 15;
-            s_setNmParameterString = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address));
+            address = MemScanner.FindPatternBmh("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx");
+            if (address != null)
+            {
+                s_setNmParameterString = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address - 15));
+            }
 
             address = MemScanner.FindPatternBmh("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
-            s_setNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
+            if (address != null)
+            {
+                s_setNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
+            }
 
             address = MemScanner.FindPatternBmh("\x4D\x8B\xF0\x48\x8B\xF2\xE8\x00\x00\x00\x00\x33\xFF\x48\x85\xC0\x75\x07\x32\xC0\xE9\xD8\x03\x00\x00", "xxxxxxx????xxxxxxxxxxxxxx");
-            s_getActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(*(int*)(address + 7) + address + 11));
+            if (address != null)
+            {
+                s_getActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(new IntPtr(*(int*)(address + 7) + address + 11));
+            }
 
             address = MemScanner.FindPatternBmh("\x75\xEF\x48\x8B\x5C\x24\x30\xB8", "xxxxxxxx");
             if (address != null)
@@ -240,7 +303,10 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
-            s_getLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
+            if (address != null)
+            {
+                s_getLabelTextByHashAddress = (ulong)(*(int*)(address + 7) + address + 11);
+            }
 
             // Find the function that returns if the corresponding text label exist first.
             // We have to find GetLabelTextByHashFunc indirectly since Rampage Trainer hooks the function that returns the string address for corresponding text label hash by inserting jmp instruction at the beginning if that trainer is installed.
@@ -253,27 +319,49 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
-            s_checkpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
-            s_getCGameScriptHandlerAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address - 19) + address - 15));
+            if (address != null)
+            {
+                s_checkpointPoolAddress = (ulong*)(*(int*)(address + 17) + address + 21);
+                s_getCGameScriptHandlerAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address - 19) + address - 15));
+            }
 
             address = MemScanner.FindPatternBmh("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
-            s_radarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            if (address != null)
+            {
+                s_radarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            }
             address = MemScanner.FindPatternBmh("\xFF\xC6\x49\x83\xC6\x08\x3B\x35\x00\x00\x00\x00\x7C\x9B", "xxxxxxxx????xx");
-            s_possibleRadarBlipCountAddress = (int*)(*(int*)(address + 8) + address + 12);
+            if (address != null)
+            {
+                s_possibleRadarBlipCountAddress = (int*)(*(int*)(address + 8) + address + 12);
+            }
             address = MemScanner.FindPatternBmh("\x8B\x44\x0A\x20\x89\x01\x48\x8D\x49\x04\x49\xFF\xC8\x75\xF1\xF3\xC3\x48\x63\x05", "xxxxxxxxxxxxxxxxxxxx");
-            s_unkFirstRadarBlipIndexAddress = (int*)(*(int*)(address + 20) + address + 24);
+            if (address != null)
+            {
+                s_unkFirstRadarBlipIndexAddress = (int*)(*(int*)(address + 20) + address + 24);
+            }
             address = MemScanner.FindPatternBmh("\x41\xB8\x07\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFC", "xxxxxxxxxx????xxxx");
-            s_northRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
+            if (address != null)
+            {
+                s_northRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
+            }
             address = MemScanner.FindPatternBmh("\x41\xB8\x06\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFD", "xxxxxxxxxx????xxxx");
-            s_centerRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
+            if (address != null)
+            {
+                s_centerRadarBlipHandleAddress = (int*)(*(int*)(address + 10) + address + 14);
+            }
 
             address = MemScanner.FindPatternBmh("\x33\xDB\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x07\x48\x8B\x40\x20\x8B\x58\x18", "xxx????xxxxxxxxxxxx");
-            s_getLocalPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address + 3) + address + 7));
+            if (address != null)
+            {
+                s_getLocalPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address + 3) + address + 7));
+            }
 
             address = MemScanner.FindPatternBmh("\x4C\x8D\x05\x00\x00\x00\x00\x74\x07\xB8\x00\x00\x00\x00\xEB\x2D\x33\xC0", "xxx????xxx????xxxx");
-            s_waypointInfoArrayStartAddress = (ulong*)(*(int*)(address + 3) + address + 7);
-            if (s_waypointInfoArrayStartAddress != null)
+            if (address != null)
             {
+                s_waypointInfoArrayStartAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+
                 startAddressToSearch = new IntPtr(address);
                 address = MemScanner.FindPatternBmh("\x48\x8D\x15\x00\x00\x00\x00\x48\x83\xC1\x00\xFF\xC0\x48\x3B\xCA\x7C\xEA\x32\xC0", "xxx????xxx?xxxxxxxxx", startAddressToSearch);
                 s_waypointInfoArrayEndAddress = (ulong*)(*(int*)(address + 3) + address + 7);
@@ -310,9 +398,10 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x48\x8B\x89\x00\x00\x00\x00\x33\xC0\x44\x8B\xC2\x48\x85\xC9\x74\x20", "xxx????xxxxxxxxxx");
-            NativeMemory.CAttackerArrayOfEntityOffset = *(int*)(address + 3); // the correct name is unknown
             if (address != null)
             {
+                NativeMemory.CAttackerArrayOfEntityOffset = *(int*)(address + 3); // the correct name is unknown
+
                 startAddressToSearch = new IntPtr(address);
                 address = MemScanner.FindPatternBmh("\x48\x63\x51\x00\x48\x85\xD2", "xxx?xxx", startAddressToSearch);
                 NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset = (*(sbyte*)(address + 3));
@@ -324,17 +413,23 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
-            s_cursorSpriteAddr = (int*)(*(int*)(address - 4) + address);
+            if (address != null)
+            {
+                s_cursorSpriteAddr = (int*)(*(int*)(address - 4) + address);
+            }
 
             address = MemScanner.FindPatternBmh("\x48\x63\xC1\x48\x8D\x0D\x00\x00\x00\x00\xF3\x0F\x10\x04\x81\xF3\x0F\x11\x05", "xxxxxx????xxxxxxxxx");
-            s_readWorldGravityAddress = (float*)(*(int*)(address + 19) + address + 23);
-            s_writeWorldGravityAddress = (float*)(*(int*)(address + 6) + address + 10);
+            if (address != null)
+            {
+                s_readWorldGravityAddress = (float*)(*(int*)(address + 19) + address + 23);
+                s_writeWorldGravityAddress = (float*)(*(int*)(address + 6) + address + 10);
+            }
 
             address = MemScanner.FindPatternBmh("\xF3\x0F\x11\x05\x00\x00\x00\x00\xF3\x0F\x10\x08\x0F\x2F\xC8\x73\x03\x0F\x28\xC1\x48\x83\xC0\x04\x49\x2B", "xxxx????xxxxxxxxxxxxxxxxxx");
-            float* timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
-            if (timeScaleArrayAddress != null)
-            // SET_TIME_SCALE changes the 2nd element, so obtain the address of it
+            if (address != null)
             {
+                float* timeScaleArrayAddress = (float*)(*(int*)(address + 4) + address + 8);
+                // SET_TIME_SCALE changes the 2nd element, so obtain the address of it
                 s_timeScaleAddress = timeScaleArrayAddress + 1;
             }
 
@@ -347,14 +442,24 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x75\x2D\x44\x38\x3D\x00\x00\x00\x00\x75\x24", "xxxxx????xx");
-            s_isClockPausedAddress = (byte*)(*(int*)(address + 5) + address + 9);
+            if (address != null)
+            {
+                s_isClockPausedAddress = (byte*)(*(int*)(address + 5) + address + 9);
+            }
 
             // Find camera objects
-            address = MemScanner.FindPatternBmh("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx") - 9;
-            s_cameraPoolAddress = (ulong*)(*(int*)(address) + address + 4);
-            address = MemScanner.FindPatternBmh("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx") - 0x1D;
-            address = address + *(int*)(address) + 4;
-            s_gameplayCameraAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            address = MemScanner.FindPatternBmh("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx");
+            if (address != null)
+            {
+                s_cameraPoolAddress = (ulong*)(*(int*)(address - 9) + address - 5);
+            }
+
+            address = MemScanner.FindPatternBmh("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx");
+            if (address != null)
+            {
+                address = (*(int*)(address - 0x1D) + address - 0x19);
+                s_gameplayCameraAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+            }
 
             // Find model hash table
             address = MemScanner.FindPatternBmh("\x3C\x05\x75\x16\x8B\x81", "xxxxxx");
@@ -363,22 +468,31 @@ namespace SHVDN
                 s_vehicleTypeOffsetInModelInfo = *(int*)(address + 6);
             }
 
-            address = MemScanner.FindPatternBmh("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx") - 0x21;
-            uint vehicleClassOffset = *(uint*)(address + 0x31);
+            address = MemScanner.FindPatternBmh("\x66\x81\xF9\x00\x00\x74\x10\x4D\x85\xC0", "xxx??xxxxx");
+            if (address != null)
+            {
+                uint vehicleClassOffset = *(uint*)(address + 0x10);
 
-            address = address + *(int*)(address) + 4;
-            s_modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
-            s_modelNum2 = *(UInt64*)(*(int*)(address + 0x63) + address + 0x67);
-            s_modelNum3 = *(UInt64*)(*(int*)(address + 0x7A) + address + 0x7E);
-            s_modelNum4 = *(UInt64*)(*(int*)(address + 0x81) + address + 0x85);
-            s_modelHashTable = *(UInt64*)(*(int*)(address + 0x24) + address + 0x28);
-            s_modelHashEntries = *(UInt16*)(address + *(int*)(address + 3) + 7);
+                address = address + *(int*)(address) + 4;
+                s_modelNum1 = *(UInt32*)(*(int*)(address + 0x52) + address + 0x56);
+                s_modelNum2 = *(UInt64*)(*(int*)(address + 0x63) + address + 0x67);
+                s_modelNum3 = *(UInt64*)(*(int*)(address + 0x7A) + address + 0x7E);
+                s_modelNum4 = *(UInt64*)(*(int*)(address + 0x81) + address + 0x85);
+                s_modelHashTable = *(UInt64*)(*(int*)(address + 0x24) + address + 0x28);
+                s_modelHashEntries = *(UInt16*)(address + *(int*)(address + 3) + 7);
+            }
 
             address = MemScanner.FindPatternBmh("\x33\xD2\x00\x8B\xD0\x00\x2B\x05\x00\x00\x00\x00\xC1\xE6\x10", "xx?xx?xx????xxx");
-            s_modelInfoArrayPtr = (ulong*)(*(int*)(address + 8) + address + 12);
+            if (address != null)
+            {
+                s_modelInfoArrayPtr = (ulong*)(*(int*)(address + 8) + address + 12);
+            }
 
             address = MemScanner.FindPatternBmh("\x48\x83\xEC\x20\x48\x8B\x91\x00\x00\x00\x00\x33\xF6\x48\x8B\xD9\x48\x85\xD2\x74\x2B\x48\x8D\x0D", "xxxxxxx??xxxxxxxxxxxxxxx");
-            s_cStreamingAddr = (ulong*)(*(int*)(address + 24) + address + 28);
+            if (address != null)
+            {
+                s_cStreamingAddr = (ulong*)(*(int*)(address + 24) + address + 28);
+            }
 
             address = MemScanner.FindPatternBmh("\x44\x39\x38\x74\x17\x48\xFF\xC1\x48\x83\xC0\x04\x48\x3B\xCB\x7C\xEF\x41\x8B\xD7\x49\x8B\xCE\xE8", "xxxxxxxxxxxxxxxxxxxxxxxx");
             if (address != null)
@@ -395,10 +509,16 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x41\x8B\x1E", "xxx????xxx");
-            s_weaponAndAmmoInfoArrayPtr = (RageAtArrayPtr*)(*(int*)(address + 3) + address + 7);
+            if (address != null)
+            {
+                s_weaponAndAmmoInfoArrayPtr = (RageAtArrayPtr*)(*(int*)(address + 3) + address + 7);
+            }
 
             address = MemScanner.FindPatternBmh("\x84\xC0\x74\x20\x48\x8B\x47\x40\x48\x85\xC0\x74\x08\x8B\xB0\x00\x00\x00\x00\xEB\x02\x33\xF6\x48\x8D\x4D\x48\xE8", "xxxxxxxxxxxxxxx????xxxxxxxxx");
-            s_weaponInfoHumanNameHashOffset = *(int*)(address + 15);
+            if (address != null)
+            {
+                s_weaponInfoHumanNameHashOffset = *(int*)(address + 15);
+            }
 
             address = MemScanner.FindPatternBmh("\x8B\x05\x00\x00\x00\x00\x44\x8B\xD3\x8D\x48\xFF", "xx????xxxxxx");
             if (address != null)
@@ -724,6 +844,11 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x48\x03\x15\x00\x00\x00\x00\x4C\x23\xC2\x49\x8B\x08", "xxx????xxxxxx");
+            if (address == null)
+            {
+                return;
+            }
+
             var yscScriptTable = (YscScriptTable*)(address + *(int*)(address + 3) + 7);
 
             // find the shop_controller script
