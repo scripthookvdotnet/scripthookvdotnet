@@ -471,6 +471,8 @@ static void ScriptHookVDotNet_ManagedInit()
                 }
                 else
                 {
+                    // this lock is needed to prevent from the keyboard thread reading a stale value
+                    msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
                     ScriptHookVDotNet::reloadKeyBinding = keyCombinationResult.Item1;
                 }
             }
@@ -484,6 +486,7 @@ static void ScriptHookVDotNet_ManagedInit()
                 }
                 else
                 {
+                    msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
                     ScriptHookVDotNet::consoleKeyBinding = keyCombinationResult.Item1;
                 }
             }
@@ -636,6 +639,10 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
     if (keycode <= 0 || keycode >= 256)
         return;
 
+    // Protect against race condition during reload.
+    // Also prevent from the keyboard thread reading stale values such as key bindings.
+    msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
+
     ScriptHookVDotNet::UpdatePrimaryKeyboardStateCache(static_cast<unsigned char>(keycode), keydown);
     ScriptHookVDotNet::UpdateKeyboardModifierStateCache(shift, ctrl, alt);
 
@@ -644,9 +651,6 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
     if (ctrl)  keys = keys | WinForms::Keys::Control;
     if (shift) keys = keys | WinForms::Keys::Shift;
     if (alt)   keys = keys | WinForms::Keys::Alt;
-
-    // Protect against race condition during reload
-    msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
 
     SHVDN::Console^ console = ScriptHookVDotNet::console;
     if (console != nullptr)
