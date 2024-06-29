@@ -276,7 +276,7 @@ namespace SHVDN
         /// <summary>
         /// Writes the help text for all commands to the console.
         /// </summary>
-        internal void PrintHelpText()
+        public void PrintHelpText()
         {
             var help = new StringBuilder();
             foreach (string space in _commands.Keys)

@@ -81,6 +81,13 @@ public:
     [SHVDN::ConsoleCommand("Print the default help")]
     static void Help()
     {
+        SHVDN::Console^ console = GetConsole();
+        if (console == nullptr)
+        {
+            WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand("Help");
+            return;
+        }
+
         console->PrintInfo("~c~--- Help ---");
         console->PrintInfo("The console accepts ~h~C# expressions~h~ as input and has full access to the scripting API. To print the result of an expression, simply add \"return\" in front of it.");
         console->PrintInfo("You can use \"P\" as a shortcut for the player character and \"V\" for the current vehicle (without the quotes).");
@@ -91,18 +98,39 @@ public:
     [SHVDN::ConsoleCommand("Print the help for a specific command")]
     static void Help(String ^command)
     {
+        SHVDN::Console^ console = GetConsole();
+        if (console == nullptr)
+        {
+            WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand("Help");
+            return;
+        }
+
         console->PrintHelpText(command);
     }
 
     [SHVDN::ConsoleCommand("Clear the console history and pages")]
     static void Clear()
     {
+        SHVDN::Console^ console = GetConsole();
+        if (console == nullptr)
+        {
+            WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand("Clear");
+            return;
+        }
+
         console->Clear();
     }
 
     [SHVDN::ConsoleCommand("Reload all scripts from the scripts directory")]
     static void Reload()
     {
+        SHVDN::Console^ console = GetConsole();
+        if (console == nullptr)
+        {
+            WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand("Reload");
+            return;
+        }
+
         console->PrintInfo("~y~Reloading ...");
 
         // Force a reload on next tick
@@ -112,6 +140,13 @@ public:
     [SHVDN::ConsoleCommand("Load scripts from a file")]
     static void Start(String ^filename)
     {
+        SHVDN::Console^ console = GetConsole();
+        if (console == nullptr)
+        {
+            WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand("Start");
+            return;
+        }
+
         if (!IO::Path::IsPathRooted(filename))
             filename = IO::Path::Combine(domain->ScriptPath, filename);
         if (!IO::Path::HasExtension(filename))
@@ -128,12 +163,26 @@ public:
     [SHVDN::ConsoleCommand("Load all scripts in the scripts folder")]
     static void StartAllScripts()
     {
+        SHVDN::Console^ console = GetConsole();
+        if (console == nullptr)
+        {
+            WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand("StartAllScripts");
+            return;
+        }
+
         console->PrintInfo("~y~Loading all scripts ...");
         domain->Start();
     }
     [SHVDN::ConsoleCommand("Abort all scripts from a file")]
     static void Abort(String ^filename)
     {
+        SHVDN::Console^ console = GetConsole();
+        if (console == nullptr)
+        {
+            WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand("Abort");
+            return;
+        }
+
         if (!IO::Path::IsPathRooted(filename))
             filename = IO::Path::Combine(domain->ScriptPath, filename);
         if (!IO::Path::HasExtension(filename))
@@ -150,6 +199,13 @@ public:
     [SHVDN::ConsoleCommand("Abort all scripts currently running")]
     static void AbortAll()
     {
+        SHVDN::Console^ console = GetConsole();
+        if (console == nullptr)
+        {
+            WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand("AbortAll");
+            return;
+        }
+
         domain->Abort();
 
         console->PrintInfo("Stopped all running scripts. Use \"Start(filename)\" to start them again.");
@@ -158,13 +214,21 @@ public:
     [SHVDN::ConsoleCommand("List all loaded scripts")]
     static void ListScripts()
     {
+        SHVDN::Console^ console = GetConsole();
+        if (console == nullptr)
+        {
+            WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand("ListScripts");
+            return;
+        }
+
         console->PrintInfo("~c~--- Loaded Scripts ---");
         for each (auto script in domain->RunningScripts)
             console->PrintInfo(IO::Path::GetFileName(script->Filename) + " ~h~" + script->Name + (script->IsRunning ? (script->IsPaused ? " ~o~[paused]" : " ~g~[running]") : " ~r~[aborted]"));
     }
 
 internal:
-    static SHVDN::Console ^console = nullptr;
+    // This `domain` variable should not be used in the keyboard message thread without a lock.
+    // We could directly use the `ScriptDomain::CurrentDomain` property for the keyboard thread.
     static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
     static array<WinForms::Keys>^ reloadKeyBinding = { WinForms::Keys::None };
     static array<WinForms::Keys>^ consoleKeyBinding = { WinForms::Keys::F4 };
@@ -187,9 +251,23 @@ internal:
         String^ message;
     };
 
-    static void SetConsole()
+    // Read the console instance via the `ScriptDomain`'s AppDomain, so we won't read a stale value.
+    // `System::AppDomain::GetData` uses a lock when reading non-special values.
+    static SHVDN::Console^ GetConsole()
     {
-        console = (SHVDN::Console ^)AppDomain::CurrentDomain->GetData("Console");
+        return (SHVDN::Console^)AppDomain::CurrentDomain->GetData("Console");
+    }
+
+    static void WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand(String^ commandName)
+    {
+        SHVDN::Log::WriteToFile(SHVDN::Log::Level::Error,
+            String::Format(
+                "Could not execute the console command \"{0}\". The console is not loaded. " +
+                "You could report this error to the ScriptHookVDotNet's GitHub repository as the error can be " +
+                "responsible to ScriptHookVDotNet's implementation.",
+                commandName
+            )
+        );
     }
 
     static void SendPendingMessagesToConsole(SHVDN::Console^ console, List<LogMessageInfo>^ pendingMessageInfo)
@@ -413,8 +491,8 @@ static void LogKeyBindingParseError(String^ rawInput, InvalidKeysFoundError^ inv
 
 static void ScriptHookVDotNet_ManagedInit()
 {
-    SHVDN::Console^% console = ScriptHookVDotNet::console;
     SHVDN::ScriptDomain^% domain = ScriptHookVDotNet::domain;
+    SHVDN::Console^ console = nullptr;
     List<String^>^ stashedConsoleCommandHistory = gcnew List<String^>();
     List<ScriptHookVDotNet::LogMessageInfo>^ pendingLogMessageInfo = gcnew List<ScriptHookVDotNet::LogMessageInfo>();
 
@@ -424,6 +502,7 @@ static void ScriptHookVDotNet_ManagedInit()
 
         if (domain != nullptr)
         {
+            console = (SHVDN::Console^)domain->AppDomain->GetData("Console");
             // Stash the command history if console is loaded
             if (console != nullptr)
             {
@@ -562,7 +641,6 @@ static void ScriptHookVDotNet_ManagedInit()
 
         // Update console pointer in script domain
         domain->AppDomain->SetData("Console", console);
-        domain->AppDomain->DoCallBack(gcnew CrossAppDomainDelegate(&ScriptHookVDotNet::SetConsole));
 
         // Add default console commands
         console->RegisterCommands(ScriptHookVDotNet::typeid);
@@ -586,13 +664,19 @@ static void ScriptHookVDotNet_ManagedInit()
 
 static void ScriptHookVDotNet_ManagedTick()
 {
-    SHVDN::Console ^console = ScriptHookVDotNet::console;
-    if (console != nullptr)
-        console->DoTick();
+    SHVDN::ScriptDomain^ scriptDomain = ScriptHookVDotNet::domain;
+    if (scriptDomain == nullptr)
+    {
+        return;
+    }
 
-    SHVDN::ScriptDomain ^scriptDomain = ScriptHookVDotNet::domain;
-    if (scriptDomain != nullptr)
-        scriptDomain->DoTick();
+    SHVDN::Console ^console = (SHVDN::Console^)scriptDomain->AppDomain->GetData("Console");
+    if (console != nullptr)
+    {
+        console->DoTick();
+    }
+
+    scriptDomain->DoTick();
 }
 
 static bool AreAllKeysPressed(array<WinForms::Keys>^ keys)
@@ -652,7 +736,11 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
     if (shift) keys = keys | WinForms::Keys::Shift;
     if (alt)   keys = keys | WinForms::Keys::Alt;
 
-    SHVDN::Console^ console = ScriptHookVDotNet::console;
+    SHVDN::ScriptDomain^ scriptDomain = SHVDN::ScriptDomain::CurrentDomain;
+    if (scriptDomain == nullptr)
+        return;
+
+    SHVDN::Console^ console = (SHVDN::Console^)scriptDomain->AppDomain->GetData("Console");
     if (console != nullptr)
     {
         if (keydown && AreAllKeysPressed(ScriptHookVDotNet::reloadKeyBinding))
@@ -676,12 +764,8 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
             return;
     }
 
-    SHVDN::ScriptDomain ^scriptDomain = ScriptHookVDotNet::domain;
-    if (scriptDomain != nullptr)
-    {
-        // Send key events to all scripts
-        scriptDomain->DoKeyEvent(keys, keydown);
-    }
+    // Send key events to all scripts
+    scriptDomain->DoKeyEvent(keys, keydown);
 }
 
 #pragma unmanaged
