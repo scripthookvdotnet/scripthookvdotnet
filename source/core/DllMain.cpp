@@ -227,15 +227,18 @@ public:
     }
 
 internal:
-    // This `domain` variable should not be used in the keyboard message thread without a lock.
-    // We could directly use the `ScriptDomain::CurrentDomain` property for the keyboard thread.
+    static SHVDN::Console^ console = nullptr;
     static SHVDN::ScriptDomain ^domain = SHVDN::ScriptDomain::CurrentDomain;
     static array<WinForms::Keys>^ reloadKeyBinding = { WinForms::Keys::None };
     static array<WinForms::Keys>^ consoleKeyBinding = { WinForms::Keys::F4 };
     static unsigned int scriptTimeoutThreshold = 5000;
     static bool shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = true;
     static bool AutoLoadScripts = true;
-    static Object^ keyboardMessageLock = gcnew Object();
+
+    // We use this domain to prevent from the keyboard thread reading stale values, and to protect against race
+    // condition during reload. Do note that static variables are not shared between `AppDomain`s.
+    static Object^ variablesLockForMainDomain = gcnew Object();
+    static Object^ variablesLockForScriptDomain = gcnew Object();
     static array<bool>^ _keyboardStatePool = gcnew array<bool>(256);
     static ModifierKeyState _modKeyState = ModifierKeyState::None;
 
@@ -251,11 +254,17 @@ internal:
         String^ message;
     };
 
-    // Read the console instance via the `ScriptDomain`'s AppDomain, so we won't read a stale value.
-    // `System::AppDomain::GetData` uses a lock when reading non-special values.
+    // Although static variables are not shared between `AppDomain`s, we need to use a lock because the keyboard
+    // message thread may want to request the script domain to instant reload.
     static SHVDN::Console^ GetConsole()
     {
-        return (SHVDN::Console^)AppDomain::CurrentDomain->GetData("Console");
+        msclr::lock l(ScriptHookVDotNet::variablesLockForScriptDomain);
+        return console;
+    }
+    static void SetConsole()
+    {
+        msclr::lock l(ScriptHookVDotNet::variablesLockForScriptDomain);
+        console = (SHVDN::Console^)AppDomain::CurrentDomain->GetData("Console");
     }
 
     static void WriteErrorMessageForConsoleNotLoadedWhenExecutingCommand(String^ commandName)
@@ -491,14 +500,17 @@ static void LogKeyBindingParseError(String^ rawInput, InvalidKeysFoundError^ inv
 
 static void ScriptHookVDotNet_ManagedInit()
 {
-    SHVDN::ScriptDomain^% domain = ScriptHookVDotNet::domain;
+    SHVDN::ScriptDomain^ domain = nullptr; 
     SHVDN::Console^ console = nullptr;
     List<String^>^ stashedConsoleCommandHistory = gcnew List<String^>();
     List<ScriptHookVDotNet::LogMessageInfo>^ pendingLogMessageInfo = gcnew List<ScriptHookVDotNet::LogMessageInfo>();
 
     // Unload previous domain (this unloads all script assemblies too)
     {
-        msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
+        msclr::lock l(ScriptHookVDotNet::variablesLockForMainDomain);
+
+        domain = ScriptHookVDotNet::domain;
+        console = ScriptHookVDotNet::console;
 
         if (domain != nullptr)
         {
@@ -507,11 +519,11 @@ static void ScriptHookVDotNet_ManagedInit()
             if (console != nullptr)
             {
                 stashedConsoleCommandHistory = console->CommandHistory;
-                console = nullptr;
+                ScriptHookVDotNet::console = nullptr;
             }
 
             SHVDN::ScriptDomain::Unload(domain);
-            domain = nullptr;
+            ScriptHookVDotNet::domain = nullptr;
         }
     }
 
@@ -551,7 +563,7 @@ static void ScriptHookVDotNet_ManagedInit()
                 else
                 {
                     // this lock is needed to prevent from the keyboard thread reading a stale value
-                    msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
+                    msclr::lock l(ScriptHookVDotNet::variablesLockForMainDomain);
                     ScriptHookVDotNet::reloadKeyBinding = keyCombinationResult.Item1;
                 }
             }
@@ -565,7 +577,7 @@ static void ScriptHookVDotNet_ManagedInit()
                 }
                 else
                 {
-                    msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
+                    msclr::lock l(ScriptHookVDotNet::variablesLockForMainDomain);
                     ScriptHookVDotNet::consoleKeyBinding = keyCombinationResult.Item1;
                 }
             }
@@ -607,6 +619,11 @@ static void ScriptHookVDotNet_ManagedInit()
     if (domain == nullptr)
         return;
 
+    {
+        msclr::lock l(ScriptHookVDotNet::variablesLockForMainDomain);
+        ScriptHookVDotNet::domain = domain;
+    }
+
     domain->ScriptTimeoutThreshold = ScriptHookVDotNet::scriptTimeoutThreshold;
     domain->ShouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker = ScriptHookVDotNet::shouldWarnOfScriptsBuiltAgainstDeprecatedApiWithTicker;
 
@@ -641,6 +658,7 @@ static void ScriptHookVDotNet_ManagedInit()
 
         // Update console pointer in script domain
         domain->AppDomain->SetData("Console", console);
+        domain->AppDomain->DoCallBack(gcnew CrossAppDomainDelegate(&ScriptHookVDotNet::SetConsole));
 
         // Add default console commands
         console->RegisterCommands(ScriptHookVDotNet::typeid);
@@ -648,6 +666,10 @@ static void ScriptHookVDotNet_ManagedInit()
     catch (Exception^ ex)
     {
         SHVDN::Log::Message(SHVDN::Log::Level::Error, "Failed to create console: ", ex->ToString());
+    }
+    {
+        msclr::lock l(ScriptHookVDotNet::variablesLockForMainDomain);
+        ScriptHookVDotNet::console = console;
     }
 
     if (ScriptHookVDotNet::AutoLoadScripts)
@@ -664,19 +686,15 @@ static void ScriptHookVDotNet_ManagedInit()
 
 static void ScriptHookVDotNet_ManagedTick()
 {
-    SHVDN::ScriptDomain^ scriptDomain = ScriptHookVDotNet::domain;
-    if (scriptDomain == nullptr)
-    {
-        return;
-    }
+    msclr::lock l(ScriptHookVDotNet::variablesLockForMainDomain);
 
-    SHVDN::Console ^console = (SHVDN::Console^)scriptDomain->AppDomain->GetData("Console");
+    SHVDN::Console^ console = ScriptHookVDotNet::console;
     if (console != nullptr)
-    {
         console->DoTick();
-    }
 
-    scriptDomain->DoTick();
+    SHVDN::ScriptDomain^ scriptDomain = ScriptHookVDotNet::domain;
+    if (scriptDomain != nullptr)
+        scriptDomain->DoTick();
 }
 
 static bool AreAllKeysPressed(array<WinForms::Keys>^ keys)
@@ -725,7 +743,7 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
 
     // Protect against race condition during reload.
     // Also prevent from the keyboard thread reading stale values such as key bindings.
-    msclr::lock l(ScriptHookVDotNet::keyboardMessageLock);
+    msclr::lock l(ScriptHookVDotNet::variablesLockForMainDomain);
 
     ScriptHookVDotNet::UpdatePrimaryKeyboardStateCache(static_cast<unsigned char>(keycode), keydown);
     ScriptHookVDotNet::UpdateKeyboardModifierStateCache(shift, ctrl, alt);
@@ -736,11 +754,7 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
     if (shift) keys = keys | WinForms::Keys::Shift;
     if (alt)   keys = keys | WinForms::Keys::Alt;
 
-    SHVDN::ScriptDomain^ scriptDomain = SHVDN::ScriptDomain::CurrentDomain;
-    if (scriptDomain == nullptr)
-        return;
-
-    SHVDN::Console^ console = (SHVDN::Console^)scriptDomain->AppDomain->GetData("Console");
+    SHVDN::Console^ console = ScriptHookVDotNet::console;
     if (console != nullptr)
     {
         if (keydown && AreAllKeysPressed(ScriptHookVDotNet::reloadKeyBinding))
@@ -764,8 +778,12 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
             return;
     }
 
-    // Send key events to all scripts
-    scriptDomain->DoKeyEvent(keys, keydown);
+    SHVDN::ScriptDomain^ scriptDomain = ScriptHookVDotNet::domain;
+    if (scriptDomain != nullptr)
+    {
+        // Send key events to all scripts
+        scriptDomain->DoKeyEvent(keys, keydown);
+    }
 }
 
 #pragma unmanaged
