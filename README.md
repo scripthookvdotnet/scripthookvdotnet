@@ -23,7 +23,7 @@ You need to use the ASI file and the DLL files for APIs in an archive of the sam
 For newer builds, check out the [Nightly Builds](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases). You don't have to sign in to GitHub to download nightly releases.  
 Here is some of the notes you should be aware of when using a nightly version (from v3.6.0):
 * The default API version for raw scripts is changed from v2 from v3.
-    * If you have raw scripts without an API version notation by file name, you will need to specify in nightly versions. You can specify a API version by adding a dot and a version number right before the extention name (e.g. `Script.cs` to `Script.2.cs`).
+    * **For Users**: If you have raw scripts without an API version notation by file name, you will need to specify in nightly versions. You can specify a API version by adding a dot and a version number right before the extention name (e.g. `Script.cs` to `Script.2.cs`).
 * The ini settings are changed. You should use the ini file that comes from a nightly release. SHVDN does not add missing settings currently.
 * Warning messages are added for scripts built against the v2 API, which is not as maintained as the v3 one and will not have any new features. This does not mean the v2 API will not be even receiving compatibility fixes for new game updates in the *near* future. These messages are printed to urge users to ask the script authors to migrate to the v3 API.
 * Some scripts *may* not be working that rely on the main thread of the game process (for game logic).
