@@ -34,6 +34,10 @@ For script developers, please note that new APIs included in new nightly builds 
 ## Installation
 * Extract all the files in the root folder from the zip file into your game folder except for `README.txt` and the 2 folders.
     * The XML files in the `Docs` folder are provided solely as API documentation for script developers.
+* When you update, **always make sure to update at least all the asi and the dll files all together! No support will be provided if you cherry-pick them and that causes problems!** The following files are the ones you must update all together:
+    * `ScriptHookVDotNet.asi`
+    * `ScriptHookVDotNet2.dll`
+    * `ScriptHookVDotNet3.dll`
 
 ## Contributing
 
