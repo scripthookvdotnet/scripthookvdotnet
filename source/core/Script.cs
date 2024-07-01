@@ -10,28 +10,206 @@ using System.Windows.Forms;
 
 namespace SHVDN
 {
-    public sealed class Script
+    public sealed class Script : IDisposable
     {
-        private Thread _thread; // The thread hosting the execution of the script
         internal SemaphoreSlim _waitEvent;
         internal SemaphoreSlim _continueEvent;
         internal readonly ConcurrentQueue<Tuple<bool, KeyEventArgs>> _keyboardEvents = new();
 
+        private Thread _thread; // The thread hosting the execution of the script
+
+        private int _interval;
+        private bool _isPaused;
+        private bool _isRunning;
+        private string _name;
+        private string _fileName;
+        private object _scriptInstance;
+
+        // Use a reader-writer lock rather than a monitor lock because all the fields are not too frequently written
+        private readonly ReaderWriterLockSlim _rwLock = new ();
+
+        public void Dispose()
+        {
+            _rwLock.Dispose();
+        }
+
+        internal SemaphoreSlim WaitEvent
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _waitEvent;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _waitEvent = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
+
+        internal SemaphoreSlim ContinueEvent
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _continueEvent;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _continueEvent = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
+
+        private Thread Thread
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _thread;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _thread = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
+
         /// <summary>
         /// Gets or sets the interval in ms between each <see cref="Tick"/>.
         /// </summary>
-        public int Interval { get; set; }
+        public int Interval
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _interval;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _interval = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets whether executing of this script is paused or not.
         /// </summary>
-        public bool IsPaused { get; private set; }
+        public bool IsPaused
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _isPaused;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            private set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _isPaused = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the status of this script.
         /// So <see langword="true" /> if it is running and <see langword="false" /> if it was aborted.
         /// </summary>
-        public bool IsRunning { get; private set; }
+        public bool IsRunning
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _isRunning;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            private set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _isRunning = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets whether this is the currently executing script.
@@ -64,17 +242,95 @@ namespace SHVDN
         /// <summary>
         /// Gets the instance name of this script.
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _name;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            internal set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _name = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the path to the file that contains this script.
         /// </summary>
-        public string Filename { get; internal set; }
+        public string Filename
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _fileName;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            internal set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _fileName = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the instance of the script.
         /// </summary>
-        public object ScriptInstance { get; internal set; }
+        public object ScriptInstance
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _scriptInstance;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            internal set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _scriptInstance = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
 
         /// <summary>
         /// The main execution logic of all scripts.
@@ -154,15 +410,17 @@ namespace SHVDN
         {
             if (useThread)
             {
-                _waitEvent = new SemaphoreSlim(0);
-                _continueEvent = new SemaphoreSlim(0);
+                WaitEvent = new SemaphoreSlim(0);
+                ContinueEvent = new SemaphoreSlim(0);
 
-                _thread = new Thread(MainLoop);
+                Thread th = new Thread(MainLoop);
                 // By setting this property to true, script thread should stop executing when the main thread stops executing
                 // Note: The exe may not stop executing if some scripts create Thread instances and use them without setting Thread.IsBackground false
-                _thread.IsBackground = true;
+                th.IsBackground = true;
 
-                _thread.Start();
+                th.Start();
+
+                Thread = th;
             }
             else
             {
@@ -174,6 +432,13 @@ namespace SHVDN
         /// <summary>
         /// Aborts execution of this script.
         /// </summary>
+        /// <remarks>
+        /// This method may suffer race condtions in a script instances if a dedicated thread is used to run a script,
+        /// since this method will be called in the script main method when the script itself calls it, but it will be
+        /// called in the main method of the `<c>ScriptDomain</c>` (which is different from the script thread) when
+        /// the `<c>ScriptDomain</c>` aborted it.
+        /// </remarks>
+        // We can't completely eliminate race condition issues as long as we use dedicated threads to run scripts...
         public void Abort()
         {
             IsRunning = false;
@@ -192,7 +457,7 @@ namespace SHVDN
                 _waitEvent.Release();
 
                 _thread.Abort();
-                _thread = null;
+                Thread = null;
             }
             else
             {
@@ -248,7 +513,7 @@ namespace SHVDN
             }
             else
             {
-                Thread.Sleep(ms);
+                System.Threading.Thread.Sleep(ms);
             }
         }
     }
