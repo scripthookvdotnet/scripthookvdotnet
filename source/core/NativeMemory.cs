@@ -4923,31 +4923,37 @@ namespace SHVDN
             // On the other hand, each vanilla ynd file (each ynd file has nodes in an area of 512 meters x 512 meters) contains likely 100 to 1500 nodes, and getting nodes nearby 512 meters will likely get less than 1500 nodes.
             // Therefore, using this buffer won't make much difference in how many CPU cycles will be used when we get nodes in certain area
             private static List<int> s_pathNodeBuffer = new List<int>();
+            // The buffer can be too big to dispose fast enough (by considering a large object heap), so use a lock
+            // instead of using a local variable
+            private static readonly object s_pathNodeBufferLock = new();
 
             public static int[] GetAllLoadedVehicleNodes(Func<int, bool> predicateForFlags)
             {
-                s_pathNodeBuffer.Clear();
-
-                for (uint i = 0; i < MaxCPathRegionCount; i++)
+                lock (s_pathNodeBufferLock)
                 {
-                    CPathRegion* pathRegion = GetCPathRegion(i);
-                    if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
-                    {
-                        continue;
-                    }
+                    s_pathNodeBuffer.Clear();
 
-                    uint vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
-                    for (uint j = 0; j < vehicleNodeCountInRegion; j++)
+                    for (uint i = 0; i < MaxCPathRegionCount; i++)
                     {
-                        CPathNode* pathNode = pathRegion->GetPathNodeUnsafe(j);
-                        if (predicateForFlags == null || predicateForFlags((int)pathNode->GetPropertyFlags()))
+                        CPathRegion* pathRegion = GetCPathRegion(i);
+                        if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
                         {
-                            s_pathNodeBuffer.Add(pathNode->GetHandleForNativeFunctions());
+                            continue;
+                        }
+
+                        uint vehicleNodeCountInRegion = pathRegion->NodeCountVehicle;
+                        for (uint j = 0; j < vehicleNodeCountInRegion; j++)
+                        {
+                            CPathNode* pathNode = pathRegion->GetPathNodeUnsafe(j);
+                            if (predicateForFlags == null || predicateForFlags((int)pathNode->GetPropertyFlags()))
+                            {
+                                s_pathNodeBuffer.Add(pathNode->GetHandleForNativeFunctions());
+                            }
                         }
                     }
-                }
 
-                return s_pathNodeBuffer.ToArray();
+                    return s_pathNodeBuffer.ToArray();
+                }
             }
 
             public static int[] GetLoadedVehicleNodesInRange(float x, float y, float z, float radius, Func<int, bool> predicateForFlags)
@@ -5419,9 +5425,6 @@ namespace SHVDN
             #region Fields
             internal CScriptResourceTypeNameIndex _typeNameIndex;
             internal int[] _returnHandles = Array.Empty<int>();
-
-            private const int MaxCheckpointCount = 64; // hard coded in the exe
-            private static readonly int[] s_cScriptResourceHandleBuffer = new int[MaxCheckpointCount];
             #endregion
 
             internal GetAllCScriptResourceHandlesTask(CScriptResourceTypeNameIndex typeNameIndex)
@@ -5438,7 +5441,7 @@ namespace SHVDN
                     return;
                 }
 
-                int elementCount = 0;
+                List<int> handles = new List<int>();
                 CGameScriptResource* firstRegisteredScriptResourceItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
                 for (CGameScriptResource* item = firstRegisteredScriptResourceItem; item != null; item = item->next)
                 {
@@ -5447,16 +5450,15 @@ namespace SHVDN
                         continue;
                     }
 
-                    s_cScriptResourceHandleBuffer[elementCount++] = (int)item->counterOfPool;
+                    handles.Add((int)item->counterOfPool);
                 }
 
-                if (elementCount == 0)
+                if (handles.Count == 0)
                 {
                     return;
                 }
 
-                _returnHandles = new int[elementCount];
-                Array.Copy(s_cScriptResourceHandleBuffer, _returnHandles, elementCount);
+                _returnHandles = handles.ToArray();
             }
         }
 

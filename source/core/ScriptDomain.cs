@@ -45,7 +45,7 @@ namespace SHVDN
         // `EventWaitHandle`, which uses `SafeHandle`.
         private static readonly ReaderWriterLockSlim s_currentDomainPropertyLock = new();
 
-        private int _executingThreadId = Thread.CurrentThread.ManagedThreadId;
+        private readonly int _executingThreadId = Thread.CurrentThread.ManagedThreadId;
         private Script _executingScript = null;
         private readonly List<IntPtr> _pinnedStrings = new();
         private readonly List<Script> _runningScripts = new();
@@ -719,8 +719,8 @@ namespace SHVDN
             // If the rw lock is used in the whole loop, a script will end up indirectly reading `RunningScripts`
             // where the same lock is used, causing a `LockRecursionException` without getting caught and
             // the whole process will crash.
-            List<Type> scriptTypesToInstantiate = new(_scriptTypes.Count);
             _rwLock.EnterReadLock();
+            List<Type> scriptTypesToInstantiate = new(_scriptTypes.Count);
             try
             {
                 foreach (Type type in _scriptTypes.Values.Select(x => x.Item2))
@@ -834,13 +834,12 @@ namespace SHVDN
                 {
                     script.Abort();
                 }
-
-                _scriptTypes.Clear();
-
                 foreach (Script scr in _runningScripts)
                 {
                     scr.Dispose();
                 }
+
+                _scriptTypes.Clear();
                 _runningScripts.Clear();
             }
             finally
@@ -933,7 +932,7 @@ namespace SHVDN
                     executingScript = _executingScript;
                 }
 
-                SignalAndWait(executingScript._waitEvent, executingScript._continueEvent);
+                SignalAndWait(executingScript.WaitEvent, executingScript.ContinueEvent);
             }
         }
 
@@ -1020,8 +1019,8 @@ namespace SHVDN
                         // `ScriptDomain`.
 
                         // Resume script thread and execute any incoming tasks from it
-                        SemaphoreSlim continueEvent = script._continueEvent;
-                        SemaphoreSlim waitEvent = script._waitEvent;
+                        SemaphoreSlim continueEvent = script.ContinueEvent;
+                        SemaphoreSlim waitEvent = script.WaitEvent;
                         SignalAndWait(continueEvent, waitEvent);
                         while (_taskQueue.Count > 0)
                         {
@@ -1421,13 +1420,23 @@ namespace SHVDN
 
             // Show a notification with the script crash information
             ScriptDomain domain = ScriptDomain.CurrentDomain;
-            if (domain != null && domain._executingScript != null)
+            if (domain == null)
             {
-                PostTickerToFeed(
-                    message: "~r~Unhandled exception~s~ in script \"~h~" + script.Name + "~h~\"!~n~~n~~r~" + args.ExceptionObject.GetType().Name + "~s~ " + ((Exception)args.ExceptionObject).StackTrace.Split('\n').FirstOrDefault().Trim(),
-                    isImportant: true,
-                    cacheMessage: false
+                return;
+            }
+
+            lock (domain._lockForFieldsThatFrequentlyWritten)
+            {
+                if (domain._executingScript != null)
+                {
+                    PostTickerToFeed(
+                        message: "~r~Unhandled exception~s~ in script \"~h~" + script.Name + "~h~\"!~n~~n~~r~"
+                            + args.ExceptionObject.GetType().Name + "~s~ "
+                            + ((Exception)args.ExceptionObject).StackTrace.Split('\n').FirstOrDefault().Trim(),
+                        isImportant: true,
+                        cacheMessage: false
                     );
+                }
             }
         }
 
