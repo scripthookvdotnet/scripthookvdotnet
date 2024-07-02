@@ -12,8 +12,8 @@ namespace SHVDN
 {
     public static class StringMarshal
     {
-        private static byte[] s_strBufferForStringToCoTaskMemUtf8 = new byte[100];
-        private static readonly object _lock = new();
+        [ThreadStatic]
+        private static byte[] s_strBufferForStringToCoTaskMemUtf8;
 
         public static string PtrToStringUtf8(IntPtr ptr)
         {
@@ -65,27 +65,27 @@ namespace SHVDN
                 return IntPtr.Zero;
             }
 
+            if (s_strBufferForStringToCoTaskMemUtf8 == null)
+            {
+                s_strBufferForStringToCoTaskMemUtf8 = new byte[100];
+            }
+
             unsafe
             {
                 int byteCountUtf8 = Encoding.UTF8.GetByteCount(s);
-
-                IntPtr dest = IntPtr.Zero;
-                lock (_lock)
+                if (byteCountUtf8 > s_strBufferForStringToCoTaskMemUtf8.Length)
                 {
-                    if (byteCountUtf8 > s_strBufferForStringToCoTaskMemUtf8.Length)
-                    {
-                        s_strBufferForStringToCoTaskMemUtf8 = new byte[byteCountUtf8 * 2];
-                    }
-
-                    Encoding.UTF8.GetBytes(s, 0, s.Length, s_strBufferForStringToCoTaskMemUtf8, 0);
-                    dest = Marshal.AllocCoTaskMem(byteCountUtf8 + 1);
-                    if (dest == IntPtr.Zero)
-                    {
-                        throw new OutOfMemoryException();
-                    }
-
-                    Marshal.Copy(s_strBufferForStringToCoTaskMemUtf8, 0, dest, byteCountUtf8);
+                    s_strBufferForStringToCoTaskMemUtf8 = new byte[byteCountUtf8 * 2];
                 }
+
+                Encoding.UTF8.GetBytes(s, 0, s.Length, s_strBufferForStringToCoTaskMemUtf8, 0);
+                IntPtr dest = Marshal.AllocCoTaskMem(byteCountUtf8 + 1);
+                if (dest == IntPtr.Zero)
+                {
+                    throw new OutOfMemoryException();
+                }
+
+                Marshal.Copy(s_strBufferForStringToCoTaskMemUtf8, 0, dest, byteCountUtf8);
 
                 // Add null-terminator to end
                 ((byte*)dest.ToPointer())[byteCountUtf8] = 0;
