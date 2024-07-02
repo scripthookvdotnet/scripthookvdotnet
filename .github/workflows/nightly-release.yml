@@ -193,3 +193,4 @@ jobs:
           artifactErrorsFailBuild: true
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
+          makeLatest: true
