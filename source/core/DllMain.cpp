@@ -33,21 +33,18 @@ static LPVOID GetTlsContext()
 
 static LPVOID GetTlsContextAddrOfGameMainThread()
 {
-    LPVOID val;
     {
-        std::shared_lock<std::shared_mutex> lock(sGameMainThreadVarsMutex);
-        val = sTlsContextAddrOfGameMainThread;
+        // lock would take too short time for shared lock to be worth it, use exclusive lock
+        std::lock_guard<std::shared_mutex> lock(sGameMainThreadVarsMutex);
+        return sTlsContextAddrOfGameMainThread;
     }
-    return val;
 }
 static DWORD GetGameMainThreadId()
 {
-    DWORD val;
     {
-        std::shared_lock<std::shared_mutex> lock(sGameMainThreadVarsMutex);
-        val = sGameMainThreadId;
+        std::lock_guard<std::shared_mutex> lock(sGameMainThreadVarsMutex);
+        return sGameMainThreadId;
     }
-    return val;
 }
 
 static void RequestScriptDomainToReload()
