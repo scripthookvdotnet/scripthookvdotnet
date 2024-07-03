@@ -18,7 +18,7 @@ The issues page should be primarily used for bug reports and focused enhancement
 ## Downloads
 The stable builds can be downloaded from the [Releases](https://github.com/scripthookvdotnet/scripthookvdotnet/releases) page.
 You need to use the ASI file and the DLL files for APIs in an archive of the same version as the internal structure can be changed without notice.  
-**If you use the game version v1.0.3258.0, use the nightly version `nightly.89` or later (see below for nightly version details), or downgrade the game to v1.0.3179.0 or earlier! `v3.6.0` and all the earlier stable versions have compatibility issues with v1.0.3258.0!**
+**If you are using the game version v1.0.3258.0, use the nightly version `nightly.89` or later (see below for nightly version details), or downgrade the game to v1.0.3179.0 or earlier! `v3.6.0` and all the earlier stable versions have compatibility issues with v1.0.3258.0!**
 
 For newer builds, check out the [Nightly Builds](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases). You don't have to sign in to GitHub to download nightly releases.  
 Here is some of the notes you should be aware of when using a nightly version (from v3.6.0):
@@ -30,6 +30,7 @@ Here is some of the notes you should be aware of when using a nightly version (f
     * This is because we had to use a dedicated thread other than the main thread to avoid using ScriptHookV's fiber, so users won't have crutial compatibility problems with RAGE Plugin Hook and C++ scripts that use try catch blocks. Although we are still searching for how to have SHVDN tick in the main game thread by hooking a function in the game process, we have not found one.
 
 For script developers, please note that new APIs included in new nightly builds but not included in any stable versions are subject to change without notice, so it is not advisable to use any of them for public/production builds of your scripts.
+In other words, **you should build your scripts against stable versions but not nightly versions, so you won't accidentally use anything not available in any stable versions, unless you build your scripts for testing some of new APIs. Building scripts against nightly versions may make scripts not work as intended in SHVDN versions different from the versions they are built against!** 
 
 ## Installation
 * Extract all the files in the root folder from the zip file into your game folder except for `README.txt` and the 2 folders.
