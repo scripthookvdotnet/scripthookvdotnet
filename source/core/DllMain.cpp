@@ -742,6 +742,14 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
     // Also prevent from the keyboard thread reading stale values such as key bindings.
     msclr::lock l(ScriptHookVDotNet::variablesLockForMainDomain);
 
+    SHVDN::ScriptDomain^ scriptDomain = ScriptHookVDotNet::domain;
+    // If the TLS stuff is not initialized, the console or some script can call a native function without swapping
+    // TLS address, leading the whole process to crash
+    if (scriptDomain == nullptr || !scriptDomain->IsTlsStuffInitialized())
+    {
+        return;
+    }
+
     ScriptHookVDotNet::UpdatePrimaryKeyboardStateCache(static_cast<unsigned char>(keycode), keydown);
     ScriptHookVDotNet::UpdateKeyboardModifierStateCache(shift, ctrl, alt);
 
@@ -775,12 +783,8 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
             return;
     }
 
-    SHVDN::ScriptDomain^ scriptDomain = ScriptHookVDotNet::domain;
-    if (scriptDomain != nullptr)
-    {
-        // Send key events to all scripts
-        scriptDomain->DoKeyEvent(keys, keydown);
-    }
+    // Send key events to all scripts
+    scriptDomain->DoKeyEvent(keys, keydown);
 }
 
 #pragma unmanaged

@@ -63,6 +63,8 @@ namespace SHVDN
         private IntPtr _tlsContextOfMainThread;
         private uint _gameMainThreadIdUnmanaged;
 
+        private bool _areTlsVarsInitialized;
+
         // Since `ConcurrentQueue` doesn't have `Clear` method in .NET Framework where the head and tail will be set
         // to a new segment instance, we read `_pinnedStrings` sequentially to dispose pinned strings.
         private readonly object _pinnedStrListLock = new();
@@ -93,10 +95,24 @@ namespace SHVDN
                 _setTlsContext = (delegate* unmanaged[Cdecl]<IntPtr, void>)setTlsContextFunc;
                 _tlsContextOfMainThread = tlsAddr;
                 _gameMainThreadIdUnmanaged = threadId;
+                _areTlsVarsInitialized = true;
             }
             finally
             {
                 _tlsVariablesLock.ExitWriteLock();
+            }
+        }
+
+        internal bool IsTlsStuffInitialized()
+        {
+            _tlsVariablesLock.EnterReadLock();
+            try
+            {
+                return _areTlsVarsInitialized;
+            }
+            finally
+            {
+                _tlsVariablesLock.ExitReadLock();
             }
         }
 
