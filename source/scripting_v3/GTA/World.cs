@@ -2886,7 +2886,7 @@ namespace GTA
                     }
                 }
             }
-            else if (!PathFind.GetNthClosestVehicleNodePosition(position, 1, out position, GetClosestVehicleNodeFlags.IncludeSwitchedOffNodes))
+            else if (PathFind.GetNthClosestVehicleNodePosition(position, 1, out position, GetClosestVehicleNodeFlags.IncludeSwitchedOffNodes))
             {
                 return position;
             }
