@@ -11,6 +11,10 @@ body:
           - If you get the `FATAL: Unknown game version` error after a game update, then this project is not responsible. Instead, you need to wait for [**ScriptHookV**](http://www.dev-c.com/gtav/scripthookv/) to update.
         - Look for similar errors in existing [GitHub Issues](https://github.com/scripthookvdotnet/scripthookvdotnet/issues?q=is%3Aissue) (open or closed) before creating a new issue.
         - Also, you should try using the latest nightly version to make sure your issue has not already been fixed. Nightly builds are available on [GitHub Actions](https://github.com/scripthookvdotnet/scripthookvdotnet/actions).
+        - Since the scripting dlls are supposed to use the asi that comes from the same version (archive) as those of the dlls, their versions you're using must match before your bug report can be considered valid. Otherwise, your bug report will be rejected for not meeting a requirement.
+          - For example, when you use the scripting dlls from the nightly version nightly.100, use the asi from it as well. Do not update only the asi but not the dlls, and do not update only the dlls but not the asi. Update all of them.
+          - When you update your SHVDN, make sure you update at least the asi and scripting dlls all together. You should put or update the pdb files with ones that come from the same archive as the asi and the dlls you're using, so we can diagnose your issues easier.
+            - This is not required, but you might want to update the ini file unless you're sure the available options are not changed between the version you were using and the new version you want to use.
         - If you are not familiar with how to program and you are encountering some issues related to some SHVDN scripts such as compatibility issues due to game versions, please try to seek help from the authors and ask them to find out the causes.
   - type: dropdown
     id: modules-with-problem
