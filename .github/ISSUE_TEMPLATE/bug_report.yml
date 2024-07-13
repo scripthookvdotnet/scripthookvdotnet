@@ -34,10 +34,11 @@ body:
     attributes:
       label: SHVDN Version
       description: |
-        For nightly versions, write an unique commit hash (like 0d5b09b) in the main repository. Don't use a short commit hash less than 7 characters to avoid easy hash collision.
+        For nightly versions, write a nightly version such as `nightly.100` or write an unique commit hash (like 0d5b09b) in the main repository. Don't use a short commit hash less than 7 characters to avoid easy hash collision.
         Each nightly release in the nightly auto-release repository includes the short and full commit hash of the corresponding commit in the main repository.
         Reporting bugs with a short commit hash is acceptable in most cases. If the main branch contains multiple hashes starting with a short commit hash, you could report with the full hash in this case.
         Do not write a commit hash in the nightly auto-release repository as commits in it are not tied to specific SHVDN commits in the main repository!
+        Do not use the console to check when you are using a nightly version, because it does not report a nightly number.
 
         For stable release versions, open the console to check. However, you should try the latest nightly version to make sure your issue has not already been fixed.
       placeholder: "0d5b09b"
@@ -47,7 +48,7 @@ body:
       required: true
     attributes:
       label: Game Version
-      description: See ScriptHookV.dll to check. You should see a string like "VER_1_0_2845_0", and convert it to like "v1.0.2845.0" to fill in.
+      description: See ScriptHookV.log to check. You should see a string like "VER_1_0_2845_0", and convert it to like "v1.0.2845.0" to fill in.
       placeholder: "v1.0.2845.0"
   - type: textarea
     id: bug-desc
