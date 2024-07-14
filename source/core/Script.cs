@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -495,21 +496,22 @@ namespace SHVDN
         }
 
         /// <summary>
-        /// Pause execution of this script for the specified time.
+        /// Pause execution of this script for at least the specified duration.
         /// </summary>
-        /// <param name="ms">The time in milliseconds to pause.</param>
+        /// <param name="ms">The duration in milliseconds to pause.</param>
         public void Wait(int ms)
         {
             if (IsUsingThread)
             {
-                int startTickCount = Environment.TickCount;
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
 
                 do
                 {
                     _waitEvent.Release();
                     _continueEvent.Wait();
                 }
-                while (Environment.TickCount - startTickCount < ms);
+                while (sw.ElapsedMilliseconds < ms);
             }
             else
             {
