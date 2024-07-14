@@ -259,10 +259,10 @@ namespace GTA
         }
 
         /// <summary>
-        /// Pauses execution of the <see cref="Script"/> for a specific amount of time.
+        /// Pauses execution of the <see cref="Script"/> for at least a specific amount of time.
         /// Must be called inside the main script loop (the <see cref="Tick"/> event or any sub methods called from it).
         /// </summary>
-        /// <param name="ms">The time in milliseconds to pause for.</param>
+        /// <param name="ms">The minimum amount of time in milliseconds to pause for.</param>
         public static void Wait(int ms)
         {
             SHVDN.Script script = SHVDN.ScriptDomain.ExecutingScript;
