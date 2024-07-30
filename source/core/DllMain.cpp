@@ -787,6 +787,15 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
     scriptDomain->DoKeyEvent(keys, keydown);
 }
 
+// This is needed to match `_tls_index` of .NET CLR dlls, which are loaded by the OS loader (if we understand
+// correctly), in between our .NET threads and the game's main logic thread. If they mismatch, we would have to change
+// those in our .NET threads to that in for the game's main logic thread to avoid the game crashing every time we do
+// something that needs game's thread local variables, which is more tedious.
+static int EmptyClrMethodForEagerClrDllLoading()
+{
+    return 1;
+}
+
 #pragma unmanaged
 
 #include <Main.h>
@@ -801,10 +810,16 @@ std::atomic_bool sClrEventsInitialized(false);
 // use atomic_bool to avoid unnecessary optimization, with std::memory_order_seq_cst just in case for a xchg instruction
 std::atomic_bool sClrThreadRequestedToExit(false);
 
+int sTempValForEagerClrDllLoading = 0;
+
 // A procedure that is supposed to be run in a dedicated thread for so a cached stack limit in .NET runtime won't panic for
 // (false) stack overflow that can be caused by running managed code in a custom fiber (with a custom fiber data in other words)
 static DWORD ClrThreadProc(LPVOID lparam)
 {
+    // Eagerly load CLR DLLs, so the game won't crash when we try to swap TLS address by making `_tls_index` of .NET
+    // CLR dlls match in between our .NET threads and the game's main logic thread.
+    sTempValForEagerClrDllLoading = EmptyClrMethodForEagerClrDllLoading();
+
     while (!sClrEventsInitialized.load(std::memory_order_acquire)) {
         Sleep(0);
     }
