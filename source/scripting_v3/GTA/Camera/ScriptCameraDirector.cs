@@ -46,8 +46,8 @@ namespace GTA
         /// Tells the game that script thread of the SHVDN runtime (<c>GtaThread</c>, not individual SHVDN scripts)
         /// wants to enable rendering of scripted cameras.
         /// </summary>
-        public static void StartRendering(bool shouldLockInterpolationSourceFrame = true)
-            => Function.Call(Hash.RENDER_SCRIPT_CAMS, true, false, 3000, shouldLockInterpolationSourceFrame, 0, 0);
+        public static void StartRendering()
+            => Function.Call(Hash.RENDER_SCRIPT_CAMS, true, false, 3000, false, 0, 0);
         /// <summary>
         /// Starts rendering a scripted camera while interpolating from the gameplay camera
         /// that the gameplay camera director (<c>camGameplayDirector</c>) is using to a scripted camera.
@@ -65,10 +65,8 @@ namespace GTA
         /// wants to disable rendering of scripted cameras.
         /// </summary>
         /// <inheritdoc cref="StopRenderingWithInterp"/>
-        public static void StopRendering(bool shouldLockInterpolationSourceFrame = true,
-            bool shouldApplyAcrossAllThreads = false)
-            => Function.Call(Hash.RENDER_SCRIPT_CAMS, false, false, 3000, shouldLockInterpolationSourceFrame,
-                shouldApplyAcrossAllThreads, 0);
+        public static void StopRendering(bool shouldApplyAcrossAllThreads = false)
+            => Function.Call(Hash.RENDER_SCRIPT_CAMS, false, false, 3000, false, shouldApplyAcrossAllThreads, 0);
         /// <summary>
         /// Stops rendering a scripted camera while interpolating from the previously rendered scripted camera to
         /// the gameplay camera that the gameplay camera director (<c>camGameplayDirector</c>) is using.
