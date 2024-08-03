@@ -46,6 +46,9 @@ namespace GTA
         /// Tells the game that script thread of the SHVDN runtime (<c>GtaThread</c>, not individual SHVDN scripts)
         /// wants to enable rendering of scripted cameras.
         /// </summary>
+        /// <remarks>
+        /// <inheritdoc cref="StopRenderingWithInterp" path="/remarks"/>
+        /// </remarks>
         public static void StartRendering()
             => Function.Call(Hash.RENDER_SCRIPT_CAMS, true, false, 3000, false, 0, 0);
         /// <summary>
@@ -54,7 +57,17 @@ namespace GTA
         /// Tells the game that script thread of the SHVDN runtime (<c>GtaThread</c>, not individual SHVDN scripts)
         /// wants to enable rendering of scripted cameras.
         /// </summary>
-        /// <inheritdoc cref="StopRenderingWithInterp"/>
+        /// <param name="interpDuration">
+        /// The interpolation duration in milliseconds.
+        /// If zero, this method will behave the same as <see cref="StartRendering"/> and
+        /// <paramref name="shouldLockInterpolationSourceFrame"/> will not have effect.
+        /// </param>
+        /// <param name="shouldLockInterpolationSourceFrame">
+        /// <inheritdoc cref="StopRenderingWithInterp" path="/param[@name='shouldLockInterpolationSourceFrame']"/>
+        /// </param>
+        /// <remarks>
+        /// <inheritdoc cref="StopRenderingWithInterp" path="/remarks"/>
+        /// </remarks>
         public static void StartRenderingWithInterp(int interpDuration = 3000,
             bool shouldLockInterpolationSourceFrame = true)
             => Function.Call(Hash.RENDER_SCRIPT_CAMS, true, true, interpDuration, shouldLockInterpolationSourceFrame,
@@ -73,11 +86,23 @@ namespace GTA
         /// Tells the game that script thread of the SHVDN runtime (<c>GtaThread</c>, not individual SHVDN scripts)
         /// wants to disable rendering of scripted cameras.
         /// </summary>
-        /// <param name="interpDuration">The interpolation duration in milliseconds.</param>
+        /// <param name="interpDuration">
+        /// The interpolation duration in milliseconds.
+        /// If zero, this method will behave the same as <see cref="StopRendering"/> and
+        /// <paramref name="shouldLockInterpolationSourceFrame"/> will not have effect.
+        /// </param>
         /// <param name="shouldLockInterpolationSourceFrame">
-        /// If <see langword="false"/>, the source frame is updated throughout the interpolation,
+        /// <para>
+        /// If <see langword="false"/>, the source camera frame is updated throughout the interpolation,
         /// allowing for fully dynamic interpolation that can reduce the appearance of 'lag' when the source frame is
-        /// not static.
+        /// not static. For example, when the Z coordinates of the source scripted camera and a destination gameplay
+        /// camera are the same at the time when the interpolation starts but the Z coordinate of the source scripted
+        /// camera are added after the interpolation starts, that of the moving camera (frame) should be greater than
+        /// that of the destination gameplay camera.
+        /// </para>
+        /// <para>
+        /// Does not have any effect if <paramref name="interpDuration"/> is zero.
+        /// </para>
         /// </param>
         /// <param name="shouldApplyAcrossAllThreads">
         /// If <see langword="true"/>, a request to stop rendering will be enforced irrespective of whether other
@@ -86,10 +111,10 @@ namespace GTA
         /// </param>
         /// <remarks>
         /// At least one of the scripts loaded by SHVDN must have created a <see cref="Camera"/> that can be rendered,
-        /// so you would want to set <see cref="Camera.IsActive"/> to <see langword="true"/> on your
+        /// thus you would want to set <see cref="Camera.IsActive"/> to <see langword="true"/> on your
         /// <see cref="Camera"/>.
-        /// Note that rendering is typically not stopped if another script thread (<c>GtaThread</c>) other than
-        /// the SHVDN runtime still expects it to be active (see <paramref name="shouldApplyAcrossAllThreads"/>.)
+        /// Note that rendering is typically not stopped if other script threads (<c>GtaThread</c>) other than
+        /// the SHVDN runtime still expect it to be active (see <paramref name="shouldApplyAcrossAllThreads"/>.)
         /// </remarks>
         public static void StopRenderingWithInterp(int interpDuration = 3000,
             bool shouldLockInterpolationSourceFrame = true, bool shouldApplyAcrossAllThreads = false)

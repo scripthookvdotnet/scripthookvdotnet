@@ -1605,7 +1605,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Creates a <see cref="Camera"/>, use <see cref="ScriptCameraDirector.StartRendering(bool)"/> to switch to
+        /// Creates a <see cref="Camera"/>, use <see cref="ScriptCameraDirector.StartRendering()"/> to switch to
         /// this camera.
         /// </summary>
         /// <param name="position">The position of the camera.</param>
