@@ -986,19 +986,11 @@ namespace SHVDN
         /// </summary>
         internal void DoTick()
         {
-            int runningScriptCount = 0;
-            _rwLock.EnterReadLock();
-            try
-            {
-                runningScriptCount = _runningScripts.Count;
-            }
-            finally
-            {
-                _rwLock.ExitReadLock();
-            }
-
-            // Execute running scripts
-            for (int i = 0; i < runningScriptCount; i++)
+            // Execute running scripts. Running scripts count should be read every time we execute `DoTick` on a script
+            // because a script may instantiate additional script instances. Otherwise, the loop will end up skipping
+            // newly instantiated scripts one tick, which is different from how this `DoTick` works in between v3.0.0
+            // and v3.6.0.
+            for (int i = 0; i < GetRunningScriptsCount(); i++)
             {
                 // If the rw lock is used in the whole loop, a script will end up indirectly reading `RunningScripts`
                 // where the same lock is used, causing a `LockRecursionException` without getting caught and
@@ -1088,6 +1080,23 @@ namespace SHVDN
             // Clean up any pinned strings of this frame
             CleanupStrings();
         }
+
+        private int GetRunningScriptsCount()
+        {
+            int c = 0;
+            _rwLock.EnterReadLock();
+            try
+            {
+                c = _runningScripts.Count;
+            }
+            finally
+            {
+                _rwLock.ExitReadLock();
+            }
+
+            return c;
+        }
+
         /// <summary>
         /// Keyboard handling logic of the script domain.
         /// </summary>
