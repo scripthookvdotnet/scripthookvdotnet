@@ -894,36 +894,59 @@ namespace SHVDN
         /// <param name="task">The task to execute.</param>
         public void ExecuteTaskWithGameThreadTlsContext(IScriptTask task)
         {
-            _tlsVariablesLock.EnterReadLock();
-            try
+            // Store the TLS variables to local variables, so we can perform the `IScriptTask` without the lock
+            // and that makes sure the task won't be able to cause a `LockRecursionException` by calling this method
+            // again in the task.
+            // Since `delegate* unmanaged` is allowed only in unsafe context, we have to use `unsafe` keyword for
+            // the entire block.
+            unsafe
             {
-                if (_gameMainThreadIdUnmanaged == GetCurrentThreadId())
+                uint gameMainThreadIdUnmanaged;
+                IntPtr tlsContextOfMainThread;
+                delegate* unmanaged[Cdecl]<IntPtr> getTlsContext;
+                delegate* unmanaged[Cdecl]<IntPtr, void> setTlsContext;
+
+                #region Read TLS variables with the Lock for Them and Store to Local Variables
+                _tlsVariablesLock.EnterReadLock();
+                try
+                {
+                    gameMainThreadIdUnmanaged = _gameMainThreadIdUnmanaged;
+                    tlsContextOfMainThread = _tlsContextOfMainThread;
+                    getTlsContext = _getTlsContext;
+                    setTlsContext = _setTlsContext;
+                }
+                catch
+                {
+                    // We should abort the method if reading the TLS variables *should* fail, so we can see the error
+                    // in the log when it's predictable.
+                    throw;
+                }
+                finally
+                {
+                    _tlsVariablesLock.ExitReadLock();
+                }
+                #endregion
+
+                if (gameMainThreadIdUnmanaged == GetCurrentThreadId())
                 {
                     // Request came from the main thread of the exe, so can just execute it right away
                     task.Run();
                 }
                 else
                 {
-                    unsafe
-                    {
-                        IntPtr tlsContextOfScriptThread = _getTlsContext();
-                        _setTlsContext(_tlsContextOfMainThread);
+                    IntPtr tlsContextOfScriptThread = getTlsContext();
+                    setTlsContext(tlsContextOfMainThread);
 
-                        try
-                        {
-                            task.Run();
-                        }
-                        finally
-                        {
-                            // Need to revert TLS context to the real one of the script thread
-                            _setTlsContext(tlsContextOfScriptThread);
-                        }
+                    try
+                    {
+                        task.Run();
+                    }
+                    finally
+                    {
+                        // Need to revert TLS context to the real one of the script thread
+                        setTlsContext(tlsContextOfScriptThread);
                     }
                 }
-            }
-            finally
-            {
-                _tlsVariablesLock.ExitReadLock();
             }
         }
 
