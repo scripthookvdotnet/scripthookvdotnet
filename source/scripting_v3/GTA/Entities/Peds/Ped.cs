@@ -1097,15 +1097,75 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets whether permanent events are blocked for this <see cref="Ped"/>.
         /// <para>
-        /// If set to <see langword="true" />, this <see cref="Ped"/> will no longer react to permanent events and will only do as they're told.
-        /// For example, the <see cref="Ped"/> will not flee when get shot at and they will not begin combat even if <see cref="DecisionMaker"/> specifies that seeing a hated ped should.
-        /// However, the <see cref="Ped"/> will still respond to temporary events like walking around other peds or vehicles even if this property is set to <see langword="true" />.
+        /// Sets whether non-temporary events without high priorities are blocked for this <see cref="Ped"/>.
+        /// </para>
+        /// <para>
+        /// For example, the <see cref="Ped"/> will not flee when get shot at and they will not begin combat even if
+        /// <see cref="DecisionMaker"/> specifies that seeing a hated ped should.
         /// </para>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Even if this property is set to <see langword="true"/>, the <see cref="Ped"/> will still respond
+        /// to events that meet one of the following criteria;
+        /// <list type="bullet">
+        /// <item><description>
+        /// Priority is higher than that of "block non-temp events" (or the same). Examples;
+        ///     <list type="bullet">
+        ///     <item><description>
+        ///     Event for the <see cref="Ped"/>'s <see cref="Vehicle"/> being on fire (`<c>CEventVehicleOnFire</c>`)
+        ///     </description></item>
+        ///     <item><description>
+        ///     Event for taking damage (`<c>CEventDamage</c>` with 4 possible priorities)
+        ///     </description></item>
+        ///     <item><description>
+        ///     Event for getting bumped into by another <see cref="Ped"/> (`<c>CEventPedCollisionWithPed</c>` and
+        ///     `<c>CEventPedCollisionWithPlayer</c>`, whose priorities are the same)
+        ///     </description></item>
+        ///     <item><description>
+        ///     Event for taking damage (`<c>CEventDamage</c>` with 4 possible priorities)
+        ///     </description></item>
+        ///     </list>
+        /// </description></item>
+        /// <item><description>
+        /// Event is set to be temporary. Examples;
+        ///     <list type="bullet">
+        ///     <item><description>
+        ///     Event for vehicle on fire (`<c>CEventVehicleOnFire</c>`)
+        ///     </description></item>
+        ///     <item><description>
+        ///     Event for being about to walk into fire (`<c>CEventPotentialWalkIntoFire</c>`)
+        ///     </description></item>
+        ///     <item><description>
+        ///     Event for the <see cref="Ped"/>'s <see cref="Vehicle"/> being upside down, beached, or stuck
+        ///     (`<c>CEventCarUndriveable</c>`)
+        ///     </description></item>
+        ///     </list>
+        /// </description></item>
+        /// <item><description>
+        /// Event type is set to one of the following types;
+        ///     <list type="bullet">
+        ///     <item><description>
+        ///     `<c>EVENT_SCRIPT_COMMAND</c>`
+        ///     </description></item>
+        ///     <item><description>
+        ///     `<c>EVENT_LEADER_ENTERED_CAR_AS_DRIVER</c>`
+        ///     </description></item>
+        ///     <item><description>
+        ///     `<c>EVENT_LEADER_EXITED_CAR_AS_DRIVER</c>`
+        ///     </description></item>
+        ///     <item><description>
+        ///     `<c>EVENT_SCENARIO_FORCE_ACTION</c>`
+        ///     </description></item>
+        ///     </list>
+        /// </description></item>
+        /// </list>
+        /// </para>
+        /// </remarks>
         /// <value>
-        ///   <see langword="true" /> if permanent events are blocked; otherwise, <see langword="false" />.
+        /// <see langword="true"/> if non-temporary events without high priorities are blocked; otherwise,
+        /// <see langword="false"/>.
         /// </value>
         public bool BlockPermanentEvents
         {
