@@ -1098,7 +1098,7 @@ namespace GTA
 
         /// <summary>
         /// <para>
-        /// Sets whether non-temporary events without high priorities are blocked for this <see cref="Ped"/>.
+        /// Gets or sets whether non-temporary events without high priorities are blocked for this <see cref="Ped"/>.
         /// </para>
         /// <para>
         /// For example, the <see cref="Ped"/> will not flee when get shot at and they will not begin combat even if
@@ -1169,7 +1169,28 @@ namespace GTA
         /// </value>
         public bool BlockPermanentEvents
         {
+            get => GetConfigFlag(PedConfigFlagToggles.BlockNonTemporaryEvents);
             set => Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS, Handle, value);
+        }
+
+        /// <summary>
+        /// Sets the value that indicates whether non-temp events without high priorities will be blocked for
+        /// random/ambient <see cref="Ped"/>s this frame. Excludes law enforcement <see cref="Ped"/>s.
+        /// </summary>
+        /// <remarks>
+        /// Strictly, if this property is set to <see langword="true"/>, the game will block non-temp events this frame
+        /// on <see cref="Ped"/>s with one of the random population types (e.g.
+        /// <see cref="EntityPopulationType.RandomAmbient"/>) and with a <see cref="GTA.PedType"/> other than
+        /// <see cref="GTA.PedType.Cop"/>, <see cref="GTA.PedType.Swat"/>, or <see cref="GTA.PedType.Army"/>.
+        /// </remarks>
+        /// <seealso cref="BlockPermanentEvents"/>
+        // There's `GetRandomPedsBlockingNonTempEventsThisFrame` and `SetRandomPedsBlockingNonTempEventsThisFrame` in
+        // `CPed`, which just read or write a single static variable, and `SET_BLOCKING_OF_NON_TEMPORARY_EVENTS_FOR_AMBIENT_PEDS_THIS_FRAME`
+        // basically just calls `CPed::SetRandomPedsBlockingNonTempEventsThisFrame()` apart from debug funcs, hence
+        // the property name.
+        public static bool RandomPedsBlockingNonTempEventsThisFrame
+        {
+            set => Function.Call(Hash.SET_BLOCKING_OF_NON_TEMPORARY_EVENTS_FOR_AMBIENT_PEDS_THIS_FRAME, value);
         }
 
         /// <summary>
