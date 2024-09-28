@@ -5,6 +5,8 @@
 
 using GTA.Native;
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
@@ -122,8 +124,23 @@ namespace GTA
         public static Language Language => Function.Call<Language>(Hash.GET_CURRENT_LANGUAGE);
 
         /// <summary>
+        /// Gets the "FileVersion" resource value of GTA5.exe, which is the same as what SHV's function
+        /// <c>getGameVersionInfo</c> retrieves, as a <see cref="System.Version"/> instance.
+        /// </summary>
+        // We don't want to rely on the new API unless absolutely necessary.
+        // Also, SHV's implementation does not use a mutex lock while variables for version cache can be read and written in
+        // multiple threads, which can lead potential issues due to race condition. (at least as of the version 28 Sep 2024).
+        // SHV's implementation uses `GetModuleHandleA` and searches the exe image for "FileVersion" info, and this can be
+        // substituted with C#'s standard library.
+        public static Version FileVersion
+            => new Version(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
+
+        /// <summary>
         /// Gets the version of the game.
         /// </summary>
+        [Obsolete("`Game.Version` is deprecated because Script Hook V is deprecating `getGameVersion`, which " +
+            "the property is based on. Use `Game.FileVersion` instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static GameVersion Version => (GameVersion)SHVDN.NativeMemory.GetGameVersion();
 
         /// <summary>
