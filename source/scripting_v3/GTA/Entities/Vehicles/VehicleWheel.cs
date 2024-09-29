@@ -491,7 +491,7 @@ namespace GTA
             // You can actually call `SET_TYRE_WEAR_RATE` in RPH and FiveM.
             get
             {
-                if (Game.Version < GameVersion.v1_0_1868_0_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1868_0)
                 {
                     return 0f;
                 }
@@ -535,7 +535,7 @@ namespace GTA
         {
             get
             {
-                if (Game.Version < GameVersion.v1_0_2060_0_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_2060_0)
                 {
                     return 0f;
                 }
@@ -582,7 +582,7 @@ namespace GTA
         {
             get
             {
-                if (Game.Version < GameVersion.v1_0_2060_0_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_2060_0)
                 {
                     return 0f;
                 }

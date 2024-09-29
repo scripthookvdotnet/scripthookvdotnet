@@ -311,7 +311,7 @@ namespace GTA
         {
             get
             {
-                if (Game.Version < GameVersion.v1_0_505_2_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
                 {
                     GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_505_2_Steam), nameof(VehicleModCollection), nameof(TrimColor));
                 }
@@ -326,7 +326,7 @@ namespace GTA
             }
             set
             {
-                if (Game.Version < GameVersion.v1_0_505_2_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
                 {
                     GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_505_2_Steam), nameof(VehicleModCollection), nameof(TrimColor));
                 }
@@ -338,7 +338,7 @@ namespace GTA
         {
             get
             {
-                if (Game.Version < GameVersion.v1_0_505_2_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
                 {
                     GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_505_2_Steam), nameof(VehicleModCollection), nameof(DashboardColor));
                 }
@@ -353,7 +353,7 @@ namespace GTA
             }
             set
             {
-                if (Game.Version < GameVersion.v1_0_505_2_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
                 {
                     GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_505_2_Steam), nameof(VehicleModCollection), nameof(DashboardColor));
                 }

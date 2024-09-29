@@ -1204,7 +1204,7 @@ namespace GTA
 
         public bool HasReceivedEvent(EventType eventType)
         {
-            if ((int)Game.Version < (int)GameVersion.v1_0_1868_0_Steam)
+            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1868_0)
             {
                 return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
             }
@@ -1221,7 +1221,7 @@ namespace GTA
         /// </value>
         public bool IsRespondingToEvent(EventType eventType)
         {
-            if ((int)Game.Version < (int)GameVersion.v1_0_1868_0_Steam)
+            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1868_0)
             {
                 return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
             }

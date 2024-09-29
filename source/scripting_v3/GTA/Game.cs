@@ -116,7 +116,10 @@ namespace GTA
         /// <summary>
         /// Gets the north blip, which is shown on the radar.
         /// </summary>
-        public static Blip NorthBlip => Version >= GameVersion.v1_0_463_1_Steam ? new Blip(Function.Call<int>(Hash.GET_NORTH_BLID_INDEX)) : new Blip(SHVDN.NativeMemory.GetNorthBlip());
+        public static Blip NorthBlip
+            => FileVersion >= VersionConstsForGameVersion.v1_0_463_1
+            ? new Blip(Function.Call<int>(Hash.GET_NORTH_BLID_INDEX))
+            : new Blip(SHVDN.NativeMemory.GetNorthBlip());
 
         /// <summary>
         /// Gets the current game language.
@@ -133,7 +136,7 @@ namespace GTA
         // SHV's implementation uses `GetModuleHandleA` and searches the exe image for "FileVersion" info, and this can be
         // substituted with C#'s standard library.
         public static Version FileVersion
-            => new Version(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
+            => new(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
 
         /// <summary>
         /// Gets the version of the game.

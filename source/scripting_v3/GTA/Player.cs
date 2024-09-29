@@ -894,7 +894,7 @@ namespace GTA
         /// </remarks>
         public void ActivateSpecialAbility()
         {
-            if (Game.Version >= GameVersion.v1_0_678_1_Steam)
+            if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_678_1)
             {
                 Function.Call(Hash.SPECIAL_ABILITY_ACTIVATE, Handle, 0);
                 return;

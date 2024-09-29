@@ -29,7 +29,7 @@ namespace GTA
         {
             // Although we could get element count from parStructure->parMemberArray->parMemberDefinition,
             // it won't worth it because only one update changed max element count of array members of CVehicleWeaponHandlingData as of b2845
-            if (Game.Version >= GameVersion.v1_0_1180_2_Steam)
+            if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2)
             {
                 s_elemCountForWeaponPropertyArrays = 6;
                 s_elemCountActuallyUsedForTurretPropertyArrays = 6;
@@ -117,7 +117,7 @@ namespace GTA
 
                 var result = new VehicleSeat[s_elemCountForWeaponPropertyArrays];
 
-                int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
+                int memberOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2 ? 0x20 : 0x18;
                 for (int i = 0; i < result.Length; i++)
                 {
                     result[i] = (VehicleSeat)SHVDN.MemDataMarshal.ReadInt32(MemoryAddress + memberOffset + i * 4);
@@ -149,7 +149,7 @@ namespace GTA
                     arrayToFill[i] = (int)value[i] + 1;
                 }
 
-                int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x20 : 0x18;
+                int memberOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2 ? 0x20 : 0x18;
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
                     SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
@@ -173,7 +173,7 @@ namespace GTA
         {
             get
             {
-                if (Game.Version < GameVersion.v1_0_1103_2_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1103_2)
                 {
                     GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1103_2_Steam), nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
                 }
@@ -183,7 +183,7 @@ namespace GTA
                 }
 
                 var result = new VehicleModType[s_elemCountForWeaponPropertyArrays];
-                int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
+                int memberOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2 ? 0x38 : 0x28;
                 for (int i = 0; i < result.Length; i++)
                 {
                     int modTypeForNative = SHVDN.MemDataMarshal.ReadInt32(MemoryAddress + memberOffset + i * 4);
@@ -200,7 +200,7 @@ namespace GTA
             }
             set
             {
-                if (Game.Version < GameVersion.v1_0_1103_2_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1103_2)
                 {
                     GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1103_2_Steam), nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
                 }
@@ -226,7 +226,8 @@ namespace GTA
                     arrayToFill[i] = GetModTypeValueForInternalGameCode(currentValue);
                 }
 
-                int memberOffset = Game.Version >= GameVersion.v1_0_1180_2_Steam ? 0x38 : 0x28;
+                int memberOffset
+                    = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2 ? 0x38 : 0x28;
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
                     SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
@@ -247,11 +248,11 @@ namespace GTA
                 }
 
                 int memberOffset;
-                if (Game.Version >= GameVersion.v1_0_1180_2_Steam)
+                if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2)
                 {
                     memberOffset = 0x50;
                 }
-                else if (Game.Version >= GameVersion.v1_0_1103_2_Steam)
+                else if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1103_2)
                 {
                     memberOffset = 0x38;
                 }
@@ -280,11 +281,11 @@ namespace GTA
                 }
 
                 int memberOffset;
-                if (Game.Version >= GameVersion.v1_0_1180_2_Steam)
+                if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2)
                 {
                     memberOffset = 0x50;
                 }
-                else if (Game.Version >= GameVersion.v1_0_1103_2_Steam)
+                else if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1103_2)
                 {
                     memberOffset = 0x38;
                 }
@@ -319,11 +320,11 @@ namespace GTA
                 }
 
                 int memberOffset;
-                if (Game.Version >= GameVersion.v1_0_1180_2_Steam)
+                if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2)
                 {
                     memberOffset = 0x80;
                 }
-                else if (Game.Version >= GameVersion.v1_0_1103_2_Steam)
+                else if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1103_2)
                 {
                     memberOffset = 0x44;
                 }
@@ -352,11 +353,11 @@ namespace GTA
                 }
 
                 int memberOffset;
-                if (Game.Version >= GameVersion.v1_0_1180_2_Steam)
+                if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2)
                 {
                     memberOffset = 0x80;
                 }
-                else if (Game.Version >= GameVersion.v1_0_1103_2_Steam)
+                else if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1103_2)
                 {
                     memberOffset = 0x44;
                 }
@@ -391,11 +392,11 @@ namespace GTA
                 }
 
                 int memberOffset;
-                if (Game.Version >= GameVersion.v1_0_1180_2_Steam)
+                if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2)
                 {
                     memberOffset = 0xB0;
                 }
-                else if (Game.Version >= GameVersion.v1_0_1103_2_Steam)
+                else if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1103_2)
                 {
                     memberOffset = 0x50;
                 }
@@ -424,11 +425,11 @@ namespace GTA
                 }
 
                 int memberOffset;
-                if (Game.Version >= GameVersion.v1_0_1180_2_Steam)
+                if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2)
                 {
                     memberOffset = 0xB0;
                 }
-                else if (Game.Version >= GameVersion.v1_0_1103_2_Steam)
+                else if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1103_2)
                 {
                     memberOffset = 0x50;
                 }
@@ -453,7 +454,7 @@ namespace GTA
         private int GetModTypeValueForInternalGameCode(VehicleModType modTypeForNativeFunction)
         {
             // This kind of correction was introduced in b393 so return the same value if the game version is earlier than b393
-            if (Game.Version < GameVersion.v1_0_393_2_Steam)
+            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
             {
                 return (int)modTypeForNativeFunction;
             }
@@ -476,7 +477,7 @@ namespace GTA
 
         private VehicleModType GetModTypeForNativeFunction(int modTypeForInternalCode)
         {
-            if (Game.Version < GameVersion.v1_0_393_2_Steam)
+            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
             {
                 return (VehicleModType)modTypeForInternalCode;
             }

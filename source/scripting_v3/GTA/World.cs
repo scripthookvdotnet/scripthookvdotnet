@@ -2705,7 +2705,7 @@ namespace GTA
         /// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.463.1 or earlier game versions.</exception>
         public static bool GetGroundHeightExcludingProps(Vector3 position, out float height, GetGroundHeightMode mode = GetGroundHeightMode.Normal)
         {
-            if (Game.Version < GameVersion.v1_0_505_2_Steam)
+            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
             {
                 GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_505_2_Steam), nameof(GetGroundHeightExcludingProps), nameof(GetGroundHeightExcludingProps));
             }
