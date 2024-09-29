@@ -534,7 +534,8 @@ namespace GTA
         /// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.1290.1 or earlier game versions.</exception>
         public void AttachToVehicleBone(EntityBone vehicleBone, Vector3 positionOffset, bool offsetIsRelative = true)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Camera), nameof(AttachToVehicleBone));
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1290_1,
+                nameof(Camera), nameof(AttachToVehicleBone));
 
             // The rotational offsets have effect only if hard attachment flag is set
             Function.Call(Hash.ATTACH_CAM_TO_VEHICLE_BONE, Handle, vehicleBone.Owner.Handle, vehicleBone.Index,
@@ -562,7 +563,8 @@ namespace GTA
         public void HardAttachToVehicleBone(EntityBone vehicleBone, Vector3 rotationOffset,
             Vector3 positionOffset, bool offsetIsRelative = true)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(Camera), nameof(AttachToVehicleBone));
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1290_1,
+                nameof(Camera), nameof(AttachToVehicleBone));
 
             Function.Call(Hash.ATTACH_CAM_TO_VEHICLE_BONE, Handle, vehicleBone.Owner.Handle, vehicleBone.Index,
                 true /* hardAttachment */, rotationOffset.X, rotationOffset.Y, rotationOffset.Z, positionOffset.X,

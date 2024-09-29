@@ -1598,7 +1598,7 @@ namespace GTA
             }
             set
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_463_1_Steam,
+                GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_463_1,
                     nameof(Entity), nameof(BlocksAnyDamageButHasReactions));
 
                 IntPtr address = MemoryAddress;
@@ -1924,7 +1924,7 @@ namespace GTA
             }
             set
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam,
+                GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1180_2,
                     nameof(Entity), nameof(IsPickupByCargobobDisabled));
 
                 Function.Call(Hash.SET_PICK_UP_BY_CARGOBOB_DISABLED, Handle, value);
@@ -2968,7 +2968,7 @@ namespace GTA
             EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ, float invMassScaleA = 1f,
             float invMassScaleB = 1f)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2944_0, nameof(Entity),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2944_0, nameof(Entity),
                 nameof(AttachToMatrixPhysicallyOverrideInverseMass));
 
             Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY_OVERRIDE_INVERSE_MASS, Handle, secondEntity, -1, -1,
@@ -3076,7 +3076,7 @@ namespace GTA
             EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ, float invMassScaleA = 1f,
             float invMassScaleB = 1f)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2944_0, nameof(Entity),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2944_0, nameof(Entity),
                 nameof(AttachToBonePhysicallyOverrideInverseMass));
 
             Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY_OVERRIDE_INVERSE_MASS, Handle,

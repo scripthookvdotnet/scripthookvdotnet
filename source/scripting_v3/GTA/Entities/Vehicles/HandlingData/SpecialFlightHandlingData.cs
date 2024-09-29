@@ -66,7 +66,7 @@ namespace GTA
             {
                 if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1493_0_Steam), nameof(SpecialFlightHandlingData), nameof(VectorAngularDampingMin));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(VectorAngularDampingMin));
                 }
                 if (!IsValid)
                 {
@@ -127,7 +127,7 @@ namespace GTA
             {
                 if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1493_0_Steam), nameof(SpecialFlightHandlingData), nameof(VectorLinearDampingMin));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(VectorLinearDampingMin));
                 }
                 if (!IsValid)
                 {
@@ -308,7 +308,7 @@ namespace GTA
             {
                 if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1493_0_Steam), nameof(SpecialFlightHandlingData), nameof(MinSpeedForThrustFalloff));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(MinSpeedForThrustFalloff));
                 }
                 if (!IsValid)
                 {
@@ -340,7 +340,7 @@ namespace GTA
             {
                 if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1493_0_Steam), nameof(SpecialFlightHandlingData), nameof(BrakingThrustScale));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(BrakingThrustScale));
                 }
                 if (!IsValid)
                 {

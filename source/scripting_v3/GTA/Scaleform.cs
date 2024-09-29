@@ -50,7 +50,7 @@ namespace GTA
         public static Scaleform RequestMovieIgnoreSuperWidescreenAdjustment(string fileName)
         {
             GameVersionNotSupportedException.ThrowIfNotSupported(
-                GameVersion.v1_0_372_2_Steam,
+                VersionConstsForGameVersion.v1_0_372_2,
                 nameof(Scaleform),
                 nameof(RequestMovieIgnoreSuperWidescreenAdjustment)
                 );

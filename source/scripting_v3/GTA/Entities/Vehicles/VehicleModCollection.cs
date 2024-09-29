@@ -313,7 +313,7 @@ namespace GTA
             {
                 if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_505_2_Steam), nameof(VehicleModCollection), nameof(TrimColor));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_505_2), nameof(VehicleModCollection), nameof(TrimColor));
                 }
 
                 int color;
@@ -328,7 +328,7 @@ namespace GTA
             {
                 if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_505_2_Steam), nameof(VehicleModCollection), nameof(TrimColor));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_505_2), nameof(VehicleModCollection), nameof(TrimColor));
                 }
 
                 Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_5, _owner.Handle, (int)value);
@@ -340,7 +340,7 @@ namespace GTA
             {
                 if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_505_2_Steam), nameof(VehicleModCollection), nameof(DashboardColor));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_505_2), nameof(VehicleModCollection), nameof(DashboardColor));
                 }
 
                 int color;
@@ -355,7 +355,7 @@ namespace GTA
             {
                 if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_505_2_Steam), nameof(VehicleModCollection), nameof(DashboardColor));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_505_2), nameof(VehicleModCollection), nameof(DashboardColor));
                 }
 
                 Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_6, _owner.Handle, (int)value);

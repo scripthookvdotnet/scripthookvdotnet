@@ -174,7 +174,7 @@ namespace GTA
         /// </returns>
         public Ped CloneAlt(bool linkBlends = true, bool cloneCompressedDamage = true)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_463_1_Steam, nameof(Ped),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_463_1, nameof(Ped),
                 nameof(CloneAlt));
 
             const bool registerAsNetworkObject = true;
@@ -218,7 +218,7 @@ namespace GTA
         /// </param>
         public void CloneToTargetAlt(Ped target, bool cloneCompressedDamage = true)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_463_1_Steam, nameof(Ped),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_463_1, nameof(Ped),
                 nameof(CloneToTargetAlt));
 
             Function.Call(Hash.CLONE_PED_TO_TARGET_ALT, Handle, target, cloneCompressedDamage);
