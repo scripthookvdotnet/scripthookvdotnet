@@ -7,6 +7,8 @@ using System;
 
 namespace GTA
 {
+    // This class's visibility is set to internal only because we might come up with better names,
+    // so it would be appreciated if better names could be proposed for this class.
     internal static class VersionConstsForGameVersion
     {
         internal static Version v1_0_335_2 => new(1, 0, 335, 2);
