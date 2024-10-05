@@ -960,7 +960,7 @@ namespace GTA
             TaskMoVEScriptedInitialParameters initParams, AnimationBlendDuration? blendDuration = null,
             MoveNetworkFlags flags = MoveNetworkFlags.Default)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1493_0_Steam, nameof(TaskInvoker),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1493_0, nameof(TaskInvoker),
                 nameof(StartMoveNetworkByNameWithInitParams));
 
             unsafe
@@ -1012,7 +1012,7 @@ namespace GTA
             EulerRotationOrder rotOrder = EulerRotationOrder.YXZ, AnimationBlendDuration? blendDuration = null,
             MoveNetworkFlags flags = MoveNetworkFlags.Default)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1868_0_Steam, nameof(TaskInvoker),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1868_0, nameof(TaskInvoker),
                 nameof(StartMoveNetworkAdvancedByNameWithInitParams));
 
             unsafe
@@ -1903,7 +1903,7 @@ namespace GTA
         public void GoToPlanePreciseVtol(Vehicle plane, Vector3 target, int flightHeight, int minHeightAboveTerrain,
             float? desiredOrientation = null, bool autoPilot = false)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1290_1_Steam, nameof(TaskInvoker),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1290_1, nameof(TaskInvoker),
                 nameof(GoToPlanePreciseVtol));
 
             bool useDesiredOrientation = desiredOrientation.HasValue;
@@ -1938,7 +1938,7 @@ namespace GTA
         /// </remarks>
         public void GoToSubmarineAndStop(Vehicle submarine, Vector3 position, bool autoPilot = false)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2189_0_Steam, nameof(TaskInvoker),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2189_0, nameof(TaskInvoker),
                 nameof(GoToSubmarineAndStop));
 
             Function.Call(Hash.TASK_SUBMARINE_GOTO_AND_STOP, _ped.Handle, submarine, position.X, position.Y, position.Z,

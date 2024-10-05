@@ -639,7 +639,7 @@ namespace GTA
         public void AttachToBone(EntityBone boneOfSecondEntity, bool activeCollisions = true,
             bool useBasicAttachIfPed = false)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_791_2_Steam, nameof(EntityBone),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_791_2, nameof(EntityBone),
                 nameof(AttachToBone));
 
             Entity secondEntity = boneOfSecondEntity.Owner;
@@ -694,7 +694,7 @@ namespace GTA
         public void AttachToBoneYForward(EntityBone boneOfSecondEntity, bool activeCollisions = true,
             bool useBasicAttachIfPed = false)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_791_2_Steam, nameof(Entity),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_791_2, nameof(Entity),
                 nameof(AttachToBoneYForward));
 
             Entity secondEntity = boneOfSecondEntity.Owner;
@@ -978,7 +978,7 @@ namespace GTA
             EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ, float invMassScaleA = 1f,
             float invMassScaleB = 1f)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2944_0, nameof(Entity),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2944_0, nameof(Entity),
                 nameof(AttachToEntityPhysicallyOverrideInverseMass));
 
             Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY_OVERRIDE_INVERSE_MASS, Owner, secondEntity,
@@ -1078,7 +1078,7 @@ namespace GTA
             bool addInitialSeparation = true, EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ,
             float invMassScaleA = 1f, float invMassScaleB = 1f)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2944_0, nameof(Entity),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2944_0, nameof(Entity),
                 nameof(AttachToBonePhysicallyOverrideInverseMass));
 
             Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY_OVERRIDE_INVERSE_MASS, Owner,

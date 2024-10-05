@@ -5,6 +5,8 @@
 
 using GTA.Native;
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
@@ -114,7 +116,10 @@ namespace GTA
         /// <summary>
         /// Gets the north blip, which is shown on the radar.
         /// </summary>
-        public static Blip NorthBlip => Version >= GameVersion.v1_0_463_1_Steam ? new Blip(Function.Call<int>(Hash.GET_NORTH_BLID_INDEX)) : new Blip(SHVDN.NativeMemory.GetNorthBlip());
+        public static Blip NorthBlip
+            => FileVersion >= VersionConstsForGameVersion.v1_0_463_1
+            ? new Blip(Function.Call<int>(Hash.GET_NORTH_BLID_INDEX))
+            : new Blip(SHVDN.NativeMemory.GetNorthBlip());
 
         /// <summary>
         /// Gets the current game language.
@@ -122,8 +127,17 @@ namespace GTA
         public static Language Language => Function.Call<Language>(Hash.GET_CURRENT_LANGUAGE);
 
         /// <summary>
+        /// Gets the "FileVersion" resource value of GTA5.exe, which is the same as what SHV's function
+        /// <c>getGameVersionInfo</c> retrieves, as a <see cref="System.Version"/> instance.
+        /// </summary>
+        public static Version FileVersion => SHVDN.NativeMemory.GameFileVersion;
+
+        /// <summary>
         /// Gets the version of the game.
         /// </summary>
+        [Obsolete("`Game.Version` is deprecated because Script Hook V is deprecating `getGameVersion`, which " +
+            "the property is based on. Use `Game.FileVersion` instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public static GameVersion Version => (GameVersion)SHVDN.NativeMemory.GetGameVersion();
 
         /// <summary>

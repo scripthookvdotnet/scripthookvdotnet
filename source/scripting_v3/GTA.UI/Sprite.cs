@@ -195,9 +195,10 @@ namespace GTA.UI
             {
                 // Although you can find what DRAW_SPRITE_ARX_WITH_UV eventually calls with ["48 8B 41 10 66 39 70 58 74 06 48 8B 78 50 EB 07" - 0xA],
                 // but we have to prevent the setter from calling in the game versions prior to b1868 since we haven't find a alternative way to do what DRAW_SPRITE_ARX_WITH_UV does
-                if (Game.Version < GameVersion.v1_0_1868_0_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1868_0)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((GameVersion.v1_0_1868_0_Steam), nameof(Sprite), nameof(TextureCoordinates));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_1868_0),
+                        nameof(Sprite), nameof(TextureCoordinates));
                 }
 
                 _textureCoordinates = value;

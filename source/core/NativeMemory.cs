@@ -91,6 +91,10 @@ namespace SHVDN
             NullString = StringMarshal.StringToCoTaskMemUtf8(string.Empty); // ""
             CellEmailBcon = StringMarshal.StringToCoTaskMemUtf8("CELL_EMAIL_BCON"); // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
 
+            GameFileVersion = new Version(FileVersionInfo.GetVersionInfo(
+                Process.GetCurrentProcess().MainModule.FileName).FileVersion
+                );
+
             byte* address;
             IntPtr startAddressToSearch;
 
@@ -907,6 +911,23 @@ namespace SHVDN
         public static IntPtr String { get; private set; } // "~a~"
         public static IntPtr NullString { get; private set; } // ""
         public static IntPtr CellEmailBcon { get; private set; } // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
+
+        // Script Hook V's implementation uses `GetModuleHandleA` and searches the exe image for "FileVersion" info,
+        // and this can be substituted with dotnet's standard library. We don't want to rely on 's new API unless
+        // absolutely necessary.
+        // Also, SHV's implementation does not use a mutex lock while variables for version cache can be read and
+        // written in multiple threads, which can lead potential issues due to race condition (at least as of
+        // the version 28 Sep 2024). SHV's `getGameVersionInfo` writes the retrieved value to the cache variable
+        // the first time it is called, and this can only happen after some ASI script is loaded unless some
+        // ASI plugin that doesn't rely on SHV bothers invoking `getGameVersionInfo`.
+        //
+        // Getting file version info from the process image is too expensive to execute every time we need to
+        // determine memory offsets to read, since it could take 1 ms while reading a cached value would only take
+        // 500 ns in the same environment even if a reader write lock is used (but we don't need to use one in our
+        // case). Since `NativeMemory` won't be visible before the constructor is performed and all of
+        // the underlying fields of `System.Version` are read-only, we can read the instance without using a mutex
+        // lock.
+        public static Version GameFileVersion { get; }
 
         private static float DistanceToSquared(float x1, float y1, float z1, float x2, float y2, float z2)
         {

@@ -197,7 +197,7 @@ namespace GTA
         {
             get
             {
-                return (int)Game.Version >= (int)GameVersion.v1_0_2699_0_Steam
+                return Game.FileVersion >= VersionConstsForGameVersion.v1_0_2699_0
                     ? Function.Call<bool>(Hash.DOES_ENTITY_HAVE_SKELETON, Handle)
                     : SHVDN.NativeMemory.EntityHasSkeleton(Handle);
             }
@@ -220,7 +220,7 @@ namespace GTA
         {
             get
             {
-                if (Game.Version >= GameVersion.v1_0_2699_0_Steam)
+                if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_2699_0)
                 {
                     return Function.Call<bool>(Hash.DOES_ENTITY_HAVE_ANIM_DIRECTOR, Handle);
                 }
@@ -1389,7 +1389,7 @@ namespace GTA
                     return false;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 11 : 10;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 11 : 10;
                 return SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set
@@ -1400,7 +1400,7 @@ namespace GTA
                     return;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 11 : 10;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 11 : 10;
                 SHVDN.MemDataMarshal.SetBit(address + 392, bitOffset, value);
             }
         }
@@ -1487,7 +1487,7 @@ namespace GTA
                     return false;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 15 : 14;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 15 : 14;
                 return SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set
@@ -1498,7 +1498,7 @@ namespace GTA
                     return;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 15 : 14;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 15 : 14;
                 SHVDN.MemDataMarshal.SetBit(address + 392, bitOffset, value);
             }
         }
@@ -1519,7 +1519,7 @@ namespace GTA
                     return false;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 16 : 15;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 16 : 15;
                 return SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set
@@ -1530,7 +1530,7 @@ namespace GTA
                     return;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 16 : 15;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 16 : 15;
                 SHVDN.MemDataMarshal.SetBit(address + 392, bitOffset, value);
             }
         }
@@ -1583,7 +1583,7 @@ namespace GTA
         {
             get
             {
-                if (Game.Version < GameVersion.v1_0_463_1_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_463_1)
                 {
                     return false;
                 }
@@ -1598,7 +1598,7 @@ namespace GTA
             }
             set
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_463_1_Steam,
+                GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_463_1,
                     nameof(Entity), nameof(BlocksAnyDamageButHasReactions));
 
                 IntPtr address = MemoryAddress;
@@ -1630,7 +1630,7 @@ namespace GTA
                     return false;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 10 : 9;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 10 : 9;
                 return SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set => Function.Call(Hash.SET_ENTITY_ONLY_DAMAGED_BY_PLAYER, Handle, value);
@@ -1670,7 +1670,7 @@ namespace GTA
                     return false;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 12 : 11;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 12 : 11;
                 return SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set
@@ -1681,7 +1681,7 @@ namespace GTA
                     return;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 12 : 11;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 12 : 11;
                 SHVDN.MemDataMarshal.SetBit(address + 392, bitOffset, value);
             }
         }
@@ -1719,7 +1719,7 @@ namespace GTA
                     return false;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 13 : 12;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 13 : 12;
                 return SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set
@@ -1730,7 +1730,7 @@ namespace GTA
                     return;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 13 : 12;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 13 : 12;
                 SHVDN.MemDataMarshal.SetBit(address + 392, bitOffset, value);
             }
         }
@@ -1835,7 +1835,7 @@ namespace GTA
                     return false;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 19 : 17;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 19 : 17;
                 return SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set => Function.Call(Hash.SET_ENTITY_RENDER_SCORCHED, Handle, value);
@@ -1858,7 +1858,7 @@ namespace GTA
                     return false;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 29 : 27;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 29 : 27;
                 return !SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set => Function.Call(Hash.SET_CAN_AUTO_VAULT_ON_ENTITY, Handle, value);
@@ -1881,7 +1881,7 @@ namespace GTA
                     return false;
                 }
 
-                int bitOffset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 30 : 28;
+                int bitOffset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 30 : 28;
                 return !SHVDN.MemDataMarshal.IsBitSet(address + 392, bitOffset);
             }
             set => Function.Call(Hash.SET_CAN_CLIMB_ON_ENTITY, Handle, value);
@@ -1909,7 +1909,7 @@ namespace GTA
         {
             get
             {
-                if (Game.Version < GameVersion.v1_0_1180_2_Steam)
+                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1180_2)
                 {
                     return false;
                 }
@@ -1924,7 +1924,7 @@ namespace GTA
             }
             set
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_1180_2_Steam,
+                GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1180_2,
                     nameof(Entity), nameof(IsPickupByCargobobDisabled));
 
                 Function.Call(Hash.SET_PICK_UP_BY_CARGOBOB_DISABLED, Handle, value);
@@ -2031,7 +2031,7 @@ namespace GTA
                     return false;
                 }
 
-                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 400 : 396;
+                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 400 : 396;
                 return SHVDN.MemDataMarshal.IsBitSet(address + offset, 0);
             }
             set
@@ -2042,7 +2042,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 400 : 396;
+                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 400 : 396;
                 SHVDN.MemDataMarshal.SetBit(address + offset, 0, value);
             }
         }
@@ -2065,7 +2065,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 404 : 400;
+                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 404 : 400;
                 return new RelationshipGroup(SHVDN.MemDataMarshal.ReadInt32(address + offset));
             }
             set
@@ -2076,7 +2076,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.Version >= GameVersion.v1_0_463_1_Steam ? 404 : 400;
+                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 404 : 400;
                 SHVDN.MemDataMarshal.WriteInt32(address + offset, value.Hash);
             }
         }
@@ -2968,7 +2968,7 @@ namespace GTA
             EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ, float invMassScaleA = 1f,
             float invMassScaleB = 1f)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2944_0, nameof(Entity),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2944_0, nameof(Entity),
                 nameof(AttachToMatrixPhysicallyOverrideInverseMass));
 
             Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY_OVERRIDE_INVERSE_MASS, Handle, secondEntity, -1, -1,
@@ -3076,7 +3076,7 @@ namespace GTA
             EulerRotationOrder rotationOrder = EulerRotationOrder.YXZ, float invMassScaleA = 1f,
             float invMassScaleB = 1f)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(GameVersion.v1_0_2944_0, nameof(Entity),
+            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2944_0, nameof(Entity),
                 nameof(AttachToBonePhysicallyOverrideInverseMass));
 
             Function.Call(Hash.ATTACH_ENTITY_TO_ENTITY_PHYSICALLY_OVERRIDE_INVERSE_MASS, Handle,
