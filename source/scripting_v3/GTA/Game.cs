@@ -130,13 +130,7 @@ namespace GTA
         /// Gets the "FileVersion" resource value of GTA5.exe, which is the same as what SHV's function
         /// <c>getGameVersionInfo</c> retrieves, as a <see cref="System.Version"/> instance.
         /// </summary>
-        // We don't want to rely on the new API unless absolutely necessary.
-        // Also, SHV's implementation does not use a mutex lock while variables for version cache can be read and written in
-        // multiple threads, which can lead potential issues due to race condition. (at least as of the version 28 Sep 2024).
-        // SHV's implementation uses `GetModuleHandleA` and searches the exe image for "FileVersion" info, and this can be
-        // substituted with C#'s standard library.
-        public static Version FileVersion
-            => new(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
+        public static Version FileVersion => SHVDN.NativeMemory.GameFileVersion;
 
         /// <summary>
         /// Gets the version of the game.
