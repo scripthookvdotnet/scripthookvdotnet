@@ -2298,7 +2298,18 @@ namespace GTA
         /// Sets whether this <see cref="Ped"/> will die instantly if they find themselves in a body of water.
         /// </summary>
         /// <remarks>
-        /// The complete submersion into water does not guarantee this <see cref="Ped"/> will die if this <see cref="Ped"/> is the player one.
+        /// <para>
+        /// The complete submersion into water does not guarantee this <see cref="Ped"/> will die if this
+        /// <see cref="Ped"/> is the local player. In details, the <see cref="Ped"/> with this flag enabled will not die
+        /// by being in water if this <see cref="Ped"/> is the local player, the <see cref="PedType"/> is
+        /// <see cref="PedType.Animal"/>, and the motion task data associated with the <see cref="Model"/> (which is set
+        /// based on <c>motiontasks.ymt</c>) has non-null InWater (<c>PED_IN_WATER</c> type) data.
+        /// </para>
+        /// <para>
+        /// Resets to <see langword="false"/> when the <see cref="Ped"/> is marked as no longer needed, which can be
+        /// done with <see cref="Entity.MarkAsNoLongerNeeded()"/> unless <see cref="Ped"/> is running a task with
+        /// the type <c>TASK_ON_FOOT_FISH</c>.
+        /// </para>
         /// </remarks>
         public bool DiesInstantlyInWater
         {
@@ -2306,9 +2317,21 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets whether this <see cref="Ped"/> can take damage for being deep water.
-        /// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be deep water without taking <c>WEAPON_DROWNING</c> damage.
+        /// Sets whether this <see cref="Ped"/> can take damage for being underwater.
+        /// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be
+        /// underwater without taking <c>WEAPON_DROWNING</c> damage forever.
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Stats for time underwater do not be counted when the local player has this flag disabled and is in
+        /// underwater.
+        /// </para>
+        /// <para>
+        /// Resets to <see langword="false"/> when the <see cref="Ped"/> is marked as no longer needed, which can be
+        /// done with <see cref="Entity.MarkAsNoLongerNeeded()"/> unless <see cref="Ped"/> is running a task with
+        /// the type <c>TASK_ON_FOOT_FISH</c>.
+        /// </para>
+        /// </remarks>
         public bool DrownsInWater
         {
             set => Function.Call(Hash.SET_PED_DIES_IN_WATER, Handle, value);
@@ -2316,7 +2339,8 @@ namespace GTA
 
         /// <summary>
         /// Sets whether this <see cref="Ped"/> can take <c>WEAPON_DROWNING</c> damage in a sinking vehicle.
-        /// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be in a sinking vehicle without taking <c>WEAPON_DROWNING</c> damage.
+        /// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be
+        /// in a sinking vehicle without taking <c>WEAPON_DROWNING</c> damage forever.
         /// </summary>
         public bool DrownsInSinkingVehicle
         {
