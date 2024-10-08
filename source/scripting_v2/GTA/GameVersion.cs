@@ -31,6 +31,11 @@ namespace GTA
         VER_1_0_678_1_NOSTEAM,
         VER_1_0_757_2_STEAM,
         VER_1_0_757_2_NOSTEAM,
+        /// <remarks>
+        /// The correct name would be <c>VER_1_0_757_4_STEAM</c> since the Steam v1.0.757.3 does not exist but Steam
+        /// v1.0.757.4 does. Script Hook V can log <c>VER_1_0_757_4_STEAM</c> in <c>ScriptHookV.log</c> but cannot
+        /// log <c>VER_1_0_757_3_STEAM</c> as well.
+        /// </remarks>
         VER_1_0_757_3_STEAM,
         VER_1_0_757_4_NOSTEAM,
         VER_1_0_791_2_STEAM,
