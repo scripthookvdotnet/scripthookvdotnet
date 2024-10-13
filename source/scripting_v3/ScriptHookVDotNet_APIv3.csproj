@@ -36,6 +36,12 @@
     <Copyright>Copyright © 2015 crosire &amp; kagikn</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(SHVDN_VERSION)' != ''">
+    <Version>$(SHVDN_VERSION)</Version>
+    <FileVersion>$(SHVDN_VERSION)</FileVersion>
+    <AssemblyVersion>$(SHVDN_VERSION)</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <OutputPath>..\..\bin\Debug\</OutputPath>
