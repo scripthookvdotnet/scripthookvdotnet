@@ -28,7 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       sha_on_main_branch_in_nightly_repo: ${{ steps.calc-next-tag-name.outputs.sha_nightly_repo }}
-      next_version_name: ${{ steps.calc-next-tag-name.outputs.next_version_name }}
+      next_version_name_for_tags: ${{ steps.calc-next-tag-name.outputs.next_version_name_for_tags }}
+      next_version_name_for_assemblies: ${{ steps.calc-next-tag-name.outputs.next_version_name_for_assemblies }}
     steps:
       - name: Checkout Nightly Release Repo
         uses: actions/checkout@v4
@@ -46,23 +47,29 @@ jobs:
           echo "sha_nightly_repo=$(git log -n 1 --pretty=format:"%H")" >> "$GITHUB_OUTPUT"
 
           if [ "$CUSTOM_VERSION_NAME" != "" ]; then
-            echo "next_version_name=${CUSTOM_VERSION_NAME}-nightly.${PRERELEASE_BUILD_NO}" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if [[ "$GITHUB_REF" = refs/tags/* ]]; then
+            echo "next_version_name_for_tags=${CUSTOM_VERSION_NAME}-nightly.${PRERELEASE_BUILD_NO}" >> "$GITHUB_OUTPUT"
+          elif [[ "$GITHUB_REF" = refs/tags/* ]]; then
             # we've already checked that the ref is a tag with the v prefix
-            next_version_name=$(echo "${GITHUB_REF_NAME}-nightly.0" | cut -c2-)
-            echo "next_version_name=${next_version_name}" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          if latest_tag_name=$(git describe --tags `git rev-list --tags --max-count=1`); then
-            next_version_name=$(npx semver "$latest_tag_name" -i prerelease)
-            echo "next_version_name=${next_version_name}" >> "$GITHUB_OUTPUT"
+            next_version_name_for_tags=$(echo "${GITHUB_REF_NAME}-nightly.0" | cut -c2-)
+            echo "next_version_name_for_tags=${next_version_name_for_tags}" >> "$GITHUB_OUTPUT"
+          elif latest_tag_name=$(git describe --tags `git rev-list --tags --max-count=1`); then
+            next_version_name_for_tags=$(npx semver "$latest_tag_name" -i prerelease)
+            echo "next_version_name_for_tags=${next_version_name_for_tags}" >> "$GITHUB_OUTPUT"
           else
             echo "There's no tags on the nightly repo. Please specify a custom version tag."
             exit 1
           fi
+
+          # e.g. sed will transform "v3.6.0-nightly.69" into "3.6.0.69"
+          next_version_name_for_assemblies=$(echo ${next_version_name_for_tags} | sed -E 's/v?([0-9]{1,5})\.([0-9]{1,5})\.([0-9]{1,5})-nightly\.([0-9]{1,5})/\1.\2.\3.\4/')
+
+          if [ "$next_version_name_for_assemblies" == "$next_version_name_for_tags" ]; then
+            >&2 echo "Failed to create the version string for the ASI and the scripting DLLs because the version tag is ill-formed as a nightly version tag. Tag name: $next_version_name_for_tags"
+            exit 1
+          fi
+
+          echo "next_version_name_for_assemblies=${next_version_name_for_assemblies}" >> "$GITHUB_OUTPUT"
+          exit 0
 
   create-release-note-body-text:
     name: Create Body Text for Release
@@ -90,8 +97,10 @@ jobs:
 
   build:
     name: Build Solution
+    needs: [calc-next-tag-name]
     uses: ./.github/workflows/build.yml
-    # can't (directly) pass property values of the env var for reusable workflows, so build workflow takes care
+    with:
+        build-version: ${{needs.calc-next-tag-name.outputs.next_version_name_for_assemblies}}
 
   create-new-tag:
     name: Push New Version Tag
@@ -114,7 +123,7 @@ jobs:
         id: tag-output
         env:
           SHA_NIGHTLY_REPO: ${{ needs.calc-next-tag-name.outputs.sha_on_main_branch_in_nightly_repo }}
-          TAG_NAME: ${{ needs.calc-next-tag-name.outputs.next_version_name }}
+          TAG_NAME: ${{ needs.calc-next-tag-name.outputs.next_version_name_for_tags }}
         with:
           github-token: ${{ steps.app-token.outputs.token }}
           script: |

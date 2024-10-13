@@ -2,6 +2,10 @@ name: Build
 
 on:
   workflow_call:
+    inputs:
+      build-version:
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -32,24 +36,28 @@ jobs:
     - name: Define SHVDN version
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        # callers can't (directly) pass property values of the env var, so check if the current ref is a version tag in here
-        $VerInput = ""
+        $VerInputAsFallback = ""
         $currentRefIsVersionTag = $env:GITHUB_REF -match '^refs/tags/v([0-9]+\.[0-9]+\.[0-9]+)'
         if ($currentRefIsVersionTag) {
-          $VerInput = $matches[1]
+          $VerInputAsFallback = $matches[1]
         }
 
-        if ($VerInput -eq "")
+        $CustomBuildVersionInput = "${{inputs.build-version}}"
+        if ($CustomBuildVersionInput -ne "")
+        {
+          $env:SHVDN_VERSION = echo "$($CustomBuildVersionInput)"
+        }
+        elseif ($VerInputAsFallback -eq "")
         {
           git fetch --unshallow 2>&1 | Out-Null
-          $env:SHVDN_VERSION = echo "SHVDN_VERSION=$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" refs/tags |% { $_.Substring(1) })"
+          $env:SHVDN_VERSION = echo "$(git for-each-ref --sort=-creatordate --count 1 --format="%(refname:short)" refs/tags |% { $_.Substring(1) })"
         }
         else
         {
-          $env:SHVDN_VERSION = "SHVDN_VERSION=$($VerInput)"
+          $env:SHVDN_VERSION = "$($VerInputAsFallback)"
         }
-        echo "Version: v$($VerInput)"
-        echo $env:SHVDN_VERSION >> $env:GITHUB_ENV
+        echo "Version: v$($env:SHVDN_VERSION)"
+        echo "SHVDN_VERSION=$($env:SHVDN_VERSION)" >> $env:GITHUB_ENV
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
