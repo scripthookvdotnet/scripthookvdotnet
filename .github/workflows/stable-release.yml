@@ -14,7 +14,7 @@ jobs:
     outputs:
       version_name_for_assemblies: ${{ steps.calc-tag-name.outputs.version_name_for_assemblies }}
     steps:
-      - name: Checkout Nightly Release Repo
+      - name: Checkout Repo
         uses: actions/checkout@v4
       - name: Calculate Version for Assemblies
         id: calc-tag-name
