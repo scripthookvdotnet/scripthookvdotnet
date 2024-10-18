@@ -1,4 +1,4 @@
-name: Stable Release
+name: 🧱🏭 Stable Release
 
 on:
   push:
@@ -9,13 +9,36 @@ permissions:
   contents: read
 
 jobs:
+  calc-version-for-assemblies:
+    runs-on: ubuntu-latest
+    outputs:
+      version_name_for_assemblies: ${{ steps.calc-tag-name.outputs.version_name_for_assemblies }}
+    steps:
+      - name: Checkout Nightly Release Repo
+        uses: actions/checkout@v4
+      - name: Calculate Version for Assemblies
+        id: calc-tag-name
+        run: |
+          # e.g. sed will transform "v3.7.0" into "3.7.0"
+          version_name_for_assemblies=$(echo ${GITHUB_REF_NAME} | sed -E 's/v?([0-9]{1,5})\.([0-9]{1,5})\.([0-9]{1,5})/\1.\2.\3/')
+
+          if [ "$version_name_for_assemblies" == "$next_version_name_for_tags" ]; then
+            >&2 echo "Failed to create the version string for the ASI and the scripting DLLs because the version tag is ill-formed as a stable version tag. Tag name: ${version_name_for_assemblies}"
+            exit 1
+          fi
+
+          echo "version_name_for_assemblies=${version_name_for_assemblies}" >> "$GITHUB_OUTPUT"
+          exit 0
+
   build:
+    needs: calc-version-for-assemblies
     uses: ./.github/workflows/build.yml
-    # can't (directly) pass property values of the env var for reusable workflows, so build workflow takes care
+    with:
+        build-version: ${{needs.calc-version-for-assemblies.outputs.version_name_for_assemblies}}
 
   create-release-draft:
     needs: build
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
@@ -29,13 +52,14 @@ jobs:
         working-directory: bin/Release
       - name: Pack build
         run: |
-          $ArtifactName = "ScriptHookVDotNet-$($env:GITHUB_REF_NAME)"
-          $ArtifactFileName = "$($ArtifactName).zip"
-          "artifact_name=$($ArtifactName)" >> $env:GITHUB_ENV
-          "artifact_filename=$($ArtifactFileName)" >> $env:GITHUB_ENV
-          7z a $($ArtifactFileName) ${{ github.workspace }}/bin/Release/*
+          artifact_name="ScriptHookVDotNet-${GITHUB_REF_NAME}"
+          artifact_file_name="${artifact_name}.zip"
+          echo "artifact_name=${artifact_name}" >> $GITHUB_ENV
+          echo "artifact_filename=${artifact_file_name}" >> $GITHUB_ENV
+          cd "${GITHUB_WORKSPACE}/bin/Release"
+          zip -r "${GITHUB_WORKSPACE}/${artifact_file_name}" *
       - name: Push new release
-        uses: ncipollo/release-action@v1.13.0
+        uses: ncipollo/release-action@v1.14.0
         with:
           # should add a boilerplate body text to save our time
           name: ${{ env.artifact_name }}
