@@ -21,7 +21,7 @@ body:
     validations:
       required: true
     attributes:
-      label: What modules are you seeing the problem on?
+      label: 📦 What modules are you seeing the problem on?
       multiple: true
       options:
         - ScriptHookVDotNet.asi (runtime)
@@ -32,7 +32,7 @@ body:
     validations:
       required: true
     attributes:
-      label: SHVDN Version
+      label: 🛠️ SHVDN Version
       description: |
         For nightly versions, write a nightly version such as `nightly.100` or write an unique commit hash (like 0d5b09b) in the main repository. Don't use a short commit hash less than 7 characters to avoid easy hash collision.
         Each nightly release in the nightly auto-release repository includes the short and full commit hash of the corresponding commit in the main repository.
@@ -47,7 +47,7 @@ body:
     validations:
       required: true
     attributes:
-      label: Game Version
+      label: 🎮 Game Version
       description: See ScriptHookV.log to check. You should see a string like "VER_1_0_2845_0", and convert it to like "v1.0.2845.0" to fill in.
       placeholder: "v1.0.2845.0"
   - type: textarea
@@ -55,7 +55,7 @@ body:
     validations:
       required: true
     attributes:
-      label: Bug Description
+      label: 🐛 Bug Description
       description: |
        Please provide a clear and concise description of what the bug is. Include appropriate logs or screenshots if needed.
        Please test using the latest nightly version of SHVDN to make sure your issue has not already been fixed.
@@ -64,7 +64,7 @@ body:
     validations:
       required: true
     attributes:
-      label: Steps To Reproduce
+      label: 🔄 Steps To Reproduce
       description: |
         Steps to reproduce the problem.
         Your bug will get fixed much faster if we can run your code and it doesn't have dependencies other than a SHVDN SDK.
@@ -82,7 +82,7 @@ body:
     validations:
       required: false
     attributes:
-      label: Link To Code Example
+      label: 📄 Link To Code Example
       description: |
         Please provide a link to a minimal code example if the bug is related to an API layer.
   - type: textarea
@@ -90,12 +90,12 @@ body:
     validations:
       required: true
     attributes:
-      label: The Current Behavior
+      label: ⚠️ Current Behavior
       description: A brief description of what is happening.
   - type: textarea
     id: expected-behavior
     validations:
       required: true
     attributes:
-      label: The Expected Behavior
+      label: 🎯 Expected Behavior
       description: A brief description of what should happen.
