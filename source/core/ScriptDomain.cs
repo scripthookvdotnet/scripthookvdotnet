@@ -516,14 +516,17 @@ namespace SHVDN
                         _rwLock.ExitWriteLock();
                     }
 
-                    if (apiVersion == null) // Check API version for one of the types (should be the same for all)
+                    // Check API version for one of the types. Although you *can* add assembly references that have
+                    // the same type (e.g. `GTA.Script`) in conjuction with the alias feature, the API version should
+                    // be the same among all the types in the assembly for all for typical cases.
+                    if (apiVersion == null)
                     {
                         apiVersion = GetBaseTypeVersion(type, "GTA.Script");
-                    }
 
-                    if (apiVersion == new Version(0, 0, 0, 0))
-                    {
-                        Log.Message(Log.Level.Warning, "Resolving API version 0.0.0 referenced in " + assembly.GetName(), ".");
+                        if (apiVersion == new Version(0, 0, 0, 0))
+                        {
+                            Log.Message(Log.Level.Warning, "Resolving API version 0.0.0 referenced in " + assembly.GetName(), ".");
+                        }
                     }
                 }
             }
