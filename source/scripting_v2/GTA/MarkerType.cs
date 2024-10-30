@@ -164,5 +164,85 @@ namespace GTA
         /// (the member name named wrongly).
         /// </remarks>
         DebugSphere,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_MONEY</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_HALO_MONEY</c>".
+        /// </summary>
+        Money,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_LINES</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_HALO_LINES</c>".
+        /// </summary>
+        Lines,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_BEAST</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_HALO_BEAST</c>".
+        /// </summary>
+        Beast,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_QUESTION_MARK</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_RANDOM_TRANSFORM</c>".
+        /// </summary>
+        QuestionMark,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_TRANSFORM_PLANE</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_TRANSFORM_PLANE</c>".
+        /// </summary>
+        TransformPlane,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_TRANSFORM_HELICOPTER</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_TRANSFORM_HELICOPTER</c>".
+        /// </summary>
+        TransformHelicopter,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_TRANSFORM_BOAT</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_TRANSFORM_BOAT</c>".
+        /// </summary>
+        TransformBoat,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_TRANSFORM_CAR</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_TRANSFORM_CAR</c>".
+        /// </summary>
+        TransformCar,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_TRANSFORM_BIKE</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_TRANSFORM_BIKE</c>".
+        /// </summary>
+        TransformBike,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_TRANSFORM_PUSH_BIKE</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_TRANSFORM_PUSH_BIKE</c>".
+        /// </summary>
+        TransformPushBike,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_TRANSFORM_TRUCK</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_TRANSFORM_TRUCK</c>".
+        /// </summary>
+        TransformTruck,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_TRANSFORM_PARACHUTE</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_TRANSFORM_PARACHUTE</c>".
+        /// </summary>
+        TransformParachute,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_TRANSFORM_THRUSTER</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_TRANSFORM_THRUSTER</c>".
+        /// </summary>
+        TransformThruster,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_WARP</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_MK_WARP</c>".
+        /// </summary>
+        Warp,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_BOXES</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_ARENA_ICON_BOXMK</c>".
+        /// </summary>
+        Boxes,
+        /// <summary>
+        /// The marker type for <c>MarkerType_e::MARKERTYPE_PIT_LANE</c>, which uses the prop <see cref="Model"/>
+        /// "<c>PROP_AC_PIT_LANE_BLIP</c>".
+        /// </summary>
+        PitLane,
     }
 }
