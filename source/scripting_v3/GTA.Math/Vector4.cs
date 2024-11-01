@@ -67,7 +67,7 @@ namespace GTA.Math
         public static Vector4 Zero => new(0f, 0f, 0f, 0f);
 
         /// <summary>
-        /// Returns a one vector, a vector with all components set to <c>0</c>.
+        /// Returns a one vector, a vector with all components set to <c>1</c>.
         /// </summary>
         public static Vector4 One => new(1f, 1f, 1f, 1f);
 
