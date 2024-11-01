@@ -61,9 +61,14 @@ namespace GTA.Math
         public readonly Vector2 Normalized => Normalize(new Vector2(X, Y));
 
         /// <summary>
-        /// Returns a null vector. (0,0)
+        /// Returns a zero vector, which is (0, 0).
         /// </summary>
         public static Vector2 Zero => new(0.0f, 0.0f);
+
+        /// <summary>
+        /// Returns a one vector, which is (1, 1, 1).
+        /// </summary>
+        public static Vector2 One => new(1.0f, 1.0f);
 
         /// <summary>
         /// The X unit <see cref="Vector2"/> (1, 0).
