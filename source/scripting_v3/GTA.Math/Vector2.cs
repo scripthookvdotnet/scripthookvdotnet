@@ -22,6 +22,12 @@ using System.Runtime.InteropServices;
 
 namespace GTA.Math
 {
+    /// <remarks>
+    /// Guaranteed to be an 8-byte aligned struct, which has the same memory layout as <c>rage::Vector2</c>.
+    /// You can use this struct to read that kind of data using memory dereference.
+    /// The memory layout is different from that of <c>rage::Vec2V</c>, which is 16-byte aligned structs that has a
+    /// vectorized 128-bit value.
+    /// </remarks>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Vector2 : IEquatable<Vector2>, IFormattable

@@ -22,6 +22,16 @@ using System.Runtime.InteropServices;
 
 namespace GTA.Math
 {
+    /// <summary>
+    /// Represents a vector with four single-precision floating-point values that can be used to represent 3D
+    /// coordinates or any other triplet of numeric values.
+    /// </summary>
+    /// <remarks>
+    /// Guaranteed to be an 8-byte aligned struct, which has the same memory layout as <c>rage::Vector2</c>.
+    /// You can use this struct to read that kind of data using memory dereference.
+    /// The memory layout is different from that of <c>rage::Vec2V</c>, which is 16-byte aligned structs that has a
+    /// vectorized 128-bit value.
+    /// </remarks>
     [Serializable]
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     public struct Vector2 : IEquatable<Vector2>

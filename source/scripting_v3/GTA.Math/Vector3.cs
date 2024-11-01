@@ -28,6 +28,17 @@ namespace GTA.Math
         internal static System.Random Instance = new();
     }
 
+    /// <summary>
+    /// Represents a vector with four single-precision floating-point values that can be used to represent 3D
+    /// coordinates or any other triplet of numeric values.
+    /// </summary>
+    /// <remarks>
+    /// Guaranteed to be a 16-byte aligned struct, which has the same memory layout as <c>rage::Vector3</c> and
+    /// <c>rage::Vec3V</c>, where a padding field is included as the last field in the executable for at least Win64.
+    /// You can use this struct to read these kinds of data using memory dereference. You should not write data to
+    /// contiguous X, Y, Z values using this struct if you are not sure a padding 4-byte value follows after the Z value
+    /// of the contiguous 3 values.
+    /// </remarks>
     [Serializable]
     [StructLayout(LayoutKind.Explicit, Pack = 4)]
     public struct Vector3 : IEquatable<Vector3>, IFormattable
