@@ -236,6 +236,12 @@ namespace GTA
         /// <summary>
         /// Gets or sets the current radio station.
         /// </summary>
+        /// <remarks>
+        /// Setting to <see cref="RadioStation.RadioOff"/> has the effect only when the player is using
+        /// the radio of a <see cref="Vehicle"/> or the mobile radio, since
+        /// <c>audRadioAudioEntity::RetuneToStation(const char *stationName)</c> does nothing if the player is not
+        /// using their radio when the argument is a string that says "<c>OFF</c>".
+        /// </remarks>
         public static RadioStation RadioStation
         {
             get
