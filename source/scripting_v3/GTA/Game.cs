@@ -224,12 +224,18 @@ namespace GTA
             }
             set
             {
-                if (Enum.IsDefined(typeof(RadioStation), value) && value != RadioStation.RadioOff)
+                if (value == RadioStation.RadioOff)
+                {
+                    Function.Call(Hash.SET_RADIO_TO_STATION_NAME, "OFF");
+                }
+                if (Enum.IsDefined(typeof(RadioStation), value))
                 {
                     Function.Call(Hash.SET_RADIO_TO_STATION_NAME, s_radioNames[(int)value]);
                 }
                 else
                 {
+                    // Probably do nothing, but just in case static funcs of `audRadioStation` accept
+                    // an `audRadioStation` instance that has the null name hash (which is zero)
                     Function.Call(Hash.SET_RADIO_TO_STATION_NAME, SHVDN.NativeMemory.NullString);
                 }
             }
