@@ -31,6 +31,34 @@ namespace SHVDN
 
     public sealed class ScriptDomain : MarshalByRefObject, IDisposable
     {
+        internal sealed class ScriptAssemblyInfo
+        {
+            public Assembly Assembly { get; }
+            public string FileName { get; }
+
+            public ScriptAssemblyInfo(Assembly asm, string fileName)
+            {
+                Assembly = asm;
+                FileName = fileName;
+            }
+        }
+
+        internal sealed class ScriptTypeInfo
+        {
+            public ScriptAssemblyInfo AssemblyInfo { get; }
+            public Type Type { get; }
+            public Version TargetApiVersion { get; }
+
+            // We don't validate if the passed `Type` isn't abstract and is a subclass of `GTA.Script`, because
+            // these checks aren't that cheap
+            public ScriptTypeInfo(ScriptAssemblyInfo assemblyInfo, Type type, Version targetApiVersion)
+            {
+                AssemblyInfo = assemblyInfo;
+                Type = type;
+                TargetApiVersion = targetApiVersion;
+            }
+        }
+
         // Debugger.IsAttached does not detect a Visual Studio debugger
         [SuppressUnmanagedCodeSecurity]
         [DllImport("Kernel32.dll")]
@@ -38,6 +66,9 @@ namespace SHVDN
 
         [DllImport("kernel32.dll")]
         private static extern uint GetCurrentThreadId();
+
+        private static readonly Version s_FirstApiVerThatHasSeparateApiModuleFromAsi = new Version(2, 10, 0, 0);
+        private static readonly Version s_LastVerWhereAsiModuleHasCoreCodeAndApiCode = new Version(2, 9, 6, 0);
 
         private static ScriptDomain s_currentDomain;
         // `Dispose` won't be called in this instance because it may be too difficult to call correctly due to how
@@ -52,10 +83,15 @@ namespace SHVDN
         private readonly ConcurrentQueue<IScriptTask> _taskQueue = new();
         // this is only used in the main thread of `ScriptDomain`, so no lock is needed
         private readonly Dictionary<string, int> _scriptInstances = new();
-        private readonly SortedList<string, Tuple<string, Type>> _scriptTypes = new();
+        private readonly SortedList<string, ScriptTypeInfo> _scriptTypes = new();
         private bool _recordKeyboardEvents = true;
         private bool[] _keyboardState = new bool[256];
         private readonly List<Assembly> _scriptingApiAsms = new List<Assembly>();
+        private readonly HashSet<string> _scriptingApiAsmNamesCache = new HashSet<string>();
+        private readonly Dictionary<int, Type> _scriptingGtaClassTypesCacheDict = new Dictionary<int, Type>();
+        // Intentionally use array over `HashSet` because only 2 or 3 elements will be inserted for sure, where
+        // HashSet takes way more time (like 2x or 3x time) to search, at least for `System.Type`.
+        private readonly Type[] _scriptingGtaClassTypesCacheArray = Array.Empty<Type>();
 
         private unsafe delegate* unmanaged[Cdecl]<IntPtr> _getTlsContext;
         private unsafe delegate* unmanaged[Cdecl]<IntPtr, void> _setTlsContext;
@@ -262,7 +298,26 @@ namespace SHVDN
             // Sort the api list by major version so the order is guaranteed to be sorted in ascending order regardless of how Directory.EnumerateFiles enumerates
             // as long as all of major versions are unique
             _scriptingApiAsms.Sort((x, y) => x.GetName().Version.Major.CompareTo(y.GetName().Version.Major));
+            foreach (Assembly apiAsm in _scriptingApiAsms)
+            {
+                AssemblyName asmName = apiAsm.GetName();
+                _scriptingApiAsmNamesCache.Add(asmName.Name);
+
+                if (TryFindTypeByFullName(apiAsm, "GTA.Script", out Type gtaScriptType))
+                {
+                    _scriptingGtaClassTypesCacheDict.Add(asmName.Version.Major, gtaScriptType);
+                }
+                else
+                {
+                    Log.Message(Log.Level.Error, "Could not find `GTA.Script` type in ",
+                        Path.GetFileName(apiAsm.Location), ".", "Report to the developers of SHVDN as this should be " +
+                        "a bug.");
+                }
+            }
+            _scriptingGtaClassTypesCacheArray = _scriptingGtaClassTypesCacheDict.Values.ToArray();
         }
+
+
 
         ~ScriptDomain()
         {
@@ -475,106 +530,284 @@ namespace SHVDN
         /// <returns><see langword="true" /> on success, <see langword="false" /> otherwise</returns>
         private bool LoadScriptsFromAssembly(Assembly assembly, string filename)
         {
-            int count = 0;
-            Version apiVersion = null;
+            int scriptTypeCount = 0;
+            Version resolvedApiVersion = null;
+            ScriptAssemblyInfo asmInfo = new ScriptAssemblyInfo(assembly, filename);
 
+            Dictionary<int, Version> targetApis = MakeTargetApisDictPerMajorVerFromAssemblyRefs(assembly);
+
+            // Don't bother to enumerate the types if the assembly doesn't have any references to scripting APIs
+            // because enumerating types is expensive enough for users to notice the difference
+            if (targetApis.Count == 0)
+            {
+                Log.Message(Log.Level.Info, "Found no compatible scripts in ", Path.GetFileName(filename),
+                    " but loaded for scripts.");
+                return false;
+            }
+            if (targetApis.Count > 1)
+            {
+                // The script assembly bothered to use multiple API versions, which can be achieved with the alias
+                // feature. Annoying shit because we have to find an appropriate API version per concrete script class
+                // 🤮
+                return LoadScriptsFromAssemblyMultipleApiVers(assembly, filename, targetApis, asmInfo);
+            }
+
+            Version targetApiVersion = targetApis.Values.First();
             try
             {
+                scriptTypeCount = RegisterScriptTypesInAssembly(assembly, filename, asmInfo, targetApiVersion, ref resolvedApiVersion);
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                LogScriptAssemblyLoadingFailureUnlessItWasDueToFailureOfApiAsmResolution(ex, filename);
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Log.Message(Log.Level.Error, "Failed to load assembly ", Path.GetFileName(filename), ": ", ex.ToString());
+
+                return false;
+            }
+
+            if (resolvedApiVersion == new Version(0, 0, 0, 0))
+            {
+                // shouldn't be null if came this path
+                Assembly v2ApiAsm = CurrentDomain._scriptingApiAsms.First(x => x.GetName().Version.Major == 2);
+
+                Log.Message(Log.Level.Info, "Found ", scriptTypeCount.ToString(), " script(s) in ", Path.GetFileName(filename),
+                    " resolved to API version " + v2ApiAsm.GetName().Version.ToString(3), " (target API version: v2.9 or earlier).");
+            }
+            else
+            {
+                Log.Message(Log.Level.Info, "Found ", scriptTypeCount.ToString(), " script(s) in ", Path.GetFileName(filename),
+                    " resolved to API version " + resolvedApiVersion.ToString(3), " (target API version: ",
+                    targetApiVersion.ToString(3), ").");
+            }
+
+            if (resolvedApiVersion != null && IsApiVersionDeprecated(resolvedApiVersion))
+            {
+                AddScriptAssemblyNameBuiltAgainstApiVersion(resolvedApiVersion.Major, Path.GetFileName(filename));
+            }
+
+            return scriptTypeCount != 0;
+
+            int RegisterScriptTypesInAssembly(Assembly assembly, string filename, ScriptAssemblyInfo asmInfo, Version targetApiVersion, ref Version resolvedApiVersion)
+            {
+                int scriptTypeCount = 0;
+                AssemblyName asmName = assembly.GetName();
+                string asmNameStr = asmName.Name;
+                Version asmVersion = asmName.Version;
+
+                Type gtaScriptType = _scriptingGtaClassTypesCacheDict[targetApiVersion.Major];
                 // Find all script types in the assembly
-                foreach (Type type in assembly.GetTypes().Where(x => IsSubclassOf(x, "GTA.Script")))
+                foreach (Type type in assembly.GetTypes().Where(x => IsSubclassOf(x, gtaScriptType)))
                 {
-                    count++;
+                    scriptTypeCount++;
 
-                    // This function builds a composite key of all dependencies of a script
-                    string BuildComparisonString(Type a, string b)
+                    string key = BuildComparisonStringForDependencyKey(type, string.Empty);
+                    key = asmNameStr + "-" + asmVersion + key;
+
+                    // Check API version for one of the types. The API version must be the same among all the types
+                    // in the assembly, because API assemblies aren't strongly-named and we already filter out the case
+                    // where the script assembly references multiple API assemblies.
+                    if (resolvedApiVersion == null)
                     {
-                        b = a.FullName + "%%" + b;
-                        foreach (CustomAttributeData attribute in a.GetCustomAttributesData().Where(x => x.AttributeType.FullName == "GTA.RequireScript"))
-                        {
-                            var dependency = attribute.ConstructorArguments[0].Value as Type;
-                            // Ignore circular dependencies
-                            if (dependency != null && !b.Contains("%%" + dependency.FullName))
-                            {
-                                b = BuildComparisonString(dependency, b);
-                            }
-                        }
-
-                        return b;
+                        // return value shouldn't be null, because we already filtered out the types that aren't
+                        // subclass of `GTA.Script`
+                        resolvedApiVersion = GetBaseTypeVersion(type, gtaScriptType);
                     }
-
-                    string key = BuildComparisonString(type, string.Empty);
-                    key = assembly.GetName().Name + "-" + assembly.GetName().Version + key;
 
                     // The script is likely to add to script types list, so intentionally use write lock here
                     _rwLock.EnterWriteLock();
                     try
                     {
-                        if (_scriptTypes.TryGetValue(key, out Tuple<string, Type> scriptType))
+                        if (_scriptTypes.TryGetValue(key, out ScriptTypeInfo scriptTypeInfo))
                         {
-                            Log.Message(Log.Level.Warning, "The script name ", type.FullName, " already exists and was loaded from ", Path.GetFileName(scriptType.Item1), ". Ignoring occurrence loaded from ", Path.GetFileName(filename), ".");
+                            Log.Message(Log.Level.Warning, "The script name ", type.FullName, " already exists and was loaded from ", Path.GetFileName(scriptTypeInfo.AssemblyInfo.FileName), ". Ignoring occurrence loaded from ", Path.GetFileName(filename), ".");
                             continue; // Skip types that were already added previously are ignored
                         }
 
-                        _scriptTypes.Add(key, new Tuple<string, Type>(filename, type));
+                        _scriptTypes.Add(key, new ScriptTypeInfo(asmInfo, type, targetApiVersion));
                     }
                     finally
                     {
                         _rwLock.ExitWriteLock();
                     }
+                }
 
-                    // Check API version for one of the types. Although you *can* add assembly references that have
-                    // the same type (e.g. `GTA.Script`) in conjuction with the alias feature, the API version should
-                    // be the same among all the types in the assembly for all for typical cases.
-                    if (apiVersion == null)
+                return scriptTypeCount;
+            }
+        }
+
+        private bool LoadScriptsFromAssemblyMultipleApiVers(Assembly assembly, string filename, Dictionary<int, Version> targetApis, ScriptAssemblyInfo asmInfo)
+        {
+            Log.Message(Log.Level.Info, "Resolving API Versions of the scripts in ", Path.GetFileName(filename),
+                ", which has multiple references to different API assemblies...");
+            Log.Message(Log.Level.Debug, "For Developers: scripts should not use multiple API versions at the same " +
+                "time. Loading multiple API versions may not be supported in future SHVDN versions. " +
+                "For users: you could contact the author(s) of ", Path.GetFileName(filename), ", and ask them to use " +
+                "only one API version.");
+
+            int scriptTypeCount = 0;
+            AssemblyName asmName = assembly.GetName();
+            string asmNameStr = asmName.Name;
+            Version asmVersion = asmName.Version;
+            HashSet<Version> resolvedApiVersionSets = new(targetApis.Count);
+
+            try
+            {
+                // Find all script types in the assembly
+                foreach (Type type in assembly.GetTypes().Where(
+                    x => IsSubclassOfOneOfTargetTypes(x, _scriptingGtaClassTypesCacheArray)))
+                {
+                    scriptTypeCount++;
+
+                    string key = BuildComparisonStringForDependencyKey(type, string.Empty);
+                    key = asmNameStr + "-" + asmVersion + key;
+
+                    Version resolvedApiVersion
+                        = GetVersionOfOneOfTargetBaseTypes(type, _scriptingGtaClassTypesCacheArray);
+                    resolvedApiVersionSets.Add(resolvedApiVersion);
+
+                    Version targetApiVersion = null;
+                    if (resolvedApiVersion == new Version(0, 0, 0, 0))
                     {
-                        apiVersion = GetBaseTypeVersion(type, "GTA.Script");
+                        // shouldn't be null if came this path
+                        Assembly v2ApiAsm = CurrentDomain._scriptingApiAsms.First(x => x.GetName().Version.Major == 2);
+                        Log.Message(Log.Level.Info, "Resolved API Version of the script class name ", type.FullName, ": ", v2ApiAsm.GetName().Version.ToString(3), " (target API version: v2.9 or earlier)");
 
-                        if (apiVersion == new Version(0, 0, 0, 0))
+                        targetApiVersion = s_LastVerWhereAsiModuleHasCoreCodeAndApiCode;
+                    }
+                    else if (targetApis.TryGetValue(resolvedApiVersion.Major, out targetApiVersion))
+                    {
+                        Log.Message(Log.Level.Info, "Resolved API Version of the script class name ", type.FullName, ": ", resolvedApiVersion.ToString(3), " (target API version: ",
+                            targetApiVersion.ToString(3), ")");
+                    }
+                    else
+                    {
+                        Log.Message(Log.Level.Info, "Resolved API Version of the script name ", type.FullName, ": ", resolvedApiVersion.ToString(3), " (target API version: unknown)");
+                        Log.Message(Log.Level.Warning, "Target API version of ", type.FullName, "is unknown. Contact " +
+                            "developers of SHVDN as there may be some bugs if you see this warning.");
+
+                        targetApiVersion = s_LastVerWhereAsiModuleHasCoreCodeAndApiCode;
+                    }
+
+                    // The script is likely to add to script types list, so intentionally use write lock here
+                    _rwLock.EnterWriteLock();
+                    try
+                    {
+                        if (_scriptTypes.TryGetValue(key, out ScriptTypeInfo scriptTypeInfo))
                         {
-                            Log.Message(Log.Level.Warning, "Resolving API version 0.0.0 referenced in " + assembly.GetName(), ".");
+                            Log.Message(Log.Level.Warning, "The script name ", type.FullName, " already exists and was loaded from ", Path.GetFileName(scriptTypeInfo.AssemblyInfo.FileName), ". Ignoring occurrence loaded from ", Path.GetFileName(filename), ".");
+                            continue; // Skip types that were already added previously are ignored
                         }
+
+                        _scriptTypes.Add(key, new ScriptTypeInfo(asmInfo, type, targetApiVersion));
+                    }
+                    finally
+                    {
+                        _rwLock.ExitWriteLock();
                     }
                 }
             }
             catch (ReflectionTypeLoadException ex)
             {
-                // Filter out failure if unable to resolve SHVDN API, since this was already logged in 'HandleResolve'
-                var fileNotFoundException = ex.LoaderExceptions[0] as FileNotFoundException;
-                if (fileNotFoundException == null || fileNotFoundException.Message.IndexOf("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) < 0)
-                {
-                    Log.Message(Log.Level.Error, "Failed to load assembly ", Path.GetFileName(filename), ": ", ex.LoaderExceptions[0].ToString());
-                }
+                LogScriptAssemblyLoadingFailureUnlessItWasDueToFailureOfApiAsmResolution(ex, filename);
 
                 return false;
             }
 
-            Log.Message(Log.Level.Info, "Found ", count.ToString(), " script(s) in ", Path.GetFileName(filename), (apiVersion != null ? " resolved to API version " + apiVersion.ToString(3) : string.Empty), ".");
+            Log.Message(Log.Level.Info, "Found ", scriptTypeCount.ToString(), " script(s) in ", Path.GetFileName(filename), ".");
 
-            if (apiVersion != null && IsApiVersionDeprecated(apiVersion))
+
+            foreach (Version resolvedApiVerElem in resolvedApiVersionSets)
             {
-                AddScriptAssemblyNameBuiltAgainstApiVersion(apiVersion.Major, Path.GetFileName(filename));
+                if (IsApiVersionDeprecated(resolvedApiVerElem))
+                {
+                    AddScriptAssemblyNameBuiltAgainstApiVersion(resolvedApiVerElem.Major, Path.GetFileName(filename));
+                    break;
+                }
             }
 
-            return count != 0;
+            return scriptTypeCount != 0;
         }
 
-        /// <summary>
-        /// Creates an instance of a script.
-        /// </summary>
-        /// <param name="scriptType">The type of the script to instantiate.</param>
-        /// <returns>The script instance or <see langword="null" /> in case of failure.</returns>
+        private Dictionary<int, Version> MakeTargetApisDictPerMajorVerFromAssemblyRefs(Assembly asm)
+        {
+            return asm.GetReferencedAssemblies()
+                      .Where(x => _scriptingApiAsmNamesCache.Contains(x.Name)
+                               || x.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+                      .Select(x =>
+                        x.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase)
+                        ? s_LastVerWhereAsiModuleHasCoreCodeAndApiCode
+                        : x.Version)
+                      .OrderByDescending(x => x)
+                      .ToDictionary(x => x.Major, x => x);
+        }
+
+        private static void LogScriptAssemblyLoadingFailureUnlessItWasDueToFailureOfApiAsmResolution(
+            ReflectionTypeLoadException ex, string fileName)
+        {
+            var fileNotFoundException = ex.LoaderExceptions[0] as FileNotFoundException;
+            if (fileNotFoundException == null)
+            {
+                Log.Message(Log.Level.Error,
+                    "Failed to load script assembly ", Path.GetFileName(fileName), ": ", ex.ToString());
+            }
+            // Filter out failure if unable to resolve SHVDN API, since this was already logged in `HandleResolve`
+            else if (!fileNotFoundException.Message.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+            {
+                Log.Message(Log.Level.Error, "Failed to load script assembly ", Path.GetFileName(fileName),
+                    " when searching for script types because there is an assembly that the script tried to load as " +
+                    "a dependency but couldn't. Exception message: ", ex.Message.ToString(), Environment.NewLine,
+                    "First LoaderException message (which tells what assembly is missing): ",
+                    fileNotFoundException.ToString());
+            }
+        }
+
+        // This function builds a composite key of all dependencies of a script
+        private static string BuildComparisonStringForDependencyKey(Type a, string b)
+        {
+            b = a.FullName + "%%" + b;
+            foreach (CustomAttributeData attribute in a.GetCustomAttributesData().Where(
+                x => x.AttributeType.FullName == "GTA.RequireScript"))
+            {
+                var dependency = attribute.ConstructorArguments[0].Value as Type;
+                // Ignore circular dependencies
+                if (dependency != null && !b.Contains("%%" + dependency.FullName))
+                {
+                    b = BuildComparisonStringForDependencyKey(dependency, b);
+                }
+            }
+
+            return b;
+        }
+
         public Script InstantiateScript(Type scriptType)
         {
             if (Thread.CurrentThread.ManagedThreadId != _executingThreadId)
             {
-                return null; // This must only be called in the main thread (since changing 'executingScript' during 'DoTick' of another script would break)
+                // This must only be called in the main thread (since changing `_executingScript` during `DoTick` of
+                // another script would break)
+                return null;
             }
-
-            if (scriptType.IsAbstract || !IsSubclassOf(scriptType, "GTA.Script"))
+            if (scriptType.IsAbstract || !IsSubclassOfOneOfTargetTypes(scriptType, _scriptingGtaClassTypesCacheArray))
             {
                 return null;
             }
 
+            return InstantiateScriptFast(scriptType);
+        }
+        /// <summary>
+        /// Creates an instance of a script without testing if the current thread is the main script domain thread or
+        /// if <paramref name="scriptType"/> is concreate and inherits `<c>GTA.Script</c>` of one of scripting API
+        /// assemblies.
+        /// </summary>
+        /// <param name="scriptType">The type of the script to instantiate.</param>
+        /// <returns>The script instance or <see langword="null" /> in case of failure.</returns>
+        internal Script InstantiateScriptFast(Type scriptType)
+        {
             Log.Message(Log.Level.Debug, "Instantiating script ", scriptType.FullName, " ...");
 
             var script = new Script();
@@ -585,7 +818,7 @@ namespace SHVDN
             {
                 previousScript = _executingScript;
                 _executingScript = script;
-            }       
+            }
 
             // Create a name for the new script instance
             if (_scriptInstances.ContainsKey(scriptType.FullName))
@@ -745,27 +978,32 @@ namespace SHVDN
             // where the same lock is used, causing a `LockRecursionException` without getting caught and
             // the whole process will crash.
             _rwLock.EnterReadLock();
-            List<Type> scriptTypesToInstantiate = new(_scriptTypes.Count);
+            List<ScriptTypeInfo> scriptTypesToInstantiate = new(_scriptTypes.Count);
             try
             {
-                foreach (Type type in _scriptTypes.Values.Select(x => x.Item2))
+                foreach (ScriptTypeInfo scriptTypeInfo in _scriptTypes.Values)
                 {
-                    // Start the script unless script does not want a default instance
-                    if (GetScriptAttribute(type, "NoDefaultInstance") is bool NoDefaultInstance && NoDefaultInstance)
+                    // Start the script unless script does not want a default instance or is abstract
+                    if (scriptTypeInfo.Type.IsAbstract
+                        || GetScriptAttribute(scriptTypeInfo.Type, "NoDefaultInstance") is bool noDefaultInstance
+                        && noDefaultInstance)
                     {
                         continue;
                     }
 
-                    scriptTypesToInstantiate.Add(type);
+                    scriptTypesToInstantiate.Add(scriptTypeInfo);
                 }
             }
             finally
             {
                 _rwLock.ExitReadLock();
             }
-            foreach (Type type in scriptTypesToInstantiate)
+            foreach (ScriptTypeInfo scriptTypeInfo in scriptTypesToInstantiate)
             {
-                InstantiateScript(type)?.Start(!(GetScriptAttribute(type, "NoScriptThread") is bool NoScriptThread) || !NoScriptThread);
+                Type systemTypeOfScript = scriptTypeInfo.Type;
+                InstantiateScriptFast(systemTypeOfScript)?
+                    .Start(!(GetScriptAttribute(systemTypeOfScript, "NoScriptThread") is bool NoScriptThread)
+                            || !NoScriptThread);
             }
 
             void WarnOfScriptsUsingDeprecatedApi()
@@ -818,7 +1056,7 @@ namespace SHVDN
             _rwLock.EnterWriteLock();
             try
             {
-                foreach (Type type in _scriptTypes.Values.Where(x => x.Item1 == filename).Select(x => x.Item2))
+                foreach (Type type in _scriptTypes.Values.Where(x => x.AssemblyInfo.FileName == filename).Select(x => x.Type))
                 {
                     // Make sure there are no others instances of this script
                     Func<Script, bool> filterToRemove = (x => x.Filename == filename && x.ScriptInstance.GetType() == type);
@@ -1036,7 +1274,7 @@ namespace SHVDN
                 finally
                 {
                     _rwLock.ExitReadLock();
-                }           
+                }
 
                 // Ignore terminated scripts
                 if (!script.IsRunning || script.IsPaused)
@@ -1089,11 +1327,6 @@ namespace SHVDN
                     }
 
                     continue;
-                }
-
-                lock (_lockForFieldsThatFrequentlyWritten)
-                {
-                    _executingScript = null;
                 }
 
                 // Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
@@ -1266,7 +1499,7 @@ namespace SHVDN
             _rwLock.EnterReadLock();
             try
             {
-                return _scriptTypes.Values.FirstOrDefault(x => x.Item2 == scriptType)?.Item1 ?? string.Empty;
+                return _scriptTypes.Values.FirstOrDefault(x => x.Type == scriptType)?.AssemblyInfo.FileName ?? string.Empty;
             }
             finally
             {
@@ -1323,6 +1556,48 @@ namespace SHVDN
 
             return false;
         }
+        private static bool IsSubclassOf(Type typeToTest, Type targetBaseType)
+        {
+            for (Type t = typeToTest.BaseType; t != null; t = t.BaseType)
+            {
+                if (t == targetBaseType)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        private static bool IsSubclassOfOneOfTargetTypes(Type typeToTest, Type[] targetBaseTypes)
+        {
+            for (Type t = typeToTest.BaseType; t != null; t = t.BaseType)
+            {
+                foreach (Type targetBaseType in targetBaseTypes)
+                {
+                    if (t == targetBaseType)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool TryFindTypeByFullName(Assembly asm, string fullTypeName, out Type type)
+        {
+            type = null;
+            foreach (Type t in asm.GetTypes())
+            {
+                if (t.FullName == fullTypeName)
+                {
+                    type = t;
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         private static Version GetBaseTypeVersion(Type type, string baseTypeName)
         {
@@ -1331,6 +1606,33 @@ namespace SHVDN
                 if (t.FullName == baseTypeName)
                 {
                     return t.Assembly.GetName().Version;
+                }
+            }
+
+            return null;
+        }
+        private static Version GetBaseTypeVersion(Type typeToTest, Type targetBaseType)
+        {
+            for (Type t = typeToTest.BaseType; t != null; t = t.BaseType)
+            {
+                if (t == targetBaseType)
+                {
+                    return t.Assembly.GetName().Version;
+                }
+            }
+
+            return null;
+        }
+        private static Version GetVersionOfOneOfTargetBaseTypes(Type typeToTest, Type[] targetBaseTypes)
+        {
+            for (Type t = typeToTest.BaseType; t != null; t = t.BaseType)
+            {
+                foreach (Type targetBaseType in targetBaseTypes)
+                {
+                    if (t == targetBaseType)
+                    {
+                        return t.Assembly.GetName().Version;
+                    }
                 }
             }
 
@@ -1399,7 +1701,8 @@ namespace SHVDN
 
             // Special case for the main assembly (this is necessary since the .NET framework does not check ASI files for assemblies during lookup, so is unable to load the ScriptDomain type when creating it in a new application domain)
             // Some scripts were written against old SHVDN versions where everything was still in the ASI, so make sure those are not caught here (see also https://github.com/crosire/scripthookvdotnet/releases/tag/v2.10.0)
-            if (assemblyName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase) && assemblyName.Version >= new Version(2, 10, 0, 0))
+            if (assemblyName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase)
+                && assemblyName.Version >= s_FirstApiVerThatHasSeparateApiModuleFromAsi)
             {
                 return typeof(ScriptDomain).Assembly;
             }
