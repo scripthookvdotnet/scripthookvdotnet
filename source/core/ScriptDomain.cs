@@ -55,7 +55,7 @@ namespace SHVDN
         private readonly SortedList<string, Tuple<string, Type>> _scriptTypes = new();
         private bool _recordKeyboardEvents = true;
         private bool[] _keyboardState = new bool[256];
-        private readonly List<Assembly> _scriptApis = new List<Assembly>();
+        private readonly List<Assembly> _scriptingApiAsms = new List<Assembly>();
 
         private unsafe delegate* unmanaged[Cdecl]<IntPtr> _getTlsContext;
         private unsafe delegate* unmanaged[Cdecl]<IntPtr, void> _setTlsContext;
@@ -252,7 +252,7 @@ namespace SHVDN
 
                 try
                 {
-                    _scriptApis.Add(Assembly.LoadFrom(apiPath));
+                    _scriptingApiAsms.Add(Assembly.LoadFrom(apiPath));
                 }
                 catch (Exception ex)
                 {
@@ -261,7 +261,7 @@ namespace SHVDN
             }
             // Sort the api list by major version so the order is guaranteed to be sorted in ascending order regardless of how Directory.EnumerateFiles enumerates
             // as long as all of major versions are unique
-            _scriptApis.Sort((x, y) => x.GetName().Version.Major.CompareTo(y.GetName().Version.Major));
+            _scriptingApiAsms.Sort((x, y) => x.GetName().Version.Major.CompareTo(y.GetName().Version.Major));
         }
 
         ~ScriptDomain()
@@ -378,11 +378,17 @@ namespace SHVDN
             string apiVersionString = Path.GetExtension(Path.GetFileNameWithoutExtension(filename));
             if (!string.IsNullOrEmpty(apiVersionString) && int.TryParse(apiVersionString.Substring(1), out int apiVersion))
             {
-                scriptApi = ScriptDomain.CurrentDomain._scriptApis.FirstOrDefault(x => x.GetName().Version.Major == apiVersion);
+                scriptApi = ScriptDomain.CurrentDomain._scriptingApiAsms.FirstOrDefault(x => x.GetName().Version.Major == apiVersion);
             }
 
             // Reference the oldest scripting API that is not deprecated by default to stay compatible with existing scripts
-            scriptApi ??= _scriptApis.First(x => !IsApiVersionDeprecated(x.GetName().Version));
+            scriptApi ??= _scriptingApiAsms.FirstOrDefault(x => !IsApiVersionDeprecated(x.GetName().Version));
+            if (scriptApi == null)
+            {
+                Log.Message(Log.Level.Error, "Could not compile ", Path.GetFileName(filename), " because " +
+                    "there are not any loaded scripting APIs that are not deprecated to compile scripts.");
+                return false;
+            }
             compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
 
             string extension = Path.GetExtension(filename);
@@ -1407,12 +1413,12 @@ namespace SHVDN
                 // No warning will be printed from here. Once one script that references a version-less SHVDN is resolved, SHVDN will not execute this block when SHVDN resolves other script that reference a version-less SHVDN.
                 if (assemblyName.Version == bestVersion)
                 {
-                    return CurrentDomain._scriptApis.FirstOrDefault(x => x.GetName().Version.Major == 2);
+                    return CurrentDomain._scriptingApiAsms.FirstOrDefault(x => x.GetName().Version.Major == 2);
                 }
 
                 Assembly compatibleApi = null;
 
-                foreach (Assembly api in CurrentDomain._scriptApis)
+                foreach (Assembly api in CurrentDomain._scriptingApiAsms)
                 {
                     Version apiVersion = api.GetName().Version;
 
