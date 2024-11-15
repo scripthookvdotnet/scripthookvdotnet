@@ -8,6 +8,7 @@
     <CsCompile Include="source\core\Script.cs" />
     <CsCompile Include="source\core\ScriptDomain.cs" />
     <CsCompile Include="source\core\StringMarshal.cs" />
+    <CsCompile Include="source\core\CheapThreadSafeStopwatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\core\DllMain.cpp" />
