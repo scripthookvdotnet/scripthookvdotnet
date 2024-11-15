@@ -44,8 +44,13 @@ jobs:
           echo "sha_nightly_repo=$(git log -n 1 --pretty=format:"%H")" >> "$GITHUB_OUTPUT"
 
           if [ "$CUSTOM_VERSION_NAME" != "" ]; then
-            echo "next_version_name_for_tags=${CUSTOM_VERSION_NAME}-nightly.${PRERELEASE_BUILD_NO}" >> "$GITHUB_OUTPUT"
+            # remove the prefix v if exists
+            CUSTOM_VERSION_NAME=$(echo "${CUSTOM_VERSION_NAME}" | sed -E 's/v?([0-9]{1,5})\.([0-9]{1,5}).([0-9]{1,5})/\1.\2.\3/')
+
+            next_version_name_for_tags="${CUSTOM_VERSION_NAME}-nightly.${PRERELEASE_BUILD_NO}"
+            echo "next_version_name_for_tags=${next_version_name_for_tags}" >> "$GITHUB_OUTPUT"
           elif latest_tag_name=$(git describe --tags `git rev-list --tags --max-count=1`); then
+            # semver command removes the prefix such as "v"
             next_version_name_for_tags=$(npx semver "$latest_tag_name" -i prerelease)
             echo "next_version_name_for_tags=${next_version_name_for_tags}" >> "$GITHUB_OUTPUT"
           else
@@ -53,8 +58,8 @@ jobs:
             exit 1
           fi
 
-          # e.g. sed will transform "v3.6.0-nightly.69" into "3.6.0.69"
-          next_version_name_for_assemblies=$(echo ${next_version_name_for_tags} | sed -E 's/v?([0-9]{1,5})\.([0-9]{1,5})\.([0-9]{1,5})-nightly\.([0-9]{1,5})/\1.\2.\3.\4/')
+          # e.g. sed will transform "3.6.0-nightly.69" into "3.6.0.69"
+          next_version_name_for_assemblies=$(echo ${next_version_name_for_tags} | sed -E 's/([0-9]{1,5})\.([0-9]{1,5})\.([0-9]{1,5})-nightly\.([0-9]{1,5})/\1.\2.\3.\4/')
 
           if [ "$next_version_name_for_assemblies" == "$next_version_name_for_tags" ]; then
             >&2 echo "Failed to create the version string for the ASI and the scripting DLLs because the version tag is ill-formed as a nightly version tag. Tag name: ${next_version_name_for_tags}"
