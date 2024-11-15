@@ -261,6 +261,27 @@ namespace SHVDN
         /// Executes a script function inside the current script domain.
         /// </summary>
         /// <param name="hash">The function has to call.</param>
+        /// <param name="argPtr">A pointer of function arguments.</param>
+        /// <param name="argCount">The length of <paramref name="argPtr" />.</param>
+        /// <returns>A pointer to the return value of the call.</returns>
+        public static ulong* InvokeLongBlockingFunc(ulong hash, ulong* argPtr, int argCount)
+        {
+            ScriptDomain domain = ScriptDomain.CurrentDomain;
+            if (domain == null)
+            {
+                ThrowInvalidOperationException_IllegalScriptingCall();
+                return null;
+            }
+
+            var task = new NativeTaskPtrArgs { _hash = hash, _argumentPtr = argPtr, _argumentCount = argCount };
+            domain.ExecuteTaskWithGameThreadTlsContext(task, true);
+
+            return task._result;
+        }
+        /// <summary>
+        /// Executes a script function inside the current script domain.
+        /// </summary>
+        /// <param name="hash">The function has to call.</param>
         /// <param name="args">A list of function arguments.</param>
         /// <returns>A pointer to the return value of the call.</returns>
         public static ulong* Invoke(ulong hash, params ulong[] args)
