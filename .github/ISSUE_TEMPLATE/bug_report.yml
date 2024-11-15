@@ -10,12 +10,13 @@ body:
         - Please note: **ScriptHookVDotNet is NOT ScriptHookV**!
           - If you get the `FATAL: Unknown game version` error after a game update, then this project is not responsible. Instead, you need to wait for [**ScriptHookV**](http://www.dev-c.com/gtav/scripthookv/) to update.
         - Look for similar errors in existing [GitHub Issues](https://github.com/scripthookvdotnet/scripthookvdotnet/issues?q=is%3Aissue) (open or closed) before creating a new issue.
-        - Also, you should try using the latest nightly version to make sure your issue has not already been fixed. Nightly builds are available on [GitHub Actions](https://github.com/scripthookvdotnet/scripthookvdotnet/actions).
-        - Since the scripting dlls are supposed to use the asi that comes from the same version (archive) as those of the dlls, their versions you're using must match before your bug report can be considered valid. Otherwise, your bug report will be rejected for not meeting a requirement.
+        - Also, you should try using the latest nightly version to make sure your issue has not already been fixed. Nightly builds are available on [a dedicated nightly-release repository](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases).
+        - Since the scripting dlls are supposed to use the asi that comes from the same version (archive) as those of the dlls, their versions you're using must match before your bug report can be considered valid. Otherwise, your bug report will be rejected for not meeting one of the requirements.
           - For example, when you use the scripting dlls from the nightly version nightly.100, use the asi from it as well. Do not update only the asi but not the dlls, and do not update only the dlls but not the asi. Update all of them.
-          - When you update your SHVDN, make sure you update at least the asi and scripting dlls all together. You should put or update the pdb files with ones that come from the same archive as the asi and the dlls you're using, so we can diagnose your issues easier.
+          - When you update your SHVDN, make sure you update at least the asi and scripting dlls together. You should put or update the pdb files with ones that come from the same archive as the asi and the dlls you're using, so we can diagnose your issues easier.
             - This is not required, but you might want to update the ini file unless you're sure the available options are not changed between the version you were using and the new version you want to use.
         - If you are not familiar with how to program and you are encountering some issues related to some SHVDN scripts such as compatibility issues due to game versions, please try to seek help from the authors and ask them to find out the causes.
+          - If the issue is due to uses of nightly methods or properties that are not included in any stable releases, it will be closed as not planned/valid as the script did not follow one of the API compatibility contracts. Contact the author(s) of the script and ask them to build the script against a stable version in that case.
   - type: dropdown
     id: modules-with-problem
     validations:
@@ -34,7 +35,7 @@ body:
     attributes:
       label: 🛠️ SHVDN Version
       description: |
-        For nightly versions, write a nightly version such as `nightly.100` or write an unique commit hash (like 0d5b09b) in the main repository. Don't use a short commit hash less than 7 characters to avoid easy hash collision.
+        For nightly versions, write a nightly version such as `v3.6.0-nightly.100` or write an unique commit hash (like 0d5b09b) in the main repository. Don't use a short commit hash less than 7 characters to avoid easy hash collision.
         Each nightly release in the nightly auto-release repository includes the short and full commit hash of the corresponding commit in the main repository.
         Reporting bugs with a short commit hash is acceptable in most cases. If the main branch contains multiple hashes starting with a short commit hash, you could report with the full hash in this case.
         Do not write a commit hash in the nightly auto-release repository as commits in it are not tied to specific SHVDN commits in the main repository!
@@ -84,7 +85,7 @@ body:
     attributes:
       label: 📄 Link To Code Example
       description: |
-        Please provide a link to a minimal code example if the bug is related to an API layer.
+        Please provide a link to a minimal code example if the bug is related to an API layer and Steps To Reproduce isn't enough to describe the bug.
   - type: textarea
     id: current-behavior
     validations:
