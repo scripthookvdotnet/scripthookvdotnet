@@ -601,7 +601,7 @@ namespace SHVDN
 
                 Type gtaScriptType = _scriptingGtaClassTypesCacheDict[targetApiVersion.Major];
                 // Find all script types in the assembly
-                foreach (Type type in assembly.GetTypes().Where(x => IsSubclassOf(x, gtaScriptType)))
+                foreach (Type type in assembly.GetTypes().Where(x => x.IsSubclassOf(gtaScriptType)))
                 {
                     scriptTypeCount++;
 
@@ -1549,18 +1549,6 @@ namespace SHVDN
             for (Type t = type.BaseType; t != null; t = t.BaseType)
             {
                 if (t.FullName == baseTypeName)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        private static bool IsSubclassOf(Type typeToTest, Type targetBaseType)
-        {
-            for (Type t = typeToTest.BaseType; t != null; t = t.BaseType)
-            {
-                if (t == targetBaseType)
                 {
                     return true;
                 }
