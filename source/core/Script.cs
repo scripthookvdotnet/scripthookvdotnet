@@ -26,8 +26,12 @@ namespace SHVDN
         private string _fileName;
         private object _scriptInstance;
 
+        private bool _nativeCallResetsTimeout;
+
         // Use a reader-writer lock rather than a monitor lock because all the fields are not too frequently written
         private readonly ReaderWriterLockSlim _rwLock = new ();
+
+        private readonly CheapThreadSafeStopwatch _stopwatch = new();
 
         public void Dispose()
         {
@@ -89,6 +93,8 @@ namespace SHVDN
                 }
             }
         }
+
+        internal CheapThreadSafeStopwatch StopwatchForTimeout => _stopwatch;
 
         private Thread Thread
         {
@@ -325,6 +331,34 @@ namespace SHVDN
                 try
                 {
                     _scriptInstance = value;
+                }
+                finally
+                {
+                    _rwLock.ExitWriteLock();
+                }
+            }
+        }
+
+        internal bool NativeCallResetsTimeout
+        {
+            get
+            {
+                _rwLock.EnterReadLock();
+                try
+                {
+                    return _nativeCallResetsTimeout;
+                }
+                finally
+                {
+                    _rwLock.ExitReadLock();
+                }
+            }
+            set
+            {
+                _rwLock.EnterWriteLock();
+                try
+                {
+                    _nativeCallResetsTimeout = value;
                 }
                 finally
                 {

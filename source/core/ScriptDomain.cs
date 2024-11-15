@@ -59,6 +59,23 @@ namespace SHVDN
             }
         }
 
+        public enum AbortScriptMode
+        {
+            Default,
+            Off,
+            On,
+        }
+
+        internal class ScriptInitOption
+        {
+            public bool NativeCallResetsTimeout { get; }
+
+            public ScriptInitOption(bool nativeCallResetsTimeout)
+            {
+                NativeCallResetsTimeout = nativeCallResetsTimeout;
+            }
+        }
+
         // Debugger.IsAttached does not detect a Visual Studio debugger
         [SuppressUnmanagedCodeSecurity]
         [DllImport("Kernel32.dll")]
@@ -69,6 +86,7 @@ namespace SHVDN
 
         private static readonly Version s_FirstApiVerThatHasSeparateApiModuleFromAsi = new Version(2, 10, 0, 0);
         private static readonly Version s_LastVerWhereAsiModuleHasCoreCodeAndApiCode = new Version(2, 9, 6, 0);
+        private static readonly Version s_FirstApiVerWhereNativeCallDoesntResetTimeoutByDefault = new Version(3, 7, 0, 0);
 
         private static ScriptDomain s_currentDomain;
         // `Dispose` won't be called in this instance because it may be too difficult to call correctly due to how
@@ -784,6 +802,60 @@ namespace SHVDN
             return b;
         }
 
+        internal static ScriptInitOption GetScriptInitOptionForScriptsBuiltAgainstV2API()
+            => new ScriptInitOption(true);
+
+        internal ScriptInitOption BuildScriptInitOptionFromScriptAttribute(Type scriptType)
+        {
+            Version apiVersion = GetVersionOfOneOfTargetBaseTypes(scriptType, _scriptingGtaClassTypesCacheArray);
+            return BuildScriptInitOptionFromScriptAttribute(scriptType, apiVersion);
+        }
+        internal ScriptInitOption BuildScriptInitOptionFromScriptAttribute(Type scriptType, Version apiVersion)
+        {
+            if (apiVersion < new Version(3, 0, 0, 0))
+            {
+                return GetScriptInitOptionForScriptsBuiltAgainstV2API();
+            }
+
+            bool nativeCallResetsTimeout = false;
+
+            object nativeCallResetsTimeoutAttr
+                = GetScriptAttribute(scriptType, "NativeCallResetsTimeout");
+            // checking against our `AbortScriptMode` doesn't work, because the types are different even though
+            // the underlying types are the same
+            if (nativeCallResetsTimeoutAttr is not null)
+            {
+                // The cast will always be successful unless the attribute is not an enum with the underlying
+                // type of `int`.
+                AbortScriptMode AbortModeForNativeCallResetsTimeout = (AbortScriptMode)nativeCallResetsTimeoutAttr;
+                // Let the script continue to run after calling a long-blocking native functions only if the API
+                // version is 3.6.0.0 or earlier when `AbortsScriptForBlockingNativeFunc` is set to `Default`.
+                // This is because the script domain didn't stop the script execution after calling a long-blocking
+                // natives in SHVDN v3.6.0.0 or earlier (in short, *only for compatibility reasons*).
+                if (AbortModeForNativeCallResetsTimeout == AbortScriptMode.Default
+                    && (apiVersion < s_FirstApiVerWhereNativeCallDoesntResetTimeoutByDefault)
+                    || AbortModeForNativeCallResetsTimeout == AbortScriptMode.On)
+                {
+                    nativeCallResetsTimeout = true;
+                }
+            }
+            else
+            {
+                nativeCallResetsTimeout
+                    = (apiVersion < s_FirstApiVerWhereNativeCallDoesntResetTimeoutByDefault) ? true : false;
+            }
+
+            return new ScriptInitOption(nativeCallResetsTimeout);
+        }
+        internal ScriptInitOption BuildScriptInitOptionFromScriptAttributeSafe(Type scriptType)
+        {
+            if (scriptType.IsAbstract || !IsSubclassOfOneOfTargetTypes(scriptType, _scriptingGtaClassTypesCacheArray))
+            {
+                return null;
+            }
+            return BuildScriptInitOptionFromScriptAttribute(scriptType);
+        }
+
         public Script InstantiateScript(Type scriptType)
         {
             if (Thread.CurrentThread.ManagedThreadId != _executingThreadId)
@@ -792,12 +864,34 @@ namespace SHVDN
                 // another script would break)
                 return null;
             }
-            if (scriptType.IsAbstract || !IsSubclassOfOneOfTargetTypes(scriptType, _scriptingGtaClassTypesCacheArray))
+            ScriptInitOption option = BuildScriptInitOptionFromScriptAttributeSafe(scriptType);
+            if (option == null)
+            {
+                option = new ScriptInitOption(false);
+            }
+
+            return InstantiateScriptFast(scriptType, option);
+        }
+        /// <summary>
+        /// Creates an instance of a script.
+        /// </summary>
+        /// <param name="scriptType">The type of the script to instantiate.</param>
+        /// <returns>The script instance or <see langword="null" /> in case of failure.</returns>
+        internal Script InstantiateScript(Type scriptType, ScriptInitOption option)
+        {
+            if (Thread.CurrentThread.ManagedThreadId != _executingThreadId)
+            {
+                // This must only be called in the main thread (since changing `_executingScript` during `DoTick` of
+                // another script would break)
+                return null;
+            }
+            if (scriptType.IsAbstract
+                || !IsSubclassOfOneOfTargetTypes(scriptType, _scriptingGtaClassTypesCacheArray))
             {
                 return null;
             }
 
-            return InstantiateScriptFast(scriptType);
+            return InstantiateScriptFast(scriptType, option);
         }
         /// <summary>
         /// Creates an instance of a script without testing if the current thread is the main script domain thread or
@@ -805,8 +899,9 @@ namespace SHVDN
         /// assemblies.
         /// </summary>
         /// <param name="scriptType">The type of the script to instantiate.</param>
-        /// <returns>The script instance or <see langword="null" /> in case of failure.</returns>
-        internal Script InstantiateScriptFast(Type scriptType)
+        /// <param name="initOption">The initialize option for script instantiation.</param>
+        /// <returns>The script instance or <see langword="null"/> in case of failure.</returns>
+        internal Script InstantiateScriptFast(Type scriptType, ScriptInitOption initOption)
         {
             Log.Message(Log.Level.Debug, "Instantiating script ", scriptType.FullName, " ...");
 
@@ -863,6 +958,8 @@ namespace SHVDN
 
                 return null;
             }
+
+            script.NativeCallResetsTimeout = initOption.NativeCallResetsTimeout;
 
             _rwLock.EnterWriteLock();
             try
@@ -1000,8 +1097,10 @@ namespace SHVDN
             }
             foreach (ScriptTypeInfo scriptTypeInfo in scriptTypesToInstantiate)
             {
+                ScriptInitOption initOpt = BuildScriptInitOptionFromScriptAttribute(scriptTypeInfo.Type,
+                    scriptTypeInfo.TargetApiVersion);
                 Type systemTypeOfScript = scriptTypeInfo.Type;
-                InstantiateScriptFast(systemTypeOfScript)?
+                InstantiateScriptFast(systemTypeOfScript, initOpt)?
                     .Start(!(GetScriptAttribute(systemTypeOfScript, "NoScriptThread") is bool NoScriptThread)
                             || !NoScriptThread);
             }
@@ -1133,14 +1232,68 @@ namespace SHVDN
             }
         }
 
+        private bool ResetTimeoutStopwatchOfExecutingScriptIfScriptWantsToResetWhenCallingANativeFunc()
+        {
+            lock (_lockForFieldsThatFrequentlyWritten)
+            {
+                if (_executingScript == null)
+                {
+                    return false;
+                }
+                if (_executingScript.NativeCallResetsTimeout)
+                {
+                    _executingScript.StopwatchForTimeout.Reset();
+                    return true;
+                }
+
+                return false;
+            }
+        }
+        private void ResetTimeoutStopwatchOfExecutingScript()
+        {
+            lock (_lockForFieldsThatFrequentlyWritten)
+            {
+                if (_executingScript == null)
+                {
+                    return;
+                }
+
+                _executingScript.StopwatchForTimeout.Reset();
+            }
+        }
+        private void StartTimeoutStopwatchOfExecutingScript()
+        {
+            lock (_lockForFieldsThatFrequentlyWritten)
+            {
+                if (_executingScript == null)
+                {
+                    return;
+                }
+
+                _executingScript.StopwatchForTimeout.Start();
+            }
+        }
+
         /// <summary>
         /// Execute a script task in this script domain with the tls context of the main thread of the exe.
         /// You must use this method when you call native functions or functions that may access some
         /// resources of the tls context of the main thread, such as a <c>rage::sysMemAllocator</c>.
         /// </summary>
         /// <param name="task">The task to execute.</param>
-        public void ExecuteTaskWithGameThreadTlsContext(IScriptTask task)
+        public void ExecuteTaskWithGameThreadTlsContext(IScriptTask task, bool forceResetTimeoutStopwatch = false)
         {
+            bool timeoutStopwatchHasBeenReset;
+            if (forceResetTimeoutStopwatch)
+            {
+                ResetTimeoutStopwatchOfExecutingScript();
+                timeoutStopwatchHasBeenReset = true;
+            }
+            else
+            {
+                timeoutStopwatchHasBeenReset
+                    = ResetTimeoutStopwatchOfExecutingScriptIfScriptWantsToResetWhenCallingANativeFunc();
+            }
+
             // Store the TLS variables to local variables, so we can perform the `IScriptTask` without the lock
             // and that makes sure the task won't be able to cause a `LockRecursionException` by calling this method
             // again in the task.
@@ -1195,6 +1348,11 @@ namespace SHVDN
                     }
                 }
             }
+
+            if (timeoutStopwatchHasBeenReset)
+            {
+                StartTimeoutStopwatchOfExecutingScript();
+            }
         }
 
         /// <summary>
@@ -1203,6 +1361,10 @@ namespace SHVDN
         /// <param name="task">The task to execute.</param>
         public void ExecuteTaskInScriptDomainThread(IScriptTask task)
         {
+            // Timeout stopwatch should always be reset, as an `IScriptTask` that must be executed in the script domain
+            // may take time to execute longer than the timeout threshold in poor PC environments but not in good ones.
+            ResetTimeoutStopwatchOfExecutingScript();
+
             if (Thread.CurrentThread.ManagedThreadId == _executingThreadId)
             {
                 // Request came from the script domain thread, so can just execute it right away
@@ -1220,6 +1382,8 @@ namespace SHVDN
 
                 SignalAndWait(executingScript.WaitEvent, executingScript.ContinueEvent);
             }
+
+            StartTimeoutStopwatchOfExecutingScript();
         }
 
         /// <summary>
@@ -1287,7 +1451,7 @@ namespace SHVDN
                     _executingScript = script;
                 }
 
-                int startTimeTickCount = Environment.TickCount;
+                script.StopwatchForTimeout.Restart();
                 try
                 {
                     if (script.IsUsingThread)
@@ -1313,6 +1477,7 @@ namespace SHVDN
                     {
                         script.DoTick();
                     }
+                    script.StopwatchForTimeout.Stop();
                 }
                 catch (Exception ex)
                 {
@@ -1329,8 +1494,15 @@ namespace SHVDN
                     continue;
                 }
 
+                uint elapsedTimeForTimeout = 0;
+                lock (_lockForFieldsThatFrequentlyWritten)
+                {
+                    elapsedTimeForTimeout = _executingScript.StopwatchForTimeout.ElapsedMilliseconds;
+                    _executingScript = null;
+                }
+
                 // Tolerate long execution time if a debugger is attached since some script may be debugged using breakpoints
-                if ((uint)(Environment.TickCount - startTimeTickCount) < ScriptTimeoutThreshold || IsDebuggerPresent())
+                if (elapsedTimeForTimeout < ScriptTimeoutThreshold || IsDebuggerPresent())
                 {
                     continue;
                 }

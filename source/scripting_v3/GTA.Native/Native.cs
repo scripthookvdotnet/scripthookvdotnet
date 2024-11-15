@@ -1165,6 +1165,583 @@ namespace GTA.Native
         }
         #endregion
 
+        /// <summary>
+        /// Calls the specified native script function and ignores its return value, without letting
+        /// the <see cref="GTA.Script"/> get timeout and stop being executed even if the script blocks other ones
+        /// longer than the timeout set by the user config.
+        /// </summary>
+        /// <param name="hash">
+        /// The hash code of the native function, which is a magic number associated with native.
+        /// </param>
+        /// <param name="arguments">A list of input and output arguments to pass to the native script function.</param>
+        /// <returns>The return value of the native.</returns>
+        /// <remarks>
+        /// This method should be used only when the native function is expensive enough to take a long time
+        /// (e.g. 1 or 5 seconds) for better user experience, as calling this variant is more expensive than the normal
+        /// variant.
+        /// </remarks>
+        public static T CallLongBlockingFunc<T>(Hash hash, params InputArgument[] arguments)
+        {
+            unsafe
+            {
+                int argCount = arguments.Length <= MaxArgCount ? arguments.Length : MaxArgCount;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                for (int i = 0; i < argCount; ++i)
+                {
+                    argPtr[i] = arguments[i]?._data ?? 0;
+                }
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+
+        #region `CallLongBlockingFunc` with Return Value Overloads with Normal `InputArgument` Paramaters
+        // `cref` can fail to track correctly if there are new lines in the value, so don't insert any new lines in
+        // `cref` values.
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash)
+        {
+            unsafe
+            {
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, null, 0);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash, InputArgument argument)
+        {
+            unsafe
+            {
+                const int argCount = 1;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash, InputArgument argument0, InputArgument argument1)
+        {
+            unsafe
+            {
+                const int argCount = 2;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
+        {
+            unsafe
+            {
+                const int argCount = 3;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+        {
+            unsafe
+            {
+                const int argCount = 4;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4)
+        {
+            unsafe
+            {
+                const int argCount = 5;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5)
+        {
+            unsafe
+            {
+                const int argCount = 6;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6)
+        {
+            unsafe
+            {
+                const int argCount = 7;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7)
+        {
+            unsafe
+            {
+                const int argCount = 8;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8)
+        {
+            unsafe
+            {
+                const int argCount = 9;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9)
+        {
+            unsafe
+            {
+                const int argCount = 10;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10)
+        {
+            unsafe
+            {
+                const int argCount = 11;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11)
+        {
+            unsafe
+            {
+                const int argCount = 12;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11,
+            InputArgument argument12)
+        {
+            unsafe
+            {
+                const int argCount = 13;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+                argPtr[12] = argument12?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11,
+            InputArgument argument12,
+            InputArgument argument13)
+        {
+            unsafe
+            {
+                const int argCount = 14;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+                argPtr[12] = argument12?._data ?? 0;
+                argPtr[13] = argument13?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc{T}(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"
+        /// />
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11,
+            InputArgument argument12,
+            InputArgument argument13,
+            InputArgument argument14)
+        {
+            unsafe
+            {
+                const int argCount = 15;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+                argPtr[12] = argument12?._data ?? 0;
+                argPtr[13] = argument13?._data ?? 0;
+                argPtr[14] = argument14?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        /// <summary>
+        /// Calls the specified native script function and ignores its return value, without letting
+        /// the <see cref="GTA.Script"/> get timeout and stop being executed even if the script blocks other ones
+        /// longer than the timeout set by the user config.
+        /// </summary>
+        /// <param name="hash">
+        /// The hash code of the native function, which is a magic number associated with native.
+        /// </param>
+        /// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+        /// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+        /// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+        /// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+        /// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+        /// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+        /// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+        /// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+        /// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+        /// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+        /// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+        /// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+        /// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+        /// <param name="argument13">The 14th input or output argument to pass to the native script function.</param>
+        /// <param name="argument14">The 15th input or output argument to pass to the native script function.</param>
+        /// <param name="argument15">The 16th input or output argument to pass to the native script function.</param>
+        /// <returns>The return value of the native.</returns>
+        /// <remarks>
+        /// This method should be used only when the native function is expensive enough to take a long time
+        /// (e.g. 1 or 5 seconds) for better user experience, as calling this variant is more expensive than the normal
+        /// variant.
+        /// </remarks>
+        public static T CallLongBlockingFunc<T>(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11,
+            InputArgument argument12,
+            InputArgument argument13,
+            InputArgument argument14,
+            InputArgument argument15)
+        {
+            unsafe
+            {
+                const int argCount = 16;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+                argPtr[12] = argument12?._data ?? 0;
+                argPtr[13] = argument13?._data ?? 0;
+                argPtr[14] = argument14?._data ?? 0;
+                argPtr[15] = argument15?._data ?? 0;
+
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                return ReturnValueFromNativeIfNotNull<T>(res);
+            }
+        }
+        #endregion
+
         static unsafe T ReturnValueFromNativeIfNotNull<T>(ulong* result)
         {
             // The result will be null when this method is called from a thread other than the main thread
@@ -1218,7 +1795,7 @@ namespace GTA.Native
             }
         }
 
-        #region void Call Overloads with Normal InputArgument Paramaters
+        #region void `Call` Overloads with Normal `InputArgument` Paramaters
         /// <summary>
         /// Calls the specified native script function and ignores its return value.
         /// </summary>
@@ -1878,6 +2455,547 @@ namespace GTA.Native
                 argPtr[15] = argument15?._data ?? 0;
 
                 SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Calls the specified native script function and ignores its return value, without letting
+        /// the <see cref="GTA.Script"/> get timeout and stop being executed even if the script blocks other ones
+        /// longer than the timeout set by the user config.
+        /// </summary>
+        /// <param name="hash">
+        /// The hash code of the native function, which is a magic number associated with native.
+        /// </param>
+        /// <param name="arguments">A list of input and output arguments to pass to the native script function.</param>
+        /// <remarks>
+        /// This method should be used only when the native function is expensive enough to take a long time
+        /// (e.g. 1 or 5 seconds) for better user experience, as calling this variant is more expensive than the normal
+        /// variant. `<c>ON_ENTER_MP</c>` is one of the examples of the native functions where calling this method
+        /// would be justified over the normal variant.
+        /// </remarks>
+        public static void CallLongBlockingFunc(Hash hash, params InputArgument[] arguments)
+        {
+            unsafe
+            {
+                int argCount = arguments.Length <= MaxArgCount ? arguments.Length : MaxArgCount;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                for (int i = 0; i < argCount; ++i)
+                {
+                    argPtr[i] = arguments[i]?._data ?? 0;
+                }
+
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+            }
+        }
+
+        #region void `CallLongBlockingFunc` Overloads with Normal `InputArgument` Paramaters
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash)
+        {
+            unsafe
+            {
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, null, 0);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash, InputArgument argument0)
+        {
+            unsafe
+            {
+                const int argCount = 1;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash, InputArgument argument0, InputArgument argument1)
+        {
+            unsafe
+            {
+                const int argCount = 2;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2)
+        {
+            unsafe
+            {
+                const int argCount = 3;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash, InputArgument argument0, InputArgument argument1, InputArgument argument2, InputArgument argument3)
+        {
+            unsafe
+            {
+                const int argCount = 4;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4)
+        {
+            unsafe
+            {
+                const int argCount = 5;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5)
+        {
+            unsafe
+            {
+                const int argCount = 6;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6)
+        {
+            unsafe
+            {
+                const int argCount = 7;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7)
+        {
+            unsafe
+            {
+                const int argCount = 8;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8)
+        {
+            unsafe
+            {
+                const int argCount = 9;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9)
+        {
+            unsafe
+            {
+                const int argCount = 10;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10)
+        {
+            unsafe
+            {
+                const int argCount = 11;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11)
+        {
+            unsafe
+            {
+                const int argCount = 12;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11,
+            InputArgument argument12)
+        {
+            unsafe
+            {
+                const int argCount = 13;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+                argPtr[12] = argument12?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11,
+            InputArgument argument12,
+            InputArgument argument13)
+        {
+            unsafe
+            {
+                const int argCount = 14;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+                argPtr[12] = argument12?._data ?? 0;
+                argPtr[13] = argument13?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <inheritdoc
+        /// cref="CallLongBlockingFunc(Hash, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument, InputArgument , InputArgument)"/>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11,
+            InputArgument argument12,
+            InputArgument argument13,
+            InputArgument argument14)
+        {
+            unsafe
+            {
+                const int argCount = 15;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+                argPtr[12] = argument12?._data ?? 0;
+                argPtr[13] = argument13?._data ?? 0;
+                argPtr[14] = argument14?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+            }
+        }
+        /// <summary>
+        /// Calls the specified native script function and ignores its return value, without letting
+        /// the <see cref="GTA.Script"/> get timeout and stop being executed even if the script blocks other ones
+        /// longer than the timeout set by the user config.
+        /// </summary>
+        /// <param name="hash">
+        /// The hash code of the native function, which is a magic number associated with native.
+        /// </param>
+        /// <param name="argument0">The 1st input or output argument to pass to the native script function.</param>
+        /// <param name="argument1">The 2nd input or output argument to pass to the native script function.</param>
+        /// <param name="argument2">The 3rd input or output argument to pass to the native script function.</param>
+        /// <param name="argument3">The 4th input or output argument to pass to the native script function.</param>
+        /// <param name="argument4">The 5th input or output argument to pass to the native script function.</param>
+        /// <param name="argument5">The 6th input or output argument to pass to the native script function.</param>
+        /// <param name="argument6">The 7th input or output argument to pass to the native script function.</param>
+        /// <param name="argument7">The 8th input or output argument to pass to the native script function.</param>
+        /// <param name="argument8">The 9th input or output argument to pass to the native script function.</param>
+        /// <param name="argument9">The 10th input or output argument to pass to the native script function.</param>
+        /// <param name="argument10">The 11th input or output argument to pass to the native script function.</param>
+        /// <param name="argument11">The 12th input or output argument to pass to the native script function.</param>
+        /// <param name="argument12">The 13th input or output argument to pass to the native script function.</param>
+        /// <param name="argument13">The 14th input or output argument to pass to the native script function.</param>
+        /// <param name="argument14">The 15th input or output argument to pass to the native script function.</param>
+        /// <param name="argument15">The 16th input or output argument to pass to the native script function.</param>
+        /// <remarks>
+        /// This method should be used only when the native function is expensive enough to take a long time
+        /// (e.g. 1 or 5 seconds) for better user experience, as calling this variant is more expensive than the normal
+        /// variant. `<c>ON_ENTER_MP</c>` is one of the examples of the native functions where calling this method
+        /// would be justified over the normal variant.
+        /// </remarks>
+        public static void CallLongBlockingFunc(Hash hash,
+            InputArgument argument0,
+            InputArgument argument1,
+            InputArgument argument2,
+            InputArgument argument3,
+            InputArgument argument4,
+            InputArgument argument5,
+            InputArgument argument6,
+            InputArgument argument7,
+            InputArgument argument8,
+            InputArgument argument9,
+            InputArgument argument10,
+            InputArgument argument11,
+            InputArgument argument12,
+            InputArgument argument13,
+            InputArgument argument14,
+            InputArgument argument15)
+        {
+            unsafe
+            {
+                const int argCount = 16;
+                ulong* argPtr = stackalloc ulong[argCount];
+
+                argPtr[0] = argument0?._data ?? 0;
+                argPtr[1] = argument1?._data ?? 0;
+                argPtr[2] = argument2?._data ?? 0;
+                argPtr[3] = argument3?._data ?? 0;
+                argPtr[4] = argument4?._data ?? 0;
+                argPtr[5] = argument5?._data ?? 0;
+                argPtr[6] = argument6?._data ?? 0;
+                argPtr[7] = argument7?._data ?? 0;
+                argPtr[8] = argument8?._data ?? 0;
+                argPtr[9] = argument9?._data ?? 0;
+                argPtr[10] = argument10?._data ?? 0;
+                argPtr[11] = argument11?._data ?? 0;
+                argPtr[12] = argument12?._data ?? 0;
+                argPtr[13] = argument13?._data ?? 0;
+                argPtr[14] = argument14?._data ?? 0;
+                argPtr[15] = argument15?._data ?? 0;
+
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
             }
         }
         #endregion
