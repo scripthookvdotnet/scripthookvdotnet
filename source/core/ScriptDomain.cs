@@ -594,7 +594,7 @@ namespace SHVDN
                 Assembly v2ApiAsm = CurrentDomain._scriptingApiAsms.First(x => x.GetName().Version.Major == 2);
 
                 Log.Message(Log.Level.Info, "Found ", scriptTypeCount.ToString(), " script(s) in ", Path.GetFileName(filename),
-                    " resolved to API version " + v2ApiAsm.GetName().Version.ToString(3), " (target API version: v2.9 or earlier).");
+                    " resolved to API version " + v2ApiAsm.GetName().Version.ToString(3), " (target API version: v2.8 or earlier).");
             }
             else
             {
@@ -698,7 +698,7 @@ namespace SHVDN
                     {
                         // shouldn't be null if came this path
                         Assembly v2ApiAsm = CurrentDomain._scriptingApiAsms.First(x => x.GetName().Version.Major == 2);
-                        Log.Message(Log.Level.Info, "Resolved API Version of the script class name ", type.FullName, ": ", v2ApiAsm.GetName().Version.ToString(3), " (target API version: v2.9 or earlier)");
+                        Log.Message(Log.Level.Info, "Resolved API Version of the script class name ", type.FullName, ": ", v2ApiAsm.GetName().Version.ToString(3), " (target API version: v2.8 or earlier)");
 
                         targetApiVersion = s_LastVerWhereAsiModuleHasCoreCodeAndApiCode;
                     }
