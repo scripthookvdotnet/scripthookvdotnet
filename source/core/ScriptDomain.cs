@@ -598,9 +598,14 @@ namespace SHVDN
             }
             else
             {
+                // Script may not have any subclasses of `GTA.Script` even if came here, so `resolvedApiVersion` can be
+                // null
+                string resolvedApiVerSubstr
+                    = (resolvedApiVersion != null
+                    ? (" resolved to API version " + resolvedApiVersion.ToString(3))
+                    : string.Empty);
                 Log.Message(Log.Level.Info, "Found ", scriptTypeCount.ToString(), " script(s) in ", Path.GetFileName(filename),
-                    " resolved to API version " + resolvedApiVersion.ToString(3), " (target API version: ",
-                    targetApiVersion.ToString(3), ").");
+                    resolvedApiVerSubstr, " (target API version: ", targetApiVersion.ToString(3), ").");
             }
 
             if (resolvedApiVersion != null && IsApiVersionDeprecated(resolvedApiVersion))
