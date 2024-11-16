@@ -85,7 +85,8 @@ namespace SHVDN
         private static extern uint GetCurrentThreadId();
 
         private static readonly Version s_FirstApiVerThatHasSeparateApiModuleFromAsi = new Version(2, 10, 0, 0);
-        private static readonly Version s_LastVerWhereAsiModuleHasCoreCodeAndApiCode = new Version(2, 9, 6, 0);
+        private static readonly Version s_FirstVerWhereScriptingAssemblyHasProperVersionInfo = new Version(2, 9, 0, 0);
+        private static readonly Version s_LastVerWhereScriptingAssemblyDoesNotHaveProperVersionInfo = new Version(2, 8, 0, 0);
         private static readonly Version s_FirstApiVerWhereNativeCallDoesntResetTimeoutByDefault = new Version(3, 7, 0, 0);
 
         private static ScriptDomain s_currentDomain;
@@ -700,7 +701,7 @@ namespace SHVDN
                         Assembly v2ApiAsm = CurrentDomain._scriptingApiAsms.First(x => x.GetName().Version.Major == 2);
                         Log.Message(Log.Level.Info, "Resolved API Version of the script class name ", type.FullName, ": ", v2ApiAsm.GetName().Version.ToString(3), " (target API version: v2.8 or earlier)");
 
-                        targetApiVersion = s_LastVerWhereAsiModuleHasCoreCodeAndApiCode;
+                        targetApiVersion = s_LastVerWhereScriptingAssemblyDoesNotHaveProperVersionInfo;
                     }
                     else if (targetApis.TryGetValue(resolvedApiVersion.Major, out targetApiVersion))
                     {
@@ -713,7 +714,7 @@ namespace SHVDN
                         Log.Message(Log.Level.Warning, "Target API version of ", type.FullName, "is unknown. Contact " +
                             "developers of SHVDN as there may be some bugs if you see this warning.");
 
-                        targetApiVersion = s_LastVerWhereAsiModuleHasCoreCodeAndApiCode;
+                        targetApiVersion = s_LastVerWhereScriptingAssemblyDoesNotHaveProperVersionInfo;
                     }
 
                     // The script is likely to add to script types list, so intentionally use write lock here
@@ -758,15 +759,41 @@ namespace SHVDN
 
         private Dictionary<int, Version> MakeTargetApisDictPerMajorVerFromAssemblyRefs(Assembly asm)
         {
-            return asm.GetReferencedAssemblies()
-                      .Where(x => _scriptingApiAsmNamesCache.Contains(x.Name)
-                               || x.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
-                      .Select(x =>
-                        x.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase)
-                        ? s_LastVerWhereAsiModuleHasCoreCodeAndApiCode
-                        : x.Version)
-                      .OrderByDescending(x => x)
-                      .ToDictionary(x => x.Major, x => x);
+           Dictionary<int, Version> targetVerDict = new Dictionary<int, Version>(_scriptingApiAsmNamesCache.Count);
+
+            foreach (AssemblyName asmName in asm.GetReferencedAssemblies())
+            {
+                if (_scriptingApiAsmNamesCache.Contains(asmName.Name))
+                {
+                    Version asmVer = asmName.Version;
+                    UpdateDictIfValueDoesNotExistOnKeyOrValueIsOlder(targetVerDict, asmVer);
+                }
+                else if (asmName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+                {
+                    Version verInfoInAsm = asmName.Version;
+                    Version targetVerToUseForDict
+                        = (verInfoInAsm >= s_FirstVerWhereScriptingAssemblyHasProperVersionInfo)
+                        ? verInfoInAsm
+                        : s_LastVerWhereScriptingAssemblyDoesNotHaveProperVersionInfo;
+
+                    // There **are** scripts that have references to version-less (0.0.0.0) SHVDN and versioned one
+                    // in the *same* assembly, such as "Animation Viewer" by Guadmaz. Therefore, we need to avoid
+                    // naively calling `Dictionary.Add` without checking if the key already exists.
+                    UpdateDictIfValueDoesNotExistOnKeyOrValueIsOlder(targetVerDict, targetVerToUseForDict);
+                }
+            }
+
+            return targetVerDict;
+
+            static void UpdateDictIfValueDoesNotExistOnKeyOrValueIsOlder(Dictionary<int, Version> dict,
+                Version newCandidate)
+            {
+                int majorVer = newCandidate.Major;
+                if (!dict.TryGetValue(majorVer, out Version currentLatestVer) || newCandidate > currentLatestVer)
+                {
+                    dict[majorVer] = newCandidate;
+                }
+            }
         }
 
         private static void LogScriptAssemblyLoadingFailureUnlessItWasDueToFailureOfApiAsmResolution(
