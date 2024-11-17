@@ -1642,7 +1642,7 @@ namespace GTA
 
         public bool IsInPoliceVehicle => Function.Call<bool>(Hash.IS_PED_IN_ANY_POLICE_VEHICLE, Handle);
         
-        [Obsolete("Use ScriptSoundId.PlaySoundFrontend or Audio.PlaySoundFrontendAndForget instead.")]
+        [Obsolete("Use IsEnteringVehicle instead.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsGettingIntoVehicle => IsEnteringVehicle;
 
