@@ -828,7 +828,7 @@ namespace GTA
         /// <summary>
         /// Indicates whether this <see cref="Ped"/> is getting up.
         /// </summary>
-        public bool Up => Function.Call<bool>(Hash.IS_PED_GETTING_UP, Handle);
+        public bool IsGettingUp => Function.Call<bool>(Hash.IS_PED_GETTING_UP, Handle);
 
         /// <summary>
         /// Indicates whether this <see cref="Ped"/> is currently diving (includes jump launch/clamber phase).
