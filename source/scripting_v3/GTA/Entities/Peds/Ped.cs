@@ -818,7 +818,7 @@ namespace GTA
 
         #region Tasks
 
-        public bool IsIdle => !IsInjured && !IsRagdoll && !IsInAir && !IsOnFire && !IsDucking && !IsGettingIntoVehicle && !IsInCombat && !IsInMeleeCombat && (!IsInVehicle() || IsSittingInVehicle());
+        public bool IsIdle => !IsInjured && !IsRagdoll && !IsInAir && !IsOnFire && !IsDucking && !IsEnteringVehicle && !IsInCombat && !IsInMeleeCombat && (!IsInVehicle() || IsSittingInVehicle());
 
         /// <summary>
         /// Indicates whether this <see cref="Ped"/> is basically lying on the ground.
@@ -1641,11 +1641,15 @@ namespace GTA
         public bool IsInBoat => Function.Call<bool>(Hash.IS_PED_IN_ANY_BOAT, Handle);
 
         public bool IsInPoliceVehicle => Function.Call<bool>(Hash.IS_PED_IN_ANY_POLICE_VEHICLE, Handle);
+        
+        [Obsolete("Use IsEnteringVehicle instead.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool IsGettingIntoVehicle => IsEnteringVehicle;
 
         /// <summary>
-        /// Indicates whether is getting into a <see cref="Vehicle"/> but not sitting in a <see cref="Vehicle"/>.
+        /// Indicates whether is currently entering a <see cref="Vehicle"/> but not sitting in a <see cref="Vehicle"/>.
         /// </summary>
-        public bool IsGettingIntoVehicle => Function.Call<bool>(Hash.IS_PED_GETTING_INTO_A_VEHICLE, Handle);
+        public bool IsEnteringVehicle => Function.Call<bool>(Hash.IS_PED_GETTING_INTO_A_VEHICLE, Handle);
 
         /// <summary>
         /// Indicates whether is currently exiting a <see cref="Vehicle"/>.
