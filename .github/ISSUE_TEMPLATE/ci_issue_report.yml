@@ -1,0 +1,27 @@
+name: CI Issue Report
+description: Report CI issue report.
+title: "[CI Issue]: "
+labels: ["Area: CI"]
+body:
+  - type: textarea
+    id: issue-desc
+    validations:
+      required: true
+    attributes:
+      label: Issue Description
+      description: |
+       Please provide a clear and concise description of what the issue is.
+  - type: textarea
+    id: current-behavior
+    validations:
+      required: true
+    attributes:
+      label: ⚠️ Current Behavior
+      description: A brief description of what is happening.
+  - type: textarea
+    id: expected-behavior
+    validations:
+      required: true
+    attributes:
+      label: 🎯 Expected Behavior
+      description: A brief description of what should happen.
