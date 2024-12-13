@@ -37,14 +37,14 @@ jobs:
           echo "previous-issue-number=${previous_issue_number}" >> $GITHUB_OUTPUT
 
           if [[ -n $previous_issue_number ]]; then
-            echo: "There is a issue that have the \"shv-sdk-not-found\" label, skipping further steps. Number of latest matching issue: ${previous_issue_number}"
+            echo: "There is a issue that has the \"shv-sdk-not-found\" label, skipping further steps. Number of latest matching issue: ${previous_issue_number}"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           LABELS: deps-url-of-shv-sdk-not-found
       - name: Create new issue
-        if: ${{ steps.prev-issue-test.outputs.previous-issue-number != '' }}
+        if: ${{ steps.prev-issue-test.outputs.previous-issue-number == '' }}
         run: |
           new_issue_url=$(gh issue create \
             --title "$TITLE" \
