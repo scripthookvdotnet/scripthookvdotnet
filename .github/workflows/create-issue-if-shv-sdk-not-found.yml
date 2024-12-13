@@ -54,7 +54,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           TITLE: Current URL of SHV's SDK in `install_sdk.ps1` is unavailable
-          LABELS: deps-url-of-shv-sdk-not-found
+          LABELS: 'Area: CI,deps-url-of-shv-sdk-not-found'
           BODY: |
             The current URL of SHV's SDK in `install_sdk.ps1` is unavailable, which returns the status code 404. Should be replaced with the new URL.  
             Current URL: `${{ steps.const-strings.outputs.sdk-url }}`
