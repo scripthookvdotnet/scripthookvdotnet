@@ -37,7 +37,7 @@ jobs:
           echo "previous-issue-number=${previous_issue_number}" >> $GITHUB_OUTPUT
 
           if [[ -n $previous_issue_number ]]; then
-            echo: "There is a issue that has the \"shv-sdk-not-found\" label, skipping further steps. Number of latest matching issue: ${previous_issue_number}"
+            echo "There is a issue that has the \"shv-sdk-not-found\" label, skipping further steps. Number of latest matching issue: ${previous_issue_number}"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
