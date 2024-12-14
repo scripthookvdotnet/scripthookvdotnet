@@ -44,7 +44,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           LABELS: deps-url-of-shv-sdk-not-found
       - name: Create new issue
-        if: ${{ steps.prev-issue-test.outputs.previous-issue-number == '' }}
+        if: ${{ steps.status-code-check.outputs.shv-sdk-status-code == '404' && steps.prev-issue-test.outputs.previous-issue-number == '' }}
         run: |
           new_issue_url=$(gh issue create \
             --title "$TITLE" \
