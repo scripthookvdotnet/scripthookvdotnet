@@ -7,6 +7,7 @@
 //
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace GTA.Chrono
 {
@@ -27,6 +28,8 @@ namespace GTA.Chrono
         {
             _secs = secs;
         }
+
+        private const char ColonForTimeSeparator = ':';
 
         /// <summary>
         /// Gets the largest possible value of <see cref="GameClockDate"/>.
@@ -288,6 +291,28 @@ namespace GTA.Chrono
             if (_secs > t) return 1;
             if (_secs < t) return -1;
             return 0;
+        }
+
+        public override string ToString() => ToStringInternal();
+
+        [SkipLocalsInit]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private unsafe string ToStringInternal()
+        {
+            const int RequiredStrLen = 8;
+            char* buffer = stackalloc char[RequiredStrLen];
+
+            Deconstruct(out int hour, out int minute, out int second);
+
+            NumberFormatting.WriteTwoDigits((uint)hour, buffer);
+            buffer[2] = ColonForTimeSeparator;
+
+            NumberFormatting.WriteTwoDigits((uint)minute, buffer + 3);
+            buffer[5] = ColonForTimeSeparator;
+
+            NumberFormatting.WriteTwoDigits((uint)second, buffer + 6);
+
+            return new string(buffer, 0, RequiredStrLen);
         }
 
         /// <summary>

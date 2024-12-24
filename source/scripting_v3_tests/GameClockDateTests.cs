@@ -505,6 +505,66 @@ namespace ScriptHookVDotNet_APIv3_Tests
             Assert.Equal(expected, date.IsLeapYear);
         }
 
+        public static TheoryData<GameClockDate, string> ToString_Typical_NonNegative_4Digit_Year_Data =>
+            new()
+            {
+                { GameClockDate.FromYmd(0, 1, 1), "0000-01-01" },
+                { GameClockDate.FromYmd(30, 9, 17), "0030-09-17" },
+                { GameClockDate.FromYmd(700, 6, 30), "0700-06-30" },
+                { GameClockDate.FromYmd(1900, 1, 1), "1900-01-01" },
+                { GameClockDate.FromYmd(2500, 12, 31), "2500-12-31" },
+                { GameClockDate.FromYmd(9999, 12, 31), "9999-12-31" },
+            };
+
+        public static TheoryData<GameClockDate, string> ToString_Negative_4Digit_Year_Data =>
+            new()
+            {
+                { GameClockDate.FromYmd(-1, 1, 1), "-0001-01-01" },
+                { GameClockDate.FromYmd(-1900, 10, 26), "-1900-10-26" },
+                { GameClockDate.FromYmd(-9999, 12, 31), "-9999-12-31" },
+            };
+
+        public static TheoryData<GameClockDate, string> ToString_More_Than_4_Digit_Year_Data =>
+            new()
+            {
+                { GameClockDate.FromYmd(10000, 1, 1), "10000-01-01" },
+                { GameClockDate.FromYmd(-10000, 12, 31), "-10000-12-31" },
+                { GameClockDate.FromYmd(2147483647, 12, 31), "2147483647-12-31" },
+                { GameClockDate.FromYmd(-2147483648, 1, 1), "-2147483648-01-01" },
+            };
+
+        [Theory]
+        [MemberData(nameof(ToString_Typical_NonNegative_4Digit_Year_Data))]
+        public void ToString_with_no_params_returns_string_with_4_digit_year_2_digit_month_and_2_digit_day_concatenated_with_hyphen_separator_if_year_is_between_0_and_9999(
+            GameClockDate date, string expected)
+        {
+            string actual = date.ToString();
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [MemberData(nameof(ToString_Negative_4Digit_Year_Data))]
+        public void
+        ToString_with_no_params_returns_string_with_leading_neg_sign_and_4_digit_year_if_year_is_between_neg_9999_and_neg_1(
+            GameClockDate date, string expected)
+        {
+            string actual = date.ToString();
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [MemberData(nameof(ToString_More_Than_4_Digit_Year_Data))]
+        public void
+            ToString_with_no_params_returns_string_with_more_than_5_digit_year_if_year_is_not_between_neg_9999_and_pos_9999(
+                GameClockDate date, string expected)
+        {
+            string actual = date.ToString();
+
+            Assert.Equal(expected, actual);
+        }
+
         public static IEnumerable<object[]> Deconstruct_Method_TestData()
         {
             yield return new object[] { int.MinValue, 1, 1 };

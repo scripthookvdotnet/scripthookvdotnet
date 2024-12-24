@@ -7,6 +7,7 @@
 //
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace GTA.Chrono
 {
@@ -571,6 +572,17 @@ namespace GTA.Chrono
             }
 
             return false;
+        }
+
+        public override string ToString() => ToStringInternal();
+
+        [SkipLocalsInit]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private unsafe string ToStringInternal()
+        {
+            // this implementation is shit enough to improve in time wise, we could use stackalloc for an entire string
+            // buffer
+            return _date.ToString() + " " + _time.ToString();
         }
 
         /// <summary>

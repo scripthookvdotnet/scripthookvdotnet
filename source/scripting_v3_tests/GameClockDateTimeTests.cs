@@ -128,6 +128,44 @@ namespace ScriptHookVDotNet_APIv3_Tests
                 => minDateTimeRightBeforeMidnight + GameClockDuration.MinValue);
         }
 
+        public static TheoryData<GameClockDateTime> ToString_Data =>
+            new()
+            {
+                {
+                    YmdHms(1, 1, 1, 0, 0, 0)
+                },
+                {
+                    YmdHms(9999, 12, 31, 23, 59, 59)
+                },
+                {
+                    YmdHms(10000, 1, 1, 13, 14, 15)
+                },
+                {
+                    YmdHms(-1, 1, 1, 23, 26, 27)
+                },
+                {
+                    YmdHms(2147483647, 12, 31, 23, 55, 59)
+                },
+                {
+                    YmdHms(-2147483648, 1, 1, 1, 2, 3)
+                },
+            };
+
+        [Theory]
+        [MemberData(nameof(ToString_Data))]
+        public void ToString_with_no_params_returns_string_with_ToString_of_date_and_space_and_ToString_of_time(
+            GameClockDateTime dt)
+        {
+            GameClockDate d = dt.Date;
+            string dStr = d.ToString();
+            GameClockTime t = dt.Time;
+            string tStr = t.ToString();
+
+            string actual = dt.ToString();
+
+            Assert.Equal($"{dStr} {tStr}", actual);
+        }
+
         private static GameClockDateTime YmdHms(int y, int m, int d, int h, int n, int s)
             => GameClockDate.FromYmd(y, m, d).AndHms(h, n, s);
 
