@@ -15,9 +15,27 @@ namespace GTA.Chrono
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static int Log2(uint value)
         {
+            // The 0->0 contract is fulfilled by setting the LSB to 1.
+            // Log(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
+            value |= 1;
+
             // Maybe we could use write assembly code where a `lzcnt` opcode is used and call it via a function pointer?
             // We'll need to test if the CPU supports `lzcnt` before trying to use it, of course.
             return Log2SoftwareFallback(value);
+        }
+
+        public static int Log2(ulong value)
+        {
+            // should add `value |= 1` here if we decided to add `lzcnt` support
+
+            uint hi = (uint)(value >> 32);
+
+            if (hi == 0)
+            {
+                return Log2((uint)value);
+            }
+
+            return 32 + Log2(hi);
         }
 
         private static int Log2SoftwareFallback(uint value)

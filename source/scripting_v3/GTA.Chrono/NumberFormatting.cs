@@ -38,7 +38,7 @@ namespace GTA.Chrono
 
         internal static unsafe void WriteFourDigits(uint value, char* ptr)
         {
-            uint quotient = DivRem(value, 100, out uint remainder);
+            uint quotient = MathHelpers.DivRem(value, 100, out uint remainder);
 
             WriteTwoDigits(quotient, ptr);
             WriteTwoDigits(remainder, ptr + 2);
@@ -62,11 +62,19 @@ namespace GTA.Chrono
             }
         }
 
-        private static uint DivRem(uint left, uint right, out uint remainder)
+        internal static unsafe void WriteDigits(ulong value, char* ptr, int count)
         {
-            uint quotient = left / right;
-            remainder = left - (quotient * right);
-            return quotient;
+            char* cur;
+            for (cur = ptr + count - 1; cur > ptr; cur--)
+            {
+                ulong temp = '0' + value;
+                value /= 10;
+                *cur = (char)(temp - (value * 10));
+            }
+
+            Debug.Assert(value < 10);
+            Debug.Assert(cur == ptr);
+            *cur = (char)('0' + value);
         }
     }
 }

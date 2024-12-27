@@ -4,13 +4,16 @@
 //
 
 using System;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace GTA.Chrono
 {
     /// <summary>
     /// Represents a fixed length of game clock time with the millisecond precision.
     /// </summary>
-    public readonly struct GameClockDuration : IEquatable<GameClockDuration>, IComparable<GameClockDuration>, IComparable
+    public readonly struct GameClockDuration : IEquatable<GameClockDuration>, IComparable<GameClockDuration>,
+        IComparable
     {
         private readonly long _secs;
 
@@ -21,10 +24,13 @@ namespace GTA.Chrono
 
         /// The number of seconds in a minute.
         const long SecsPerMinute = 60;
+
         /// The number of seconds in an hour.
         const long SecsPerHour = 3600;
+
         /// The number of (non-leap) seconds in days.
         const long SecsPerDay = 86_400;
+
         /// The number of (non-leap) seconds in a week.
         const long SecsPerWeek = 604_800;
 
@@ -37,24 +43,28 @@ namespace GTA.Chrono
         /// </summary>
         const long DayCountUInt32YearsLaterSinceInt32MinValueYear = (LeapYearCountOfInt32 * 366)
             + (NonLeapYearCountOfInt32 * 365) - 1;
+
         /// <summary>
         /// The same value as 135_536_076_801_503_999 seconds.
         /// </summary>
         const long MaxSecDifference = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
-            + 23 * SecsPerHour + 59 * SecsPerMinute + 59;
+                                      + 23 * SecsPerHour + 59 * SecsPerMinute + 59;
+
         const long MinSecDifference = -((DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
-            + 23 * SecsPerHour + 59 * SecsPerMinute + 59);
+                                        + 23 * SecsPerHour + 59 * SecsPerMinute + 59);
 
         /// <summary>
         /// Represents the zero <see cref="GameClockDuration"/> value. This field is read-only.
         /// </summary>
         public static GameClockDuration Zero = new(0);
+
         /// <summary>
         /// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
         /// <see cref="GameClockDateTime.MinValue"/> to <see cref="GameClockDateTime.MaxValue"/>.
         /// This field is read-only.
         /// </summary>
         public static GameClockDuration MaxValue = new(MaxSecDifference);
+
         /// <summary>
         /// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
         /// <see cref="GameClockDateTime.MaxValue"/> to <see cref="GameClockDateTime.MinValue"/>.
@@ -152,7 +162,8 @@ namespace GTA.Chrono
 
         private static void ThrowOutOfRange_TooLongDuration()
         {
-            ThrowHelper.ThrowArgumentOutOfRangeException(null, "GameClockDuration overflowed because the duration is too long.");
+            ThrowHelper.ThrowArgumentOutOfRangeException(null,
+                "GameClockDuration overflowed because the duration is too long.");
         }
 
         private static void ThrowIfOverflowedFromInt32YearMonthDay(long secs)
@@ -188,6 +199,7 @@ namespace GTA.Chrono
             if (_secs < t) return -1;
             return 0;
         }
+
         /// <summary>
         /// Compares the value of this instance to a specified <see cref="GameClockTime"/> value and indicates whether
         /// this instance is less than, the same as, or greater than the specified <see cref="GameClockTime"/> value.
@@ -231,6 +243,7 @@ namespace GTA.Chrono
 
             return new GameClockDuration(weeks * SecsPerWeek);
         }
+
         /// <summary>
         /// Returns a <see cref="GameClockDuration"/> that represents a specified number of days.
         /// </summary>
@@ -247,6 +260,7 @@ namespace GTA.Chrono
 
             return new GameClockDuration(days * SecsPerDay);
         }
+
         /// <summary>
         /// Returns a <see cref="GameClockDuration"/> that represents a specified number of hours.
         /// </summary>
@@ -263,6 +277,7 @@ namespace GTA.Chrono
 
             return new GameClockDuration(hours * SecsPerHour);
         }
+
         /// <summary>
         /// Returns a <see cref="GameClockDuration"/> that represents a specified number of minutes.
         /// </summary>
@@ -279,6 +294,7 @@ namespace GTA.Chrono
 
             return new GameClockDuration(minutes * SecsPerMinute);
         }
+
         /// <summary>
         /// Returns a <see cref="GameClockDuration"/> that represents a specified number of seconds.
         /// </summary>
@@ -295,6 +311,7 @@ namespace GTA.Chrono
 
             return new GameClockDuration(seconds);
         }
+
         public static GameClockDuration FromTimeSpan(TimeSpan timeSpan)
             => new GameClockDuration(timeSpan.Ticks / TimeSpan.TicksPerSecond);
 
@@ -368,10 +385,12 @@ namespace GTA.Chrono
                 // overflow, throw ArgumentOutOfRangeException if overflowed to avoid the exception type surprise.
                 ThrowOutOfRange_TooLongDuration();
             }
+
             ThrowIfOverflowedFromInt32YearMonthDay(result);
 
             return new GameClockDuration(result);
         }
+
         public static GameClockDuration operator *(GameClockDuration duration, double factor)
         {
             if (double.IsNaN(factor))
@@ -436,6 +455,7 @@ namespace GTA.Chrono
         /// </returns>
         public static GameClockDuration operator *(long factor, GameClockDuration duration)
             => duration * factor;
+
         /// <summary>
         /// Returns a new <see cref="GameClockDuration"/> object whose value is the result of multiplying the
         /// specified <paramref name="factor"/> and the specified <paramref name="duration"/> instance.
@@ -461,6 +481,7 @@ namespace GTA.Chrono
         /// </returns>
         public static GameClockDuration operator /(GameClockDuration duration, long divisor)
             => new GameClockDuration(duration._secs / divisor);
+
         /// <summary>
         /// Returns a new TimeSpan object whose value is the result of dividing the specified
         /// <paramref name="duration"/> by the specified <paramref name="divisor"/>.
@@ -522,6 +543,7 @@ namespace GTA.Chrono
                 }
             }
         }
+
         /// <summary>
         /// Returns a new Double value that's the result of dividing <paramref name="d1"/> by <paramref name="d2"/>.
         /// </summary>
@@ -541,6 +563,7 @@ namespace GTA.Chrono
             // Do not check the second boundary, as this method is supposed to be called within the boundary.
             return new GameClockDuration((long)System.Math.Round(secs, MidpointRounding.ToEven));
         }
+
         private static GameClockDuration FromDecimalSecondsInternal(decimal secs)
         {
             if (secs < MinSecDifference || secs > MaxSecDifference)
@@ -569,6 +592,7 @@ namespace GTA.Chrono
         {
             return _secs == value._secs;
         }
+
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
@@ -586,6 +610,95 @@ namespace GTA.Chrono
             }
 
             return false;
+        }
+
+        public override string ToString() => ToStringInternal();
+
+        [SkipLocalsInit]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private string ToStringInternal()
+        {
+            unsafe
+            {
+                // large enough for any standard string format for `GameClockDuration` (e.g. "-1568704592609:23:59:59"
+                // for the min value)
+                const int destSize = 24;
+                char* dest = stackalloc char[destSize];
+                TryFormatStandard(this, dest, destSize, out int charsWritten);
+
+                return new string(dest, 0, charsWritten);
+            }
+        }
+
+        [SkipLocalsInit]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static unsafe bool TryFormatStandard(GameClockDuration duration, char* dest,
+            int destSizeInElemCount, out int charsWritten)
+        {
+            bool secsValIsNegative = duration._secs < 0;
+            ulong absSecs = (ulong)(secsValIsNegative ? -duration._secs : duration._secs);
+
+            // start with "-HH:MM:SS" if the value is negative or else "HH:MM:SS", and adjust as necessary
+            int requiredOutputLength = secsValIsNegative ? 9 : 8;
+
+            ulong totalMinsRemaining = MathHelpers.DivRem(absSecs, SecsPerMinute, out ulong secs);
+            Debug.Assert(secs < 60);
+
+            ulong totalHoursRemaining = 0, mins = 0;
+            if (totalMinsRemaining > 0)
+            {
+                totalHoursRemaining = MathHelpers.DivRem(totalMinsRemaining, 60 /* minutes per hour */, out mins);
+                Debug.Assert(mins < 60);
+            }
+
+            ulong days = 0, hours = 0;
+            if (totalHoursRemaining > 0)
+            {
+                days = MathHelpers.DivRem(totalHoursRemaining, 24 /* hours per days */, out hours);
+                Debug.Assert(hours < 24);
+            }
+
+            int dayDigits = 0;
+            if (days > 0)
+            {
+                dayDigits = FormattingHelpers.CountDigits(days);
+                Debug.Assert(dayDigits <= 13);
+                requiredOutputLength += dayDigits + 1; // for the leading `D:`
+            }
+
+            if (destSizeInElemCount < requiredOutputLength)
+            {
+                charsWritten = 0;
+                return false;
+            }
+
+            char* p = dest;
+            if (secsValIsNegative)
+            {
+                *p++ = '-';
+            }
+
+            // Write day and separator, if necessary
+            if (dayDigits > 0)
+            {
+                NumberFormatting.WriteDigits(days, p, dayDigits);
+                p += dayDigits;
+                *p++ = ':';
+            }
+
+            // Write "HH:MM:SS"
+            NumberFormatting.WriteTwoDigits((uint)hours, p);
+            p += 2;
+            *p++ = ':';
+            NumberFormatting.WriteTwoDigits((uint)mins, p);
+            p += 2;
+            *p++ = ':';
+            NumberFormatting.WriteTwoDigits((uint)secs, p);
+            p += 2;
+            Debug.Assert(p - dest == requiredOutputLength);
+
+            charsWritten = requiredOutputLength;
+            return true;
         }
 
         /// <summary>
