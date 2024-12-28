@@ -22,9 +22,9 @@
     <PathMap>$(MSBuildProjectDirectory)=$(AssemblyName)</PathMap>
   </PropertyGroup>
   <PropertyGroup>
-    <Version>3.6.0.0</Version>
-    <FileVersion>3.6.0.0</FileVersion>
-    <AssemblyVersion>3.6.0.0</AssemblyVersion>
+    <Version>3.6.0</Version>
+    <FileVersion>3.6.0</FileVersion>
+    <AssemblyVersion>3.6.0</AssemblyVersion>
     <Authors>crosire &amp; kagikn &amp; contributors</Authors>
     <Company></Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
