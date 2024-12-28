@@ -1,4 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿//
+// Copyright (C) 2024 kagikn & contributors
+// License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
+//
+
+using System.Runtime.CompilerServices;
 
 namespace GTA.Chrono
 {

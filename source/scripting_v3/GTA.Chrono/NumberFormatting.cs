@@ -1,4 +1,9 @@
-﻿using System.Diagnostics;
+﻿//
+// Copyright (C) 2024 kagikn & contributors
+// License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
+//
+
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -30,7 +35,6 @@ namespace GTA.Chrono
             unsafe
             {
                 int offsetFromDigitsCharsArray = (int)(value * 2);
-                // pinning the `TwoDigitsChars` doesn't save time when picking two chars
                 ptr[0] = TwoDigitsChars[offsetFromDigitsCharsArray];
                 ptr[1] = TwoDigitsChars[offsetFromDigitsCharsArray + 1];
             }
