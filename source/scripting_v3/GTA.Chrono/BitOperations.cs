@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (C) 2024 kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
@@ -24,15 +24,13 @@ namespace GTA.Chrono
             // Log(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
             value |= 1;
 
-            // Maybe we could use write assembly code where a `lzcnt` opcode is used and call it via a function pointer?
-            // We'll need to test if the CPU supports `lzcnt` before trying to use it, of course.
+            // Bothering to call lzcnt code from C++ code or calling asm code in C# code isn't worth the effort,
+            // because calling lzcnt saves only 25% of the time compared to the software fallback.
             return Log2SoftwareFallback(value);
         }
 
         public static int Log2(ulong value)
         {
-            // should add `value |= 1` here if we decided to add `lzcnt` support
-
             uint hi = (uint)(value >> 32);
 
             if (hi == 0)
