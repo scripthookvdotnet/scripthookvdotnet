@@ -29,8 +29,6 @@ namespace GTA.Chrono
             _secs = secs;
         }
 
-        private const char ColonForTimeSeparator = ':';
-
         /// <summary>
         /// Gets the largest possible value of <see cref="GameClockDate"/>.
         /// </summary>
@@ -299,20 +297,14 @@ namespace GTA.Chrono
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private unsafe string ToStringInternal()
         {
-            const int RequiredStrLen = 8;
-            char* buffer = stackalloc char[RequiredStrLen];
-
-            Deconstruct(out int hour, out int minute, out int second);
-
-            NumberFormatting.WriteTwoDigits((uint)hour, buffer);
-            buffer[2] = ColonForTimeSeparator;
-
-            NumberFormatting.WriteTwoDigits((uint)minute, buffer + 3);
-            buffer[5] = ColonForTimeSeparator;
-
-            NumberFormatting.WriteTwoDigits((uint)second, buffer + 6);
-
-            return new string(buffer, 0, RequiredStrLen);
+            unsafe
+            {
+                // this is the minimum number that is large enough to contain any time string
+                const int bufferLen = 8;
+                char* buffer = stackalloc char[bufferLen];
+                GameClockDateTimeFormat.TryFormatTimeS(this, buffer, bufferLen, out int written);
+                return new string(buffer, 0, written);
+            }
         }
 
         /// <summary>

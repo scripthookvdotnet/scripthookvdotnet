@@ -8,7 +8,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace GTA.Chrono
 {
@@ -58,8 +57,6 @@ namespace GTA.Chrono
 
         private static OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
         private static OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
-
-        private const char HyphenForDateSeparator = '-';
 
         /// <summary>
         /// Represents the largest possible value of a <see cref="GameClockDate"/>.
@@ -921,98 +918,20 @@ namespace GTA.Chrono
             return false;
         }
 
-        public override string ToString()
+        public override string ToString() => ToStringInternal();
+
+        [SkipLocalsInit]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private unsafe string ToStringInternal()
         {
             unsafe
             {
-                if (_year < -9999 || _year > 9999)
-                {
-                    return ToStringForDateWithMoreThan4DigitYear();
-                }
-
-                return ToStringWith4DigitYear();
+                // this is the minimum number that is large enough to contain any date string and is multiple of 4
+                const int bufferLen = 20;
+                char* buffer = stackalloc char[bufferLen];
+                GameClockDateTimeFormat.TryFormatDateS(this, buffer, bufferLen, out int written);
+                return new string(buffer, 0, written);
             }
-        }
-
-        [SkipLocalsInit]
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private unsafe string ToStringWith4DigitYear()
-        {
-            if (_year < 0)
-            {
-                return ToStringWithNegative4DigitYear();
-            }
-            const int RequiredStrLen = 10;
-            char* buffer = stackalloc char[RequiredStrLen];
-
-            NumberFormatting.WriteFourDigits((uint)_year, buffer);
-            WriteMonthDayStrWithLeadingHyphen(buffer + 4);
-
-            return new string(buffer, 0, RequiredStrLen);
-        }
-
-        [SkipLocalsInit]
-        // Negative year values would be way less common than the year values between 0 and 9999, so no aggressive
-        // inlining
-        private unsafe string ToStringWithNegative4DigitYear()
-        {
-            // Without considering the year part but considering the first hyphen, any date string takes 6 chars
-            // ("-0001-01-01", "-2006-01-02" etc...)
-            const int RequiredStrLen = 11;
-            char* buffer = stackalloc char[RequiredStrLen];
-
-            buffer[0] = '-';
-            NumberFormatting.WriteFourDigits((uint)(-_year), buffer + 1);
-            WriteMonthDayStrWithLeadingHyphen(buffer + 5);
-
-            return new string(buffer, 0, RequiredStrLen);
-        }
-
-        [SkipLocalsInit]
-        // Year values more than 9999 would be way less common than the year values between 0 and 9999, so no aggressive
-        // inlining
-        private unsafe string ToStringForDateWithMoreThan4DigitYear()
-        {
-            const int MinDigitsForYearPart = 4;
-            const int RequiredStrLenWithoutYearPart = 6;
-
-            bool yearIsNegative = _year < 0;
-            // We can't use `System.Math.Abs(int)`, because it throws an `OverflowException` for int.MinValue,
-            // but negating and then casting int.MinValue to uint doesn't cause any problems for `WriteDigits`.
-            uint absYear = (uint)(yearIsNegative ? -_year : _year);
-
-            int yearDigitCount = System.Math.Max(FormattingHelpers.CountDigits(absYear), MinDigitsForYearPart);
-            int bufferLen = yearIsNegative
-                ? yearDigitCount + RequiredStrLenWithoutYearPart + 1
-                : yearDigitCount + RequiredStrLenWithoutYearPart;
-
-            char* buffer = stackalloc char[bufferLen];
-
-            int i;
-            if (yearIsNegative)
-            {
-                buffer[0] = '-';
-                i = 1;
-            }
-            else
-            {
-                i = 0;
-            }
-
-            NumberFormatting.WriteDigits(absYear, buffer + i, yearDigitCount);
-            i += yearDigitCount;
-            WriteMonthDayStrWithLeadingHyphen(buffer + i);
-
-            return new string(buffer, 0, bufferLen);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private unsafe void WriteMonthDayStrWithLeadingHyphen(char* ptr)
-        {
-            ptr[0] = HyphenForDateSeparator;
-            NumberFormatting.WriteTwoDigits((uint)Month, ptr + 1);
-            ptr[3] = HyphenForDateSeparator;
-            NumberFormatting.WriteTwoDigits((uint)Day, ptr + 4);
         }
 
         /// <summary>
