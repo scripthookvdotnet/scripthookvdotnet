@@ -24,8 +24,8 @@ namespace GTA.Chrono
             // Log(1) is 0, and setting the LSB for values > 1 does not change the log2 result.
             value |= 1;
 
-            // Bothering to call lzcnt code from C++ code or calling asm code in C# code isn't worth the effort,
-            // because calling lzcnt saves only 25% of the time compared to the software fallback.
+            // Bothering to call `lzcnt` code from C++ code or calling asm code in C# code isn't worth the effort,
+            // because calling `lzcnt` saves only 25% of the time compared to the software fallback.
             return Log2SoftwareFallback(value);
         }
 
@@ -43,18 +43,20 @@ namespace GTA.Chrono
 
         private static int Log2SoftwareFallback(uint value)
         {
-            // No AggressiveInlining due to large method size.
-            // Has conventional contract 0->0 (Log(0) is undefined).
+            // No `AggressiveInlining` due to large method size.
+            // Has conventional contract 0->0 (`Log(0)` is undefined).
 
-            // Fill trailing zeros with ones, eg 00010010 becomes 00011111
+            // Fill trailing zeros with ones, eg `00010010` becomes `00011111`
             value |= value >> 01;
             value |= value >> 02;
             value |= value >> 04;
             value |= value >> 08;
             value |= value >> 16;
 
-            // uint.MaxValue >> 27 is always in range [0 - 31] so there's no need to let perform bounds check, really
-            return (int)Log2DeBruijn[(value * 0x07C4ACDDu) >> 27];
+            // `uint.MaxValue >> 27` is always in range [0 - 31] so there's no need to let the JIT perform bound
+            // checks, really, but pinning the array takes more time than accepting bound checks if we access
+            // the array only couple times after pinning it.
+            return Log2DeBruijn[(value * 0x07C4ACDDu) >> 27];
         }
     }
 }
