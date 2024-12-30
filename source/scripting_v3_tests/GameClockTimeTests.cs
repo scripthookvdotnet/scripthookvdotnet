@@ -219,6 +219,25 @@ namespace ScriptHookVDotNet_APIv3_Tests
             Assert.Equal(-expectedDurationNonNegative, negDuration);
         }
 
+        public static TheoryData<GameClockTime, string> ToString_Data =>
+            new()
+            {
+                { GameClockTime.FromHms(0, 0, 0), "00:00:00" },
+                { GameClockTime.FromHms(1, 2, 3), "01:02:03" },
+                { GameClockTime.FromHms(13, 14, 15), "13:14:15" },
+                { GameClockTime.FromHms(23, 59, 59), "23:59:59" },
+            };
+
+        [Theory]
+        [MemberData(nameof(ToString_Data))]
+        public void ToString_with_no_params_returns_string_with_2_digit_hour_min_and_sec_concatenated_with_colon_separator(
+            GameClockTime date, string expected)
+        {
+            string actual = date.ToString();
+
+            Assert.Equal(expected, actual);
+        }
+
         private static void VerifyGameClockTimeHms(GameClockTime gameClockTime, int hour, int minute, int second)
         {
             Assert.Equal(hour, gameClockTime.Hour);

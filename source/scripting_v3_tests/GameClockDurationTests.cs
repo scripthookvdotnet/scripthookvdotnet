@@ -18,6 +18,9 @@ namespace ScriptHookVDotNet_APIv3_Tests
         /// is 1.0 or less.
         const double MinSafeIntegerOutOfF64 = -9007199254740991.0;
 
+        private const long SecsPerHour = 3600;
+        private const long SecsPerMinute = 60;
+
         [Fact]
         public void FromSeconds_with_the_arg_1_does_not_return_the_same_duration_as_zero()
         {
@@ -153,6 +156,22 @@ namespace ScriptHookVDotNet_APIv3_Tests
             GameClockDuration actualDuration = GameClockDuration.FromSeconds(secs);
 
             Assert.Equal(expectedDays, actualDuration.WholeDays);
+        }
+
+        [Fact]
+        public void Whole_days_of_max_value_is_1568704592609_days()
+        {
+            long wholeDaysOfMaxDuration = GameClockDuration.MaxValue.WholeDays;
+
+            Assert.Equal(1568704592609, wholeDaysOfMaxDuration);
+        }
+
+        [Fact]
+        public void Whole_days_of_min_value_is_negative_1568704592609_days()
+        {
+            long wholeDaysOfMinDuration = GameClockDuration.MinValue.WholeDays;
+
+            Assert.Equal(-1568704592609, wholeDaysOfMinDuration);
         }
 
         [Fact]
@@ -540,6 +559,92 @@ namespace ScriptHookVDotNet_APIv3_Tests
             // Note: this test will fail if the results as both double and decimal fall in the same value
             Assert.Equal(expected.WholeSeconds, actual.WholeSeconds);
             Assert.NotEqual(expected.WholeSeconds, (long)(duration.WholeSeconds / factor));
+        }
+
+        public static TheoryData<GameClockDuration, string> ToString_NonNegative_Less_Than_86400_Secs_Data =>
+            new()
+            {
+                { GameClockDuration.FromSeconds(0), "00:00:00" },
+                { GameClockDuration.FromSeconds(1), "00:00:01" },
+                { GameClockDuration.FromMinutes(33), "00:33:00" },
+                { GameClockDuration.FromHours(15), "15:00:00" },
+                {
+                    GameClockDuration.FromSeconds(23 * SecsPerHour + 59 * SecsPerMinute + 59),
+                    "23:59:59"
+                },
+            };
+
+        [Theory]
+        [MemberData(nameof(ToString_NonNegative_Less_Than_86400_Secs_Data))]
+        public void
+        ToString_with_no_params_returns_string_with_2_digit_hour_min_and_sec_concatenated_with_colon_separator_if_duration_has_0_days_and_is_not_negative(
+            GameClockDuration date, string expected)
+        {
+            string actual = date.ToString();
+
+            Assert.Equal(expected, actual);
+        }
+
+        public static TheoryData<GameClockDuration, string> ToString_Negative_More_Than_86400_Secs_Data =>
+            new()
+            {
+                { -GameClockDuration.FromSeconds(1), "-00:00:01" },
+                { -GameClockDuration.FromMinutes(22), "-00:22:00" },
+                { -GameClockDuration.FromHours(19), "-19:00:00" },
+                {
+                    -GameClockDuration.FromSeconds(23 * SecsPerHour + 59 * SecsPerMinute + 59),
+                    "-23:59:59"
+                },
+            };
+
+        [Theory]
+        [MemberData(nameof(ToString_Negative_More_Than_86400_Secs_Data))]
+        public void
+        ToString_with_no_params_returns_string_with_neg_sign_2_digit_hour_min_and_sec_concatenated_with_colon_separator_if_duration_has_0_days_and_is_negative(
+            GameClockDuration date, string expected)
+        {
+            string actual = date.ToString();
+
+            Assert.Equal(expected, actual);
+        }
+
+        public static TheoryData<GameClockDuration, string> ToString_NonNegative_86400_Or_More_Secs_Data =>
+            new()
+            {
+                { GameClockDuration.FromDays(1), "1:00:00:00" },
+                { GameClockDuration.FromDays(14) + GameClockDuration.FromSeconds(5), "14:00:00:05" },
+                { GameClockDuration.FromDays(190) + GameClockDuration.FromMinutes(37), "190:00:37:00" },
+                { GameClockDuration.MaxValue, "1568704592609:23:59:59" },
+            };
+
+        [Theory]
+        [MemberData(nameof(ToString_NonNegative_86400_Or_More_Secs_Data))]
+        public void
+            ToString_with_no_params_returns_string_with_no_padding_whole_days_2_digit_hour_min_and_sec_concatenated_with_colon_separator_if_duration_has_1_or_more_days_and_is_not_negative(
+                GameClockDuration date, string expected)
+        {
+            string actual = date.ToString();
+
+            Assert.Equal(expected, actual);
+        }
+
+        public static TheoryData<GameClockDuration, string> ToString_Negative_86400_Or_Less_Secs_Data =>
+            new()
+            {
+                { -GameClockDuration.FromDays(1), "-1:00:00:00" },
+                { -(GameClockDuration.FromDays(1000) + GameClockDuration.FromHours(5)), "-1000:05:00:00" },
+                { GameClockDuration.MinValue, "-1568704592609:23:59:59" },
+            };
+
+        [Theory]
+        [MemberData(nameof(ToString_Negative_86400_Or_Less_Secs_Data))]
+        public void
+            ToString_with_no_params_returns_string_with_neg_sign_no_padding_whole_days_2_digit_hour_min_and_sec_concatenated_with_colon_separator_if_duration_has_1_or_more_days_and_is_negative(
+                GameClockDuration date, string expected)
+        {
+            string actual = date.ToString();
+
+            Assert.Equal(expected, actual);
         }
     }
 }

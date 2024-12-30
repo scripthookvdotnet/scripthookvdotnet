@@ -918,6 +918,22 @@ namespace GTA.Chrono
             return false;
         }
 
+        public override string ToString() => ToStringInternal();
+
+        [SkipLocalsInit]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private unsafe string ToStringInternal()
+        {
+            unsafe
+            {
+                // this is the minimum number that is large enough to contain any date string and is multiple of 4
+                const int bufferLen = 20;
+                char* buffer = stackalloc char[bufferLen];
+                GameClockDateTimeFormat.TryFormatDateS(this, buffer, bufferLen, out int written);
+                return new string(buffer, 0, written);
+            }
+        }
+
         /// <summary>
         /// Indicates whether two <see cref="GameClockDate"/> instances are equal.
         /// </summary>
