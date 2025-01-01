@@ -79,13 +79,30 @@ namespace GTA
 
         public bool IsVariationValid(int index, int textureIndex = 0)
         {
-            if (index == 0)
+            const uint NumAnchors = 12;
+
+            if ((uint)AnchorPoint >= NumAnchors)
             {
-                return true; // No prop is always valid
+                return false;
             }
 
-            return Function.Call<bool>(Hash.SET_PED_PRELOAD_PROP_DATA, _ped.Handle, (int)AnchorPoint, index - 1, textureIndex);
+            // No prop is always valid if `index` or `textureIndex` is negative, and `SET_PED_PROP_INDEX` does nothing
+            // when either of the passed drawable index or texture index is negative.
+            int actualDrawableIndex = index - 1;
+            return IsPedPropDrawableVariationValid(_ped, AnchorPoint, actualDrawableIndex) &&
+                   IsPedPropTextureVariationValid(_ped, AnchorPoint, actualDrawableIndex, textureIndex);
         }
+
+        private static bool IsPedPropDrawableVariationValid(Ped ped, PedPropAnchorPoint anchorPoint, int drawableIndex)
+            => (drawableIndex > 0 &&
+                (Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, ped.Handle,
+                (int)anchorPoint) < drawableIndex));
+
+        private static bool IsPedPropTextureVariationValid(Ped ped, PedPropAnchorPoint anchorPoint, int drawableIndex,
+            int textureIndex)
+            => (textureIndex >= 0 &&
+                (Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, ped.Handle,
+                    (int)anchorPoint, drawableIndex) < textureIndex));
 
         public bool HasVariations => Count > 1;
 
