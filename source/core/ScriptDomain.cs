@@ -453,15 +453,26 @@ namespace SHVDN
             if (!string.IsNullOrEmpty(apiVersionString) && int.TryParse(apiVersionString.Substring(1), out int apiVersion))
             {
                 scriptApi = ScriptDomain.CurrentDomain._scriptingApiAsms.FirstOrDefault(x => x.GetName().Version.Major == apiVersion);
-            }
 
-            // Reference the oldest scripting API that is not deprecated by default to stay compatible with existing scripts
-            scriptApi ??= _scriptingApiAsms.FirstOrDefault(x => !IsApiVersionDeprecated(x.GetName().Version));
-            if (scriptApi == null)
+                if (scriptApi == null)
+                {
+                    string apiVersionStr = "v" + apiVersion.ToString();
+                    Log.Message(Log.Level.Error, "Could not compile ", Path.GetFileName(filename), " because " +
+                        "the scripting API with the specified version (", apiVersionStr, ") to compile scripts " +
+                        "is not loaded.");
+                    return false;
+                }
+            }
+            else
             {
-                Log.Message(Log.Level.Error, "Could not compile ", Path.GetFileName(filename), " because " +
-                    "there are not any loaded scripting APIs that are not deprecated to compile scripts.");
-                return false;
+                // Reference the oldest scripting API that is not deprecated by default to stay compatible with existing scripts
+                scriptApi ??= _scriptingApiAsms.FirstOrDefault(x => !IsApiVersionDeprecated(x.GetName().Version));
+                if (scriptApi == null)
+                {
+                    Log.Message(Log.Level.Error, "Could not compile ", Path.GetFileName(filename), " because " +
+                        "there are not any loaded scripting APIs that are not deprecated to compile scripts.");
+                    return false;
+                }
             }
             compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
 
