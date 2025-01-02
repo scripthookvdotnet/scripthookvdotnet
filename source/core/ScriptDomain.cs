@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 
 namespace SHVDN
 {
@@ -88,6 +89,12 @@ namespace SHVDN
         private static readonly Version s_FirstVerWhereScriptingAssemblyHasProperVersionInfo = new Version(2, 9, 0, 0);
         private static readonly Version s_LastVerWhereScriptingAssemblyDoesNotHaveProperVersionInfo = new Version(2, 8, 0, 0);
         private static readonly Version s_FirstApiVerWhereNativeCallDoesntResetTimeoutByDefault = new Version(3, 7, 0, 0);
+
+        private static readonly Regex s_ScriptingApiModuleNamePattern
+            = new Regex(@"^ScriptHookVDotNet\d\.dll$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        private static readonly Regex s_ScriptingApiModuleNamePatternWithVersionCapture
+            = new Regex(@"^ScriptHookVDotNet(?<ver>\d)\.dll$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         private static ScriptDomain s_currentDomain;
         // `Dispose` won't be called in this instance because it may be too difficult to call correctly due to how
@@ -298,7 +305,7 @@ namespace SHVDN
             // Load API assemblies into this script domain
             foreach (string apiPath in Directory.EnumerateFiles(apiBasePath, "ScriptHookVDotNet*.dll", SearchOption.TopDirectoryOnly))
             {
-                if (!Regex.IsMatch(Path.GetFileName(apiPath), @"^ScriptHookVDotNet\d\.dll$"))
+                if (!s_ScriptingApiModuleNamePattern.IsMatch(Path.GetFileName(apiPath)))
                 {
                     continue;
                 }
@@ -314,6 +321,25 @@ namespace SHVDN
                     Log.Message(Log.Level.Error, "Unable to load ", Path.GetFileName(apiPath), ": ", ex.ToString());
                 }
             }
+
+            if (_scriptingApiAsms.Count == 0)
+            {
+                Log.Message(Log.Level.Error, "No scripting API .dll files (\"ScriptingVDotNet*.dll\") were loaded, " +
+                    "and therefore ScriptHookVDotNet can't load any scripts or have the console work including " +
+                    "the reload feature except for displaying logs. Make sure *at least* ScriptingVDotNet3.dll is in" +
+                    "the root directory, so the console can work and scripts that are built against only " +
+                    "ScriptingVDotNet3.dll (the v3 API) can work.");
+
+                return;
+            }
+            else if (!_scriptingGtaClassTypesCacheDict.TryGetValue(3, out Type _))
+            {
+                Log.Message(Log.Level.Warning, "ScriptingVDotNet3.dll is not loaded, and therefore ScriptHookVDotNet " +
+                    "can't have the console work except for displaying logs. You should make sure the dll file is in " +
+                    "the root directory, so the console can work. You can't reload scripts via the console because " +
+                    "it is not working properly.");
+            }
+
             // Sort the api list by major version so the order is guaranteed to be sorted in ascending order regardless of how Directory.EnumerateFiles enumerates
             // as long as all of major versions are unique
             _scriptingApiAsms.Sort((x, y) => x.GetName().Version.Major.CompareTo(y.GetName().Version.Major));
@@ -456,7 +482,7 @@ namespace SHVDN
 
                 if (scriptApi == null)
                 {
-                    string apiVersionStr = "v" + apiVersion.ToString();
+                    string apiVersionStr = "ScriptHookVDotNet" + apiVersion.ToString() + ".dll";
                     Log.Message(Log.Level.Error, "Could not compile ", Path.GetFileName(filename), " because " +
                         "the scripting API with the specified version (", apiVersionStr, ") to compile scripts " +
                         "is not loaded.");
@@ -564,14 +590,30 @@ namespace SHVDN
             Version resolvedApiVersion = null;
             ScriptAssemblyInfo asmInfo = new ScriptAssemblyInfo(assembly, filename);
 
-            Dictionary<int, Version> targetApis = MakeTargetApisDictPerMajorVerFromAssemblyRefs(assembly);
+            MakeTargetApisDictPerMajorVerFromAssemblyRefs(assembly, out Dictionary<int, Version> targetApis,
+                out int[] missingApiVersions);
 
             // Don't bother to enumerate the types if the assembly doesn't have any references to scripting APIs
             // because enumerating types is expensive enough for users to notice the difference
             if (targetApis.Count == 0)
             {
-                Log.Message(Log.Level.Info, "Found no compatible scripts in ", Path.GetFileName(filename),
+                if (missingApiVersions.Length == 1)
+                {
+                    string missingApiStr = "ScriptHookVDotNet" + missingApiVersions[0].ToString() + ".dll";
+                    Log.Message(Log.Level.Error, "Failed to load scripts in ", Path.GetFileName(filename),
+                        " because ", missingApiStr, " is missing in the root directory.");
+                }
+                else if (missingApiVersions.Length > 1)
+                {
+                    string missingApiVersionsStr = string.Join(", ", missingApiVersions);
+                    Log.Message(Log.Level.Error, "Failed to load scripts in ", Path.GetFileName(filename),
+                    " because ", missingApiVersionsStr, " are missing in the root directory.");
+                }
+                else
+                {
+                    Log.Message(Log.Level.Info, "Found no compatible scripts in ", Path.GetFileName(filename),
                     " but loaded for scripts.");
+                }
                 return false;
             }
             if (targetApis.Count > 1)
@@ -768,18 +810,28 @@ namespace SHVDN
             return scriptTypeCount != 0;
         }
 
-        private Dictionary<int, Version> MakeTargetApisDictPerMajorVerFromAssemblyRefs(Assembly asm)
+        private void MakeTargetApisDictPerMajorVerFromAssemblyRefs(Assembly asm,
+            out Dictionary<int, Version> resolvedApis, out int[] missingApiVersions)
         {
-           Dictionary<int, Version> targetVerDict = new Dictionary<int, Version>(_scriptingApiAsmNamesCache.Count);
+            resolvedApis = new Dictionary<int, Version>(_scriptingApiAsmNamesCache.Count);
+            SortedSet<int> missingApiVersionList = new SortedSet<int>();
 
             foreach (AssemblyName asmName in asm.GetReferencedAssemblies())
             {
                 if (_scriptingApiAsmNamesCache.Contains(asmName.Name))
                 {
                     Version asmVer = asmName.Version;
-                    UpdateDictIfValueDoesNotExistOnKeyOrValueIsOlder(targetVerDict, asmVer);
+                    UpdateDictIfValueDoesNotExistOnKeyOrValueIsOlder(resolvedApis, asmVer);
+                    continue;
                 }
-                else if (asmName.Name.Equals("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+                string asmNameStr = asmName.Name;
+                if (!asmNameStr.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
+                {
+                    // we know the assembly isn't ours now
+                    continue;
+                }
+
+                if (asmNameStr.Length == "ScriptHookVDotNet".Length)
                 {
                     Version verInfoInAsm = asmName.Version;
                     Version targetVerToUseForDict
@@ -790,11 +842,20 @@ namespace SHVDN
                     // There **are** scripts that have references to version-less (0.0.0.0) SHVDN and versioned one
                     // in the *same* assembly, such as "Animation Viewer" by Guadmaz. Therefore, we need to avoid
                     // naively calling `Dictionary.Add` without checking if the key already exists.
-                    UpdateDictIfValueDoesNotExistOnKeyOrValueIsOlder(targetVerDict, targetVerToUseForDict);
+                    UpdateDictIfValueDoesNotExistOnKeyOrValueIsOlder(resolvedApis, targetVerToUseForDict);
+                }
+                else
+                {
+                    Match nameMatch = s_ScriptingApiModuleNamePatternWithVersionCapture.Match(asmName.Name);
+                    if (nameMatch.Success)
+                    {
+                        int capturedMajorVer = int.Parse(nameMatch.Groups["ver"].Value);
+                        missingApiVersionList.Add(capturedMajorVer);
+                    }
                 }
             }
 
-            return targetVerDict;
+            missingApiVersions = missingApiVersionList.ToArray();
 
             static void UpdateDictIfValueDoesNotExistOnKeyOrValueIsOlder(Dictionary<int, Version> dict,
                 Version newCandidate)
