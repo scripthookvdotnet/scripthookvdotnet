@@ -322,24 +322,6 @@ namespace SHVDN
                 }
             }
 
-            if (_scriptingApiAsms.Count == 0)
-            {
-                Log.Message(Log.Level.Error, "No scripting API .dll files (\"ScriptHookVDotNet*.dll\") were loaded, " +
-                    "and therefore ScriptHookVDotNet can't load any scripts or have the console work including " +
-                    "the reload feature except for displaying logs. Make sure *at least* ScriptHookVDotNet3.dll is in" +
-                    "the root directory, so the console can work and scripts that are built against only " +
-                    "ScriptHookVDotNet3.dll (the v3 API) can work.");
-
-                return;
-            }
-            else if (!_scriptingGtaClassTypesCacheDict.TryGetValue(3, out Type _))
-            {
-                Log.Message(Log.Level.Warning, "ScriptHookVDotNet3.dll is not loaded, and therefore ScriptHookVDotNet " +
-                    "can't have the console work except for displaying logs. You should make sure the dll file is in " +
-                    "the root directory, so the console can work. You can't reload scripts via the console because " +
-                    "it is not working properly.");
-            }
-
             // Sort the api list by major version so the order is guaranteed to be sorted in ascending order regardless of how Directory.EnumerateFiles enumerates
             // as long as all of major versions are unique
             _scriptingApiAsms.Sort((x, y) => x.GetName().Version.Major.CompareTo(y.GetName().Version.Major));
@@ -360,6 +342,24 @@ namespace SHVDN
                 }
             }
             _scriptingGtaClassTypesCacheArray = _scriptingGtaClassTypesCacheDict.Values.ToArray();
+
+            if (_scriptingApiAsms.Count == 0)
+            {
+                Log.Message(Log.Level.Error, "No scripting API .dll files (\"ScriptHookVDotNet*.dll\") were loaded, " +
+                    "and therefore ScriptHookVDotNet can't load any scripts or have the console work including " +
+                    "the reload feature except for displaying logs. Make sure *at least* ScriptHookVDotNet3.dll is in" +
+                    "the root directory, so the console can work and scripts that are built against only " +
+                    "ScriptHookVDotNet3.dll (the v3 API) can work.");
+
+                return;
+            }
+            else if (!_scriptingGtaClassTypesCacheDict.TryGetValue(3, out Type _))
+            {
+                Log.Message(Log.Level.Warning, "ScriptHookVDotNet3.dll is not loaded, and therefore ScriptHookVDotNet " +
+                    "can't have the console work except for displaying logs. You should make sure the dll file is in " +
+                    "the root directory, so the console can work. You can't reload scripts via the console because " +
+                    "it is not working properly.");
+            }
         }
 
 
