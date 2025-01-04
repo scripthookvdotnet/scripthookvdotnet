@@ -25,7 +25,7 @@ body:
       label: 📦 What modules are you seeing the problem on?
       multiple: true
       options:
-        - ScriptHookVDotNet.asi (runtime)
+        - ScriptHookVDotNet.asi (core/runtime)
         - ScriptHookVDotNet3.dll (v3 SDK/API)
         - ScriptHookVDotNet2.dll (v2 SDK/API)
   - type: input
