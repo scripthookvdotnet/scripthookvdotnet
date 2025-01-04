@@ -324,17 +324,17 @@ namespace SHVDN
 
             if (_scriptingApiAsms.Count == 0)
             {
-                Log.Message(Log.Level.Error, "No scripting API .dll files (\"ScriptingVDotNet*.dll\") were loaded, " +
+                Log.Message(Log.Level.Error, "No scripting API .dll files (\"ScriptHookVDotNet*.dll\") were loaded, " +
                     "and therefore ScriptHookVDotNet can't load any scripts or have the console work including " +
-                    "the reload feature except for displaying logs. Make sure *at least* ScriptingVDotNet3.dll is in" +
+                    "the reload feature except for displaying logs. Make sure *at least* ScriptHookVDotNet3.dll is in" +
                     "the root directory, so the console can work and scripts that are built against only " +
-                    "ScriptingVDotNet3.dll (the v3 API) can work.");
+                    "ScriptHookVDotNet3.dll (the v3 API) can work.");
 
                 return;
             }
             else if (!_scriptingGtaClassTypesCacheDict.TryGetValue(3, out Type _))
             {
-                Log.Message(Log.Level.Warning, "ScriptingVDotNet3.dll is not loaded, and therefore ScriptHookVDotNet " +
+                Log.Message(Log.Level.Warning, "ScriptHookVDotNet3.dll is not loaded, and therefore ScriptHookVDotNet " +
                     "can't have the console work except for displaying logs. You should make sure the dll file is in " +
                     "the root directory, so the console can work. You can't reload scripts via the console because " +
                     "it is not working properly.");
