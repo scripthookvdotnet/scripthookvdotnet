@@ -49,7 +49,9 @@ body:
       required: true
     attributes:
       label: 🎮 Game Version
-      description: See ScriptHookV.log to check. You should see a string like "VER_1_0_2845_0", and convert it to like "v1.0.2845.0" to fill in.
+      description: | 
+        See ScriptHookV.log to check. You should see a string like "VER_1_0_2845_0", and convert it to like "v1.0.2845.0" to fill in.
+        Pirated versions are not acceptable and the created issue will be closed as not planned (unless it's reproducible with some legitimate versions).
       placeholder: "v1.0.2845.0"
   - type: textarea
     id: bug-desc
