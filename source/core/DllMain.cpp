@@ -17,9 +17,6 @@ DWORD sGameMainThreadId = 0;
 std::shared_mutex sGameMainThreadVarsMutex;
 std::atomic_bool sGameMainThreadVarsInitialized(false);
 
-// Use atomic to guarantee its visibility
-// Script domain should be reloaded as soon as getting requested to reload, so this should be used with std::memory_order_seq_cst
-// when storing a value so a xchg instruction will be issued for memory barrier
 std::atomic_bool sScriptDomainRequestedToReload(false);
 
 static void SetTlsContext(LPVOID context)
@@ -49,7 +46,7 @@ static DWORD GetGameMainThreadId()
 
 static void RequestScriptDomainToReload()
 {
-    sScriptDomainRequestedToReload.store(true);
+    sScriptDomainRequestedToReload.store(true, std::memory_order_release);
 }
 
 #pragma managed(pop)
@@ -805,9 +802,9 @@ std::atomic<HANDLE> hClrWaitEvent{ nullptr };
 std::atomic<HANDLE> hClrContinueEvent{ nullptr };
 
 std::atomic_bool sClrEventsInitialized(false);
-// proper synchronization with event objects would cause a deadlock or timeout (for executing longer than 2 seconds)
+// synchronization with event objects would cause a deadlock or timeout (for executing longer than 2 seconds)
 // in DllMain, so use a bool variable to tell procedures that the asi wants to get freed
-// use atomic_bool to avoid unnecessary optimization, with std::memory_order_seq_cst just in case for a xchg instruction
+// use `atomic_bool` to avoid unnecessary optimization
 std::atomic_bool sClrThreadRequestedToExit(false);
 
 int sTempValForEagerClrDllLoading = 0;
@@ -821,13 +818,15 @@ static DWORD ClrThreadProc(LPVOID lparam)
     sTempValForEagerClrDllLoading = EmptyClrMethodForEagerClrDllLoading();
 
     while (!sClrEventsInitialized.load(std::memory_order_acquire)) {
-        Sleep(0);
+        // We want to give up our time slice of this thread but don't want to busy wait at all if not the all events
+        // are initialized, so sleep at least 1 tick per test
+        Sleep(1);
     }
 
     // DllMain gets called before ScriptHookV starts script fibers, so wait until getting signaled by ScriptMain
-    WaitForSingleObject(hClrContinueEvent.load(), INFINITE);
+    WaitForSingleObject(hClrContinueEvent.load(std::memory_order_relaxed), INFINITE);
 
-    while (!sClrThreadRequestedToExit) {
+    while (!sClrThreadRequestedToExit.load(std::memory_order_relaxed)) {
         ScriptHookVDotNet_ManagedInit();
         sScriptDomainRequestedToReload.store(false, std::memory_order_release);
 
@@ -836,8 +835,8 @@ static DWORD ClrThreadProc(LPVOID lparam)
         while (!sScriptDomainRequestedToReload.load(std::memory_order_relaxed)
             && !sClrThreadRequestedToExit.load(std::memory_order_relaxed)) {
             ScriptHookVDotNet_ManagedTick();
-            SetEvent(hClrWaitEvent.load());
-            WaitForSingleObject(hClrContinueEvent, INFINITE);
+            SetEvent(hClrWaitEvent.load(std::memory_order_relaxed));
+            WaitForSingleObject(hClrContinueEvent.load(std::memory_order_relaxed), INFINITE);
         }
     }
 
@@ -864,12 +863,12 @@ static void ScriptMain()
     if (sOldGameFiber != nullptr)
     {
         // The game session is reloaded, so tell our script domain to reload from this fiber
-        sScriptDomainRequestedToReload.store(true);
+        sScriptDomainRequestedToReload.store(true, std::memory_order_release);
     }
     sOldGameFiber = initialGameFiber;
 
     bool gameReloaded = false;
-    while (!sClrThreadRequestedToExit.load() && !gameReloaded)
+    while (!sClrThreadRequestedToExit.load(std::memory_order_acquire) && !gameReloaded)
     {
         // Break from the loop if ScriptHookV reloads scripts when the game creates a new session (because the old fiber is being disposed)
         // Script fibers gets executed at least once after a scriptWait call even after the new game session is reloaded,
@@ -882,10 +881,10 @@ static void ScriptMain()
             break;
         }
 
-        SetEvent(hClrContinueEvent.load());
+        SetEvent(hClrContinueEvent.load(std::memory_order_release));
         // This call blocks the main thread so GtaThread instances (which ysc or external scripts internally rely on)
         // won't be executed except for one for the SHVDN runtime as long as it is executing
-        WaitForSingleObject(hClrWaitEvent.load(), INFINITE);
+        WaitForSingleObject(hClrWaitEvent.load(std::memory_order_relaxed), INFINITE);
         scriptWait(0);
     }
 }
@@ -936,17 +935,17 @@ BOOL WINAPI DllMain(HMODULE hModule, DWORD fdwReason, LPVOID lpvReserved)
         hClrThread.store(CreateThread(NULL, NULL, ClrThreadProc, NULL, NULL, NULL), std::memory_order_release);
         break;
     case DLL_PROCESS_DETACH:
-        sClrThreadRequestedToExit.store(true);
+        sClrThreadRequestedToExit.store(true, std::memory_order_relaxed);
 
         // Gracefully let the CLR thread procedure and the script fiber exit (CloseHandle does not set events)
         // Probably these calls do not wake up ClrThreadProc however
-        SetEvent(hClrContinueEvent.load());
-        SetEvent(hClrWaitEvent.load());
+        SetEvent(hClrContinueEvent.load(std::memory_order_relaxed));
+        SetEvent(hClrWaitEvent.load(std::memory_order_relaxed));
 
         // Cleanup events and thread handles so the exe can exit
-        CloseHandle(hClrContinueEvent.load());
-        CloseHandle(hClrWaitEvent.load());
-        CloseHandle(hClrThread.load());
+        CloseHandle(hClrContinueEvent.load(std::memory_order_relaxed));
+        CloseHandle(hClrWaitEvent.load(std::memory_order_relaxed));
+        CloseHandle(hClrThread.load(std::memory_order_relaxed));
         // Unregister ScriptHookVDotNet native script
         scriptUnregister(hModule);
         // Unregister handler for keyboard messages
