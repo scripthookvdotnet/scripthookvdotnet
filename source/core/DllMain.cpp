@@ -881,7 +881,7 @@ static void ScriptMain()
             break;
         }
 
-        SetEvent(hClrContinueEvent.load(std::memory_order_release));
+        SetEvent(hClrContinueEvent.load(std::memory_order_relaxed));
         // This call blocks the main thread so GtaThread instances (which ysc or external scripts internally rely on)
         // won't be executed except for one for the SHVDN runtime as long as it is executing
         WaitForSingleObject(hClrWaitEvent.load(std::memory_order_relaxed), INFINITE);
