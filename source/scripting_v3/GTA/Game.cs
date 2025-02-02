@@ -349,8 +349,20 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets a value indicating whether there is a loading screen being displayed.
+        /// Gets a value indicating whether there is a loading screen being displayed if Script Hook V v1.0.3337.0 or
+        /// older is installed to the game.
         /// </summary>
+        /// <remarks>
+        /// This property always return <see langword="false"/> since Script Hook V v1.0.3351.0+ This is because
+        /// SHV changed the way SHV scripts start in v1.0.3351.0 (SHV version and not game version) and they never be
+        /// able to start before the game finished showing the loading screen since SHV v1.0.3351.0+. See
+        /// <see href="https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1549">#1549 on the main GitHub
+        /// repository</see> for details.
+        /// </remarks>
+        [Obsolete("`Game.IsLoading` is obsolete because Script Hook V changed the way SHV scripts start in" +
+            "v1.0.3351.0 (SHV version and not game version) and they never be able to start before the game " +
+            "finished showing the loading screen since SHV v1.0.3351.0+. It is advised not to use `Game.IsLoading`" +
+            "at all.")]
         public static bool IsLoading => Function.Call<bool>(Hash.GET_IS_LOADING_SCREEN_ACTIVE);
 
         /// <summary>
