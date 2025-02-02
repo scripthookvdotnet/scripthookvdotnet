@@ -18,7 +18,7 @@ The issues page should be primarily used for bug reports and focused enhancement
 ## Downloads
 The stable builds can be downloaded from the [Releases](https://github.com/scripthookvdotnet/scripthookvdotnet/releases) page.
 You need to use the ASI file and the DLL files for APIs in an archive of the same version as the internal structure can be changed without notice.  
-**If you are using the game version v1.0.3258.0 or later, use the nightly version `nightly.89` or later (see below for nightly version details), or downgrade the game to v1.0.3179.0 or earlier! `v3.6.0` and `v3.5.1` have [a compatibility issue with the game version v1.0.3258.0 and later game versions](https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1451)!**
+**If you are using the game version v1.0.3258.0 or later, use the nightly version `v3.6.0-nightly.89` or later (see below for nightly version details), or downgrade the game to v1.0.3179.0 or earlier! `v3.6.0` and `v3.5.1` have [a compatibility issue with the game version v1.0.3258.0 and later game versions](https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1451)!**
 
 For newer builds, check out the [Nightly Builds](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases). You don't have to sign in to GitHub to download nightly releases.  
 Here are some of the notes you should be aware of when using a nightly version (from v3.6.0):
