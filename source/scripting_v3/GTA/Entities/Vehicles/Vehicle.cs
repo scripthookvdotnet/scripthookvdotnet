@@ -464,7 +464,7 @@ namespace GTA
         /// </value>
         public bool AreExhaustPopsEnabled
         {
-            set => Function.Call(Hash.ENABLE_VEHICLE_EXHAUST_POPS, value);
+            set => Function.Call(Hash.ENABLE_VEHICLE_EXHAUST_POPS, Handle, value);
         }
 
         /// <summary>
