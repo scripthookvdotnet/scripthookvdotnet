@@ -75,7 +75,9 @@ namespace GTA
                 return false;
             }
 
-            Function.Call(Hash.SET_PED_PROP_INDEX, _ped.Handle, (int)AnchorPoint, index - 1, textureIndex, 1);
+            const int SyncWithBlendParamUnused = 0;
+            Function.Call(Hash.SET_PED_PROP_INDEX, _ped.Handle, (int)AnchorPoint, index - 1, textureIndex,
+                SyncWithBlendParamUnused);
             return true;
         }
 
