@@ -68,6 +68,8 @@ namespace GTA
                 return true;
             }
 
+            // No need to test the variation if this method didn't return a bool where the operation has suceeded,
+            // since `SET_PED_PROP_INDEX` also tests one before applying it without returning anything.
             if (!IsVariationValid(index, textureIndex))
             {
                 return false;
