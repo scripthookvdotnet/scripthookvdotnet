@@ -97,11 +97,23 @@ namespace GTA
                    IsPedPropTextureVariationValid(_ped, AnchorPoint, actualDrawableIndex, textureIndex);
         }
 
+        /// <summary>
+        /// Returns a value that indicates whether the drawable index is valid for the specified <see cref="Ped"/>
+        /// (strictly the ped's <see cref="Model"/>), anchor point, and drawable index.
+        /// Determines by testing if the drawable index is non-negative and less than the number of available drawable
+        /// variations.
+        /// </summary>
         private static bool IsPedPropDrawableVariationValid(Ped ped, PedPropAnchorPoint anchorPoint, int drawableIndex)
             => (drawableIndex > 0 &&
                 (Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, ped.Handle,
                 (int)anchorPoint) < drawableIndex));
 
+        /// <summary>
+        /// Returns a value that indicates whether the drawable index is valid for the specified <see cref="Ped"/>
+        /// (strictly the ped's <see cref="Model"/>), anchor point, and drawable index.
+        /// Determines by testing if the drawable index is non-negative and less than the number of available texture
+        /// variations.
+        /// </summary>
         private static bool IsPedPropTextureVariationValid(Ped ped, PedPropAnchorPoint anchorPoint, int drawableIndex,
             int textureIndex)
             => (textureIndex >= 0 &&
