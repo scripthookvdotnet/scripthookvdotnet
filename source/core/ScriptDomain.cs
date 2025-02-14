@@ -461,54 +461,14 @@ namespace SHVDN
         /// <returns><see langword="true" /> on success, <see langword="false" /> otherwise</returns>
         private bool LoadScriptsFromSource(string filename)
         {
-            var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
-            compilerOptions.CompilerOptions = "/optimize";
-            compilerOptions.GenerateInMemory = true;
-            compilerOptions.IncludeDebugInformation = true;
-            compilerOptions.ReferencedAssemblies.Add("System.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.Core.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.Drawing.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.Windows.Forms.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.XML.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.XML.Linq.dll");
-            compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
-
-            Assembly scriptApi = null;
-            // Support specifying the API version to be used in the file name like "script.3.cs"
-            string apiVersionString = Path.GetExtension(Path.GetFileNameWithoutExtension(filename));
-            if (!string.IsNullOrEmpty(apiVersionString) && int.TryParse(apiVersionString.Substring(1), out int apiVersion))
-            {
-                scriptApi = ScriptDomain.CurrentDomain._scriptingApiAsms.FirstOrDefault(x => x.GetName().Version.Major == apiVersion);
-
-                if (scriptApi == null)
-                {
-                    string apiVersionStr = "ScriptHookVDotNet" + apiVersion.ToString() + ".dll";
-                    Log.Message(Log.Level.Error, "Could not compile ", Path.GetFileName(filename), " because " +
-                        "the scripting API with the specified version (", apiVersionStr, ") to compile scripts " +
-                        "is not loaded.");
-                    return false;
-                }
-            }
-            else
-            {
-                // Reference the oldest scripting API that is not deprecated by default to stay compatible with existing scripts
-                scriptApi ??= _scriptingApiAsms.FirstOrDefault(x => !IsApiVersionDeprecated(x.GetName().Version));
-                if (scriptApi == null)
-                {
-                    Log.Message(Log.Level.Error, "Could not compile ", Path.GetFileName(filename), " because " +
-                        "there are not any loaded scripting APIs that are not deprecated to compile scripts.");
-                    return false;
-                }
-            }
-            compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
-
             string extension = Path.GetExtension(filename);
             System.CodeDom.Compiler.CodeDomProvider compiler = null;
 
+            string additionalCompilerOptions = string.Empty;
             if (extension.Equals(".cs", StringComparison.OrdinalIgnoreCase))
             {
                 compiler = new Microsoft.CSharp.CSharpCodeProvider();
-                compilerOptions.CompilerOptions += " /unsafe";
+                additionalCompilerOptions = " /unsafe";
             }
             else if (extension.Equals(".vb", StringComparison.OrdinalIgnoreCase))
             {
@@ -519,17 +479,145 @@ namespace SHVDN
                 return false;
             }
 
-            CompilerResults compilerResult = compiler.CompileAssemblyFromFile(compilerOptions, filename);
-
-            if (!compilerResult.Errors.HasErrors)
+            // Support specifying the API version to be used in the file name like "script.3.cs"
+            string apiVersionString = Path.GetExtension(Path.GetFileNameWithoutExtension(filename));
+            if (!string.IsNullOrEmpty(apiVersionString) && int.TryParse(apiVersionString.Substring(1), out int apiVersion))
             {
-                Log.Message(Log.Level.Debug, "Successfully compiled ", Path.GetFileName(filename), ".");
-                return LoadScriptsFromAssembly(compilerResult.CompiledAssembly, filename);
+                Assembly scriptApi = ScriptDomain.CurrentDomain._scriptingApiAsms.FirstOrDefault(
+                    x => x.GetName().Version.Major == apiVersion);
+
+                if (scriptApi == null)
+                {
+                    string apiVersionStr = "ScriptHookVDotNet" + apiVersion.ToString() + ".dll";
+                    Log.Message(Log.Level.Error, "Could not compile ", Path.GetFileName(filename), " because " +
+                        "the scripting API with the specified version (", apiVersionStr, ") to compile scripts " +
+                        "is not loaded.");
+                    return false;
+                }
+
+                return CompileScriptsFromAssemblyVersionWithNotatedApi(filename, scriptApi, compiler,
+                    additionalCompilerOptions);
             }
 
+            return CompileScriptsFromAssemblyWithFirstNonDeprecatedApiAndLastDeprecatedApi(filename, compiler,
+                additionalCompilerOptions);
+        }
+        private CompilerResults CompileScriptsFromAssembly(string filename, Assembly scriptApi,
+            System.CodeDom.Compiler.CodeDomProvider compiler, string additionalCompilerOptions)
+        {
+            var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
+            compilerOptions.CompilerOptions = "/optimize";
+            compilerOptions.CompilerOptions += additionalCompilerOptions;
+            compilerOptions.GenerateInMemory = true;
+            compilerOptions.IncludeDebugInformation = true;
+            compilerOptions.ReferencedAssemblies.Add("System.dll");
+            compilerOptions.ReferencedAssemblies.Add("System.Core.dll");
+            compilerOptions.ReferencedAssemblies.Add("System.Drawing.dll");
+            compilerOptions.ReferencedAssemblies.Add("System.Windows.Forms.dll");
+            compilerOptions.ReferencedAssemblies.Add("System.XML.dll");
+            compilerOptions.ReferencedAssemblies.Add("System.XML.Linq.dll");
+            compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
+            compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
+
+            return compiler.CompileAssemblyFromFile(compilerOptions, filename);
+        }
+        private bool CompileScriptsFromAssemblyVersionWithNotatedApi(string filename, Assembly scriptApi,
+            System.CodeDom.Compiler.CodeDomProvider compiler, string additionalCompilerOptions)
+        {
+            CompilerResults compilerResults = CompileScriptsFromAssembly(filename, scriptApi, compiler,
+                additionalCompilerOptions);
+
+            if (!compilerResults.Errors.HasErrors)
+            {
+                Log.Message(Log.Level.Debug, "Successfully compiled ", Path.GetFileName(filename), ".");
+                return LoadScriptsFromAssembly(compilerResults.CompiledAssembly, filename);
+            }
+
+            LogCompilerErrorForRawScript(compilerResults, filename, scriptApi);
+            return false;
+        }
+        private bool CompileScriptsFromAssemblyWithFirstNonDeprecatedApiAndLastDeprecatedApi(string filename,
+            System.CodeDom.Compiler.CodeDomProvider compiler, string additionalCompilerOptions)
+        {
+            // Reference the oldest scripting API that is not deprecated by default to stay compatible with existing scripts
+            Assembly firstNonDeprecatedScriptApi = _scriptingApiAsms.FirstOrDefault(x => !IsApiVersionDeprecated(x.GetName().Version));
+            Assembly lastDeprecatedScriptApi = _scriptingApiAsms.LastOrDefault(x => IsApiVersionDeprecated(x.GetName().Version));
+
+            bool foundfirstNonDeprecatedScriptApi = firstNonDeprecatedScriptApi != null;
+            bool foundLastDeprecatedScriptApi = lastDeprecatedScriptApi != null;
+
+            string scriptFileName = Path.GetFileName(filename);
+
+            if (!foundfirstNonDeprecatedScriptApi && !foundLastDeprecatedScriptApi)
+            {
+                Log.Message(Log.Level.Error, "Could not compile ", scriptFileName, " because " +
+                    "there are not any loaded scripting APIs to compile scripts.");
+                return false;
+            }
+
+            if (foundfirstNonDeprecatedScriptApi)
+            {
+                CompilerResults compilerResultsWithFirstNonDeprecatedApi
+                    = CompileScriptsFromAssembly(filename, firstNonDeprecatedScriptApi, compiler,
+                    additionalCompilerOptions);
+
+                if (!compilerResultsWithFirstNonDeprecatedApi.Errors.HasErrors)
+                {
+                    string scriptFileNameWithoutExt = Path.GetFileNameWithoutExtension(filename);
+                    string extensionStrOfScriptFileName = Path.GetExtension(filename);
+
+                    string scriptFileNameCandidateVersionAnnotated = scriptFileNameWithoutExt + ".2" + extensionStrOfScriptFileName;
+
+                    Log.Message(Log.Level.Debug, "Successfully compiled ", scriptFileName, " using API version ",
+                        firstNonDeprecatedScriptApi.GetName().Version.ToString(3), ". " +
+                        "If you find the script not working as the author(s) intended, you could annotate an API " +
+                        "version by adding a dot and a single-digit number for API version before the extension " +
+                        "(e.g. \"", scriptFileNameCandidateVersionAnnotated, "\").");
+                    return LoadScriptsFromAssembly(compilerResultsWithFirstNonDeprecatedApi.CompiledAssembly, filename);
+                }
+                else
+                {
+                    LogCompilerErrorForRawScript(compilerResultsWithFirstNonDeprecatedApi, filename,
+                        firstNonDeprecatedScriptApi);
+
+                    if (!foundLastDeprecatedScriptApi)
+                    {
+                        return false;
+                    }
+                    Log.Message(Log.Level.Info, "Fallbacking to the last deprecated API version ",
+                        lastDeprecatedScriptApi.GetName().Version.ToString(3), " to compile ",
+                        Path.GetFileName(filename), "...");
+                }
+            }
+
+            if (foundLastDeprecatedScriptApi)
+            {
+                CompilerResults compilerResultsWithLastDeprecatedApi
+                    = CompileScriptsFromAssembly(filename, lastDeprecatedScriptApi, compiler,
+                    additionalCompilerOptions);
+                if (!compilerResultsWithLastDeprecatedApi.Errors.HasErrors)
+                {
+                    lastDeprecatedScriptApi.GetName().Version.ToString(3);
+                    Log.Message(Log.Level.Debug, "Successfully compiled ", Path.GetFileName(filename),
+                        " using deprecated API version ", lastDeprecatedScriptApi.GetName().Version.ToString(3),
+                        ". You could let ScriptHookVDotNet compile faster by adding \".",
+                        lastDeprecatedScriptApi.GetName().Version.ToString(1), "\" before the extension name of " +
+                        "the file name.");
+                    return LoadScriptsFromAssembly(compilerResultsWithLastDeprecatedApi.CompiledAssembly, filename);
+                }
+
+                LogCompilerErrorForRawScript(compilerResultsWithLastDeprecatedApi, filename,
+                    firstNonDeprecatedScriptApi);
+                return false;
+            }
+
+            return false;
+        }
+        private void LogCompilerErrorForRawScript(CompilerResults res, string scriptFileName, Assembly scriptApi)
+        {
             var errors = new System.Text.StringBuilder();
 
-            foreach (System.CodeDom.Compiler.CompilerError error in compilerResult.Errors)
+            foreach (System.CodeDom.Compiler.CompilerError error in res.Errors)
             {
                 errors.Append("   at line ");
                 errors.Append(error.Line);
@@ -538,9 +626,11 @@ namespace SHVDN
                 errors.AppendLine();
             }
 
-            Log.Message(Log.Level.Error, "Failed to compile ", Path.GetFileName(filename), " using API version ", scriptApi.GetName().Version.ToString(3), " with ", compilerResult.Errors.Count.ToString(), " error(s):", Environment.NewLine, errors.ToString());
-            return false;
+            Log.Message(Log.Level.Error, "Failed to compile ", Path.GetFileName(scriptFileName), " using API version ",
+                scriptApi.GetName().Version.ToString(3), " with ", res.Errors.Count.ToString(),
+                " error(s):", Environment.NewLine, errors.ToString());
         }
+
         /// <summary>
         /// Loads scripts from the specified assembly file.
         /// </summary>
