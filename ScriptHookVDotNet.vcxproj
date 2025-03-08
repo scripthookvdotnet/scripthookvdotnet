@@ -61,7 +61,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalUsingDirectories>$(IntDir);%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
-      <AdditionalIncludeDirectories>sdk\inc\shsdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'==''">SHVDN_VERSION="3.0.0.0";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'!=''">SHVDN_VERSION="$(SHVDN_VERSION)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -182,7 +182,7 @@
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
     <ItemGroup>
       <!-- Look for the header files and the library -->
-      <SDKFiles Include="sdk\inc\shsdk\*.h" />
+      <SDKFiles Include="sdk\inc\*.h" />
       <SDKLib Include="sdk\lib\*.lib" />
     </ItemGroup>
     <PropertyGroup>

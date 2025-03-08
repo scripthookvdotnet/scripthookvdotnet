@@ -14,7 +14,7 @@ jobs:
       - name: Set up const strings
         id: const-strings
         run: |
-          echo "sdk-url=https://ntscorp.ru/dev-c/ScriptHookV_SDK_1.0.3337.0.zip" >> $GITHUB_OUTPUT
+          echo "sdk-url=https://ntscorp.ru/dev-c/ScriptHookV_SDK_1.0.617.1a.zip" >> $GITHUB_OUTPUT
       - name: Test if URL of SHV SDK returns status code 404 (Not Found)
         id: status-code-check
         run: |
