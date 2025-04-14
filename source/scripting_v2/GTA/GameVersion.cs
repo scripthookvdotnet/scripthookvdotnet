@@ -5,6 +5,17 @@
 
 namespace GTA
 {
+    /// <summary>
+    /// An enumeration of game versions.
+    /// </summary>
+    /// <remarks>
+    /// The values of this enum <see cref="GameVersion"/> are defined only for convenience.
+    /// Since the value of this enum <see cref="GameVersion"/> match what Script Hook V's `<c>getGameVersion()</c>`
+    /// returns plus 1, you can still compare <see cref="Game.Version"/> with a value the enum <see cref="GameVersion"/>
+    /// does not define. For example, even if <see cref="VER_1_0_2060_0_STEAM"/> was not defined, you could still
+    /// compare <see cref="Game.Version"/> with the internal value of <see cref="VER_1_0_2060_0_STEAM"/>, which is
+    /// <c>60</c>.
+    /// </remarks>
     public enum GameVersion
     {
         Unknown = 0,
