@@ -18,9 +18,9 @@ namespace GTA
         private const int MaxWantedLevel = 5;
 
         /// <summary>
-        /// Gets the wanted radius for a specified wanted level. Can affect the difficulty level of <see cref="Wanted"/>
-        /// by the distance between the last spotted position and the current player position, and by the wanted radius
-        /// value.
+        /// Gets the wanted radius for a specified wanted level. The raduis value can affect the difficulty level of
+        /// <see cref="Wanted"/> by the distance between the last spotted position and the current player position, and
+        /// by the wanted radius value.
         /// </summary>
         /// <param name="wantedLevel">The wanted level to retrieve the wanted radius.</param>
         /// <returns>The wanted level radius.</returns>
@@ -42,7 +42,8 @@ namespace GTA
         /// </summary>
         /// <param name="wantedLevel">The wanted level to retrieve the minimum threshold.</param>
         /// <returns>
-        /// The minimum threshold of a specified wanted level (the same unit as <see cref="Wanted.CurrentCrimeValue"/>).
+        /// The minimum threshold of the specified wanted level (the same unit as
+        /// <see cref="Wanted.CurrentCrimeValue"/>).
         /// </returns>
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="wantedLevel"/> is not between 0 and 5, inclusive.

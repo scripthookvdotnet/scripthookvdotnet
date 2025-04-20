@@ -32,8 +32,8 @@ namespace GTA
         /// Will refocus the search area if you set a value less than the current value and is not zero.
         /// </para>
         /// <para>
-        /// Hardcoded to clamp to at most 5 since <c>SET_PLAYER_WANTED_LEVEL</c> just sets the pending crime value to zero
-        /// when passed wanted level is a value other than from 1 to 5 (inclusive).
+        /// Hardcoded to clamp to at most 5 since <c>SET_PLAYER_WANTED_LEVEL</c> just sets the pending crime value to
+        /// zero when passed wanted level is a value other than from 1 to 5 (inclusive).
         /// Also, the game does not read <c>WantedLevel6</c> items from <c>dispatch.meta</c>.
         /// </para>
         /// </remarks>
@@ -269,7 +269,8 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset, value);
+                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress
+                    + SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset, value);
             }
         }
 
@@ -321,9 +322,9 @@ namespace GTA
         /// The game will set this value to zero when the wanted level is zero.
         /// </summary>
         /// <remarks>
-        /// The game will set to the game time as long as this <see cref="Player"/> is spotted by the police each frame,
-        /// but you can make the <see cref="Player"/> getting in the hidden evasion phase up to 1 or 2 seconds if
-        /// the police does not know where the <see cref="Player"/> is.
+        /// The game will set to the game time as long as this <see cref="Player"/> is spotted by the police each
+        /// frame, but you can make the <see cref="Player"/> getting in the hidden evasion phase up to 1 or 2 seconds
+        /// if the police does not know where the <see cref="Player"/> is.
         /// </remarks>
         public int TimeLastSpotted
         {
@@ -483,8 +484,8 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets <see cref="EverybodyBackOff"/> to a specified value. Also stops every law enforcement vehicles that has
-        /// a NPC driver by setting the velocity to the zero vector if set to <see langword="true"/>.
+        /// Sets <see cref="EverybodyBackOff"/> to a specified value. Also stops every law enforcement vehicles that
+        /// has a NPC driver by setting the velocity to the zero vector if set to <see langword="true"/>.
         /// </summary>
         /// <param name="value">
         /// <see langword="true"/> if this <see cref="Player"/> should be ignored by everyone; otherwise,
