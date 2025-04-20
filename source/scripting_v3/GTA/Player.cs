@@ -14,7 +14,8 @@ namespace GTA
     public sealed class Player : INativeValue
     {
         #region Fields
-        Ped _ped;
+        private Ped _ped;
+        private Wanted _wanted;
         #endregion
 
         internal Player(int handle)
@@ -60,6 +61,11 @@ namespace GTA
                 return _ped;
             }
         }
+
+        /// <summary>
+        /// Gets the wanted info.
+        /// </summary>
+        public Wanted Wanted => _wanted ??= new Wanted(Handle);
 
         /// <summary>
         /// Gets the Social Club name of this <see cref="Player"/>.
@@ -275,7 +281,10 @@ namespace GTA
         /// </remarks>
         public int WantedLevel
         {
+            [Obsolete("Use `GTA.Wanted.WantedLevel` instead via the property `GTA.Player.Wanted`.")]
             get => Function.Call<int>(Hash.GET_PLAYER_WANTED_LEVEL, Handle);
+            [Obsolete("Use the combination of `SetWantedLevel` and `ApplyWantedLevelChangeNow` of `GTA.Wanted` " +
+                      "instead via the property `GTA.Player.Wanted`.")]
             set
             {
                 Function.Call(Hash.SET_PLAYER_WANTED_LEVEL, Handle, value, false);
@@ -291,275 +300,11 @@ namespace GTA
         /// </value>
         public Vector3 WantedCenterPosition
         {
+            [Obsolete("Use `GTA.Wanted.LastPositionSpottedByPolice` instead via the property `GTA.Player.Wanted`.")]
             get => Function.Call<Vector3>(Hash.GET_PLAYER_WANTED_CENTRE_POSITION, Handle);
+            [Obsolete("Use `GTA.Wanted.SetRadiusCenter` instead via the property `GTA.Player.Wanted`.")]
             set => Function.Call(Hash.SET_PLAYER_WANTED_CENTRE_POSITION, Handle, value.X, value.Y, value.Z);
         }
-
-        /// <summary>
-        /// Gets or sets the current crime value that determines the real wanted level when the game updates the real wanted level.
-        /// </summary>
-        /// <remarks>
-        /// For instance, if this value is 32 and a vehicle theft crime you started gets reported (increases by 18) without crime directly getting spotted by the police,
-        /// this value will be 50 and the wanted level will be one when the game updates the real wanted level using this value.
-        /// </remarks>
-        /// <value>
-        /// The current crime value.
-        /// </value>
-        public int CurrentCrimeValue
-        {
-            get
-            {
-                if (SHVDN.NativeMemory.CurrentCrimeValueOffset == 0)
-                {
-                    return 0;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return 0;
-                }
-
-                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CurrentCrimeValueOffset);
-            }
-            set
-            {
-                if (SHVDN.NativeMemory.CurrentCrimeValueOffset == 0)
-                {
-                    return;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return;
-                }
-
-                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentCrimeValueOffset, value);
-            }
-        }
-        /// <summary>
-        /// Gets or sets the pending crime value that will be applied when the game ticks
-        /// if <see cref="TimeWhenNewCrimeValueTakesEffect"/> is not zero and less than <see cref="Game.GameTime"/>.
-        /// </summary>
-        /// <remarks>
-        /// The game sets this value only when this <see cref="Player"/> commit a crime that will immediately increase their wanted level such as targeting a police officer,
-        /// when <c>SET_PLAYER_WANTED_LEVEL</c> is called and the wanted level is to increase, or when the game applies this value to <see cref="CurrentCrimeValue"/>.
-        /// </remarks>
-        /// <value>
-        /// The pending crime value.
-        /// </value>
-        public int NewCrimeValue
-        {
-            get
-            {
-                if (SHVDN.NativeMemory.NewCrimeValueOffset == 0)
-                {
-                    return 0;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return 0;
-                }
-
-                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.NewCrimeValueOffset);
-            }
-            set
-            {
-                if (SHVDN.NativeMemory.NewCrimeValueOffset == 0)
-                {
-                    return;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return;
-                }
-
-                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.NewCrimeValueOffset, value);
-            }
-        }
-        /// <summary>
-        /// Gets or sets the game time when <see cref="NewCrimeValue"/> will be set to <see cref="CurrentCrimeValue"/>.
-        /// If zero, the game will not apply <see cref="NewCrimeValue"/>.
-        /// </summary>
-        /// <remarks>
-        /// The game sets this value only when <c>SET_PLAYER_WANTED_LEVEL</c> is called and the wanted level is to increase
-        /// or when the game applies <see cref="NewCrimeValue"/> to <see cref="CurrentCrimeValue"/> and set this value to zero.
-        /// </remarks>
-        /// <value>
-        /// The game time when <see cref="NewCrimeValue"/> will be set to <see cref="CurrentCrimeValue"/>.
-        /// </value>
-        public int TimeWhenNewCrimeValueTakesEffect
-        {
-            get
-            {
-                if (SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset == 0)
-                {
-                    return 0;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return 0;
-                }
-
-                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset);
-            }
-            set
-            {
-                if (SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset == 0)
-                {
-                    return;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return;
-                }
-
-                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.TimeWhenNewCrimeValueTakesEffectOffset, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the last time when the search area got refocused for this <see cref="Player"/>.
-        /// When you commit a crime that refocus the search area, this value will update.
-        /// </summary>
-        /// <remarks>
-        /// The game will set this value to zero when the wanted level is zero.
-        /// </remarks>
-        public int TimeSearchLastRefocused
-        {
-            get
-            {
-                if (SHVDN.NativeMemory.CWantedTimeSearchLastRefocusedOffset == 0)
-                {
-                    return 0;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return 0;
-                }
-
-                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeSearchLastRefocusedOffset);
-            }
-            set
-            {
-                if (SHVDN.NativeMemory.CWantedTimeSearchLastRefocusedOffset == 0)
-                {
-                    return;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return;
-                }
-
-                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeSearchLastRefocusedOffset, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the last game time when this <see cref="Player"/> is spotted by the police.
-        /// The game will set this value to zero when the wanted level is zero.
-        /// </summary>
-        /// <remarks>
-        /// The game will set to the game time as long as this <see cref="Player"/> is spotted by the police each frame,
-        /// but you can make the <see cref="Player"/> getting in the hidden evasion phase up to 1 or 2 seconds if the police does not know where the <see cref="Player"/> is.
-        /// </remarks>
-        public int TimeLastSpotted
-        {
-            get
-            {
-                if (SHVDN.NativeMemory.CWantedTimeLastSpottedOffset == 0)
-                {
-                    return 0;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return 0;
-                }
-
-                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeLastSpottedOffset);
-            }
-            set
-            {
-                if (SHVDN.NativeMemory.CWantedTimeLastSpottedOffset == 0)
-                {
-                    return;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return;
-                }
-
-                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeLastSpottedOffset, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the game time when hidden evasion phase gets started.
-        /// </summary>
-        /// <remarks>
-        /// The game will set to zero when this <see cref="Player"/> is spotted by the police each frame,
-        /// but you can set small value (but not zero) to clear the wanted level when the <see cref="Player"/> is in the hidden evasion phase
-        /// if not suppressed by <c>SUPPRESS_LOSING_WANTED_LEVEL_IF_HIDDEN_THIS_FRAME</c>.
-        /// </remarks>
-        public int TimeHiddenEvasionStarted
-        {
-            get
-            {
-                if (SHVDN.NativeMemory.CWantedTimeHiddenEvasionStartedOffset == 0)
-                {
-                    return 0;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return 0;
-                }
-
-                return SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeHiddenEvasionStartedOffset);
-            }
-            set
-            {
-                if (SHVDN.NativeMemory.CWantedTimeHiddenEvasionStartedOffset == 0)
-                {
-                    return;
-                }
-
-                IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-                if (cWantedAddress == IntPtr.Zero)
-                {
-                    return;
-                }
-
-                SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CWantedTimeHiddenEvasionStartedOffset, value);
-            }
-        }
-        /// <summary>
-        /// Returns <see langword="true"/> if this <see cref="Player"/> has a wanted level and the stars are displayed gray.
-        /// </summary>
-        /// <remarks>
-        /// Technically, this property returns <see langword="true"/> when the flag for stars graying out is set
-        /// and <see cref="TimeLastSpotted"/> has more value by more than <c>1000</c> or <c>2000</c> (depending on a unknown state)
-        /// than <see cref="Game.GameTime"/>.
-        /// </remarks>
-        public bool AreWantedStarsGrayedOut => Function.Call<bool>(Hash.ARE_PLAYER_STARS_GREYED_OUT, Handle);
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Player"/> is ignored by the police.
@@ -569,6 +314,7 @@ namespace GTA
         /// </value>
         public bool IgnoredByPolice
         {
+            [Obsolete("Use `GTA.Wanted.PoliceBackOff` instead via the property `GTA.Player.Wanted`.")]
             get
             {
                 if (SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset == 0)
@@ -584,6 +330,7 @@ namespace GTA
 
                 return SHVDN.MemDataMarshal.IsBitSet(cWantedAddress + SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset, 16);
             }
+            [Obsolete("Use `GTA.Wanted.SetPoliceIgnorePlayer` instead via the property `GTA.Player.Wanted`.")]
             set => Function.Call(Hash.SET_POLICE_IGNORE_PLAYER, Handle, value);
         }
 
@@ -595,6 +342,7 @@ namespace GTA
         /// </value>
         public bool IgnoredByEveryone
         {
+            [Obsolete("Use `GTA.Wanted.EveryoneBackOff` instead via the property `GTA.Player.Wanted`.")]
             get
             {
                 if (SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset == 0)
@@ -610,6 +358,7 @@ namespace GTA
 
                 return SHVDN.MemDataMarshal.IsBitSet(cWantedAddress + SHVDN.NativeMemory.CWantedIgnorePlayerFlagOffset, 18);
             }
+            [Obsolete("Use `GTA.Wanted.SetEveryoneIgnorePlayer` instead via the property `GTA.Player.Wanted`.")]
             set => Function.Call(Hash.SET_EVERYONE_IGNORE_PLAYER, Handle, value);
         }
 
@@ -619,6 +368,7 @@ namespace GTA
         /// <value>
         /// <see langword="true" /> if cops will be dispatched; otherwise, <see langword="false" />.
         /// </value>
+        [Obsolete("Use `GTA.Wanted.DispatchesCopsForPlayer` instead via the property `GTA.Player.Wanted`.")]
         public bool DispatchsCops
         {
             get
@@ -638,96 +388,6 @@ namespace GTA
             }
             set => Function.Call(Hash.SET_DISPATCH_COPS_FOR_PLAYER, Handle, value);
         }
-
-        /// <summary>
-        /// Sets the "new" wanted level for the player.
-        /// The current wanted level changes takes 10 seconds before it gets applied (emulating the time it takes
-        /// a citizen to report the crime) if the passed wanted level is higher than the current.
-        /// Otherwise, the change will get applied immediately, including <see cref="CurrentCrimeValue"/> and
-        /// <see cref="WantedCenterPosition"/>.
-        /// </summary>
-        public void SetNewWantedLevel(int wantedLevel, bool delayLawResponse = false)
-            => Function.Call(Hash.SET_PLAYER_WANTED_LEVEL, Handle, wantedLevel, delayLawResponse);
-
-        /// <summary>
-        /// Sets the "new" wanted level for the player only if its higher than the current.
-        /// The current wanted level changes takes 10 seconds before it gets applied.
-        /// </summary>
-        public void SetNewWantedLevelNoDrop(int wantedLevel, bool delayLawResponse = false)
-            => Function.Call(Hash.SET_PLAYER_WANTED_LEVEL_NO_DROP, Handle, wantedLevel, delayLawResponse);
-
-        /// <summary>
-        /// Sets the wanted level for this <see cref="Player"/> but without refocusing the search area.
-        /// </summary>
-        /// <remarks>
-        /// When the previous wanted level is zero, you cannot avoid refocusing the search area with this method.
-        /// </remarks>
-        public void SetWantedLevelNoRefocusSearchArea(int wantedLevel)
-        {
-            if (SHVDN.NativeMemory.CurrentCrimeValueOffset == 0 || SHVDN.NativeMemory.CurrentWantedLevelOffset == 0)
-            {
-                return;
-            }
-
-            IntPtr cWantedAddress = SHVDN.NativeMemory.GetCWantedAddress(Handle);
-            if (cWantedAddress == IntPtr.Zero)
-            {
-                return;
-            }
-
-            int currentWantedLevel = SHVDN.MemDataMarshal.ReadInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset);
-
-            if (wantedLevel <= 0 || wantedLevel >= currentWantedLevel)
-            {
-                // Just call SET_PLAYER_WANTED_LEVEL and SET_PLAYER_WANTED_LEVEL_NOW, because setting to the current wanted level or above won't refocus the search area (the crime value will be reset)
-                Function.Call(Hash.SET_PLAYER_WANTED_LEVEL, Handle, wantedLevel, false);
-                Function.Call(Hash.SET_PLAYER_WANTED_LEVEL_NOW, Handle, false);
-                return;
-            }
-
-            // Clamps and/or sets the wanted level just like SET_PLAYER_WANTED_LEVEL does
-            int wantedLevelToApply = wantedLevel;
-            if (wantedLevelToApply >= 6)
-            {
-                wantedLevelToApply = 5;
-            }
-
-            // This additional crime value is hardcoded in a function that is called by SET_PLAYER_WANTED_LEVEL
-            const int ADDITIONAL_CRIME_VALUE = 20;
-            int threshold = Function.Call<int>(Hash.GET_WANTED_LEVEL_THRESHOLD, Handle, wantedLevelToApply);
-
-            CurrentCrimeValue = threshold + ADDITIONAL_CRIME_VALUE;
-            SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset, wantedLevelToApply);
-
-            // Set the pending crime value just like SET_PLAYER_WANTED_LEVEL does (SET_PLAYER_WANTED_LEVEL_NOW does not clear the value)
-            NewCrimeValue = threshold + ADDITIONAL_CRIME_VALUE;
-        }
-
-        /// <summary>
-        /// Reports a crime for this <see cref="Player"/>.
-        /// </summary>
-        /// <param name="crimeToReport">The crime time to report.</param>
-        /// <param name="crimeValue">
-        /// If left at zero, the crime will get evaluated.
-        /// It not zero, the crime value will be overridden to specify an amount (can be both positive or negative).
-        /// </param>
-        /// <remarks>
-        /// Clearing the wanted level will disable to increase the crime value for commiting crimes for 2 seconds.
-        /// </remarks>
-        public void ReportCrime(CrimeType crimeToReport, int crimeValue = 0) => Function.Call(Hash.REPORT_CRIME, Handle, (int)crimeToReport, crimeValue);
-
-        /// <summary>
-        /// Forces this <see cref="Player"/> to get spotted by police.
-        /// </summary>
-        /// <remarks>
-        /// Unlike when you commit a crime that refocuses the search area, this method also updates <see cref="TimeLastSpotted"/>.
-        /// </remarks>
-        public void ReportPoliceSpottingPlayer() => Function.Call(Hash.REPORT_POLICE_SPOTTED_PLAYER, Handle);
-        /// <summary>
-        /// Force hidden evasion to start for this <see cref="Player"/>, making wanted stars flashing and cops using vision cones to search for the player.
-        /// You can use this method at any point that police know where this player is.
-        /// </summary>
-        public void ForceStartHiddenEvasion() => Function.Call(Hash.FORCE_START_HIDDEN_EVASION, Handle);
 
         #endregion
 
