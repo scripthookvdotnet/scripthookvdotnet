@@ -219,7 +219,7 @@ namespace GTA
         /// <c>CTaskThreadResponse</c> task.
         /// </remarks>
         public void CombatTimed(Ped target, int time, TaskCombatFlags combatFlags = TaskCombatFlags.None)
-            => Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, time, (int)combatFlags);
+            => Function.Call(Hash.TASK_COMBAT_PED_TIMED, _ped.Handle, target.Handle, time, (int)combatFlags);
 
         /// <summary>
         /// Tells the <see cref="Ped"/> to combat hated targets in the area.
