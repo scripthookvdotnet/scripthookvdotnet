@@ -8,7 +8,7 @@ using System;
 
 namespace GTA
 {
-    public struct WeaponAsset : IEquatable<WeaponAsset>, INativeValue
+    public struct WeaponAsset : IEquatable<WeaponAsset>, INativeValue, IScriptStreamingResource
     {
         public WeaponAsset(int hash) : this()
         {
