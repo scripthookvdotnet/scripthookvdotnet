@@ -65,10 +65,7 @@ namespace GTA
         /// <summary>
         /// Attempts to load this <see cref="WeaponAsset"/> into memory.
         /// </summary>
-        public void Request()
-        {
-            Function.Call(Native.Hash.REQUEST_WEAPON_ASSET, Hash, 31, 0);
-        }
+        public void Request() => Request(WeaponScriptResourceFlags.RequestAllAnims);
         /// <summary>
         /// Attempts to load this <see cref="WeaponAsset"/> into memory for a given period of time.
         /// </summary>
@@ -95,6 +92,27 @@ namespace GTA
             }
 
             return true;
+        }
+        /// <summary>
+        /// Attempts to load this <see cref="WeaponAsset"/> into memory.
+        /// </summary>
+        /// <param name="weaponResourceFlags">
+        /// The set of weapon resource flags that specifies which weapon animations to load in advance.
+        /// </param>
+        /// <param name="extraWeaponComponentResourceFlags">
+        /// The set of weapon component resource flags that specifies which extra weapon components to load in advance
+        /// (not for default components).
+        /// </param>
+        // There's no need to have the first argument non-optional to avoid ambiguous method resolution if there wasn't
+        // `Request()` with 0 parameters in v3.6.0. There's occurrences of `REQUEST_WEAPON_ASSET` where only a weapon
+        // hash and a set of weapon resource flags (for anims) are explicitly supplied, such as `Prologue1.sc` (or
+        // the compiled script for the Windows version `Prologue1.ysc`).
+        public void Request(WeaponScriptResourceFlags weaponResourceFlags,
+            ExtraWeaponComponentScriptResourceFlags extraWeaponComponentResourceFlags
+            = ExtraWeaponComponentScriptResourceFlags.None)
+        {
+            Function.Call(Native.Hash.REQUEST_WEAPON_ASSET, Hash, (uint)weaponResourceFlags,
+                (uint)extraWeaponComponentResourceFlags);
         }
 
         /// <summary>
