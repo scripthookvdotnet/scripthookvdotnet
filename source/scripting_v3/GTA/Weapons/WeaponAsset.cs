@@ -33,7 +33,8 @@ namespace GTA
         /// Gets the slot hash for this <see cref="WeaponAsset"/>.
         /// </summary>
         /// <remarks>
-        /// The slot hash must be unique in a weapon inventory of a <see cref="Ped"/> , so a <see cref="Ped"/> cannot have multiple weapon items with the same slot hash in their inventory.
+        /// The slot hash must be unique in a weapon inventory of a <see cref="Ped"/> , so a <see cref="Ped"/> cannot
+        /// have multiple weapon items with the same slot hash in their inventory.
         /// </remarks>
         public int SlotHash => Function.Call<int>(Native.Hash.GET_WEAPONTYPE_SLOT, (uint)Hash);
 
@@ -71,8 +72,10 @@ namespace GTA
         /// <summary>
         /// Attempts to load this <see cref="WeaponAsset"/> into memory for a given period of time.
         /// </summary>
-        /// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="WeaponAsset"/>.</param>
-        /// <returns><see langword="true" /> if this <see cref="WeaponAsset"/> is loaded; otherwise, <see langword="false" />.</returns>
+        /// <param name="timeout">The time (in milliseconds) before giving up trying to load this
+        /// <see cref="WeaponAsset"/>.</param>
+        /// <returns><see langword="true"/> if this <see cref="WeaponAsset"/> is loaded; otherwise,
+        /// <see langword="false"/>.</returns>
         public bool Request(int timeout)
         {
             Request();
@@ -108,7 +111,8 @@ namespace GTA
         /// <remarks>
         /// Returns <see cref="string.Empty"/> if this <see cref="WeaponAsset"/> is not valid as a weapon hash.
         /// </remarks>
-        public string DisplayName => IsValidAsWeaponHash ? Weapon.GetDisplayNameFromHash((WeaponHash)Hash) : string.Empty;
+        public string DisplayName
+            => IsValidAsWeaponHash ? Weapon.GetDisplayNameFromHash((WeaponHash)Hash) : string.Empty;
 
         /// <summary>
         /// Gets the localized human name for this <see cref="WeaponAsset"/>.
