@@ -31,7 +31,6 @@ namespace GTA
         /// </para>
         /// </summary>
         void Request();
-        bool Request(int timeout);
 
         /// <summary>
         /// Tells the game we have finished using the streaming resource, so it can be freed from memory.

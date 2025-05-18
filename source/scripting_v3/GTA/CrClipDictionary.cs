@@ -70,31 +70,6 @@ namespace GTA
         {
             Function.Call(Hash.REQUEST_ANIM_DICT, Name);
         }
-        /// <summary>
-        /// Attempts to load this <see cref="CrClipDictionary"/> into memory for a given period of time.
-        /// </summary>
-        /// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="CrClipDictionary"/>.</param>
-        /// <returns><see langword="true" /> if this <see cref="CrClipDictionary"/> is loaded; otherwise, <see langword="false" />.</returns>
-        public bool Request(int timeout)
-        {
-            Request();
-
-            int startTime = Environment.TickCount;
-            int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
-
-            while (!IsLoaded)
-            {
-                Script.Yield();
-                Request();
-
-                if (Environment.TickCount - startTime >= maxElapsedTime)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
 
         /// <summary>
         /// Tells the game we have finished using this <see cref="CrClipDictionary"/> and it can be freed from memory.

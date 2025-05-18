@@ -62,31 +62,6 @@ namespace GTA
         {
             Function.Call(Hash.REQUEST_CLIP_SET, Name);
         }
-        /// <summary>
-        /// Attempts to load this <see cref="ClipSet"/> into memory for a given period of time.
-        /// </summary>
-        /// <param name="timeout">The time (in milliseconds) before giving up trying to load this <see cref="ClipSet"/>.</param>
-        /// <returns><see langword="true" /> if this <see cref="ClipSet"/> is loaded; otherwise, <see langword="false" />.</returns>
-        public bool Request(int timeout)
-        {
-            Request();
-
-            int startTime = Environment.TickCount;
-            int maxElapsedTime = timeout >= 0 ? timeout : int.MaxValue;
-
-            while (!IsLoaded)
-            {
-                Script.Yield();
-                Request();
-
-                if (Environment.TickCount - startTime >= maxElapsedTime)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
 
         /// <summary>
         /// Tells the game we have finished using this <see cref="ClipSet"/> and it can be freed from memory.
