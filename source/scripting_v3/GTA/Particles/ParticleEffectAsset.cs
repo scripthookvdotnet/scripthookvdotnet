@@ -62,7 +62,15 @@ namespace GTA
         }
 
         /// <summary>
-        /// Attempts to load this <see cref="ParticleEffectAsset"/> into memory so it can be used for starting <see cref="ParticleEffect"/>s.
+        /// <para>
+        /// Requests the global streaming loader to load this <see cref="ParticleEffectAsset"/> so it will be eventually
+        /// loaded (unless getting interrupted by a <see cref="MarkAsNoLongerNeeded()"/> call of another SHVDN script).
+        /// </para>
+        /// <para>
+        /// You will need to test if the <see cref="ParticleEffectAsset"/> is loaded with <see cref="IsLoaded"/> every
+        /// frame until it is loaded before you can use it. The game starts loading pending streaming objects every
+        /// frame (with `<c>CStreaming::Update()</c>`) before the script update call.
+        /// </para>
         /// </summary>
         public void Request()
         {

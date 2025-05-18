@@ -53,12 +53,28 @@ namespace GTA.Graphics
         public bool IsLoaded => Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, Name);
 
         /// <summary>
-        /// Attempts to load the textures of this <see cref="Txd"/> into memory.
-        /// You do not need to call this method if this <see cref="Txd"/> is loaded by another way,
-        /// such as <see cref="PedHeadshot"/>.
+        /// <para>
+        /// Requests the global streaming loader to load this <see cref="Txd"/> so it will be eventually loaded
+        /// (unless getting interrupted by a <see cref="MarkAsNoLongerNeeded()"/> call of another SHVDN script).
+        /// </para>
+        /// <para>
+        /// You will need to test if the resource is loaded with <see cref="IsLoaded"/> every frame until
+        /// the <see cref="Txd"/> is loaded before you can use it. The game starts loading pending streaming objects
+        /// every frame (with `<c>CStreaming::Update()</c>`) before the script update call.
+        /// </para>
         /// </summary>
         /// <remarks>
+        /// <para>
+        /// Calling this method every frame could practically avoid the game crashing due to the textures of this
+        /// <see cref="Txd"/> getting unloaded at the time your script tries to use some of them, which may be useful
+        /// when the <see cref="Txd"/> is going to be used for a long time like 5 seconds. That kind of game crash can
+        /// happen when another <em>SHVDN</em> script calls <see cref="MarkAsNoLongerNeeded()"/> on the same
+        /// <see cref="Txd"/>. Do note that the workaround is needed only because of how SHVDN runtime cannot isolate
+        /// script resources from other scripts.
+        /// </para>
+        /// <para>
         /// Allocates a <c>CScriptResource_TextureDictionary</c> instance for the SHVDN runtime.
+        /// </para>
         /// </remarks>
         public void Request()
         {
@@ -100,9 +116,16 @@ namespace GTA.Graphics
         /// You do not need to call this method if this <see cref="Txd"/> was loaded by another way before your script
         /// used this <see cref="Txd"/>, such as <see cref="PedHeadshot"/>.
         /// </summary>
-        /// <remarks>
+        /// <para>
+        /// You should not call this method if the <see cref="Txd"/> is already loaded before your script tried to use
+        /// it (though SHVDN runtime cannot prevent other scripts from doing). You can test if the <see cref="Txd"/> is
+        /// loaded with <see cref="IsLoaded"/>.
+        /// </para>
+        /// <para>
         /// Releases a <c>CScriptResource_TextureDictionary</c> instance from the <c>CGameScriptHandler</c> for
         /// the SHVDN runtime.
+        /// </para>
+        /// <remarks>
         /// </remarks>
         public void MarkAsNoLongerNeeded()
         {

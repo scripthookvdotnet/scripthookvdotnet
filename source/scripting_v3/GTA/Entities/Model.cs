@@ -416,7 +416,15 @@ namespace GTA
         }
 
         /// <summary>
-        /// Attempts to load this <see cref="Model"/> into memory.
+        /// <para>
+        /// Requests the global streaming loader to load this <see cref="Model"/> so it will be eventually loaded
+        /// (unless getting interrupted by a <see cref="MarkAsNoLongerNeeded()"/> call of another SHVDN script).
+        /// </para>
+        /// <para>
+        /// You will need to test if the <see cref="Model"/> is loaded with <see cref="IsLoaded"/> every frame until
+        /// the <see cref="Model"/> is loaded before you can use it. The game starts loading pending streaming objects
+        /// every frame (with `<c>CStreaming::Update()</c>`) before the script update call.
+        /// </para>
         /// </summary>
         public void Request()
         {
