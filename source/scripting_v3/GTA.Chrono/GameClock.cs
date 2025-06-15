@@ -404,6 +404,7 @@ namespace GTA.Chrono
             static void ShiftMonthsAndNormalizeYearAndMonth(ref int year, ref int month0, int diff)
             {
                 month0 += diff;
+
                 if (month0 > 11)
                 {
                     do
@@ -412,15 +413,14 @@ namespace GTA.Chrono
                         year++;
                     }
                     while (month0 > 11);
+
+                    return;
                 }
-                else if (month0 < 0)
+
+                while (month0 < 0)
                 {
-                    do
-                    {
-                        month0 += 12;
-                        year--;
-                    }
-                    while (month0 < 0);
+                    month0 += 12;
+                    year--;
                 }
             }
         }
