@@ -8,7 +8,6 @@ using GTA.Native;
 using GTA.NaturalMotion;
 using System;
 using System.ComponentModel;
-using System.Linq;
 
 namespace GTA
 {

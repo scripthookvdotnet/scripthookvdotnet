@@ -5,7 +5,6 @@
 
 using System;
 using GTA.Math;
-using SHVDN;
 
 namespace GTA
 {

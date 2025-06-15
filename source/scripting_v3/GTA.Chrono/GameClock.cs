@@ -5,7 +5,6 @@
 
 using System;
 using GTA.Native;
-
 namespace GTA.Chrono
 {
     /// <summary>

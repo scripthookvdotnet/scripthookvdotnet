@@ -4,7 +4,6 @@
 //
 
 using GTA.Native;
-using System.Linq;
 
 namespace GTA
 {

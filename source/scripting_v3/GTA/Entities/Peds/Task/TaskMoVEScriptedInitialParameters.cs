@@ -3,7 +3,6 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using GTA.Native;
 using System;
 using System.Runtime.InteropServices;
 

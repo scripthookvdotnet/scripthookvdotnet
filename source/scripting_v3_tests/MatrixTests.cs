@@ -5,8 +5,6 @@
 
 using Xunit;
 using GTA.Math;
-using System;
-using GTA;
 
 namespace ScriptHookVDotNet_APIv3_Tests.Math
 {
