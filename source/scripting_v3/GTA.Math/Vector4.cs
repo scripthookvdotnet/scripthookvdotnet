@@ -238,7 +238,7 @@ namespace GTA.Math
         /// <returns>A vector containing the smallest components of the source vectors.</returns>
         public static Vector4 Min(Vector4 left, Vector4 right)
         {
-            Vector4 vector = default;;
+            Vector4 vector = default;
             vector.X = (left.X < right.X) ? left.X : right.X;
             vector.Y = (left.Y < right.Y) ? left.Y : right.Y;
             vector.Z = (left.Z < right.Z) ? left.Z : right.Z;
@@ -253,7 +253,7 @@ namespace GTA.Math
         /// <returns>A vector containing the largest components of the source vectors.</returns>
         public static Vector4 Max(Vector4 left, Vector4 right)
         {
-            Vector4 vector = default;;
+            Vector4 vector = default;
             vector.X = (left.X > right.X) ? left.X : right.X;
             vector.Y = (left.Y > right.Y) ? left.Y : right.Y;
             vector.Z = (left.Z > right.Z) ? left.Z : right.Z;
