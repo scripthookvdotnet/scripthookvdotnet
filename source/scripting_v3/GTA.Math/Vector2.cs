@@ -535,7 +535,7 @@ namespace GTA.Math
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; otherwise, <see langword="false" />.</returns>
         public override readonly bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != typeof(Vector2))
+            if (obj == null || obj.GetType() != GetType())
             {
                 return false;
             }
