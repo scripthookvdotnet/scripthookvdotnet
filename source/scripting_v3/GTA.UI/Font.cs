@@ -48,7 +48,7 @@ namespace GTA.UI
         /// <para>
         /// This font is for the condensed font for gamer tags or the distance info on the radar.
         /// You should use <see cref="ChaletComprimeCologneNotGamerName"/> if you want to draw strings with condensed
-        /// font if possible but they can contain some CJK characters (e.g. localized strings from gxt files).
+        /// font if possible, but they can contain some CJK characters (e.g. localized strings from gxt files).
         /// </para>
         /// <para>
         /// The native functions for text drawing will use the condensed font Chalet Comprimé Cologne 1960 regardless

@@ -27,7 +27,7 @@ namespace GTA
             {
                 int handle = Function.Call<int>(Hash.GET_RENDERING_CAM);
                 // GET_RENDERING_CAM returns -1 if the current rendering camera doesn't match any scripted cameras
-                // the camScriptDirector is handling (or there's really no rendering camera, which is a edge case)
+                // the camScriptDirector is handling (or there's really no rendering camera, which is an edge case)
                 // Game code for cams does never treat negative values as valid cam handles either
                 return handle < 0 ? null : new Camera(handle);
             }
@@ -133,7 +133,7 @@ namespace GTA
         /// Note that this can result in conflicts between concurrent script threads, so this must be used with caution.
         /// </param>
         /// <param name="distanceToBlend">
-        /// Overrides the distance over which the catch up blend occurs in the <see cref="GameplayCamera"/>
+        /// Overrides the distance over which the catch-up blend occurs in the <see cref="GameplayCamera"/>
         /// (<c>camGameplayDirector</c>).
         /// If zero is specified, default blend distance will be used.
         /// </param>
@@ -165,7 +165,7 @@ namespace GTA
             => Function.Call<bool>(Hash.IS_INTERPOLATING_FROM_SCRIPT_CAMS);
 
         /// <summary>
-        /// Gets a value that indicates whether an interpolation is occurring to a script cam from a gameplay cam.
+        /// Gets a value that indicates whether an interpolation is occurring to a script camera from a gameplay cam.
         /// </summary>
         /// <remarks>
         /// Returns <see langword="true"/> if the interpolating state matches the specific value on the

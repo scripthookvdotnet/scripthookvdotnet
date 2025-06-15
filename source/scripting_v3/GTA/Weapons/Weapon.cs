@@ -208,7 +208,7 @@ namespace GTA
         /// </summary>
         /// <remarks>
         /// Despite the interface, setting this value globally affects any of the weapons that uses the ammo the current weapon is using
-        /// as <c>SET_PED_INFINITE_AMMO</c> modifies a of member of weapon ammo item in <c>CPedInventory</c> of the owner <see cref="Ped"/>.
+        /// as <c>SET_PED_INFINITE_AMMO</c> modifies a member of weapon ammo item in <c>CPedInventory</c> of the owner <see cref="Ped"/>.
         /// </remarks>
         public bool InfiniteAmmo
         {
@@ -226,7 +226,7 @@ namespace GTA
         /// Sets whether this ped will not consume any ammo in any clips or that of the weapon ammo inventory of the owner <see cref="Ped"/>.
         /// </summary>
         /// <remarks>
-        /// Despite the interface, setting this value globally affects all of the weapons of the owner <see cref="Ped"/>.
+        /// Despite the interface, setting this value globally affects all the weapons of the owner <see cref="Ped"/>.
         /// </remarks>
         public bool InfiniteAmmoClip
         {

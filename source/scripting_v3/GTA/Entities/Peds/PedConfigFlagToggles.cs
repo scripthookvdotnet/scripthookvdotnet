@@ -124,7 +124,7 @@ namespace GTA
         /// </summary>
         DeathPickupsPersist,
         /// <summary>
-        /// Script command so <see cref="Ped"/> doesn't stop to watch fights.
+        /// Script command so <see cref="Ped"/> does not stop to watch fights.
         /// </summary>
         IgnoreSeenMelee,
         /// <summary>
@@ -133,7 +133,7 @@ namespace GTA
         /// </summary>
         ForceDieIfInjured,
         /// <summary>
-        /// Force this <see cref="Ped"/> can't be carjacked.
+        /// Force this <see cref="Ped"/> cannot be carjacked.
         /// </summary>
         DontDragMeOutCar,
         /// <summary>
@@ -548,11 +548,11 @@ namespace GTA
         KeepRelationshipGroupAfterCleanUp,
         /// <summary>
         /// Forces the <see cref="Ped"/> to loop try locked door anim in order to be dragged along when
-        /// <see cref="Vehicle"/>'s entry point they're trying to go has a door and it's fully closed.
+        /// <see cref="Vehicle"/>'s entry point they're trying to go has a door, and it's fully closed.
         /// </summary>
         ForcePedToBeDragged,
         /// <summary>
-        /// <see cref="Ped"/> doesn't react when being jacked.
+        /// <see cref="Ped"/> does not react when being jacked.
         /// </summary>
         PreventPedFromReactingToBeingJacked,
         /// <summary>
@@ -713,7 +713,7 @@ namespace GTA
         /// </summary>
         AllowPlayerToInterruptVehicleEntryExit,
         /// <summary>
-        /// This <see cref="Ped"/> won't attack cops unless the player is wanted.
+        /// This <see cref="Ped"/> will not attack cops unless the player is wanted.
         /// </summary>
         OnlyAttackLawIfPlayerIsWanted,
         /// <summary>
@@ -862,7 +862,7 @@ namespace GTA
         /// </summary>
         UseDiminishingAmmoRate,
         /// <summary>
-        /// This <see cref="Ped"/> won't steer around anyone
+        /// This <see cref="Ped"/> will not steer around anyone
         /// </summary>
         /// <remarks>
         /// The original name is `<c>CPED_CONFIG_FLAG_Avoidance_Ignore_All</c>` in the exe.
@@ -876,7 +876,7 @@ namespace GTA
         /// </remarks>
         AvoidanceIgnoredByAll,
         /// <summary>
-        /// This <see cref="Ped"/> won't steer around <see cref="Ped"/>s marked group 1.
+        /// This <see cref="Ped"/> will not steer around <see cref="Ped"/>s marked group 1.
         /// </summary>
         /// <remarks>
         /// The original name is `<c>CPED_CONFIG_FLAG_Avoidance_Ignore_Group1</c>` in the exe.
@@ -911,7 +911,7 @@ namespace GTA
         /// </summary>
         WaitingForPlayerControlInterrupt,
         /// <summary>
-        /// <see cref="Ped"/> won't move out of cover when set (not even to fire).
+        /// <see cref="Ped"/> will not move out of cover when set (not even to fire).
         /// </summary>
         ForcedToStayInCover,
         /// <summary>
@@ -1055,26 +1055,26 @@ namespace GTA
         /// Overwrites the evaluated value with <see langword="false"/>.
         /// </description></item>
         /// <item><description>
-        /// The <see cref="Vehicle"/> is using script auto pilot. Overwrites the evaluated value with
+        /// The <see cref="Vehicle"/> is using script autopilot. Overwrites the evaluated value with
         /// <see langword="false"/>.
         /// </description></item>
         /// </list>
         /// </remarks>
         LeaveEngineOnWhenExitingVehicles,
         /// <summary>
-        /// tells taskmobile phone to not texting animations.  Currently don't play these in MP.
+        /// tells taskmobile phone to not texting animations.  For now, don't play these in MP.
         /// </summary>
         PhoneDisableTextingAnimations,
         /// <summary>
-        /// tells taskmobile phone to not talking animations.  Currently don't play these in MP.
+        /// tells taskmobile phone to not talking animations.  For now, don't play these in MP.
         /// </summary>
         PhoneDisableTalkingAnimations,
         /// <summary>
-        /// tells taskmobile phone to not camera animations.  Currently don't play these in SP.
+        /// tells taskmobile phone to not camera animations.  For now, don't play these in SP.
         /// </summary>
         PhoneDisableCameraAnimations,
         /// <summary>
-        /// Stops the <see cref="Ped"/> from accidentally blind firing it's weapon when doing an NM (ragdoll) shot
+        /// Stops the <see cref="Ped"/> from accidentally blind firing its weapon when doing an NM (ragdoll) shot
         /// reaction.
         /// </summary>
         DisableBlindFiringInShotReactions,
@@ -1224,12 +1224,12 @@ namespace GTA
         EdgeDetected,
         /// <summary>
         /// This <see cref="Ped"/> will cause physics to activate on any <see cref="Ped"/> this <see cref="Ped"/>'s
-        /// capsule is inside of, even if this <see cref="Ped"/> is being attached.
+        /// capsule is inside, even if this <see cref="Ped"/> is being attached.
         /// </summary>
         AlwaysWakeUpPhysicsOfIntersectedPeds,
         /// <summary>
         /// This is set to prevent a <see cref="Ped"/> from holstering a loadout weapon equipped during
-        /// <c>CPedPopulation::EquipPed</c> as part of the defined <c>CAmbientPedModelVariations</c>' loadout.
+        /// <c>CPedPopulation::EquipPed</c> as part of the defined <c>CAmbientPedModelVariations</c> loadout.
         /// </summary>
         EquippedAmbientLoadOutWeapon,
         /// <summary>
@@ -1425,7 +1425,7 @@ namespace GTA
         /// <summary>
         /// </summary>
         /// If set on security <see cref="Ped"/>s, they will not use the law like behaviors/logic (they will not report
-        /// wanted position, can attack without wanted level, etc).
+        /// wanted position, can attack without wanted level, etc.).
         DontBehaveLikeLaw,
         /// <summary>
         /// If set, the <see cref="Ped"/> was originally spawned at a scenario point.
@@ -1445,7 +1445,7 @@ namespace GTA
         /// </summary>
         LowerPriorityOfWarpSeats,
         /// <summary>
-        /// If set the <see cref="Ped"/> can't be talked to.
+        /// If set the <see cref="Ped"/> cannot be talked to.
         /// </summary>
         /// <remarks>
         /// Resets to <see langword="false"/> when the <see cref="Ped"/> is marked as no longer needed, which can be
@@ -1508,7 +1508,7 @@ namespace GTA
         /// </summary>
         AlwaysLeaveTrainUponArrival,
         /// <summary>
-        /// Set flag to determine that a directed normal exit should be use for new tasks on this scenario
+        /// Set flag to determine that a directed normal exit should be used for new tasks on this scenario
         /// <see cref="Ped"/>.
         /// </summary>
         ForcePlayDirectedNormalScenarioExitOnNextScriptCommand,
@@ -1767,7 +1767,7 @@ namespace GTA
         /// </summary>
         PlayersDontDragMeOutOfCar,
         /// <summary>
-        /// Whenever the <see cref="Ped"/> starts shooting while going to a point, it trigger a responded to threat
+        /// Whenever the <see cref="Ped"/> starts shooting while going to a point, it triggers a responded to threat
         /// broadcast.
         /// </summary>
         /// <remarks>
@@ -2045,7 +2045,7 @@ namespace GTA
         /// </summary>
         ForcedAimFromArrest,
         /// <summary>
-        /// If set, we wont set a new target after a melee attack.
+        /// If set, we won't set a new target after a melee attack.
         /// </summary>
         DontChangeTargetFromMelee,
         /// <summary>

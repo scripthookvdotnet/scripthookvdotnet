@@ -290,7 +290,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets an vertical offset relative attach parent in meters.
+        /// Sets a vertical offset relative attach parent in meters.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -325,7 +325,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Stops the hint cam running except if its a code gameplay hint.
+        /// Stops the hint cam running except if it is a code gameplay hint.
         /// </summary>
         /// <param name="stopImmediately">
         /// If <see langword="true"/>, the hint camera will stop immediately,
@@ -361,7 +361,7 @@ namespace GTA
         /// </summary>
         /// <param name="vehicle">
         /// The vehicle for follow vehicle camera.
-        /// You can pass <see langword="null"/> or a invalid <see cref="Vehicle"/>
+        /// You can pass <see langword="null"/> or an invalid <see cref="Vehicle"/>
         /// if <paramref name="inVehicleState"/> is set to <see cref="CamInVehicleState.OutsideVehicle"/>,
         /// since this value will not be used for <see cref="CamInVehicleState.OutsideVehicle"/>.
         /// </param>
@@ -433,7 +433,7 @@ namespace GTA
         /// Gets a value indicating whether a first person ped aim camera is active,
         /// which can be activated by using a sniper rifle scope or mobile phone camera (strictly checks if the gameplay
         /// director use a <c>camFirstPersonPedAimCamera</c> instance).
-        /// Do not confuse with a first person shooter camera (<c>camFirstPersonShooterCamera</c>),
+        /// Do not confuse with a firstperson shooter camera (<c>camFirstPersonShooterCamera</c>),
         /// which can be activated by switching the camera mode.
         /// </summary>
         /// <value>

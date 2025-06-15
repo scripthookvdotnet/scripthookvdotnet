@@ -247,7 +247,7 @@ namespace GTA
                 // Call set_gravity_level normally using 0 as gravity type
                 // The native will then set the gravity level to what we just wrote
                 Function.Call(Hash.SET_GRAVITY_LEVEL, 0);
-                // Reset the array item back to 9.8 so as to restore behavior of the native
+                // Reset the array item back to 9.8 to restore behavior of the native
                 SHVDN.NativeMemory.WorldGravity = 9.800000f;
             }
         }
@@ -318,13 +318,13 @@ namespace GTA
         #region Wind
 
         /// <summary>
-        /// Gets the current wind speed in m/s. The value is between 0 to 12.
+        /// Gets the current wind speed in m/s. The value is between 0 and 12.
         /// </summary>
         public static float WindSpeed => Function.Call<float>(Hash.GET_WIND_SPEED);
 
         /// <summary>
         /// Sets the wind speed override by percentage, where 1.0 sets the current wind speed to 12.0 in m/s.
-        /// Sets an negative value to stop using the override and let the game calculates the current wind speed as usual.
+        /// Sets a negative value to stop using the override and let the game calculates the current wind speed as usual.
         /// </summary>
         /// <remarks>
         /// Although this property does not clamp the override value at all, the game clamps the wind speed between
@@ -338,10 +338,10 @@ namespace GTA
         /// <summary>
         /// Sets the wind speed override by speed. The value divided by 12 will be set if the result is lower than 1.0.
         /// Otherwise, the value will be set to 1.0.
-        /// Sets an negative value to stop using the override and let the game calculates the current wind speed as usual.
+        /// Sets a negative value to stop using the override and let the game calculates the current wind speed as usual.
         /// </summary>
         /// <remarks>
-        /// Basically do the same as <see cref="set_WindSpeedOverride"/> does but with a upper bound and one division.
+        /// Basically do the same as <see cref="set_WindSpeedOverride"/> does but with an upper bound and one division.
         /// Use <see cref="set_WindSpeedOverride"/> to set the value precisely (and avoid one division for performance).
         /// </remarks>
         public static void SetWindSpeedOverrideBySpeed(float windSpeed)
@@ -361,7 +361,7 @@ namespace GTA
         /// </summary>
         /// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
         /// <remarks>
-        /// Returns <see langword="null" /> if a waypoint <see cref="Blip"/> hasn't been set
+        /// Returns <see langword="null" /> if a waypoint <see cref="Blip"/> has not been set.
         /// </remarks>
         public static Blip WaypointBlip
         {
@@ -386,7 +386,7 @@ namespace GTA
         /// </summary>
         /// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
         /// <remarks>
-        /// Returns an empty <see cref="Vector3"/> if a waypoint <see cref="Blip"/> hasn't been set
+        /// Returns an empty <see cref="Vector3"/> if a waypoint <see cref="Blip"/> has not been set
         /// If the game engine cant extract height information the Z component will be 0.0f
         /// </remarks>
         public static Vector3 WaypointPosition
@@ -1330,7 +1330,7 @@ namespace GTA
         /// <param name="rotation">The rotation of the <see cref="Prop"/>.</param>
         /// <param name="dynamic">
         /// <para>
-        /// If <see langword="true"/>, the <see cref="Prop"/> will always be forced to be an regular prop type (<c>CObject</c>). This applies when creating a <see cref="Prop"/> that uses a door <see cref="Model"/>.
+        /// If <see langword="true"/>, the <see cref="Prop"/> will always be forced to be a regular prop type (<c>CObject</c>). This applies when creating a <see cref="Prop"/> that uses a door <see cref="Model"/>.
         /// If this is <see langword="false"/>, the <see cref="Prop"/> will be created as a door type (<c>CDoor</c>) and it will work as a door.
         /// </para>
         /// <para>Although "dynamic" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para>
@@ -1631,7 +1631,7 @@ namespace GTA
         /// </value>
         /// <remarks>
         /// Setting to <see langword="null" /> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>.
-        /// The getter will return a invalid <see cref="Camera"/> where <see cref="PoolObject.Handle"/> is -1 if the
+        /// The getter will return an invalid <see cref="Camera"/> where <see cref="PoolObject.Handle"/> is -1 if the
         /// rendering camera does not match any scripted cameras the scripted camera director is managing.
         /// </remarks>
         [Obsolete("World.RenderingCamera is obsolete. " +
@@ -2261,7 +2261,7 @@ namespace GTA
         #region Drawing
 
         /// <summary>
-        /// Draws a marker in the world, this needs to be done on a per frame basis
+        /// Draws a marker in the world for exactly one frame.
         /// </summary>
         /// <param name="type">The type of marker.</param>
         /// <param name="pos">The position of the marker.</param>
@@ -2315,18 +2315,18 @@ namespace GTA
         /// Leave <see langword="null"/> to use the texture for <paramref name="type"/>.
         /// </param>
         /// <param name="renderInverted">
-        /// if set to <see langword="true"/> the marker will be drawed in the reverse order.
-        /// Marker vertices will shown on any <c>CEntity</c> (which includes but not limited to <see cref="Entity"/>
+        /// if set to <see langword="true"/> the marker will be drawn in the reverse order.
+        /// Marker vertices will be shown on any <c>CEntity</c> (which includes but not limited to <see cref="Entity"/>
         /// and <see cref="Building"/>), that are intersected.
         /// </param>
         /// <param name="usePreAlphaDepth">
         /// If <see langword="false"/>, the marker will not use pre-alpha depth, making the marker invisible behind
         /// translucent <see cref="Vehicle"/>s and translucent <see cref="Prop"/>s with smooth opacity (which is
-        /// different from <see cref="DrawMarker"/>.
+        /// different from <see cref="DrawMarker"/>).
         /// </param>
         /// <param name="matchEntityRotOrder">
-        /// If <see langword="true"/>, the marker will rotate in the same way how <see cref="Entity"/>s are rotated
-        /// (which is different from <see cref="DrawMarker"/>.
+        /// If <see langword="true"/>, the marker will rotate in the same way how <see cref="Entity"/>s is rotated
+        /// (which is different from <see cref="DrawMarker"/>).
         /// </param>
         public static void DrawMarkerEx(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale,
             Color color, bool bounce = false, bool faceCamera = false,
@@ -2820,7 +2820,7 @@ namespace GTA
             unsafe
             {
                 // the 4th position sets the internal initial bitflag value to 3 instead of 2 if set,
-                // making it like the 1nd bit flag of 6th parameter is always set
+                // making it like the 1st bit flag of 6th parameter is always set
                 bool foundSafePos = Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED,
                     position.X,
                     position.Y,
@@ -2980,7 +2980,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the display name of the a zone in the map.
+        /// Gets the display name of a zone in the map.
         /// Use <see cref="Game.GetLocalizedString(string)"/> to convert to the localized name.
         /// </summary>
         /// <param name="position">The position on the map.</param>
@@ -2989,7 +2989,7 @@ namespace GTA
             return GetZoneDisplayName(new Vector3(position.X, position.Y, 0f));
         }
         /// <summary>
-        /// Gets the display name of the a zone in the map.
+        /// Gets the display name of a zone in the map.
         /// Use <see cref="Game.GetLocalizedString(string)"/> to convert to the localized name.
         /// </summary>
         /// <param name="position">The position on the map.</param>
@@ -2999,7 +2999,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the localized name of the a zone in the map.
+        /// Gets the localized name of a zone in the map.
         /// </summary>
         /// <param name="position">The position on the map.</param>
         public static string GetZoneLocalizedName(Vector2 position)
@@ -3007,7 +3007,7 @@ namespace GTA
             return GetZoneLocalizedName(new Vector3(position.X, position.Y, 0f));
         }
         /// <summary>
-        /// Gets the localized name of the a zone in the map.
+        /// Gets the localized name of a zone in the map.
         /// </summary>
         /// <param name="position">The position on the map.</param>
         public static string GetZoneLocalizedName(Vector3 position)

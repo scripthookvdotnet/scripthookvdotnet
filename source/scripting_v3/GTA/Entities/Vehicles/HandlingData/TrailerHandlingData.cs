@@ -17,13 +17,13 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets the attach limit angle in degrees that indicates how much the trailer is allowed to lean in the yaw axis (local x-axis).
+        /// Gets or sets the attachment limit angle in degrees that indicates how much the trailer is allowed to lean in the yaw axis (local x-axis).
         /// </summary>
         /// <remarks>
         /// The value will be read only when this trailer starts to get towed.
         /// </remarks>
         /// <value>
-        /// The attach limit angle in degrees that indicates how much the trailer is allowed to lean in the yaw axis (local x-axis).
+        /// The attachment limit angle in degrees that indicates how much the trailer is allowed to lean in the yaw axis (local x-axis).
         /// </value>
         public float AttachLimitPitch
         {
@@ -47,13 +47,13 @@ namespace GTA
             }
         }
         /// <summary>
-        /// Gets or sets the attach limit angle in degrees that indicates how much the trailer is allowed to lean in the roll axis (local y-axis).
+        /// Gets or sets the attachment limit angle in degrees that indicates how much the trailer is allowed to lean in the roll axis (local y-axis).
         /// </summary>
         /// <remarks>
         /// The value will be read only when this trailer starts to get towed.
         /// </remarks>
         /// <value>
-        /// The attach limit angle that in degrees indicates how much the trailer is allowed to lean in the roll axis (local y-axis).
+        /// The attachment limit angle that in degrees indicates how much the trailer is allowed to lean in the roll axis (local y-axis).
         /// </value>
         public float AttachLimitRoll
         {
@@ -77,13 +77,13 @@ namespace GTA
             }
         }
         /// <summary>
-        /// Gets or sets the attach limit angle that in degrees indicates how much the trailer is allowed to lean in the yaw axis (local z-axis).
+        /// Gets or sets the attachment limit angle that in degrees indicates how much the trailer is allowed to lean in the yaw axis (local z-axis).
         /// </summary>
         /// <remarks>
         /// The value will be read only when this trailer starts to get towed.
         /// </remarks>
         /// <value>
-        /// The attach limit angle that in degrees indicates how much the trailer is allowed to lean in the yaw axis (local z-axis).
+        /// The attachment limit angle that in degrees indicates how much the trailer is allowed to lean in the yaw axis (local z-axis).
         /// </value>
         public float AttachLimitYaw
         {

@@ -100,7 +100,7 @@ namespace GTA
         /// <param name="position">The position to check the <see cref="PathNode"/>s against.</param>
         /// <param name="nthClosest">
         /// The numeric position the in a series of closest nodes.
-        /// If this is set to 1 then the closest node will be returned. If this is set to 2 then the second closest node will be returned and so on.
+        /// If this is set to 1 then the closest node will be returned. If this is set to 2 then the second-closest node will be returned and so on.
         /// </param>
         /// <param name="flags">The flags to consider for the search.</param>
         /// <param name="zMeasureMult">The factor how strongly should the difference in Z direction be weighted if the Z coords is more than <paramref name="zTolerance"/>.</param>
@@ -130,7 +130,7 @@ namespace GTA
         /// <param name="position">The position to check the <see cref="PathNode"/>s against.</param>
         /// <param name="nthClosest">
         /// The numeric position the in a series of closest nodes.
-        /// If this is set to 1 then the closest node will be returned. If this is set to 2 then the second closest node will be returned and so on.
+        /// If this is set to 1 then the closest node will be returned. If this is set to 2 then the second-closest node will be returned and so on.
         /// </param>
         /// <param name="closestNodePosition">The position where the closest node is.</param>
         /// <param name="flags">The flags to consider for the search.</param>
@@ -169,7 +169,7 @@ namespace GTA
         /// <param name="position">The position to check the <see cref="PathNode"/>s against.</param>
         /// <param name="nthClosest">
         /// The numeric position the in a series of closest nodes.
-        /// If this is set to 1 then the closest node will be returned. If this is set to 2 then the second closest node will be returned and so on.
+        /// If this is set to 1 then the closest node will be returned. If this is set to 2 then the second-closest node will be returned and so on.
         /// </param>
         /// <param name="heading">
         /// The heading of the first node link that has forward lanes among the array of node links of the found vehicle path node.

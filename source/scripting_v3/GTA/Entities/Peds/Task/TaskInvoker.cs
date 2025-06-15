@@ -276,7 +276,7 @@ namespace GTA
         /// </param>
         /// <param name="strafePhaseSync">
         /// <para>
-        /// Typically <c>0f</c> is used, but <c>10f</c> is used in all of the occurrences where <c>8f</c> is used for
+        /// Typically <c>0f</c> is used, but <c>10f</c> is used in all the occurrences where <c>8f</c> is used for
         /// <paramref name="blendIn"/> in <c>fbi4_prep1.ysc</c>.
         /// </para>
         /// <para>
@@ -548,7 +548,7 @@ namespace GTA
         /// </param>
         /// <param name="useLongRangeVehiclePathing">
         /// If <see langword="true"/>, the created task may use a <c>CTaskVehicleGotoLongRange</c>, which automatically
-        /// loads nodes in the background (may be useful to avoid the task not going to a point when you want to get
+        /// loads nodes in the background (maybe useful to avoid the task not going to a point when you want to get
         /// <see cref="Ped"/>s to a point far from where the player is).
         /// If <see langword="false"/>, the created task will not use a <c>CTaskVehicleGotoLongRange</c>, which may
         /// result in the task not going to a point if the specified point is too far from where the player is.
@@ -797,7 +797,7 @@ namespace GTA
         /// </param>
         /// <param name="position">The initial position in World Coordinates to start the anim at.</param>
         /// <param name="rotation">
-        /// The initial rotation (in degrees, format &lt;&lt; pitch, roll, heading &gt;&gt;) to playback the anim from.
+        /// The initial rotation (in degrees, format &lt;&lt; pitch, roll, heading &gt;&gt;) to play the animation from.
         /// </param>
         /// <param name="blendInDelta">The rate at which the task will blend in.</param>
         /// <param name="blendOutDelta">The rate at which the task will blend out.</param>
@@ -1122,7 +1122,7 @@ namespace GTA
         /// </summary>
         /// <param name="duration">The duration in milliseconds.</param>
         /// <remarks>
-        /// Unlike <see cref="Pause(int)"/>, the <see cref="Ped"/> won't stop doing a pause task even if no script
+        /// Unlike <see cref="Pause(int)"/>, the <see cref="Ped"/> will not stop doing a pause task even if no script
         /// (including ysc ones or external ones) owns the <see cref="Ped"/>, which is possible by creating them or
         /// calling <see cref="Entity.MarkAsMissionEntity(bool)"/>.
         /// </remarks>
@@ -1142,11 +1142,11 @@ namespace GTA
         /// </summary>
         /// <param name="scenarioName">The scenario name.</param>
         /// <param name="timeToLeave">
-        /// <para>The time in milliseconds since the <see cref="Ped"/> starts the main clip of the scenario before they starts to leave.</para>
+        /// <para>The time in milliseconds since the <see cref="Ped"/> starts the main clip of the scenario before they start to leave.</para>
         /// <para>If zero, the initiated task will not have the <see cref="Ped"/> leave the scenario by elapsing time.</para>
         /// <para>If positive, the initiated task will have the <see cref="Ped"/> leave the scenario after the specified time elapsed.</para>
         /// <para>
-        /// If negative, the initiated task will will not stop the <see cref="Ped"/> leaving the scenario by elapsing time (behaves the same as zero in this way)
+        /// If negative, the initiated task will not stop the <see cref="Ped"/> leaving the scenario by elapsing time (behaves the same as zero in this way)
         /// but this method will start a <c>CTaskUseScenario</c> task with "idle forever" flag (although it is unknown what difference the flag makes).
         /// </para>
         /// </param>
@@ -1167,11 +1167,11 @@ namespace GTA
         /// <param name="position">The position to put the <see cref="Ped"/> into the given scenario.</param>
         /// <param name="heading">The heading to put the <see cref="Ped"/> into the given scenario.</param>
         /// <param name="timeToLeave">
-        /// <para>The time in milliseconds since the <see cref="Ped"/> starts the main clip of the scenario before they starts to leave.</para>
+        /// <para>The time in milliseconds since the <see cref="Ped"/> starts the main clip of the scenario before they start to leave.</para>
         /// <para>If zero, the initiated task will not have the <see cref="Ped"/> leave the scenario by elapsing time.</para>
         /// <para>If positive, the initiated task will have the <see cref="Ped"/> leave the scenario after the specified time elapsed.</para>
         /// <para>
-        /// If negative, the initiated task will will not stop the <see cref="Ped"/> leaving the scenario by elapsing time (behaves the same as zero in this way)
+        /// If negative, the initiated task will not stop the <see cref="Ped"/> leaving the scenario by elapsing time (behaves the same as zero in this way)
         /// but this method will start a <c>CTaskUseScenario</c> task with "idle forever" flag (although it is unknown what difference the flag makes).
         /// </para>
         /// </param>
@@ -1203,7 +1203,7 @@ namespace GTA
         /// <param name="straightLineDist">
         /// The distance in meters at which the AI switches to heading for the target directly instead of following
         /// the nodes.
-        /// The max acceptable value is 255, or the value will be clamp to 255 by the native function
+        /// The max acceptable value is 255, or the value will be clamped to 255 by the native function
         /// <c>TASK_VEHICLE_MISSION</c>.
         /// To pick default value <c>20f</c>, the parameter can be passed in as <c>-1</c> or any other values less than
         /// zero.
@@ -1335,7 +1335,7 @@ namespace GTA
         /// <description>
         /// If <paramref name="escortType"/> is either <see cref="VehicleEscortType.Rear"/> or
         /// <see cref="VehicleEscortType.Front"/>, always 5 meters is used as a fallback regardless of the vehicle type
-        /// (<see cref="VehicleType"/>). To test if the fall back value is correct for front or rear escort types,
+        /// (<see cref="VehicleType"/>). To test if the fallback value is correct for front or rear escort types,
         /// search a dumped exe for <c>0F 28 46 ? F3 0F 10 8B ? ? 00 00 0F 2F 0D ? ? ? ? 0F 29 45 ? 73 08</c>.
         /// </description>
         /// </item>
@@ -1364,7 +1364,7 @@ namespace GTA
         /// 	</description>
         /// 	</item>
         ///     </list>
-        /// To test if the fall back value is correct for left or right escort types, search a dumped exe for
+        /// To test if the fallback value is correct for left or right escort types, search a dumped exe for
         /// <c>0F 57 F6 0F 2F FE 44 0F 28 C6 73 32</c>.
         /// </description>
         /// </item>
@@ -2057,7 +2057,7 @@ namespace GTA
         /// </summary>
         public void Wander(float heading = DefaultNavmeshFinalHeading, bool keepMovingWhilstWaitingForFirstPath = false)
         {
-            // the 3nd argument is actually a flag value, but only the 1st bit is used as of b2845
+            // the 3rd argument is actually a flag value, but only the 1st bit is used as of b2845
             Function.Call(Hash.TASK_WANDER_STANDARD, _ped.Handle, heading, keepMovingWhilstWaitingForFirstPath ? 1 : 0);
         }
         [Obsolete("the overload of TaskInvoker.WanderAround with no parameters is obsolete, use TaskInvoker.Wander instead.")]
@@ -2100,7 +2100,7 @@ namespace GTA
         /// </summary>
         /// <param name="state">The <see cref="PedMotionState"/> to set.</param>
         /// <param name="restartState">
-        /// If <see langword="true"/>, the <see cref="Ped"/> will perform an new appropriate motion task
+        /// If <see langword="true"/>, the <see cref="Ped"/> will perform a new appropriate motion task
         /// even if the current primary motion task is in the specified motion state (<paramref name="state"/>).
         /// </param>
         public void ForceMotionState(PedMotionState state, bool restartState = false)

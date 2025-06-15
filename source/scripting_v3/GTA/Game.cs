@@ -151,10 +151,10 @@ namespace GTA
         public static int GameTime => Function.Call<int>(Hash.GET_GAME_TIMER);
 
         /// <summary>
-        /// Gets or sets the time scale of the game.
+        /// Gets or sets the timescale of the game.
         /// </summary>
         /// <value>
-        /// The time scale, only accepts values in range 0.0f to 1.0f.
+        /// The timescale, only accepts values in range 0.0f to 1.0f.
         /// </value>
         public static float TimeScale
         {
@@ -573,7 +573,7 @@ namespace GTA
         /// </para>
         /// <para>
         /// Strictly, returns <see langword="true"/> when <see cref="GetDisabledControlValueNormalized(Control)"/>
-        /// returns a value less than <c>0.5f</c> and it returns <c>0.5f</c> last frame; otherwise, returns
+        /// returns a value less than <c>0.5f</c>, and it returns <c>0.5f</c> last frame; otherwise, returns
         /// <see langword="false"/>.
         /// </para>
         /// </returns>
@@ -615,7 +615,7 @@ namespace GTA
         /// </para>
         /// <para>
         /// Strictly, returns <see langword="true"/> when <see cref="GetControlValueNormalized(Control)"/> returns
-        /// <c>0.5f</c> or more and it returns a value less than <c>0.5f</c> last frame; otherwise, returns
+        /// <c>0.5f</c> or more, and it returns a value less than <c>0.5f</c> last frame; otherwise, returns
         /// <see langword="false"/>.
         /// </para>
         /// </returns>
@@ -635,7 +635,7 @@ namespace GTA
         /// </para>
         /// <para>
         /// Strictly, returns <see langword="true"/> when <see cref="GetControlValueNormalized(Control)"/> returns
-        /// a value less than <c>0.5f</c> and it returns <c>0.5f</c> or more last frame; otherwise, returns
+        /// a value less than <c>0.5f</c>, and it returns <c>0.5f</c> or more last frame; otherwise, returns
         /// <see langword="false"/>.
         /// </para>
         /// </returns>
@@ -730,7 +730,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets an value associated with the specified index of the profile setting.
+        /// Gets a value associated with the specified index of the profile setting.
         /// </summary>
         /// <param name="index">The index of the profile setting values.</param>
         /// <returns>The integer value associated with the specified index of the profile setting.</returns>

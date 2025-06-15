@@ -549,28 +549,28 @@ namespace GTA.Math
             return (float)((System.Math.Acos(System.Math.Min(System.Math.Abs(dot), 1.0f)) * 2.0 * (180.0f / System.Math.PI)));
         }
 
-        const float DEG_2_RAD = (float)((System.Math.PI / 180.0));
-        const float RAD_2_DEG = (float)((180.0 / System.Math.PI));
+        const float DEG_TO_RAD = (float)((System.Math.PI / 180.0));
+        const float RAD_TO_DEG = (float)((180.0 / System.Math.PI));
 
         /// <summary>
-        /// <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).</para>
+        /// <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x-axis, and y degrees around the y-axis (in that order).</para>
         /// <para>
         /// For example, <c>Quaternion.Euler(60f, 30f, 45f)</c> will yield (almost) the same result as <c>Quaternion.RotationAxis(Vector3.UnitY, 45f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitX, 30f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitZ, 60f * deg2Rad)</c>
         /// provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>.
         /// </para>
         /// </summary>
-        /// <param name="zaxis">Z degrees.</param>
-        /// <param name ="xaxis">X degrees.</param>
-        /// <param name ="yaxis">Y degrees.</param>
+        /// <param name="z">Z degrees.</param>
+        /// <param name ="x">X degrees.</param>
+        /// <param name ="y">Y degrees.</param>
         /// <remarks>
-        /// <para>You should aware the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
+        /// <para>You should be aware that the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
         /// <para>
         /// For compatibility with scripts built against v3.6.0 or earlier, this overload does the same as <see cref="Euler(float, float, float, EulerRotationOrder)"/>
         /// where <see cref="EulerRotationOrder.ZXY"/> is passed as the rotation order.
         /// In most cases, you should use the other overload <see cref="Euler(float, float, float, EulerRotationOrder)"/> and pass <see cref="EulerRotationOrder.YXZ"/> as the rotation order.
         /// </para>
         /// </remarks>
-        public static Quaternion Euler(float zaxis, float xaxis, float yaxis) => RotationYawPitchRoll(zaxis * DEG_2_RAD, xaxis * DEG_2_RAD, yaxis * DEG_2_RAD);
+        public static Quaternion Euler(float z, float x, float y) => RotationYawPitchRoll(z * DEG_TO_RAD, x * DEG_TO_RAD, y * DEG_TO_RAD);
 
         /// <summary>
         /// <para>Returns a rotation that rotates degrees in the specified order in world space.</para>
@@ -588,13 +588,13 @@ namespace GTA.Math
         /// For most methods for the game and native functions, you would like to use <see cref="EulerRotationOrder.YXZ"/>.
         /// </param>
         /// <remarks>
-        /// <para>You should aware the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
+        /// <para>You should be aware that the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
         /// </remarks>
         public static Quaternion Euler(float z, float x, float y, EulerRotationOrder rotationOrder) => FromEulerInternal(x, y, z, rotationOrder);
 
         /// <summary>
         /// <para>
-        /// Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+        /// Returns a rotation that rotates z degrees around the z axis, x degrees around the x-axis, and y degrees around the y-axis (in that order).
         /// </para>
         /// <para>
         /// For example, <c>Quaternion.Euler(new Vector3(30f, 45f, 60f))</c> will yield (almost) the same result as <c>Quaternion.RotationAxis(Vector3.UnitY, 45f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitX, 30f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitZ, 60f * deg2Rad)</c>
@@ -607,7 +607,7 @@ namespace GTA.Math
         /// where <see cref="EulerRotationOrder.ZXY"/> is passed as the rotation order.
         /// In most cases, you should use the other overload <see cref="Euler(Vector3, EulerRotationOrder)"/> and pass <see cref="EulerRotationOrder.YXZ"/> as the rotation order.
         /// </remarks>
-        public static Quaternion Euler(Vector3 euler) => RotationYawPitchRoll(euler.Z * DEG_2_RAD, euler.X * DEG_2_RAD, euler.Y * DEG_2_RAD);
+        public static Quaternion Euler(Vector3 euler) => RotationYawPitchRoll(euler.Z * DEG_TO_RAD, euler.X * DEG_TO_RAD, euler.Y * DEG_TO_RAD);
 
         /// <summary>
         /// <para>Returns a rotation that rotates degrees in the specified order in world space.</para>
@@ -617,7 +617,7 @@ namespace GTA.Math
         /// </para>
         /// <para>
         /// <c>entity.Quaternion = Quaternion.Euler(new Vector3(30f, 45f, 60f), EulerRotationOrder.YXZ)</c> does the same as
-        /// <c>entity.Quaternion = new Vector3(30f, 45f, 60f)</c> provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>..
+        /// <c>entity.Quaternion = new Vector3(30f, 45f, 60f)</c> provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>.
         /// </para>
         /// </summary>
         /// <param name="euler">Euler angles in degrees. euler.X = around X axis, euler.Y = around Y axis, euler.Z = around Z axis</param>
@@ -631,13 +631,13 @@ namespace GTA.Math
         {
             Quaternion result = Zero;
 
-            float halfX = x * 0.5f * DEG_2_RAD;
+            float halfX = x * 0.5f * DEG_TO_RAD;
             float sinX = (float)(System.Math.Sin((double)(halfX)));
             float cosX = (float)(System.Math.Cos((double)(halfX)));
-            float halfY = y * 0.5f * DEG_2_RAD;
+            float halfY = y * 0.5f * DEG_TO_RAD;
             float sinY = (float)(System.Math.Sin((double)(halfY)));
             float cosY = (float)(System.Math.Cos((double)(halfY)));
-            float halfZ = z * 0.5f * DEG_2_RAD;
+            float halfZ = z * 0.5f * DEG_TO_RAD;
             float sinZ = (float)(System.Math.Sin((double)(halfZ)));
             float cosZ = (float)(System.Math.Cos((double)(halfZ)));
 
@@ -741,14 +741,14 @@ namespace GTA.Math
                 float m10 = 2 * ((X * Y) + (Z * W));
                 float m00 = 2 * ((W * W) + (X * X)) - 1;
 
-                return new Vector3(90f, (float)System.Math.Atan2(m10, m00) * RAD_2_DEG, 0f);
+                return new Vector3(90f, (float)System.Math.Atan2(m10, m00) * RAD_TO_DEG, 0f);
             }
             if (singularityTest < -SINGULARITY_THRESHOLD)
             {
                 float m10 = 2 * ((X * Y) + (Z * W));
                 float m00 = 2 * ((W * W) + (X * X)) - 1;
 
-                return new Vector3(-90f, (float)System.Math.Atan2(-m10, m00) * RAD_2_DEG, 0f);
+                return new Vector3(-90f, (float)System.Math.Atan2(-m10, m00) * RAD_TO_DEG, 0f);
             }
 
             float rotX = (float)System.Math.Asin(2 * singularityTest);
@@ -761,7 +761,7 @@ namespace GTA.Math
             float m11 = 2 * ((W * W) + (Y * Y)) - 1;
             float rotZ = (float)System.Math.Atan2(-m01, m11);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * RAD_TO_DEG, rotY * RAD_TO_DEG, rotZ * RAD_TO_DEG);
         }
         private readonly Vector3 ToEulerXYZ()
         {
@@ -772,7 +772,7 @@ namespace GTA.Math
                 float m01 = 2 * ((X * Y) - (Z * W));
                 float m11 = 2 * ((W * W) + (Y * Y)) - 1;
 
-                return new Vector3((float)System.Math.Atan2(m01, m11) * RAD_2_DEG, 90f, 0f);
+                return new Vector3((float)System.Math.Atan2(m01, m11) * RAD_TO_DEG, 90f, 0f);
             }
 
             if (singularityTest > SINGULARITY_THRESHOLD)
@@ -780,7 +780,7 @@ namespace GTA.Math
                 float m01 = 2 * ((X * Y) - (Z * W));
                 float m11 = 2 * ((W * W) + (Y * Y)) - 1;
 
-                return new Vector3((float)System.Math.Atan2(-m01, m11) * RAD_2_DEG, -90f, 0f);
+                return new Vector3((float)System.Math.Atan2(-m01, m11) * RAD_TO_DEG, -90f, 0f);
             }
 
             float m21 = 2 * ((Y * Z) + (X * W));
@@ -793,7 +793,7 @@ namespace GTA.Math
             float m00 = 2 * ((W * W) + (X * X)) - 1;
             float rotZ = (float)System.Math.Atan2(m10, m00);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * RAD_TO_DEG, rotY * RAD_TO_DEG, rotZ * RAD_TO_DEG);
         }
         private readonly Vector3 ToEulerXZY()
         {
@@ -804,7 +804,7 @@ namespace GTA.Math
                 float m02 = 2 * ((X * Z) + (Y * W));
                 float m22 = 2 * ((W * W) + (Z * Z)) - 1;
 
-                return new Vector3((float)System.Math.Atan2(m02, m22) * RAD_2_DEG, 0f, 90f);
+                return new Vector3((float)System.Math.Atan2(m02, m22) * RAD_TO_DEG, 0f, 90f);
             }
 
             if (singularityTest < -SINGULARITY_THRESHOLD)
@@ -812,7 +812,7 @@ namespace GTA.Math
                 float m02 = 2 * ((X * Z) + (Y * W));
                 float m22 = 2 * ((W * W) + (Z * Z)) - 1;
 
-                return new Vector3((float)System.Math.Atan2(-m02, m22) * RAD_2_DEG, 0f, -90f);
+                return new Vector3((float)System.Math.Atan2(-m02, m22) * RAD_TO_DEG, 0f, -90f);
             }
 
             float m12 = 2 * ((Y * Z) - (X * W));
@@ -825,7 +825,7 @@ namespace GTA.Math
 
             float rotZ = (float)System.Math.Asin(2 * singularityTest);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * RAD_TO_DEG, rotY * RAD_TO_DEG, rotZ * RAD_TO_DEG);
         }
         private readonly Vector3 ToEulerYZX()
         {
@@ -836,7 +836,7 @@ namespace GTA.Math
                 float m12 = 2 * ((Y * Z) - (X * W));
                 float m22 = 2 * ((W * W) + (Z * Z)) - 1;
 
-                return new Vector3(0f, (float)System.Math.Atan2(-m12, m22) * RAD_2_DEG, -90f);
+                return new Vector3(0f, (float)System.Math.Atan2(-m12, m22) * RAD_TO_DEG, -90f);
             }
 
             if (singularityTest < -SINGULARITY_THRESHOLD)
@@ -844,7 +844,7 @@ namespace GTA.Math
                 float m12 = 2 * ((Y * Z) - (X * W));
                 float m22 = 2 * ((W * W) + (Z * Z)) - 1;
 
-                return new Vector3(0f, (float)System.Math.Atan2(m12, m22) * RAD_2_DEG, 90f);
+                return new Vector3(0f, (float)System.Math.Atan2(m12, m22) * RAD_TO_DEG, 90f);
             }
 
             float m21 = 2 * ((Y * Z) + (X * W));
@@ -857,7 +857,7 @@ namespace GTA.Math
 
             float rotZ = (float)System.Math.Asin(-2 * singularityTest);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * RAD_TO_DEG, rotY * RAD_TO_DEG, rotZ * RAD_TO_DEG);
         }
         private readonly Vector3 ToEulerZXY()
         {
@@ -868,7 +868,7 @@ namespace GTA.Math
                 float m20 = 2 * ((X * Z) - (Y * W));
                 float m00 = 2 * ((W * W) + (X * X)) - 1;
 
-                return new Vector3(-90f, 0f, (float)System.Math.Atan2(-m20, m00) * RAD_2_DEG);
+                return new Vector3(-90f, 0f, (float)System.Math.Atan2(-m20, m00) * RAD_TO_DEG);
             }
 
             if (singularityTest < -SINGULARITY_THRESHOLD)
@@ -876,7 +876,7 @@ namespace GTA.Math
                 float m20 = 2 * ((X * Z) - (Y * W));
                 float m00 = 2 * ((W * W) + (X * X)) - 1;
 
-                return new Vector3(90f, 0f, (float)System.Math.Atan2(m20, m00) * RAD_2_DEG);
+                return new Vector3(90f, 0f, (float)System.Math.Atan2(m20, m00) * RAD_TO_DEG);
             }
 
             float rotX = (float)System.Math.Asin(-2 * singularityTest);
@@ -889,7 +889,7 @@ namespace GTA.Math
             float m11 = 2 * ((W * W) + (Y * Y)) - 1;
             float rotZ = (float)System.Math.Atan2(m10, m11);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * RAD_TO_DEG, rotY * RAD_TO_DEG, rotZ * RAD_TO_DEG);
         }
         private readonly Vector3 ToEulerZYX()
         {
@@ -900,7 +900,7 @@ namespace GTA.Math
                 float m21 = 2 * ((Y * Z) + (X * W));
                 float m11 = 2 * ((W * W) + (Y * Y)) - 1;
 
-                return new Vector3(0f, 90f, (float)System.Math.Atan2(m21, m11) * RAD_2_DEG);
+                return new Vector3(0f, 90f, (float)System.Math.Atan2(m21, m11) * RAD_TO_DEG);
             }
 
             if (singularityTest < -SINGULARITY_THRESHOLD)
@@ -908,7 +908,7 @@ namespace GTA.Math
                 float m21 = 2 * ((Y * Z) + (X * W));
                 float m11 = 2 * ((W * W) + (Y * Y)) - 1;
 
-                return new Vector3(0f, -90f, (float)System.Math.Atan2(-m21, m11) * RAD_2_DEG);
+                return new Vector3(0f, -90f, (float)System.Math.Atan2(-m21, m11) * RAD_TO_DEG);
             }
 
             float m12 = 2 * ((Y * Z) - (X * W));
@@ -921,7 +921,7 @@ namespace GTA.Math
             float m00 = 2 * ((W * W) + (X * X)) - 1;
             float rotZ = (float)System.Math.Atan2(-m01, m00);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * RAD_TO_DEG, rotY * RAD_TO_DEG, rotZ * RAD_TO_DEG);
         }
 
         #endregion
@@ -1078,9 +1078,9 @@ namespace GTA.Math
         /// Get direction vectors from the given quaternion
         /// </summary>
         /// <param name="quaternion">The quaternion</param>
-        /// <param name="rightVector">RightVector = relative x axis</param>
-        /// <param name="forwardVector">ForwardVector = relative y axis</param>
-        /// <param name="upVector">UpVector = relative z axis</param>
+        /// <param name="rightVector">RightVector = relative x-axis</param>
+        /// <param name="forwardVector">ForwardVector = relative y-axis</param>
+        /// <param name="upVector">UpVector = relative z-axis</param>
         public static void GetDirectionVectors(Quaternion quaternion, out Vector3 rightVector, out Vector3 forwardVector, out Vector3 upVector)
         {
             quaternion.Normalize();

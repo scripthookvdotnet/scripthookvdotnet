@@ -8,8 +8,8 @@ namespace GTA
     public enum ScriptTaskStatus
     {
         /// <summary>
-        /// The task is issued to the <see cref="Ped"/> as a primary task but they're waiting for events or other tasks preventing them from performing it to end.
-        /// Eg. When the task is issued while the <see cref="Ped"/> is ragdolling or reacting a shocking event such as a agitating event,
+        /// The task is issued to the <see cref="Ped"/> as a primary task, but they're waiting for events or other tasks preventing them from performing it to end.
+        /// E.g. When the task is issued while the <see cref="Ped"/> is ragdolling or reacting a shocking event such as an agitating event,
         /// or when an animation task is issued while they are being dragged from their <see cref="Vehicle"/> (and the animation task is primary one).
         /// </summary>
         WaitingToStart = 0,
@@ -19,7 +19,7 @@ namespace GTA
         Performing = 1,
         /// <summary>
         /// The task is dormant because it's temporarily interrupted by some events or other tasks.
-        /// Eg. When the <see cref="Ped"/> is stumbling since another <see cref="Entity"/> bumped them after the task had started at all.
+        /// E.g. When the <see cref="Ped"/> is stumbling since another <see cref="Entity"/> bumped them after the task had started at all.
         /// </summary>
         Dormant = 2,
         /// <summary>

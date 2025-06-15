@@ -487,7 +487,7 @@ namespace GTA
         /// </summary>
         CannotBeTargeted,
         /// <summary>
-        /// <see cref="Ped"/> is in pure fall state (i.e. no parachuting, landing etc included).
+        /// <see cref="Ped"/> is in pure fall state (i.e. no parachuting, landing etc. included).
         /// </summary>
         IsFalling,
         /// <summary>
@@ -630,7 +630,7 @@ namespace GTA
         /// </summary>
         NoAutoRunWhenFiring,
         /// <summary>
-        /// Ignore certain aspects (FOV checks, etc) of `<c>AffectsPedCore()</c>` on some events while
+        /// Ignore certain aspects (FOV checks, etc.) of `<c>AffectsPedCore()</c>` on some events while
         /// the <see cref="Ped"/> is playing a scenario exit.
         /// </summary>
         PermitEventDuringScenarioExit,
@@ -735,7 +735,7 @@ namespace GTA
         /// </remarks>
         ForceMotionStateLeaveDesiredMbr,
         /// <summary>
-        /// Disable drop downs for this <see cref="Ped"/>.
+        /// Disable dropdowns for this <see cref="Ped"/>.
         /// </summary>
         DisableDropDowns,
         /// <summary>
@@ -906,8 +906,8 @@ namespace GTA
         /// </summary>
         UseFastEnterExitVehicleRates,
         /// <summary>
-        /// If set, the <see cref="Ped"/> won't attach to a ground physical when his physics disables (useful for
-        /// cutscenes, etc).
+        /// If set, the <see cref="Ped"/> will not attach to a ground physical when his physics disables (useful for
+        /// cutscenes, etc.).
         /// </summary>
         DisableGroundAttachment,
         DisableAgitation,
@@ -925,14 +925,14 @@ namespace GTA
         DisableVehicleDamageReactions,
         DisablePotentialBlastReactions,
         /// <summary>
-        /// When set along side open door ik, will only use the left hand.
+        /// When set alongside open door ik, will only use the left hand.
         /// </summary>
         /// <remarks>
         /// The canonical name is `<c>CPED_RESET_FLAG_OnlyAllowLeftArmDoorIk</c>`.
         /// </remarks>
         OnlyAllowLeftArmDoorIK,
         /// <summary>
-        /// When set along side open door ik, will only use the right hand.
+        /// When set alongside open door ik, will only use the right hand.
         /// </summary>
         /// <remarks>
         /// The canonical name is `<c>CPED_RESET_FLAG_OnlyAllowRightArmDoorIk</c>`.
@@ -943,7 +943,7 @@ namespace GTA
         /// </summary>
         ForceProcessPedStandingUpdateEachSimStep,
         /// <summary>
-        /// When set, the flashlight on a AI weapon will be turned off.
+        /// When set, the flashlight on an AI weapon will be turned off.
         /// </summary>
         /// <remarks>
         /// The canonical name is `<c>CPED_RESET_FLAG_DisableFlashLight</c>`.
@@ -1050,7 +1050,7 @@ namespace GTA
         /// </summary>
         DontActivateRagdollFromPlayerPedImpactReset,
         /// <summary>
-        /// Block ragdoll activations from collisions with an ai ragdoll.
+        /// Block ragdoll activations from collisions with an AI ragdoll.
         /// </summary>
         DontActivateRagdollFromAiRagdollImpactReset,
         /// <summary>
@@ -1225,7 +1225,7 @@ namespace GTA
         /// </summary>
         UseTighterTurnSettingsForScript,
         /// <summary>
-        /// Set if the <see cref="Ped"/> should process externally driven dofs before the pre-camera ai update.
+        /// Set if the <see cref="Ped"/> should process externally driven dofs before the pre-camera AI update.
         /// </summary>
         /// <remarks>
         /// The canonical name is `<c>CPED_RESET_FLAG_ForcePreCameraProcessExternallyDrivenDOFs</c>`.
@@ -1445,7 +1445,7 @@ namespace GTA
         FpsAllowAimIKForThrownProjectile,
         TriggerRoadRageAnim,
         /// <summary>
-        /// Force a pre camera ai and animation update if the <see cref="Ped"/> is the first person camera target
+        /// Force a pre camera AI and animation update if the <see cref="Ped"/> is the first person camera target
         /// during the pre camera update.
         /// </summary>
         /// <remarks>

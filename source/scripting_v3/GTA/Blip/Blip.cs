@@ -502,7 +502,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Blip"/> shows the dollar sign at the top left corner of the <see cref="Blip"/>.
+        /// Gets or sets a value indicating whether this <see cref="Blip"/> shows the dollar sign in the top left corner of the <see cref="Blip"/>.
         /// </summary>
         /// <value>
         ///   <see langword="true" /> to show the dollar sign; otherwise, <see langword="false" />.

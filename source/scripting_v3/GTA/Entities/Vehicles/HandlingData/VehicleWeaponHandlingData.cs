@@ -28,7 +28,7 @@ namespace GTA
         static VehicleWeaponHandlingData()
         {
             // Although we could get element count from parStructure->parMemberArray->parMemberDefinition,
-            // it won't worth it because only one update changed max element count of array members of CVehicleWeaponHandlingData as of b2845
+            // it's not worth it because only one update changed max element count of array members of CVehicleWeaponHandlingData as of b2845
             if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2)
             {
                 s_elemCountForWeaponPropertyArrays = 6;
@@ -81,7 +81,7 @@ namespace GTA
                 int[] arrayToFill = new int[s_elemCountForWeaponPropertyArrays];
                 for (int i = 0; i < value.Length; i++)
                 {
-                    // VehicleWeaponHash.Invalid should have been zero since the game always treats zero as a invalid weapon hash but not necessarily for 0xFFFFFFFF
+                    // VehicleWeaponHash.Invalid should have been zero since the game always treats zero as an invalid weapon hash but not necessarily for 0xFFFFFFFF
                     if (value[i] == VehicleWeaponHash.Invalid)
                     {
                         continue;

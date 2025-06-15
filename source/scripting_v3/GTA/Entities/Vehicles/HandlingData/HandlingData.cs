@@ -336,7 +336,7 @@ namespace GTA
 
         /// <summary>
         /// <para>Gets or sets how much the vehicle gives rear axles force. The rest of the force will be given to front axles. This value will be set to the equivalent value in the <c>handling.meta</c> multiplied by 2 when <see cref="HandlingData"/> instances are initialized.</para>
-        /// <para>0.0 is rear wheel drive, 2.0 is front wheel drive, and any value between 0.01 and 0.199 is four wheel drive (1.0 give both front and rear axles equal force, being perfect 4WD.)</para>
+        /// <para>0.0 is rear-wheel drive, 2.0 is front-wheel drive, and any value between 0.01 and 0.199 is four-wheel drive (1.0 give both front and rear axles equal force, being perfect 4WD.)</para>
         /// </summary>
         /// <value>
         /// The percent the vehicle gives rear axles force (between 0.0 to 2.0).

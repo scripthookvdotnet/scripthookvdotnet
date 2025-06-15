@@ -25,7 +25,7 @@ namespace GTA
         /// </summary>
         TagSyncOut = 2,
         /// <summary>
-        /// When this flag is set, the scene will not be interrupted by ai events like falling, entering water / etc.
+        /// When this flag is set, the scene will not be interrupted by AI events like falling, entering water / etc.
         /// Also blocks all weapon reactions / etc.
         /// </summary>
         DontInterrupt = 4,
@@ -47,7 +47,7 @@ namespace GTA
         /// </summary>
         LoopWithinScene = 64,
         /// <summary>
-        /// When this flag is set, the task will preserve it's velocity on clean up (must be using physics).
+        /// When this flag is set, the task will preserve its velocity on clean up (must be using physics).
         /// </summary>
         PreserveVelocity = 128,
         /// <summary>

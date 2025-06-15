@@ -10,7 +10,7 @@ using System;
 namespace GTA
 {
     /// <summary>
-    /// Represents a interior proxy, which is for <c>CInteriorProxy</c> and is used for native functions for interiors.
+    /// Represents an interior proxy, which is for <c>CInteriorProxy</c> and is used for native functions for interiors.
     /// </summary>
     public sealed class InteriorProxy : INativeValue, IExistable
     {
@@ -118,7 +118,7 @@ namespace GTA
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="InteriorProxy"/> is capped to load only the shell objects (usually walls + floor + doors + windows),
-        /// prevents most of collisions from loading.
+        /// prevents most of the collisions from loading.
         /// </summary>
         /// <value>
         /// <see langword="true" /> if this <see cref="InteriorProxy"/> is capped to load only the shell objects; otherwise, <see langword="false" />.
@@ -153,7 +153,7 @@ namespace GTA
 
         /// <summary>
         /// Caps the interior so this <see cref="InteriorProxy"/> will load only the shell objects (usually walls + floor + doors + windows),
-        /// prevents most of collisions from loading.
+        /// prevents most of the collisions from loading.
         /// </summary>
         /// <remarks>Does nothing if the player <see cref="Ped"/> is in this <see cref="InteriorProxy"/>.</remarks>
         public void Cap(bool toggle)

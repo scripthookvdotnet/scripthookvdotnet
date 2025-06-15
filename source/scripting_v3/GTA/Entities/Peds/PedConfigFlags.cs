@@ -83,7 +83,7 @@ namespace GTA
          * ```cpp
          * enum eGestureModes
            {
-               // if gesturing is enabled*, gestures will blended in and out based on audio
+               // if gesturing is enabled*, gestures will blend in and out based on audio
 	           GESTURE_MODE_DEFAULT,
                // if gesturing is enabled*, gestures will only be blended in during gesture allow tags
 	           GESTURE_MODE_USE_ANIM_ALLOW_TAGS,
@@ -99,7 +99,7 @@ namespace GTA
         /// a <see cref="PedGroup"/> as a follower.
         /// If set to <see cref="VehicleSeat.Any"/>, which is the default value when a <see cref="Ped"/> is created,
         /// the group leader <see cref="Ped"/> will decide which seat this <see cref="Ped"/> should be in when
-        /// the leader entered a vehicle as a driver (using a task response to a event leader event).
+        /// the leader entered a vehicle as a driver (using a task response to ab event leader event).
         /// </summary>
         /// <value>
         /// A corresponding <see cref="VehicleSeat"/> value if the internal value is between 0 and 15, or
@@ -144,7 +144,7 @@ namespace GTA
                 }
                 // Any negative values except for -1 should be considered as not really useful.
                 //
-                // Any values between 16 to 31 is supposed to be negative considering how signed bit-fields are
+                // Any values between 16 and 31 is supposed to be negative considering how signed bit-fields are
                 // interpreted in Windows implementation of C++.
                 //
                 // None of them will make `CTaskEnterVehicle::ShouldLeaveDoorOpenForGroupMembers` and
@@ -178,19 +178,19 @@ namespace GTA
                 int valToPass = (int)value;
                 // Both of the special cases below use the overflow wrapping behavior, while the internal value is
                 // a signed bit-field and signed overflow is undefined in C++. You can test the compiled code of
-                // `CPedFlags::SetPassengerIndexToUseInAGroup` just uses the wrapping behavior by passing a int value
+                // `CPedFlags::SetPassengerIndexToUseInAGroup` just uses the wrapping behavior by passing an int value
                 // more than 14 to the native function as the 2nd argument (the native passes what you pass plus 1 to
                 // the internal func and the range of `CPedFlags::m_iPassengerIndexToUseInAGroup` is between -16 and
                 // 15).
                 if (value == VehicleSeat.Any)
                 {
-                    const int PassengerIndexToResetToDefault = 30;
-                    valToPass = PassengerIndexToResetToDefault;
+                    const int PASSENGER_INDEX_TO_RESET_TO_DEFAULT = 30;
+                    valToPass = PASSENGER_INDEX_TO_RESET_TO_DEFAULT;
                 }
                 else if (value == VehicleSeat.Driver)
                 {
-                    const int PassengerIndexToSetToDriver = 31;
-                    valToPass = PassengerIndexToSetToDriver;
+                    const int PASSENGER_INDEX_TO_SET_TO_DRIVER = 31;
+                    valToPass = PASSENGER_INDEX_TO_SET_TO_DRIVER;
                 }
 
                 Function.Call(Hash.SET_PED_GROUP_MEMBER_PASSENGER_INDEX, _ped.Handle, valToPass);               

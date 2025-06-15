@@ -82,7 +82,7 @@ namespace GTA
         public static float GetFloat(Entity entity, string decoratorName)
             => Function.Call<float>(Hash.DECOR_GET_FLOAT, entity, decoratorName);
         /// <summary>
-        /// Gets the value of a int decorator.
+        /// Gets the value of an int decorator.
         /// </summary>
         /// <returns>The int value of the decorator.</returns>
         public static int GetInt(Entity entity, string decoratorName)

@@ -45,7 +45,7 @@ namespace GTA
         /// </summary>
         /// <param name="cameraNameHash">
         /// The camera name hash.
-        /// Passing a invalid name hash will result in the <see langword="null"/> return value.
+        /// Passing an invalid name hash will result in the <see langword="null"/> return value.
         /// It would result in some unintended behaviors such as the camera position not being able to change
         /// if you pass a camera name hash whose metadata is not designed for scripted cameras.
         /// </param>
@@ -76,7 +76,7 @@ namespace GTA
         /// </summary>
         /// <param name="cameraName">
         /// The camera name.
-        /// Passing a invalid name will result in the <see langword="null"/> return value.
+        /// Passing an invalid name will result in the <see langword="null"/> return value.
         /// It would result in some unintended behaviors such as the camera position not being able to change
         /// if you pass a camera name hash whose metadata is not designed for scripted cameras.
         /// </param>
@@ -305,7 +305,7 @@ namespace GTA
         /// This method fails to interpolate if there is no space for a new camera so the method cannot add a new
         /// camera cloned from this camera, which gets deleted on completion of the interpolation (unless
         /// <paramref name="duration"/> is zero).
-        /// The camera will be deactivated if this method successfully starts an camera interpolation.
+        /// The camera will be deactivated if this method successfully starts a camera interpolation.
         /// </remarks>
         public void InterpolateToNewCamFrame(Vector3 position, Vector3 rotation, float fov, uint duration,
             CamFrameInterpolatorCurveType graphTypePos = CamFrameInterpolatorCurveType.SinAccelDecel,
@@ -525,7 +525,7 @@ namespace GTA
         /// <paramref name="vehicleBone"/>.
         /// </summary>
         /// <param name="vehicleBone">The <see cref="Vehicle"/> bone to attach the camera to.</param>
-        /// <param name="positionOffset">The additional offset to be applied from the attach position.</param>
+        /// <param name="positionOffset">The additional offset to be applied from the attachment position.</param>
         /// <param name="offsetIsRelative">
         /// If true, <paramref name="positionOffset"/> are applied relative to the transform of the attached
         /// <see cref="Vehicle"/> (not the bone), rather than in world-space. Effective as long as the
@@ -552,7 +552,7 @@ namespace GTA
         /// <param name="rotationOffset">
         /// An additional rotational offset to be applied from the attach bone rotation (x=yaw, y=pitch, z=roll).
         /// </param>
-        /// <param name="positionOffset">The additional offset to be applied from the attach position.</param>
+        /// <param name="positionOffset">The additional offset to be applied from the attachment position.</param>
         /// <param name="offsetIsRelative">
         /// If true, <paramref name="positionOffset"/> are applied relative to the transform of the attached
         /// <see cref="Vehicle"/> (not the bone), rather than in world-space. Effective as long as the
@@ -586,11 +586,11 @@ namespace GTA
         /// The animation clip to play. Must be loaded before this method can start playing the anim.
         /// </param>
         /// <param name="originPosition">
-        /// The position of the origin in world coordinates to playback the anim from.
+        /// The position of the origin in world coordinates to play back the anim from.
         /// Any local scene origin/offset specified in the animation clip will be applied in addition to this.
         /// </param>
         /// <param name="originRotation">
-        /// The rotation of the origin in degrees to playback the anim from.
+        /// The rotation of the origin in degrees to play back the anim from.
         /// Any local scene origin/offset specified in the animation clip will be applied in addition to this.
         /// </param>
         /// <param name="animFlags">The animation flags to be used for playback.</param>

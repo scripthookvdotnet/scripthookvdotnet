@@ -82,17 +82,17 @@ namespace GTA
         /// <summary>
         /// Sync the anim whilst blending in (use for seamless transitions from walk / run into a full body anim).
         /// </summary>
-        /// <remarks>Tag synchronizer flags are for syncing the anim against ped movement (walking / running / etc).</remarks>
+        /// <remarks>Tag synchronizer flags are for syncing the anim against ped movement (walking / running / etc.).</remarks>
         TagSyncIn = 16384,
         /// <summary>
         /// Sync the anim whilst blending out (use for seamless transitions from a full body anim into walking / running behaviour).
         /// </summary>
-        /// <remarks>Tag synchronizer flags are for syncing the anim against ped movement (walking / running / etc).</remarks>
+        /// <remarks>Tag synchronizer flags are for syncing the anim against ped movement (walking / running / etc.).</remarks>
         TagSyncOut = 32768,
         /// <summary>
         /// Sync all the time (Only useful to synchronize a partial anim e.g. an upper body).
         /// </summary>
-        /// <remarks>Tag synchronizer flags are for syncing the anim against ped movement (walking / running / etc).</remarks>
+        /// <remarks>Tag synchronizer flags are for syncing the anim against ped movement (walking / running / etc.).</remarks>
         TagSyncContinuous = 65536,
         /// <summary>
         /// Force the anim task to start even if the ped is falling / ragdolling / etc.
@@ -100,16 +100,16 @@ namespace GTA
         /// </summary>
         ForceStart = 131072,
         /// <summary>
-        /// Use the kinematic physics mode on the entity for the duration of the anim (it should push other entities out of the way, and not be pushed around by players / etc).
+        /// Use the kinematic physics mode on the entity for the duration of the anim (it should push other entities out of the way, and not be pushed around by players / etc.).
         /// </summary>
         UseKinematicPhysics = 262144,
         /// <summary>
         /// Updates the peds capsule position every frame based on the animation.
-        /// Use in conjunction with <see cref="UseKinematicPhysics"/> to create characters that cannot be pushed off course by other entities / geometry / etc whilst playing the anim.
+        /// Use in conjunction with <see cref="UseKinematicPhysics"/> to create characters that cannot be pushed off course by other entities / geometry / etc. whilst playing the anim.
         /// </summary>
         UseMoverExtraction = 524288,
         /// <summary>
-        /// Indicates that the ped's weapon should be hidden while this animation is playing.
+        /// Indicates that the weapon of the ped should be hidden while this animation is playing.
         /// </summary>
         HideWeapon = 1048576,
         /// <summary>
@@ -125,11 +125,11 @@ namespace GTA
         /// </summary>
         DontExitOnDeath = 8388608,
         /// <summary>
-        /// Allow aborting from damage events (including non-ragdoll damage events) even when blocking other ai events using <see cref="NotInterruptable"/>.
+        /// Allow aborting from damage events (including non-ragdoll damage events) even when blocking other AI events using <see cref="NotInterruptable"/>.
         /// </summary>
         AbortOnWeaponDamage = 16777216,
         /// <summary>
-        /// Prevent adjusting the capsule on the enter state (useful if script is doing a sequence of scripted anims and they are known to more or less stand still).
+        /// Prevent adjusting the capsule on the enter state (useful if script is doing a sequence of scripted anims, and they are known to more or less stand still).
         /// </summary>
         DisableForcedPhysicsUpdate = 33554432,
         /// <summary>

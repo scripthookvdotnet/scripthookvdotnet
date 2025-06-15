@@ -82,7 +82,7 @@ namespace GTA
         /// is set, default 5.0.
         /// </summary>
         /// <remarks>
-        /// There was the note "(currently only for cover search + usage)" in a official scripting header, but it is
+        /// There was the note "(currently only for cover search + usage)" in ab official scripting header, but it is
         /// unknown when the word "currently" in the note specifies.
         /// </remarks>
         MinimumDistanceToTarget,
@@ -134,7 +134,7 @@ namespace GTA
         /// </summary>
         HomingRocketBreakLockCloseDistance,
         /// <summary>
-        ///  Alters homing characteristics defined for the weapon (1.0 is default, &lt;1.0 slow turn rates, &gt;1.0
+        ///  Alters homing characteristics defined for the weapon, 1.0 is default, &lt;1.0 slow turn rates, &gt;1.0
         ///  speed them up.
         /// </summary>
         HomingRocketTurnRateModifier,

@@ -74,7 +74,7 @@ namespace GTA
         /// <param name="headingDegrees">The heading in degrees.</param>
         /// <param name="flags">The flags that specify what types of paths the blocking object will block new peds task that use navigation meshes from using.</param>
         /// <returns>The new <see cref="NavMeshBlockingObject"/> if successfully created; otherwise, <see langword="null"/>.</returns>
-        /// <remarks>The updated <see cref="NavMeshBlockingObject"/> won't affect existing <see cref="Ped"/> tasks.</remarks>
+        /// <remarks>The updated <see cref="NavMeshBlockingObject"/> will not affect existing <see cref="Ped"/> tasks.</remarks>
         public void Update(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags)
         {
             const float DEG_2_RAD = (float)(System.Math.PI / 180);
