@@ -18,7 +18,7 @@ namespace GTA
         private const int MaxWantedLevel = 5;
 
         /// <summary>
-        /// Gets the wanted radius for a specified wanted level. The raduis value can affect the difficulty level of
+        /// Gets the wanted radius for a specified wanted level. The radius value can affect the difficulty level of
         /// <see cref="Wanted"/> by the distance between the last spotted position and the current player position, and
         /// by the wanted radius value.
         /// </summary>
