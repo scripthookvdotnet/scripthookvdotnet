@@ -393,13 +393,14 @@ namespace GTA.Math
         /// <returns>The spherical linear interpolation of the two quaternions.</returns>
         public static Quaternion Slerp(Quaternion start, Quaternion end, float amount)
         {
+            const float K_EPSILON = 1.192093E-07f;
+
             Quaternion result = Zero;
-            float kEpsilon = (float)(1.192093E-07);
             float opposite;
             float inverse;
             float dot = Dot(start, end);
 
-            if (System.Math.Abs(dot) > (1.0f - kEpsilon))
+            if (System.Math.Abs(dot) > (1.0f - K_EPSILON))
             {
                 inverse = 1.0f - amount;
                 opposite = amount * System.Math.Sign(dot);
