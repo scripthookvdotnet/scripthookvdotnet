@@ -1350,7 +1350,7 @@ namespace GTA.Math
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
         public override readonly bool Equals(object obj)
         {
-            if (obj == null || obj.GetType() != GetType())
+            if (obj == null || obj.GetType() != typeof(Quaternion))
             {
                 return false;
             }
