@@ -266,12 +266,14 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets a value indicating whether <see cref="PathNode"/>s are loaded for the region specified.
+        /// Gets a value indicating whether all of <see cref="PathNode"/>s are loaded for the region specified.
         /// </summary>
         /// <param name="min">The minimum position of the region.</param>
         /// <param name="max">The maximum position of the region.</param>
         /// <returns>
-        ///   <see langword="true"/> if <see cref="PathNode"/>s are loaded for the region specified; otherwise, <see langword="false"/>.
+        /// <see langword="false"/> if some area for <see cref="PathNode"/>s in the region specified is dummy, where
+        /// any <see cref="PathNode"/>s are not loaded, and not skipped by the prologue node rejection rule;
+        /// otherwise, <see langword="true"/>.
         /// </returns>
         public static bool ArePathNodesLoadedForArea(Vector2 min, Vector2 max) => Function.Call<bool>(Hash.ARE_NODES_LOADED_FOR_AREA, min.X, min.Y, max.X, max.Y);
         /// <summary>
