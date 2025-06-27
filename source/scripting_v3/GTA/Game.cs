@@ -228,7 +228,7 @@ namespace GTA
                 {
                     Function.Call(Hash.SET_RADIO_TO_STATION_NAME, "OFF");
                 }
-                if (Enum.IsDefined(typeof(RadioStation), value))
+                else if (Enum.IsDefined(typeof(RadioStation), value))
                 {
                     Function.Call(Hash.SET_RADIO_TO_STATION_NAME, s_radioNames[(int)value]);
                 }
