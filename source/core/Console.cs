@@ -31,6 +31,8 @@ namespace SHVDN
         private int _lastClosedTickCount;
         private bool _shouldBlockControls;
         private Task<MethodInfo> _compilerTask;
+        private List<string> _commandCandidates = new();
+        private int _selectedCandidateIndex = -1;
 
         // We need a lock because tick calls and keyboard events are fired on different threads, even if we don't use
         // a dedicated thread in order to avoid a fiber from SHV
@@ -212,6 +214,7 @@ namespace SHVDN
             {
                 _input = _input.Insert(_cursorPos, text);
                 _cursorPos += text.Length;
+                UpdateCommandCandidates();
             }
         }
         /// <summary>
@@ -496,6 +499,16 @@ namespace SHVDN
                 {
                     DrawText(2, (float)((i - historyOffset) * 14), _lineHistory[i], s_outputColor);
                 }
+
+                // Draw command candidates
+                if (_commandCandidates.Count > 0)
+                {
+                    for (int i = 0; i < _commandCandidates.Count && i < 5; i++)
+                    {
+                        var color = (i == _selectedCandidateIndex) ? Color.Yellow : Color.Gray;
+                        DrawText(25, ConsoleHeight + InputHeight + 16 + i * 16, _commandCandidates[i], color);
+                    }
+                }
             }
         }
         /// <summary>
@@ -575,10 +588,24 @@ namespace SHVDN
                     MoveCursorToEndOfLine();
                     break;
                 case Keys.Up:
-                    GoUpCommandList();
+                    if (_commandCandidates.Count > 0)
+                    {
+                        _selectedCandidateIndex = (_selectedCandidateIndex - 1 + _commandCandidates.Count) % _commandCandidates.Count;
+                    }
+                    else
+                    {
+                        GoUpCommandList();
+                    }
                     break;
                 case Keys.Down:
-                    GoDownCommandList();
+                    if (_commandCandidates.Count > 0)
+                    {
+                        _selectedCandidateIndex = (_selectedCandidateIndex + 1) % _commandCandidates.Count;
+                    }
+                    else
+                    {
+                        GoDownCommandList();
+                    }
                     break;
                 case Keys.Enter:
                     CompileExpression();
@@ -766,6 +793,17 @@ namespace SHVDN
                         goto default;
                     }
 
+                    break;
+                case Keys.Tab:
+                    if (_commandCandidates.Count > 0 && _selectedCandidateIndex >= 0)
+                    {
+                        lock (_lock)
+                        {
+                            _input = _commandCandidates[_selectedCandidateIndex];
+                            _cursorPos = _input.Length;
+                            UpdateCommandCandidates();
+                        }
+                    }
                     break;
                 default:
                     var buf = new StringBuilder(256);
@@ -1310,6 +1348,36 @@ namespace SHVDN
             {
                 _compilerTask = newCompilerTask;
             }
+        }
+
+        private void UpdateCommandCandidates()
+        {
+            string input = _input.ToLowerInvariant();
+            _commandCandidates.Clear();
+            _selectedCandidateIndex = -1;
+            if (string.IsNullOrWhiteSpace(input))
+                return;
+
+            lock (_lock)
+            {
+                foreach (var space in _commands.Keys)
+                {
+                    foreach (var cmd in _commands[space])
+                    {
+                        // Constructing a complete command signature
+                        var paramList = cmd.MethodInfo.GetParameters();
+                        string paramStr = string.Join(", ", paramList.Select(p => p.ParameterType.Name + " " + p.Name));
+                        string displayName = $"{cmd.Name}({paramStr})";
+
+                        if (displayName.ToLowerInvariant().Contains(input))
+                        {
+                            _commandCandidates.Add(displayName);
+                        }
+                    }
+                }
+            }
+            if (_commandCandidates.Count > 0)
+                _selectedCandidateIndex = 0;
         }
 
         public override object InitializeLifetimeService()
