@@ -31,6 +31,8 @@ namespace SHVDN
         private int _lastClosedTickCount;
         private bool _shouldBlockControls;
         private Task<MethodInfo> _compilerTask;
+        private List<string> _commandCandidates = new();
+        private int _selectedCandidateIndex = -1;
 
         // We need a lock because tick calls and keyboard events are fired on different threads, even if we don't use
         // a dedicated thread in order to avoid a fiber from SHV
@@ -212,6 +214,7 @@ namespace SHVDN
             {
                 _input = _input.Insert(_cursorPos, text);
                 _cursorPos += text.Length;
+                UpdateCommandCandidates();
             }
         }
         /// <summary>
@@ -496,6 +499,16 @@ namespace SHVDN
                 {
                     DrawText(2, (float)((i - historyOffset) * 14), _lineHistory[i], s_outputColor);
                 }
+
+                // Draw command candidates
+                if (_commandCandidates.Count > 0)
+                {
+                    for (int i = 0; i < _commandCandidates.Count && i < 5; i++)
+                    {
+                        var color = (i == _selectedCandidateIndex) ? Color.Yellow : Color.Gray;
+                        DrawText(25, ConsoleHeight + InputHeight + 16 + i * 16, _commandCandidates[i], color);
+                    }
+                }
             }
         }
         /// <summary>
@@ -575,10 +588,24 @@ namespace SHVDN
                     MoveCursorToEndOfLine();
                     break;
                 case Keys.Up:
-                    GoUpCommandList();
+                    if (_commandCandidates.Count > 0)
+                    {
+                        _selectedCandidateIndex = (_selectedCandidateIndex - 1 + _commandCandidates.Count) % _commandCandidates.Count;
+                    }
+                    else
+                    {
+                        GoUpCommandList();
+                    }
                     break;
                 case Keys.Down:
-                    GoDownCommandList();
+                    if (_commandCandidates.Count > 0)
+                    {
+                        _selectedCandidateIndex = (_selectedCandidateIndex + 1) % _commandCandidates.Count;
+                    }
+                    else
+                    {
+                        GoDownCommandList();
+                    }
                     break;
                 case Keys.Enter:
                     CompileExpression();
@@ -767,6 +794,64 @@ namespace SHVDN
                     }
 
                     break;
+                case Keys.Tab:
+                    if (_commandCandidates.Count > 0)
+                    {
+                        lock (_lock)
+                        {
+                            
+                            if (_selectedCandidateIndex >= 0 && _selectedCandidateIndex < _commandCandidates.Count)
+                            {
+                                string candidate = _commandCandidates[_selectedCandidateIndex];
+                                int parenIndex = candidate.IndexOf('(');
+                                int closeParenIndex = candidate.IndexOf(')');
+                                bool noParams = (closeParenIndex - parenIndex == 1);
+
+                                if (parenIndex >= 0)
+                                {
+                                    if (noParams)
+                                    {
+                                        
+                                        _input = candidate.Substring(0, closeParenIndex + 1);
+                                    }
+                                    else
+                                    {
+                                        
+                                        _input = candidate.Substring(0, parenIndex + 1);
+                                    }
+                                    _cursorPos = _input.Length;
+                                    UpdateCommandCandidates();
+                                }
+                                else
+                                {
+                                    
+                                    _input = candidate;
+                                    _cursorPos = _input.Length;
+                                    UpdateCommandCandidates();
+                                }
+                            }
+                            
+                            else if (_commandCandidates.Count > 1)
+                            {
+                                var names = _commandCandidates
+                                    .Select(c => {
+                                        int idx = c.IndexOf('(');
+                                        return idx > 0 ? c.Substring(0, idx) : c;
+                                    })
+                                    .ToList();
+
+                                string prefix = LongestCommonPrefix(names, _input);
+
+                                if (prefix.Length > _input.Length)
+                                {
+                                    _input = prefix;
+                                    _cursorPos = _input.Length;
+                                    UpdateCommandCandidates();
+                                }
+                            }
+                        }
+                    }
+                    break;
                 default:
                     var buf = new StringBuilder(256);
                     byte[] keyboardState = new byte[256];
@@ -923,6 +1008,7 @@ namespace SHVDN
 
                 _input = _input.Remove(_cursorPos - 1, 1);
                 _cursorPos--;
+                UpdateCommandCandidates(); 
             }
         }
         /// <summary>
@@ -938,6 +1024,7 @@ namespace SHVDN
                 }
 
                 _input = _input.Remove(_cursorPos, 1);
+                UpdateCommandCandidates(); 
             }
         }
 
@@ -1312,6 +1399,36 @@ namespace SHVDN
             }
         }
 
+        private void UpdateCommandCandidates()
+        {
+            string input = _input;
+            _commandCandidates.Clear();
+            _selectedCandidateIndex = -1;
+            if (string.IsNullOrWhiteSpace(input))
+                return;
+
+            lock (_lock)
+            {
+                foreach (var space in _commands.Keys)
+                {
+                    foreach (var cmd in _commands[space])
+                    {
+                        var paramList = cmd.MethodInfo.GetParameters();
+                        string paramStr = string.Join(", ", paramList.Select(p => p.ParameterType.Name + " " + p.Name));
+                        string displayName = $"{cmd.Name}({paramStr})";
+
+                        
+                        if (displayName.Contains(input))
+                        {
+                            _commandCandidates.Add(displayName);
+                        }
+                    }
+                }
+            }
+            if (_commandCandidates.Count > 0)
+                _selectedCandidateIndex = 0;
+        }
+
         public override object InitializeLifetimeService()
         {
             return null;
@@ -1364,6 +1481,27 @@ namespace SHVDN
             float len1 = GetTextLength("A");
             float len2 = GetTextLength("AA");
             return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
+        }
+
+        
+        private static string LongestCommonPrefix(List<string> strs, string input)
+        {
+            if (strs == null || strs.Count == 0)
+                return input;
+
+            string prefix = strs[0];
+            for (int i = 1; i < strs.Count; i++)
+            {
+                int j = 0;
+                while (j < prefix.Length && j < strs[i].Length && prefix[j] == strs[i][j])
+                {
+                    j++;
+                }
+                prefix = prefix.Substring(0, j);
+                if (prefix.Length == input.Length)
+                    break; // No more can be completed
+            }
+            return prefix;
         }
     }
 
