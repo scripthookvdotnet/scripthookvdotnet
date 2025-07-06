@@ -144,21 +144,18 @@ namespace GTA.Chrono
         {
             return OrdFlags.New(ordinal, flags) switch
             {
-                OrdFlags of => new GameClockDate(year, of),
+                { } of => new GameClockDate(year, of),
                 _ => null
             };
         }
 
         static GameClockDate? FromMdf(int year, MonthDayFlags mdf)
         {
-            OrdFlags? of = mdf.ToOrdFlags();
-
-            if (of is OrdFlags ofNonNull)
+            return mdf.ToOrdFlags() switch
             {
-                return new GameClockDate(year, ofNonNull);
-            }
-
-            return null;
+                { } of => new GameClockDate(year, of),
+                _ => null
+            };
         }
 
         static GameClockDate FromMdfUnchecked(int year, MonthDayFlags mdf)
