@@ -121,7 +121,7 @@ namespace GTA.UI
         /// </summary>
         public List<IElement> Items
         {
-            get; private set;
+            get;
         }
 
         /// <summary>

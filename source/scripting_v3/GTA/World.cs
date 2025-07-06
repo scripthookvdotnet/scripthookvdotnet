@@ -1255,8 +1255,8 @@ namespace GTA
                 position.Z, heading, false, false));
 
             // Randomize variation but not ped props, just like `CREATE_RANDOM_PED` does.
-            const int race = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
-            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, race);
+            const int RACE = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
+            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, RACE);
 
             return createdPed;
         }
@@ -2164,12 +2164,12 @@ namespace GTA
         /// the created projectile will not collide with <paramref name="ignoreEntity"/>.
         /// </para>
         /// <para>
-        /// Cannot be used in conjunction with <paramref name="ignoreCollisionResetNoBB"/>
-        /// and <paramref name="ignoreCollisionResetNoBB"/> takes precedence if both are set to <see langword="true"/>
+        /// Cannot be used in conjunction with <paramref name="ignoreCollisionResetNoBb"/>
+        /// and <paramref name="ignoreCollisionResetNoBb"/> takes precedence if both are set to <see langword="true"/>
         /// and the game version is v1.0.2189.0 or later.
         /// </para>
         /// </param>
-        /// <param name="ignoreCollisionResetNoBB">
+        /// <param name="ignoreCollisionResetNoBb">
         /// <para>
         /// If <see langword="true"/> and if <paramref name="startPosition"/> is inside the BoundingBox of
         /// <paramref name="ignoreEntity"/>, the created projectile will ignore collision until it leaves the
@@ -2186,14 +2186,14 @@ namespace GTA
             bool allowRumble = true, float initialVelocity = -1f, Entity ignoreEntity = null,
             bool forceCreateNewProjectileObject = false, bool disablePlayerCoverStartAdjustment = false,
             Entity targetEntity = null, bool freezeProjectileWaitingOnCollision = false,
-            bool ignoreCollisionEntity = false, bool ignoreCollisionResetNoBB = false)
+            bool ignoreCollisionEntity = false, bool ignoreCollisionResetNoBb = false)
         {
             Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY_NEW, startPosition.X, startPosition.Y,
                 startPosition.Z, endPosition.X, endPosition.Y, endPosition.Z, damage, perfectAccuracy, weapon, owner,
                 createTraceVfx, allowRumble, initialVelocity, ignoreEntity, forceCreateNewProjectileObject,
                 disablePlayerCoverStartAdjustment, targetEntity,
                 true /* named bDoDeadCheck in the official header, which is not used in the internal function */,
-                freezeProjectileWaitingOnCollision, ignoreCollisionEntity, ignoreCollisionResetNoBB);
+                freezeProjectileWaitingOnCollision, ignoreCollisionEntity, ignoreCollisionResetNoBb);
         }
 
         /// <summary>

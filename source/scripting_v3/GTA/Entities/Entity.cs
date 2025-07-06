@@ -3514,11 +3514,11 @@ namespace GTA
         /// <returns><see langword="true"/> if this method found an event tag in an animation playing; otherwise, <see langword="false"/>.</returns>
         public bool FindAnimationEventPhase(CrClipAsset crClipAsset, string eventName, out float startPhase, out float endPhase)
         {
-            float startPhaseTemp, endPhaseTemp;
-
             unsafe
             {
                 (CrClipDictionary clipDict, string clipName) = crClipAsset;
+                float startPhaseTemp;
+                float endPhaseTemp;
                 bool foundEventTag = Function.Call<bool>(Hash.FIND_ANIM_EVENT_PHASE, Handle, clipDict, clipName, eventName, &startPhaseTemp, &endPhaseTemp);
 
                 startPhase = startPhaseTemp;
