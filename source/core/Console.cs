@@ -505,7 +505,7 @@ namespace SHVDN
                 {
                     for (int i = 0; i < _commandCandidates.Count && i < 5; i++)
                     {
-                        var color = (i == _selectedCandidateIndex) ? Color.Yellow : Color.Gray;
+                        var color = (i == _selectedCandidateIndex) ? Color.Yellow : Color.White;
                         DrawText(25, ConsoleHeight + InputHeight + 16 + i * 16, _commandCandidates[i], color);
                     }
                 }
@@ -588,24 +588,10 @@ namespace SHVDN
                     MoveCursorToEndOfLine();
                     break;
                 case Keys.Up:
-                    if (_commandCandidates.Count > 0)
-                    {
-                        _selectedCandidateIndex = (_selectedCandidateIndex - 1 + _commandCandidates.Count) % _commandCandidates.Count;
-                    }
-                    else
-                    {
-                        GoUpCommandList();
-                    }
+                    _selectedCandidateIndex = (_selectedCandidateIndex - 1 + _commandCandidates.Count) % (_commandCandidates.Count == 0 ? 1 : _commandCandidates.Count);
                     break;
                 case Keys.Down:
-                    if (_commandCandidates.Count > 0)
-                    {
-                        _selectedCandidateIndex = (_selectedCandidateIndex + 1) % _commandCandidates.Count;
-                    }
-                    else
-                    {
-                        GoDownCommandList();
-                    }
+                    _selectedCandidateIndex = (_selectedCandidateIndex + 1) % (_commandCandidates.Count == 0 ? 1 : _commandCandidates.Count);
                     break;
                 case Keys.Enter:
                     CompileExpression();
@@ -799,38 +785,35 @@ namespace SHVDN
                     {
                         lock (_lock)
                         {
-                            
                             if (_selectedCandidateIndex >= 0 && _selectedCandidateIndex < _commandCandidates.Count)
                             {
                                 string candidate = _commandCandidates[_selectedCandidateIndex];
                                 int parenIndex = candidate.IndexOf('(');
                                 int closeParenIndex = candidate.IndexOf(')');
-                                bool noParams = (closeParenIndex - parenIndex == 1);
+                                bool hasParams = (closeParenIndex - parenIndex > 1);
 
                                 if (parenIndex >= 0)
                                 {
-                                    if (noParams)
+                                    if (hasParams)
                                     {
-                                        
-                                        _input = candidate.Substring(0, closeParenIndex + 1);
+                                        string cmdName = candidate.Substring(0, parenIndex);
+                                        _input = $"{cmdName}(\"\")";
+                                        _cursorPos = cmdName.Length + 2; 
                                     }
                                     else
                                     {
-                                        
-                                        _input = candidate.Substring(0, parenIndex + 1);
+                                        _input = candidate.Substring(0, closeParenIndex + 1);
+                                        _cursorPos = _input.Length;
                                     }
-                                    _cursorPos = _input.Length;
                                     UpdateCommandCandidates();
                                 }
                                 else
                                 {
-                                    
                                     _input = candidate;
                                     _cursorPos = _input.Length;
                                     UpdateCommandCandidates();
                                 }
                             }
-                            
                             else if (_commandCandidates.Count > 1)
                             {
                                 var names = _commandCandidates
@@ -901,6 +884,7 @@ namespace SHVDN
                 _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
                 // Reset cursor position to end of input text
                 _cursorPos = _input.Length;
+                UpdateCommandCandidates(); 
             }
         }
 
@@ -916,6 +900,7 @@ namespace SHVDN
                 _commandPos--;
                 _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
                 _cursorPos = _input.Length;
+                UpdateCommandCandidates(); 
             }
         }
 
@@ -1179,6 +1164,7 @@ namespace SHVDN
                 {
                     _input = SwapTwoCharacters(_input, _cursorPos - 2);
                 }
+                UpdateCommandCandidates(); 
             }
 
             string SwapTwoCharacters(string str, int index)
@@ -1266,6 +1252,7 @@ namespace SHVDN
             {
                 _input = stringBuilder.ToString();
                 _cursorPos = word2End;
+                UpdateCommandCandidates(); 
             }
         }
 
@@ -1273,6 +1260,7 @@ namespace SHVDN
         {
             Clipboard.SetText(str.Substring(startIndex, length));
             str = str.Remove(startIndex, length);
+            UpdateCommandCandidates(); 
         }
 
         private void MoveCursorLeft()
@@ -1417,7 +1405,6 @@ namespace SHVDN
                         string paramStr = string.Join(", ", paramList.Select(p => p.ParameterType.Name + " " + p.Name));
                         string displayName = $"{cmd.Name}({paramStr})";
 
-                        
                         if (displayName.Contains(input))
                         {
                             _commandCandidates.Add(displayName);
@@ -1483,7 +1470,6 @@ namespace SHVDN
             return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
         }
 
-        
         private static string LongestCommonPrefix(List<string> strs, string input)
         {
             if (strs == null || strs.Count == 0)
@@ -1499,7 +1485,7 @@ namespace SHVDN
                 }
                 prefix = prefix.Substring(0, j);
                 if (prefix.Length == input.Length)
-                    break; // No more can be completed
+                    break; 
             }
             return prefix;
         }
