@@ -89,9 +89,9 @@ namespace GTA
         {
             get
             {
-                int outBone;
                 unsafe
                 {
+                    int outBone;
                     if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, _owner.Handle, &outBone))
                     {
                         return this[(Bone)outBone];

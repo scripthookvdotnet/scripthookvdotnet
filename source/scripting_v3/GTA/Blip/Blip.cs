@@ -14,7 +14,9 @@ namespace GTA
     {
         public Blip(int handle) : base(handle)
         {
+
         }
+
 
         /// <summary>
         /// Gets the memory address where the <see cref="GTA.Entity"/> is stored in memory.
@@ -41,8 +43,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5E,
-                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5C,
+                    { } v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5E,
+                    { } v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5C,
                     _ => 0x58
                 };
 
@@ -66,8 +68,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x60,
-                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5E,
+                    { } v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x60,
+                    { } v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5E,
                     _ => 0x5A
                 };
 
@@ -103,8 +105,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5D,
-                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5B,
+                    { } v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5D,
+                    { } v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5B,
                     _ => 0x57
                 };
 
@@ -129,8 +131,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x61,
-                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5F,
+                    { } v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x61,
+                    { } v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5F,
                     _ => 0x5B
                 };
 

@@ -39,7 +39,7 @@ namespace GTA.Chrono
     /// altering an existing date.
     /// </para>
     /// </remarks>
-    public interface IDatelike<T>
+    public interface IDatelike<out T>
     {
         /// <summary>
         /// Returns the year part of this interface. The returned value is an integer in the range of <see langword="int"/>.
@@ -55,7 +55,7 @@ namespace GTA.Chrono
         /// Returns the zero-based month part of this interface.
         /// The returned value is an integer between 0 and 11 (the same as <see cref="Month"/> minus 1).
         /// </summary>
-        public int Month0 { get; }
+        public int MonthIndex { get; }
 
         /// <summary>
         /// Returns the day-of-month part of this interface. The returned value is an integer between 1 and 31.

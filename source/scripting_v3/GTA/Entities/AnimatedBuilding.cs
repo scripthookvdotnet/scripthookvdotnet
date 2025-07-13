@@ -33,7 +33,7 @@ namespace GTA
         /// </summary>
         public int Handle
         {
-            get; private set;
+            get;
         }
 
         /// <summary>

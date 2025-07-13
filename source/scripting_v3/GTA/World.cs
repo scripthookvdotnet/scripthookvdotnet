@@ -199,10 +199,11 @@ namespace GTA
                     return;
                 }
 
-                int currentWeatherHash, nextWeatherHash;
-                float weatherTransition;
+                int currentWeatherHash;
                 unsafe
                 {
+                    int nextWeatherHash;
+                    float weatherTransition;
                     Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
                 }
                 Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, StringHash.AtStringHash(s_weatherNames[(int)value]), 0.0f);
@@ -2561,14 +2562,6 @@ namespace GTA
         /// <summary>
         /// Determines where the crosshair intersects with the world.
         /// </summary>
-        /// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
-        public static RaycastResult GetCrosshairCoordinates()
-        {
-            return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectFlags.Everything, null);
-        }
-        /// <summary>
-        /// Determines where the crosshair intersects with the world.
-        /// </summary>
         /// <param name="intersectOptions">Type of <see cref="IntersectFlags">environment</see> the raycast should intersect with.</param>
         /// <param name="ignoreEntity">Prevent the raycast detecting a specific <see cref="Entity"/>.</param>
         /// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
@@ -2916,7 +2909,8 @@ namespace GTA
                 {
                     return outPos;
                 }
-                else if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
+
+                if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
                 {
                     return outPos;
                 }

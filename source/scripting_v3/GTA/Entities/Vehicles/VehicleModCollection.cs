@@ -254,9 +254,10 @@ namespace GTA
         {
             get
             {
-                int color1, color2;
+                int color1;
                 unsafe
                 {
+                    int color2;
                     Function.Call(Hash.GET_VEHICLE_COLOURS, _owner.Handle, &color1, &color2);
                 }
 
@@ -268,9 +269,10 @@ namespace GTA
         {
             get
             {
-                int color1, color2;
+                int color2;
                 unsafe
                 {
+                    int color1;
                     Function.Call(Hash.GET_VEHICLE_COLOURS, _owner.Handle, &color1, &color2);
                 }
 
@@ -283,9 +285,10 @@ namespace GTA
         {
             get
             {
-                int color1, color2;
+                int color2;
                 unsafe
                 {
+                    int color1;
                     Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS, _owner.Handle, &color1, &color2);
                 }
 
@@ -297,9 +300,10 @@ namespace GTA
         {
             get
             {
-                int color1, color2;
+                int color1;
                 unsafe
                 {
+                    int color2;
                     Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS, _owner.Handle, &color1, &color2);
                 }
 

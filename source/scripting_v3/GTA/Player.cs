@@ -158,9 +158,9 @@ namespace GTA
         {
             get
             {
-                int entityHandle;
                 unsafe
                 {
+                    int entityHandle;
                     if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
                     {
                         return Entity.FromHandle(entityHandle);
@@ -228,9 +228,9 @@ namespace GTA
         {
             get
             {
-                int entityHandle;
                 unsafe
                 {
+                    int entityHandle;
                     if (Function.Call<bool>(Hash.GET_PLAYER_TARGET_ENTITY, Handle, &entityHandle))
                     {
                         return Entity.FromHandle(entityHandle);

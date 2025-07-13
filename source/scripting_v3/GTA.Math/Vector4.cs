@@ -350,7 +350,7 @@ namespace GTA.Math
         /// <returns>The string representation of the value of this instance.</returns>
         public override readonly string ToString()
         {
-            return $"X:{X.ToString()} Y:{Y.ToString()} Z:{Z.ToString()} W:{W.ToString()}";
+            return $"X:{X} Y:{Y} Z:{Z} W:{W}";
         }
 
         /// <summary>
@@ -360,12 +360,7 @@ namespace GTA.Math
         /// <returns>The string representation of the value of this instance.</returns>
         public readonly string ToString(string format)
         {
-            if (format == null)
-            {
-                return ToString();
-            }
-
-            return $"X:{X.ToString(format)} Y:{Y.ToString(format)} Z:{Z.ToString(format)} W:{W.ToString(format)}";
+            return format == null ? ToString() : $"X:{X.ToString(format)} Y:{Y.ToString(format)} Z:{Z.ToString(format)} W:{W.ToString(format)}";
         }
 
         /// <summary>

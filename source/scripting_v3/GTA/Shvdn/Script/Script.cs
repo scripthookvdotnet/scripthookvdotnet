@@ -36,7 +36,7 @@ namespace GTA
         /// not intended to be used directly from your code.
         /// To instantiate scripts from a running script instance, use <see cref="InstantiateScript{T}"/>.
         /// </summary>
-        public Script()
+        protected Script()
         {
             Name = SHVDN.ScriptDomain.CurrentDomain.LookupScript(this)?.Name ?? string.Empty;
             Filename = SHVDN.ScriptDomain.CurrentDomain.LookupScriptFilename(GetType());

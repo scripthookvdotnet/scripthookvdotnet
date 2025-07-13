@@ -389,13 +389,13 @@ namespace GTA
             {
                 _weaponCollection = weaponCollection;
                 _index = -1;
-                _currentElement = default;
+                _currentElement = null;
             }
 
             public void Dispose()
             {
                 _index = -2;
-                _currentElement = default;
+                _currentElement = null;
             }
 
             public bool MoveNext()
@@ -409,7 +409,7 @@ namespace GTA
                 if (currentWeaponInstance == null)
                 {
                     _index = -2;
-                    _currentElement = default;
+                    _currentElement = null;
                     return false;
                 }
 
@@ -439,7 +439,7 @@ namespace GTA
             void IEnumerator.Reset()
             {
                 _index = -1;
-                _currentElement = default;
+                _currentElement = null;
             }
 
             private readonly Weapon GetWeaponInstanceByIndexOfPedInventory(int index)

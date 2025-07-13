@@ -370,11 +370,11 @@ namespace GTA
                     return "WT_SNWBALL";
             }
 
-            DlcWeaponData data;
             for (int i = 0, max = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < max; i++)
             {
                 unsafe
                 {
+                    DlcWeaponData data;
                     if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &data))
                     {
                         continue;

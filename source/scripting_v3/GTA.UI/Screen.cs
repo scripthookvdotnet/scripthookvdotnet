@@ -15,7 +15,7 @@ namespace GTA.UI
     public static class Screen
     {
         #region Fields
-        private static readonly string[] _effects = new string[] {
+        private static readonly string[] s_effects = {
             "SwitchHUDIn",
             "SwitchHUDOut",
             "FocusIn",
@@ -236,7 +236,7 @@ namespace GTA.UI
         /// <returns><see langword="true" /> if the screen effect is active; otherwise, <see langword="false" />.</returns>
         public static bool IsEffectActive(ScreenEffect effectName)
         {
-            return Function.Call<bool>(Hash.ANIMPOSTFX_IS_RUNNING, _effects[(int)effectName]);
+            return Function.Call<bool>(Hash.ANIMPOSTFX_IS_RUNNING, s_effects[(int)effectName]);
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace GTA.UI
         /// <param name="looped">If <see langword="true" /> the effect won't stop until <see cref="Screen.StopEffect(ScreenEffect)"/> is called.</param>
         public static void StartEffect(ScreenEffect effectName, int duration = 0, bool looped = false)
         {
-            Function.Call(Hash.ANIMPOSTFX_PLAY, _effects[(int)effectName], duration, looped);
+            Function.Call(Hash.ANIMPOSTFX_PLAY, s_effects[(int)effectName], duration, looped);
         }
         /// <summary>
         /// Stops applying the specified effect to the screen.
@@ -255,7 +255,7 @@ namespace GTA.UI
         /// <param name="effectName">The <see cref="ScreenEffect"/> to stop playing.</param>
         public static void StopEffect(ScreenEffect effectName)
         {
-            Function.Call(Hash.ANIMPOSTFX_STOP, _effects[(int)effectName]);
+            Function.Call(Hash.ANIMPOSTFX_STOP, s_effects[(int)effectName]);
         }
         /// <summary>
         /// Stops all currently running effects.
@@ -279,17 +279,8 @@ namespace GTA.UI
         /// </summary>
         /// <param name="message">The message to display.</param>
         /// <param name="duration">The duration to display the subtitle in milliseconds.</param>
-        public static void ShowSubtitle(string message, int duration = 2500)
-        {
-            ShowSubtitle(message, duration, true);
-        }
-        /// <summary>
-        /// Shows a subtitle at the bottom of the screen for a given time
-        /// </summary>
-        /// <param name="message">The message to display.</param>
-        /// <param name="duration">The duration to display the subtitle in milliseconds.</param>
         /// <param name="drawImmediately">Whether to draw immediately or draw after all the queued subtitles have finished.</param>
-        public static void ShowSubtitle(string message, int duration, bool drawImmediately = true)
+        public static void ShowSubtitle(string message, int duration = 2500, bool drawImmediately = true)
         {
             Function.Call(Hash.BEGIN_TEXT_COMMAND_PRINT, SHVDN.NativeMemory.CellEmailBcon);
             SHVDN.NativeFunc.PushLongString(message);

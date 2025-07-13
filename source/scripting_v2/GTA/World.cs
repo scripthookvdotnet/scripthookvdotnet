@@ -506,7 +506,7 @@ namespace GTA
                 closest = spatial;
                 closestDistance = distance;
             }
-            return (T)closest;
+            return closest;
         }
         /// <summary>
         /// Gets the closest <see cref="Ped"/> to a given position in the World.

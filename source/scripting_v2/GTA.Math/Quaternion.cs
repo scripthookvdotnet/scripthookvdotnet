@@ -366,7 +366,7 @@ namespace GTA.Math
         }
 
         /// <summary>
-        /// Interpolates between two quaternions, using spherical linear interpolation..
+        /// Interpolates between two quaternions, using spherical linear interpolation.
         /// </summary>
         /// <param name="start">Start quaternion.</param>
         /// <param name="end">End quaternion.</param>
@@ -375,7 +375,7 @@ namespace GTA.Math
         public static Quaternion Slerp(Quaternion start, Quaternion end, float amount)
         {
             var result = new Quaternion();
-            float kEpsilon = (float)(1.192093E-07);
+            const float kEpsilon = (float)(1.192093E-07);
             float opposite;
             float inverse;
             float dot = Dot(start, end);

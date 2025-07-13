@@ -482,7 +482,7 @@ namespace GTA.Math
         /// <returns>The string representation of the value of this instance.</returns>
         public override readonly string ToString()
         {
-            return $"X:{X.ToString()} Y:{Y.ToString()}";
+            return $"X:{X} Y:{Y}";
         }
 
         /// <summary>

@@ -1513,9 +1513,10 @@ namespace GTA
         {
             get
             {
-                bool lightState1, lightState2;
+                bool lightState1;
                 unsafe
                 {
+                    bool lightState2;
                     Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
                 }
 
@@ -1550,9 +1551,10 @@ namespace GTA
         {
             get
             {
-                bool lightState1, lightState2;
+                bool lightState2;
                 unsafe
                 {
+                    bool lightState1;
                     Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
                 }
 
@@ -2095,15 +2097,15 @@ namespace GTA
         public void PlaceOnNextStreet()
         {
             Vector3 currentPosition = Position;
-            NativeVector3 newPosition;
-            float heading;
-            long unkn;
+            int totalLanes;
 
             for (int i = 1; i < 40; i++)
             {
+                NativeVector3 newPosition;
+                float heading;
                 unsafe
                 {
-                    Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, currentPosition.X, currentPosition.Y, currentPosition.Z, i, &newPosition, &heading, &unkn, 1, 0x40400000, 0);
+                    Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, currentPosition.X, currentPosition.Y, currentPosition.Z, i, &newPosition, &heading, &totalLanes, 1, 0x40400000, 0);
                 }
 
                 if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPosition.X, newPosition.Y, newPosition.Z, 5.0f, 5.0f, 5.0f, 0))

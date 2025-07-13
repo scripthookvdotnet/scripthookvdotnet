@@ -181,7 +181,7 @@ namespace GTA
                 }
 
                 int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_877_1 ? 84 : 80;
-                SHVDN.MemDataMarshal.WriteInt32(address + offset, Color.ToArgb());
+                SHVDN.MemDataMarshal.WriteInt32(address + offset, value.ToArgb());
             }
         }
         /// <summary>
