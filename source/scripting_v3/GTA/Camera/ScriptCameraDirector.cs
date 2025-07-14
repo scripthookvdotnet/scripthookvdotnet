@@ -27,7 +27,7 @@ namespace GTA
             {
                 int handle = Function.Call<int>(Hash.GET_RENDERING_CAM);
                 // GET_RENDERING_CAM returns -1 if the current rendering camera doesn't match any scripted cameras
-                // the camScriptDirector is handling (or there's really no rendering camera, which is a edge case)
+                // the camScriptDirector is handling (or there's really no rendering camera, which is an edge case)
                 // Game code for cams does never treat negative values as valid cam handles either
                 return handle < 0 ? null : new Camera(handle);
             }

@@ -50,7 +50,7 @@ namespace GTA.UI
         }
 
         /// <summary>
-        /// Gets or sets the sprite the cursor should used when drawn
+        /// Gets or sets the sprite the cursor should use when drawn.
         /// </summary>
         public static CursorSprite CursorSprite
         {

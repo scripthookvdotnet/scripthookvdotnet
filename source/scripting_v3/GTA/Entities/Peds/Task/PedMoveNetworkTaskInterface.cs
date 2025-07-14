@@ -29,17 +29,15 @@ namespace GTA
         /// <summary>
         /// Returns <see langword="true"/> if a move network is active.
         /// </summary>
-        /// <value>
+        /// <remarks>
+        /// The property searches for a `<c>CTaskMoVEScripted</c>` by searching primary tasks first, then secondary
+        /// tasks.
+        /// </remarks>
+        /// <returns>
         /// <see langword="true"/> if the <see cref="GTA.Ped"/> is processing a move network task
         /// (`<c>CTaskMoVEScripted</c>`) and a move network is active in the found task; otherwise,
         /// <see langword="false"/>.
-        /// </value>
-        /// <remarks>
-        /// The property searches for a `<c>CTaskMoVEScripted</c>` by searching primary tasks first, then secondary
-        /// tasks. The property returns <see langword="false"/> when `<c>CTaskMoVEScripted</c>`s are found among
-        /// both primary and secondary tasks and the found a move network is not active in
-        /// the found `<c>CTaskMoVEScripted</c>` of primary tasks.
-        /// </remarks>
+        /// </returns>
         public bool IsTaskActive => Function.Call<bool>(Hash.IS_TASK_MOVE_NETWORK_ACTIVE, Ped);
 
         /// <summary>
@@ -111,7 +109,7 @@ namespace GTA
         /// the clone from the current value to the target value.
         /// It is assumed that the corresponding MoVE float signal has already been created using
         /// <see cref="SetSignalFloat"/>.
-        /// Currently the lerp rate defaults to a value of `<c>0.5f</c>`. The lerp value has to be above `<c>0.0f</c>`
+        /// Currently, the lerp rate defaults to a value of `<c>0.5f</c>`. The lerp value has to be above `<c>0.0f</c>`
         /// and below `<c>1.0f</c>`.
         /// If a lerp rate of `<c>1.0f</c>` is applied then no lerping is used and the exact float value will be
         /// synced and applied immediately on the clone.

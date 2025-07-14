@@ -42,7 +42,7 @@ namespace GTA
 
 			// Natives for vehicle wheels don't support the middle 2 wheels or middle 3 wheels
 			// Can fetch some correct value even if any value outside 0 to 7 is passed as the wheel id to the natives,
-			// but it's kind of a undefined behavior because the array for wheel id has only 8 elements
+			// but it's kind of an undefined behavior because the array for wheel id has only 8 elements
 			{ VehicleWheelBoneId.WheelLeftMiddle2, ScriptVehicleWheelIndex.Invalid },
             { VehicleWheelBoneId.WheelRightMiddle2, ScriptVehicleWheelIndex.Invalid },
             { VehicleWheelBoneId.WheelLeftMiddle3, ScriptVehicleWheelIndex.Invalid },
@@ -141,7 +141,7 @@ namespace GTA
                     return IntPtr.Zero;
                 }
 
-                // Check if the vehicle is not boat, train, or submarine. This also checks if the vehicle exists (0xFFFFFFFF will be returned if doesn't exist)
+                // Check if the vehicle is not boat, train, or submarine. This also checks if the vehicle exists (0xFFFFFFFF will be returned if it doesn't exist)
                 if (!CanVehicleHaveWheels(Vehicle))
                 {
                     return IntPtr.Zero;
@@ -487,7 +487,7 @@ namespace GTA
         {
             // If you wonder why `SET_TYRE_WEAR_RATE` and `SET_TYRE_WEAR_RATE_SCALE` produce the same result in SHV
             // scripts, that's because SHV maps hashes for `SET_TYRE_WEAR_RATE` wrong in versions that support up to
-            // v1.0.2944.0 or a older game version (maps hashes for `SET_TYRE_WEAR_RATE_SCALE` instead).
+            // v1.0.2944.0 or an older game version (maps hashes for `SET_TYRE_WEAR_RATE_SCALE` instead).
             // You can actually call `SET_TYRE_WEAR_RATE` in RPH and FiveM.
             get
             {
@@ -573,7 +573,7 @@ namespace GTA
         /// </summary>
         /// <remarks>
         /// This property represents the wear rate scale property, which <c>SET_TYRE_WEAR_RATE_SCALE</c> is supposed to
-        /// change, not the the wear rate property, which <c>SET_TYRE_WEAR_RATE</c> is supposed to change.
+        /// change, not the wear rate property, which <c>SET_TYRE_WEAR_RATE</c> is supposed to change.
         /// </remarks>
         /// <exception cref="GameVersionNotSupportedException">
         /// Thrown when called on a game version prior to v1.0.2060.0.

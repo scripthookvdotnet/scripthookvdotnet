@@ -9,13 +9,13 @@ using System.Xml.Linq;
 namespace GTA
 {
     /// <summary>
-    /// Represents a struct that contains a <see cref="GTA.CrClipDictionary"/> and a animation clip name
-    /// <see cref="string"/> so you can find a animation clip (an instance of a subclass of <c>rage::crClip</c>, which
+    /// Represents a struct that contains a <see cref="GTA.CrClipDictionary"/> and an animation clip name
+    /// <see cref="string"/> so you can find an animation clip (an instance of a subclass of <c>rage::crClip</c>, which
     /// is an abstract one).
     /// </summary>
     /// <remarks>
     /// <para>
-    /// This struct does not specify an target subclass out of all 3 subclasses <c>rage::crClip</c>, which are,
+    /// This struct does not specify a target subclass out of all 3 subclasses <c>rage::crClip</c>, which are,
     /// <c>rage::crClipAnimation</c>, <c>rage::crClipAnimations</c>, and <c>rage::crClipAnimationExpression</c>
     /// (the one that is presumed to not be used), as the internal function
     /// <c>fwAnimManager::GetClipIfExistsByDictIndex</c>, which gets a <c>rage::crClip</c> by an index for a clip

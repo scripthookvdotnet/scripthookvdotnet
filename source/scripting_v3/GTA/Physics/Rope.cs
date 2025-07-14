@@ -29,7 +29,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Activates physics interactions for this <see cref="Rope"/>.
+        /// Activate physics interactions for this <see cref="Rope"/>.
         /// </summary>
         public void ActivatePhysics()
         {

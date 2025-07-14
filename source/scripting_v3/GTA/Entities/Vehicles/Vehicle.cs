@@ -152,7 +152,7 @@ namespace GTA
         /// </summary>
         /// <param name="gameObjectName">
         /// <para>
-        /// The audio game object name. Case insensitive in ASCII characters since the string will be hashed using
+        /// The audio game object name. Case-insensitive in ASCII characters since the string will be hashed using
         /// (almost) the same function as <see cref="StringHash.AtStringHash(string, uint)"/> uses.
         /// </para>
         /// <para>
@@ -166,7 +166,7 @@ namespace GTA
         /// or train. You can find one with the term <c>Item type="[some type]"</c> ("[some type]" can be
         /// <c>Vehicle</c>, <c>Boat</c>, <c>Bicycle</c>, <c>Aeroplane</c>, <c>Helicopter</c>, <c>Train</c>)
         /// in <c>game.dat[some number].rel</c> in CodeWalker. "BJXL_ARMENIAN_3" and "STRETCH_MICHAEL_4" are registered
-        /// as the vehicle type for 2 ysc scripts for example and you can use them.
+        /// as the vehicle type for 2 ysc scripts for example, and you can use them.
         /// </para>
         /// </param>
         public void ForceUseAudioGameObject(string gameObjectName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, gameObjectName);
@@ -531,7 +531,7 @@ namespace GTA
         /// Gets or sets a lod multiplier for this <see cref="Vehicle"/>.
         /// </summary>
         /// <remarks>
-        /// When you try to find an appropriate lod multiplier to set, start by using low values (1.1, 1.5, etc) until the wanted result is achieved.
+        /// When you try to find an appropriate lod multiplier to set, start by using low values (1.1, 1.5, etc.) until the wanted result is achieved.
         /// Large values are not appropriate and will be expensive to draw.
         /// </remarks>
         public float LodMultiplier
@@ -1841,7 +1841,7 @@ namespace GTA
         /// <summary>
         /// Applies damage deformation to this <see cref="Vehicle"/>.
         /// You might want to pass <paramref name="damage"/> and <paramref name="deformation"/> where the product is
-        /// larger than 5000 to see a observable result.
+        /// larger than 5000 to see an observable result.
         /// </summary>
         /// <param name="position">The coordinates where the damage is applied to the <see cref="Vehicle"/>.</param>
         /// <param name="damage">
@@ -2568,7 +2568,7 @@ namespace GTA
 
         /// <summary>
         /// Checks if this <see cref="Vehicle"/> is being brought to a halt.
-        /// Currently supports only in v1.0.1493.0.
+        /// Currently only supported in v1.0.1493.0.
         /// </summary>
         public bool IsBeingBroughtToHalt
             => Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0
@@ -2590,7 +2590,7 @@ namespace GTA
 
         /// <summary>
         /// Stops bringing this <see cref="Vehicle"/> to a halt.
-        /// Currently supports only in v1.0.1103.2.
+        /// Currently only supported in v1.0.1103.2.
         /// </summary>
         public void StopBringingToHalt()
         {

@@ -23,7 +23,7 @@ namespace GTA
         /// </summary>
         NoStopping = 1,
         /// <summary>
-        /// Performs a slide-to-coord at the and of the task.
+        /// Performs a slide-to-coord at the end of the task.
         /// This requires that the parameter <c>slideToCoordHeading</c> is set correctly.
         /// </summary>
         AdvancedSlideToCoordAndAchieveHeadingAtEnd = 2,
@@ -39,7 +39,7 @@ namespace GTA
         /// <summary>
         /// Will only allow navigation on pavements.
         /// If the path starts or ends off the pavement, the command will fail.
-        /// Likewise if no pavement-only route can be found even although the start and end are on pavement.
+        /// Likewise, if no pavement-only route can be found even though the start and end are on pavement.
         /// </summary>
         KeepToPavements = 16,
         /// <summary>

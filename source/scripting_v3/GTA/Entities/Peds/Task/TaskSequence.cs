@@ -14,7 +14,7 @@ namespace GTA
     /// right after the instance creation statement.
     /// </summary>
     /// <remarks>
-    /// If you forget to close or dispose of your <see cref="TaskSequence"/>s and <see cref="Ped"/>s cannot start any <see cref="TaskSequence"/>s afterwards during script development,
+    /// If you forget to close or dispose of your <see cref="TaskSequence"/>s and <see cref="Ped"/>s cannot start any <see cref="TaskSequence"/> afterwards during script development,
     /// try restarting the game session by loading a save or starting a new game.
     /// </remarks>
     public sealed class TaskSequence : IDisposable
@@ -73,7 +73,7 @@ namespace GTA
         /// Gets the number <see cref="TaskSequence"/> of stacked tasks.
         /// </summary>
         /// <remarks>
-        /// Will return a incorrect value when you have add tasks via a variable cached from what <see cref="AddTask"/> returns.
+        /// Will return an incorrect value when you have added tasks via a variable cached from what <see cref="AddTask"/> returns.
         /// </remarks>
         public int Count
         {

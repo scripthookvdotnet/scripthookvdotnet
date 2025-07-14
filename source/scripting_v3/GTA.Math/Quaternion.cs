@@ -552,7 +552,7 @@ namespace GTA.Math
         const float RAD_2_DEG = (float)((180.0 / System.Math.PI));
 
         /// <summary>
-        /// <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).</para>
+        /// <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x-axis, and y degrees around the y-axis (in that order).</para>
         /// <para>
         /// For example, <c>Quaternion.Euler(60f, 30f, 45f)</c> will yield (almost) the same result as <c>Quaternion.RotationAxis(Vector3.UnitY, 45f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitX, 30f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitZ, 60f * deg2Rad)</c>
         /// provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>.
@@ -562,7 +562,7 @@ namespace GTA.Math
         /// <param name ="xaxis">X degrees.</param>
         /// <param name ="yaxis">Y degrees.</param>
         /// <remarks>
-        /// <para>You should aware the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
+        /// <para>You should be aware the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
         /// <para>
         /// For compatibility with scripts built against v3.6.0 or earlier, this overload does the same as <see cref="Euler(float, float, float, EulerRotationOrder)"/>
         /// where <see cref="EulerRotationOrder.ZXY"/> is passed as the rotation order.
@@ -587,13 +587,13 @@ namespace GTA.Math
         /// For most methods for the game and native functions, you would like to use <see cref="EulerRotationOrder.YXZ"/>.
         /// </param>
         /// <remarks>
-        /// <para>You should aware the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
+        /// <para>You should be aware the parameter order are z degrees, x degrees, and then y degrees, not x degrees, y degrees, and then z degrees.</para>
         /// </remarks>
         public static Quaternion Euler(float z, float x, float y, EulerRotationOrder rotationOrder) => FromEulerInternal(x, y, z, rotationOrder);
 
         /// <summary>
         /// <para>
-        /// Returns a rotation that rotates z degrees around the z axis, x degrees around the x axis, and y degrees around the y axis (in that order).
+        /// Returns a rotation that rotates z degrees around the z axis, x degrees around the x-axis, and y degrees around the y-axis (in that order).
         /// </para>
         /// <para>
         /// For example, <c>Quaternion.Euler(new Vector3(30f, 45f, 60f))</c> will yield (almost) the same result as <c>Quaternion.RotationAxis(Vector3.UnitY, 45f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitX, 30f * deg2Rad) * Quaternion.RotationAxis(Vector3.UnitZ, 60f * deg2Rad)</c>
@@ -616,7 +616,7 @@ namespace GTA.Math
         /// </para>
         /// <para>
         /// <c>entity.Quaternion = Quaternion.Euler(new Vector3(30f, 45f, 60f), EulerRotationOrder.YXZ)</c> does the same as
-        /// <c>entity.Quaternion = new Vector3(30f, 45f, 60f)</c> provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>..
+        /// <c>entity.Quaternion = new Vector3(30f, 45f, 60f)</c> provided that <c>deg2Rad</c> is calculated with <c>(float)((System.Math.PI / 180.0))</c>.
         /// </para>
         /// </summary>
         /// <param name="euler">Euler angles in degrees. euler.X = around X axis, euler.Y = around Y axis, euler.Z = around Z axis</param>
@@ -1077,8 +1077,8 @@ namespace GTA.Math
         /// Get direction vectors from the given quaternion
         /// </summary>
         /// <param name="quaternion">The quaternion</param>
-        /// <param name="rightVector">RightVector = relative x axis</param>
-        /// <param name="forwardVector">ForwardVector = relative y axis</param>
+        /// <param name="rightVector">RightVector = relative x-axis</param>
+        /// <param name="forwardVector">ForwardVector = relative y-axis</param>
         /// <param name="upVector">UpVector = relative z axis</param>
         public static void GetDirectionVectors(Quaternion quaternion, out Vector3 rightVector, out Vector3 forwardVector, out Vector3 upVector)
         {

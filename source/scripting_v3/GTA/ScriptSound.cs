@@ -63,7 +63,7 @@ namespace GTA
         /// </para>
         /// </param>
         /// <remarks>
-        /// If the sound has a Pan or a SpeakerMask set by the sound designer then the it will play using these settings,
+        /// If the sound has a Pan or a SpeakerMask set by the sound designer then it will play using these settings,
         /// otherwise it will play from dead ahead (0°).
         /// </remarks>
         public void PlaySoundFrontend(string soundName, string setName, bool enableOnReplay = true)

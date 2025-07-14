@@ -506,7 +506,7 @@ namespace GTA
         public bool ContainsKey(string sectionName, string keyName) => _values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyValuePairs) && keyValuePairs.ContainsKey(keyName);
 
         /// <summary>
-        /// Gets all of the section names this <see cref="ScriptSettings"/> contains.
+        /// Gets all the section names this <see cref="ScriptSettings"/> contains.
         /// </summary>
         public string[] GetAllSectionNames()
         {
@@ -517,7 +517,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets all of the key names at the specified section name this <see cref="ScriptSettings"/> contains.
+        /// Gets all the key names at the specified section name this <see cref="ScriptSettings"/> contains.
         /// </summary>
         /// <param name="sectionName">The section name.</param>
         public string[] GetAllKeyNames(string sectionName)
@@ -534,7 +534,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Removes all of the keys of the specified section this <see cref="ScriptSettings"/> has the key.
+        /// Removes all the keys of the specified section this <see cref="ScriptSettings"/> has the key.
         /// </summary>
         /// <param name="sectionName">The section name.</param>
         /// <param name="keyName">The name of the key.</param>

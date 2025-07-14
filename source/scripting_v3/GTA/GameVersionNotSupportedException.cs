@@ -25,7 +25,7 @@ namespace GTA
     /// <description>
     /// The relevant implementation is completely absent and operation cannot be performed in a meaningful way in
     /// the running game version. For example, <see cref="Vehicle.SetRestrictedAmmoCount(int, int)"/> cannot be
-    /// implemented for the game versions earlier than v1.0.877.1 due to the absent of the member of restricted ammo
+    /// implemented for the game versions earlier than v1.0.877.1 due to the absence of the member of restricted ammo
     /// count in <c>CVehicle</c>.
     /// </description>
     /// </item>

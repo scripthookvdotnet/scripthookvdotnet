@@ -87,7 +87,7 @@ namespace GTA
         /// </para>
         /// <para>
         /// The game focus is used for loading map data, collisions, object population etc.
-        /// If this has been overridden by script, it is important to clear it afterwards.
+        /// If this has been overridden by script, it is important to clear it afterward.
         /// </para>
         /// </summary>
         // CLEAR_FOCUS changes the internal focus type to zero (the default value) without clearing

@@ -231,7 +231,7 @@ namespace GTA
         /// Always check if the returned value is valid with the null check and <see cref="Entity.Exists"/>.
         /// This method returns <see langword="null"/> if the current weapon is <see cref="WeaponHash.Unarmed"/>, but always returns a <see cref="Prop"/> instance otherwise
         /// even if the owner <see cref="Ped"/> is not using the weapon <see cref="Prop"/> (For example, when the <see cref="Ped"/> is ragdolling and the current weapon cannot hold with one hand),
-        /// which is kept for compatibility as calling methods on a invalid <see cref="Prop"/> will not cause serious issues in general (just do nothing or return zero values in most cases).
+        /// which is kept for compatibility as calling methods on an invalid <see cref="Prop"/> will not cause serious issues in general (just do nothing or return zero values in most cases).
         /// </remarks>
         public Prop CurrentWeaponObject
         {

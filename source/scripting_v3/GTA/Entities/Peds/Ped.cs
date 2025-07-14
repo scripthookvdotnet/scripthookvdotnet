@@ -113,7 +113,7 @@ namespace GTA
         /// with the 2nd bool parameter `<c>cloneCompressedDamage</c>` set to <see langword="true"/>.
         /// </para>
         /// <para>
-        /// This overload was supposed to be have <paramref name="linkBlends"/> as an optional argument with
+        /// This overload was supposed to have <paramref name="linkBlends"/> as an optional argument with
         /// the default value <see langword="true"/>, but it is not the case due to the call `<c>Ped.Clone()</c>` being
         /// ambiguous for CS0121 if the parameter was optional.
         /// </para>
@@ -365,7 +365,7 @@ namespace GTA
         public Gender Gender => Function.Call<bool>(Hash.IS_PED_MALE, Handle) ? Gender.Male : Gender.Female;
 
         /// <summary>
-        /// Gets or sets the how much sweat should be rendered on this <see cref="Ped"/>.
+        /// Gets or sets how much sweat should be rendered on this <see cref="Ped"/>.
         /// </summary>
         /// <value>
         /// The sweat from 0 to 100, 0 being no sweat, 100 being saturated.
@@ -846,7 +846,7 @@ namespace GTA
         public bool IsFalling => Function.Call<bool>(Hash.IS_PED_FALLING, Handle);
 
         /// <summary>
-        /// Indicates whether this <see cref="Ped"/> is currently climbing or vaulting or doing a drop down.
+        /// Indicates whether this <see cref="Ped"/> is currently climbing or vaulting or doing a drop-down.
         /// </summary>
         public bool IsVaulting => Function.Call<bool>(Hash.IS_PED_VAULTING, Handle);
 
@@ -922,7 +922,7 @@ namespace GTA
         /// </para>
         /// <para>
         /// If set to <see langword="true" />, this <see cref="Ped"/> will keep their scripted task.
-        /// Once this <see cref="Ped"/> has no script tasks, their task will clear and they'll start some ambient tasks (one-time-only).
+        /// Once this <see cref="Ped"/> has no script tasks, their task will clear, and they'll start some ambient tasks (one-time-only).
         /// </para>
         /// </value>
         public bool KeepTaskWhenMarkedAsNoLongerNeeded
@@ -1025,7 +1025,7 @@ namespace GTA
         /// Sets or unsets any <see cref="VehicleChaseBehaviorFlags"/> that the <see cref="Ped"/> will use for an active
         /// vehicle chase task (<c>CTaskVehicleChase</c>).
         /// A vehicle chase task (<c>CTaskVehicleChase</c>) on the <see cref="Ped"/> must be run, which can be created
-        /// by calling <see cref="TaskInvoker.VehicleChase(Ped)"/>, before calling this method or it will have no
+        /// by calling <see cref="TaskInvoker.VehicleChase(Ped)"/>, before calling this method, or it will have no
         /// effect.
         /// </summary>
         /// <param name="flags">The flag to set or unset.</param>
@@ -1041,7 +1041,7 @@ namespace GTA
         /// Sets the ideal pursuit distance when chasing a <see cref="Vehicle"/> for an active vehicle chase task
         /// (<c>CTaskVehicleChase</c>).
         /// A vehicle chase task (<c>CTaskVehicleChase</c>) on the <see cref="Ped"/> must be run, which can be created
-        /// by calling <see cref="TaskInvoker.VehicleChase(Ped)"/>, before calling this method or it will have no
+        /// by calling <see cref="TaskInvoker.VehicleChase(Ped)"/>, before calling this method, or it will have no
         /// effect.
         /// </summary>
         public void SetVehicleChaseIdealPursuitDistance(float distance)
@@ -1054,7 +1054,7 @@ namespace GTA
         /// </summary>
         /// <param name="state">The <see cref="PedMotionState"/> to set.</param>
         /// <param name="restartState">
-        /// If <see langword="true"/>, the <see cref="Ped"/> will perform an new appropriate motion task
+        /// If <see langword="true"/>, the <see cref="Ped"/> will perform a new appropriate motion task
         /// even if the current primary motion task is in the specified motion state (<paramref name="state"/>).
         /// </param>
         /// <param name="exitState">Specifies how to exit the current primary motion task.</param>
@@ -1101,7 +1101,7 @@ namespace GTA
         /// Gets or sets whether non-temporary events without high priorities are blocked for this <see cref="Ped"/>.
         /// </para>
         /// <para>
-        /// For example, the <see cref="Ped"/> will not flee when get shot at and they will not begin combat even if
+        /// For example, the <see cref="Ped"/> will not flee when get shot at, and they will not begin combat even if
         /// <see cref="DecisionMaker"/> specifies that seeing a hated ped should.
         /// </para>
         /// </summary>
@@ -1697,7 +1697,7 @@ namespace GTA
 
         /// <summary>
         /// Get the value that indicates whether this <see cref="Ped"/> is in a bike and <see cref="KnockOffVehicleType"/> is not set to <see cref="GTA.KnockOffVehicleType.Never"/>
-        /// so the <see cref="Ped"/> can be be knocked off (fall off) a <see cref="Vehicle"/>.
+        /// so the <see cref="Ped"/> can be knocked off (fall off) a <see cref="Vehicle"/>.
         /// </summary>
         public bool CanBeKnockedOffVehicle
         {
@@ -1799,7 +1799,7 @@ namespace GTA
         /// <summary>
         /// Gets the current <see cref="Vehicle"/> this <see cref="Ped"/> is using.
         /// </summary>
-        /// <remarks>returns <see langword="null" /> if this <see cref="Ped"/> isn't in a <see cref="Vehicle"/>.</remarks>
+        /// <remarks>returns <see langword="null" /> if this <see cref="Ped"/> is not in a <see cref="Vehicle"/>.</remarks>
         public Vehicle CurrentVehicle
         {
             get
@@ -1819,7 +1819,7 @@ namespace GTA
         /// <summary>
         /// Gets the <see cref="Vehicle"/> this <see cref="Ped"/> is trying to enter.
         /// </summary>
-        /// <remarks>returns <see langword="null" /> if this <see cref="Ped"/> isn't trying to enter a <see cref="Vehicle"/>.</remarks>
+        /// <remarks>returns <see langword="null" /> if this <see cref="Ped"/> is not trying to enter a <see cref="Vehicle"/>.</remarks>
         public Vehicle VehicleTryingToEnter
         {
             get
@@ -1909,7 +1909,7 @@ namespace GTA
 
         /// <summary>
         /// <para>
-        /// Sets the the drive tasks driving style.
+        /// Sets the drive tasks driving style.
         /// </para>
         /// <para>
         /// This <see cref="Ped"/> must be on a <see cref="Vehicle"/> as a driver and the drive task running on this <see cref="Ped"/> must be active before setting the value can actually affect.
@@ -1926,7 +1926,7 @@ namespace GTA
 
         /// <summary>
         /// <para>
-        /// Sets the the drive tasks driving style.
+        /// Sets the drive tasks driving style.
         /// </para>
         /// <para>
         /// This <see cref="Ped"/> must be on a <see cref="Vehicle"/> as a driver and the drive task running on this <see cref="Ped"/> must be active before setting the value can actually affect.
@@ -2047,7 +2047,7 @@ namespace GTA
         /// <para>
         /// Since <see cref="Ped"/>s cannot start any scripted tasks if you try to give injured <see cref="Ped"/>s some of them,
         /// this property should be used to determine if the <see cref="Ped"/> is able to do anything in the game (i.e. run scripted tasks) instead of <see cref="Entity.IsDead"/>.
-        /// You can reproduce the case where you give some <see cref="Ped"/> a scripted task but it will not start by modifying <see cref="InjuryHealthThreshold"/> and then giving them a scripted task.
+        /// You can reproduce the case where you give some <see cref="Ped"/> a scripted task, but it will not start by modifying <see cref="InjuryHealthThreshold"/> and then giving them a scripted task.
         /// <see cref="Entity.IsDead"/> should be used only if you want to specifically know that the <see cref="Ped"/> is dead.
         /// </para>
         /// <para>
@@ -2164,7 +2164,7 @@ namespace GTA
 
         /// <summary>
         /// Returns whether this <see cref="Ped"/> is currently performing any type of melee action (attack, block,
-        /// stealth kill, takedown, dodge, etc).
+        /// stealth kill, takedown, dodge, etc.).
         /// </summary>
         /// <remarks>
         /// This property returns <see langword="true"/> when the <see cref="Ped"/> is executing a
@@ -2180,7 +2180,7 @@ namespace GTA
 
         /// <summary>
         /// Gets the melee target for this <see cref="Ped"/>. This <see cref="Ped"/> must be performing any type of
-        /// melee action (attack, block, stealth kill, takedown, dodge, etc) before this property can return a valid
+        /// melee action (attack, block, stealth kill, takedown, dodge, etc.) before this property can return a valid
         /// <see cref="Ped"/>.
         /// </summary>
         /// <remarks>
@@ -2270,7 +2270,7 @@ namespace GTA
 
         /// <summary>
         /// Gets or Sets whether this <see cref="Ped"/> can suffer critical damage (which deals 1000 times base damages to non-player characters with default weapon configs) when bullets hit this <see cref="Ped"/>'s head bone or its child bones.
-        /// If <see langword="false"/>, they will take base damage of weapons when bullets hit their head bone or its child bones, just like when bullets hit a bone other than their head bone, its child bones, or limb bones.
+        /// If <see langword="false"/>, they will take base damage from weapons when bullets hit their head bone or its child bones, just like when bullets hit a bone other than their head bone, its child bones, or limb bones.
         /// </summary>
         /// <value>
         ///   <see langword="true" /> if this <see cref="Ped"/> can suffer critical damage; otherwise, <see langword="false" />.
@@ -2473,7 +2473,7 @@ namespace GTA
         /// Gets the last position a weapon of this <see cref="Ped"/> was impacted at this frame.
         /// </summary>
         /// <remarks>
-        /// This property should be called every frame as the the last valid result lasts only the frame a weapon of this <see cref="Ped"/>
+        /// This property should be called every frame as the last valid result lasts only the frame a weapon of this <see cref="Ped"/>
         /// was impacted at and else it returns <see cref="Vector3.Zero"/>.
         /// </remarks>
         public Vector3 LastWeaponImpactPosition
@@ -2977,7 +2977,7 @@ namespace GTA
         /// <param name="scaleByMass">
         /// <para>Specifies whether to scale the force by mass.</para>
         /// <para>If <see langword="true"/>, force will be multiplied by mass. For example, force passed in is in fact an acceleration rate in <c>m/s*s</c> (force) or velocity change in <c>m/s</c> (impulse).</para>
-        /// <para>If <see langword="false"/>, force will be applied directly and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
+        /// <para>If <see langword="false"/>, force will be applied directly, and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
         /// <para>
         /// In other words, scaling by mass is probably easier in most situations -
         /// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
@@ -2985,10 +2985,10 @@ namespace GTA
         /// </param>
         /// <param name="triggerAudio">
         /// <para>Specifies whether to play audio events related to the force being applied. The sound will play only if the entity type is <see cref="Vehicle"/> and will play a suspension squeal depending on the magnitude of the force.</para>
-        /// <para>The sound will play even if regardless of <see cref="ForceType"/> (even with a value other than between 0 to 5).</para>
+        /// <para>The sound will play even if regardless of <see cref="ForceType"/> (even with a value other than between 0 and 5).</para>
         /// </param>
         /// <param name="scaleByTimeScale">
-        /// <para>Specifies whether scale the force by the current time scale (max: <c>1.0f</c>).</para>
+        /// <para>Specifies whether scale the force by the current timescale (max: <c>1.0f</c>).</para>
         ///	<para>Only affects when <paramref name="forceType"/> is <see cref="ForceType.InternalImpulse"/> or <see cref="ForceType.ExternalImpulse"/>.</para>
         /// </param>
         /// <exception cref="System.ArgumentOutOfRangeException">Thrown when <paramref name="component"/> not a value defined in <see cref="RagdollComponent"/>.</exception>
@@ -3036,7 +3036,7 @@ namespace GTA
         /// <param name="scaleByMass">
         /// <para>Specifies whether to scale the force by mass.</para>
         /// <para>If <see langword="true"/>, force will be multiplied by mass. For example, force passed in is in fact an acceleration rate in <c>m/s*s</c> (force) or velocity change in <c>m/s</c> (impulse).</para>
-        /// <para>If <see langword="false"/>, force will be applied directly and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
+        /// <para>If <see langword="false"/>, force will be applied directly, and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
         /// <para>
         /// In other words, scaling by mass is probably easier in most situations -
         /// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
@@ -3093,7 +3093,7 @@ namespace GTA
         }
 
         // This overload is intentionally separated to reduce issues with ped bones if some game update breaks our bone
-        // memory stuff and thus we struggle to find a new solution. We have to use our memory stuff when we want to
+        // memory stuff, and thus we struggle to find a new solution. We have to use our memory stuff when we want to
         // find a bone tag by a sequential index.
         /// <summary>
         /// <inheritdoc cref="SetIKTarget(IKPart, PedBone, Vector3, IKTargetFlags, int, int)" path="/summary"/>
@@ -3203,7 +3203,7 @@ namespace GTA
 
         /// <summary>
         /// Returns a <see cref="Ped"/> instance with the specified handle if the handle is not zero.
-        /// Much more cheaper than calling <see cref="Entity.FromHandle(int)"/>, but be sure to use this only if we
+        /// Much cheaper than calling <see cref="Entity.FromHandle(int)"/>, but be sure to use this only if we
         /// know what we are using always returns the zero handle when it does not return a valid ped handle.
         /// </summary>
         /// <param name="handle">The handle to test.</param>

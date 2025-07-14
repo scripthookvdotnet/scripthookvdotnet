@@ -204,7 +204,7 @@ namespace GTA.NaturalMotion
         /// Gets a SetMuscleStiffness Helper class for sending SetMuscleStiffness <see cref="Message"/> to this <see cref="Ped"/>.
         /// </summary>
         /// <remarks>
-        /// Use this message to manually set the muscle stiffness values -before using Active Pose to drive to an animated pose, for example.
+        /// Use this function to manually set the muscle stiffness values before using Active Pose to drive to an animated pose, for example.
         /// </remarks>
         public SetMuscleStiffnessHelper SetMuscleStiffness => GetHelper<SetMuscleStiffnessHelper>("setMuscleStiffness");
 
@@ -373,7 +373,7 @@ namespace GTA.NaturalMotion
         public CatchFallHelper CatchFall => GetHelper<CatchFallHelper>("catchFall");
 
         /// <summary>
-        /// Gets a Electrocute Helper class for sending Electrocute <see cref="Message"/> to this <see cref="Ped"/>.
+        /// Gets an Electrocute Helper class for sending Electrocute <see cref="Message"/> to this <see cref="Ped"/>.
         /// </summary>
         public ElectrocuteHelper Electrocute => GetHelper<ElectrocuteHelper>("electrocute");
 
@@ -471,7 +471,7 @@ namespace GTA.NaturalMotion
         /// Gets a ShotNewBullet Helper class for sending ShotNewBullet <see cref="Message"/> to this <see cref="Ped"/>.
         /// </summary>
         /// <remarks>
-        /// Send new wound information to the shot.  Can cause shot to restart it's performance in part or in whole.
+        /// Send new wound information to the shot. Can cause shot to restart its performance in part or in whole.
         /// </remarks>
         public ShotNewBulletHelper ShotNewBullet => GetHelper<ShotNewBulletHelper>("shotNewBullet");
 

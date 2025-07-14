@@ -45,7 +45,7 @@ namespace GTA
         /// </summary>
         /// <param name="cameraNameHash">
         /// The camera name hash.
-        /// Passing a invalid name hash will result in the <see langword="null"/> return value.
+        /// Passing an invalid name hash will result in the <see langword="null"/> return value.
         /// It would result in some unintended behaviors such as the camera position not being able to change
         /// if you pass a camera name hash whose metadata is not designed for scripted cameras.
         /// </param>
@@ -76,7 +76,7 @@ namespace GTA
         /// </summary>
         /// <param name="cameraName">
         /// The camera name.
-        /// Passing a invalid name will result in the <see langword="null"/> return value.
+        /// Passing an invalid name will result in the <see langword="null"/> return value.
         /// It would result in some unintended behaviors such as the camera position not being able to change
         /// if you pass a camera name hash whose metadata is not designed for scripted cameras.
         /// </param>
@@ -305,7 +305,7 @@ namespace GTA
         /// This method fails to interpolate if there is no space for a new camera so the method cannot add a new
         /// camera cloned from this camera, which gets deleted on completion of the interpolation (unless
         /// <paramref name="duration"/> is zero).
-        /// The camera will be deactivated if this method successfully starts an camera interpolation.
+        /// The camera will be deactivated if this method successfully starts a camera interpolation.
         /// </remarks>
         public void InterpolateToNewCamFrame(Vector3 position, Vector3 rotation, float fov, uint duration,
             CamFrameInterpolatorCurveType graphTypePos = CamFrameInterpolatorCurveType.SinAccelDecel,

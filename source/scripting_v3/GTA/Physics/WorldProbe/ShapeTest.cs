@@ -39,7 +39,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Start a expensive synchronous line-of-sight world probe shape test between 2 points and blocks the game until the shape test completes.
+        /// Start an expensive synchronous line-of-sight world probe shape test between 2 points and blocks the game until the shape test completes.
         /// </summary>
         /// <param name="startPosition">The position where the shape test starts.</param>
         /// <param name="endPosition">The position where the shape test ends.</param>

@@ -39,7 +39,7 @@ namespace GTA
         /// Gets the memory address of <c>CPlayerInfo</c> for this <see cref="Player"/>, where most of the player specific variables are stored in memory.
         /// </summary>
         /// <remarks>
-        /// Some the native functions exposed in the namespace <c>PLAYER</c> just access some of members of <c>CPed</c> but none of those of <c>CPlayerInfo</c>.
+        /// Some the native functions exposed in the namespace <c>PLAYER</c> just access some members of <c>CPed</c> but none of those of <c>CPlayerInfo</c>.
         /// For example, <see cref="ForcedAim"/> only access one member of <c>CPed</c>, which does not affect non-player <see cref="Ped"/>s.
         /// </remarks>
         public IntPtr MemoryAddress => SHVDN.NativeMemory.GetCPlayerInfoAddress(Handle);
@@ -221,7 +221,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the <see cref="Entity"/> this <see cref="Player"/> is locking on when they are aiming with a firearm using a controller or they are locking on unarmed or with a melee weapon.
+        /// Gets the <see cref="Entity"/> this <see cref="Player"/> is locking on when they are aiming with a firearm using a controller, or they are locking on unarmed or with a melee weapon.
         /// </summary>
         /// <returns>The <see cref="Entity"/> if this <see cref="Player"/> is automatically locking on any <see cref="Entity"/>; otherwise, <see langword="null" /></returns>
         public Entity LockedOnEntity
@@ -569,7 +569,7 @@ namespace GTA
         /// Deactivates the special ability for this <see cref="Player"/>.
         /// </summary>
         /// <remarks>
-        /// The current time scale for the special ability, which is different from the one that can be accessed via
+        /// The current timescale for the special ability, which is different from the one that can be accessed via
         /// <see cref="Game.TimeScale"/>, will gradually go to 1.0 (in the ease-out style where the value starts
         /// quickly, slowing down the animation continues).
         /// </remarks>
@@ -577,7 +577,7 @@ namespace GTA
 
         /// <summary>
         /// Deactivates the special ability for this <see cref="Player"/> instantly without applying the fadeout fx.
-        /// Also immediately sets the current time scale for the special ability, which is different from the one that
+        /// Also immediately sets the current timescale for the special ability, which is different from the one that
         /// can be accessed via <see cref="Game.TimeScale"/>, to 1.0.
         /// </summary>
         public void DeactivateSpecialAbilityInstantly()

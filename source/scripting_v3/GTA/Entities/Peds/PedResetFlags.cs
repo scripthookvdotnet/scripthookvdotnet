@@ -93,7 +93,7 @@ namespace GTA
          */
 
         /// <summary>
-        /// Gets or sets the number of frames where the the game can snap the height of the ped to the correct distance
+        /// Gets or sets the number of frames where the game can snap the height of the ped to the correct distance
         /// above the ground.
         /// </summary>
         public byte NumFramesToSetEntityZFromGround

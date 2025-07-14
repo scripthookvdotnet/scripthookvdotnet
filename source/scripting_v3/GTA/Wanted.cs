@@ -580,7 +580,7 @@ namespace GTA
         /// <param name="crimeToReport">The crime time to report.</param>
         /// <param name="crimeValue">
         /// If left at zero, the crime will get evaluated.
-        /// It not zero, the crime value will be overridden to specify an amount (can be both positive or negative).
+        /// Else, the crime value will be overridden to specify an amount (can be both positive or negative).
         /// </param>
         /// <remarks>
         /// Clearing the wanted level will disable to increase the crime value for commiting crimes for 2 seconds.

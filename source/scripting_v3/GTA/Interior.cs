@@ -78,7 +78,7 @@ namespace GTA
         /// <remarks>
         /// This method gets the name hash from the <see cref="InteriorInstance"/> of <see cref="InteriorProxy"/>
         /// associated with the game viewport. The list of rooms are defined in a <c>CMloRoomDef</c> in a corresponding
-        /// ytyp file, and this methods hashes the raw name before returning a value.
+        /// ytyp file, and this method hashes the raw name before returning a value.
         /// </remarks>
         public static int GetRoomKeyForGameViewport()
             => Function.Call<int>(Hash.GET_ROOM_KEY_FOR_GAME_VIEWPORT);

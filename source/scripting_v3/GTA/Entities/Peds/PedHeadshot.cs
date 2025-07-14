@@ -122,7 +122,7 @@ namespace GTA
         /// without ANY status tests.
         /// </summary>
         /// <remarks>
-        /// This methods basically returns the same string as <c>pedmugshot_%02d</c>,
+        /// This method basically returns the same string as <c>pedmugshot_%02d</c>,
         /// where <see cref="Handle"/> is filled in.
         /// </remarks>
         public Txd GetTxdNoStatusCheck() => new($"pedmugshot_{Handle.ToString("D2")}");

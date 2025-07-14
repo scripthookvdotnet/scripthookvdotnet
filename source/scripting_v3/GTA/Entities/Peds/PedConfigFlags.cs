@@ -99,7 +99,7 @@ namespace GTA
         /// a <see cref="PedGroup"/> as a follower.
         /// If set to <see cref="VehicleSeat.Any"/>, which is the default value when a <see cref="Ped"/> is created,
         /// the group leader <see cref="Ped"/> will decide which seat this <see cref="Ped"/> should be in when
-        /// the leader entered a vehicle as a driver (using a task response to a event leader event).
+        /// the leader entered a vehicle as a driver (using a task response to an event leader event).
         /// </summary>
         /// <value>
         /// A corresponding <see cref="VehicleSeat"/> value if the internal value is between 0 and 15, or
@@ -144,7 +144,7 @@ namespace GTA
                 }
                 // Any negative values except for -1 should be considered as not really useful.
                 //
-                // Any values between 16 to 31 is supposed to be negative considering how signed bit-fields are
+                // Any values between 16 and 31 are supposed to be negative considering how signed bit-fields are
                 // interpreted in Windows implementation of C++.
                 //
                 // None of them will make `CTaskEnterVehicle::ShouldLeaveDoorOpenForGroupMembers` and
@@ -171,14 +171,14 @@ namespace GTA
                     ThrowHelper.ThrowArgumentOutOfRangeException(
                         nameof(value),
                         "The value must be one of the members of the passenger seats or `VehicleSeat.Any` " +
-                        "(`VehicleSeat.Driver` is also acceptable for implementaion convenience)."
+                        "(`VehicleSeat.Driver` is also acceptable for implementation convenience)."
                     );
                 }
 
                 int valToPass = (int)value;
                 // Both of the special cases below use the overflow wrapping behavior, while the internal value is
                 // a signed bit-field and signed overflow is undefined in C++. You can test the compiled code of
-                // `CPedFlags::SetPassengerIndexToUseInAGroup` just uses the wrapping behavior by passing a int value
+                // `CPedFlags::SetPassengerIndexToUseInAGroup` just uses the wrapping behavior by passing an int value
                 // more than 14 to the native function as the 2nd argument (the native passes what you pass plus 1 to
                 // the internal func and the range of `CPedFlags::m_iPassengerIndexToUseInAGroup` is between -16 and
                 // 15).

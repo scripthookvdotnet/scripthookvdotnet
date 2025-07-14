@@ -238,7 +238,7 @@ namespace GTA
     /// Intended to be used to pass the data to native functions.
     /// </summary>
     /// <remarks>
-    /// Since this struct has a private disposed field, this struct should not be passed by value as a argument.
+    /// Since this struct has a private disposed field, this struct should not be passed by value as an argument.
     /// </remarks>
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
     internal ref struct TaskMoVEScriptedInitialParametersStruct

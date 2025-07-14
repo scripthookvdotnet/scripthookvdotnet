@@ -47,7 +47,7 @@ namespace GTA
 
         /// <summary>
         /// Gets a value that indicates whether this <see cref="Model"/> exists.
-        /// This property is practically the same as <see cref="IsInCdImage"/> since an additional check this method does does not work in practice.
+        /// This property is practically the same as <see cref="IsInCdImage"/> since an additional check this method does not work in practice.
         /// </summary>
         /// <value>
         ///   <see langword="true" /> if this <see cref="Model"/> is valid; otherwise, <see langword="false" />.
@@ -55,7 +55,7 @@ namespace GTA
         /// <remarks>
         /// You may want to use <see cref="IsInCdImage"/> to avoid a redundant additional check,
         /// where <c>!(~(((modelIndex | 0xFFF0000) &amp; 0xEFFFFFFF) &lt;&lt; 28) &amp; 1)</c> is evaluated (but always evaluated as false in the range of uint32_t)
-        /// after checking if the model index is not <c>0xFFFF</c> (which means the index could not found) just like <see cref="IsInCdImage"/> does.
+        /// after checking if the model index is not <c>0xFFFF</c> (which means the index could not be found) just like <see cref="IsInCdImage"/> does.
         /// </remarks>
         public bool IsValid => Function.Call<bool>(Native.Hash.IS_MODEL_VALID, Hash);
         /// <summary>
@@ -111,10 +111,10 @@ namespace GTA
         /// </value>
         public bool IsAmphibiousVehicle => IsAmphibiousCar || IsAmphibiousQuadBike;
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Model"/> is a animal pedestrian.
+        /// Gets a value indicating whether this <see cref="Model"/> is an animal pedestrian.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Model"/> is a animal pedestrian; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if this <see cref="Model"/> is an animal pedestrian; otherwise, <see langword="false" />.
         /// </value>
         public bool IsAnimalPed => SHVDN.NativeMemory.IsModelAnAnimalPed(Hash);
         /// <summary>
@@ -327,14 +327,14 @@ namespace GTA
         /// Gets a value indicating whether this <see cref="Model"/> is a submarine.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Model"/> is an submarine; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if this <see cref="Model"/> is a submarine; otherwise, <see langword="false" />.
         /// </value>
         public bool IsSubmarine => SHVDN.NativeMemory.IsModelASubmarine(Hash);
         /// <summary>
         /// Gets a value indicating whether this <see cref="Model"/> is a submarine car.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Model"/> is an submarine car; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if this <see cref="Model"/> is a submarine car; otherwise, <see langword="false" />.
         /// </value>
         public bool IsSubmarineCar => SHVDN.NativeMemory.IsModelASubmarineCar(Hash);
         /// <summary>

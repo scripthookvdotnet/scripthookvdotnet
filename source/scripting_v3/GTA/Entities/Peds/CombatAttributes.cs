@@ -211,7 +211,7 @@ namespace GTA
         /// </summary>
         UseVehicleAttackIfVehicleHasMountedGuns,
         /// <summary>
-        /// Always equip best weapon in combat.
+        /// Always equip the best weapon in combat.
         /// </summary>
         AlwaysEquipBestWeapon,
         /// <summary>
@@ -327,7 +327,7 @@ namespace GTA
         /// </summary>
         AllowDogFighting,
         /// <summary>
-        /// This will make the weight of targets who aircraft vehicles be reduced greatly compared to targets
+        /// This will make the weight of targets being aircraft vehicles be reduced greatly compared to targets
         /// on foot or in ground based vehicles.
         /// </summary>
         PreferNonAircraftTargets,
