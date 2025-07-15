@@ -633,7 +633,7 @@ namespace GTA
         /// <param name="ped">The ped to check.</param>
         /// <param name="radius">The maximum distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
         /// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-        /// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
+        /// <remarks>Does not include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
         public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
         {
             int[] hashes = Array.ConvertAll(models, model => model.Hash);
@@ -938,7 +938,7 @@ namespace GTA
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="position">The position to check against.</param>
-        /// <param name="spatials">The spatials to check.</param>
+        /// <param name="spatials">The spatial objects to check.</param>
         /// <returns>The closest <see cref="ISpatial"/> to the <paramref name="position"/></returns>
         public static T GetClosest<T>(Vector2 position, params T[] spatials) where T : ISpatial
         {
