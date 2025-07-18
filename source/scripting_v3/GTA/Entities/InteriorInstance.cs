@@ -9,7 +9,7 @@ using System;
 namespace GTA
 {
     /// <summary>
-    /// Represents a interior instance, which is for <c>CInteriorInst</c> (a subclass of <c>CBuilding</c>) and is not used for native functions for interiors.
+    /// Represents an interior instance, which is for <c>CInteriorInst</c> (a subclass of <c>CBuilding</c>) and is not used for native functions for interiors.
     /// </summary>
     public sealed class InteriorInstance : IExistable
     {

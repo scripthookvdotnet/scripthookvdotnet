@@ -290,7 +290,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets an vertical offset relative attach parent in meters.
+        /// Sets a vertical offset relative attach parent in meters.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -325,7 +325,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Stops the hint cam running except if its a code gameplay hint.
+        /// Stops the hint cam running except if it's a code gameplay hint.
         /// </summary>
         /// <param name="stopImmediately">
         /// If <see langword="true"/>, the hint camera will stop immediately,
@@ -361,7 +361,7 @@ namespace GTA
         /// </summary>
         /// <param name="vehicle">
         /// The vehicle for follow vehicle camera.
-        /// You can pass <see langword="null"/> or a invalid <see cref="Vehicle"/>
+        /// You can pass <see langword="null"/> or an invalid <see cref="Vehicle"/>
         /// if <paramref name="inVehicleState"/> is set to <see cref="CamInVehicleState.OutsideVehicle"/>,
         /// since this value will not be used for <see cref="CamInVehicleState.OutsideVehicle"/>.
         /// </param>

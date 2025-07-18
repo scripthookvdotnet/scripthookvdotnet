@@ -9,7 +9,7 @@ using System;
 namespace GTA
 {
     /// <summary>
-    /// Represents a interior proxy, which is for <c>CAnimatedBuilding</c>.
+    /// Represents an interior proxy, which is for <c>CAnimatedBuilding</c>.
     /// </summary>
     public sealed class AnimatedBuilding : IExistable
     {

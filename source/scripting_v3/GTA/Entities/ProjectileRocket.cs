@@ -375,7 +375,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets whether this <see cref="ProjectileRocket"/> is locked on with a on-foot homing weapon
+        /// Gets or sets whether this <see cref="ProjectileRocket"/> is locked on with an on-foot homing weapon
         /// that fired the <see cref="ProjectileRocket"/>. `<c>OnFootHoming</c>` should be set in
         /// `<c>WeaponFlags</c>` of `<c>CWeaponInfo</c>` (in a `weapons.meta`), so the internal functions of
         /// `<c>CProjectileRocket</c>` can work to home <see cref="Target"/> as intended.

@@ -183,7 +183,7 @@ namespace GTA
         /// <param name="propModel">The prop model to consider.</param>
         /// <returns>
         /// A <see cref="FwSyncedScene"/> instance if the method finds some <see cref="Prop"/> with
-        /// <paramref name="propModel"/> within the search sphere and it successfully creates a new synchronized scene
+        /// <paramref name="propModel"/> within the search sphere, and it successfully creates a new synchronized scene
         /// at the closest <see cref="Prop"/>, otherwise, <see langword="null"/>.
         /// </returns>
         /// <remarks>

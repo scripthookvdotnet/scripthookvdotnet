@@ -24,7 +24,7 @@ namespace GTA
         /// </returns>
         /// <remarks>
         /// This method gets the level of the water excluding the waves first, then adds the wave
-        /// level delta if the method have successfully retrieve the level/height of the water.
+        /// level delta if the method have successfully retrieved the level/height of the water.
         /// Therefore, this method returns <see langword="false"/> when
         /// <see cref="GetWaterLevelNoWaves"/> returns <see langword="false"/> with the same
         /// arguments.

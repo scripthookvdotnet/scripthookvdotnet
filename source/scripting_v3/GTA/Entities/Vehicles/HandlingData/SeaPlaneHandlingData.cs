@@ -45,7 +45,7 @@ namespace GTA
         }
         /// <summary>
         /// Gets or sets the damping coefficient against positive z-direction.
-        /// Higher value will float more stronger when travelling on water.
+        /// Higher value will float stronger when travelling on water.
         /// </summary>
         /// <value>
         /// The damping coefficient against positive z-direction.
@@ -73,7 +73,7 @@ namespace GTA
         }
         /// <summary>
         /// Gets or sets the damping coefficient against negative z-direction.
-        /// Higher value will sink more stronger when travelling on water.
+        /// Higher value will sink stronger when travelling on water.
         /// </summary>
         /// <value>
         /// The damping coefficient against negative z-direction.

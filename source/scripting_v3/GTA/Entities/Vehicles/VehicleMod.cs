@@ -110,7 +110,7 @@ namespace GTA
             {
                 int index = Index;
                 int count = Count;
-                // This still needs a little more work, but its better than what it used to be
+                // This still needs a little more work, but it is better than what it used to be
                 if (count == 0)
                 {
                     return string.Empty;

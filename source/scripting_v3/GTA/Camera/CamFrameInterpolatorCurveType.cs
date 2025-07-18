@@ -17,15 +17,15 @@ namespace GTA
         /// </summary>
         Linear,
         /// <summary>
-        /// The interpolator works the same with this type as how they works with <see cref="SlowInOut"/>.
+        /// The interpolator works the same with this type as how they work with <see cref="SlowInOut"/>.
         /// </summary>
         SinAccelDecel,
         /// <summary>
-        /// The interpolator works the same with this type as how they works with <see cref="SlowIn"/>.
+        /// The interpolator works the same with this type as how they work with <see cref="SlowIn"/>.
         /// </summary>
         Accel,
         /// <summary>
-        /// The interpolator works the same with this type as how they works with <see cref="SlowOut"/>.
+        /// The interpolator works the same with this type as how they work with <see cref="SlowOut"/>.
         /// </summary>
         Decel,
         /// <summary>

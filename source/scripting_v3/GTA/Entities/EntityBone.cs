@@ -1142,7 +1142,7 @@ namespace GTA
             return entityBone.Owner is Ped ped && ped.Bones[boneId].Index == entityBone.Index;
         }
         /// <summary>
-        /// Determines if an <see cref="EntityBone"/> doesn't refer to a specific bone.
+        /// Determines if an <see cref="EntityBone"/> does not refer to a specific bone.
         /// </summary>
         /// <param name="entityBone">The <see cref="EntityBone"/> to check.</param>
         /// <param name="boneId">The <see cref="Bone"/> ID to check against.</param>

@@ -16,7 +16,7 @@ namespace GTA
     {
         None = 0,
         /// <summary>
-        /// The node has been flagged as 'off road', suitable only for 4x4 vehicles, etc.
+        /// The node has been flagged as 'off-road', suitable only for 4x4 vehicles, etc.
         /// </summary>
         OffRoad = 1,
         /// <summary>

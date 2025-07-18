@@ -50,7 +50,7 @@ namespace GTA
         /// <summary>
         /// Gets the <see cref="PedBone"/> with the specified <paramref name="boneId"/>.
         /// </summary>
-        /// <param name="boneId">The bone Id.</param>
+        /// <param name="boneId">The bone id.</param>
         public PedBone this[Bone boneId] => new((Ped)_owner, boneId);
 
         /// <summary>

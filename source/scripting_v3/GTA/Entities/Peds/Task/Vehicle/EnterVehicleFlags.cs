@@ -41,7 +41,7 @@ namespace GTA
         DontCloseDoor = 256,
         /// <summary>
         /// Allow ped to warp to the seat if entry is blocked.
-        /// If the shuffle link to that seat is blocked by someone but the entry point for the shuffle link is not directly blocked, the <see cref="Ped"/> won't warp.
+        /// If the shuffle link to that seat is blocked by someone but the entry point for the shuffle link is not directly blocked, the <see cref="Ped"/> will not warp.
         /// Consider using <see cref="WarpIfShuffleLinkIsBlocked"/> if you want the <see cref="Ped"/> to warp when the direct door and the shuffle link to that seat is blocked by someone.
         /// </summary>
         WarpIfDoorIsBlocked = 512,
@@ -63,7 +63,7 @@ namespace GTA
         BlockSeatShuffling = 1048576,
         /// <summary>
         /// Allow ped to warp if the direct door is blocked and the shuffle link to that seat is blocked by someone.
-        /// Unlike <see cref="WarpIfDoorIsBlocked"/>, this flag allows the the <see cref="Ped"/> to warp when the direct door and the shuffle link to that seat is blocked by someone (regardless of whether the door linked to the shuffle link is directly blocked).
+        /// Unlike <see cref="WarpIfDoorIsBlocked"/>, this flag allows the <see cref="Ped"/> to warp when the direct door and the shuffle link to that seat is blocked by someone (regardless of whether the door linked to the shuffle link is directly blocked).
         /// </summary>
         WarpIfShuffleLinkIsBlocked = 4194304,
         /// <summary>

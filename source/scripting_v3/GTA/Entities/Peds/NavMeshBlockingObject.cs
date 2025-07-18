@@ -27,7 +27,7 @@ namespace GTA
         /// <param name="headingDegrees">The heading in degrees.</param>
         /// <param name="flags">The flags that specify what types of paths the blocking object will block new <see cref="Ped"/> tasks that use navigation meshes (e.g. <see cref="TaskInvoker.WanderAround()"/>) from using.</param>
         /// <returns>The new <see cref="NavMeshBlockingObject"/> if successfully created; otherwise, <see langword="null"/>.</returns>
-        /// <remarks>The new <see cref="NavMeshBlockingObject"/> won't block existing <see cref="Ped"/> tasks that use navigation mesh paths in the area the blocking object covers from using.</remarks>
+        /// <remarks>The new <see cref="NavMeshBlockingObject"/> will not block existing <see cref="Ped"/> tasks that use navigation mesh paths in the area the blocking object covers from using.</remarks>
         public static NavMeshBlockingObject Create(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags = NavMeshBlockingObjectFlags.AllPaths)
         {
             const float DEG_2_RAD = (float)(System.Math.PI / 180);
@@ -72,9 +72,9 @@ namespace GTA
         /// <param name="position">The origin position.</param>
         /// <param name="size">The size.</param>
         /// <param name="headingDegrees">The heading in degrees.</param>
-        /// <param name="flags">The flags that specify what types of paths the blocking object will block new peds task that use navigation meshes from using.</param>
+        /// <param name="flags">Flags specifying which types of paths the blocking object will block for new pedestrian tasks that use navigation meshes.</param>
         /// <returns>The new <see cref="NavMeshBlockingObject"/> if successfully created; otherwise, <see langword="null"/>.</returns>
-        /// <remarks>The updated <see cref="NavMeshBlockingObject"/> won't affect existing <see cref="Ped"/> tasks.</remarks>
+        /// <remarks>The updated <see cref="NavMeshBlockingObject"/> will not affect existing <see cref="Ped"/> tasks.</remarks>
         public void Update(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags)
         {
             const float DEG_2_RAD = (float)(System.Math.PI / 180);

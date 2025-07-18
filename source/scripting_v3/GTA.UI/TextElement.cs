@@ -70,8 +70,8 @@ namespace GTA.UI
         /// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="TextElement"/>.</param>
         /// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>
         /// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/>.</param>
-        /// <param name="shadow">Sets whether or not to draw the <see cref="TextElement"/> with a <see cref="Shadow"/> effect.</param>
-        /// <param name="outline">Sets whether or not to draw the <see cref="TextElement"/> with an <see cref="Outline"/> around the letters.</param>
+        /// <param name="shadow">Sets whether to draw the <see cref="TextElement"/> with a <see cref="Shadow"/> effect.</param>
+        /// <param name="outline">Sets whether to draw the <see cref="TextElement"/> with an <see cref="Outline"/> around the letters.</param>
         public TextElement(string caption, PointF position, float scale, Color color, Font font, Alignment alignment, bool shadow, bool outline) :
             this(caption, position, scale, color, font, alignment, shadow, outline, 0.0f)
         {
@@ -85,8 +85,8 @@ namespace GTA.UI
         /// <param name="color">Set the <see cref="Color"/> used to draw the <see cref="TextElement"/>.</param>
         /// <param name="font">Sets the <see cref="Font"/> used when drawing the text.</param>
         /// <param name="alignment">Sets the <see cref="Alignment"/> used when drawing the text, <see cref="GTA.UI.Alignment.Left"/>,<see cref="GTA.UI.Alignment.Center"/> or <see cref="GTA.UI.Alignment.Right"/>.</param>
-        /// <param name="shadow">Sets whether or not to draw the <see cref="TextElement"/> with a <see cref="Shadow"/> effect.</param>
-        /// <param name="outline">Sets whether or not to draw the <see cref="TextElement"/> with an <see cref="Outline"/> around the letters.</param>
+        /// <param name="shadow">Sets whether to draw the <see cref="TextElement"/> with a <see cref="Shadow"/> effect.</param>
+        /// <param name="outline">Sets whether to draw the <see cref="TextElement"/> with an <see cref="Outline"/> around the letters.</param>
         /// <param name="wrapWidth">Sets how many horizontal pixel to draw before wrapping the <see cref="TextElement"/> on the next line down.</param>
         public TextElement(string caption, PointF position, float scale, Color color, Font font, Alignment alignment, bool shadow, bool outline, float wrapWidth)
         {

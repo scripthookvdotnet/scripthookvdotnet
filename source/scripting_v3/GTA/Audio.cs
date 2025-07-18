@@ -90,7 +90,7 @@ namespace GTA
         /// <param name="setName">The optional sound set name that contains the sound.</param>
         /// <param name="enableOnReplay"><inheritdoc cref="ScriptSound.PlaySoundFrontend(string, string, bool)" path="/param[@name='enableOnReplay']"/></param>.
         /// <remarks>
-        /// If the sound has a Pan or a SpeakerMask set by the sound designer then the it will play using these settings,
+        /// If the sound has a Pan or a SpeakerMask set by the sound designer then it will play using these settings,
         /// otherwise it will play from dead ahead (0°).
         /// </remarks>
         public static void PlaySoundFrontendAndForget(string soundName, string setName, bool enableOnReplay = true)

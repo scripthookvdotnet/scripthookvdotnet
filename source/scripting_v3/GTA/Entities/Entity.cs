@@ -507,7 +507,7 @@ namespace GTA
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.EntityMaxHealthOffset, value);
 
-                // Only needed for setter as GET_ENTITY_HEALTH doesn't use the the uint16_t max health value of CPlayerInfo in any cases
+                // Only needed for setter as GET_ENTITY_HEALTH doesn't use the uint16_t max health value of CPlayerInfo in any cases
                 // SET_ENTITY_HEALTH ignores the float max health value of CPhysical and instead uses the max health value of CPlayerInfo for the player ped
                 // SET_ENTITY_MAX_HEALTH sets both values for player peds as thw health display on HUD uses the float max health value of CPhysical
                 #region Special Max Health Treatment for Player Ped
@@ -929,7 +929,7 @@ namespace GTA
             return Function.Call<bool>(Hash.HAS_ENTITY_BEEN_DAMAGED_BY_ENTITY, Handle, entity.Handle, 1);
         }
         /// <summary>
-        /// Determines whether this <see cref="Entity"/> has been damaged by a specific weapon].
+        /// Determines whether this <see cref="Entity"/> has been damaged by a specific weapon.
         /// </summary>
         /// <param name="weapon">The weapon to check.</param>
         /// <returns>
@@ -1280,12 +1280,12 @@ namespace GTA
         #region Invincibility
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Entity"/> is fire proof.
+        /// Gets or sets a value indicating whether this <see cref="Entity"/> is fireproof.
         /// This <see cref="Entity"/> does not catch fire naturally and <see cref="Ped"/>s do not getting ragdolled
         /// for being burned when this property is set to <see langword="true" />.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Entity"/> is fire proof; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if this <see cref="Entity"/> is fireproof; otherwise, <see langword="false" />.
         /// </value>
         public bool IsFireProof
         {
@@ -1343,10 +1343,10 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Entity"/> is bullet proof.
+        /// Gets or sets a value indicating whether this <see cref="Entity"/> is bulletproof.
         /// </summary>
         /// <value>
-        /// <see langword="true" /> if this <see cref="Entity"/> is bullet proof; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if this <see cref="Entity"/> is bulletproof; otherwise, <see langword="false" />.
         /// </value>
         public bool IsBulletProof
         {
@@ -1570,7 +1570,7 @@ namespace GTA
         /// </summary>
         /// <value>
         /// <see langword="true"/> if this <see cref="Entity"/> is will not take any damage but will react
-        /// to any explosion/flame etc; otherwise, <see langword="false"/>.
+        /// to any explosion/flame etc.; otherwise, <see langword="false"/>.
         /// </value>
         /// <exception cref="GameVersionNotSupportedException">
         /// The running game version is prior to v1.0.463.1. Can only be thrown from the setter.
@@ -1653,10 +1653,10 @@ namespace GTA
         /// and any <see cref="Vehicle"/>s with drivers.
         /// </para>
         /// <para>
-        /// This property does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`,
+        /// This property does not make the <see cref="Entity"/> block damage from `<c>WEAPON_DROWNING</c>`,
         /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. It does not make
-        /// the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
-        /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
+        /// the <see cref="Entity"/> block damage from `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
+        /// the inflictor exists, and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
         /// from catching fire at all.
         /// </para>
         /// </remarks>
@@ -1703,7 +1703,7 @@ namespace GTA
         /// <see cref="Ped"/>s and any <see cref="Vehicle"/>s with drivers.
         /// </para>
         /// <para>
-        /// This property does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`,
+        /// This property does not make the <see cref="Entity"/> block damage from `<c>WEAPON_DROWNING</c>`,
         /// `<c>WEAPON_EXPLOSION</c>`, `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, `<c>WEAPON_BLEEDING</c>`, or
         /// `<c>WEAPON_FIRE</c>` at all. This property does not prevent the <see cref="Entity"/> from catching fire
         /// at all.
@@ -1750,10 +1750,10 @@ namespace GTA
         /// <see cref="BlocksDamageByRelGroup"/> to <see langword="false"/> before this method can have effects.
         /// </para>
         /// <para>
-        /// Calling this method does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`,
+        /// Calling this method does not make the <see cref="Entity"/> block damage from `<c>WEAPON_DROWNING</c>`,
         /// `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, or `<c>WEAPON_BLEEDING</c>` at all. It does not make
-        /// the <see cref="Entity"/> block damage of `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
-        /// the inflictor exists and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
+        /// the <see cref="Entity"/> block damage from `<c>WEAPON_EXPLOSION</c>` or `<c>WEAPON_FIRE</c>` unless
+        /// the inflictor exists, and it is a <see cref="Ped"/>. This property does not prevent the <see cref="Entity"/>
         /// from catching fire at all.
         /// </para>
         /// </remarks>
@@ -1787,7 +1787,7 @@ namespace GTA
         /// <see cref="CanOnlyBeDamagedByRelGroup"/> to <see langword="false"/> before this method can have effects.
         /// </para>
         /// <para>
-        /// Calling this method does not make the <see cref="Entity"/> block damage of `<c>WEAPON_DROWNING</c>`,
+        /// Calling this method does not make the <see cref="Entity"/> block damage from `<c>WEAPON_DROWNING</c>`,
         /// `<c>WEAPON_EXPLOSION</c>`, `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, `<c>WEAPON_BLEEDING</c>`, or
         /// `<c>WEAPON_FIRE</c>` at all. This property does not prevent the <see cref="Entity"/> from catching fire
         /// at all.
@@ -2052,7 +2052,7 @@ namespace GTA
         /// damaged by the <see cref="Ped"/>s.
         /// </summary>
         /// <value>
-        /// The relationship group if this <see cref="Entity"/> has the relation ship group hash for inflictor
+        /// The relationship group if this <see cref="Entity"/> has the relationship group hash for inflictor
         /// checks; otherwise, zero.
         /// </value>
         public RelationshipGroup SpecificRelGroupForInflictorChecks
@@ -2249,8 +2249,8 @@ namespace GTA
         /// This returns <see cref = "MaterialHash.None"/> in some cases even if this entity is internally
         /// pushing up against something.
         /// For example, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> is
-        /// a <see cref = "Ped"/> and the <see cref = "Entity"/> doesn't push none of the touching entities, including
-        /// static or animated buildings, since the <see cref = "Entity"/> doesn't have any collision records at that
+        /// a <see cref = "Ped"/> and the <see cref = "Entity"/> does not push none of the touching entities, including
+        /// static or animated buildings, since the <see cref = "Entity"/> does not have any collision records at that
         /// time.
         /// However, this returns <see cref = "MaterialHash.None"/> when this <see cref = "Entity"/> touches any
         /// ragdolled ped with the largest accumulated impulse.
@@ -2304,12 +2304,12 @@ namespace GTA
         /// </summary>
         /// <param name="entity">
         /// When this method returns, contains the physical <see cref="Entity"/> this <see cref="Entity"/> has collided with,
-        /// if the last collision record exists on this <see cref="Entity"/> and the collision record has a has a physical <see cref="Entity"/> address as a target;
+        /// if the last collision record exists on this <see cref="Entity"/> and the collision record has a physical <see cref="Entity"/> address as a target;
         /// otherwise, <see langword="null"/>.
         /// This parameter is passed uninitialized.
         /// </param>
         /// <returns>
-        /// <see langword="true"/> if the last collision record exists on this <see cref="Entity"/> and the collision record has a has a physical <see cref="Entity"/> address as a target;
+        /// <see langword="true"/> if the last collision record exists on this <see cref="Entity"/> and the collision record has a physical <see cref="Entity"/> address as a target;
         /// otherwise, <see langword="false"/>.
         /// </returns>
         public bool TryGetPhysicalEntityFromLastCollisionRecord(out Entity entity)
@@ -2332,7 +2332,7 @@ namespace GTA
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Entity"/> is recording collisions.
-        /// This value must be set to <see langword="true"/> before this <see cref="Entity"/> can record their collision records and you can properly fetch some of the records,
+        /// This value must be set to <see langword="true"/> before this <see cref="Entity"/> can record their collision records, and you can properly fetch some of the records,
         /// via properties such as <see cref="HasCollided"/> and <see cref="TryGetPhysicalEntityFromLastCollisionRecord(out Entity)"/>.
         /// </summary>
         public bool IsRecordingCollisions
@@ -2345,7 +2345,7 @@ namespace GTA
         /// Sets the collision between this <see cref="Entity"/> and another <see cref="Entity"/>
         /// </summary>
         /// <param name="entity">The <see cref="Entity"/> to set collision with</param>
-        /// <param name="toggle">if set to <see langword="true" /> the 2 <see cref="Entity"/>s wont collide with each other.</param>
+        /// <param name="toggle">if set to <see langword="true" /> the 2 <see cref="Entity"/>s will not collide with each other.</param>
         public void SetNoCollision(Entity entity, bool toggle)
         {
             Function.Call(Hash.SET_ENTITY_NO_COLLISION_ENTITY, Handle, entity.Handle, toggle);
@@ -2738,7 +2738,7 @@ namespace GTA
         /// The <see cref="Entity"/> to attach this <see cref="Entity"/> to.
         /// </param>
         /// <param name="secondEntityOffset">
-        /// The attach point offset of <paramref name="secondEntity"/> in local space.
+        /// The attachment point offset of <paramref name="secondEntity"/> in local space.
         /// </param>
         /// <param name="thisEntityOffset">
         /// <inheritdoc
@@ -3133,14 +3133,14 @@ namespace GTA
 
         /// <summary>
         /// Gets the <see cref="Entity"/> this <see cref="Entity"/> is attached to.
-        /// <remarks>Returns <see langword="null" /> if this <see cref="Entity"/> isn't attached to any entity.</remarks>
+        /// <remarks>Returns <see langword="null" /> if this <see cref="Entity"/> is not attached to any entity.</remarks>
         /// </summary>
         public Entity AttachedEntity => FromHandle(Function.Call<int>(Hash.GET_ENTITY_ATTACHED_TO, Handle));
 
         /// <summary>
         /// Updates an <see cref="Entity"/>'s attachments immediately that is attached to something.
         /// Updates the position of an attached <see cref="Entity"/> (And all of its children) immediately,
-        /// so that up to date entity and child entity positions can be grabbed.
+        /// so that up-to-date entity and child entity positions can be grabbed.
         /// </summary>
         /// <remarks>
         /// Also updates the position of the <see cref="Entity"/> within a synchronized scene.
@@ -3182,7 +3182,7 @@ namespace GTA
         public void ActivatePhysics() => Function.Call(Hash.ACTIVATE_PHYSICS, Handle);
         /// <summary>
         /// Deactivates the physics of this <see cref="Entity"/> by destroying its <c>rage::phCollider</c> so the
-        /// <see cref="Entity"/> can't physically move in both linear and rotational motions.
+        /// <see cref="Entity"/> cannot physically move in both linear and rotational motions.
         /// Does not stop animations or any bones rotating, since they have nothing to do with <c>rage::phCollider</c>.
         /// </summary>
         public void DeactivatePhysics() => Function.Call(Hash.SET_ENTITY_DYNAMIC, Handle, false);
@@ -3308,7 +3308,7 @@ namespace GTA
         /// <param name="scaleByMass">
         /// <para>Specifies whether to scale the force by mass.</para>
         /// <para>If <see langword="true"/>, force will be multiplied by mass. For example, force passed in is in fact an acceleration rate in <c>m/s*s</c> (force) or velocity change in <c>m/s</c> (impulse).</para>
-        /// <para>If <see langword="false"/>, force will be applied directly and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
+        /// <para>If <see langword="false"/>, force will be applied directly, and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
         /// <para>
         /// In other words, scaling by mass is probably easier in most situations -
         /// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
@@ -3316,10 +3316,10 @@ namespace GTA
         /// </param>
         /// <param name="triggerAudio">
         /// <para>Specifies whether to play audio events related to the force being applied. The sound will play only if the entity type is <see cref="Vehicle"/> and will play a suspension squeal depending on the magnitude of the force.</para>
-        /// <para>The sound will play even if regardless of <see cref="ForceType"/> (even with a value other than between 0 to 5).</para>
+        /// <para>The sound will play even if regardless of <see cref="ForceType"/> (even with a value other than between 0 and 5).</para>
         /// </param>
         /// <param name="scaleByTimeScale">
-        /// <para>Specifies whether scale the force by the current time scale (max: <c>1.0f</c>).</para>
+        /// <para>Specifies whether scale the force by the current timescale (max: <c>1.0f</c>).</para>
         ///	<para>Only affects when <paramref name="forceType"/> is <see cref="ForceType.InternalImpulse"/> or <see cref="ForceType.ExternalImpulse"/>.</para>
         /// </param>
         private void ApplyForceInternal(Vector3 force, Vector3 offset, ForceType forceType, bool relativeForce, bool relativeOffset, bool scaleByMass, bool triggerAudio = false, bool scaleByTimeScale = true)
@@ -3359,7 +3359,7 @@ namespace GTA
         /// <param name="scaleByMass">
         /// <para>Specifies whether to scale the force by mass.</para>
         /// <para>If <see langword="true"/>, force will be multiplied by mass. For example, force passed in is in fact an acceleration rate in <c>m/s*s</c> (force) or velocity change in <c>m/s</c> (impulse).</para>
-        /// <para>If <see langword="false"/>, force will be applied directly and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
+        /// <para>If <see langword="false"/>, force will be applied directly, and it's effect will depend on the mass of the entity. For example, force passed in is a proper force in Newtons (force) or a step change in momentum <c>kg*m/s</c> (impulse).</para>
         /// <para>
         /// In other words, scaling by mass is probably easier in most situations -
         /// if the mass of the object changes it's behaviour shouldn't, and it's easier to picture the effect because an acceleration rate of <c>10.0</c> is approximately the same as gravity (<c>9.81</c> to be more precise).
@@ -3482,7 +3482,7 @@ namespace GTA
 
         /// <summary>
         /// Gets a float value representing animation's current playtime with respect to its total playtime.
-        /// This value increasing in a range from [0.0 to 1.0] and wrap back to 0.0 when it reach 1.0.
+        /// This value increasing in a range from [0.0 to 1.0] and wrap back to 0.0 when it reaches 1.0.
         /// The phase of the anim is between 0.0 and 1.0 regardless of the anim length.
         /// </summary>
         public float GetAnimationCurrentTime(CrClipAsset crClipAsset)
@@ -3707,7 +3707,7 @@ namespace GTA
         /// <remarks>
         /// This method gets the name hash from the <see cref="InteriorInstance"/> of <see cref="InteriorProxy"/>
         /// associated with the <see cref="Entity"/>. The list of rooms are defined in a <c>CMloRoomDef</c> in a corresponding
-        /// ytyp file, and this methods hashes the raw name before returning a value.
+        /// ytyp file, and hashes the raw name before returning a value.
         /// </remarks>
         public int CurrentInteriorRoomKey => Function.Call<int>(Hash.GET_ROOM_KEY_FROM_ENTITY, Handle);
 
@@ -3720,12 +3720,12 @@ namespace GTA
         /// </param>
         public void MarkAsMissionEntity(bool grabFromOtherScript = false)
         {
-            // The 2nd parameter is only for multiplayer and we aren't interested in that mode (set to true in most SP scripts)
+            // The 2nd parameter is only for multiplayer, and we are not interested in that mode (set to true in most SP scripts)
             Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, true, grabFromOtherScript);
         }
 
         /// <summary>
-        /// Marks this <see cref="Entity"/> as no longer needed to keep and lets the game delete it when its too far away.
+        /// Marks this <see cref="Entity"/> as no longer needed to keep and lets the game delete it when it is too far away.
         /// You can still manipulate this <see cref="Entity"/> as long as the <see cref="Entity"/> exists.
         /// </summary>
         public void MarkAsNoLongerNeeded()

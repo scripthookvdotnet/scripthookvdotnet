@@ -57,7 +57,7 @@ namespace GTA
         {
             get
             {
-                // Return null wheel instance to avoid scripts that targets to between 3.0 to 3.1 not working due to a exception
+                // Return null wheel instance to avoid scripts that targets to between 3.0 to 3.1 not working due to an exception
                 // The vehicle wheel id array for natives defines only 8 elements, and any other values can result in undefined behavior or even memory access violation
                 if (index < 0 || index > 7)
                 {

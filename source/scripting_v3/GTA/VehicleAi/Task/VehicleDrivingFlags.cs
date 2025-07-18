@@ -49,7 +49,7 @@ namespace GTA
         /// </summary>
         AdjustCruiseSpeedBasedOnRoadSpeed = 16384,
         /// <summary>
-        /// Allow the <see cref="Ped"/> to use short cut links (e.g. the 180? turns on the highways without the direction sign).
+        /// Allow the <see cref="Ped"/> to use shortcut links (e.g. the 180? turns on the highways without the direction sign).
         /// </summary>
         UseShortCutLinks = 262144,
         /// <summary>
@@ -64,7 +64,7 @@ namespace GTA
         UseSwitchedOffNodes = 2097152,
         /// <summary>
         /// Make <see cref="Ped"/> prefer navigation mesh routes rather than vehicle nodes.
-        /// Can be useful if you're going to be primarily driving off road.
+        /// Can be useful if you're going to be primarily driving off-road.
         /// </summary>
         PreferNavmeshRoute = 4194304,
         /// <summary>
@@ -72,7 +72,7 @@ namespace GTA
         /// </summary>
         PlaneTaxiMode = 8388608,
         /// <summary>
-        /// Force to go to the target directly instead of following the nodes regardless of the distance config for driving or vehicle mission tasks at which the ai switches to heading for the target directly.
+        /// Force to go to the target directly instead of following the nodes regardless of the distance config for driving or vehicle mission tasks at which the AI switches to heading for the target directly.
         /// </summary>
         ForceStraightLine = 16777216,
         UseStringPullingAtJunctions = 33554432,
