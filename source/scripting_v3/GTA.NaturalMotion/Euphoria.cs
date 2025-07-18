@@ -204,7 +204,7 @@ namespace GTA.NaturalMotion
         /// Gets a SetMuscleStiffness Helper class for sending SetMuscleStiffness <see cref="Message"/> to this <see cref="Ped"/>.
         /// </summary>
         /// <remarks>
-        /// Use this function to manually set the muscle stiffness values before using Active Pose to drive to an animated pose, for example.
+        /// Use this message to manually set the muscle stiffness values before using Active Pose to drive to an animated pose, for example.
         /// </remarks>
         public SetMuscleStiffnessHelper SetMuscleStiffness => GetHelper<SetMuscleStiffnessHelper>("setMuscleStiffness");
 
