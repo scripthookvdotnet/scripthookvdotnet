@@ -1,3 +1,6 @@
 * text=auto eol=lf
 *.{cmd,[cC][mM][dD]} text eol=crlf
 *.{bat,[bB][aA][tT]} text eol=crlf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+# Use CRLF EOL for header files of SHV SDK as they use CRLF EOL, so no conversion will be happened
+sdk/inc/*.h text eol=crlf

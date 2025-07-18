@@ -33,6 +33,8 @@ jobs:
     - name: Install ScriptHookV SDK
       working-directory: ${{env.SOLUTION_FILE_PATH}}
       run: ./tools/install_sdk.ps1
+    # We use a local subset of SHV SDK, where only `ScriptHookV.lib` and `main.h` are included out of the SDK because
+    # these files are necessary to build SHVDN.
     - name: Define SHVDN version
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
