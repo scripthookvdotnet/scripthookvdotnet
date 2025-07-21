@@ -8,7 +8,7 @@ namespace GTA.Chrono
     /// <summary>
     /// Defines the common set of methods for time component.
     /// </summary>
-    public interface ITimelike<out T>
+    public interface ITimelike<T>
     {
         /// <summary>
         /// Gets the hour component of the time represented by this interface.

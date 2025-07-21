@@ -8,6 +8,7 @@ using GTA.Native;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace GTA
 {
@@ -161,7 +162,7 @@ namespace GTA
         /// want to check if <c>audioNameHash</c> is overridden.
         /// </para>
         /// <para>
-        /// You can use any names listed as items of any audio type of vehicle, boat, bicycle, airplane, helicopter,
+        /// You can use any names listed as items of any audio type of vehicle, boat, bicycle, aeroplane, helicopter,
         /// or train. You can find one with the term <c>Item type="[some type]"</c> ("[some type]" can be
         /// <c>Vehicle</c>, <c>Boat</c>, <c>Bicycle</c>, <c>Aeroplane</c>, <c>Helicopter</c>, <c>Train</c>)
         /// in <c>game.dat[some number].rel</c> in CodeWalker. "BJXL_ARMENIAN_3" and "STRETCH_MICHAEL_4" are registered
@@ -1513,10 +1514,9 @@ namespace GTA
         {
             get
             {
-                bool lightState1;
+                bool lightState1, lightState2;
                 unsafe
                 {
-                    bool lightState2;
                     Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
                 }
 
@@ -1551,10 +1551,9 @@ namespace GTA
         {
             get
             {
-                bool lightState2;
+                bool lightState1, lightState2;
                 unsafe
                 {
-                    bool lightState1;
                     Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
                 }
 
@@ -2097,15 +2096,15 @@ namespace GTA
         public void PlaceOnNextStreet()
         {
             Vector3 currentPosition = Position;
-            int totalLanes;
+            NativeVector3 newPosition;
+            float heading;
+            long unkn;
 
             for (int i = 1; i < 40; i++)
             {
-                NativeVector3 newPosition;
-                float heading;
                 unsafe
                 {
-                    Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, currentPosition.X, currentPosition.Y, currentPosition.Z, i, &newPosition, &heading, &totalLanes, 1, 0x40400000, 0);
+                    Function.Call(Hash.GET_NTH_CLOSEST_VEHICLE_NODE_WITH_HEADING, currentPosition.X, currentPosition.Y, currentPosition.Z, i, &newPosition, &heading, &unkn, 1, 0x40400000, 0);
                 }
 
                 if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, newPosition.X, newPosition.Y, newPosition.Z, 5.0f, 5.0f, 5.0f, 0))
@@ -2312,13 +2311,13 @@ namespace GTA
             => Function.Call(Hash.SET_HELI_CONTROL_LAGGING_RATE_SCALAR, Handle, mult);
 
         /// <summary>
-        /// Generates the pickup rope for cargobob.
+        /// Generates the pick up rope for cargobob.
         /// </summary>
         public void DropCargobobHook(CargobobHook hook)
             => Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, (int)hook);
 
         /// <summary>
-        /// Removes the pickup rope for cargobob.
+        /// Removes the pick up rope for cargobob.
         /// </summary>
         public void RetractCargobobHook()
             => Function.Call(Hash.REMOVE_PICK_UP_ROPE_FOR_CARGOBOB, Handle);
@@ -2569,14 +2568,14 @@ namespace GTA
 
         /// <summary>
         /// Checks if this <see cref="Vehicle"/> is being brought to a halt.
-        /// Currently only supported in version starting at v1.0.1493.0.
+        /// Currently only supported in v1.0.1493.0.
         /// </summary>
         public bool IsBeingBroughtToHalt
             => Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0
             && Function.Call<bool>(Hash.IS_VEHICLE_BEING_BROUGHT_TO_HALT, Handle);
 
         /// <summary>
-        ///Starts the task to decelerate this <see cref="Vehicle"/> until it comes to rest, possibly over an unphysically short distance.
+        /// Starts the task to decelerate this <see cref="Vehicle"/> until it comes to rest, possibly in an unphysically short distance.
         /// </summary>
         /// <param name="stoppingDistance">The distance from the initial coords at which the vehicle should come to rest.</param>
         /// <param name="timeToStopFor">The length of time in seconds to hold the car at rest after stopping.</param>
@@ -2591,7 +2590,7 @@ namespace GTA
 
         /// <summary>
         /// Stops bringing this <see cref="Vehicle"/> to a halt.
-        /// Currently only supported in versions above v1.0.1103.2.
+        /// Currently only supported in v1.0.1103.2.
         /// </summary>
         public void StopBringingToHalt()
         {

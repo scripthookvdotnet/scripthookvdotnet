@@ -306,11 +306,11 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets the base lift factor that's independent of wing's attack angle.
+        /// Gets or sets the base lift factor that is independent of the wing's attack angle.
         /// Affects the tendency to point relative upwards with speed.
         /// </summary>
         /// <value>
-        /// The base lift factor that's independent of wing's attack angle.
+        /// The base lift factor that's independent of the wing's attack angle.
         /// </value>
         public float FormLiftMultiplier
         {

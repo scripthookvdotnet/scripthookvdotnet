@@ -657,7 +657,7 @@ namespace GTA
 
         /// <summary>
         /// Attaches this <see cref="EntityBone"/> to a <see cref="EntityBone"/> of a different <see cref="Entity"/>
-        /// assuming that the bone is facing along the y-axis.
+        /// assuming that the bone is facing along the y axis.
         /// </summary>
         /// <param name="boneOfSecondEntity">
         /// The <see cref="EntityBone"/> to attach this <see cref="EntityBone"/> to that belongs to another
@@ -743,7 +743,7 @@ namespace GTA
         /// The <see cref="Entity"/> to attach this <see cref="EntityBone"/> to.
         /// </param>
         /// <param name="secondEntityOffset">
-        /// The attachment point offset of <paramref name="secondEntity"/> in local space.
+        /// The attach point offset of <paramref name="secondEntity"/> in local space.
         /// </param>
         /// <param name="thisEntityOffset">
         /// <inheritdoc
@@ -818,10 +818,10 @@ namespace GTA
         /// second/another <see cref="Entity"/>.
         /// </param>
         /// <param name="secondEntityOffset">
-        /// The attachment point offset of <paramref name="boneOfSecondEntity"/> in local space.
+        /// The attach point offset of <paramref name="boneOfSecondEntity"/> in local space.
         /// </param>
         /// <param name="thisEntityOffset">
-        /// The attachment point offset of this <see cref="Entity"/> relative to this <see cref="EntityBone"/>.
+        /// The attach point offset of this <see cref="Entity"/> relative to this <see cref="EntityBone"/>.
         /// </param>
         /// <param name="rotation">
         /// The rotation to apply to this <see cref="Entity"/> relative to the <paramref name="rotation"/>.
@@ -846,7 +846,7 @@ namespace GTA
         /// Otherwise, If <paramref name="addInitialSeparation"/> is <see langword="true"/>,
         /// the initial separation will be used as an allowed give in the attachment (e.g. a rope length).
         /// If <paramref name="addInitialSeparation"/> is <see langword="false"/>,
-        /// this <see cref="Entity"/> will not warp and instead the other one will warp to the attachment point.
+        /// this <see cref="Entity"/> will not warp and instead the other one will warp to the attach point.
         /// </para>
         /// <para>
         /// Although setting this parameter to <see langword="true"/> does not make it prevent from warp
@@ -858,7 +858,7 @@ namespace GTA
         /// <param name="addInitialSeparation">
         /// If <see langword="true"/> and <paramref name="doInitialWarp"/> is <see langword="false"/>,
         /// this method will not warp either of the two <see cref="Entity"/>s they can get separated as long as
-        /// the initial separation (where the attachment point and the two offset determines how high the initial
+        /// the initial separation (where the attach point and the two offset determines how high the initial
         /// separation value is).
         /// </param>
         /// <param name="collideWithEntity">
@@ -867,7 +867,7 @@ namespace GTA
         /// </param>
         /// <param name="rotationOrder">The rotation order.</param>
         /// <remarks>
-        /// If a bone index of a <see cref="Entity"/> is invalid, its attachment point will fall back to its
+        /// If a bone index of a <see cref="Entity"/> is invalid, its attach point will fallback to its
         /// transformation matrix.
         /// </remarks>
         public void AttachToBonePhysically(EntityBone boneOfSecondEntity, Vector3 secondEntityOffset,

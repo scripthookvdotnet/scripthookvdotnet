@@ -28,7 +28,7 @@ namespace GTA
         static VehicleWeaponHandlingData()
         {
             // Although we could get element count from parStructure->parMemberArray->parMemberDefinition,
-            // it's not worth it because only one update changed max element count of array members of CVehicleWeaponHandlingData as of b2845
+            // it will not be worth it because only one update changed max element count of array members of CVehicleWeaponHandlingData as of b2845
             if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2)
             {
                 s_elemCountForWeaponPropertyArrays = 6;

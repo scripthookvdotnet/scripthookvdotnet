@@ -5,6 +5,7 @@
 
 using GTA.Native;
 using System;
+using SHVDN;
 
 namespace GTA
 {

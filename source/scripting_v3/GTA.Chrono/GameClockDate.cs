@@ -55,8 +55,8 @@ namespace GTA.Chrono
             _ordFlags = ordFlags;
         }
 
-        private static readonly OrdFlags s_ordFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
-        private static readonly OrdFlags s_ordFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
+        private static OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
+        private static OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
 
         /// <summary>
         /// Represents the largest possible value of a <see cref="GameClockDate"/>.
@@ -64,14 +64,14 @@ namespace GTA.Chrono
         /// <value>
         /// The largest possible value of <see cref="GameClockTime"/>, which is December 31, 2147483647 CE.
         /// </value>
-        public static GameClockDate MaxValue = new(int.MaxValue, s_ordFlagsForMaxDate);
+        public static GameClockDate MaxValue = new(int.MaxValue, OrdFlagsForMaxDate);
         /// <summary>
         /// Represents the smallest possible value of a <see cref="GameClockDate"/>.
         /// </summary>
         /// <value>
         /// The smallest possible value of <see cref="GameClockTime"/>, which is January 1, -2147483648 BCE.
         /// </value>
-        public static GameClockDate MinValue = new(int.MinValue, s_ordFlagsForMinDate);
+        public static GameClockDate MinValue = new(int.MinValue, OrdFlagsForMinDate);
 
         /// <summary>
         /// Returns the year part of this <see cref="GameClockDate"/>. The returned value is an integer in the range of
@@ -124,7 +124,7 @@ namespace GTA.Chrono
         /// Returns the zero-based month part of this <see cref="GameClockDate"/>.
         /// The returned value is an integer between 0 and 11 (the same as <see cref="Month"/> minus 1).
         /// </summary>
-        public int MonthIndex => MonthDayFlags.Month - 1;
+        public int Month0 => MonthDayFlags.Month - 1;
 
         /// <summary>
         /// Returns the day-of-month part of this <see cref="GameClockDate"/>.
@@ -144,18 +144,21 @@ namespace GTA.Chrono
         {
             return OrdFlags.New(ordinal, flags) switch
             {
-                { } of => new GameClockDate(year, of),
+                OrdFlags of => new GameClockDate(year, of),
                 _ => null
             };
         }
 
         static GameClockDate? FromMdf(int year, MonthDayFlags mdf)
         {
-            return mdf.ToOrdFlags() switch
+            OrdFlags? of = mdf.ToOrdFlags();
+
+            if (of is OrdFlags ofNonNull)
             {
-                { } of => new GameClockDate(year, of),
-                _ => null
-            };
+                return new GameClockDate(year, ofNonNull);
+            }
+
+            return null;
         }
 
         static GameClockDate FromMdfUnchecked(int year, MonthDayFlags mdf)
@@ -558,7 +561,7 @@ namespace GTA.Chrono
             if (day > dayMax)
             {
                 day = dayMax;
-            }
+            };
 
             return FromMdfUnchecked(year, new MonthDayFlags(month, day, flags));
         }

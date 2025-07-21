@@ -1787,7 +1787,7 @@ namespace GTA
         /// <see cref="CanOnlyBeDamagedByRelGroup"/> to <see langword="false"/> before this method can have effects.
         /// </para>
         /// <para>
-        /// Calling this method does not make the <see cref="Entity"/> block the damage of `<c>WEAPON_DROWNING</c>`,
+        /// Calling this method does not make the <see cref="Entity"/> block damage from `<c>WEAPON_DROWNING</c>`,
         /// `<c>WEAPON_EXPLOSION</c>`, `<c>WEAPON_DROWNING_IN_VEHICLE</c>`, `<c>WEAPON_BLEEDING</c>`, or
         /// `<c>WEAPON_FIRE</c>` at all. This property does not prevent the <see cref="Entity"/> from catching fire
         /// at all.
@@ -2345,7 +2345,7 @@ namespace GTA
         /// Sets the collision between this <see cref="Entity"/> and another <see cref="Entity"/>
         /// </summary>
         /// <param name="entity">The <see cref="Entity"/> to set collision with</param>
-        /// <param name="toggle">if set to <see langword="true" /> the 2 <see cref="Entity"/>s won't collide with each other.</param>
+        /// <param name="toggle">if set to <see langword="true" /> the 2 <see cref="Entity"/>s will not collide with each other.</param>
         public void SetNoCollision(Entity entity, bool toggle)
         {
             Function.Call(Hash.SET_ENTITY_NO_COLLISION_ENTITY, Handle, entity.Handle, toggle);
@@ -3514,11 +3514,11 @@ namespace GTA
         /// <returns><see langword="true"/> if this method found an event tag in an animation playing; otherwise, <see langword="false"/>.</returns>
         public bool FindAnimationEventPhase(CrClipAsset crClipAsset, string eventName, out float startPhase, out float endPhase)
         {
+            float startPhaseTemp, endPhaseTemp;
+
             unsafe
             {
                 (CrClipDictionary clipDict, string clipName) = crClipAsset;
-                float startPhaseTemp;
-                float endPhaseTemp;
                 bool foundEventTag = Function.Call<bool>(Hash.FIND_ANIM_EVENT_PHASE, Handle, clipDict, clipName, eventName, &startPhaseTemp, &endPhaseTemp);
 
                 startPhase = startPhaseTemp;
@@ -3707,7 +3707,7 @@ namespace GTA
         /// <remarks>
         /// This method gets the name hash from the <see cref="InteriorInstance"/> of <see cref="InteriorProxy"/>
         /// associated with the <see cref="Entity"/>. The list of rooms are defined in a <c>CMloRoomDef</c> in a corresponding
-        /// ytyp file, and this method hashes the raw name before returning a value.
+        /// ytyp file, and hashes the raw name before returning a value.
         /// </remarks>
         public int CurrentInteriorRoomKey => Function.Call<int>(Hash.GET_ROOM_KEY_FROM_ENTITY, Handle);
 
@@ -3720,12 +3720,12 @@ namespace GTA
         /// </param>
         public void MarkAsMissionEntity(bool grabFromOtherScript = false)
         {
-            // The 2nd parameter is only for multiplayer, and we aren't interested in that mode (set to true in most SP scripts)
+            // The 2nd parameter is only for multiplayer, and we are not interested in that mode (set to true in most SP scripts)
             Function.Call(Hash.SET_ENTITY_AS_MISSION_ENTITY, Handle, true, grabFromOtherScript);
         }
 
         /// <summary>
-        /// Marks this <see cref="Entity"/> as no longer needed to keep and lets the game delete it when it's too far away.
+        /// Marks this <see cref="Entity"/> as no longer needed to keep and lets the game delete it when it is too far away.
         /// You can still manipulate this <see cref="Entity"/> as long as the <see cref="Entity"/> exists.
         /// </summary>
         public void MarkAsNoLongerNeeded()

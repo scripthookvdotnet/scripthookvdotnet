@@ -418,7 +418,7 @@ namespace GTA
         /// </summary>
         ForceAimAtHead,
         /// <summary>
-        /// In a scenario and not moving. Informs avoidance code that the <see cref="Ped"/> isn't going anywhere and
+        /// In a scenario and not moving. Informs avoidance code that the <see cref="Ped"/> is not going anywhere and
         /// should be steered around rather than waited for. Needs to be set on the <see cref="Ped"/> before they can
         /// handle scenario gesture clip sets.
         /// </summary>
@@ -735,7 +735,7 @@ namespace GTA
         /// </remarks>
         ForceMotionStateLeaveDesiredMbr,
         /// <summary>
-        /// Disable dropdowns for this <see cref="Ped"/>.
+        /// Disable drop downs for this <see cref="Ped"/>.
         /// </summary>
         DisableDropDowns,
         /// <summary>
@@ -1225,7 +1225,7 @@ namespace GTA
         /// </summary>
         UseTighterTurnSettingsForScript,
         /// <summary>
-        /// Set if the <see cref="Ped"/> should process externally driven dofs before the pre-camera AI update.
+        /// Set if the <see cref="Ped"/> should process externally driven DOFs before the pre-camera aAI update.
         /// </summary>
         /// <remarks>
         /// The canonical name is `<c>CPED_RESET_FLAG_ForcePreCameraProcessExternallyDrivenDOFs</c>`.

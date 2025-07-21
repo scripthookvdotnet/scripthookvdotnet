@@ -4,6 +4,7 @@
 //
 
 using GTA.Native;
+using System.Linq;
 
 namespace GTA
 {
@@ -207,7 +208,7 @@ namespace GTA
         /// </summary>
         /// <remarks>
         /// Despite the interface, setting this value globally affects any of the weapons that uses the ammo the current weapon is using
-        /// as <c>SET_PED_INFINITE_AMMO</c> modifies a member of weapon ammo item in <c>CPedInventory</c> of the owner <see cref="Ped"/>.
+        /// as <c>SET_PED_INFINITE_AMMO</c> modifies an of member of weapon ammo item in <c>CPedInventory</c> of the owner <see cref="Ped"/>.
         /// </remarks>
         public bool InfiniteAmmo
         {
@@ -234,7 +235,7 @@ namespace GTA
 
         public bool CanUseOnParachute => Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, (uint)Hash);
 
-        public WeaponComponentCollection Components => _components ?? (_components = new WeaponComponentCollection(_owner, this));
+        public WeaponComponentCollection Components => _components ??= new WeaponComponentCollection(_owner, this);
 
         public static implicit operator WeaponHash(Weapon weapon)
         {
@@ -370,11 +371,11 @@ namespace GTA
                     return "WT_SNWBALL";
             }
 
+            DlcWeaponData data;
             for (int i = 0, max = Function.Call<int>(Native.Hash.GET_NUM_DLC_WEAPONS); i < max; i++)
             {
                 unsafe
                 {
-                    DlcWeaponData data;
                     if (!Function.Call<bool>(Native.Hash.GET_DLC_WEAPON_DATA, i, &data))
                     {
                         continue;

@@ -141,7 +141,7 @@ namespace GTA
                     return IntPtr.Zero;
                 }
 
-                // Check if the vehicle is not boat, train, or submarine. This also checks if the vehicle exists (0xFFFFFFFF will be returned if the Vehicle doesn't exist)
+                // Check if the vehicle is not boat, train, or submarine. This also checks if the vehicle exists (0xFFFFFFFF will be returned if it doesn't exist)
                 if (!CanVehicleHaveWheels(Vehicle))
                 {
                     return IntPtr.Zero;

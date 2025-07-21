@@ -1,10 +1,12 @@
-//
+﻿//
 // Copyright (C) 2024 kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace GTA.Chrono
 {

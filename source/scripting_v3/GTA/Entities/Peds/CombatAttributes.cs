@@ -327,7 +327,7 @@ namespace GTA
         /// </summary>
         AllowDogFighting,
         /// <summary>
-        /// This will make the weight of targets that are aircraft vehicles be reduced greatly compared to targets
+        /// This will make the weight of targets being aircraft vehicles be reduced greatly compared to targets
         /// on foot or in ground based vehicles.
         /// </summary>
         PreferNonAircraftTargets,

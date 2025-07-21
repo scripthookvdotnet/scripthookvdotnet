@@ -8,6 +8,7 @@ using GTA.Native;
 using GTA.NaturalMotion;
 using System;
 using System.ComponentModel;
+using System.Linq;
 
 namespace GTA
 {
@@ -364,7 +365,7 @@ namespace GTA
         public Gender Gender => Function.Call<bool>(Hash.IS_PED_MALE, Handle) ? Gender.Male : Gender.Female;
 
         /// <summary>
-        /// Gets or sets amount of sweat that should be rendered on this <see cref="Ped"/>.
+        /// Gets or sets how much sweat should be rendered on this <see cref="Ped"/>.
         /// </summary>
         /// <value>
         /// The sweat from 0 to 100, 0 being no sweat, 100 being saturated.
@@ -845,7 +846,7 @@ namespace GTA
         public bool IsFalling => Function.Call<bool>(Hash.IS_PED_FALLING, Handle);
 
         /// <summary>
-        /// Indicates whether this <see cref="Ped"/> is currently climbing or vaulting or doing a dropdown.
+        /// Indicates whether this <see cref="Ped"/> is currently climbing or vaulting or doing a drop-down.
         /// </summary>
         public bool IsVaulting => Function.Call<bool>(Hash.IS_PED_VAULTING, Handle);
 
@@ -2269,7 +2270,7 @@ namespace GTA
 
         /// <summary>
         /// Gets or Sets whether this <see cref="Ped"/> can suffer critical damage (which deals 1000 times base damages to non-player characters with default weapon configs) when bullets hit this <see cref="Ped"/>'s head bone or its child bones.
-        /// If <see langword="false"/>, they will take base the damage of weapons when bullets hit their head bone or its child bones, just like when bullets hit a bone other than their head bone, its child bones, or limb bones.
+        /// If <see langword="false"/>, they will take base damage from weapons when bullets hit their head bone or its child bones, just like when bullets hit a bone other than their head bone, its child bones, or limb bones.
         /// </summary>
         /// <value>
         ///   <see langword="true" /> if this <see cref="Ped"/> can suffer critical damage; otherwise, <see langword="false" />.

@@ -548,7 +548,7 @@ namespace GTA
         /// </param>
         /// <param name="useLongRangeVehiclePathing">
         /// If <see langword="true"/>, the created task may use a <c>CTaskVehicleGotoLongRange</c>, which automatically
-        /// loads nodes in the background (maybe useful to avoid the task not going to a point when you want to get
+        /// loads nodes in the background (it may be useful to avoid the task not going to a point when you want to get
         /// <see cref="Ped"/>s to a point far from where the player is).
         /// If <see langword="false"/>, the created task will not use a <c>CTaskVehicleGotoLongRange</c>, which may
         /// result in the task not going to a point if the specified point is too far from where the player is.
@@ -797,7 +797,7 @@ namespace GTA
         /// </param>
         /// <param name="position">The initial position in World Coordinates to start the anim at.</param>
         /// <param name="rotation">
-        /// The initial rotation (in degrees, format &lt;&lt; pitch, roll, heading &gt;&gt;) to play the animation from.
+        /// The initial rotation (in degrees, format &lt;&lt; pitch, roll, heading &gt;&gt;) to playback the anim from.
         /// </param>
         /// <param name="blendInDelta">The rate at which the task will blend in.</param>
         /// <param name="blendOutDelta">The rate at which the task will blend out.</param>
@@ -1142,7 +1142,7 @@ namespace GTA
         /// </summary>
         /// <param name="scenarioName">The scenario name.</param>
         /// <param name="timeToLeave">
-        /// <para>The time in milliseconds since the <see cref="Ped"/> starts the main clip of the scenario before they start to leave.</para>
+        /// <para>The time in milliseconds since the <see cref="Ped"/> has started the main clip of the scenario before they start to leave.</para>
         /// <para>If zero, the initiated task will not have the <see cref="Ped"/> leave the scenario by elapsing time.</para>
         /// <para>If positive, the initiated task will have the <see cref="Ped"/> leave the scenario after the specified time elapsed.</para>
         /// <para>
@@ -1167,7 +1167,7 @@ namespace GTA
         /// <param name="position">The position to put the <see cref="Ped"/> into the given scenario.</param>
         /// <param name="heading">The heading to put the <see cref="Ped"/> into the given scenario.</param>
         /// <param name="timeToLeave">
-        /// <para>The time in milliseconds since the <see cref="Ped"/> starts the main clip of the scenario before they start to leave.</para>
+        /// <para>The time in milliseconds since the <see cref="Ped"/> has started the main clip of the scenario before they start to leave.</para>
         /// <para>If zero, the initiated task will not have the <see cref="Ped"/> leave the scenario by elapsing time.</para>
         /// <para>If positive, the initiated task will have the <see cref="Ped"/> leave the scenario after the specified time elapsed.</para>
         /// <para>

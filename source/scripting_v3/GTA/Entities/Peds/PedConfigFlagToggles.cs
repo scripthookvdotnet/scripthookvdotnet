@@ -1062,15 +1062,15 @@ namespace GTA
         /// </remarks>
         LeaveEngineOnWhenExitingVehicles,
         /// <summary>
-        /// tells taskmobile phone to not texting animations.  For now, don't play these in MP.
+        /// Tells taskmobile phone to not play texting animations. Currently, don't play these in MP.
         /// </summary>
         PhoneDisableTextingAnimations,
         /// <summary>
-        /// tells taskmobile phone to not talking animations.  For now, don't play these in MP.
+        /// Tells taskmobile phone to not play talking animations. Currently, don't play these in MP.
         /// </summary>
         PhoneDisableTalkingAnimations,
         /// <summary>
-        /// tells taskmobile phone to not camera animations.  For now, don't play these in SP.
+        /// Tells taskmobile phone to not play camera animations. Currently, don't play these in SP.
         /// </summary>
         PhoneDisableCameraAnimations,
         /// <summary>
@@ -1453,7 +1453,7 @@ namespace GTA
         /// </remarks>
         DisableTalkTo,
         /// <summary>
-        /// Stops a <see cref="Ped"/> being blipped by the wanted system.
+        /// Prevents the wanted system from attaching a blip to a <see cref="Ped"/>
         /// </summary>
         DontBlip,
         /// <summary>
@@ -2045,7 +2045,7 @@ namespace GTA
         /// </summary>
         ForcedAimFromArrest,
         /// <summary>
-        /// If set, we won't set a new target after a melee attack.
+        /// If set, we will not set a new target after a melee attack.
         /// </summary>
         DontChangeTargetFromMelee,
         /// <summary>

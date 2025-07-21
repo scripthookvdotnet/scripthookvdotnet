@@ -6,6 +6,7 @@
 using Xunit;
 using GTA.Chrono;
 using System;
+using System.Collections.Generic;
 
 namespace ScriptHookVDotNet_APIv3_Tests
 {

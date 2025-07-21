@@ -110,7 +110,7 @@ namespace GTA
             {
                 int index = Index;
                 int count = Count;
-                // This still needs a little more work, but its better than what it used to be
+                // This still needs a little more work, but it is better than what it used to be
                 if (count == 0)
                 {
                     return string.Empty;
@@ -126,7 +126,7 @@ namespace GTA
                     Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
                     Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
                 }
-
+                string cur;
                 if (Type == VehicleModType.Horns)
                 {
                     if (!_hornNames.ContainsKey(index))
@@ -185,7 +185,7 @@ namespace GTA
                 }
                 if (index > -1)
                 {
-                    string cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index);
+                    cur = Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index);
                     if (!string.IsNullOrEmpty(Game.GetLocalizedString(cur)))
                     {
                         cur = Game.GetLocalizedString(cur);

@@ -118,7 +118,7 @@ namespace GTA
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="InteriorProxy"/> is capped to load only the shell objects (usually walls + floor + doors + windows),
-        /// prevents most of the collisions from loading.
+        /// prevents most collisions from loading.
         /// </summary>
         /// <value>
         /// <see langword="true" /> if this <see cref="InteriorProxy"/> is capped to load only the shell objects; otherwise, <see langword="false" />.
@@ -153,7 +153,7 @@ namespace GTA
 
         /// <summary>
         /// Caps the interior so this <see cref="InteriorProxy"/> will load only the shell objects (usually walls + floor + doors + windows),
-        /// prevents most of the collisions from loading.
+        /// prevents most collisions from loading.
         /// </summary>
         /// <remarks>Does nothing if the player <see cref="Ped"/> is in this <see cref="InteriorProxy"/>.</remarks>
         public void Cap(bool toggle)
@@ -215,16 +215,16 @@ namespace GTA
             Function.Call(Hash.SET_INTERIOR_ENTITY_SET_TINT_INDEX, Handle, entitySetName, index);
         }
 
-        static public InteriorProxy GetInteriorProxyAt(Vector3 position)
+        public static InteriorProxy GetInteriorProxyAt(Vector3 position)
         {
             return FromHandle(Function.Call<int>(Hash.GET_INTERIOR_AT_COORDS, position.X, position.Y, position.Z));
         }
 
         /// <summary>
-        /// Gets the <see cref="InteriorProxy"/> if the gameplay camera is in a interior.
+        /// Gets the <see cref="InteriorProxy"/> if the gameplay camera is in an interior.
         /// </summary>
         /// <remarks>returns <see langword="null" /> if the gameplay camera is not in any interior space.</remarks>
-        static public InteriorProxy GetInteriorProxyFromGameplayCam()
+        public static InteriorProxy GetInteriorProxyFromGameplayCam()
         {
             int interiorInstHandle = SHVDN.NativeMemory.GetInteriorProxyHandleFromGameplayCam();
             return interiorInstHandle != 0 ? new InteriorProxy(interiorInstHandle) : null;

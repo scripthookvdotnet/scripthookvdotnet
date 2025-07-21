@@ -39,7 +39,7 @@ namespace GTA
         /// Gets the memory address of <c>CPlayerInfo</c> for this <see cref="Player"/>, where most of the player specific variables are stored in memory.
         /// </summary>
         /// <remarks>
-        /// Some the native functions exposed in the namespace <c>PLAYER</c> just access some of the members of <c>CPed</c> but none of those of <c>CPlayerInfo</c>.
+        /// Some the native functions exposed in the namespace <c>PLAYER</c> just access some members of <c>CPed</c> but none of those of <c>CPlayerInfo</c>.
         /// For example, <see cref="ForcedAim"/> only access one member of <c>CPed</c>, which does not affect non-player <see cref="Ped"/>s.
         /// </remarks>
         public IntPtr MemoryAddress => SHVDN.NativeMemory.GetCPlayerInfoAddress(Handle);
@@ -158,9 +158,9 @@ namespace GTA
         {
             get
             {
+                int entityHandle;
                 unsafe
                 {
-                    int entityHandle;
                     if (Function.Call<bool>(Hash.GET_ENTITY_PLAYER_IS_FREE_AIMING_AT, Handle, &entityHandle))
                     {
                         return Entity.FromHandle(entityHandle);
@@ -228,9 +228,9 @@ namespace GTA
         {
             get
             {
+                int entityHandle;
                 unsafe
                 {
-                    int entityHandle;
                     if (Function.Call<bool>(Hash.GET_PLAYER_TARGET_ENTITY, Handle, &entityHandle))
                     {
                         return Entity.FromHandle(entityHandle);

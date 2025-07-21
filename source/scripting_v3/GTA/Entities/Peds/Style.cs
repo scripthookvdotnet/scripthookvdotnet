@@ -14,9 +14,9 @@ namespace GTA
     {
         #region Fields
 
-        private readonly Ped _ped;
-        private readonly Dictionary<PedPropAnchorPoint, PedProp> _pedProps = new();
-        private readonly Dictionary<PedComponentType, PedComponent> _pedComponents = new();
+        readonly Ped _ped;
+        Dictionary<PedPropAnchorPoint, PedProp> _pedProps = new();
+        Dictionary<PedComponentType, PedComponent> _pedComponents = new();
 
         #endregion
 

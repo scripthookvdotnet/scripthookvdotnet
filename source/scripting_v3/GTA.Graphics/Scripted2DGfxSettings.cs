@@ -57,7 +57,7 @@ namespace GTA.Graphics
         /// <param name="offset">
         /// <para>
         /// The <see cref="PointF"/> value to offset all x, y coords passed to 2d renderer,
-        /// where 0 is in the top left corner of the screen and 1 is in the bottom right corner of the screen.
+        /// where 0 is at the top left corner of the screen and 1 is at the bottom right corner of the screen.
         /// </para>
         /// <para>
         /// Set <c>new PointF(0, 0)</c> to revert to the default value.
@@ -93,7 +93,7 @@ namespace GTA.Graphics
         /// </summary>
         /// <param name="offset">
         /// The input <see cref="PointF"/> value in screen space (not 1280x720 screen pixel space),
-        /// where 0 is in the top left corner of the screen and 1 is in the bottom right corner of the screen.
+        /// where 0 is at the top left corner of the screen and 1 is at the bottom right corner of the screen.
         /// </param>
         public static PointF GetAlignPosition(PointF offset)
         {

@@ -3,6 +3,8 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
+using GTA;
 using GTA.Math;
 
 namespace GTA.NaturalMotion

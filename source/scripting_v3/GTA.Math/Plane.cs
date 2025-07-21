@@ -233,7 +233,7 @@ namespace GTA.Math
         /// <returns>The string representation of the value of this instance.</returns>
         public override readonly string ToString()
         {
-            return $"Normal:{Normal.ToString()} D:{D}";
+            return $"Normal:{Normal.ToString()} D:{D.ToString()}";
         }
 
         /// <summary>

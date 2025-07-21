@@ -199,11 +199,10 @@ namespace GTA
                     return;
                 }
 
-                int currentWeatherHash;
+                int currentWeatherHash, nextWeatherHash;
+                float weatherTransition;
                 unsafe
                 {
-                    int nextWeatherHash;
-                    float weatherTransition;
                     Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
                 }
                 Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, StringHash.AtStringHash(s_weatherNames[(int)value]), 0.0f);
@@ -362,7 +361,7 @@ namespace GTA
         /// </summary>
         /// <returns>The <see cref="Vector3"/> coordinates of the Waypoint <see cref="Blip"/></returns>
         /// <remarks>
-        /// Returns <see langword="null" /> if a waypoint <see cref="Blip"/> has not been set.
+        /// Returns <see langword="null" /> if a waypoint <see cref="Blip"/> has not been set
         /// </remarks>
         public static Blip WaypointBlip
         {
@@ -634,7 +633,7 @@ namespace GTA
         /// <param name="ped">The ped to check.</param>
         /// <param name="radius">The maximum distance from the <paramref name="ped"/> to detect <see cref="Vehicle"/>s.</param>
         /// <param name="models">The <see cref="Model"/> of <see cref="Vehicle"/>s to get, leave blank for all <see cref="Vehicle"/> <see cref="Model"/>s.</param>
-        /// <remarks>Doesnt include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
+        /// <remarks>Does not include the <see cref="Vehicle"/> the <paramref name="ped"/> is using in the result</remarks>
         public static Vehicle[] GetNearbyVehicles(Ped ped, float radius, params Model[] models)
         {
             int[] hashes = Array.ConvertAll(models, model => model.Hash);
@@ -939,7 +938,7 @@ namespace GTA
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="position">The position to check against.</param>
-        /// <param name="spatials">The spatials to check.</param>
+        /// <param name="spatials">The spatial objects to check.</param>
         /// <returns>The closest <see cref="ISpatial"/> to the <paramref name="position"/></returns>
         public static T GetClosest<T>(Vector2 position, params T[] spatials) where T : ISpatial
         {
@@ -1256,8 +1255,8 @@ namespace GTA
                 position.Z, heading, false, false));
 
             // Randomize variation but not ped props, just like `CREATE_RANDOM_PED` does.
-            const int RACE = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
-            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, RACE);
+            const int race = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
+            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, race);
 
             return createdPed;
         }
@@ -2165,12 +2164,12 @@ namespace GTA
         /// the created projectile will not collide with <paramref name="ignoreEntity"/>.
         /// </para>
         /// <para>
-        /// Cannot be used in conjunction with <paramref name="ignoreCollisionResetNoBb"/>
-        /// and <paramref name="ignoreCollisionResetNoBb"/> takes precedence if both are set to <see langword="true"/>
+        /// Cannot be used in conjunction with <paramref name="ignoreCollisionResetNoBB"/>
+        /// and <paramref name="ignoreCollisionResetNoBB"/> takes precedence if both are set to <see langword="true"/>
         /// and the game version is v1.0.2189.0 or later.
         /// </para>
         /// </param>
-        /// <param name="ignoreCollisionResetNoBb">
+        /// <param name="ignoreCollisionResetNoBB">
         /// <para>
         /// If <see langword="true"/> and if <paramref name="startPosition"/> is inside the BoundingBox of
         /// <paramref name="ignoreEntity"/>, the created projectile will ignore collision until it leaves the
@@ -2187,14 +2186,14 @@ namespace GTA
             bool allowRumble = true, float initialVelocity = -1f, Entity ignoreEntity = null,
             bool forceCreateNewProjectileObject = false, bool disablePlayerCoverStartAdjustment = false,
             Entity targetEntity = null, bool freezeProjectileWaitingOnCollision = false,
-            bool ignoreCollisionEntity = false, bool ignoreCollisionResetNoBb = false)
+            bool ignoreCollisionEntity = false, bool ignoreCollisionResetNoBB = false)
         {
             Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY_NEW, startPosition.X, startPosition.Y,
                 startPosition.Z, endPosition.X, endPosition.Y, endPosition.Z, damage, perfectAccuracy, weapon, owner,
                 createTraceVfx, allowRumble, initialVelocity, ignoreEntity, forceCreateNewProjectileObject,
                 disablePlayerCoverStartAdjustment, targetEntity,
                 true /* named bDoDeadCheck in the official header, which is not used in the internal function */,
-                freezeProjectileWaitingOnCollision, ignoreCollisionEntity, ignoreCollisionResetNoBb);
+                freezeProjectileWaitingOnCollision, ignoreCollisionEntity, ignoreCollisionResetNoBB);
         }
 
         /// <summary>
@@ -2262,7 +2261,7 @@ namespace GTA
         #region Drawing
 
         /// <summary>
-        /// Draws a marker in the world for exactly one frame.
+        /// Draws a marker in the world, this needs to be done on a per-frame basis
         /// </summary>
         /// <param name="type">The type of marker.</param>
         /// <param name="pos">The position of the marker.</param>
@@ -2316,7 +2315,7 @@ namespace GTA
         /// Leave <see langword="null"/> to use the texture for <paramref name="type"/>.
         /// </param>
         /// <param name="renderInverted">
-        /// if set to <see langword="true"/> the marker will be drawn in the reverse order.
+        /// if set to <see langword="true"/> the marker will be drawed in the reverse order.
         /// Marker vertices will be shown on any <c>CEntity</c> (which includes but not limited to <see cref="Entity"/>
         /// and <see cref="Building"/>), that are intersected.
         /// </param>
@@ -2326,7 +2325,7 @@ namespace GTA
         /// different from <see cref="DrawMarker"/>).
         /// </param>
         /// <param name="matchEntityRotOrder">
-        /// If <see langword="true"/>, the marker will rotate in the same way how <see cref="Entity"/>s is rotated
+        /// If <see langword="true"/>, the marker will rotate in the same way how <see cref="Entity"/>s are rotated
         /// (which is different from <see cref="DrawMarker"/>).
         /// </param>
         public static void DrawMarkerEx(MarkerType type, Vector3 pos, Vector3 dir, Vector3 rot, Vector3 scale,
@@ -2559,6 +2558,14 @@ namespace GTA
                 7));
         }
 
+        /// <summary>
+        /// Determines where the crosshair intersects with the world.
+        /// </summary>
+        /// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
+        public static RaycastResult GetCrosshairCoordinates()
+        {
+            return Raycast(GameplayCamera.Position, GameplayCamera.GetOffsetPosition(new Vector3(0f, 1000f, 0f)), IntersectFlags.Everything, null);
+        }
         /// <summary>
         /// Determines where the crosshair intersects with the world.
         /// </summary>
@@ -2909,8 +2916,7 @@ namespace GTA
                 {
                     return outPos;
                 }
-
-                if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
+                else if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
                 {
                     return outPos;
                 }

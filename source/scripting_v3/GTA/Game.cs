@@ -6,6 +6,7 @@
 using GTA.Native;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
@@ -227,7 +228,7 @@ namespace GTA
                 {
                     Function.Call(Hash.SET_RADIO_TO_STATION_NAME, "OFF");
                 }
-                if (Enum.IsDefined(typeof(RadioStation), value))
+                else if (Enum.IsDefined(typeof(RadioStation), value))
                 {
                     Function.Call(Hash.SET_RADIO_TO_STATION_NAME, s_radioNames[(int)value]);
                 }
@@ -353,7 +354,7 @@ namespace GTA
         /// </summary>
         /// <remarks>
         /// This property always return <see langword="false"/> since Script Hook V v1.0.3351.0+ This is because
-        /// SHV changed the way SHV scripts start in v1.0.3351.0 (SHV version and not game version) and they never be
+        /// SHV changed the way SHV scripts start in v1.0.3351.0 (SHV version and not game version) and they will never be
         /// able to start before the game finished showing the loading screen since SHV v1.0.3351.0+. See
         /// <see href="https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1549">#1549 on the main GitHub
         /// repository</see> for details.
@@ -549,7 +550,7 @@ namespace GTA
         /// </para>
         /// <para>
         /// Strictly, returns <see langword="true"/> when <see cref="GetDisabledControlValueNormalized(Control)"/>
-        /// returns <c>0.5f</c> or more this frame and it returns a value less than <c>0.5f</c> last frame; otherwise,
+        /// returns <c>0.5f</c> or more this frame, and it returns a value less than <c>0.5f</c> last frame; otherwise,
         /// returns <see langword="false"/>.
         /// </para>
         /// </returns>

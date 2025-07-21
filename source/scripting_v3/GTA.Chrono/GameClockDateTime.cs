@@ -124,7 +124,7 @@ namespace GTA.Chrono
         /// Returns the zero-based month part of this <see cref="GameClockDateTime"/>.
         /// The returned value is an integer between 0 and 11 (the same as <see cref="Month"/> minus 1).
         /// </summary>
-        public int MonthIndex => _date.MonthIndex;
+        public int Month0 => _date.Month0;
 
         /// <summary>
         /// Returns the day-of-month part of this <see cref="GameClockDateTime"/>.

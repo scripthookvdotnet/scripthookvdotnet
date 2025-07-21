@@ -292,9 +292,8 @@ namespace GTA.Native
     public class OutputArgument : IDisposable
     {
         #region Fields
-
-        private bool _disposed;
-        internal IntPtr _storage;
+        bool _disposed = false;
+        internal IntPtr _storage = IntPtr.Zero;
         #endregion
 
         /// <summary>
@@ -3128,7 +3127,7 @@ namespace GTA.Native
     /// <summary>
     /// A value class which handles access to global script variables.
     /// </summary>
-    public readonly struct GlobalVariable
+    public struct GlobalVariable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalVariable"/> class with a variable address.

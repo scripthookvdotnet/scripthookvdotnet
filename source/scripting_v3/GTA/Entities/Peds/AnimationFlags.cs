@@ -96,7 +96,7 @@ namespace GTA
         TagSyncContinuous = 65536,
         /// <summary>
         /// Force the anim task to start even if the ped is falling / ragdolling / etc.
-        /// Can fix issues with peds not playing their anims immediately after a warp / etc.
+        /// Can fix issues with a ped not playing their anims immediately after a warp / etc.
         /// </summary>
         ForceStart = 131072,
         /// <summary>
@@ -104,7 +104,7 @@ namespace GTA
         /// </summary>
         UseKinematicPhysics = 262144,
         /// <summary>
-        /// Updates the peds capsule position every frame based on the animation.
+        /// Updates the capsule position of the ped every frame based on the animation.
         /// Use in conjunction with <see cref="UseKinematicPhysics"/> to create characters that cannot be pushed off course by other entities / geometry / etc. whilst playing the anim.
         /// </summary>
         UseMoverExtraction = 524288,

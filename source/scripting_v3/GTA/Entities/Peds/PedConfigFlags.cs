@@ -5,6 +5,7 @@
 
 using GTA.Native;
 using System;
+using SHVDN;
 
 namespace GTA
 {
@@ -82,7 +83,7 @@ namespace GTA
          * ```cpp
          * enum eGestureModes
            {
-               // if gesturing is enabled*, gestures will blend in and out based on audio
+               // if gesturing is enabled*, gestures will blended in and out based on audio
 	           GESTURE_MODE_DEFAULT,
                // if gesturing is enabled*, gestures will only be blended in during gesture allow tags
 	           GESTURE_MODE_USE_ANIM_ALLOW_TAGS,
@@ -98,7 +99,7 @@ namespace GTA
         /// a <see cref="PedGroup"/> as a follower.
         /// If set to <see cref="VehicleSeat.Any"/>, which is the default value when a <see cref="Ped"/> is created,
         /// the group leader <see cref="Ped"/> will decide which seat this <see cref="Ped"/> should be in when
-        /// the leader entered a vehicle as a driver (using a task response to ab event leader event).
+        /// the leader entered a vehicle as a driver (using a task response to an event leader event).
         /// </summary>
         /// <value>
         /// A corresponding <see cref="VehicleSeat"/> value if the internal value is between 0 and 15, or
@@ -143,7 +144,7 @@ namespace GTA
                 }
                 // Any negative values except for -1 should be considered as not really useful.
                 //
-                // Any values between 16 and 31 is supposed to be negative considering how signed bit-fields are
+                // Any values between 16 and 31 are supposed to be negative considering how signed bit-fields are
                 // interpreted in Windows implementation of C++.
                 //
                 // None of them will make `CTaskEnterVehicle::ShouldLeaveDoorOpenForGroupMembers` and
@@ -170,7 +171,7 @@ namespace GTA
                     ThrowHelper.ThrowArgumentOutOfRangeException(
                         nameof(value),
                         "The value must be one of the members of the passenger seats or `VehicleSeat.Any` " +
-                        "(`VehicleSeat.Driver` is also acceptable for implementaion convenience)."
+                        "(`VehicleSeat.Driver` is also acceptable for implementation convenience)."
                     );
                 }
 
@@ -183,13 +184,13 @@ namespace GTA
                 // 15).
                 if (value == VehicleSeat.Any)
                 {
-                    const int PASSENGER_INDEX_TO_RESET_TO_DEFAULT = 30;
-                    valToPass = PASSENGER_INDEX_TO_RESET_TO_DEFAULT;
+                    const int PassengerIndexToResetToDefault = 30;
+                    valToPass = PassengerIndexToResetToDefault;
                 }
                 else if (value == VehicleSeat.Driver)
                 {
-                    const int PASSENGER_INDEX_TO_SET_TO_DRIVER = 31;
-                    valToPass = PASSENGER_INDEX_TO_SET_TO_DRIVER;
+                    const int PassengerIndexToSetToDriver = 31;
+                    valToPass = PassengerIndexToSetToDriver;
                 }
 
                 Function.Call(Hash.SET_PED_GROUP_MEMBER_PASSENGER_INDEX, _ped.Handle, valToPass);               

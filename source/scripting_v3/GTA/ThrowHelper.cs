@@ -110,7 +110,7 @@ namespace GTA
         /// <exception cref="ArgumentOutOfRangeException"/>
         internal static void ThrowArgumentOutOfRangeException(string paramName, double value, double minInclusive, double maxInclusive)
         {
-            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive}, {maxInclusive}].");
+            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString()}, {maxInclusive.ToString()}].");
         }
 
         /// <summary>

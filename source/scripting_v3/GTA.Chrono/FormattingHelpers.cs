@@ -1,9 +1,11 @@
-//
+﻿//
 // Copyright (C) 2024 kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace GTA.Chrono

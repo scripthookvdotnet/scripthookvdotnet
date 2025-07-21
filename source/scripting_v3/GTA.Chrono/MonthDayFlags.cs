@@ -18,7 +18,7 @@ namespace GTA.Chrono
     /// </para>
     /// <para>
     /// The methods implemented on <see cref="MonthDayFlags"/> do not always return a valid value.
-    /// Invalid dates, like for e.g. February 30th, can still be represented.
+    /// Dates that can't exist, like February 30, can still be represented.
     /// Use <see cref="IsValid"/> to check whether the date is valid.
     /// </para>
     /// </summary>

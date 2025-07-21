@@ -14,9 +14,7 @@ namespace GTA
     {
         public Blip(int handle) : base(handle)
         {
-
         }
-
 
         /// <summary>
         /// Gets the memory address where the <see cref="GTA.Entity"/> is stored in memory.
@@ -43,8 +41,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    { } v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5E,
-                    { } v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5C,
+                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5E,
+                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5C,
                     _ => 0x58
                 };
 
@@ -68,8 +66,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    { } v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x60,
-                    { } v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5E,
+                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x60,
+                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5E,
                     _ => 0x5A
                 };
 
@@ -105,8 +103,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    { } v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5D,
-                    { } v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5B,
+                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5D,
+                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5B,
                     _ => 0x57
                 };
 
@@ -131,8 +129,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    { } v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x61,
-                    { } v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5F,
+                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x61,
+                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5F,
                     _ => 0x5B
                 };
 
@@ -504,7 +502,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Blip"/> shows the dollar sign in the top left corner of the <see cref="Blip"/>.
+        /// Gets or sets a value indicating whether this <see cref="Blip"/> shows the dollar sign at the top left corner of the <see cref="Blip"/>.
         /// </summary>
         /// <value>
         ///   <see langword="true" /> to show the dollar sign; otherwise, <see langword="false" />.

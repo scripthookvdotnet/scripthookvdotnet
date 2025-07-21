@@ -4543,7 +4543,7 @@ namespace GTA.NaturalMotion
         }
 
         /// <summary>
-        /// Maximum broom(everything but the twist) arm moment of bullet applied.
+        /// Maximum broom((everything but the twist) arm moment of bullet applied.
         /// </summary>
         /// <remarks>
         /// Default value = 1.0f.
@@ -4647,7 +4647,7 @@ namespace GTA.NaturalMotion
         }
 
         /// <summary>
-        /// If Airborne: Maximum broom(everything but the twist) arm moment of bullet applied.
+        /// If Airborne: Maximum broom((everything but the twist) arm moment of bullet applied.
         /// </summary>
         /// <remarks>
         /// Default value = 1.0f.
@@ -4751,7 +4751,7 @@ namespace GTA.NaturalMotion
         }
 
         /// <summary>
-        /// If only one leg in contact: Maximum broom(everything but the twist) arm moment of bullet applied.
+        /// If only one leg in contact: Maximum broom((everything but the twist) arm moment of bullet applied.
         /// </summary>
         /// <remarks>
         /// Default value = 1.0f.

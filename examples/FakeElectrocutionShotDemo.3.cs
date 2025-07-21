@@ -1,6 +1,9 @@
 using GTA;
 using GTA.Math;
 using GTA.NaturalMotion;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 // Mimic electrocution with the stun gun by sending NM messages to the player ped.
 // You can find similar config in physicstasks.ymt (search for "CTaskNMShot").

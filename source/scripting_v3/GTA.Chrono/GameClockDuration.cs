@@ -553,7 +553,7 @@ namespace GTA.Chrono
         /// A new value that represents result of dividing <paramref name="d1"/> by the value of
         /// <paramref name="d2"/>.
         /// </returns>
-        public static double operator /(GameClockDuration d1, GameClockDuration d2) => (decimal)d1._secs / d2._secs;
+        public static double operator /(GameClockDuration d1, GameClockDuration d2) => d1._secs / d2._secs;
 
         private static GameClockDuration IntervalFromF64Seconds(double secs)
         {

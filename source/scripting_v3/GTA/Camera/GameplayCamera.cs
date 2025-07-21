@@ -325,7 +325,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Stops the hint cam running except if it is a code gameplay hint.
+        /// Stops the hint cam running except if it's a code gameplay hint.
         /// </summary>
         /// <param name="stopImmediately">
         /// If <see langword="true"/>, the hint camera will stop immediately,
@@ -433,7 +433,7 @@ namespace GTA
         /// Gets a value indicating whether a first person ped aim camera is active,
         /// which can be activated by using a sniper rifle scope or mobile phone camera (strictly checks if the gameplay
         /// director use a <c>camFirstPersonPedAimCamera</c> instance).
-        /// Do not confuse with a firstperson shooter camera (<c>camFirstPersonShooterCamera</c>),
+        /// Do not confuse with a first person shooter camera (<c>camFirstPersonShooterCamera</c>),
         /// which can be activated by switching the camera mode.
         /// </summary>
         /// <value>

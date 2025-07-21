@@ -24,13 +24,13 @@ namespace GTA
         /// </summary>
         DontWaitForVehicleToStop = 64,
         /// <summary>
-        /// Don't close the vehicle door.
+        /// Dont close the vehicle door.
         /// </summary>
         LeaveDoorOpen = 256,
         /// <summary>
         /// Allow ped to warp to the seat if entry is blocked. The player <see cref="Ped"/> will warp out of the vehicle without any flags if the entry is blocked.
-        /// If the shuffle link to that seat is blocked by someone but the entry point for the shuffle link is not directly blocked, the <see cref="Ped"/> wont warp.
-        /// Consider using <see cref="WarpIfShuffleLinkIsBlocked"/> if you want the <see cref="Ped"/> to warp when the direct door and the shuffle link to that seat is blocked by a ped.
+        /// If the shuffle link to that seat is blocked by someone but the entry point for the shuffle link is not directly blocked, the <see cref="Ped"/> will not warp.
+        /// Consider using <see cref="WarpIfShuffleLinkIsBlocked"/> if you want the <see cref="Ped"/> to warp when the direct door and the shuffle link to the seat are blocked.
         /// </summary>
         WarpIfDoorIsBlocked = 512,
         /// <summary>

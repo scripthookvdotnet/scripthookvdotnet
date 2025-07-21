@@ -50,7 +50,7 @@ namespace GTA
         /// <summary>
         /// Gets the <see cref="PedBone"/> with the specified <paramref name="boneId"/>.
         /// </summary>
-        /// <param name="boneId">The bone ID.</param>
+        /// <param name="boneId">The bone id.</param>
         public PedBone this[Bone boneId] => new((Ped)_owner, boneId);
 
         /// <summary>
@@ -89,9 +89,9 @@ namespace GTA
         {
             get
             {
+                int outBone;
                 unsafe
                 {
-                    int outBone;
                     if (Function.Call<bool>(Hash.GET_PED_LAST_DAMAGE_BONE, _owner.Handle, &outBone))
                     {
                         return this[(Bone)outBone];

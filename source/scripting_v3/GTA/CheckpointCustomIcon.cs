@@ -4,6 +4,7 @@
 //
 
 using GTA.Native;
+using System;
 
 namespace GTA
 {
@@ -21,7 +22,7 @@ namespace GTA
         /// otherwise allowed range is 0 - 9. </param>
         public CheckpointCustomIcon(CheckpointCustomIconStyle iconStyle, byte iconNumber)
         {
-            //initialise them so vs doesn't complain
+            //initialise them so vs doesnt complain
             _style = CheckpointCustomIconStyle.Number;
             _number = 0;
 

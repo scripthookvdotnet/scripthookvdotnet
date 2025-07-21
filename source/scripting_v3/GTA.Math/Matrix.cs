@@ -379,9 +379,9 @@ namespace GTA.Math
                 (M14 * (((M21 * temp3) - (M22 * temp5)) + (M23 * temp6))));
         }
 
-        readonly float Det3X3(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33)
+        readonly float Det3x3(float M11, float M12, float M13, float M21, float M22, float M23, float M31, float M32, float M33)
         {
-            return m11 * (m22 * m33 - m23 * m32) - m12 * (m21 * m33 - m23 * m31) + m13 * (m21 * m32 - m22 * m31);
+            return M11 * (M22 * M33 - M23 * M32) - M12 * (M21 * M33 - M23 * M31) + M13 * (M21 * M32 - M22 * M31);
         }
 
         /// <summary>
@@ -389,33 +389,33 @@ namespace GTA.Math
         /// </summary>
         public void Invert()
         {
-            float det = Determinant();
+            float Det = Determinant();
 
-            if (det == 0.0f)
+            if (Det == 0.0f)
             {
                 return;
             }
 
-            float invDet = 1.0f / det;
-            float tM11 = Det3X3(M22, M23, M24, M32, M33, M34, M42, M43, M44) * invDet;
-            float tM21 = -Det3X3(M21, M23, M24, M31, M33, M34, M41, M43, M44) * invDet;
-            float tM31 = Det3X3(M21, M22, M24, M31, M32, M34, M41, M42, M44) * invDet;
-            float tM41 = -Det3X3(M21, M22, M23, M31, M32, M33, M41, M42, M43) * invDet;
+            float invDet = 1.0f / Det;
+            float tM11 = Det3x3(M22, M23, M24, M32, M33, M34, M42, M43, M44) * invDet;
+            float tM21 = -Det3x3(M21, M23, M24, M31, M33, M34, M41, M43, M44) * invDet;
+            float tM31 = Det3x3(M21, M22, M24, M31, M32, M34, M41, M42, M44) * invDet;
+            float tM41 = -Det3x3(M21, M22, M23, M31, M32, M33, M41, M42, M43) * invDet;
 
-            float tM12 = -Det3X3(M12, M13, M14, M32, M33, M34, M42, M43, M44) * invDet;
-            float tM22 = Det3X3(M11, M13, M14, M31, M33, M34, M41, M43, M44) * invDet;
-            float tM32 = -Det3X3(M11, M12, M14, M31, M32, M34, M41, M42, M44) * invDet;
-            float tM42 = Det3X3(M11, M12, M13, M31, M32, M33, M41, M42, M43) * invDet;
+            float tM12 = -Det3x3(M12, M13, M14, M32, M33, M34, M42, M43, M44) * invDet;
+            float tM22 = Det3x3(M11, M13, M14, M31, M33, M34, M41, M43, M44) * invDet;
+            float tM32 = -Det3x3(M11, M12, M14, M31, M32, M34, M41, M42, M44) * invDet;
+            float tM42 = Det3x3(M11, M12, M13, M31, M32, M33, M41, M42, M43) * invDet;
 
-            float tM13 = Det3X3(M12, M13, M14, M22, M23, M24, M42, M43, M44) * invDet;
-            float tM23 = -Det3X3(M11, M13, M14, M21, M23, M24, M41, M43, M44) * invDet;
-            float tM33 = Det3X3(M11, M12, M14, M21, M22, M24, M41, M42, M44) * invDet;
-            float tM43 = -Det3X3(M11, M12, M13, M21, M22, M23, M41, M42, M43) * invDet;
+            float tM13 = Det3x3(M12, M13, M14, M22, M23, M24, M42, M43, M44) * invDet;
+            float tM23 = -Det3x3(M11, M13, M14, M21, M23, M24, M41, M43, M44) * invDet;
+            float tM33 = Det3x3(M11, M12, M14, M21, M22, M24, M41, M42, M44) * invDet;
+            float tM43 = -Det3x3(M11, M12, M13, M21, M22, M23, M41, M42, M43) * invDet;
 
-            float tM14 = -Det3X3(M12, M13, M14, M22, M23, M24, M32, M33, M34) * invDet;
-            float tM24 = Det3X3(M11, M13, M14, M21, M23, M24, M31, M33, M34) * invDet;
-            float tM34 = -Det3X3(M11, M12, M14, M21, M22, M24, M31, M32, M34) * invDet;
-            float tM44 = Det3X3(M11, M12, M13, M21, M22, M23, M31, M32, M33) * invDet;
+            float tM14 = -Det3x3(M12, M13, M14, M22, M23, M24, M32, M33, M34) * invDet;
+            float tM24 = Det3x3(M11, M13, M14, M21, M23, M24, M31, M33, M34) * invDet;
+            float tM34 = -Det3x3(M11, M12, M14, M21, M22, M24, M31, M32, M34) * invDet;
+            float tM44 = Det3x3(M11, M12, M13, M21, M22, M23, M31, M32, M33) * invDet;
 
             M11 = tM11;
             M12 = tM12;

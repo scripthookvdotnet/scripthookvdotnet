@@ -10,7 +10,7 @@ using System.Drawing;
 
 namespace GTA.UI
 {
-    public sealed class ContainerElement : IWorldDrawableElement
+    public class ContainerElement : IWorldDrawableElement
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerElement"/> class used for grouping items on screen.
@@ -61,7 +61,7 @@ namespace GTA.UI
         /// <value>
         ///   <see langword="true" /> if enabled; otherwise, <see langword="false" />.
         /// </value>
-        public bool Enabled
+        public virtual bool Enabled
         {
             get; set;
         }
@@ -72,7 +72,7 @@ namespace GTA.UI
         /// <value>
         /// The color.
         /// </value>
-        public Color Color
+        public virtual Color Color
         {
             get; set;
         }
@@ -86,7 +86,7 @@ namespace GTA.UI
         /// <remarks>
         /// If ScaledDraw is called, the position will be scaled by the width returned in <see cref="Screen.ScaledWidth"/>.
         /// </remarks>
-        public PointF Position
+        public virtual PointF Position
         {
             get; set;
         }
@@ -111,7 +111,7 @@ namespace GTA.UI
         /// <value>
         ///   <see langword="true" /> if centered; otherwise, <see langword="false" />.
         /// </value>
-        public bool Centered
+        public virtual bool Centered
         {
             get; set;
         }
@@ -121,13 +121,13 @@ namespace GTA.UI
         /// </summary>
         public List<IElement> Items
         {
-            get;
+            get; private set;
         }
 
         /// <summary>
         /// Draws this <see cref="ContainerElement" /> this frame.
         /// </summary>
-        public void Draw()
+        public virtual void Draw()
         {
             Draw(SizeF.Empty);
         }
@@ -135,7 +135,7 @@ namespace GTA.UI
         /// Draws this <see cref="ContainerElement" /> this frame at the specified offset.
         /// </summary>
         /// <param name="offset">The offset to shift the draw position of this <see cref="ContainerElement" /> using a 1280*720 pixel base.</param>
-        public void Draw(SizeF offset)
+        public virtual void Draw(SizeF offset)
         {
             if (!Enabled)
             {
@@ -160,7 +160,7 @@ namespace GTA.UI
         /// <summary>
         /// Draws this <see cref="ContainerElement" /> this frame using the width returned in <see cref="Screen.ScaledWidth" />.
         /// </summary>
-        public void ScaledDraw()
+        public virtual void ScaledDraw()
         {
             ScaledDraw(SizeF.Empty);
         }
@@ -168,7 +168,7 @@ namespace GTA.UI
         /// Draws this <see cref="ContainerElement" /> this frame at the specified offset using the width returned in <see cref="Screen.ScaledWidth" />.
         /// </summary>
         /// <param name="offset">The offset to shift the draw position of this <see cref="ContainerElement" /> using a <see cref="Screen.ScaledWidth" />*720 pixel base.</param>
-        public void ScaledDraw(SizeF offset)
+        public virtual void ScaledDraw(SizeF offset)
         {
             if (!Enabled)
             {
@@ -194,7 +194,7 @@ namespace GTA.UI
         /// Draws this <see cref="ContainerElement"/> this frame in the specified <see cref="Vector3"/> position.
         /// </summary>
         /// <param name="position">Position in the world where you want the <see cref="ContainerElement"/> to be drawn</param>
-        public void WorldDraw(Vector3 position)
+        public virtual void WorldDraw(Vector3 position)
         {
             WorldDraw(position, SizeF.Empty);
         }
@@ -203,7 +203,7 @@ namespace GTA.UI
         /// </summary>
         /// <param name="position">Position in the world where you want the <see cref="ContainerElement"/> to be drawn</param>
         /// <param name="offset">The offset to shift the draw position of this <see cref="ContainerElement"/> using a 1280*720 pixel base.</param>
-        public void WorldDraw(Vector3 position, SizeF offset)
+        public virtual void WorldDraw(Vector3 position, SizeF offset)
         {
             Function.Call(Hash.SET_DRAW_ORIGIN, position.X, position.Y, position.Z, 0);
             InternalDraw(offset, Screen.Width, Screen.Height);
@@ -213,7 +213,7 @@ namespace GTA.UI
         /// Draws this <see cref="ContainerElement"/> this frame at the specified <see cref="Vector3"/> position and offset using the width returned in <see cref="Screen.ScaledWidth"/>.
         /// </summary>
         /// <param name="position">Position in the world where you want the <see cref="ContainerElement"/> to be drawn</param>
-        public void WorldScaledDraw(Vector3 position)
+        public virtual void WorldScaledDraw(Vector3 position)
         {
             WorldScaledDraw(position, SizeF.Empty);
         }
@@ -222,7 +222,7 @@ namespace GTA.UI
         /// </summary>
         /// <param name="position">Position in the world where you want the <see cref="ContainerElement"/> to be drawn</param>
         /// <param name="offset">The offset to shift the draw position of this <see cref="ContainerElement"/> using a <see cref="Screen.ScaledWidth"/>*720 pixel base.</param>
-        public void WorldScaledDraw(Vector3 position, SizeF offset)
+        public virtual void WorldScaledDraw(Vector3 position, SizeF offset)
         {
             Function.Call(Hash.SET_DRAW_ORIGIN, position.X, position.Y, position.Z, 0);
             InternalDraw(offset, Screen.ScaledWidth, Screen.Height);
