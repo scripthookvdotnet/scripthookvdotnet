@@ -9,17 +9,17 @@ namespace GTA
         InvalidProfileSetting = -1,
 
         /// <summary>
-        /// Represents the Controller Targeting Mode (0 = Assisted Aim - Full, 1 = Assisted Aim - Partial, 2 = Free Aim - Assisted, 3 = Free Aim).
+        /// Represents the Controller Targeting Mode (0: Assisted Aim - Full, 1: Assisted Aim - Partial, 2: Free Aim - Assisted, 3: Free Aim).
         /// </summary>
         TargetingMode = 0,
 
         /// <summary>
-        /// Indicates whether the controller axis is inverted (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the controller axis is inverted (1: Enabled, 0: Disabled).
         /// </summary>
         AxisInversion = 1,
 
         /// <summary>
-        /// Indicates whether controller vibration is enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether controller vibration is enabled (1: Enabled, 0: Disabled).
         /// </summary>
         ControllerVibration = 2,
 
@@ -29,22 +29,22 @@ namespace GTA
         ControllerControlConfig = 12,
 
         /// <summary>
-        /// Represents the 3rd person controller aim sensitivity (Range 0-14, 0 = Slowest, 14 = Highest).
+        /// Represents the 3rd person controller aim sensitivity (Range 0-14, 0: Slowest, 14: Highest).
         /// </summary>
         ControllerAimSensitivity = 13,
 
         /// <summary>
-        /// Represents the 3rd person controller look-around sensitivity (Range 0-14, 0 = Slowest, 14 = Highest).
+        /// Represents the 3rd person controller look-around sensitivity (Range 0-14, 0: Slowest, 14: Highest).
         /// </summary>
         LookAroundSensitivity = 14,
 
         /// <summary>
-        /// Indicates whether mouse controls are inverted (1 = Enabled, 0 = Disabled)
+        /// Indicates whether mouse controls are inverted (1: Enabled, 0: Disabled)
         /// </summary>
 		MouseInversion = 15,
 
         /// <summary>
-        /// Indicates whether you can move around with your controller while zoomed in (1 = Enabled, 0 = Disabled).
+        /// Indicates whether you can move around with your controller while zoomed in (1: Enabled, 0: Disabled).
         /// </summary>
         ControllerAllowMovementWhenZoomed = 16,
 
@@ -54,62 +54,62 @@ namespace GTA
         ControllerControlConfigFps = 20,
 
         /// <summary>
-        /// Indicates whether the mouse axis is inverted while flying (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the mouse axis is inverted while flying (1: Enabled, 0: Disabled).
         /// </summary>
 		MouseInversionFlying = 21,
 
         /// <summary>
-        /// Indicates whether the mouse axis is inverted while in a submarine (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the mouse axis is inverted while in a submarine (1: Enabled, 0: Disabled).
         /// </summary>
         MouseInversionSub = 22,
 
         /// <summary>
-        /// Indicates how fast the camera centers itself to the car while driving, (Range 0-10). (0 = Slowest, 10 = Fastest).
+        /// Indicates how fast the camera centers itself to the car while driving, (Range 0-10). (0: Slowest, 10: Fastest).
         /// </summary>
 		MouseAutocenterCar = 23,
 
         /// <summary>
-        /// Indicates how fast the camera centers itself to the bike while driving, (Range 0-10). (0 = Slowest, 10 = Fastest).
+        /// Indicates how fast the camera centers itself to the bike while driving, (Range 0-10). (0: Slowest, 10: Fastest).
         /// </summary>
         MouseAutocenterBike = 24,
 
         /// <summary>
-        /// Indicates how fast the camera centers itself to the aircraft while flying, (Range 0-10). (0 = Slowest, 10 = Fastest).
+        /// Indicates how fast the camera centers itself to the aircraft while flying, (Range 0-10). (0: Slowest, 10: Fastest).
         /// </summary>
         MouseAutocenterPlane = 25,
 
         /// <summary>
-        /// Represents the mouse flying control type (0 = Roll/Pitch, 1 = Yaw/Pitch).
+        /// Represents the mouse flying control type (0: Roll/Pitch, 1: Yaw/Pitch).
         /// </summary>
 		MouseSwapRollYawFlying = 26,
 
         /// <summary>
-        /// Indicates whether subtitles are enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether subtitles are enabled (1: Enabled, 0: Disabled).
         /// </summary>
         DisplaySubtitles = 203,
 
         /// <summary>
-        /// Represents the radar mode, range 0 - 2, (0 = Off, 1 = On, 2 = Blip).
+        /// Represents the radar mode, range 0 - 2, (0: Off, 1: On, 2: Blip).
         /// </summary>
         DisplayRadarMode = 204,
 
         /// <summary>
-        /// Indicates whether the HUD is enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the HUD is enabled (1: Enabled, 0: Disabled).
         /// </summary>
         DisplayHudMode = 205,
         DisplayLanguage = 206,
 
         /// <summary>
-        /// Indicates whether the GPS is enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the GPS is enabled (1: Enabled, 0: Disabled).
         /// </summary>
         DisplayGps = 207,
         /// <summary>
-        /// Indicates whether the Autosaving feature is enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the Autosaving feature is enabled (1: Enabled, 0: Disabled).
         /// </summary>
         DisplayAutosaveMode = 208,
 
         /// <summary>
-        /// Indicates where the camera is placed while in a vehicle and 1st person. (1 = Hood, 0 = Player)
+        /// Indicates where the camera is placed while in a vehicle and 1st person. (1: Hood, 0: Player)
         /// </summary>
         DisplayHandbrakeCam = 209,
 
@@ -136,12 +136,12 @@ namespace GTA
         DisplaySafezoneSize = 212,
 
         /// <summary>
-        /// Represents the display gama / brightness (Range 0-30, 0 = Darkest, 30 = Brightest).
+        /// Represents the display gama / brightness (Range 0-30, 0: Darkest, 30: Brightest).
         /// </summary>
         DisplayGamma = 213,
 
         /// <summary>
-        /// Represented an unknown display setting in past versions.
+        /// Represented an unknown display setting used in past versions.
         /// </summary>
         DisplayLegacyUnused1 = 214,
 
@@ -161,12 +161,12 @@ namespace GTA
         DisplayLegacyUnused6 = 219,
 
         /// <summary>
-        /// Represents the camera height while driving (0 = Low, 1 = High).
+        /// Represents the camera height while driving (0: Low, 1: High).
         /// </summary>
         DisplayCameraHeight = 220,
 
         /// <summary>
-        /// Indicates whether the Big Radar should be used (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the Big Radar should be used (1: Enabled, 0: Disabled).
         /// </summary>
         DisplayBigRadar = 221,
 
@@ -176,31 +176,34 @@ namespace GTA
         DisplayBigRadarNames = 222,
 
         /// <summary>
-        /// Indicates whether the control for the Handbreak is switched with the one for Hydraulics / Duck (0 = Normal, 1 = Switched).
+        /// Indicates whether the control for the Handbreak is switched with the one for Hydraulics / Duck (0: Normal, 1: Switched).
         /// </summary>
         ControllerDuckHandbrake = 223,
 
         /// <summary>
-        /// Indicates whether Depth Of Field Effects are enabled In-Game (0 = Disabled, 1 = Enabled).
+        /// Indicates whether Depth Of Field Effects are enabled In-Game (0: Disabled, 1: Enabled).
         /// </summary>
         DisplayDof = 224,
 
         /// <summary>
-        /// Represents the controller controls for Drive-Bys (0 = Aim, 1 = Aim + Fire).
+        /// Represents the controller controls for Drive-Bys (0: Aim, 1: Aim + Fire).
         /// </summary>
         ControllerDriveby = 225,
 
         /// <summary>
-        /// Indicates whether Screen Kill Effects are enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether Screen Kill Effects are enabled (1: Enabled, 0: Disabled).
         /// </summary>
         DisplayScreenKillFx = 226,
 
         /// <summary>
-        /// Represents the measurement system the game uses (0 = Imperial, 1 = Metric).
+        /// Represents the measurement system the game uses (0: Imperial, 1: Metric).
         /// </summary>
         MeasurementSystem = 227,
         NewDisplayLanguage = 228,
 
+        /// <summary>
+        /// Represents the first person aim type on mouse and keyboard (0: Normal, 1: Iron Sights)
+        /// </summary>
         FpsDefaultAimType = 229,
         FpsPersistantView = 230,
         FpsFieldOfView = 231,
@@ -227,12 +230,12 @@ namespace GTA
         DisplayTextChat = 251,
 
         /// <summary>
-        /// The volume of SFX in-game (Range 0-10, 0 = Quietest, 10 = Loudest).
+        /// The volume of SFX in-game (Range 0-10, 0: Quietest, 10: Loudest).
         /// </summary>
         AudioSfxLevel = 300,
 
         /// <summary>
-        /// The volume of Music in SP (Range 0-10, 0 = Quietest, 10 = Loudest).
+        /// The volume of Music in SP (Range 0-10, 0: Quietest, 10: Loudest).
         /// </summary>
         AudioMusicLevel = 301,
         AudioVoiceOutput = 302,
@@ -248,13 +251,13 @@ namespace GTA
         AudioSpeakerOutput = 305,
 
         /// <summary>
-        /// The volume of Music in MP (Range 0-10, 0 = Quietest, 10 = Loudest).
+        /// The volume of Music in MP (Range 0-10, 0: Quietest, 10: Loudest).
         /// </summary>
         AudioMusicLevelInMp = 306,
         AudioInteractiveMusic = 307,
 
         /// <summary>
-        /// The amount of "Boost" applied to dialogue in-game (Range 0-10, 0 = No-Boost, 10 = Most-Boost).
+        /// The amount of "Boost" applied to dialogue in-game (Range 0-10, 0: No-Boost, 10: Most-Boost).
         /// </summary>
         AudioDialogueBoost = 308,
         AudioVoiceSpeakers = 309,
@@ -269,7 +272,7 @@ namespace GTA
 		AudioUrAutoscan = 317,
 
         /// <summary>
-        /// Indicates whether audio should be muted if GTA is not in focus (0 = Do-Not-Mute, 1 = Mute-Audio).
+        /// Indicates whether audio should be muted if GTA is not in focus (0: Unmuted, 1: Mute-Audio).
         /// </summary>
 		AudioMuteOnFocusLoss = 318,
 
@@ -281,7 +284,7 @@ namespace GTA
         DisplayFlickerFilter = 414,
 
         /// <summary>
-        /// Indicates the size of the recticle (Range 0-10, 0 = Smallest, 10 = Largest)
+        /// Indicates the size of the recticle (Range 0-10, 0: Smallest, 10: Largest)
         /// </summary>
         /// <remarks>
         /// Only applies to the simple recticle!
@@ -302,7 +305,7 @@ namespace GTA
         /// Represents the graphics quality level for PC.
         /// </summary>
         /// <returns>
-        /// An integer representing the graphics level. (Range 0-4, 0 = Low, 1 = Medium, 2 = High, 3 = Ultra, 4 = Custom).
+        /// An integer representing the graphics level. (Range 0-4, 0: Low, 1: Medium, 2: High, 3: Ultra, 4: Custom).
         /// </returns>
         PcGraphicsLevel = 700,
         PcSystemLevel = 701,
@@ -333,12 +336,12 @@ namespace GTA
         PcVoiceOutputDevice = 721,
 
         /// <summary>
-        /// Represents the volume of the VoiceChat (Range 0-10, 0 = Quietest, 10 = Loudest).
+        /// Represents the volume of the VoiceChat (Range 0-10, 0: Quietest, 10: Loudest).
         /// </summary>
         PcVoiceOutputVolume = 722,
 
         /// <summary>
-        /// Indicates the activation method of the Microphone (1 = VoiceActivated, 0 = PushToTalk).
+        /// Indicates the activation method of the Microphone (1: VoiceActivated, 0: PushToTalk).
         /// </summary>
         PcVoiceTalkEnabled = 723,
 
@@ -349,22 +352,22 @@ namespace GTA
         PcVoiceChatMode = 725,
 
         /// <summary>
-        /// Represents the volume of the VoiceChat (Range 0-10, 0 = Quietest, 10 = Loudest).
+        /// Represents the volume of the VoiceChat (Range 0-10, 0: Quietest, 10: Loudest).
         /// </summary>
         PcVoiceMicVolume = 726,
 
         /// <summary>
-        /// Represents the sensitivity of the VoiceChat microphone (Range 0-10, 0 = Most-Sensitive, 10-Most-Insensitive).
+        /// Represents the sensitivity of the VoiceChat microphone (Range 0-10, 0: Most-Sensitive, 10: Most-Insensitive).
         /// </summary>
         PcVoiceMicSensitivity = 727,
 
         /// <summary>
-        /// Represents the volume of SFX sounds while people are talking in VoiceChat (Range 0-10, 0 = Quietest, 10 = Loudest).
+        /// Represents the volume of SFX sounds while people are talking in VoiceChat (Range 0-10, 0: Quietest, 10: Loudest).
         /// </summary>
         PcVoiceSoundVolume = 728,
 
         /// <summary>
-        /// Represents the volume of Music while people are talking in VoiceChat (Range 0-10, 0 = Quietest, 10 = Loudest).
+        /// Represents the volume of Music while people are talking in VoiceChat (Range 0-10, 0: Quietest, 10: Loudest).
         /// </summary>
         PcVoiceMusicVolume = 729,
 
@@ -430,7 +433,7 @@ namespace GTA
         /// Indicates what the game should boot if the landing page is disabled (0: Singleplayer, 1: Multiplayer).
         /// </summary>
         /// <remarks>
-        /// Value is ignored if <see cref="LandingPage"/> is set to 1.
+        /// Value is ignored if <see cref="LandingPage"/> is set to <value>1</value>.
         /// </remarks>
         StartUpFlow = 810,
 
