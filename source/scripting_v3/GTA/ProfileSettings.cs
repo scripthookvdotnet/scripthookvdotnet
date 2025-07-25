@@ -216,7 +216,6 @@ namespace GTA
 
         PcGfxVidOverride = 710,
 
-        //xxxxxxxx-xxxxxxxx-xxxxxxx-xxxxxxxx-xxxxxxxx-xxxxxxxx-xxxxxxx-xxxxxxx
         PcLastHardwareStatsUploadPosixtimeHigh32 = 711, //s64 value for the last successful hardware stats upload.
         PcLastHardwareStatsUploadPosixtimeLow32 = 712,
 
@@ -300,7 +299,10 @@ namespace GTA
         VideoUploadPrivacy = 960,
         RockstarEditorTooltip = 961,
         VideoExportGraphicsUpgrade = 962,
-        RockstarEditorTutorialFlags = 963, // s32 of flags representing if R* Editor tutorials have been seen
+        /// <summary>
+        /// Indicates whether the  R* Editor tutorials have been seen. (1 = seen, 0 = not seen)
+        /// </summary>
+        RockstarEditorTutorialFlags = 963,
         ReplayAutoSaveRecording = 964,
         ReplayVideosCreated = 965,
     };
