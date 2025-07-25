@@ -12,7 +12,7 @@ namespace GTA
         /// </summary>
         TargetingMode = 0,
         /// <summary>
-        /// Indicates whether the controller axis is inverted ( 1 = enabled, 0 = disabled).
+        /// Indicates whether the controller axis is inverted (1 = enabled, 0 = disabled).
         /// </summary>
         AxisInversion = 1,
         /// <summary>
