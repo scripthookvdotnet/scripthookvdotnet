@@ -3,10 +3,11 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using Xunit;
-using GTA.Chrono;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using GTA.Chrono;
+using Xunit;
 
 namespace ScriptHookVDotNet_APIv3_Tests
 {
@@ -46,6 +47,35 @@ namespace ScriptHookVDotNet_APIv3_Tests
                 { 2025, 13, 1 },
             };
 
+        /// <summary>
+        /// Invalid YMD data that can block fast, because the month is not between 1 and 12 inclusive or the day is not
+        /// between 1 and 31 inclusive.
+        /// </summary>
+        public static TheoryData<int, int, int> Ymd_Invalid_Data_That_Can_Block_Fast =>
+            new TheoryData<int, int, int>
+            {
+                { 2015, 0, 1 },
+                { 2015, 2, 32 },
+                { 2023, 3, 0 },
+                { 2025, 13, 1 },
+            };
+
+        /// <summary>
+        /// Invalid YMD data that cannot block fast, because the month is between 1 and 12 inclusive and the day is
+        /// between 1 and 31 inclusive.
+        /// </summary>
+        public static TheoryData<int, int, int> Ymd_Invalid_Data_That_Cannot_Block_Fast =>
+            new TheoryData<int, int, int>
+            {
+                { 2018, 2, 29 },
+                { 2015, 2, 30 },
+                { 2015, 2, 31 },
+                { 2015, 4, 31 },
+                { 2015, 6, 31 },
+                { 2015, 9, 31 },
+                { 2015, 11, 31 },
+            };
+
         [Theory]
         [MemberData(nameof(Ymd_Successful_Data))]
         public void FromYmd_returns_expected_value_for_valid_date(int year, int month, int day)
@@ -75,14 +105,33 @@ namespace ScriptHookVDotNet_APIv3_Tests
         }
 
         [Theory]
-        [MemberData(nameof(Ymd_Invalid_Data))]
-        public void TryFromYmd_returns_false_and_set_default_value_to_out_date_for_invalid_date(int year, int month,
-            int day)
+        [MemberData(nameof(Ymd_Invalid_Data_That_Can_Block_Fast))]
+        public void MonthDayFlags_New_returns_null_for_invalid_date_whose_month_is_not_between_1_and_12_or_whose_day_is_not_between_1_and_31(
+            int year, int month, int day)
         {
-            bool constructedValidDate = GameClockDate.TryFromYmd(year, month, day, out GameClockDate date);
+            YearFlags yf = YearFlags.FromYear(year);
+            MonthDayFlags? mdf = MonthDayFlags.New(month, day, yf);
+
+            Assert.Null(mdf);
+
+            bool constructedValidDate = GameClockDate.TryFromYmd(year, month, day, out _);
 
             Assert.False(constructedValidDate);
-            Assert.Equal(default, date);
+        }
+
+        [Theory]
+        [MemberData(nameof(Ymd_Invalid_Data_That_Cannot_Block_Fast))]
+        public void MonthDayFlags_New_returns_non_null_for_invalid_date_whose_month_is_between_1_and_12_and_whose_day_is_between_1_and_31(
+            int year, int month, int day)
+        {
+            YearFlags yf = YearFlags.FromYear(year);
+            MonthDayFlags? mdf = MonthDayFlags.New(month, day, yf);
+
+            Assert.NotNull(mdf);
+
+            bool constructedValidDate = GameClockDate.TryFromYmd(year, month, day, out _);
+
+            Assert.False(constructedValidDate);
         }
 
         public static TheoryData<int, int, GameClockDate> Yo_Successful_Data =>
