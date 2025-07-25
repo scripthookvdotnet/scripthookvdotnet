@@ -130,15 +130,28 @@ namespace GTA
         /// </summary>
         DisplayGamma = 213,
 
+        /// <summary>
+        /// Represented an unknown display setting in past versions.
+        /// </summary>
         DisplayLegacyUnused1 = 214,
+
+        /// <inheritdoc cref="DisplayLegacyUnused1"/>
         DisplayLegacyUnused2 = 215,
+
+        /// <inheritdoc cref="DisplayLegacyUnused1"/>
         DisplayLegacyUnused3 = 216,
+
+        /// <inheritdoc cref="DisplayLegacyUnused1"/>
         DisplayLegacyUnused4 = 217,
+
+        /// <inheritdoc cref="DisplayLegacyUnused1"/>
         DisplayLegacyUnused5 = 218,
+
+        /// <inheritdoc cref="DisplayLegacyUnused1"/>
         DisplayLegacyUnused6 = 219,
 
         /// <summary>
-        /// Represents the camera height while driving (0 = low, 1 = high)
+        /// Represents the camera height while driving (0 = low, 1 = high).
         /// </summary>
         DisplayCameraHeight = 220,
 
@@ -146,14 +159,20 @@ namespace GTA
         /// Indicates whether the big radar is enabled (1 = enabled, 0 = disabled).
         /// </summary>
         DisplayBigRadar = 221,
+
         DisplayBigRadarNames = 222,
         ControllerDuckHandbrake = 223,
         DisplayDof = 224,
         ControllerDriveby = 225,
+
         /// <summary>
-        /// Internal name: DisplaySkfx
+        /// Indicates whether screen kill effects are enabled (1 = enabled, 0 = disabled).
         /// </summary>
         DisplayScreenKillFx = 226,
+
+        /// <summary>
+        /// Represents whether the game uses metric or imperial units (0 = imperial, 1 = metric).
+        /// </summary>
         MeasurementSystem = 227,
         NewDisplayLanguage = 228,
 
@@ -269,8 +288,10 @@ namespace GTA
         StartUpFlow = 810,
         LandingPage = 811,
 
-        GamerPlayedLastGen = 865, // Indicates if the player has played last gen, 1 - 360, 3 - ps3.
-        GamerHasSpecialeditionContent = 866,  // Indicates if the player is entitled to special edition content
+        /// <summary>
+        /// Indicates whether the player is entitled to special edition content
+        /// </summary>
+        GamerHasSpecialeditionContent = 866,
 
         FacebookLinkedHint = 899, // Returns a value != 0 if the last Facebook App Permissions call returned successful.
         FacebookUpdates = 900,
