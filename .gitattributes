@@ -1,4 +1,6 @@
 * text=auto eol=lf
+# `.rc` files are resource script files written in text format
+*.rc text eol=lf
 *.{cmd,[cC][mM][dD]} text eol=crlf
 *.{bat,[bB][aA][tT]} text eol=crlf
 *.{cmd,[cC][mM][dD]} text eol=crlf
