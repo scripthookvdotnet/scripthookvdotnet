@@ -734,12 +734,19 @@ namespace GTA
         /// </summary>
         /// <param name="index">The index of the profile setting values.</param>
         /// <returns>The integer value associated with the specified index of the profile setting.</returns>
+        /// <remarks>If the profile settings does not exist, this will return 0.</remarks>
         public static int GetProfileSetting(int index)
         {
             return Function.Call<int>(Hash.GET_PROFILE_SETTING, index);
         }
 
-        public static int GetProfileSetting(ProfileSettings settings) => GetProfileSetting((int)settings);
+        /// <summary>
+        /// Gets a value associated with the specified profile setting.
+        /// </summary>
+        /// <param name="profile">The ProfileSetting</param>
+        /// <returns>The integer value associated with the specified index of the profile setting.</returns>
+        /// <remarks>If the profile settings does not exist, this will return 0.</remarks>
+        public static int GetProfileSetting(ProfileSettings profile) => GetProfileSetting((int)profile);
 
         /// <summary>
         /// Searches the address space of the current process for a memory pattern.
