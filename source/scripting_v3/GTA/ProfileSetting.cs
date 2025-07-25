@@ -121,6 +121,9 @@ namespace GTA
         /// </summary>
         LegacyDisplayGamma = 210,
 
+        /// <summary>
+        /// Unknown
+        /// </summary>
         ControllerCinematicShooting = 211,
 
         /// <summary>
@@ -163,10 +166,13 @@ namespace GTA
         DisplayCameraHeight = 220,
 
         /// <summary>
-        /// Indicates whether the Big Radar is enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the Big Radar should be used (1 = Enabled, 0 = Disabled).
         /// </summary>
         DisplayBigRadar = 221,
 
+        /// <summary>
+        /// Unknown
+        /// </summary>
         DisplayBigRadarNames = 222,
 
         /// <summary>
