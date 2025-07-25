@@ -7,9 +7,6 @@ on:
       - '**'
       - '!.github/**'
       - '!*.yml'
-      - '!README.md'
-      - '!COPYRIGHT.md'
-      - '!THIRD-PARTY-NOTICES.md'
       - '.github/workflows/*.yml'
 
 permissions:
