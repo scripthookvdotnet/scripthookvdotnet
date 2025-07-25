@@ -73,5 +73,10 @@
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>ScriptHookVDotNet_APIv3_Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
