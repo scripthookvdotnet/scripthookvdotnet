@@ -202,11 +202,12 @@ namespace GTA
         NewDisplayLanguage = 228,
 
         /// <summary>
-        /// Represents the first person aim type on mouse and keyboard (0: Normal, 1: Iron Sights)
+        /// Represents the first person aim type on mouse and keyboard (0: Normal, 1: Iron Sights).
         /// </summary>
         FpsDefaultAimType = 229,
         FpsPersistantView = 230,
         FpsFieldOfView = 231,
+
         FpsLookSensitivity = 232,
         FpsAimSensitivity = 233,
         FpsRagdoll = 234,
@@ -357,7 +358,7 @@ namespace GTA
         PcVoiceMicVolume = 726,
 
         /// <summary>
-        /// Represents the sensitivity of the VoiceChat microphone (Range 0-10, 0: Most-Sensitive, 10: Most-Insensitive).
+        /// Represents the sensitivity of the VoiceChat microphone (Range 0-10, 0: Most-Sensitive, 10: Least-Sensitive).
         /// </summary>
         PcVoiceMicSensitivity = 727,
 
@@ -375,18 +376,49 @@ namespace GTA
         MouseSub = 751,
         MouseDrive = 752,
         MouseFly = 753,
+
+        /// <summary>
+        /// Represents your MOUSE base sensitivity when walking around (Range 0-20, 0: Slowest, 200: Fastest).
+        /// </summary>
         MouseOnFootScale = 754,
+
+        /// <summary>
+        /// Represents the multiplier applied to your MOUSE base sensitivity when driving around (Range 0-200, 0: Slowest, 100: Normal, 200: Fastest).
+        /// </summary>
         MouseDrivingScale = 755,
+
+        /// <summary>
+        /// Represents the multiplier applied to your MOUSE base sensitivity when flying in an aircraft (Range 0-200, 0: Slowest, 100: Normal, 200: Fastest).
+        /// </summary>
         MousePlaneScale = 756,
+
+        /// <summary>
+        /// Represents the multiplier applied to your MOUSE base sensitivity when flying in a helicopter (Range 0-200, 0: Slowest, 100: Normal, 200: Fastest).
+        /// </summary>
         MouseHeliScale = 757,
 
         /// <summary>
         /// Indicates whether you need to hold down the aim button or press it once to aim (0: Hold, 1: Toggle).
         /// </summary>
         KbmToggleAim = 758,
+
         KbmAltVehMouseControls = 759,
+
+        /// <summary>
+        /// Represents the multiplier applied to your MOUSE base sensitivity when diving in a submarine (Range 0-200, 0: Slowest, 100: Normal, 200: Fastest).
+        /// </summary>
         MouseSubScale = 760,
+
+        /// <summary>
+        /// Represents how much the game smoothes out mouse input (Range 0-10, 0: No Smoothing, 10: Max Smoothing).
+        /// </summary>
+        ///
+        /// FIne aiming control
         MouseWeightScale = 761,
+
+        /// <summary>
+        /// Indicates whether fine aiming control is used (0: Disabled, 1: Enabled).
+        /// </summary>
         MouseAcceleration = 762,
 
         /// <summary>
