@@ -77,7 +77,6 @@ namespace GTA
         {
             get
             {
-                ProfileSettings p = ProfileSettings.ControllerControlConfig;
                 int handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
 
                 if (s_cachedPlayer == null || handle != s_cachedPlayer.Handle)
