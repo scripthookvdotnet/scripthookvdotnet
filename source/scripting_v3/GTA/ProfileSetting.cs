@@ -1,6 +1,6 @@
 namespace GTA
 {
-    public enum ProfileSettings
+    public enum ProfileSetting
     {
         /// <summary>
         /// Represents an invalid or uninitialized profile setting.
