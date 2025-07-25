@@ -119,7 +119,7 @@ namespace GTA
         /// <summary>
         /// Legacy version of <see cref="DisplayGamma"/>, exact game version is unknown.
         /// </summary>
-        LegacyDoNotUseDisplayGamma = 210,
+        LegacyDisplayGamma = 210,
 
         ControllerCinematicShooting = 211,
 
@@ -163,22 +163,34 @@ namespace GTA
         DisplayCameraHeight = 220,
 
         /// <summary>
-        /// Indicates whether the big radar is enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the Big Radar is enabled (1 = Enabled, 0 = Disabled).
         /// </summary>
         DisplayBigRadar = 221,
 
         DisplayBigRadarNames = 222,
+
+        /// <summary>
+        /// Indicates whether the control for the Handbreak is switched with the one for Hydraulics / Duck (0 = Normal, 1 = Switched).
+        /// </summary>
         ControllerDuckHandbrake = 223,
+
+        /// <summary>
+        /// Indicates whether Depth Of Field Effects are enabled In-Game (0 = Disabled, 1 = Enabled).
+        /// </summary>
         DisplayDof = 224,
+
+        /// <summary>
+        /// Represents the controller controls for Drive-Bys (0 = Aim, 1 = Aim + Fire).
+        /// </summary>
         ControllerDriveby = 225,
 
         /// <summary>
-        /// Indicates whether screen kill effects are enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether Screen Kill Effects are enabled (1 = Enabled, 0 = Disabled).
         /// </summary>
         DisplayScreenKillFx = 226,
 
         /// <summary>
-        /// Represents whether the game uses metric or imperial units (0 = Imperial, 1 = Metric).
+        /// Represents the measurement system the game uses (0 = Imperial, 1 = Metric).
         /// </summary>
         MeasurementSystem = 227,
         NewDisplayLanguage = 228,
@@ -203,6 +215,9 @@ namespace GTA
 
         // Gen9 is using values 246-250. Do not use these.
 
+        /// <summary>
+        /// Indicates whether the TextChat in MP should be shown (0: Hidden, 1: Shown)
+        /// </summary>
         DisplayTextChat = 251,
 
         /// <summary>
@@ -215,11 +230,15 @@ namespace GTA
         /// </summary>
         AudioMusicLevel = 301,
         AudioVoiceOutput = 302,
+
+        /// <summary>
+        /// An unknown parameter, returns one most of the time.
+        /// </summary>
         AudioGpsSpeech = 303,
-        AudioHighDynamicRange = 304,
 
-
-
+        /// <summary>
+        /// Represents the index of the output device used for game audio.
+        /// </summary>
         AudioSpeakerOutput = 305,
 
         /// <summary>
@@ -268,8 +287,8 @@ namespace GTA
         /// </summary>
         NumSingleplayerGamesStarted = 450,
 
+        //600-678 Are for the Ambisonic decoder
         AmbisonicDecoder = 600,
-        //...All these values are used for the Ambisonic decoder 
         AmbisonicDecoderEnd = 677,
         AmbisonicDecoderType = 678,
 
@@ -277,16 +296,24 @@ namespace GTA
         /// Represents the graphics quality level for PC.
         /// </summary>
         /// <returns>
-        /// An integer representing the graphics level in the inclusive (Range 0-4).
-        /// (0 = Low, 1 = Medium, 2 = High, 3 = Ultra, 4 = Custom)
+        /// An integer representing the graphics level. (Range 0-4, 0 = Low, 1 = Medium, 2 = High, 3 = Ultra, 4 = Custom).
         /// </returns>
         PcGraphicsLevel = 700,
         PcSystemLevel = 701,
         PcAudioLevel = 702,
 
+        /// <summary>.
+        /// Indicates whether the game ignores the suggested VRAM limit (0: Disabled, 1: Enabled)
+        /// </summary>
         PcGfxVidOverride = 710,
 
-        PcLastHardwareStatsUploadPosixtimeHigh32 = 711, //s64 value for the last successful hardware stats upload.
+        /// <summary>
+        /// If merged with <see cref="PcLastHardwareStatsUploadPosixtimeLow32"/> represents the last time hardware stats were uploaded.
+        /// </summary>
+        PcLastHardwareStatsUploadPosixtimeHigh32 = 711,
+        /// <summary>
+        /// If merged with <see cref="PcLastHardwareStatsUploadPosixtimeHigh32"/> represents the last time hardware stats were uploaded.
+        /// </summary>
         PcLastHardwareStatsUploadPosixtimeLow32 = 712,
 
         /// <summary>
@@ -343,29 +370,73 @@ namespace GTA
         MouseDrivingScale = 755,
         MousePlaneScale = 756,
         MouseHeliScale = 757,
+
+        /// <summary>
+        /// Indicates whether you need to hold down the aim button or press it once to aim (0: Hold, 1: Toggle).
+        /// </summary>
         KbmToggleAim = 758,
         KbmAltVehMouseControls = 759,
         MouseSubScale = 760,
         MouseWeightScale = 761,
         MouseAcceleration = 762,
 
+        /// <summary>
+        /// Indicates whether Phone Alerts should be shown (0: OFF, 1: ON).
+        /// </summary>
         FeedPhone = 800,
+
+        /// <summary>
+        /// Indicates whether Stats Alerts should be shown (0: OFF, 1: ON).
+        /// </summary>
         FeedStats = 801,
+
+        /// <summary>
+        /// Indicates whether Crew Updates should be shown (0: OFF, 1: ON).
+        /// </summary>
         FeedCrew = 802,
+
+        /// <summary>
+        /// Indicates whether Friend Updates should be shown (0: OFF, 1: ON).
+        /// </summary>
         FeedFriends = 803,
+
+        /// <summary>
+        /// Indicates whether R* Game Service notifications should be shown (0: OFF, 1: ON).
+        /// </summary>
         FeedSocial = 804,
+
+        /// <summary>
+        /// Indicates whether Store notifications should be shown (0: OFF, 1: ON).
+        /// </summary>
         FeedStore = 805,
+
+        /// <summary>
+        /// Indicates whether Tooltips should be shown (0: OFF, 1: ON).
+        /// </summary>
         FeedTooptip = 806,
+
+        /// <summary>
+        /// Represents the delay with notifications are shown (Range 0-9, 0: No Delay, 1: 1 Minute, 2: 2Minutes, 3: 3Minutes, 4: 4Minutes, 5: 5Minutes, 6: 10Minutes, 7: 15Minutes, 8: 30Minutes, 9: 1 Hour).
+        /// </summary>
         FeedDelay = 807,
 
+        /// <summary>
+        /// Indicates what the game should boot if the landing page is disabled (0: Singleplayer, 1: Multiplayer).
+        /// </summary>
+        /// <remarks>
+        /// Value is ignored if <see cref="LandingPage"/> is set to 1.
+        /// </remarks>
         StartUpFlow = 810,
+
+        /// <summary>
+        /// Indicates whether the Game should show the landing page on start or directly boot into SP or MP (0: Boot into <see cref="StartUpFlow"/>, 1: Show-Landing-Page).
+        /// </summary>
         LandingPage = 811,
 
         /// <summary>
-        /// Indicates whether the player is entitled to special edition content ( 0: Not-Entitled, 1: Entitled)
+        /// Indicates whether the player is entitled to special edition content (0: Not-Entitled, 1: Entitled).
         /// </summary>
         GamerHasSpecialeditionContent = 866,
-
 
         /// <summary>
         /// Indicates that the Rockstar Online Services is not available but the client is still connected to the platform network (0: Running, 1: ROS Down).
@@ -373,7 +444,7 @@ namespace GTA
         RosWentDownNotNet = 901,
 
         /// <summary>
-        /// Indicates whether the player has finished the prologue mission (0 = Not-Completed, 1 = Completed)
+        /// Indicates whether the player has finished the prologue mission (0: Not-Completed, 1: Completed).
         /// </summary>
         PrologueComplete = 903,
 
@@ -404,7 +475,7 @@ namespace GTA
         ReplayMemLimit = 956,
 
         /// <summary>
-        /// Indicates whether the replay mode is enabled (1 = Enabled, 0 = Disabled).
+        /// Indicates whether the replay mode is enabled (1: Enabled, 0: Disabled).
         /// </summary>
         ReplayMode = 957,
 
@@ -413,17 +484,33 @@ namespace GTA
         VideoUploadPause = 959,
 
         /// <summary>
-        /// Indicates the visibility of uploaded videos to YouTube (0: Public, 1: Unlisted, 2: Private)
+        /// Indicates the visibility of uploaded videos to YouTube (0: Public, 1: Unlisted, 2: Private).
         /// </summary>
         VideoUploadPrivacy = 960,
 
-        RockstarEditorTooltip = 961,
-        VideoExportGraphicsUpgrade = 962,
         /// <summary>
-        /// Indicates whether the  R* Editor tutorials have been seen. (1 = Seen, 0 = Not-Seen)
+        /// Indicates whether tooltips should be shown for the R* Editor (0: Hide, 1: Show).
+        /// </summary>
+        RockstarEditorTooltip = 961,
+
+        /// <summary>
+        /// Indicates whether the Graphic settings should be upgraded for replay exports (0: Use-Current, 1: Upgrade-Graphics).
+        /// </summary>
+        VideoExportGraphicsUpgrade = 962,
+
+        /// <summary>
+        /// Indicates whether the  R* Editor tutorials have been seen (1: Seen, 0: Not-Seen).
         /// </summary>
         RockstarEditorTutorialFlags = 963,
+
+        /// <summary>
+        /// Indicates whether an Action Replay should be automatically saved on death (0: Continue, 1: Save Replay).
+        /// </summary>
         ReplayAutoSaveRecording = 964,
+
+        /// <summary>
+        /// Represents the amount of videos created with the R* Editor.
+        /// </summary>
         ReplayVideosCreated = 965,
     };
 }
