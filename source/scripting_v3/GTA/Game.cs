@@ -77,6 +77,7 @@ namespace GTA
         {
             get
             {
+                ProfileSettings p = ProfileSettings.ControllerControlConfig;
                 int handle = SHVDN.NativeMemory.GetLocalPlayerIndex();
 
                 if (s_cachedPlayer == null || handle != s_cachedPlayer.Handle)
@@ -446,12 +447,12 @@ namespace GTA
         /// <summary>
         /// Gets the current targeting mode of the local player.
         /// </summary>
-        public static PlayerTargetingMode PlayerTargetingMode => (PlayerTargetingMode)GetProfileSetting(0);
+        public static PlayerTargetingMode PlayerTargetingMode => (PlayerTargetingMode)GetProfileSetting(ProfileSettings.TargetingMode);
 
         /// <summary>
         /// Gets a value indicating whether the controller vibration is enabled.
         /// </summary>
-        public static bool IsVibrationEnabled => GetProfileSetting(2) != 0;
+        public static bool IsVibrationEnabled => GetProfileSetting(ProfileSettings.ControllerVibration) != 0;
 
         /// <summary>
         /// Gets an analog value of a <see cref="Control"/> input in the range of [0, 255].
@@ -739,6 +740,7 @@ namespace GTA
             return Function.Call<int>(Hash.GET_PROFILE_SETTING, index);
         }
 
+        public static int GetProfileSetting(ProfileSettings settings) => GetProfileSetting((int)settings);
 
         /// <summary>
         /// Searches the address space of the current process for a memory pattern.
