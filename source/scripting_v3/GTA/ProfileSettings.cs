@@ -52,6 +52,7 @@ namespace GTA
         /// Indicates whether the mouse axis is inverted while flying (1 = enabled, 0 = disabled).
         /// </summary>
 		MouseInversionFlying = 21,
+
         /// <summary>
         /// Indicates whether the mouse axis is inverted while in a submarine (1 = enabled, 0 = disabled).
         /// </summary>
@@ -99,7 +100,14 @@ namespace GTA
         /// Indicates whether the Autosaving feature is enabled (1 = enabled, 0 = disabled).
         /// </summary>
         DisplayAutosaveMode = 208,
+
+        /// <summary>
+        /// Indicates where the camera is placed while in a vehicle and 1st person. (1 = hood, 0 = player)
+        /// </summary>
         DisplayHandbrakeCam = 209,
+
+        /// <inheritdoc cref="DisplayHandbrakeCam"/>
+        DisplayHoodCam = DisplayHandbrakeCam,
 
         /// <summary>
         /// Legacy version of <see cref="DisplayGamma"/>, exact game version is unknown.
@@ -111,6 +119,10 @@ namespace GTA
         /// <summary>
         /// Represents the display safezone size, range 0 - 10.
         /// </summary>
+        /// <remarks>
+        /// The safezone is the area the game places HUD elements in.
+        /// The larger the safe zone, the smaller the area where hud elements are placed.
+        /// </remarks>
         DisplaySafezoneSize = 212,
 
         /// <summary>
@@ -129,6 +141,7 @@ namespace GTA
         /// Represents the camera height while driving (0 = low, 1 = high)
         /// </summary>
         DisplayCameraHeight = 220,
+
         /// <summary>
         /// Indicates whether the big radar is enabled (1 = enabled, 0 = disabled).
         /// </summary>
@@ -270,6 +283,9 @@ namespace GTA
         PrologueComplete = 903,
         FacebookPostedAllVehiclesDriven = 904,
         EulaVersion = 905,
+        /// <summary>
+        /// Represents the version of the Terms-Of-Service
+        /// </summary>
         TosVersion = 907,
         PrivacyVersion = 908,
         JobActivityIdChar0 = 909, //Id of the UGC activity started so we know if the player has pulled the plug.
