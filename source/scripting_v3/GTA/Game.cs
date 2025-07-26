@@ -514,6 +514,12 @@ namespace GTA
         /// Gets whether the specified key is currently held down.
         /// </summary>
         /// <param name="key">The key to check.</param>
+        /// <returns><see langword="true"/> if the key is currently pressed; otherwise, <see langword="false"/>.</returns>
+        /// <remarks>
+        /// Keys with an integer value greater than 255 will throw an <see cref="IndexOutOfRangeException"/>.  
+        /// This includes modifier keys such as <see cref="Keys.Control" />, <see cref="Keys.Shift" />, and <see cref="Keys.Alt" />!
+        /// </remarks>
+
         public static bool IsKeyPressed(Keys key)
         {
             return SHVDN.ScriptDomain.CurrentDomain.IsKeyPressed(key);
