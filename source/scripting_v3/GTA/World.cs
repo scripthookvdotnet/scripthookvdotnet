@@ -19,7 +19,7 @@ namespace GTA
     public static class World
     {
         #region Fields
-        static readonly string[] s_weatherNames = {
+        private static readonly string[] s_weatherNames = {
             "EXTRASUNNY",
             "CLEAR",
             "CLOUDS",
@@ -36,6 +36,10 @@ namespace GTA
             "XMAS",
             "HALLOWEEN"
         };
+
+        private static readonly uint[] s_weatherHashes = s_weatherNames
+            .Select(name => StringHash.AtStringHash(name))
+            .ToArray();
 
         static readonly GregorianCalendar s_calendar = new();
 
@@ -156,7 +160,7 @@ namespace GTA
             {
                 for (int i = 0; i < s_weatherNames.Length; i++)
                 {
-                    if (Function.Call<uint>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == StringHash.AtStringHash(s_weatherNames[i]))
+                    if (Function.Call<uint>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == s_weatherHashes[i])
                     {
                         return (Weather)i;
                     }
