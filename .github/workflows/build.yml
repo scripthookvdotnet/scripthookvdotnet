@@ -19,7 +19,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2.0.0
       with:
         msbuild-architecture: x64
-        vs-version: 17.7.6
+        vs-version: '[17.13,17.15)'
     - name: Add VSTest.Console to PATH
       working-directory: ${{env.SOLUTION_FILE_PATH}}
       run: |
