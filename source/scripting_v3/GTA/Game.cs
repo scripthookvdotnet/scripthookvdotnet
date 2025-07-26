@@ -446,12 +446,12 @@ namespace GTA
         /// <summary>
         /// Gets the current targeting mode of the local player.
         /// </summary>
-        public static PlayerTargetingMode PlayerTargetingMode => (PlayerTargetingMode)GetProfileSetting(0);
+        public static PlayerTargetingMode PlayerTargetingMode => (PlayerTargetingMode)GetProfileSetting(ProfileSetting.TargetingMode);
 
         /// <summary>
         /// Gets a value indicating whether the controller vibration is enabled.
         /// </summary>
-        public static bool IsVibrationEnabled => GetProfileSetting(2) != 0;
+        public static bool IsVibrationEnabled => GetProfileSetting(ProfileSetting.ControllerVibration) != 0;
 
         /// <summary>
         /// Gets an analog value of a <see cref="Control"/> input in the range of [0, 255].
@@ -734,11 +734,19 @@ namespace GTA
         /// </summary>
         /// <param name="index">The index of the profile setting values.</param>
         /// <returns>The integer value associated with the specified index of the profile setting.</returns>
+        /// <remarks>If the profile settings does not exist, this will return 0.</remarks>
         public static int GetProfileSetting(int index)
         {
             return Function.Call<int>(Hash.GET_PROFILE_SETTING, index);
         }
 
+        /// <summary>
+        /// Gets a value associated with the specified profile setting.
+        /// </summary>
+        /// <param name="profile">The ProfileSetting</param>
+        /// <returns>The integer value associated with the specified index of the profile setting.</returns>
+        /// <remarks>If the profile settings does not exist, this will return 0.</remarks>
+        public static int GetProfileSetting(ProfileSetting profile) => GetProfileSetting((int)profile);
 
         /// <summary>
         /// Searches the address space of the current process for a memory pattern.
