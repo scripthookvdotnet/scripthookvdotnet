@@ -97,12 +97,14 @@ namespace GTA
         /// Indicates whether the HUD is enabled (1: Enabled, 0: Disabled).
         /// </summary>
         DisplayHudMode = 205,
+
         DisplayLanguage = 206,
 
         /// <summary>
         /// Indicates whether the GPS is enabled (1: Enabled, 0: Disabled).
         /// </summary>
         DisplayGps = 207,
+
         /// <summary>
         /// Indicates whether the Autosaving feature is enabled (1: Enabled, 0: Disabled).
         /// </summary>
@@ -239,6 +241,7 @@ namespace GTA
         /// The volume of Music in SP (Range 0-10, 0: Quietest, 10: Loudest).
         /// </summary>
         AudioMusicLevel = 301,
+
         AudioVoiceOutput = 302,
 
         /// <summary>
@@ -255,25 +258,34 @@ namespace GTA
         /// The volume of Music in MP (Range 0-10, 0: Quietest, 10: Loudest).
         /// </summary>
         AudioMusicLevelInMp = 306,
+
         AudioInteractiveMusic = 307,
 
         /// <summary>
         /// The amount of "Boost" applied to dialogue in-game (Range 0-10, 0: No-Boost, 10: Most-Boost).
         /// </summary>
         AudioDialogueBoost = 308,
+
         AudioVoiceSpeakers = 309,
+
         AudioSsFront = 310,
+
         AudioSsRear = 311,
+
         AudioCtrlSpeaker = 312,
+
         AudioCtrlSpeakerVol = 313,
+
         AudioPulseHeadset = 314,
+
         AudioCtrlSpeakerHeadphone = 315,
 
 		AudioUrPlaymode = 316,
-		AudioUrAutoscan = 317,
+
+        AudioUrAutoscan = 317,
 
         /// <summary>
-        /// Indicates whether audio should be muted if GTA is not in focus (0: Unmuted, 1: Mute-Audio).
+        /// Indicates whether audio should be muted if GTA is not in focus (0: Play Audio, 1: Mute Audio).
         /// </summary>
 		AudioMuteOnFocusLoss = 318,
 
@@ -281,7 +293,9 @@ namespace GTA
         /// Indicates whether the recticle should be shown on screen (0: Show, 1: Hide).
         /// </summary>
         DisplayReticule = 412,
+
         ControllerConfig = 413,
+
         DisplayFlickerFilter = 414,
 
         /// <summary>
@@ -299,7 +313,9 @@ namespace GTA
 
         //600-678 Are for the Ambisonic decoder
         AmbisonicDecoder = 600,
+
         AmbisonicDecoderEnd = 677,
+
         AmbisonicDecoderType = 678,
 
         /// <summary>
@@ -309,7 +325,9 @@ namespace GTA
         /// An integer representing the graphics level. (Range 0-4, 0: Low, 1: Medium, 2: High, 3: Ultra, 4: Custom).
         /// </returns>
         PcGraphicsLevel = 700,
+
         PcSystemLevel = 701,
+
         PcAudioLevel = 702,
 
         /// <summary>.
@@ -321,6 +339,7 @@ namespace GTA
         /// If merged with <see cref="PcLastHardwareStatsUploadPosixtimeLow32"/> represents the last time hardware stats were uploaded.
         /// </summary>
         PcLastHardwareStatsUploadPosixtimeHigh32 = 711,
+
         /// <summary>
         /// If merged with <see cref="PcLastHardwareStatsUploadPosixtimeHigh32"/> represents the last time hardware stats were uploaded.
         /// </summary>
@@ -350,6 +369,7 @@ namespace GTA
         /// Represents the index of the VoiceChat input device.
         /// </summary>
         PcVoiceInputDevice = 724,
+
         PcVoiceChatMode = 725,
 
         /// <summary>
@@ -373,8 +393,11 @@ namespace GTA
         PcVoiceMusicVolume = 729,
 
         MouseType = 750,
+
         MouseSub = 751,
+
         MouseDrive = 752,
+
         MouseFly = 753,
 
         /// <summary>
