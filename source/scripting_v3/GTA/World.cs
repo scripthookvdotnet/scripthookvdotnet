@@ -209,7 +209,7 @@ namespace GTA
                 {
                     Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
                 }
-                Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, StringHash.AtStringHash(s_weatherNames[(int)value]), 0.0f);
+                Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, s_weatherHashes[(int)value], 0.0f);
             }
         }
 
