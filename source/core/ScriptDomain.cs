@@ -1581,10 +1581,15 @@ namespace SHVDN
         }
 
         /// <summary>
-        /// Gets the key down status of the specified key.
+        /// Determines whether the specified key is currently pressed.
         /// </summary>
         /// <param name="key">The key to check.</param>
-        /// <returns><see langword="true" /> if the key is currently pressed or <see langword="false" /> otherwise</returns>
+        /// <returns><see langword="true" /> if the key is currently pressed; otherwise, <see langword="false" />.</returns>
+        /// <remarks>
+        /// Keys with an integer value greater than 255 will throw an <see cref="IndexOutOfRangeException"/>.  
+        /// This includes modifier keys such as <see cref="Keys.Control" />, <see cref="Keys.Shift" />, and <see cref="Keys.Alt" />!
+        /// </remarks>
+
         public bool IsKeyPressed(Keys key)
         {
             lock (_lockForFieldsThatFrequentlyWritten)
