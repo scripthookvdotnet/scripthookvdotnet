@@ -59,10 +59,10 @@ jobs:
         fi
 
         # e.g. sed will transform "3.6.0-nightly.69" into "3.6.0.69"
-        latest_version_for_assemblies=$(echo ${latest_tag_name} | sed -E 's/([0-9]{1,5})\.([0-9]{1,5})\.([0-9]{1,5})-nightly\.([0-9]{1,5})/\1.\2.\3.\4/')
+        latest_version_for_assemblies=$(echo ${latest_nightly_tag} | sed -E 's/([0-9]{1,5})\.([0-9]{1,5})\.([0-9]{1,5})-nightly\.([0-9]{1,5})/\1.\2.\3.\4/')
 
-        if [ "$latest_version_for_assemblies" = "$latest_tag_name" ]; then
-          >&2 echo "Failed to create the version string for the ASI and the scripting DLLs because the version tag is ill-formed as a nightly version tag. Tag name: ${latest_tag_name}"
+        if [ "$latest_version_for_assemblies" = "$latest_nightly_tag" ]; then
+          >&2 echo "Failed to create the version string for the ASI and the scripting DLLs because the version tag is ill-formed as a nightly version tag. Tag name: ${latest_nightly_tag}"
           exit 1
         fi
 
