@@ -217,7 +217,7 @@ namespace GTA
         /// Transitions to weather.
         /// </summary>
         /// <param name="weather">The weather.</param>
-        /// <param name="duration">The duration.</param>
+        /// <param name="duration">The duration in seconds for the weather to persist.</param>
         public static void TransitionToWeather(Weather weather, float duration)
         {
             if (Enum.IsDefined(typeof(Weather), weather) && weather != Weather.Unknown)
