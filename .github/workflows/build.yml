@@ -52,8 +52,8 @@ jobs:
       id: fetch-latest-nightly-tag-name
       working-directory: nightly-repo
       run: |
-        if latest_tag_name=$(git describe --tags `git rev-list --tags --max-count=1`); then
-        else
+        latest_nightly_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        if [ latest_nightly_tag = "" ]; then
           echo "There's no tags on the nightly repo."
           exit 1
         fi
