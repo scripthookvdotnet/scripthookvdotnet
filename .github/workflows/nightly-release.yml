@@ -19,6 +19,12 @@ on:
 permissions:
   contents: read
 
+# needs to ensure that only a single workflow will run at a time in order to prevent from the next tag being occupied
+# by another workflow
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   calc-next-tag-name:
     name: Get Latest commit hash on Nightly Repo and Calculate New Version Tag

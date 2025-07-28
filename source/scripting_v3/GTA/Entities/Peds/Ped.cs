@@ -3048,7 +3048,7 @@ namespace GTA
         private void ApplyForceCenterOfMassInternal(Vector3 force, ForceType forceType, RagdollComponent component, bool relativeForce, bool scaleByMass, bool applyToChildren = false)
         {
             // The native won't apply the force if apply force type is one of the external types
-            if (forceType == ForceType.ExternalForce && forceType == ForceType.ExternalImpulse)
+            if (forceType == ForceType.ExternalForce || forceType == ForceType.ExternalImpulse)
             {
                 ThrowHelper.ThrowArgumentException(nameof(forceType), "ForceType.ExternalForce and ForceType.ExternalImpulse are not supported.");
             }

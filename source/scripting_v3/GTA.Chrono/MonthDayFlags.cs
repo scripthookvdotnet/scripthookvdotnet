@@ -39,7 +39,7 @@ namespace GTA.Chrono
 
         internal static MonthDayFlags? New(int month, int day, YearFlags flags)
         {
-            if (month < 1 && month > 12 && day < 1 && day > 31)
+            if (month < 1 || month > 12 || day < 1 || day > 31)
             {
                 return null;
             }

@@ -464,7 +464,7 @@ namespace GTA
                     return 0;
                 }
 
-                int returnValue = SHVDN.MemDataMarshal.ReadInt16(address + 0x44);
+                int returnValue = SHVDN.MemDataMarshal.ReadUInt16(address + 0x44);
                 if (returnValue == 0xFFFF)
                 {
                     return -1;
