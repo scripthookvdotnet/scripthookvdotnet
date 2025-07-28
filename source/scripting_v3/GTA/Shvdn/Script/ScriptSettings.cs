@@ -7,20 +7,30 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace GTA
 {
     /// <summary>
-    /// Represents a script settings written in the INI format.
+    /// Represents script settings written in the INI format.
     /// </summary>
     /// <remarks>
-    /// The file encoding must be UTF-8 without BOM.
+    /// The file encoding must be one of the following:
+    /// <list type="bullet">
+    ///   <item><description>UTF-8 (with or without BOM)</description></item>
+    ///   <item><description>UTF-16 LE (with BOM)</description></item>
+    ///   <item><description>UTF-16 BE (with BOM)</description></item>
+    ///   <item><description>UTF-32 LE (with BOM)</description></item>
+    ///   <item><description>UTF-32 BE (with BOM)</description></item>
+    /// </list>
+    /// When no BOM is present, UTF-8 is assumed.
     /// </remarks>
+
     public sealed class ScriptSettings
     {
         #region Fields
-        readonly string _fileName;
-        Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
+        private readonly string _fileName;
+        private readonly Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         ScriptSettings(string fileName)
@@ -40,61 +50,69 @@ namespace GTA
             var result = new ScriptSettings(filename);
 
             if (!File.Exists(filename))
-            {
                 return result;
-            }
-
-            string line = null;
-            string tempSectionName = string.Empty;
-            StreamReader reader = null;
 
             try
             {
-                reader = new StreamReader(filename);
+                using var reader = new StreamReader(filename, Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
+                string section = string.Empty;
+                string line;
+
+                while ((line = reader.ReadLine()) != null)
+                {
+                    line = line.Trim();
+
+                    if (line.Length == 0 || line.StartsWith(";") || line.StartsWith("//"))
+                        continue;
+
+                    while (line.EndsWith("\\"))
+                    {
+                        string nextLine = reader.ReadLine();
+                        if (nextLine == null)
+                            break;
+
+                        line = line.Substring(0, line.Length - 1) + nextLine.TrimStart();
+                    }
+
+                    if (line.StartsWith("[") && line.Contains("]"))
+                    {
+                        int indexOfSectionEnd = line.IndexOf(']');
+                        if (indexOfSectionEnd != -1)
+                        {
+                            section = line.Substring(1, indexOfSectionEnd - 1).Trim();
+                            continue;
+                        }
+                    }
+
+                    int indexOfEqual = line.IndexOf('=');
+                    if (indexOfEqual != -1)
+                    {
+                        string key = line.Substring(0, indexOfEqual).Trim();
+                        string value = line.Substring(indexOfEqual + 1).Trim();
+
+                        value = StripInlineComment(value);
+
+                        if (value.StartsWith("\"") && value.EndsWith("\"") && value.Length >= 2)
+                        {
+                            value = value.Substring(1, value.Length - 2);
+                            value = value.Replace("\\\"", "\"");
+                        }
+
+                        result.AddNewValueInternal(section, key, value);
+                    }
+                    else
+                    {
+                        string key = StripInlineComment(line).Trim();
+                        if (!string.IsNullOrEmpty(key))
+                        {
+                            result.AddNewValueInternal(section, key, "");
+                        }
+                    }
+                }
             }
             catch (IOException)
             {
                 return result;
-            }
-
-            try
-            {
-                while (!ReferenceEquals(line = reader.ReadLine(), null))
-                {
-                    line = line.Trim();
-
-                    if (line.Length == 0 || line.StartsWith(";", StringComparison.Ordinal) || line.StartsWith("//", StringComparison.Ordinal))
-                    {
-                        continue;
-                    }
-
-                    if (line.StartsWith("[", StringComparison.Ordinal) && line.Contains("]"))
-                    {
-                        tempSectionName = line.Substring(1, line.IndexOf("]", StringComparison.Ordinal) - 1).Trim();
-                        continue;
-                    }
-                    else if (line.Contains("="))
-                    {
-                        int index = line.IndexOf("=", StringComparison.Ordinal);
-                        string key = line.Substring(0, index).Trim();
-                        string value = line.Substring(index + 1).Trim();
-
-                        if (value.Contains("//"))
-                        {
-                            value = value.Substring(0, value.IndexOf("//", StringComparison.Ordinal) - 1).TrimEnd();
-                        }
-                        if (value.StartsWith("\"", StringComparison.Ordinal) && value.EndsWith("\"", StringComparison.Ordinal))
-                        {
-                            value = value.Substring(1, value.Length - 2);
-                        }
-
-                        result.AddNewValueInternal(tempSectionName, key, value);
-                    }
-                }
-            }
-            finally
-            {
-                reader.Close();
             }
 
             return result;
@@ -106,54 +124,41 @@ namespace GTA
         /// <returns><see langword="true" /> if the file saved successfully; otherwise, <see langword="false" /></returns>
         public bool Save()
         {
-            var result = new Dictionary<string, List<Tuple<string, string>>>(StringComparer.Ordinal);
+            var result = new Dictionary<string, List<(string Key, string Value)>>(StringComparer.Ordinal);
 
-            foreach (KeyValuePair<string, Dictionary<string, List<string>>> sectionAndKeyValuePairs in _values)
+            foreach (var sectionAndKeyValuePairs in _values)
             {
                 string sectionName = sectionAndKeyValuePairs.Key;
-                foreach (KeyValuePair<string, List<string>> keyValuePairs in sectionAndKeyValuePairs.Value)
+
+                foreach (var keyValuePairs in sectionAndKeyValuePairs.Value)
                 {
                     string keyName = keyValuePairs.Key;
                     List<string> valueList = keyValuePairs.Value;
 
-                    foreach (string value in valueList)
+                    if (!result.TryGetValue(sectionName, out var list))
                     {
-                        if (!result.ContainsKey(sectionName))
-                        {
-                            var values = new List<Tuple<string, string>> {
-                                new(keyName, value)
-                            };
+                        list = new List<(string, string)>();
+                        result.Add(sectionName, list);
+                    }
 
-                            result.Add(sectionName, values);
-                        }
-                        else
-                        {
-                            result[sectionName].Add(new Tuple<string, string>(keyName, value));
-                        }
+                    foreach (var value in valueList)
+                    {
+                        list.Add((keyName, value));
                     }
                 }
             }
 
-            StreamWriter writer = null;
-
             try
             {
-                writer = File.CreateText(_fileName);
-            }
-            catch (IOException)
-            {
-                return false;
-            }
+                using var writer = File.CreateText(_fileName);
 
-            try
-            {
-                foreach (KeyValuePair<string, List<Tuple<string, string>>> section in result)
+                foreach (var section in result)
                 {
-                    writer.WriteLine("[" + section.Key + "]");
+                    writer.WriteLine($"[{section.Key}]");
 
-                    foreach (Tuple<string, string> value in section.Value)
+                    foreach (var (key, value) in section.Value)
                     {
-                        writer.WriteLine(value.Item1 + " = " + value.Item2);
+                        writer.WriteLine($"{key} = {EscapeValue(value)}");
                     }
 
                     writer.WriteLine();
@@ -163,13 +168,26 @@ namespace GTA
             {
                 return false;
             }
-            finally
-            {
-                writer.Close();
-            }
 
             return true;
         }
+
+        private string EscapeValue(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return "";
+
+            // If value contains whitespace, comment chars, or '=' -> quote it
+            if (value.IndexOfAny(new char[] { ' ', '\t', ';', '=', '/' }) != -1)
+            {
+                // Escape internal quotes
+                string escaped = value.Replace("\"", "\\\"");
+                return $"\"{escaped}\"";
+            }
+
+            return value;
+        }
+
 
         /// <summary>
         /// Reads a value from this <see cref="ScriptSettings"/>.
@@ -186,33 +204,44 @@ namespace GTA
         public T GetValue<T>(string section, string name, T defaultvalue)
         {
             if (!_values.TryGetValue(section, out Dictionary<string, List<string>> keyValuePairs))
-            {
                 return defaultvalue;
-            }
-            if (!keyValuePairs.TryGetValue(name, out List<string> valueList))
-            {
+
+            if (!keyValuePairs.TryGetValue(name, out List<string> valueList) || valueList.Count == 0)
                 return defaultvalue;
-            }
+
+            string rawValue = valueList[0].Trim();
 
             try
             {
-                if (typeof(T) == typeof(string))
-                {
-                    // Performs more than 10x better than converting type via Convert.ChangeType
-                    return (T)(object)valueList[0];
-                }
-                if (typeof(T).IsEnum)
-                {
-                    return (T)Enum.Parse(typeof(T), valueList[0], true);
-                }
+                Type targetType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
 
-                return (T)Convert.ChangeType(valueList[0], typeof(T));
+                if (targetType == typeof(string))
+                    return (T)(object)rawValue;
+
+                if (targetType.IsEnum)
+                    return (T)Enum.Parse(targetType, rawValue, ignoreCase: true);
+
+                if (targetType == typeof(int) && int.TryParse(rawValue, out int intValue))
+                    return (T)(object)intValue;
+
+                if (targetType == typeof(bool) && bool.TryParse(rawValue, out bool boolValue))
+                    return (T)(object)boolValue;
+
+                if (targetType == typeof(double) && double.TryParse(rawValue, out double doubleValue))
+                    return (T)(object)doubleValue;
+
+                if (targetType == typeof(float) && float.TryParse(rawValue, out float floatValue))
+                    return (T)(object)floatValue;
+
+                // fallback for other IConvertible types
+                return (T)Convert.ChangeType(rawValue, targetType);
             }
-            catch (Exception)
+            catch
             {
                 return defaultvalue;
             }
         }
+
         /// <summary>
         /// Reads a value from this <see cref="ScriptSettings"/>.
         /// </summary>
@@ -404,6 +433,7 @@ namespace GTA
                     {
                         values.Add((T)(object)stringValue);
                     }
+                    else
                     if (typeof(T).IsEnum)
                     {
                         values.Add((T)Enum.Parse(typeof(T), stringValue, true));
@@ -453,7 +483,7 @@ namespace GTA
                     {
                         values.Add((T)(object)stringValue);
                     }
-                    if (typeof(T).IsEnum)
+                    else if (typeof(T).IsEnum)
                     {
                         values.Add((T)Enum.Parse(typeof(T), stringValue, true));
                     }
@@ -560,5 +590,24 @@ namespace GTA
         /// Clears all sections this <see cref="ScriptSettings"/> has.
         /// </summary>
         public void Clear() => _values.Clear();
+
+        private static string StripInlineComment(string input)
+        {
+            bool inQuotes = false;
+            for (int i = 0; i < input.Length - 1; i++)
+            {
+                if (input[i] == '"') inQuotes = !inQuotes;
+
+                if (!inQuotes)
+                {
+                    if (input[i] == '/' && input[i + 1] == '/')
+                        return input.Substring(0, i).TrimEnd();
+
+                    if (input[i] == ';')
+                        return input.Substring(0, i).TrimEnd();
+                }
+            }
+            return input;
+        }
     }
 }
