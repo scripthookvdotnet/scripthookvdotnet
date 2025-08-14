@@ -830,6 +830,7 @@ namespace SHVDN
                 {
                     scriptTypeCount++;
 
+
                     string key = BuildComparisonStringForDependencyKey(type, string.Empty);
                     key = asmNameStr + "-" + asmVersion + key;
 
@@ -978,6 +979,19 @@ namespace SHVDN
             }
         }
 
+        private static int GetMinimumGameBuild(Type type)
+        {
+            var attrData = type.GetCustomAttributesData()
+                .FirstOrDefault(x => x.AttributeType.FullName == "GTA.RequireGameBuild");
+
+            if (attrData?.ConstructorArguments.Count > 0)
+            {
+                return Convert.ToInt32(attrData.ConstructorArguments[0].Value);
+            }
+
+            return -1; // fallback if attribute not found
+        }
+
         // This function builds a composite key of all dependencies of a script
         private static string BuildComparisonStringForDependencyKey(Type a, string b)
         {
@@ -1097,6 +1111,15 @@ namespace SHVDN
         /// <returns>The script instance or <see langword="null"/> in case of failure.</returns>
         internal Script InstantiateScriptFast(Type scriptType, ScriptInitOption initOption)
         {
+            int minGameBuild = GetMinimumGameBuild(scriptType);
+            if (minGameBuild > NativeMemory.GameFileVersion.Build)
+            {
+                Log.Message(Log.Level.Error,
+                    $"Skipped loading {scriptType.FullName} because it requires at least game build {minGameBuild}.");
+
+                return null;
+            }
+
             Log.Message(Log.Level.Debug, "Instantiating script ", scriptType.FullName, " ...");
 
             var script = new Script();
