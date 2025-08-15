@@ -1114,7 +1114,7 @@ namespace SHVDN
             int minGameBuild = GetMinimumGameBuild(scriptType);
             if (minGameBuild > NativeMemory.GameFileVersion.Build)
             {
-                Log.Message(Log.Level.Error,
+                Log.Message(Log.Level.Warning,
                     $"Skipped loading {scriptType.FullName} because it requires at least game build {minGameBuild}.");
 
                 return null;
