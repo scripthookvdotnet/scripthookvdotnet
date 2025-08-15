@@ -3,6 +3,8 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System.Drawing;
+
 namespace GTA.UI
 {
     public enum HudColor
@@ -136,6 +138,10 @@ namespace GTA.UI
         Damage,
         PinkLight,
         PMMitemHighlight,
+
+        /// <summary>
+        /// A variable HUD color that can be modified using <see cref="HudColors.SetScriptVariable(Color)"/>.
+        /// </summary>
         ScriptVariable,
         Yoga,
         Tennis,
@@ -173,6 +179,10 @@ namespace GTA.UI
         Chop,
         PauseMapTintHalf,
         NorthBlueOfficial,
+
+        /// <summary>
+        /// A variable HUD color that can be modified using <see cref="HudColors.SetScriptVariable2(Color)"/>
+        /// </summary>
         ScriptVariable2,
         H,
         HDark,
@@ -232,5 +242,30 @@ namespace GTA.UI
         TechGreenDark,
         TechRed,
         TechGreenVeryDark,
+
+        /// <summary>
+        /// Represents a placeholder entry for future use.
+        /// </summary>
+        Placeholder01,
+        ///<inheritdoc cref="Placeholder01"/>
+        Placeholder02,
+        ///<inheritdoc cref="Placeholder01"/>
+        Placeholder03,
+        ///<inheritdoc cref="Placeholder01"/>
+        Placeholder04,
+        ///<inheritdoc cref="Placeholder01"/>
+        Placeholder05,
+        ///<inheritdoc cref="Placeholder01"/>
+        Placeholder06,
+        ///<inheritdoc cref="Placeholder01"/>
+        Placeholder07,
+        ///<inheritdoc cref="Placeholder01"/>
+        Placeholder08,
+        ///<inheritdoc cref="Placeholder01"/>
+        Placeholder09,
+        ///<inheritdoc cref="Placeholder01"/>
+        Placeholder10,
+
+        JunkEnergy,
     }
 }
