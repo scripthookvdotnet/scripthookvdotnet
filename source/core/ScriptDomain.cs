@@ -830,7 +830,6 @@ namespace SHVDN
                 {
                     scriptTypeCount++;
 
-
                     string key = BuildComparisonStringForDependencyKey(type, string.Empty);
                     key = asmNameStr + "-" + asmVersion + key;
 
@@ -981,8 +980,8 @@ namespace SHVDN
 
         private static int GetMinimumGameBuild(Type type)
         {
-            var attrData = type.GetCustomAttributesData()
-                .FirstOrDefault(x => x.AttributeType.FullName == "GTA.RequireGameBuild");
+            IList<CustomAttributeData> attrData = type.GetCustomAttributesData()
+                .FirstOrDefault(x => x.AttributeType.FullName == "GTA.MinimumRequiredGameBuildAttribute");
 
             if (attrData?.ConstructorArguments.Count > 0)
             {
@@ -1115,7 +1114,7 @@ namespace SHVDN
             if (minGameBuild > NativeMemory.GameFileVersion.Build)
             {
                 Log.Message(Log.Level.Warning,
-                    $"Skipped loading {scriptType.FullName} because it requires at least game build {minGameBuild}.");
+                    $"Skipped loading {scriptType.FullName} because it requires game build {minGameBuild} or newer.");
 
                 return null;
             }
