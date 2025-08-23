@@ -3,8 +3,6 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using System.Drawing;
-
 namespace GTA.UI
 {
     public enum HudColor
