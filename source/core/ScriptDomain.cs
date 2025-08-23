@@ -980,7 +980,7 @@ namespace SHVDN
 
         private static int GetMinimumGameBuild(Type type)
         {
-            IList<CustomAttributeData> attrData = type.GetCustomAttributesData()
+            CustomAttributeData attrData = type.GetCustomAttributesData()
                 .FirstOrDefault(x => x.AttributeType.FullName == "GTA.MinimumRequiredGameBuildAttribute");
 
             if (attrData?.ConstructorArguments.Count > 0)
