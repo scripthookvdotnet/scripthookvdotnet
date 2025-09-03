@@ -1924,7 +1924,7 @@ namespace GTA
         /// <paramref name="requiredTime"/>.
         /// </para>
         /// </remarks>
-        // since the native internally clamps the value to 65535 if the passed `requiredTime` arg is more than
+        // Since the native internally clamps the value to 65535 if the passed `requiredTime` arg is more than
         // 65535 and internal stuck timer fields in `CVehicleDamage` are also `u16` values (same as `unsigned short`
         // when the game code base is built on Windows), we use `ushort` for our`requiredTime` arg.
         // If Rockstar changes the type to `u32`, we could add another overload.

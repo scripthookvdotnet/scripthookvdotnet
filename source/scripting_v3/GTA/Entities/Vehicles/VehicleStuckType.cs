@@ -23,8 +23,8 @@ namespace GTA
         /// </para>
         /// <para>
         /// Since the game assumes matrix scales of all <see cref="Entity"/>s are the same as the unit size when it
-        /// does various stuff on them, the timer may not work properly if the <see cref="Vehicle"/>'s matrix scale is
-        /// too different.
+        /// does various stuff on them, and the timer may not work properly if the <see cref="Vehicle"/>'s matrix scale
+        /// is too different.
         /// </para>
         /// </remarks>
         OnRoof,
@@ -43,8 +43,8 @@ namespace GTA
         /// mentioned are not met.
         /// <para>
         /// Since the game assumes matrix scales of all <see cref="Entity"/>s are the same as the unit size when it
-        /// does various stuff on them, the timer may not work properly if the <see cref="Vehicle"/>'s matrix scale is
-        /// too different.
+        /// does various stuff on them, and the timer may not work properly if the <see cref="Vehicle"/>'s matrix scale
+        /// is too different.
         /// </para>
         /// </remarks>
         OnSide,
@@ -74,7 +74,7 @@ namespace GTA
         /// <item><description>
         /// If the <see cref="Vehicle"/> is considered a "watercraft" in the internal stuck check update function but
         /// does not have a collider, the conditions for land <see cref="Vehicle"/>s will be used to determine whether
-        /// the stuck timer will be increased
+        /// the stuck timer will be increased.
         /// </description></item>
         /// <item><description>
         /// If the <see cref="Vehicle"/> is a boat, the hung-up stuck timer increases even when the propeller is in
@@ -108,15 +108,15 @@ namespace GTA
         /// <para>
         /// Collision being not loaded around the <see cref="Vehicle"/> does not necessarily avoid the hung-up stuck
         /// timer being increased unless it is considered a "watercraft" Therefore, hung-up stuck timers on land
-        /// vehicles where the collision is not loaded around them are likely to increase as long as none of the drive
-        /// wheels of them is touching anything.
+        /// vehicles with the collision not being loaded around them are likely to increase as long as none of
+        /// the drive wheels of them is touching anything.
         /// </para>
         /// </remarks>
         HungUp,
         /// <summary>
         /// The associated stuck timer increases when the throttle is strong enough is touching and none of the brake
-        /// and handbrake is used at all if it is a land one. The throttle threshold will be higher if
-        /// a <see cref="Player"/> <see cref="Ped"/> is driving the <see cref="Vehicle"/>.
+        /// and handbrake is used at all if it is a land one. The throttle threshold is higher for
+        /// <see cref="Vehicle"/>s that <see cref="Player"/> <see cref="Ped"/>s are driving.
         /// </summary>
         /// <remarks>
         /// <para>
