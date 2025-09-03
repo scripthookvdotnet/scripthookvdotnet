@@ -1872,6 +1872,83 @@ namespace GTA
             Function.Call(Hash.SET_VEHICLE_DAMAGE, Handle, position.X, position.Y, position.Z, damageAmount, radius);
         }
 
+        /// <summary>
+        /// Returns <see langword="true"/> if the stuck timer of this <see cref="Vehicle"/> for a passed stuck type
+        /// is more than a passed time value.
+        /// </summary>
+        /// <param name="stuckType">The stuck type to test.</param>
+        /// <param name="requiredTime">
+        /// <para>
+        /// The minimum required time for the stuck timer for the <paramref name="stuckType"/> to surpass so
+        /// this method can return <see langword="true"/>.
+        /// </para>
+        /// </param>
+        /// <returns><see langword="true"/> if the stuck timer for the passed stuck time is more than
+        /// <paramref name="requiredTime"/>, otherwise, <see langword="false"/>. If the stuck timer is the same as
+        /// <paramref name="requiredTime"/>, this method will return <see langword="false"/>.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="stuckType"/> is <see cref="VehicleStuckType.ResetAll"/>.
+        /// </exception>
+        /// <remarks>
+        /// <para>
+        /// <see cref="Vehicle"/> stuck timers increase when the position delta of <see cref="Vehicle"/> are not too
+        /// large and they meet their certain conditions, and reset to zero otherwise. The max value of the stuck
+        /// timers are `<c>65535</c>` and they clamp to `65535` when the addition of the time step in milliseconds to
+        /// current stuck timer values are `65535` or more, so no overflows will not occur for them.
+        /// </para>
+        /// <para>
+        /// The position delta limit from the last stuck position except for <see cref="VehicleStuckType.Jammed"/> is
+        /// for non-watercraft <see cref="Vehicle"/>s are `<c>2f</c>` and the one for watercraft ones are `<c>1f</c>`.
+        /// When the <see cref="Vehicle"/> is a watercraft and this method calculates a position delta for the 3 stuck
+        /// timers (not for the jammed one), the Z-axis delta is multiplied by `<c>0.2f</c>`. How the method does
+        /// determine if the <see cref="Vehicle"/> is a watercraft is described in the paragraph below.
+        /// The one for <see cref="VehicleStuckType.Jammed"/> from the last jammed position is `<c>3f</c>` for any
+        /// <see cref="Vehicle"/>s.
+        /// The last jammed position for <see cref="VehicleStuckType.Jammed"/> is different from the one for any other
+        /// stuck types, and they update independently of each other and they do only when the position deltas are too
+        /// large to consider the <see cref="Vehicle"/> stucked or jammed.
+        /// </para>
+        /// <para>
+        /// If the <see cref="VehicleType"/> of <see cref="Vehicle"/> is <see cref="VehicleType.Boat"/>,
+        /// <see cref="VehicleType.Submarine"/>, <see cref="VehicleType.SubmarineCar"/>,
+        /// <see cref="VehicleType.AmphibiousAutomobile"/>, or <see cref="VehicleType.AmphibiousQuadBike"/>, or if
+        /// the <see cref="Vehicle"/> has a <see cref="SeaPlaneHandlingData"/> and is touching water at all,
+        /// this method treats <see cref="Vehicle"/> as a watercraft. However, if the <see cref="VehicleType"/> of
+        /// <see cref="Vehicle"/> is <see cref="VehicleType.SubmarineCar"/>,
+        /// <see cref="VehicleType.AmphibiousAutomobile"/>, or <see cref="VehicleType.AmphibiousQuadBike"/> but it is
+        /// not touching water at all, this method does not treat <see cref="Vehicle"/> as a watercraft.
+        /// </para>
+        /// <para>
+        /// the method always returns <see langword="false"/> when `<c>65535</c>` is passed to
+        /// <paramref name="requiredTime"/>.
+        /// </para>
+        /// </remarks>
+        // Since the native internally clamps the value to 65535 if the passed `requiredTime` arg is more than
+        // 65535 and internal stuck timer fields in `CVehicleDamage` are also `u16` values (same as `unsigned short`
+        // when the game code base is built on Windows), we use `ushort` for our`requiredTime` arg.
+        // If Rockstar changes the type to `u32`, we could add another overload.
+        public bool IsStuckTimerUp(VehicleStuckType stuckType, ushort requiredTime)
+        {
+            // `ResetAll` is only for `RESET_VEHICLE_STUCK_TIMER`
+            if (stuckType is VehicleStuckType.ResetAll)
+            {
+                ThrowHelper.ThrowArgumentException("`VehicleStuckType.ResetAll` is not supported.", nameof(stuckType));
+            }
+
+            return Function.Call<bool>(Hash.IS_VEHICLE_STUCK_TIMER_UP, Handle, stuckType, requiredTime);
+        }
+
+        /// <summary>
+        /// Resets a stuck timer of this <see cref="Vehicle"/>.
+        /// </summary>
+        /// <param name="stuckType">
+        /// The stuck type to specify a stuck timer to reset. <see cref="VehicleStuckType.ResetAll"/> resets
+        /// all of the 4 stuck timers.
+        /// </param>
+        public void ResetVehicleStuckTimer(VehicleStuckType stuckType)
+            => Function.Call(Hash.RESET_VEHICLE_STUCK_TIMER, Handle, stuckType);
+
         #endregion
 
         #region Doors & Locks
