@@ -4358,22 +4358,57 @@ namespace SHVDN
         public static int PlayerPedSpecialAbilityOffset { get; }
 
         public static IntPtr GetPlayerPedAddress(int playerIndex)
-        {
-            return new IntPtr((long)s_getPlayerPedAddressFunc(playerIndex));
-        }
+            => s_getPlayerPedAddressFunc != null
+                ? new IntPtr((long)s_getPlayerPedAddressFunc(playerIndex))
+                : IntPtr.Zero;
         public static IntPtr GetLocalPlayerPedAddress()
-        {
-            return new IntPtr((long)s_getLocalPlayerPedAddressFunc());
-        }
+            => s_getLocalPlayerPedAddressFunc != null
+                ? new IntPtr((long)s_getLocalPlayerPedAddressFunc())
+                : IntPtr.Zero;
         public static int GetPlayerPedHandle(int handle)
         {
             IntPtr playerPedAddress = GetPlayerPedAddress(handle);
-            return playerPedAddress != IntPtr.Zero ? GetEntityHandleFromAddress(playerPedAddress) : 0;
+            if (playerPedAddress == IntPtr.Zero)
+            {
+                return GetPlayerPedHandleViaNativeCall(handle);
+            }
+            return GetEntityHandleFromAddress(playerPedAddress);
+
+            static int GetPlayerPedHandleViaNativeCall(int handle)
+            {
+                ulong argForNative = (ulong)handle;
+                const int ArgCount = 1;
+                ulong* resultAddr
+                    = NativeFunc.Invoke(0x43A66C31C68491C0 /* GET_PLAYER_PED */, &argForNative, ArgCount);
+                if (resultAddr == null)
+                {
+                    throw new InvalidOperationException("Game.Player.Character can only be called " +
+                        "from the main thread.");
+                }
+
+                return *(int*)resultAddr;
+            }
         }
         public static int GetLocalPlayerPedHandle()
         {
             IntPtr localPlayerPedAddress = GetLocalPlayerPedAddress();
-            return localPlayerPedAddress != IntPtr.Zero ? GetEntityHandleFromAddress(localPlayerPedAddress) : 0;
+            if (localPlayerPedAddress == IntPtr.Zero)
+            {
+                return GetLocalPlayerPedHandleViaNativeCall();
+            }
+            return GetEntityHandleFromAddress(localPlayerPedAddress);
+
+            static int GetLocalPlayerPedHandleViaNativeCall()
+            {
+                ulong* resultAddr = NativeFunc.Invoke(0xD80958FC74E988A6 /* PLAYER_PED_ID */, null, 0);
+                if (resultAddr == null)
+                {
+                    throw new InvalidOperationException("Game.LocalPlayerPed can only be called " +
+                        "from the main thread.");
+                }
+
+                return *(int*)resultAddr;
+            }
         }
         public static int GetLocalPlayerIndex()
         {
