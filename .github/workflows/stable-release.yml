@@ -59,7 +59,7 @@ jobs:
           cd "${GITHUB_WORKSPACE}/bin/Release"
           zip -r "${GITHUB_WORKSPACE}/${artifact_file_name}" *
       - name: Push new release
-        uses: ncipollo/release-action@v1.14.0
+        uses: ncipollo/release-action@v1.20.0
         with:
           # should add a boilerplate body text to save our time
           name: ${{ env.artifact_name }}

@@ -194,7 +194,7 @@ jobs:
           owner: 'scripthookvdotnet'
           repositories: 'scripthookvdotnet-nightly'
       - name: Push New Release
-        uses: ncipollo/release-action@v1.13.0
+        uses: ncipollo/release-action@v1.20.0
         with:
           repo: scripthookvdotnet-nightly
           name: ${{ env.artifact_name }}
