@@ -13,7 +13,7 @@ The issues page should be primarily used for bug reports and focused enhancement
 
 * [C++ Script Hook V by Alexander Blade](http://www.dev-c.com/gtav/scripthookv/)
 * [.NET Framework ≥ 4.8](https://dotnet.microsoft.com/download/dotnet-framework/net48)
-* [Visual C++ Redistributable for Visual Studio 2019 x64](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads)
+* [Visual C++ Redistributable for Visual Studio 2019 x64](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2022)
 
 ## Downloads
 The stable builds can be downloaded from the [Releases](https://github.com/scripthookvdotnet/scripthookvdotnet/releases) page.
