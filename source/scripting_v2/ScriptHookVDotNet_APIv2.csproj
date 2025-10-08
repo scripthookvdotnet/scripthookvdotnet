@@ -26,15 +26,15 @@
     <FileVersion>2.11.6</FileVersion>
     <AssemblyVersion>2.11.6</AssemblyVersion>
     <Authors>crosire &amp; kagikn &amp; contributors</Authors>
-		<AssemblyTitle>The developer SDK for ScriptHookVDotNet v2 scripts for Grand Theft Auto V</AssemblyTitle>
-		<Product>ScriptHookVDotNet</Product>
+    <AssemblyTitle>ScriptHookVDotNet v2 API</AssemblyTitle>
+    <Product>ScriptHookVDotNet</Product>
     <Company></Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/scripthookvdotnet/scripthookvdotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/scripthookvdotnet/scripthookvdotnet/releases</PackageReleaseNotes>
-    <Description>The developer SDK for ScriptHookVDotNet v2 scripts for Grand Theft Auto V</Description>
+    <Description>ScriptHookVDotNet v2 API</Description>
     <Copyright>Copyright © 2015 crosire &amp; kagikn</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
