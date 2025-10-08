@@ -26,13 +26,15 @@
     <FileVersion>3.6.0</FileVersion>
     <AssemblyVersion>3.6.0</AssemblyVersion>
     <Authors>crosire &amp; kagikn &amp; contributors</Authors>
+    <AssemblyTitle>ScriptHookVDotNet v3 API</AssemblyTitle>
+    <Product>ScriptHookVDotNet</Product>
     <Company></Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryUrl>https://github.com/scripthookvdotnet/scripthookvdotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/scripthookvdotnet/scripthookvdotnet/releases</PackageReleaseNotes>
-    <Description>The developer SDK for ScriptHookVDotNet v3 scripts for Grand Theft Auto V.</Description>
+    <Description>ScriptHookVDotNet v3 API</Description>
     <Copyright>Copyright © 2015 crosire &amp; kagikn</Copyright>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
