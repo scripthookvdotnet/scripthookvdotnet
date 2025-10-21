@@ -62,7 +62,6 @@ namespace GTA
             set => Function.Call(Native.Hash.SET_FLASH_LIGHT_FADE_DISTANCE, value);
         }
 
-
         public WeaponComponentHash ComponentHash
         {
             get;
