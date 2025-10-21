@@ -149,6 +149,34 @@ namespace GTA
         }
 
         /// <summary>
+        /// Enables or disables <c>RiotMode</c>.
+        /// </summary>
+        /// <remarks>
+        /// Riot mode has several effects:
+        /// <list type="bullet">
+        /// <item>
+        /// <description>All peds become hostile toward each other, including the player.</description>
+        /// </item>
+        /// <item>
+        /// <description>Random peds are equipped with either a pistol or a Micro SMG.</description>
+        /// </item>
+        /// <item>
+        /// <description>Peds will always select their best available weapon.</description>
+        /// </item>
+        /// <item>
+        /// <description>Peds have infinite ammunition.</description>
+        /// </item>
+        /// </list>
+        /// <para>
+        /// In rare cases, some peds may not be hostile to selected peds.
+        /// </para>
+        /// </remarks>
+        public static bool RiotMode
+        {
+            set => Function.Call(Hash.SET_RIOT_MODE_ENABLED, value);
+        }
+
+        /// <summary>
         /// Gets or sets the previous weather.
         /// </summary>
         /// <value>
