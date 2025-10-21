@@ -1531,7 +1531,7 @@ namespace GTA
 
 
         /// <summary>
-        /// Returns whether this <see cref="Ped"/> is armed with a weapon matching the specified flags.
+        /// Returns whether this <see cref="Ped"/> is armed with a <see cref="Weapon"/> matching the specified flags.
         /// </summary>
         /// <param name="includeMelee">Whether to include melee weapons (e.g., bat, knife).</param>
         /// <param name="includeGuns">Whether to include firearms.</param>
