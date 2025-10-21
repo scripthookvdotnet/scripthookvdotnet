@@ -233,6 +233,11 @@ namespace GTA
             set => Function.Call(Native.Hash.SET_PED_INFINITE_AMMO_CLIP, _owner.Handle, value);
         }
 
+        /// <summary>
+        /// Gets the <see cref="DamageType"/> of this <see cref="Weapon"/>.
+        /// </summary>
+        public DamageType DamageType => Function.Call<DamageType>(Native.Hash.GET_WEAPON_DAMAGE_TYPE, (uint)Hash);
+
         public bool CanUseOnParachute => Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, (uint)Hash);
 
         public WeaponComponentCollection Components => _components ??= new WeaponComponentCollection(_owner, this);
