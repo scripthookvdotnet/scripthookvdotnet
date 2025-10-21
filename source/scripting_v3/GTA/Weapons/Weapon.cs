@@ -240,6 +240,14 @@ namespace GTA
 
         public bool CanUseOnParachute => Function.Call<bool>(Native.Hash.CAN_USE_WEAPON_ON_PARACHUTE, (uint)Hash);
 
+        /// <summary>
+        /// Gets whether this <see cref="Weapon"/> has a flashlight attachment and whether it is currently active.
+        /// </summary>
+        public bool FlashlightActive
+        {
+            get => Function.Call<bool>(Native.Hash.IS_FLASH_LIGHT_ON, _owner.Handle);
+        }
+
         public WeaponComponentCollection Components => _components ??= new WeaponComponentCollection(_owner, this);
 
         public static implicit operator WeaponHash(Weapon weapon)
