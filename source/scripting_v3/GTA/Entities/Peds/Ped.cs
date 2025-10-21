@@ -1554,29 +1554,6 @@ namespace GTA
         }
 
         /// <summary>
-        /// Returns whether this <see cref="Ped"/> is armed with a weapon matching the specified flags.
-        /// </summary>
-        /// <param name="includeMelee">Whether to include melee weapons (e.g., bat, knife).</param>
-        /// <param name="includeGuns">Whether to include firearms.</param>
-        /// <param name="includeProjectile">Whether to include projectile weapons (e.g., rocket launcher).</param>
-        public bool IsArmed(bool includeMelee = true, bool includeGuns = true, bool includeProjectile = true)
-        {
-            int flags = 0;
-
-            if (includeMelee)
-                flags |= 1;
-            if (includeProjectile)
-                flags |= 2;
-            if (includeGuns)
-                flags |= 4;
-
-            if (flags == 0)
-                return false;
-
-            return Function.Call<bool>(Hash.IS_PED_ARMED, Handle, flags);
-        }
-
-        /// <summary>
         /// Gets a collection of all this <see cref="Ped"/>s <see cref="Weapon"/>s.
         /// </summary>
         public WeaponCollection Weapons => _weapons ?? (_weapons = new WeaponCollection(this));
@@ -1698,7 +1675,7 @@ namespace GTA
         public bool IsInBoat => Function.Call<bool>(Hash.IS_PED_IN_ANY_BOAT, Handle);
 
         public bool IsInPoliceVehicle => Function.Call<bool>(Hash.IS_PED_IN_ANY_POLICE_VEHICLE, Handle);
-        
+
         [Obsolete("Use IsEnteringVehicle instead.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsGettingIntoVehicle => IsEnteringVehicle;
