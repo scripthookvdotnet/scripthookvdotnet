@@ -1519,6 +1519,17 @@ namespace GTA
 
         #region Weapon Interaction
 
+
+        /// <summary>
+        /// Returns whether this <see cref="Ped"/>'s weapon is ready to fire.
+        /// </summary>
+        /// <remarks>
+        /// For example, this property returns <see langword="false"/> if a minigun is still spinning up.
+        /// </remarks>
+        public bool IsReadyToShoot =>
+            Function.Call<bool>(Hash.IS_PED_WEAPON_READY_TO_SHOOT, Handle);
+
+
         /// <summary>
         /// Returns whether this <see cref="Ped"/> is armed with a weapon matching the specified flags.
         /// </summary>
