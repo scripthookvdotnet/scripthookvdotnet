@@ -117,6 +117,8 @@
       <Command>tools\NativeGen.exe https://github.com/alloc8or/gta5-nativedb-data/blob/master/natives.json?raw=true source\scripting_v3\GTA.Native\NativeHashes.cs</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
+  <!-- This schema is only provided as a property page schema for the IDE -->
+  <!-- You can change C# build options without this property page schema -->
   <ItemGroup>
     <PropertyPageSchema Include="$(MSBuildThisFileDirectory)\ProjectSchema.xml" />
   </ItemGroup>
