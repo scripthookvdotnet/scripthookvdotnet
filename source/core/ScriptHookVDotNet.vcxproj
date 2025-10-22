@@ -114,7 +114,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='NativeGen|x64'">
     <PreBuildEvent>
-      <Command>tools\NativeGen.exe https://github.com/alloc8or/gta5-nativedb-data/blob/master/natives.json?raw=true source\scripting_v3\GTA.Native\NativeHashes.cs</Command>
+      <Command>$(SolutionDir)tools\NativeGen.exe https://github.com/alloc8or/gta5-nativedb-data/blob/master/natives.json?raw=true source\scripting_v3\GTA.Native\NativeHashes.cs</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <!-- This schema is only provided as a property page schema for the IDE -->
@@ -131,20 +131,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="source\core\DllMain.cpp" />
+    <ClCompile Include="DllMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CsCompile Include="source\core\Console.cs" />
-    <CsCompile Include="source\core\FVector3.cs" />
-    <CsCompile Include="source\core\Log.cs" />
-    <CsCompile Include="source\core\MemDataMarshal.cs" />
-    <CsCompile Include="source\core\MemScanner.cs" />
-    <CsCompile Include="source\core\NativeFunc.cs" />
-    <CsCompile Include="source\core\NativeMemory.cs" />
-    <CsCompile Include="source\core\Script.cs" />
-    <CsCompile Include="source\core\ScriptDomain.cs" />
-    <CsCompile Include="source\core\StringMarshal.cs" />
-    <CsCompile Include="source\core\CheapThreadSafeStopwatch.cs" />
+    <CsCompile Include="Console.cs" />
+    <CsCompile Include="FVector3.cs" />
+    <CsCompile Include="Log.cs" />
+    <CsCompile Include="MemDataMarshal.cs" />
+    <CsCompile Include="MemScanner.cs" />
+    <CsCompile Include="NativeFunc.cs" />
+    <CsCompile Include="NativeMemory.cs" />
+    <CsCompile Include="Script.cs" />
+    <CsCompile Include="ScriptDomain.cs" />
+    <CsCompile Include="StringMarshal.cs" />
+    <CsCompile Include="CheapThreadSafeStopwatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />

@@ -70,7 +70,7 @@
     <PackageReference Include="InlineIL.Fody" Version="1.7.4" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ScriptHookVDotNet.vcxproj" />
+    <ProjectReference Include="..\core\ScriptHookVDotNet.vcxproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
