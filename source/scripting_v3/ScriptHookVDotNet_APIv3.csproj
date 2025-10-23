@@ -5,7 +5,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <RootNamespace>GTA</RootNamespace>
+    <RootNamespace></RootNamespace>
     <Title>ScriptHookVDotNet3</Title>
     <AssemblyName>ScriptHookVDotNet3</AssemblyName>
     <TargetFramework>net48</TargetFramework>
