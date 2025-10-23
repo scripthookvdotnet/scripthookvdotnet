@@ -2,6 +2,9 @@ using System;
 
 namespace GTA
 {
+    /// <summary>
+    /// An enumeration of flags used for checking what <see cref="Weapon"/>s to check for with <see cref="Ped.IsArmed"/>.
+    /// </summary>
     [Flags]
     public enum WeaponCheckFlags
     {
