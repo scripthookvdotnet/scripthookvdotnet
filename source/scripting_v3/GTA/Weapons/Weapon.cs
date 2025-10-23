@@ -244,19 +244,21 @@ namespace GTA
         }
 
 
-        public WeaponHudStats GetHudStats()
+        public WeaponHudStats HudStats
         {
-            FWeaponHudStats stats;
+            get {
+                FWeaponHudStats stats;
 
-            unsafe
-            {
-                if(!Function.Call<bool>(Native.Hash.GET_WEAPON_HUD_STATS, (uint)Hash, &stats))
+                unsafe
                 {
-                    return WeaponHudStats.Empty;
+                    if (!Function.Call<bool>(Native.Hash.GET_WEAPON_HUD_STATS, (uint)Hash, &stats))
+                    {
+                        return WeaponHudStats.Empty;
+                    }
                 }
+
+                return stats;
             }
-            
-            return stats;
         }
 
         /// <summary>
