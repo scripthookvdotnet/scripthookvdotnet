@@ -1533,24 +1533,10 @@ namespace GTA
         /// <summary>
         /// Returns whether this <see cref="Ped"/> is armed with a <see cref="Weapon"/> matching the specified flags.
         /// </summary>
-        /// <param name="includeMelee">Whether to include melee weapons (e.g., bat, knife).</param>
-        /// <param name="includeGuns">Whether to include firearms.</param>
-        /// <param name="includeProjectile">Whether to include projectile weapons (e.g., rocket launcher).</param>
-        public bool IsArmed(bool includeMelee = true, bool includeGuns = true, bool includeProjectile = true)
+        /// <param name="flags">Flags to check <c>CPedInventory</c> against.</param>
+        public bool IsArmed(WeaponCheckFlags flags = WeaponCheckFlags.All)
         {
-            int flags = 0;
-
-            if (includeMelee)
-                flags |= 1;
-            if (includeProjectile)
-                flags |= 2;
-            if (includeGuns)
-                flags |= 4;
-
-            if (flags == 0)
-                return false;
-
-            return Function.Call<bool>(Hash.IS_PED_ARMED, Handle, flags);
+            return Function.Call<bool>(Hash.IS_PED_ARMED, Handle, (int)flags);
         }
 
         /// <summary>
