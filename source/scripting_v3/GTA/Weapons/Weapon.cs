@@ -243,7 +243,7 @@ namespace GTA
         /// <summary>
         /// Gets whether this <see cref="Weapon"/> has a flashlight attachment and whether it is currently active.
         /// </summary>
-        public bool FlashlightActive
+        public bool IsFlashlightActive
         {
             get => Function.Call<bool>(Native.Hash.IS_FLASH_LIGHT_ON, _owner.Handle);
         }
