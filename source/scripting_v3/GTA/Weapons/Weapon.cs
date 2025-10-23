@@ -244,6 +244,9 @@ namespace GTA
         }
 
 
+        /// <summary>
+        /// Gets the the stats displayed on the HUD for this <see cref="Weapon"/>.
+        /// </summary>
         public WeaponHudStats HudStats
         {
             get {
