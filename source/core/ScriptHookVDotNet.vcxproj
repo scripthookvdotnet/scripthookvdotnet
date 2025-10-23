@@ -136,6 +136,7 @@
   <ItemGroup>
     <CsCompile Include="Console.cs" />
     <CsCompile Include="FVector3.cs" />
+	<CsCompile Include="FWeaponHudStats.cs" />
     <CsCompile Include="Log.cs" />
     <CsCompile Include="MemDataMarshal.cs" />
     <CsCompile Include="MemScanner.cs" />
@@ -154,31 +155,8 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Compile C# source files -->
-  <Target
-    Name="CsCompile"
-    BeforeTargets="ClCompile"
-    Inputs="@(CsCompile)"
-    Outputs="$(IntDir)$(TargetName).netmodule">
-    <Csc
-      Sources="@(CsCompile)"
-      AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)"
-      DebugType="%(CsCompile.DebugType)"
-      DefineConstants="%(CsCompile.DefineConstants)"
-      DisabledWarnings="%(CsCompile.NoWarn)"
-      DocumentationFile="$(IntDir)$(TargetName).xdc"
-      EmitDebugInformation="%(CsCompile.DebugSymbols)"
-      LangVersion="%(CsCompile.LangVersion)"
-      Optimize="%(CsCompile.Optimize)"
-      OutputAssembly="$(IntDir)$(TargetName).netmodule"
-      PdbFile="$(IntDir)$(TargetName).netmodule.pdb"
-      TargetType="Module"
-      TreatWarningsAsErrors="%(CsCompile.TreatWarningsAsErrors)"
-      Utf8Output="%(CsCompile.Utf8Output)"
-      WarningLevel="%(CsCompile.WarningLevel)"
-      WarningsAsErrors="%(CsCompile.WarningsAsErrors)"
-      WarningsNotAsErrors="%(CsCompile.WarningsNotAsErrors)"
-      ToolExe="$(CscToolExe)"
-      ToolPath="$(CscToolPath)" />
+  <Target Name="CsCompile" BeforeTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
+    <Csc Sources="@(CsCompile)" AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)" DebugType="%(CsCompile.DebugType)" DefineConstants="%(CsCompile.DefineConstants)" DisabledWarnings="%(CsCompile.NoWarn)" DocumentationFile="$(IntDir)$(TargetName).xdc" EmitDebugInformation="%(CsCompile.DebugSymbols)" LangVersion="%(CsCompile.LangVersion)" Optimize="%(CsCompile.Optimize)" OutputAssembly="$(IntDir)$(TargetName).netmodule" PdbFile="$(IntDir)$(TargetName).netmodule.pdb" TargetType="Module" TreatWarningsAsErrors="%(CsCompile.TreatWarningsAsErrors)" Utf8Output="%(CsCompile.Utf8Output)" WarningLevel="%(CsCompile.WarningLevel)" WarningsAsErrors="%(CsCompile.WarningsAsErrors)" WarningsNotAsErrors="%(CsCompile.WarningsNotAsErrors)" ToolExe="$(CscToolExe)" ToolPath="$(CscToolPath)" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">

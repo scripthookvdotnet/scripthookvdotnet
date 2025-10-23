@@ -9,6 +9,9 @@
     <CsCompile Include="ScriptDomain.cs" />
     <CsCompile Include="StringMarshal.cs" />
     <CsCompile Include="CheapThreadSafeStopwatch.cs" />
+    <CsCompile Include="FVector3.cs" />
+    <CsCompile Include="MemDataMarshal.cs" />
+    <CsCompile Include="MemScanner.cs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -19,5 +22,8 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FWeaponHudStats.cs" />
   </ItemGroup>
 </Project>

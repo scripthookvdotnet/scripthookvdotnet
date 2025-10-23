@@ -5,6 +5,7 @@
 
 using GTA.Native;
 using System.Linq;
+using SHVDN;
 
 namespace GTA
 {
@@ -240,6 +241,19 @@ namespace GTA
         public static implicit operator WeaponHash(Weapon weapon)
         {
             return weapon.Hash;
+        }
+
+
+        public WeaponHudStats GetHudStats()
+        {
+            FWeaponHudStats stats;
+
+            unsafe
+            {
+                Function.Call(Native.Hash.GET_WEAPON_HUD_STATS, (uint)Hash, &stats);
+            }
+            
+            return stats;
         }
 
         /// <summary>
