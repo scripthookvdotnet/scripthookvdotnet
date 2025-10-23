@@ -250,7 +250,10 @@ namespace GTA
 
             unsafe
             {
-                Function.Call(Native.Hash.GET_WEAPON_HUD_STATS, (uint)Hash, &stats);
+                if(!Function.Call<bool>(Native.Hash.GET_WEAPON_HUD_STATS, (uint)Hash, &stats))
+                {
+                    return WeaponHudStats.Empty;
+                }
             }
             
             return stats;

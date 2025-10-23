@@ -52,6 +52,7 @@ namespace GTA
             Range = range;
         }
 
+        internal static WeaponHudStats Empty => new(0, 0, 0, 0, 0);
         /// <summary>
         /// Converts from the internal, memory-layout struct <see cref="FWeaponHudStats"/>.
         /// </summary>
