@@ -12,6 +12,7 @@
     <CsCompile Include="FVector3.cs" />
     <CsCompile Include="MemDataMarshal.cs" />
     <CsCompile Include="MemScanner.cs" />
+    <CsCompile Include="ScrWeaponHudStats.cs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -22,8 +23,5 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FWeaponHudStats.cs" />
   </ItemGroup>
 </Project>

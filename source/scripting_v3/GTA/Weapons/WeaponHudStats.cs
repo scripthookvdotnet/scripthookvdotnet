@@ -54,15 +54,15 @@ namespace GTA
 
         internal static WeaponHudStats Empty => new(0, 0, 0, 0, 0);
         /// <summary>
-        /// Converts from the internal, memory-layout struct <see cref="FWeaponHudStats"/>.
+        /// Converts from the internal, memory-layout struct <see cref="ScrWeaponHudStats"/>.
         /// </summary>
-        public static implicit operator WeaponHudStats(FWeaponHudStats value)
+        public static implicit operator WeaponHudStats(ScrWeaponHudStats value)
             => new(value.Damage, value.Speed, value.Capacity, value.Accuracy, value.Range);
 
         /// <summary>
-        /// Converts to the internal, memory-layout struct <see cref="FWeaponHudStats"/>.
+        /// Converts to the internal, memory-layout struct <see cref="ScrWeaponHudStats"/>.
         /// </summary>
-        public static implicit operator FWeaponHudStats(WeaponHudStats value)
+        public static implicit operator ScrWeaponHudStats(WeaponHudStats value)
             => new(value.Damage, value.Speed, value.Capacity, value.Accuracy, value.Range);
     }
 }

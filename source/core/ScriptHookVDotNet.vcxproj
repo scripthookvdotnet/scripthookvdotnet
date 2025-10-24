@@ -136,7 +136,7 @@
   <ItemGroup>
     <CsCompile Include="Console.cs" />
     <CsCompile Include="FVector3.cs" />
-	<CsCompile Include="FWeaponHudStats.cs" />
+    <CsCompile Include="ScrWeaponHudStats.cs" />
     <CsCompile Include="Log.cs" />
     <CsCompile Include="MemDataMarshal.cs" />
     <CsCompile Include="MemScanner.cs" />
