@@ -1,4 +1,4 @@
-Community Script Hook V .NET (SHVDN)
+Script Hook V .NET (SHVDN)
 ============================
 
 [![NuGet](https://img.shields.io/nuget/v/scripthookvdotnet3.svg?label=nuget%20%28v3%29)](https://www.nuget.org/packages/scripthookvdotnet3)
