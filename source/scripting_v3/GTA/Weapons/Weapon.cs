@@ -249,7 +249,8 @@ namespace GTA
         /// </summary>
         public WeaponHudStats HudStats
         {
-            get {
+            get
+            {
                 ScrWeaponHudStats stats;
 
                 unsafe
