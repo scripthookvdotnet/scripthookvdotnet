@@ -13,13 +13,11 @@ namespace SHVDN
 
 		public ScrWeaponHudStats(int damage, int speed, int capacity, int accuracy, int range)
 		{
-			Damage = ClampToByte(damage);
-			Speed = ClampToByte(speed);
-			Capacity = ClampToByte(capacity);
-			Accuracy = ClampToByte(accuracy);
-			Range = ClampToByte(range);
-		}
-
-		private static byte ClampToByte(int value) => (byte)(value < 0 ? 0 : (value > 255 ? 255 : value));
+            Damage = (byte)damage;
+            Speed = (byte)speed;
+            Capacity = (byte)capacity;
+            Accuracy = (byte)accuracy;
+            Range = (byte)range;
+        }
 	}
 }
