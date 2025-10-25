@@ -2028,13 +2028,18 @@ namespace GTA
 
         #region Combat
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> is an enemy to the player.
+        /// </summary>
         public bool IsEnemy
         {
+            get => GetConfigFlag(PedConfigFlagToggles.PedIsEnemyToPlayer);
             set => Function.Call(Hash.SET_PED_AS_ENEMY, Handle, value);
         }
 
         public bool IsPriorityTargetForEnemies
         {
+            get => GetConfigFlag(PedConfigFlagToggles.ThisPedIsATargetPriority);
             set => Function.Call(Hash.SET_ENTITY_IS_TARGET_PRIORITY, Handle, value, 0);
         }
 
