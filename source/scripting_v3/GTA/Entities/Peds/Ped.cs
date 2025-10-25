@@ -2116,6 +2116,7 @@ namespace GTA
         public bool CanBeShotInVehicle
         {
             set => Function.Call(Hash.SET_PED_CAN_BE_SHOT_IN_VEHICLE, Handle, value);
+            get => GetConfigFlag(PedConfigFlagToggles.CanBeShotInVehicle);
         }
 
         /// <summary>
