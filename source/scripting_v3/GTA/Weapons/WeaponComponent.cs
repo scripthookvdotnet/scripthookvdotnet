@@ -48,6 +48,20 @@ namespace GTA
 
         public string LocalizedName => _weapon != null ? Game.GetLocalizedString((int)SHVDN.NativeMemory.GetHumanNameHashOfWeaponComponentInfo((uint)ComponentHash)) : string.Empty;
 
+        /// <summary>
+        /// Sets the light intensity distance for all flashlight components.
+        /// </summary>
+        /// <remarks>
+        /// The value is internally clamped between <c>0</c> and <c>255</c>,
+        /// since the distance is stored as an 8-bit unsigned integer.
+        /// </remarks>
+        public static float FlashlightDistance
+        {
+            // According to NativeDB and the internal .sch, this should return a boolean,
+            // but the actual implementation behaves like a void function instead.
+            set => Function.Call(Native.Hash.SET_FLASH_LIGHT_FADE_DISTANCE, value);
+        }
+
         public WeaponComponentHash ComponentHash
         {
             get;

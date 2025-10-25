@@ -1519,6 +1519,26 @@ namespace GTA
 
         #region Weapon Interaction
 
+
+        /// <summary>
+        /// Returns whether this <see cref="Ped"/>'s weapon is ready to fire.
+        /// </summary>
+        /// <remarks>
+        /// For example, this property returns <see langword="false"/> if a minigun is still spinning up.
+        /// </remarks>
+        public bool IsReadyToShoot =>
+            Function.Call<bool>(Hash.IS_PED_WEAPON_READY_TO_SHOOT, Handle);
+
+
+        /// <summary>
+        /// Returns whether this <see cref="Ped"/> is armed with a <see cref="Weapon"/> matching the specified flags.
+        /// </summary>
+        /// <param name="flags">Flags to check <c>CPedInventory</c> against.</param>
+        public bool IsArmed(WeaponCheckFlags flags = WeaponCheckFlags.All)
+        {
+            return Function.Call<bool>(Hash.IS_PED_ARMED, Handle, (int)flags);
+        }
+
         /// <summary>
         /// Gets a collection of all this <see cref="Ped"/>s <see cref="Weapon"/>s.
         /// </summary>
@@ -1641,7 +1661,7 @@ namespace GTA
         public bool IsInBoat => Function.Call<bool>(Hash.IS_PED_IN_ANY_BOAT, Handle);
 
         public bool IsInPoliceVehicle => Function.Call<bool>(Hash.IS_PED_IN_ANY_POLICE_VEHICLE, Handle);
-        
+
         [Obsolete("Use IsEnteringVehicle instead.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsGettingIntoVehicle => IsEnteringVehicle;
