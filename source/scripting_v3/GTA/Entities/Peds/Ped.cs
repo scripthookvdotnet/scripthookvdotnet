@@ -2723,9 +2723,13 @@ namespace GTA
             Function.Call(Hash.REMOVE_PED_FROM_GROUP, Handle);
         }
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> will never leave its <see cref="PedGroup"/>.
+        /// </summary>
         public bool NeverLeavesGroup
         {
             set => Function.Call(Hash.SET_PED_NEVER_LEAVES_GROUP, Handle, value);
+            get => GetConfigFlag(PedConfigFlagToggles.NeverLeavesGroup);
         }
 
         /// <summary>
