@@ -2338,6 +2338,9 @@ namespace GTA
         public bool DrownsInWater
         {
             set => Function.Call(Hash.SET_PED_DIES_IN_WATER, Handle, value);
+
+            //In B2699 GET_PED_DIES_IN_WATER was introduced,
+            //but this works for all versions including newer ones.
             get => GetConfigFlag(PedConfigFlagToggles.DrownsInWater);
         }
 
