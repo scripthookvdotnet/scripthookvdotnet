@@ -2037,6 +2037,9 @@ namespace GTA
             set => Function.Call(Hash.SET_PED_AS_ENEMY, Handle, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> is a priority target for enemies.
+        /// </summary>
         public bool IsPriorityTargetForEnemies
         {
             get => GetConfigFlag(PedConfigFlagToggles.ThisPedIsATargetPriority);
