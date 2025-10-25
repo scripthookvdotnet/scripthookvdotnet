@@ -2299,7 +2299,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets whether this <see cref="Ped"/> will die instantly if they find themselves in a body of water.
+        /// Gets or sets whether this <see cref="Ped"/> will die instantly if they find themselves in a body of water.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -2318,6 +2318,7 @@ namespace GTA
         public bool DiesInstantlyInWater
         {
             set => Function.Call(Hash.SET_PED_DIES_INSTANTLY_IN_WATER, Handle, value);
+            get => PedConfigFlags.GetConfigFlag(PedConfigFlagToggles.DiesInstantlyWhenSwimming);
         }
 
         /// <summary>
