@@ -2356,7 +2356,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets whether this <see cref="Ped"/> will drop the current weapon when they get killed.
+        /// Gets or sets whether this <see cref="Ped"/> will drop the current weapon when they get killed.
         /// </summary>
         /// <value>
         /// <see langword="true" /> if <see cref="Ped"/> drops the current weapon when killed; otherwise, <see langword="false" />.
