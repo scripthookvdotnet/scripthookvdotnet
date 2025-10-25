@@ -1970,6 +1970,7 @@ namespace GTA
         /// </value>
         public bool StaysInVehicleWhenJacked
         {
+            get => GetConfigFlag(PedConfigFlagToggles.StayInCarOnJack);
             set => Function.Call(Hash.SET_PED_STAY_IN_VEHICLE_WHEN_JACKED, Handle, value);
         }
 
