@@ -2797,15 +2797,6 @@ namespace GTA
             set => Function.Call(Hash.SET_AMBIENT_VOICE_NAME, Handle, value);
         }
 
-        /// <summary>
-        /// Gets or sets the ambient voice hash to use when this <see cref="Ped"/> speaks.
-        /// </summary>
-        public string VoiceHash
-        {
-            set => Function.Call(Hash.SET_AMBIENT_VOICE_NAME_HASH, Handle, value);
-            get => Function.Call<string>(Hash.GET_AMBIENT_VOICE_NAME_HASH, Handle);
-        }
-
         #endregion
 
         #region Animation
