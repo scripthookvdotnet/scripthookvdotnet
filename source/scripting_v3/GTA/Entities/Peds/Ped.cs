@@ -2808,8 +2808,8 @@ namespace GTA
         /// </summary>
         public bool CanPlayGestures
         {
-            set => Function.Call(Hash.SET_PED_CAN_PLAY_GESTURE_ANIMS, Handle, value);
             get => GetResetFlag(PedResetFlagToggles.GestureAnimsAllowed);
+            set => Function.Call(Hash.SET_PED_CAN_PLAY_GESTURE_ANIMS, Handle, value);
         }
 
         /// <summary>
