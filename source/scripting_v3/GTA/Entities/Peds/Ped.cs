@@ -2321,7 +2321,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets whether this <see cref="Ped"/> can take damage for being underwater.
+        /// Gets or sets whether this <see cref="Ped"/> can take damage for being underwater.
         /// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be
         /// underwater without taking <c>WEAPON_DROWNING</c> damage forever.
         /// </summary>
@@ -2339,6 +2339,7 @@ namespace GTA
         public bool DrownsInWater
         {
             set => Function.Call(Hash.SET_PED_DIES_IN_WATER, Handle, value);
+            get => PedConfigFlags.GetConfigFlag(PedConfigFlagToggles.DrownsInWater);
         }
 
         /// <summary>
