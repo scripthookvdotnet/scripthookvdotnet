@@ -2342,13 +2342,14 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets whether this <see cref="Ped"/> can take <c>WEAPON_DROWNING</c> damage in a sinking vehicle.
+        /// Gets or sets whether this <see cref="Ped"/> can take <c>WEAPON_DROWNING</c> damage in a sinking vehicle.
         /// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be
         /// in a sinking vehicle without taking <c>WEAPON_DROWNING</c> damage forever.
         /// </summary>
         public bool DrownsInSinkingVehicle
         {
             set => Function.Call(Hash.SET_PED_DIES_IN_SINKING_VEHICLE, Handle, value);
+            get => PedConfigFlags.GetConfigFlag(PedConfigFlagToggles.DrownsInSinkingVehicle);
         }
 
         /// <summary>
