@@ -2315,7 +2315,7 @@ namespace GTA
         public bool DiesInstantlyInWater
         {
             set => Function.Call(Hash.SET_PED_DIES_INSTANTLY_IN_WATER, Handle, value);
-            get => PedConfigFlags.GetConfigFlag(PedConfigFlagToggles.DiesInstantlyWhenSwimming);
+            get => GetConfigFlag(PedConfigFlagToggles.DiesInstantlyWhenSwimming);
         }
 
         /// <summary>
@@ -2337,7 +2337,7 @@ namespace GTA
         public bool DrownsInWater
         {
             set => Function.Call(Hash.SET_PED_DIES_IN_WATER, Handle, value);
-            get => PedConfigFlags.GetConfigFlag(PedConfigFlagToggles.DrownsInWater);
+            get => GetConfigFlag(PedConfigFlagToggles.DrownsInWater);
         }
 
         /// <summary>
@@ -2348,7 +2348,7 @@ namespace GTA
         public bool DrownsInSinkingVehicle
         {
             set => Function.Call(Hash.SET_PED_DIES_IN_SINKING_VEHICLE, Handle, value);
-            get => PedConfigFlags.GetConfigFlag(PedConfigFlagToggles.DrownsInSinkingVehicle);
+            get => GetConfigFlag(PedConfigFlagToggles.DrownsInSinkingVehicle);
         }
 
         /// <summary>
@@ -2815,7 +2815,7 @@ namespace GTA
         public bool CanPlayGestures
         {
             set => Function.Call(Hash.SET_PED_CAN_PLAY_GESTURE_ANIMS, Handle, value);
-            get => PedResetFlags.GetResetFlag(PedResetFlagToggles.GestureAnimsAllowed);
+            get => GetResetFlag(PedResetFlagToggles.GestureAnimsAllowed);
         }
 
         /// <summary>
