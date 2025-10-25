@@ -2806,11 +2806,12 @@ namespace GTA
         #region Animation
 
         /// <summary>
-        /// Sets the value that indicates this <see cref="Ped"/> can play gesture animations.
+        /// Gets or sets whether this <see cref="Ped"/> can play gesture animations.
         /// </summary>
         public bool CanPlayGestures
         {
             set => Function.Call(Hash.SET_PED_CAN_PLAY_GESTURE_ANIMS, Handle, value);
+            get => PedResetFlags.GetResetFlag(PedResetFlagToggles.GestureAnimsAllowed);
         }
 
         /// <summary>
