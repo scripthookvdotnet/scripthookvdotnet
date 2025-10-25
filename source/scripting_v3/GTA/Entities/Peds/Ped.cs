@@ -289,6 +289,7 @@ namespace GTA
         /// </summary>
         public bool CanWearHelmet
         {
+            get => GetConfigFlag(PedConfigFlagToggles.UseHelmet);
             set => Function.Call(Hash.SET_PED_HELMET, Handle, value);
         }
 
