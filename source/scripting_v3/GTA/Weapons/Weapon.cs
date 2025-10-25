@@ -5,6 +5,7 @@
 
 using GTA.Native;
 using System.Linq;
+using SHVDN;
 
 namespace GTA
 {
@@ -253,6 +254,28 @@ namespace GTA
         public static implicit operator WeaponHash(Weapon weapon)
         {
             return weapon.Hash;
+        }
+
+
+        /// <summary>
+        /// Gets the the stats displayed on the HUD for this <see cref="Weapon"/>.
+        /// </summary>
+        public WeaponHudStats HudStats
+        {
+            get
+            {
+                ScrWeaponHudStats stats;
+
+                unsafe
+                {
+                    if (!Function.Call<bool>(Native.Hash.GET_WEAPON_HUD_STATS, (uint)Hash, &stats))
+                    {
+                        return WeaponHudStats.Empty;
+                    }
+                }
+
+                return stats;
+            }
         }
 
         /// <summary>

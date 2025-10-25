@@ -9,6 +9,10 @@
     <CsCompile Include="ScriptDomain.cs" />
     <CsCompile Include="StringMarshal.cs" />
     <CsCompile Include="CheapThreadSafeStopwatch.cs" />
+    <CsCompile Include="FVector3.cs" />
+    <CsCompile Include="MemDataMarshal.cs" />
+    <CsCompile Include="MemScanner.cs" />
+    <CsCompile Include="ScrWeaponHudStats.cs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
