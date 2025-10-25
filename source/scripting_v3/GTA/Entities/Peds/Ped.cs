@@ -2121,8 +2121,8 @@ namespace GTA
         /// </summary>
         public bool CanBeShotInVehicle
         {
-            set => Function.Call(Hash.SET_PED_CAN_BE_SHOT_IN_VEHICLE, Handle, value);
             get => GetConfigFlag(PedConfigFlagToggles.CanBeShotInVehicle);
+            set => Function.Call(Hash.SET_PED_CAN_BE_SHOT_IN_VEHICLE, Handle, value);
         }
 
         /// <summary>
@@ -2315,8 +2315,8 @@ namespace GTA
         /// </remarks>
         public bool DiesInstantlyInWater
         {
-            set => Function.Call(Hash.SET_PED_DIES_INSTANTLY_IN_WATER, Handle, value);
             get => GetConfigFlag(PedConfigFlagToggles.DiesInstantlyWhenSwimming);
+            set => Function.Call(Hash.SET_PED_DIES_INSTANTLY_IN_WATER, Handle, value);
         }
 
         /// <summary>
@@ -2337,11 +2337,10 @@ namespace GTA
         /// </remarks>
         public bool DrownsInWater
         {
-            set => Function.Call(Hash.SET_PED_DIES_IN_WATER, Handle, value);
-
             //In B2699 GET_PED_DIES_IN_WATER was introduced,
             //but this works for all versions including newer ones.
             get => GetConfigFlag(PedConfigFlagToggles.DrownsInWater);
+            set => Function.Call(Hash.SET_PED_DIES_IN_WATER, Handle, value);
         }
 
         /// <summary>
@@ -2351,8 +2350,8 @@ namespace GTA
         /// </summary>
         public bool DrownsInSinkingVehicle
         {
-            set => Function.Call(Hash.SET_PED_DIES_IN_SINKING_VEHICLE, Handle, value);
             get => GetConfigFlag(PedConfigFlagToggles.DrownsInSinkingVehicle);
+            set => Function.Call(Hash.SET_PED_DIES_IN_SINKING_VEHICLE, Handle, value);
         }
 
         /// <summary>
