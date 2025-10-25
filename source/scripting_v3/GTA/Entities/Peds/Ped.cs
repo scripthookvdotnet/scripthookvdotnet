@@ -1666,8 +1666,12 @@ namespace GTA
 
         public bool IsTryingToEnterALockedVehicle => Function.Call<bool>(Hash.IS_PED_TRYING_TO_ENTER_A_LOCKED_VEHICLE, Handle);
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> can be dragged out of a <see cref="Vehicle"/>.
+        /// </summary>
         public bool CanBeDraggedOutOfVehicle
         {
+            get => !GetConfigFlag(PedConfigFlagToggles.DontDragMeOutCar);
             set => Function.Call(Hash.SET_PED_CAN_BE_DRAGGED_OUT, Handle, value);
         }
 
