@@ -1608,10 +1608,11 @@ namespace GTA
             => Function.Call<bool>(Hash.SET_VEHICLE_SHOOT_AT_TARGET, Handle, null, target.X, target.Y, target.Z);
 
         /// <summary>
-        /// Sets if this <see cref="Ped"/> can switch between different weapons.
+        /// Gets or sets if this <see cref="Ped"/> can switch between different weapons.
         /// </summary>
         public bool CanSwitchWeapons
         {
+            get => !GetConfigFlag(PedConfigFlagToggles.BlockWeaponSwitching);
             set => Function.Call(Hash.SET_PED_CAN_SWITCH_WEAPON, Handle, value);
         }
 
