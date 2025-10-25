@@ -1716,8 +1716,8 @@ namespace GTA
 
         public bool CanFlyThroughWindscreen
         {
-            get => Function.Call<bool>(Hash.GET_PED_CONFIG_FLAG, Handle, 32, true);
-            set => Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, 32, value);
+            get => GetConfigFlag(PedConfigFlagToggles.WillFlyThroughWindscreen);
+            set => SetConfigFlag(PedConfigFlagToggles.WillFlyThroughWindscreen, value);
         }
 
         /// <summary>
