@@ -2731,8 +2731,8 @@ namespace GTA
         /// </summary>
         public bool NeverLeavesGroup
         {
-            set => Function.Call(Hash.SET_PED_NEVER_LEAVES_GROUP, Handle, value);
             get => GetConfigFlag(PedConfigFlagToggles.NeverLeavesGroup);
+            set => Function.Call(Hash.SET_PED_NEVER_LEAVES_GROUP, Handle, value);
         }
 
         /// <summary>
