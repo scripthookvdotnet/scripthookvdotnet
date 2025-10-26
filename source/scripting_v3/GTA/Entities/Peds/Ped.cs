@@ -2146,7 +2146,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// GEts or sets if this <see cref="Ped"/> can take damage inflicted by regular bullets (not stun gun bullets) while in a <see cref="Vehicle"/>.
+        /// Gets or sets if this <see cref="Ped"/> can take damage inflicted by regular bullets (not stun gun bullets) while in a <see cref="Vehicle"/>.
         /// </summary>
         public bool CanBeShotInVehicle
         {
