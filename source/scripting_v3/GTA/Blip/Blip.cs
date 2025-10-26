@@ -674,6 +674,41 @@ namespace GTA
         }
 
         /// <summary>
+        /// Gets whether a specific <see cref="BlipPropertyFlag"/> is set for this <see cref="Blip"/>.
+        /// </summary>
+        public bool GetPropertyFlag(BlipPropertyFlag flag)
+        {
+            const int PROPERTY_FLAGS_OFFSET = 0x20;
+
+            IntPtr address = MemoryAddress;
+            if (address == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            return SHVDN.MemDataMarshal.IsBitSet(address + PROPERTY_FLAGS_OFFSET, (int)flag);
+        }
+
+        // Would be practical if this was exposed publicly,
+        // but when updating some flags using this method,
+        // the blip would not visually update until the game was paused and unpaused.
+        /// <summary>
+        /// Sets whether a specific <see cref="BlipPropertyFlag"/> is set for this <see cref="Blip"/>.
+        /// </summary>
+        private void SetPropertyFlag(BlipPropertyFlag flag, bool value)
+        {
+            const int PROPERTY_FLAGS_OFFSET = 0x20;
+
+            IntPtr address = MemoryAddress;
+            if (address == IntPtr.Zero)
+            {
+                return;
+            }
+
+            SHVDN.MemDataMarshal.SetBit(address + PROPERTY_FLAGS_OFFSET, (int)flag, value);
+        }
+
+        /// <summary>
         /// Gets the appropriate name of this <see cref="Blip"/> in the same way the game does.
         /// </summary>
         /// <value>
