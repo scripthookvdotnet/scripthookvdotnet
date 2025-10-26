@@ -2115,18 +2115,12 @@ namespace GTA
 
         public bool IsInCoverFacingLeft => Function.Call<bool>(Hash.IS_PED_IN_COVER_FACING_LEFT, Handle);
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> can be targeted by other <see cref="Ped"/>s.
+        /// </summary>
         public bool CanBeTargetted
         {
-            get
-            {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset == 0)
-                {
-                    return false;
-                }
-
-                return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 9);
-            }
+            get => !GetConfigFlag(PedConfigFlagToggles.NeverEverTargetThisPed);
             set => Function.Call(Hash.SET_PED_CAN_BE_TARGETTED, Handle, value);
         }
 
@@ -2289,7 +2283,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or Sets whether this <see cref="Ped"/> can suffer critical damage (which deals 1000 times base damages to non-player characters with default weapon configs) when bullets hit this <see cref="Ped"/>'s head bone or its child bones.
+        /// Gets or sets whether this <see cref="Ped"/> can suffer critical damage (which deals 1000 times base damages to non-player characters with default weapon configs) when bullets hit this <see cref="Ped"/>'s head bone or its child bones.
         /// If <see langword="false"/>, they will take base damage from weapons when bullets hit their head bone or its child bones, just like when bullets hit a bone other than their head bone, its child bones, or limb bones.
         /// </summary>
         /// <value>
@@ -2297,16 +2291,7 @@ namespace GTA
         /// </value>
         public bool CanSufferCriticalHits
         {
-            get
-            {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset == 0)
-                {
-                    return false;
-                }
-
-                return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.SuffersCriticalHitOffset, 2);
-            }
+            get => !GetConfigFlag(PedConfigFlagToggles.NoCriticalHits);
             set => Function.Call(Hash.SET_PED_SUFFERS_CRITICAL_HITS, Handle, value);
         }
 
