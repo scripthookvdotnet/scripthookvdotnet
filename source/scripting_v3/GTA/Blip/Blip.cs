@@ -3,10 +3,11 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
+using System.ComponentModel;
+using System.Drawing;
 using GTA.Math;
 using GTA.Native;
-using System;
-using System.Drawing;
 
 namespace GTA
 {
@@ -532,6 +533,12 @@ namespace GTA
         /// <value>
         ///   <see langword="true" /> to show the dollar sign; otherwise, <see langword="false" />.
         /// </value>
+        [Obsolete(
+            "`Blip.ShowsDollarSign` is obsolete because the setter changes whether to show the tick, and also " +
+            "because `SHOW_FOR_SALE_ICON_ON_BLIP` was added in b2802, which reveals `ShowsDollarSign` is too " +
+            "different from internal flags for the blip \"for sale\" icon. For what the setter does, use " +
+            "`Blip.ShowsTick` instead."),
+            EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShowsDollarSign
         {
             get
