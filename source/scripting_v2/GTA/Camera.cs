@@ -77,11 +77,11 @@ namespace GTA
         public Vector3 GetOffsetInWorldCoords(Vector3 offset)
         {
             Vector3 forward = Direction;
-            const double d2R = 0.01745329251994329576923690768489;
-            double num1 = System.Math.Cos(Rotation.Y * d2R);
-            double x = num1 * System.Math.Cos(-Rotation.Z * d2R);
-            double y = num1 * System.Math.Sin(Rotation.Z * d2R);
-            double z = System.Math.Sin(-Rotation.Y * d2R);
+            const double D2R = 0.01745329251994329576923690768489;
+            double num1 = System.Math.Cos(Rotation.Y * D2R);
+            double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
+            double y = num1 * System.Math.Sin(Rotation.Z * D2R);
+            double z = System.Math.Sin(-Rotation.Y * D2R);
             var right = new Vector3((float)x, (float)y, (float)z);
             var up = Vector3.Cross(right, forward);
             return Position + (right * offset.X) + (forward * offset.Y) + (up * offset.Z);
@@ -90,11 +90,11 @@ namespace GTA
         public Vector3 GetOffsetFromWorldCoords(Vector3 worldCoords)
         {
             Vector3 forward = Direction;
-            const double d2R = 0.01745329251994329576923690768489;
-            double num1 = System.Math.Cos(Rotation.Y * d2R);
-            double x = num1 * System.Math.Cos(-Rotation.Z * d2R);
-            double y = num1 * System.Math.Sin(Rotation.Z * d2R);
-            double z = System.Math.Sin(-Rotation.Y * d2R);
+            const double D2R = 0.01745329251994329576923690768489;
+            double num1 = System.Math.Cos(Rotation.Y * D2R);
+            double x = num1 * System.Math.Cos(-Rotation.Z * D2R);
+            double y = num1 * System.Math.Sin(Rotation.Z * D2R);
+            double z = System.Math.Sin(-Rotation.Y * D2R);
             var right = new Vector3((float)x, (float)y, (float)z);
             var up = Vector3.Cross(right, forward);
             Vector3 delta = worldCoords - Position;

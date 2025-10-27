@@ -927,9 +927,9 @@ namespace GTA.Chrono
             unsafe
             {
                 // this is the minimum number that is large enough to contain any date string and is multiple of 4
-                const int bufferLen = 20;
-                char* buffer = stackalloc char[bufferLen];
-                GameClockDateTimeFormat.TryFormatDateS(this, buffer, bufferLen, out int written);
+                const int BufferLen = 20;
+                char* buffer = stackalloc char[BufferLen];
+                GameClockDateTimeFormat.TryFormatDateS(this, buffer, BufferLen, out int written);
                 return new string(buffer, 0, written);
             }
         }

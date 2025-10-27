@@ -548,8 +548,8 @@ namespace GTA.Math
             return (float)((System.Math.Acos(System.Math.Min(System.Math.Abs(dot), 1.0f)) * 2.0 * (180.0f / System.Math.PI)));
         }
 
-        const float DEG_2_RAD = (float)((System.Math.PI / 180.0));
-        const float RAD_2_DEG = (float)((180.0 / System.Math.PI));
+        const float Deg2Rad = (float)((System.Math.PI / 180.0));
+        const float Rad2Deg = (float)((180.0 / System.Math.PI));
 
         /// <summary>
         /// <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x-axis, and y degrees around the y-axis (in that order).</para>
@@ -569,7 +569,7 @@ namespace GTA.Math
         /// In most cases, you should use the other overload <see cref="Euler(float, float, float, EulerRotationOrder)"/> and pass <see cref="EulerRotationOrder.YXZ"/> as the rotation order.
         /// </para>
         /// </remarks>
-        public static Quaternion Euler(float zaxis, float xaxis, float yaxis) => RotationYawPitchRoll(zaxis * DEG_2_RAD, xaxis * DEG_2_RAD, yaxis * DEG_2_RAD);
+        public static Quaternion Euler(float zaxis, float xaxis, float yaxis) => RotationYawPitchRoll(zaxis * Deg2Rad, xaxis * Deg2Rad, yaxis * Deg2Rad);
 
         /// <summary>
         /// <para>Returns a rotation that rotates degrees in the specified order in world space.</para>
@@ -606,7 +606,7 @@ namespace GTA.Math
         /// where <see cref="EulerRotationOrder.ZXY"/> is passed as the rotation order.
         /// In most cases, you should use the other overload <see cref="Euler(Vector3, EulerRotationOrder)"/> and pass <see cref="EulerRotationOrder.YXZ"/> as the rotation order.
         /// </remarks>
-        public static Quaternion Euler(Vector3 euler) => RotationYawPitchRoll(euler.Z * DEG_2_RAD, euler.X * DEG_2_RAD, euler.Y * DEG_2_RAD);
+        public static Quaternion Euler(Vector3 euler) => RotationYawPitchRoll(euler.Z * Deg2Rad, euler.X * Deg2Rad, euler.Y * Deg2Rad);
 
         /// <summary>
         /// <para>Returns a rotation that rotates degrees in the specified order in world space.</para>
@@ -630,13 +630,13 @@ namespace GTA.Math
         {
             Quaternion result = Zero;
 
-            float halfX = x * 0.5f * DEG_2_RAD;
+            float halfX = x * 0.5f * Deg2Rad;
             float sinX = (float)(System.Math.Sin((double)(halfX)));
             float cosX = (float)(System.Math.Cos((double)(halfX)));
-            float halfY = y * 0.5f * DEG_2_RAD;
+            float halfY = y * 0.5f * Deg2Rad;
             float sinY = (float)(System.Math.Sin((double)(halfY)));
             float cosY = (float)(System.Math.Cos((double)(halfY)));
-            float halfZ = z * 0.5f * DEG_2_RAD;
+            float halfZ = z * 0.5f * Deg2Rad;
             float sinZ = (float)(System.Math.Sin((double)(halfZ)));
             float cosZ = (float)(System.Math.Cos((double)(halfZ)));
 
@@ -730,24 +730,24 @@ namespace GTA.Math
 
         #region Internal method for ToEuler
 
-        const float SINGULARITY_THRESHOLD = 0.4999995f;
+        const float SingularityThreshold = 0.4999995f;
         private readonly Vector3 ToEulerYXZ()
         {
             float singularityTest = (Y * Z) + (X * W);
 
-            if (singularityTest > SINGULARITY_THRESHOLD)
+            if (singularityTest > SingularityThreshold)
             {
                 float m10 = 2 * ((X * Y) + (Z * W));
                 float m00 = 2 * ((W * W) + (X * X)) - 1;
 
-                return new Vector3(90f, (float)System.Math.Atan2(m10, m00) * RAD_2_DEG, 0f);
+                return new Vector3(90f, (float)System.Math.Atan2(m10, m00) * Rad2Deg, 0f);
             }
-            if (singularityTest < -SINGULARITY_THRESHOLD)
+            if (singularityTest < -SingularityThreshold)
             {
                 float m10 = 2 * ((X * Y) + (Z * W));
                 float m00 = 2 * ((W * W) + (X * X)) - 1;
 
-                return new Vector3(-90f, (float)System.Math.Atan2(-m10, m00) * RAD_2_DEG, 0f);
+                return new Vector3(-90f, (float)System.Math.Atan2(-m10, m00) * Rad2Deg, 0f);
             }
 
             float rotX = (float)System.Math.Asin(2 * singularityTest);
@@ -760,26 +760,26 @@ namespace GTA.Math
             float m11 = 2 * ((W * W) + (Y * Y)) - 1;
             float rotZ = (float)System.Math.Atan2(-m01, m11);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
         }
         private readonly Vector3 ToEulerXYZ()
         {
             float singularityTest = (X * Z) - (Y * W);
 
-            if (singularityTest < -SINGULARITY_THRESHOLD)
+            if (singularityTest < -SingularityThreshold)
             {
                 float m01 = 2 * ((X * Y) - (Z * W));
                 float m11 = 2 * ((W * W) + (Y * Y)) - 1;
 
-                return new Vector3((float)System.Math.Atan2(m01, m11) * RAD_2_DEG, 90f, 0f);
+                return new Vector3((float)System.Math.Atan2(m01, m11) * Rad2Deg, 90f, 0f);
             }
 
-            if (singularityTest > SINGULARITY_THRESHOLD)
+            if (singularityTest > SingularityThreshold)
             {
                 float m01 = 2 * ((X * Y) - (Z * W));
                 float m11 = 2 * ((W * W) + (Y * Y)) - 1;
 
-                return new Vector3((float)System.Math.Atan2(-m01, m11) * RAD_2_DEG, -90f, 0f);
+                return new Vector3((float)System.Math.Atan2(-m01, m11) * Rad2Deg, -90f, 0f);
             }
 
             float m21 = 2 * ((Y * Z) + (X * W));
@@ -792,26 +792,26 @@ namespace GTA.Math
             float m00 = 2 * ((W * W) + (X * X)) - 1;
             float rotZ = (float)System.Math.Atan2(m10, m00);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
         }
         private readonly Vector3 ToEulerXZY()
         {
             float singularityTest = (X * Y) + (Z * W);
 
-            if (singularityTest > SINGULARITY_THRESHOLD)
+            if (singularityTest > SingularityThreshold)
             {
                 float m02 = 2 * ((X * Z) + (Y * W));
                 float m22 = 2 * ((W * W) + (Z * Z)) - 1;
 
-                return new Vector3((float)System.Math.Atan2(m02, m22) * RAD_2_DEG, 0f, 90f);
+                return new Vector3((float)System.Math.Atan2(m02, m22) * Rad2Deg, 0f, 90f);
             }
 
-            if (singularityTest < -SINGULARITY_THRESHOLD)
+            if (singularityTest < -SingularityThreshold)
             {
                 float m02 = 2 * ((X * Z) + (Y * W));
                 float m22 = 2 * ((W * W) + (Z * Z)) - 1;
 
-                return new Vector3((float)System.Math.Atan2(-m02, m22) * RAD_2_DEG, 0f, -90f);
+                return new Vector3((float)System.Math.Atan2(-m02, m22) * Rad2Deg, 0f, -90f);
             }
 
             float m12 = 2 * ((Y * Z) - (X * W));
@@ -824,26 +824,26 @@ namespace GTA.Math
 
             float rotZ = (float)System.Math.Asin(2 * singularityTest);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
         }
         private readonly Vector3 ToEulerYZX()
         {
             float singularityTest = (X * Y) - (Z * W);
 
-            if (singularityTest > SINGULARITY_THRESHOLD)
+            if (singularityTest > SingularityThreshold)
             {
                 float m12 = 2 * ((Y * Z) - (X * W));
                 float m22 = 2 * ((W * W) + (Z * Z)) - 1;
 
-                return new Vector3(0f, (float)System.Math.Atan2(-m12, m22) * RAD_2_DEG, -90f);
+                return new Vector3(0f, (float)System.Math.Atan2(-m12, m22) * Rad2Deg, -90f);
             }
 
-            if (singularityTest < -SINGULARITY_THRESHOLD)
+            if (singularityTest < -SingularityThreshold)
             {
                 float m12 = 2 * ((Y * Z) - (X * W));
                 float m22 = 2 * ((W * W) + (Z * Z)) - 1;
 
-                return new Vector3(0f, (float)System.Math.Atan2(m12, m22) * RAD_2_DEG, 90f);
+                return new Vector3(0f, (float)System.Math.Atan2(m12, m22) * Rad2Deg, 90f);
             }
 
             float m21 = 2 * ((Y * Z) + (X * W));
@@ -856,26 +856,26 @@ namespace GTA.Math
 
             float rotZ = (float)System.Math.Asin(-2 * singularityTest);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
         }
         private readonly Vector3 ToEulerZXY()
         {
             float singularityTest = (Y * Z) - (X * W);
 
-            if (singularityTest > SINGULARITY_THRESHOLD)
+            if (singularityTest > SingularityThreshold)
             {
                 float m20 = 2 * ((X * Z) - (Y * W));
                 float m00 = 2 * ((W * W) + (X * X)) - 1;
 
-                return new Vector3(-90f, 0f, (float)System.Math.Atan2(-m20, m00) * RAD_2_DEG);
+                return new Vector3(-90f, 0f, (float)System.Math.Atan2(-m20, m00) * Rad2Deg);
             }
 
-            if (singularityTest < -SINGULARITY_THRESHOLD)
+            if (singularityTest < -SingularityThreshold)
             {
                 float m20 = 2 * ((X * Z) - (Y * W));
                 float m00 = 2 * ((W * W) + (X * X)) - 1;
 
-                return new Vector3(90f, 0f, (float)System.Math.Atan2(m20, m00) * RAD_2_DEG);
+                return new Vector3(90f, 0f, (float)System.Math.Atan2(m20, m00) * Rad2Deg);
             }
 
             float rotX = (float)System.Math.Asin(-2 * singularityTest);
@@ -888,26 +888,26 @@ namespace GTA.Math
             float m11 = 2 * ((W * W) + (Y * Y)) - 1;
             float rotZ = (float)System.Math.Atan2(m10, m11);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
         }
         private readonly Vector3 ToEulerZYX()
         {
             float singularityTest = (X * Z) + (Y * W);
 
-            if (singularityTest > SINGULARITY_THRESHOLD)
+            if (singularityTest > SingularityThreshold)
             {
                 float m21 = 2 * ((Y * Z) + (X * W));
                 float m11 = 2 * ((W * W) + (Y * Y)) - 1;
 
-                return new Vector3(0f, 90f, (float)System.Math.Atan2(m21, m11) * RAD_2_DEG);
+                return new Vector3(0f, 90f, (float)System.Math.Atan2(m21, m11) * Rad2Deg);
             }
 
-            if (singularityTest < -SINGULARITY_THRESHOLD)
+            if (singularityTest < -SingularityThreshold)
             {
                 float m21 = 2 * ((Y * Z) + (X * W));
                 float m11 = 2 * ((W * W) + (Y * Y)) - 1;
 
-                return new Vector3(0f, -90f, (float)System.Math.Atan2(-m21, m11) * RAD_2_DEG);
+                return new Vector3(0f, -90f, (float)System.Math.Atan2(-m21, m11) * Rad2Deg);
             }
 
             float m12 = 2 * ((Y * Z) - (X * W));
@@ -920,7 +920,7 @@ namespace GTA.Math
             float m00 = 2 * ((W * W) + (X * X)) - 1;
             float rotZ = (float)System.Math.Atan2(-m01, m00);
 
-            return new Vector3(rotX * RAD_2_DEG, rotY * RAD_2_DEG, rotZ * RAD_2_DEG);
+            return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
         }
 
         #endregion

@@ -30,8 +30,8 @@ namespace GTA
         /// <remarks>The new <see cref="NavMeshBlockingObject"/> will not block existing <see cref="Ped"/> tasks that use navigation mesh paths in the area the blocking object covers from using.</remarks>
         public static NavMeshBlockingObject Create(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags = NavMeshBlockingObjectFlags.AllPaths)
         {
-            const float DEG_2_RAD = (float)(System.Math.PI / 180);
-            float headingRadians = headingDegrees * DEG_2_RAD;
+            const float Deg2Rad = (float)(System.Math.PI / 180);
+            float headingRadians = headingDegrees * Deg2Rad;
 
             // Set the second last parameter bPermanent to false, which determines whether the blocking object will last outside the lifetime of the calling script (scrThread)
             // If the SHVDN runtime stops working, all the blocking objects created via SHVDN will get deleted (stopping any SHVDN scripts working will not automatically remove any blocking objects)
@@ -77,8 +77,8 @@ namespace GTA
         /// <remarks>The updated <see cref="NavMeshBlockingObject"/> will not affect existing <see cref="Ped"/> tasks.</remarks>
         public void Update(Vector3 position, Vector3 size, float headingDegrees, NavMeshBlockingObjectFlags flags)
         {
-            const float DEG_2_RAD = (float)(System.Math.PI / 180);
-            Function.Call(Hash.UPDATE_NAVMESH_BLOCKING_OBJECT, Handle, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingDegrees * DEG_2_RAD, (int)flags);
+            const float Deg2Rad = (float)(System.Math.PI / 180);
+            Function.Call(Hash.UPDATE_NAVMESH_BLOCKING_OBJECT, Handle, position.X, position.Y, position.Z, size.X, size.Y, size.Z, headingDegrees * Deg2Rad, (int)flags);
         }
 
         /// <summary>

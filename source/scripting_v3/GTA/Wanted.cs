@@ -562,16 +562,16 @@ namespace GTA
             }
 
             // This additional crime value is hardcoded in a function that is called by SET_PLAYER_WANTED_LEVEL
-            const int ADDITIONAL_CRIME_VALUE = 20;
+            const int AdditionalCrimeValue = 20;
             int threshold = Function.Call<int>(Hash.GET_WANTED_LEVEL_THRESHOLD, _playerIndex, wantedLevelToApply);
 
-            CurrentCrimeValue = threshold + ADDITIONAL_CRIME_VALUE;
+            CurrentCrimeValue = threshold + AdditionalCrimeValue;
             SHVDN.MemDataMarshal.WriteInt32(cWantedAddress + SHVDN.NativeMemory.CurrentWantedLevelOffset,
                 wantedLevelToApply);
 
             // Set the pending crime value just like SET_PLAYER_WANTED_LEVEL does (`SET_PLAYER_WANTED_LEVEL_NOW` does
             // not clear the value)
-            NewCrimeValue = threshold + ADDITIONAL_CRIME_VALUE;
+            NewCrimeValue = threshold + AdditionalCrimeValue;
         }
 
         /// <summary>

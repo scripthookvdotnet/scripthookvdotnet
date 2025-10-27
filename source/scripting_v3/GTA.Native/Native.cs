@@ -503,12 +503,12 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 1;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 1;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -523,13 +523,13 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 2;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 2;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -545,14 +545,14 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 3;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 3;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
                 argPtr[2] = argument2?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -569,15 +569,15 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 4;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 4;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
                 argPtr[2] = argument2?._data ?? 0;
                 argPtr[3] = argument3?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -600,8 +600,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 5;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 5;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -609,7 +609,7 @@ namespace GTA.Native
                 argPtr[3] = argument3?._data ?? 0;
                 argPtr[4] = argument4?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -634,8 +634,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 6;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 6;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -644,7 +644,7 @@ namespace GTA.Native
                 argPtr[4] = argument4?._data ?? 0;
                 argPtr[5] = argument5?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -671,8 +671,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 7;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 7;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -682,7 +682,7 @@ namespace GTA.Native
                 argPtr[5] = argument5?._data ?? 0;
                 argPtr[6] = argument6?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -711,8 +711,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 8;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 8;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -723,7 +723,7 @@ namespace GTA.Native
                 argPtr[6] = argument6?._data ?? 0;
                 argPtr[7] = argument7?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -754,8 +754,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 9;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 9;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -767,7 +767,7 @@ namespace GTA.Native
                 argPtr[7] = argument7?._data ?? 0;
                 argPtr[8] = argument8?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -800,8 +800,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 10;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 10;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -814,7 +814,7 @@ namespace GTA.Native
                 argPtr[8] = argument8?._data ?? 0;
                 argPtr[9] = argument9?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -849,8 +849,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 11;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 11;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -864,7 +864,7 @@ namespace GTA.Native
                 argPtr[9] = argument9?._data ?? 0;
                 argPtr[10] = argument10?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -901,8 +901,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 12;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 12;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -917,7 +917,7 @@ namespace GTA.Native
                 argPtr[10] = argument10?._data ?? 0;
                 argPtr[11] = argument11?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -956,8 +956,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 13;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 13;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -973,7 +973,7 @@ namespace GTA.Native
                 argPtr[11] = argument11?._data ?? 0;
                 argPtr[12] = argument12?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1014,8 +1014,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 14;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 14;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1032,7 +1032,7 @@ namespace GTA.Native
                 argPtr[12] = argument12?._data ?? 0;
                 argPtr[13] = argument13?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1075,8 +1075,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 15;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 15;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1094,7 +1094,7 @@ namespace GTA.Native
                 argPtr[13] = argument13?._data ?? 0;
                 argPtr[14] = argument14?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1139,8 +1139,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 16;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 16;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1159,7 +1159,7 @@ namespace GTA.Native
                 argPtr[14] = argument14?._data ?? 0;
                 argPtr[15] = argument15?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1218,12 +1218,12 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 1;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 1;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1234,13 +1234,13 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 2;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 2;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1251,14 +1251,14 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 3;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 3;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
                 argPtr[2] = argument2?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1269,15 +1269,15 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 4;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 4;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
                 argPtr[2] = argument2?._data ?? 0;
                 argPtr[3] = argument3?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1293,8 +1293,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 5;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 5;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1302,7 +1302,7 @@ namespace GTA.Native
                 argPtr[3] = argument3?._data ?? 0;
                 argPtr[4] = argument4?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1319,8 +1319,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 6;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 6;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1329,7 +1329,7 @@ namespace GTA.Native
                 argPtr[4] = argument4?._data ?? 0;
                 argPtr[5] = argument5?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1347,8 +1347,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 7;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 7;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1358,7 +1358,7 @@ namespace GTA.Native
                 argPtr[5] = argument5?._data ?? 0;
                 argPtr[6] = argument6?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1377,8 +1377,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 8;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 8;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1389,7 +1389,7 @@ namespace GTA.Native
                 argPtr[6] = argument6?._data ?? 0;
                 argPtr[7] = argument7?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1409,8 +1409,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 9;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 9;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1422,7 +1422,7 @@ namespace GTA.Native
                 argPtr[7] = argument7?._data ?? 0;
                 argPtr[8] = argument8?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1443,8 +1443,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 10;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 10;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1457,7 +1457,7 @@ namespace GTA.Native
                 argPtr[8] = argument8?._data ?? 0;
                 argPtr[9] = argument9?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1479,8 +1479,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 11;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 11;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1494,7 +1494,7 @@ namespace GTA.Native
                 argPtr[9] = argument9?._data ?? 0;
                 argPtr[10] = argument10?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1517,8 +1517,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 12;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 12;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1533,7 +1533,7 @@ namespace GTA.Native
                 argPtr[10] = argument10?._data ?? 0;
                 argPtr[11] = argument11?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1557,8 +1557,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 13;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 13;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1574,7 +1574,7 @@ namespace GTA.Native
                 argPtr[11] = argument11?._data ?? 0;
                 argPtr[12] = argument12?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1599,8 +1599,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 14;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 14;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1617,7 +1617,7 @@ namespace GTA.Native
                 argPtr[12] = argument12?._data ?? 0;
                 argPtr[13] = argument13?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1643,8 +1643,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 15;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 15;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1662,7 +1662,7 @@ namespace GTA.Native
                 argPtr[13] = argument13?._data ?? 0;
                 argPtr[14] = argument14?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1716,8 +1716,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 16;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 16;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1736,7 +1736,7 @@ namespace GTA.Native
                 argPtr[14] = argument14?._data ?? 0;
                 argPtr[15] = argument15?._data ?? 0;
 
-                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                ulong* res = SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
                 return ReturnValueFromNativeIfNotNull<T>(res);
             }
         }
@@ -1816,12 +1816,12 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 1;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 1;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -1834,13 +1834,13 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 2;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 2;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -1854,14 +1854,14 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 3;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 3;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
                 argPtr[2] = argument2?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -1876,15 +1876,15 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 4;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 4;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
                 argPtr[2] = argument2?._data ?? 0;
                 argPtr[3] = argument3?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -1906,8 +1906,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 5;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 5;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1915,7 +1915,7 @@ namespace GTA.Native
                 argPtr[3] = argument3?._data ?? 0;
                 argPtr[4] = argument4?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -1939,8 +1939,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 6;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 6;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1949,7 +1949,7 @@ namespace GTA.Native
                 argPtr[4] = argument4?._data ?? 0;
                 argPtr[5] = argument5?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -1975,8 +1975,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 7;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 7;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -1986,7 +1986,7 @@ namespace GTA.Native
                 argPtr[5] = argument5?._data ?? 0;
                 argPtr[6] = argument6?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2014,8 +2014,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 8;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 8;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2026,7 +2026,7 @@ namespace GTA.Native
                 argPtr[6] = argument6?._data ?? 0;
                 argPtr[7] = argument7?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2056,8 +2056,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 9;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 9;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2069,7 +2069,7 @@ namespace GTA.Native
                 argPtr[7] = argument7?._data ?? 0;
                 argPtr[8] = argument8?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2101,8 +2101,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 10;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 10;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2115,7 +2115,7 @@ namespace GTA.Native
                 argPtr[8] = argument8?._data ?? 0;
                 argPtr[9] = argument9?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2149,8 +2149,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 11;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 11;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2164,7 +2164,7 @@ namespace GTA.Native
                 argPtr[9] = argument9?._data ?? 0;
                 argPtr[10] = argument10?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2200,8 +2200,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 12;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 12;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2216,7 +2216,7 @@ namespace GTA.Native
                 argPtr[10] = argument10?._data ?? 0;
                 argPtr[11] = argument11?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2254,8 +2254,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 13;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 13;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2271,7 +2271,7 @@ namespace GTA.Native
                 argPtr[11] = argument11?._data ?? 0;
                 argPtr[12] = argument12?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2311,8 +2311,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 14;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 14;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2329,7 +2329,7 @@ namespace GTA.Native
                 argPtr[12] = argument12?._data ?? 0;
                 argPtr[13] = argument13?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2371,8 +2371,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 15;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 15;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2390,7 +2390,7 @@ namespace GTA.Native
                 argPtr[13] = argument13?._data ?? 0;
                 argPtr[14] = argument14?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2434,8 +2434,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 16;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 16;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2454,7 +2454,7 @@ namespace GTA.Native
                 argPtr[14] = argument14?._data ?? 0;
                 argPtr[15] = argument15?._data ?? 0;
 
-                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.Invoke((ulong)hash, argPtr, ArgCount);
             }
         }
         #endregion
@@ -2506,12 +2506,12 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 1;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 1;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2520,13 +2520,13 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 2;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 2;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2535,14 +2535,14 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 3;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 3;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
                 argPtr[2] = argument2?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2551,15 +2551,15 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 4;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 4;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
                 argPtr[2] = argument2?._data ?? 0;
                 argPtr[3] = argument3?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2573,8 +2573,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 5;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 5;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2582,7 +2582,7 @@ namespace GTA.Native
                 argPtr[3] = argument3?._data ?? 0;
                 argPtr[4] = argument4?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2597,8 +2597,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 6;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 6;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2607,7 +2607,7 @@ namespace GTA.Native
                 argPtr[4] = argument4?._data ?? 0;
                 argPtr[5] = argument5?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2623,8 +2623,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 7;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 7;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2634,7 +2634,7 @@ namespace GTA.Native
                 argPtr[5] = argument5?._data ?? 0;
                 argPtr[6] = argument6?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2651,8 +2651,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 8;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 8;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2663,7 +2663,7 @@ namespace GTA.Native
                 argPtr[6] = argument6?._data ?? 0;
                 argPtr[7] = argument7?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2681,8 +2681,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 9;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 9;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2694,7 +2694,7 @@ namespace GTA.Native
                 argPtr[7] = argument7?._data ?? 0;
                 argPtr[8] = argument8?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2713,8 +2713,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 10;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 10;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2727,7 +2727,7 @@ namespace GTA.Native
                 argPtr[8] = argument8?._data ?? 0;
                 argPtr[9] = argument9?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2747,8 +2747,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 11;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 11;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2762,7 +2762,7 @@ namespace GTA.Native
                 argPtr[9] = argument9?._data ?? 0;
                 argPtr[10] = argument10?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2783,8 +2783,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 12;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 12;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2799,7 +2799,7 @@ namespace GTA.Native
                 argPtr[10] = argument10?._data ?? 0;
                 argPtr[11] = argument11?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2821,8 +2821,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 13;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 13;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2838,7 +2838,7 @@ namespace GTA.Native
                 argPtr[11] = argument11?._data ?? 0;
                 argPtr[12] = argument12?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2861,8 +2861,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 14;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 14;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2879,7 +2879,7 @@ namespace GTA.Native
                 argPtr[12] = argument12?._data ?? 0;
                 argPtr[13] = argument13?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <inheritdoc
@@ -2903,8 +2903,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 15;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 15;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2922,7 +2922,7 @@ namespace GTA.Native
                 argPtr[13] = argument13?._data ?? 0;
                 argPtr[14] = argument14?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         /// <summary>
@@ -2975,8 +2975,8 @@ namespace GTA.Native
         {
             unsafe
             {
-                const int argCount = 16;
-                ulong* argPtr = stackalloc ulong[argCount];
+                const int ArgCount = 16;
+                ulong* argPtr = stackalloc ulong[ArgCount];
 
                 argPtr[0] = argument0?._data ?? 0;
                 argPtr[1] = argument1?._data ?? 0;
@@ -2995,7 +2995,7 @@ namespace GTA.Native
                 argPtr[14] = argument14?._data ?? 0;
                 argPtr[15] = argument15?._data ?? 0;
 
-                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, argCount);
+                SHVDN.NativeFunc.InvokeLongBlockingFunc((ulong)hash, argPtr, ArgCount);
             }
         }
         #endregion

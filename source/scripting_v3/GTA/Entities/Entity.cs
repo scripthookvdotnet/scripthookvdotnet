@@ -1217,8 +1217,8 @@ namespace GTA
             }
             set
             {
-                const bool doDeadCheck = false;
-                Function.Call(Hash.SET_ENTITY_LOAD_COLLISION_FLAG, Handle, value, doDeadCheck);
+                const bool DoDeadCheck = false;
+                Function.Call(Hash.SET_ENTITY_LOAD_COLLISION_FLAG, Handle, value, DoDeadCheck);
             }
         }
 

@@ -59,10 +59,10 @@ namespace GTA
 
                 var result = new VehicleWeaponHash[s_elemCountForWeaponPropertyArrays];
 
-                const int memberOffset = 0x8;
+                const int MemberOffset = 0x8;
                 for (int i = 0; i < result.Length; i++)
                 {
-                    result[i] = (VehicleWeaponHash)SHVDN.MemDataMarshal.ReadInt32(MemoryAddress + memberOffset + i * 4);
+                    result[i] = (VehicleWeaponHash)SHVDN.MemDataMarshal.ReadInt32(MemoryAddress + MemberOffset + i * 4);
                 }
 
                 return result;
@@ -90,10 +90,10 @@ namespace GTA
                     arrayToFill[i] = (int)value[i];
                 }
 
-                const int memberOffset = 0x8;
+                const int MemberOffset = 0x8;
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
-                    SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + memberOffset + i * 4, (int)arrayToFill[i]);
+                    SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + MemberOffset + i * 4, (int)arrayToFill[i]);
                 }
             }
         }

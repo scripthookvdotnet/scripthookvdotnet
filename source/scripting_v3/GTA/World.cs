@@ -1259,8 +1259,8 @@ namespace GTA
                 position.Z, heading, false, false));
 
             // Randomize variation but not ped props, just like `CREATE_RANDOM_PED` does.
-            const int race = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
-            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, race);
+            const int Race = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
+            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, Race);
 
             return createdPed;
         }

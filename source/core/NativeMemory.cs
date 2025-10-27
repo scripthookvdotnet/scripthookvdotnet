@@ -727,9 +727,9 @@ namespace SHVDN
                 address = address != null ? (address + 0x16) : null;
                 if (address != null && *address != 0x90)
                 {
-                    const int bytesToWriteInstructions = 0x18;
-                    byte[] nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
-                    Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
+                    const int BytesToWriteInstructions = 0x18;
+                    byte[] nopBytes = Enumerable.Repeat((byte)0x90, BytesToWriteInstructions).ToArray();
+                    Marshal.Copy(nopBytes, 0, new IntPtr(address), BytesToWriteInstructions);
                 }
             }
             #endregion
@@ -738,9 +738,9 @@ namespace SHVDN
             address = address != null ? (address + 11) : null;
             if (address != null && *address != 0x90)
             {
-                const int bytesToWriteInstructions = 4;
-                byte[] nopBytes = Enumerable.Repeat((byte)0x90, bytesToWriteInstructions).ToArray();
-                Marshal.Copy(nopBytes, 0, new IntPtr(address), bytesToWriteInstructions);
+                const int BytesToWriteInstructions = 4;
+                byte[] nopBytes = Enumerable.Repeat((byte)0x90, BytesToWriteInstructions).ToArray();
+                Marshal.Copy(nopBytes, 0, new IntPtr(address), BytesToWriteInstructions);
             }
             #endregion
 
@@ -1392,10 +1392,10 @@ namespace SHVDN
         {
             s_getRotationFromMatrixFunc(returnRotationArray, (ulong)matrixAddress.ToInt64(), rotationOrder);
 
-            const float rad2Deg = 57.2957763671875f; // 0x42652EE0 in hex. Exactly the same value as the GET_ENTITY_ROTATION multiplies the rotation values in radian by.
-            returnRotationArray[0] *= rad2Deg;
-            returnRotationArray[1] *= rad2Deg;
-            returnRotationArray[2] *= rad2Deg;
+            const float Rad2Deg = 57.2957763671875f; // 0x42652EE0 in hex. Exactly the same value as the GET_ENTITY_ROTATION multiplies the rotation values in radian by.
+            returnRotationArray[0] *= Rad2Deg;
+            returnRotationArray[1] *= Rad2Deg;
+            returnRotationArray[2] *= Rad2Deg;
         }
         public static void GetQuaternionFromMatrix(float* returnRotationArray, IntPtr matrixAddress)
         {
@@ -3247,9 +3247,9 @@ namespace SHVDN
 
             var resultList = new List<int>();
 
-            const int maxModelListElementCount = 256;
+            const int MaxModelListElementCount = 256;
             var modelSet = (CModelList*)((ulong)s_cStreamingAddr + (uint)startOffsetOfCStreaming);
-            for (uint i = 0; i < maxModelListElementCount; i++)
+            for (uint i = 0; i < MaxModelListElementCount; i++)
             {
                 uint indexOfModelInfo = modelSet->modelMemberIndices[i];
 
@@ -3374,10 +3374,10 @@ namespace SHVDN
             }
 
             // This values is not likely to be changed in further updates
-            const int pedPersonalityElementSize = 0xB8;
+            const int PedPersonalityElementSize = 0xB8;
 
             ushort indexOfPedPersonality = *(ushort*)(modelInfoAddress + s_pedPersonalityIndexOffsetInModelInfo).ToPointer();
-            return (PedPersonality*)(*(ulong*)s_pedPersonalitiesArrayAddr + (uint)(indexOfPedPersonality * pedPersonalityElementSize));
+            return (PedPersonality*)(*(ulong*)s_pedPersonalitiesArrayAddr + (uint)(indexOfPedPersonality * PedPersonalityElementSize));
         }
         public static bool IsModelAMalePed(int modelHash)
         {
@@ -6163,8 +6163,8 @@ namespace SHVDN
 
             uint classNameHash = itemInfoPtr->GetClassNameHash();
 
-            const uint cWeaponInfoNameHash = 0x861905B4;
-            if (classNameHash == cWeaponInfoNameHash)
+            const uint CWeaponInfoNameHash = 0x861905B4;
+            if (classNameHash == CWeaponInfoNameHash)
             {
                 return itemInfoPtr;
             }
@@ -6268,8 +6268,8 @@ namespace SHVDN
 
                 uint classNameHash = weaponOrAmmoInfo->GetClassNameHash();
 
-                const uint cWeaponInfoNameHash = 0x861905B4;
-                if (classNameHash == cWeaponInfoNameHash)
+                const uint CWeaponInfoNameHash = 0x861905B4;
+                if (classNameHash == CWeaponInfoNameHash)
                 {
                     resultList.Add(weaponOrAmmoInfo->nameHash);
                 }

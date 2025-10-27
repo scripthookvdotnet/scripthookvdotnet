@@ -237,9 +237,9 @@ namespace GTA.Chrono
         /// </exception>
         public static GameClockDuration FromWeeks(long weeks)
         {
-            const long minWeeks = MinSecDifference / SecsPerWeek;
-            const long maxWeeks = MaxSecDifference / SecsPerWeek;
-            ThrowHelper.CheckArgumentRange(nameof(weeks), weeks, minWeeks, maxWeeks);
+            const long MinWeeks = MinSecDifference / SecsPerWeek;
+            const long MaxWeeks = MaxSecDifference / SecsPerWeek;
+            ThrowHelper.CheckArgumentRange(nameof(weeks), weeks, MinWeeks, MaxWeeks);
 
             return new GameClockDuration(weeks * SecsPerWeek);
         }
@@ -254,9 +254,9 @@ namespace GTA.Chrono
         /// </exception>
         public static GameClockDuration FromDays(long days)
         {
-            const long minDays = MinSecDifference / SecsPerDay;
-            const long maxDays = MaxSecDifference / SecsPerDay;
-            ThrowHelper.CheckArgumentRange(nameof(days), days, minDays, maxDays);
+            const long MinDays = MinSecDifference / SecsPerDay;
+            const long MaxDays = MaxSecDifference / SecsPerDay;
+            ThrowHelper.CheckArgumentRange(nameof(days), days, MinDays, MaxDays);
 
             return new GameClockDuration(days * SecsPerDay);
         }
@@ -271,9 +271,9 @@ namespace GTA.Chrono
         /// </exception>
         public static GameClockDuration FromHours(long hours)
         {
-            const long minHours = MinSecDifference / SecsPerHour;
-            const long maxHours = MaxSecDifference / SecsPerHour;
-            ThrowHelper.CheckArgumentRange(nameof(hours), hours, minHours, maxHours);
+            const long MinHours = MinSecDifference / SecsPerHour;
+            const long MaxHours = MaxSecDifference / SecsPerHour;
+            ThrowHelper.CheckArgumentRange(nameof(hours), hours, MinHours, MaxHours);
 
             return new GameClockDuration(hours * SecsPerHour);
         }
@@ -288,9 +288,9 @@ namespace GTA.Chrono
         /// </exception>
         public static GameClockDuration FromMinutes(long minutes)
         {
-            const long minMinutes = MinSecDifference / SecsPerMinute;
-            const long maxMinutes = MaxSecDifference / SecsPerMinute;
-            ThrowHelper.CheckArgumentRange(nameof(minutes), minutes, minMinutes, maxMinutes);
+            const long MinMinutes = MinSecDifference / SecsPerMinute;
+            const long MaxMinutes = MaxSecDifference / SecsPerMinute;
+            ThrowHelper.CheckArgumentRange(nameof(minutes), minutes, MinMinutes, MaxMinutes);
 
             return new GameClockDuration(minutes * SecsPerMinute);
         }
@@ -305,9 +305,9 @@ namespace GTA.Chrono
         /// </exception>
         public static GameClockDuration FromSeconds(long seconds)
         {
-            const long minSeconds = MinSecDifference;
-            const long maxSeconds = MaxSecDifference;
-            ThrowHelper.CheckArgumentRange(nameof(seconds), seconds, minSeconds, maxSeconds);
+            const long MinSeconds = MinSecDifference;
+            const long MaxSeconds = MaxSecDifference;
+            ThrowHelper.CheckArgumentRange(nameof(seconds), seconds, MinSeconds, MaxSeconds);
 
             return new GameClockDuration(seconds);
         }
@@ -622,9 +622,9 @@ namespace GTA.Chrono
             {
                 // large enough for any standard string format for `GameClockDuration` (e.g. "-1568704592609:23:59:59"
                 // for the min value)
-                const int destSize = 24;
-                char* dest = stackalloc char[destSize];
-                TryFormatStandard(this, dest, destSize, out int charsWritten);
+                const int DestSize = 24;
+                char* dest = stackalloc char[DestSize];
+                TryFormatStandard(this, dest, DestSize, out int charsWritten);
 
                 return new string(dest, 0, charsWritten);
             }

@@ -225,8 +225,8 @@ namespace GTA
         //easeOutBack function
         private static float EaseOut(float time, float duration, float value0, float deltaValue)
         {
-            const float s = 1.70158f;
-            return deltaValue * ((time = time / duration - 1) * time * ((s + 1) * time + s) + 1) + value0;
+            const float S = 1.70158f;
+            return deltaValue * ((time = time / duration - 1) * time * ((S + 1) * time + S) + 1) + value0;
         }
 
         // This is a list (or stack) of the active menus, the highest index is the one that's currently in focus

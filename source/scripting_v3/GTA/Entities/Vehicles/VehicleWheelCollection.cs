@@ -13,8 +13,8 @@ namespace GTA
     {
         #region Fields
         // Vehicles have up to 10 wheels
-        const int MAX_WHEEL_COUNT = 10;
-        readonly VehicleWheel[] _vehicleWheels = new VehicleWheel[MAX_WHEEL_COUNT];
+        const int MaxWheelCount = 10;
+        readonly VehicleWheel[] _vehicleWheels = new VehicleWheel[MaxWheelCount];
         VehicleWheel _nullWheel;
         #endregion
 

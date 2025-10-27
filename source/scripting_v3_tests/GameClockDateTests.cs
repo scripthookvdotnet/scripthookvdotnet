@@ -450,13 +450,13 @@ namespace ScriptHookVDotNet_APIv3_Tests
 
         public static IEnumerable<object[]> TryAdd_Failure_TestData()
         {
-            const long maxDayDiffExclusive = 1_568_704_592_245;
+            const long MaxDayDiffExclusive = 1_568_704_592_245;
             yield return new object[] { GameClockDate.MinValue, GameClockDuration.FromDays(-1) };
             yield return new object[] { GameClockDate.MaxValue, GameClockDuration.FromDays(1) };
             yield return new object[] { GameClockDate.FromYmd(1, 1, 1),
-                GameClockDuration.FromDays(-maxDayDiffExclusive) };
+                GameClockDuration.FromDays(-MaxDayDiffExclusive) };
             yield return new object[] { GameClockDate.FromYmd(1, 1, 1),
-                GameClockDuration.FromDays(maxDayDiffExclusive) };
+                GameClockDuration.FromDays(MaxDayDiffExclusive) };
         }
 
         [Theory]

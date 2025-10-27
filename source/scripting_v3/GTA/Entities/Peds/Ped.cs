@@ -122,10 +122,10 @@ namespace GTA
         {
             // These 2 arguments are specified as the default arguments in the native header, and they do not have
             // any effect if the game is not networked.
-            const bool registerAsNetworkObject = true;
-            const bool scriptHostObject = true;
+            const bool RegisterAsNetworkObject = true;
+            const bool ScriptHostObject = true;
 
-            int handle = Function.Call<int>(Hash.CLONE_PED, Handle, registerAsNetworkObject, scriptHostObject,
+            int handle = Function.Call<int>(Hash.CLONE_PED, Handle, RegisterAsNetworkObject, ScriptHostObject,
                 linkBlends);
 
             return MakePedInstIfHandleIsNotZero(handle);
@@ -142,12 +142,12 @@ namespace GTA
         [EditorBrowsable(EditorBrowsableState.Never)]
         public Ped Clone(float heading = 0.0f)
         {
-            const bool registerAsNetworkObject = true;
-            const bool scriptHostObject = true;
+            const bool RegisterAsNetworkObject = true;
+            const bool ScriptHostObject = true;
 
             // Do not return null even if the native function returns 0, this overload always returns a new `Ped`
             // instance in v3.6.0 and earlier.
-            return new Ped(Function.Call<int>(Hash.CLONE_PED, Handle, registerAsNetworkObject, scriptHostObject,
+            return new Ped(Function.Call<int>(Hash.CLONE_PED, Handle, RegisterAsNetworkObject, ScriptHostObject,
                 false));
         }
 
@@ -177,10 +177,10 @@ namespace GTA
             GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_463_1, nameof(Ped),
                 nameof(CloneAlt));
 
-            const bool registerAsNetworkObject = true;
-            const bool scriptHostObject = true;
+            const bool RegisterAsNetworkObject = true;
+            const bool ScriptHostObject = true;
 
-            int handle = Function.Call<int>(Hash.CLONE_PED_ALT, Handle, registerAsNetworkObject, scriptHostObject,
+            int handle = Function.Call<int>(Hash.CLONE_PED_ALT, Handle, RegisterAsNetworkObject, ScriptHostObject,
                 linkBlends, cloneCompressedDamage);
 
             return MakePedInstIfHandleIsNotZero(handle);
