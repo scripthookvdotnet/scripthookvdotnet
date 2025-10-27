@@ -502,6 +502,31 @@ namespace GTA
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Blip"/> shows the tick indicator at the top left
+        /// corner of the <see cref="Blip"/>.
+        /// </summary>
+        /// <value>
+        /// <see langword="true"/> to show the tick indicator; otherwise, <see langword="false"/>.
+        /// </value>
+        public bool ShowsTick
+        {
+            get
+            {
+                IntPtr address = MemoryAddress;
+                if (address == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                const int PropertyFlagsOffset = 0x20;
+                // This bit is the greatest bit that isn't get shifted by adding the flag for the gold tick, which can
+                // be added by `SHOW_GOLD_TICK_ON_BLIP` since b2699.
+                return SHVDN.MemDataMarshal.IsBitSet(address + PropertyFlagsOffset, 15);
+            }
+            set => Function.Call(Hash.SHOW_TICK_ON_BLIP, Handle, value);
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Blip"/> shows the dollar sign at the top left corner of the <see cref="Blip"/>.
         /// </summary>
         /// <value>
