@@ -542,7 +542,12 @@ namespace GTA
                     return false;
                 }
 
-                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 16);
+                int bitIndex = Game.FileVersion switch
+                {
+                    Version v when v >= VersionConstsForGameVersion.v1_0_2699_0 => 17,
+                    _ => 16
+                };
+                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, bitIndex);
             }
             set => Function.Call(Hash.SHOW_TICK_ON_BLIP, Handle, value);
         }
