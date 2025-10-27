@@ -1734,10 +1734,13 @@ namespace GTA
             set => Function.Call(Hash.SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE, Handle, !value);
         }
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> will fly through the windscreen when hit by a vehicle.
+        /// </summary>
         public bool CanFlyThroughWindscreen
         {
-            get => Function.Call<bool>(Hash.GET_PED_CONFIG_FLAG, Handle, 32, true);
-            set => Function.Call(Hash.SET_PED_CONFIG_FLAG, Handle, 32, value);
+            get => GetConfigFlag(PedConfigFlagToggles.WillFlyThroughWindscreen);
+            set => SetConfigFlag(PedConfigFlagToggles.WillFlyThroughWindscreen, value);
         }
 
         /// <summary>
