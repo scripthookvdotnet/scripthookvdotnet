@@ -72,11 +72,11 @@ namespace GTA
         {
             get
             {
-                long unknBool;
+                bool hasLeader;
                 int count;
                 unsafe
                 {
-                    Function.Call(Hash.GET_GROUP_SIZE, Handle, &unknBool, &count);
+                    Function.Call(Hash.GET_GROUP_SIZE, Handle, &hasLeader, &count);
                 }
                 return count;
             }
