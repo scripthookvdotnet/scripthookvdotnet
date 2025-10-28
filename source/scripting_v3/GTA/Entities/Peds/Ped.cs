@@ -2737,9 +2737,27 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the PedGroup this <see cref="Ped"/> is in.
+        /// Gets the <see cref="PedGroup"/> that this <see cref="Ped"/> belongs to.
         /// </summary>
-        public PedGroup PedGroup => IsInGroup ? new PedGroup(Function.Call<int>(Hash.GET_PED_GROUP_INDEX, Handle, false)) : null;
+        /// <returns>
+        /// The associated <see cref="PedGroup"/>, or <c>null</c> if this <see cref="Ped"/> is not part of any group.
+        /// </returns>
+        public PedGroup PedGroup
+        {
+            get
+            {
+                int handle = Function.Call<int>(Hash.GET_PED_GROUP_INDEX, Handle);
+
+                const int InvalidGroupHandle = -1;
+
+                if(handle == InvalidGroupHandle)
+                {
+                    return null;
+                }
+
+                return new PedGroup(handle);
+            }
+        }
 
         #endregion
 
