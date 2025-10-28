@@ -68,6 +68,21 @@ namespace GTA
             GC.SuppressFinalize(this);
         }
 
+        public bool HasLeader
+        {
+            get
+            {
+                bool hasLeader;
+                int count;
+                unsafe
+                {
+                    Function.Call(Hash.GET_GROUP_SIZE, Handle, &hasLeader, &count);
+                }
+
+                return hasLeader;
+            }
+        }
+
         public int MemberCount
         {
             get
