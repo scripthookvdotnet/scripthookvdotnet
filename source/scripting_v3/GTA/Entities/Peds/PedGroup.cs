@@ -70,7 +70,7 @@ namespace GTA
 
 
         /// <summary>
-        /// Gets whether this <see cref="PedGroup"/> has a leader."/>
+        /// Gets whether this <see cref="PedGroup"/> has a leader.
         /// </summary>
         public bool HasLeader
         {
