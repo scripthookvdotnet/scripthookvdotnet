@@ -68,6 +68,10 @@ namespace GTA
             GC.SuppressFinalize(this);
         }
 
+
+        /// <summary>
+        /// Gets whether this <see cref="PedGroup"/> has a leader."/>
+        /// </summary>
         public bool HasLeader
         {
             get
@@ -107,10 +111,44 @@ namespace GTA
             set => Function.Call(Hash.SET_GROUP_FORMATION, Handle, (int)value);
         }
 
+
+        /// <summary>
+        /// Sets the formation spacing for this <see cref="PedGroup"/>.
+        /// </summary>
+        /// <param name="spacing">The distance between <see cref="Ped"/>s in the group.</param>
+        /// <param name="adjustSpeedMinDistance">
+        /// The distance from <paramref name="spacing"/> at which <see cref="Ped"/>s will start to slow down. 
+        /// Defaults to -1 (no change) unless auto-calculated (see remarks).
+        /// </param>
+        /// <param name="adjustSpeedMaxDistance">
+        /// The distance from <paramref name="spacing"/> at which <see cref="Ped"/>s will start to speed up. 
+        /// Defaults to -1 (no change) unless auto-calculated (see remarks).
+        /// </param>
+        /// <remarks>
+        /// If both <paramref name="adjustSpeedMinDistance"/> and <paramref name="adjustSpeedMaxDistance"/> are less than 0 
+        /// and <see cref="Formation"/> is set to <see cref="Formation.Loose"/>, their values are calculated automatically.
+        ///
+        /// If only one of <paramref name="adjustSpeedMinDistance"/> or <paramref name="adjustSpeedMaxDistance"/> is less than 0, 
+        /// its internal value remains unchanged.
+        /// </remarks>
+        public void SetFormationSpacing(float spacing, float adjustSpeedMinDistance = -1, float adjustSpeedMaxDistance = -1)
+        {
+            Function.Call(Hash.SET_GROUP_FORMATION_SPACING, Handle, spacing, adjustSpeedMinDistance, adjustSpeedMaxDistance);
+        }
+
+        /// <summary>
+        /// Resets the formation spacing of this <see cref="PedGroup"/> to the default values.
+        /// </summary>
+        public void ResetFormationSpacing()
+        {
+            Function.Call(Hash.RESET_GROUP_FORMATION_DEFAULT_SPACING, Handle);
+        }
+
         public void Add(Ped ped, bool leader)
         {
             Function.Call(leader ? Hash.SET_PED_AS_GROUP_LEADER : Hash.SET_PED_AS_GROUP_MEMBER, ped.Handle, Handle);
         }
+
         public void Remove(Ped ped)
         {
             Function.Call(Hash.REMOVE_PED_FROM_GROUP, ped.Handle);
