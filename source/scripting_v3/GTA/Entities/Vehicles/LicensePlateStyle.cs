@@ -13,12 +13,12 @@ namespace GTA
         YellowOnBlack = 1,
         YellowOnBlue = 2,
         NorthYankton = 5,
-        ECola = 7,
-        LasVenturas = 8,
-        LibertyCity = 9,
-        LSCarMeet = 10,
-        LSPanic = 11,
-        LSPounders = 12,
-        Sprunk = 13
+        ECola = 6,
+        LasVenturas = 7,
+        LibertyCity = 8,
+        LSCarMeet = 9,
+        LSPanic = 10,
+        LSPounders = 11,
+        Sprunk = 12
     }
 }
