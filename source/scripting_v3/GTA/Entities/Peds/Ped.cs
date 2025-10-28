@@ -285,10 +285,11 @@ namespace GTA
         public bool IsCuffed => Function.Call<bool>(Hash.IS_PED_CUFFED, Handle);
 
         /// <summary>
-        /// Sets a value that indicates whether this <see cref="Ped"/> will use a helmet on their own.
+        /// Gets or sets a value that indicates whether this <see cref="Ped"/> will use a helmet on their own.
         /// </summary>
         public bool CanWearHelmet
         {
+            get => GetConfigFlag(PedConfigFlagToggles.UseHelmet);
             set => Function.Call(Hash.SET_PED_HELMET, Handle, value);
         }
 
@@ -1628,10 +1629,11 @@ namespace GTA
             => Function.Call<bool>(Hash.SET_VEHICLE_SHOOT_AT_TARGET, Handle, null, target.X, target.Y, target.Z);
 
         /// <summary>
-        /// Sets if this <see cref="Ped"/> can switch between different weapons.
+        /// Gets or sets if this <see cref="Ped"/> can switch between different weapons.
         /// </summary>
         public bool CanSwitchWeapons
         {
+            get => !GetConfigFlag(PedConfigFlagToggles.BlockWeaponSwitching);
             set => Function.Call(Hash.SET_PED_CAN_SWITCH_WEAPON, Handle, value);
         }
 
@@ -1686,8 +1688,12 @@ namespace GTA
 
         public bool IsTryingToEnterALockedVehicle => Function.Call<bool>(Hash.IS_PED_TRYING_TO_ENTER_A_LOCKED_VEHICLE, Handle);
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> can be dragged out of a <see cref="Vehicle"/>.
+        /// </summary>
         public bool CanBeDraggedOutOfVehicle
         {
+            get => !GetConfigFlag(PedConfigFlagToggles.DontDragMeOutCar);
             set => Function.Call(Hash.SET_PED_CAN_BE_DRAGGED_OUT, Handle, value);
         }
 
@@ -1986,13 +1992,14 @@ namespace GTA
         public bool IsBeingJacked => Function.Call<bool>(Hash.IS_PED_BEING_JACKED, Handle);
 
         /// <summary>
-        /// Sets a value indicating whether this <see cref="Ped"/> will stay in the vehicle when the driver gets jacked.
+        /// Gets or sets a value indicating whether this <see cref="Ped"/> will stay in the vehicle when the driver gets jacked.
         /// </summary>
         /// <value>
         /// <see langword="true" /> if <see cref="Ped"/> stays in vehicle when jacked; otherwise, <see langword="false" />.
         /// </value>
         public bool StaysInVehicleWhenJacked
         {
+            get => GetConfigFlag(PedConfigFlagToggles.StayInCarOnJack);
             set => Function.Call(Hash.SET_PED_STAY_IN_VEHICLE_WHEN_JACKED, Handle, value);
         }
 
@@ -2051,13 +2058,21 @@ namespace GTA
 
         #region Combat
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> is an enemy to the player.
+        /// </summary>
         public bool IsEnemy
         {
+            get => GetConfigFlag(PedConfigFlagToggles.PedIsEnemyToPlayer);
             set => Function.Call(Hash.SET_PED_AS_ENEMY, Handle, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> is a priority target for enemies.
+        /// </summary>
         public bool IsPriorityTargetForEnemies
         {
+            get => GetConfigFlag(PedConfigFlagToggles.ThisPedIsATargetPriority);
             set => Function.Call(Hash.SET_ENTITY_IS_TARGET_PRIORITY, Handle, value, 0);
         }
 
@@ -2128,10 +2143,11 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets if this <see cref="Ped"/> can take damage inflicted by regular bullets (not stun gun bullets) while in a <see cref="Vehicle"/>.
+        /// Gets or sets if this <see cref="Ped"/> can take damage inflicted by regular bullets (not stun gun bullets) while in a <see cref="Vehicle"/>.
         /// </summary>
         public bool CanBeShotInVehicle
         {
+            get => GetConfigFlag(PedConfigFlagToggles.CanBeShotInVehicle);
             set => Function.Call(Hash.SET_PED_CAN_BE_SHOT_IN_VEHICLE, Handle, value);
         }
 
@@ -2307,7 +2323,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets whether this <see cref="Ped"/> will die instantly if they find themselves in a body of water.
+        /// Gets or sets whether this <see cref="Ped"/> will die instantly if they find themselves in a body of water.
         /// </summary>
         /// <remarks>
         /// <para>
@@ -2325,11 +2341,12 @@ namespace GTA
         /// </remarks>
         public bool DiesInstantlyInWater
         {
+            get => GetConfigFlag(PedConfigFlagToggles.DiesInstantlyWhenSwimming);
             set => Function.Call(Hash.SET_PED_DIES_INSTANTLY_IN_WATER, Handle, value);
         }
 
         /// <summary>
-        /// Sets whether this <see cref="Ped"/> can take damage for being underwater.
+        /// Gets or sets whether this <see cref="Ped"/> can take damage for being underwater.
         /// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be
         /// underwater without taking <c>WEAPON_DROWNING</c> damage forever.
         /// </summary>
@@ -2346,16 +2363,20 @@ namespace GTA
         /// </remarks>
         public bool DrownsInWater
         {
+            //In B2699 GET_PED_DIES_IN_WATER was introduced,
+            //but this works for all versions including newer ones.
+            get => GetConfigFlag(PedConfigFlagToggles.DrownsInWater);
             set => Function.Call(Hash.SET_PED_DIES_IN_WATER, Handle, value);
         }
 
         /// <summary>
-        /// Sets whether this <see cref="Ped"/> can take <c>WEAPON_DROWNING</c> damage in a sinking vehicle.
+        /// Gets or sets whether this <see cref="Ped"/> can take <c>WEAPON_DROWNING</c> damage in a sinking vehicle.
         /// If this <see cref="Ped"/> is the player one, setting to <see langword="false"/> will enable the player to be
         /// in a sinking vehicle without taking <c>WEAPON_DROWNING</c> damage forever.
         /// </summary>
         public bool DrownsInSinkingVehicle
         {
+            get => GetConfigFlag(PedConfigFlagToggles.DrownsInSinkingVehicle);
             set => Function.Call(Hash.SET_PED_DIES_IN_SINKING_VEHICLE, Handle, value);
         }
 
@@ -2731,8 +2752,12 @@ namespace GTA
             Function.Call(Hash.REMOVE_PED_FROM_GROUP, Handle);
         }
 
+        /// <summary>
+        /// Gets or sets whether this <see cref="Ped"/> will never leave its <see cref="PedGroup"/>.
+        /// </summary>
         public bool NeverLeavesGroup
         {
+            get => GetConfigFlag(PedConfigFlagToggles.NeverLeavesGroup);
             set => Function.Call(Hash.SET_PED_NEVER_LEAVES_GROUP, Handle, value);
         }
 
@@ -2823,10 +2848,11 @@ namespace GTA
         #region Animation
 
         /// <summary>
-        /// Sets the value that indicates this <see cref="Ped"/> can play gesture animations.
+        /// Gets or sets whether this <see cref="Ped"/> can play gesture animations.
         /// </summary>
         public bool CanPlayGestures
         {
+            get => GetResetFlag(PedResetFlagToggles.GestureAnimsAllowed);
             set => Function.Call(Hash.SET_PED_CAN_PLAY_GESTURE_ANIMS, Handle, value);
         }
 
