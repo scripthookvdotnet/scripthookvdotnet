@@ -68,10 +68,6 @@ namespace GTA
             GC.SuppressFinalize(this);
         }
 
-
-        /// <summary>
-        /// Gets the number of members in the group.
-        /// </summary>
         public int MemberCount
         {
             get
@@ -86,64 +82,30 @@ namespace GTA
             }
         }
 
-        /// <summary>
-        /// Sets the maximum allowed distance from the group leader before a member leaves the group.
-        /// </summary>
         public float SeparationRange
         {
             set => Function.Call(Hash.SET_GROUP_SEPARATION_RANGE, Handle, value);
         }
 
-        /// <summary>
-        /// Sets the <see cref="Formation"/> this <see cref="PedGroup"/> will use.
-        /// </summary>
         public Formation Formation
         {
             set => Function.Call(Hash.SET_GROUP_FORMATION, Handle, (int)value);
         }
 
-        /// <summary>
-        /// Adds the specified <see cref="Ped"/> to this <see cref="PedGroup"/> as either a member or the leader.
-        /// </summary>
-        /// <param name="ped">The <see cref="Ped"/> to add to the group.</param>
-        /// <param name="leader">
-        /// If <c>true</c>, assigns the <paramref name="ped"/> as the group leader; otherwise, adds them as a regular member.
-        /// </param>
-        /// <remarks>
-        /// The game checks against an internal limit of 8 members per group.
-        /// </remarks>
         public void Add(Ped ped, bool leader)
         {
             Function.Call(leader ? Hash.SET_PED_AS_GROUP_LEADER : Hash.SET_PED_AS_GROUP_MEMBER, ped.Handle, Handle);
         }
-
-        /// <summary>
-        /// Removes the specified <see cref="Ped"/> from this <see cref="PedGroup"/>.
-        /// </summary>
-        /// <param name="ped">The <see cref="Ped"/> to remove from the group.</param>
         public void Remove(Ped ped)
         {
             Function.Call(Hash.REMOVE_PED_FROM_GROUP, ped.Handle);
         }
 
-        /// <summary>
-        /// Determines whether the specified <see cref="Ped"/> is a member of this <see cref="PedGroup"/>.
-        /// </summary>
-        /// <param name="ped">The <see cref="Ped"/> to check for membership.</param>
-        /// <returns>
-        /// <c>true</c> if the <paramref name="ped"/> is a member of this group; otherwise, <c>false</c>.
-        /// </returns>
         public bool Contains(Ped ped)
         {
             return Function.Call<bool>(Hash.IS_PED_GROUP_MEMBER, ped.Handle, Handle);
         }
 
-        /// <summary>
-        /// Gets the leader <see cref="Ped"/> of this <see cref="PedGroup"/>.
-        /// </summary>
-        /// <returns>
-        /// The leader <see cref="Ped"/> of the group, or <c>null</c> if the group has no leader.
-        /// </returns>
         public Ped Leader
         {
             get
@@ -153,44 +115,17 @@ namespace GTA
             }
         }
 
-        /// <summary>
-        /// Gets the member <see cref="Ped"/> at the specified index within this <see cref="PedGroup"/>.
-        /// </summary>
-        /// <param name="index">
-        /// The zero-based index of the group member (0–7).
-        /// </param>
-        /// <returns>
-        /// The <see cref="Ped"/> at the specified index, or <c>null</c> if no member exists at that position.
-        /// </returns>
         public Ped GetMember(int index)
         {
             int handle = Function.Call<int>(Hash.GET_PED_AS_GROUP_MEMBER, Handle, index);
             return handle != 0 ? new Ped(handle) : null;
         }
 
-        /// <summary>
-        /// Returns all <see cref="Ped"/>s in this <see cref="PedGroup"/> as an array.
-        /// </summary>
-        /// <param name="includingLeader">
-        /// If <c>true</c>, includes the group leader in the returned array; otherwise, only members are included.
-        /// </param>
-        /// <returns>
-        /// An array of <see cref="Ped"/> objects representing the group's members (and optionally the leader).
-        /// </returns>
         public Ped[] ToArray(bool includingLeader = true)
         {
             return ToList(includingLeader).ToArray();
         }
 
-        /// <summary>
-        /// Returns all <see cref="Ped"/>s in this <see cref="PedGroup"/> as a <c>List</c>.
-        /// </summary>
-        /// <param name="includingLeader">
-        /// If <c>true</c>, includes the group leader in the returned list; otherwise, only members are included.
-        /// </param>
-        /// <returns>
-        /// A list of <see cref="Ped"/> objects representing the group's members (and optionally the leader).
-        /// </returns>
         public List<Ped> ToList(bool includingLeader = true)
         {
             int memberCount = MemberCount;
@@ -221,7 +156,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Deletes this <see cref="PedGroup"/>.
+        /// Removes this <see cref="PedGroup"/>.
         /// </summary>
         public override void Delete()
         {
