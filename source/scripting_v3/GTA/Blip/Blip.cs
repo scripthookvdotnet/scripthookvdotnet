@@ -678,7 +678,7 @@ namespace GTA
         /// </summary>
         public bool GetPropertyFlag(BlipPropertyFlag flag)
         {
-            const int PROPERTY_FLAGS_OFFSET = 0x20;
+            const int PropertyFlagsOffset = 0x20;
 
             IntPtr address = MemoryAddress;
             if (address == IntPtr.Zero)
@@ -686,7 +686,7 @@ namespace GTA
                 return false;
             }
 
-            return SHVDN.MemDataMarshal.IsBitSet(address + PROPERTY_FLAGS_OFFSET, (int)flag);
+            return SHVDN.MemDataMarshal.IsBitSet(address + PropertyFlagsOffset, (int)flag);
         }
 
         // Would be practical if this was exposed publicly,
@@ -697,7 +697,7 @@ namespace GTA
         /// </summary>
         private void SetPropertyFlag(BlipPropertyFlag flag, bool value)
         {
-            const int PROPERTY_FLAGS_OFFSET = 0x20;
+            const int PropertyFlagsOffset = 0x20;
 
             IntPtr address = MemoryAddress;
             if (address == IntPtr.Zero)
@@ -705,7 +705,7 @@ namespace GTA
                 return;
             }
 
-            SHVDN.MemDataMarshal.SetBit(address + PROPERTY_FLAGS_OFFSET, (int)flag, value);
+            SHVDN.MemDataMarshal.SetBit(address + PropertyFlagsOffset, (int)flag, value);
         }
 
         /// <summary>
