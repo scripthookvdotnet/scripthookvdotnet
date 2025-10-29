@@ -676,7 +676,7 @@ namespace GTA
         /// <summary>
         /// Gets whether a specific <see cref="BlipPropertyFlag"/> is set for this <see cref="Blip"/>.
         /// </summary>
-        public bool GetPropertyFlag(BlipPropertyFlag flag)
+        private bool GetPropertyFlag(BlipPropertyFlag flag)
         {
             const int PropertyFlagsOffset = 0x20;
 
