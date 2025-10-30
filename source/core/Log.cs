@@ -18,6 +18,18 @@ namespace SHVDN
             Debug,
         }
 
+        public readonly struct Options
+        {
+            public Options(bool forceLogToConsole)
+            {
+                ForceLogToConsole = forceLogToConsole;
+            }
+
+            // We can't use `init` by defining `System.Runtime.CompilerServices.IsExternalInit` because Visual Studio
+            // refuses to load if it's defined in this core project 😭
+            public bool ForceLogToConsole { get; }
+        }
+
         private static string FilePath => Path.ChangeExtension(typeof(ScriptDomain).Assembly.Location, ".log");
 
         internal static string FileName => Path.GetFileName(FilePath);
@@ -37,7 +49,13 @@ namespace SHVDN
         public static void Message(Level level, params string[] message)
         {
             WriteToFile(level, message);
-            WriteToConsole(level, message);
+            WriteToConsole(level, default(Options), message);
+        }
+
+        public static void Message(Level level, Options opt, params string[] message)
+        {
+            WriteToFile(level, message);
+            WriteToConsole(level, opt, message);
         }
 
         internal static void WriteToFile(Level level, params string[] message)
@@ -82,6 +100,9 @@ namespace SHVDN
         }
 
         internal static void WriteToConsole(Level level, params string[] message)
+            => WriteToConsole(level, default(Options), message);
+
+        internal static void WriteToConsole(Level level, Options opt, params string[] message)
         {
             var console = AppDomain.CurrentDomain.GetData("Console") as Console;
 
@@ -92,6 +113,18 @@ namespace SHVDN
 
             switch (level)
             {
+                case Level.Debug:
+                    if (opt.ForceLogToConsole)
+                    {
+                        console.PrintDebug(string.Join(string.Empty, message));
+                    }
+                    break;
+                case Level.Info:
+                    if (opt.ForceLogToConsole)
+                    {
+                        console.PrintInfo(string.Join(string.Empty, message));
+                    }
+                    break;
                 case Level.Error:
                     console.PrintError(string.Join(string.Empty, message));
                     break;
