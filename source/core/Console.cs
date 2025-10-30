@@ -274,10 +274,22 @@ namespace SHVDN
             AddLines(headerStr + " ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
         }
 
+        const string DebugMessageHeaderStr = "[~b~DEBUG~w~]";
         const string InfoMessageHeaderStr = "[~b~INFO~w~]";
         const string ErrorMessageHeaderStr = "[~r~ERROR~w~]";
         const string WarningMessageHeaderStr = "[~o~WARNING~w~]";
 
+        /// <summary>
+        /// Writes a debug message to the console.
+        /// </summary>
+        /// <param name="msg">The composite format string.</param>
+        public void PrintDebug(string msg) => PrintMessage(DebugMessageHeaderStr, msg);
+        /// <summary>
+        /// Writes a debug message to the console.
+        /// </summary>
+        /// <param name="msg">The composite format string.</param>
+        /// <param name="args">The formatting arguments.</param>
+        public void PrintDebug(string msg, params object[] args) => PrintMessage(DebugMessageHeaderStr, msg, args);
         /// <summary>
         /// Writes an info message to the console.
         /// </summary>
