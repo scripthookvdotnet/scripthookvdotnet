@@ -732,13 +732,15 @@ namespace SHVDN
                 return false;
             }
 
+            string scriptAsmVersionStr = assembly.GetName().Version.ToString();
             if (resolvedApiVersion == new Version(0, 0, 0, 0))
             {
                 // shouldn't be null if came this path
                 Assembly v2ApiAsm = CurrentDomain._scriptingApiAsms.First(x => x.GetName().Version.Major == 2);
 
-                Log.Message(Log.Level.Info, "Found ", scriptTypeCount.ToString(), " script(s) in ", Path.GetFileName(filename),
-                    " resolved to API version " + v2ApiAsm.GetName().Version.ToString(3), " (target API version: v2.8 or earlier).");
+                Log.Message(Log.Level.Info, "Found ", scriptTypeCount.ToString(), " script(s) in ",
+                    Path.GetFileName(filename), " resolved to API version " + v2ApiAsm.GetName().Version.ToString(3),
+                    " (script assembly version: ", scriptAsmVersionStr, ", target API version: v2.8 or earlier).");
             }
             else
             {
@@ -748,8 +750,9 @@ namespace SHVDN
                     = (resolvedApiVersion != null
                     ? (" resolved to API version " + resolvedApiVersion.ToString(3))
                     : string.Empty);
-                Log.Message(Log.Level.Info, "Found ", scriptTypeCount.ToString(), " script(s) in ", Path.GetFileName(filename),
-                    resolvedApiVerSubstr, " (target API version: ", targetApiVersion.ToString(3), ").");
+                Log.Message(Log.Level.Info, "Found ", scriptTypeCount.ToString(), " script(s) in ",
+                    Path.GetFileName(filename), resolvedApiVerSubstr, " (script assembly version: ",
+                    scriptAsmVersionStr, ", target API version: ", targetApiVersion.ToString(3), ").");
             }
 
             if (resolvedApiVersion != null && IsApiVersionDeprecated(resolvedApiVersion))
@@ -809,18 +812,19 @@ namespace SHVDN
 
         private bool LoadScriptsFromAssemblyMultipleApiVers(Assembly assembly, string filename, Dictionary<int, Version> targetApis, ScriptAssemblyInfo asmInfo)
         {
-            Log.Message(Log.Level.Info, "Resolving API Versions of the scripts in ", Path.GetFileName(filename),
-                ", which has multiple references to different API assemblies...");
-            Log.Message(Log.Level.Debug, "For Developers: scripts should not use multiple API versions at the same " +
-                "time. Loading multiple API versions may not be supported in future SHVDN versions. " +
-                "For users: you could contact the author(s) of ", Path.GetFileName(filename), ", and ask them to use " +
-                "only one API version.");
-
             int scriptTypeCount = 0;
             AssemblyName asmName = assembly.GetName();
             string asmNameStr = asmName.Name;
             Version asmVersion = asmName.Version;
             HashSet<Version> resolvedApiVersionSets = new(targetApis.Count);
+
+            Log.Message(Log.Level.Info, "Resolving API Versions of the scripts in ", Path.GetFileName(filename),
+                ", which has multiple references to different API assemblies... (script assembly version: " ,
+                asmVersion.ToString(), ")");
+            Log.Message(Log.Level.Debug, "For Developers: scripts should not use multiple API versions at the same " +
+                "time. Loading multiple API versions may not be supported in future SHVDN versions. " +
+                "For users: you could contact the author(s) of ", Path.GetFileName(filename), ", and ask them to use " +
+                "only one API version.");
 
             try
             {
