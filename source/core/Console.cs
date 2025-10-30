@@ -252,71 +252,65 @@ namespace SHVDN
         }
 
         /// <summary>
-        /// Writes an info message to the console.
+        /// Writes a message to the console.
         /// </summary>
         /// <param name="msg">The composite format string.</param>
-        public void PrintInfo(string msg)
+        public void PrintMessage(string headerStr, string msg)
         {
-            AddLines("[~b~INFO~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+            AddLines(headerStr + " ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
         }
         /// <summary>
-        /// Writes an info message to the console.
+        /// Writes a message to the console.
         /// </summary>
         /// <param name="msg">The composite format string.</param>
         /// <param name="args">The formatting arguments.</param>
-        public void PrintInfo(string msg, params object[] args)
+        public void PrintMessage(string headerStr, string msg, params object[] args)
         {
             if (args.Length > 0)
             {
                 msg = String.Format(msg, args);
             }
 
-            AddLines("[~b~INFO~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+            AddLines(headerStr + " ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
         }
+
+        const string InfoMessageHeaderStr = "[~b~INFO~w~]";
+        const string ErrorMessageHeaderStr = "[~r~ERROR~w~]";
+        const string WarningMessageHeaderStr = "[~o~WARNING~w~]";
+
+        /// <summary>
+        /// Writes an info message to the console.
+        /// </summary>
+        /// <param name="msg">The composite format string.</param>
+        public void PrintInfo(string msg) => PrintMessage(InfoMessageHeaderStr, msg);
+        /// <summary>
+        /// Writes an info message to the console.
+        /// </summary>
+        /// <param name="msg">The composite format string.</param>
+        /// <param name="args">The formatting arguments.</param>
+        public void PrintInfo(string msg, params object[] args) => PrintMessage(InfoMessageHeaderStr, msg, args);
         /// <summary>
         /// Writes an error message to the console.
         /// </summary>
         /// <param name="msg">The composite format string.</param>
-        public void PrintError(string msg)
-        {
-            AddLines("[~r~ERROR~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
-        }
+        public void PrintError(string msg) => PrintMessage(ErrorMessageHeaderStr, msg);
         /// <summary>
         /// Writes an error message to the console.
         /// </summary>
         /// <param name="msg">The composite format string.</param>
         /// <param name="args">The formatting arguments.</param>
-        public void PrintError(string msg, params object[] args)
-        {
-            if (args.Length > 0)
-            {
-                msg = String.Format(msg, args);
-            }
-
-            AddLines("[~r~ERROR~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
-        }
+        public void PrintError(string msg, params object[] args) => PrintMessage(ErrorMessageHeaderStr, msg, args);
         /// <summary>
         /// Writes a warning message to the console.
         /// </summary>
         /// <param name="msg">The composite format string.</param>
-        public void PrintWarning(string msg)
-        {
-            AddLines("[~o~WARNING~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
-        }
+        public void PrintWarning(string msg) => PrintMessage(WarningMessageHeaderStr, msg);
         /// <summary>
         /// Writes a warning message to the console.
         /// </summary>
         /// <param name="msg">The composite format string.</param>
         /// <param name="args">The formatting arguments.</param>
-        public void PrintWarning(string msg, params object[] args)
-        {
-            if (args.Length > 0)
-            {
-                msg = String.Format(msg, args);
-            }
-
-            AddLines("[~o~WARNING~w~] ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
-        }
+        public void PrintWarning(string msg, params object[] args) => PrintMessage(WarningMessageHeaderStr, msg, args);
 
         /// <summary>
         /// Writes the help text for all commands to the console.
