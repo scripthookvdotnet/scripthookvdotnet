@@ -4657,6 +4657,7 @@ namespace SHVDN
                 return *(CPathRegion**)(s_cPathFindInstanceAddress + StartPathNodeOffsetOfCPathFind + areaId * 0x8);
             }
 
+            [Flags]
             public enum VehiclePathNodeProperties
             {
                 None = 0,
