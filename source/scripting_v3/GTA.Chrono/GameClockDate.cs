@@ -64,14 +64,14 @@ namespace GTA.Chrono
         /// <value>
         /// The largest possible value of <see cref="GameClockTime"/>, which is December 31, 2147483647 CE.
         /// </value>
-        public static GameClockDate MaxValue = new(int.MaxValue, OrdFlagsForMaxDate);
+        public static readonly GameClockDate MaxValue = new(int.MaxValue, OrdFlagsForMaxDate);
         /// <summary>
         /// Represents the smallest possible value of a <see cref="GameClockDate"/>.
         /// </summary>
         /// <value>
         /// The smallest possible value of <see cref="GameClockTime"/>, which is January 1, -2147483648 BCE.
         /// </value>
-        public static GameClockDate MinValue = new(int.MinValue, OrdFlagsForMinDate);
+        public static readonly GameClockDate MinValue = new(int.MinValue, OrdFlagsForMinDate);
 
         /// <summary>
         /// Returns the year part of this <see cref="GameClockDate"/>. The returned value is an integer in the range of
