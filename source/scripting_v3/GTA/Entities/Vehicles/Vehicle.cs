@@ -133,6 +133,9 @@ namespace GTA
         /// Reading always <see langword="false"/> prior to <c>v1.0.1011.1</c>;
         /// Writing to this prior to <c>v1.0.1011.1</c> will throw an error.
         /// </remarks>
+        /// <exception cref="GameVersionNotSupportedException">
+        /// Thrown if trying to update this value in game versions earlier than <c>v1.0.1011.1</c>;
+        /// </exception>
         public bool IsRocketBoostActive
         {
             get => Game.FileVersion >= VersionConstsForGameVersion.v1_0_944_2
@@ -2208,7 +2211,7 @@ namespace GTA
         /// </summary>
         /// <remarks>
         /// Returns an empty array if there are no occupants.
-        /// If this <see cref="Vehicle"/> has a <see cref="Driver"/>, the driver will be at index 0. 
+        /// If this <see cref="Vehicle"/> has a <see cref="Driver"/>, the driver will be at index 0.
         /// Remaining occupants are ordered according to their seat assignment.
         /// </remarks>
         public Ped[] Occupants
@@ -2241,7 +2244,7 @@ namespace GTA
         /// Gets an array of all passengers in this <see cref="Vehicle"/>.
         /// </summary>
         /// <remarks>
-        /// Returns an empty array if there are no passengers.  
+        /// Returns an empty array if there are no passengers.
         /// The occupants are ordered according to their seat assignment.
         /// </remarks>
         public Ped[] Passengers
