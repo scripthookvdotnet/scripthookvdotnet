@@ -55,23 +55,87 @@ namespace GTA
         #region Styling
 
         public bool IsConvertible => Function.Call<bool>(Hash.IS_VEHICLE_A_CONVERTIBLE, Handle, 0);
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> is considered a “Big” vehicle.
+        /// </summary>
+        /// <remarks>
+        /// This returns <see langword="true"/> when either of the following conditions is met:
+        /// <list type="bullet">
+        /// <item>
+        /// The <c>&lt;strModelFlags&gt;</c> attribute in the vehicle's <c>handling.xml</c>
+        /// contains the <c>IS_BIG</c> flag (<c>0x8</c>) or the <c>IS_BUS</c> flag (<c>0x2</c>).
+        /// </item>
+        /// <item>The <see cref="Type"/> of this vehicle is <see cref="VehicleType.Plane"/>.</item>
+        /// </list>
+        /// </remarks>
         public bool IsBig => Function.Call<bool>(Hash.IS_BIG_VEHICLE, Handle);
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> has bulletproof glass.
+        /// </summary>
         public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.NativeMemory.VehicleFlag2.HasBulletProofGlass);
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> has Lowrider Hydraulics.
+        /// </summary>
+        /// <remarks>
+        /// Returns <see langword="false"/> prior to <c>v1.0.505.2</c>;
+        /// </remarks>
         public bool HasLowriderHydraulics
             => Game.FileVersion >= VersionConstsForGameVersion.v1_0_505_2
             && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.NativeMemory.VehicleFlag2.HasLowriderHydraulics);
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> has Donk Hydraulics.
+        /// </summary>
+        /// <remarks>
+        /// Returns <see langword="false"/> prior to <c>v1.0.505.2</c>;
+        /// </remarks>
         public bool HasDonkHydraulics
             => Game.FileVersion >= VersionConstsForGameVersion.v1_0_505_2
             && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.NativeMemory.VehicleFlag2.HasLowriderDonkHydraulics);
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> has a Parachute.
+        /// </summary>
+        /// <remarks>
+        /// Returns <see langword="false"/> prior to <c>v1.0.505.2</c>;
+        /// </remarks>
         public bool HasParachute
             => Game.FileVersion >= VersionConstsForGameVersion.v1_0_505_2
             && Function.Call<bool>(Hash.GET_VEHICLE_HAS_PARACHUTE, Handle);
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> has a Rocket Boost
+        /// </summary>
+        /// <remarks>
+        /// Returns <see langword="false"/> prior to <c>v1.0.944.2</c>;
+        /// </remarks>
         public bool HasRocketBoost
             => Game.FileVersion >= VersionConstsForGameVersion.v1_0_944_2
             && Function.Call<bool>(Hash.GET_HAS_ROCKET_BOOST, Handle);
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> has the Parachute deployed.
+        /// </summary>
+        /// <remarks>
+        /// Returns <see langword="false"/> prior to <c>v1.0.1011.1</c>;
+        /// </remarks>
         public bool IsParachuteDeployed
             => Game.FileVersion >= VersionConstsForGameVersion.v1_0_1011_1
             && Function.Call<bool>(Hash.IS_VEHICLE_PARACHUTE_DEPLOYED, Handle);
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has its rocket boost currently active.
+        /// </summary>
+        /// <remarks>
+        /// Reading always <see langword="false"/> prior to <c>v1.0.1011.1</c>;
+        /// Writing to this prior to <c>v1.0.1011.1</c> will throw an error.
+        /// </remarks>
+        /// <exception cref="GameVersionNotSupportedException">
+        /// Thrown if trying to update this value in game versions earlier than <c>v1.0.1011.1</c>;
+        /// </exception>
         public bool IsRocketBoostActive
         {
             get => Game.FileVersion >= VersionConstsForGameVersion.v1_0_944_2
@@ -88,7 +152,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets dirt level of this <see cref="Vehicle"/> between 0.0 (clean) to 15.0 (dirty).
+        /// Gets or sets the dirt level of this <see cref="Vehicle"/> between <see langword="0.0f"/> (clean) to <see langword="15.0f"/> (dirty).
         /// </summary>
         public float DirtLevel
         {
@@ -97,7 +161,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets the opacity of the EnvEff texture on this <see cref="Vehicle"/> between 0.0 (transparent) and 1.0 (opaque).
+        /// Gets or sets the opacity of the EnvEff texture on this <see cref="Vehicle"/> between <see langword="0.0f"/> (transparent) and <see langword="1.0f"/> (opaque).
         /// </summary>
         public float EnvEffLevel
         {
@@ -105,24 +169,42 @@ namespace GTA
             set => Function.Call(Hash.SET_VEHICLE_ENVEFF_SCALE, Handle, value);
         }
 
+
+        /// <summary>
+        /// Gets the <see cref="VehicleModCollection"/> for this <see cref="Vehicle"/>.
+        /// </summary>
         public VehicleModCollection Mods => _mods ??= new VehicleModCollection(this);
 
+        /// <summary>
+        /// Gets the <see cref="VehicleWheelCollection"/> for this <see cref="Vehicle"/>.
+        /// </summary>
         public VehicleWheelCollection Wheels => _wheels ??= new VehicleWheelCollection(this);
 
+        /// <summary>
+        /// Gets the <see cref="VehicleWindowCollection"/> for this <see cref="Vehicle"/>.
+        /// </summary>
         public VehicleWindowCollection Windows => _windows ??= new VehicleWindowCollection(this);
 
+        /// <summary>
+        /// Washes this <see cref="Vehicle"/> by setting the value of <see cref="DirtLevel"/> to <see langword="0.0f"/>.
+        /// </summary>
         public void Wash()
         {
             DirtLevel = 0f;
         }
 
         /// <summary>
-        /// If disabled, any raised hydraulics are lowered and controls are disabled. If enabled, hydraulics are raised if lowered and controls are enabled.
-        /// Only available in v1.0.505.2 or later versions.
+        /// Enables or disables the control of hydraulics for this <see cref="Vehicle"/>.
         /// </summary>
-        /// <param name="toggle">Whether to enable this <see cref="Vehicle"/>'s hydraulic controls or not.</param>
+        /// <remarks>
+        /// When set to <see langword="true"/>, hydraulics control is enabled, and any lowered hydraulics are raised.
+        /// When set to <see langword="false"/>, hydraulics control is disabled, and hydraulics are lowered.
+        /// <para>
+        /// Prior to <c>v1.0.505.2</c> will throw an error.
+        /// </para>
+        /// </remarks>
         /// <exception cref="GameVersionNotSupportedException">
-        /// Thrown if called in game versions earlier than v1.0.505.2.
+        /// Thrown if called in game versions earlier than <c>v1.0.505.2</c>.
         /// </exception>
         public void SetHydraulicsControl(bool toggle)
         {
@@ -131,16 +213,35 @@ namespace GTA
             Function.Call(Hash.SET_HYDRAULICS_CONTROL, Handle, toggle);
         }
 
+        /// <summary>
+        /// Determines whether the specified <c>extra</c> is currently enabled on this <see cref="Vehicle"/>.
+        /// </summary>
+        /// <param name="extra">The extra to check.</param>
+        /// <returns>
+        /// <see langword="true"/> if the extra is enabled; otherwise, <see langword="false"/>.
+        /// </returns>
         public bool IsExtraOn(int extra)
         {
             return Function.Call<bool>(Hash.IS_VEHICLE_EXTRA_TURNED_ON, Handle, extra);
         }
 
+        /// <summary>
+        /// Determines whether the specified <c>extra</c> exists on this <see cref="Vehicle"/>.
+        /// </summary>
+        /// <param name="extra">The extra to check.</param>
+        /// <returns>
+        /// <see langword="true"/> if the extra exists; otherwise, <see langword="false"/>.
+        /// </returns>
         public bool ExtraExists(int extra)
         {
             return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
         }
 
+        /// <summary>
+        /// Enables or disables the specified <c>extra</c> on this <see cref="Vehicle"/>.
+        /// </summary>
+        /// <param name="extra">The extra to enable or disable.</param>
+        /// <param name="toggle"><see langword="true"/> to enable the extra; <see langword="false"/> to disable it.</param>
         public void ToggleExtra(int extra, bool toggle)
         {
             Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
@@ -176,22 +277,23 @@ namespace GTA
         #region Configuration
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a regular automobile.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is a regular <see cref="VehicleType.Automobile"/>.
         /// </summary>
         public bool IsRegularAutomobile => Type == VehicleType.Automobile;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is an amphibious automobile.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.AmphibiousAutomobile"/>.
         /// </summary>
         public bool IsAmphibiousAutomobile => Type == VehicleType.AmphibiousAutomobile;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a submarine car.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.SubmarineCar"/>.
         /// </summary>
         public bool IsSubmarineCar => Type == VehicleType.SubmarineCar;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is an automobile.
+        /// Gets a value indicating whether this <see cref="Vehicle"/> is either a <see cref="VehicleType.Automobile"/>,
+        /// a <see cref="VehicleType.AmphibiousAutomobile"/> or a <see cref="VehicleType.SubmarineCar"/>.
         /// </summary>
         public bool IsAutomobile
         {
@@ -203,17 +305,17 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a regular quad bike.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.QuadBike"/>.
         /// </summary>
         public bool IsRegularQuadBike => Type == VehicleType.QuadBike;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is an amphibious quad bike.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.AmphibiousQuadBike"/>.
         /// </summary>
         public bool IsAmphibiousQuadBike => Type == VehicleType.AmphibiousQuadBike;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a quad bike.
+        /// Gets a value indicating whether this <see cref="Vehicle"/> is either a <see cref="VehicleType.QuadBike"/> or a <see cref="VehicleType.AmphibiousQuadBike"/>.
         /// </summary>
         public bool IsQuadBike
         {
@@ -225,7 +327,8 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is an amphibious vehicle.
+        /// Gets a value indicating whether this <see cref="Vehicle"/> is either a <see cref="VehicleType.AmphibiousAutomobile"/>
+        /// or a <see cref="VehicleType.AmphibiousQuadBike"/>.
         /// </summary>
         public bool IsAmphibious
         {
@@ -237,27 +340,28 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a trailer.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.Trailer"/>.
         /// </summary>
         public bool IsTrailer => Type == VehicleType.Trailer;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a plane.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.Plane"/>.
         /// </summary>
         public bool IsPlane => Type == VehicleType.Plane;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a helicopter.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.Helicopter"/>.
         /// </summary>
         public bool IsHelicopter => Type == VehicleType.Helicopter;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a helicopter.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.Blimp"/>.
         /// </summary>
         public bool IsBlimp => Type == VehicleType.Blimp;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is an aircraft.
+        /// Gets a value indicating whether this <see cref="Vehicle"/> is either a <see cref="VehicleType.Plane"/>,
+        /// a <see cref="VehicleType.Helicopter"/> or a <see cref="VehicleType.Blimp"/>.
         /// </summary>
         public bool IsAircraft
         {
@@ -268,6 +372,10 @@ namespace GTA
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> is either a <see cref="VehicleType.Helicopter"/>
+        /// or a <see cref="VehicleType.Blimp"/>.
+        /// </summary>
         private bool IsHeliOrBlimp
         {
             get
@@ -277,6 +385,10 @@ namespace GTA
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> is either a <see cref="VehicleType.Helicopter"/>,
+        /// a <see cref="VehicleType.Blimp"/> or a <see cref="VehicleType.Autogyro"/>.
+        /// </summary>
         private bool IsRotaryWingAircraft
         {
             get
@@ -287,17 +399,17 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a motorcycle.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.Motorcycle"/>.
         /// </summary>
         public bool IsMotorcycle => Type == VehicleType.Motorcycle;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a bicycle.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.Bicycle"/>.
         /// </summary>
         public bool IsBicycle => Type == VehicleType.Bicycle;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a bike.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is either a <see cref="VehicleType.Motorcycle"/> or a <see cref="VehicleType.Bicycle"/>.
         /// </summary>
         public bool IsBike
         {
@@ -309,17 +421,17 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a boat.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.Boat"/>.
         /// </summary>
         public bool IsBoat => Type == VehicleType.Boat;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a train.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.Train"/>.
         /// </summary>
         public bool IsTrain => Type == VehicleType.Train;
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> is a submarine.
+        /// Gets a value indicating whether the <see cref="Type"/> of this <see cref="Vehicle"/> is <see cref="VehicleType.Submarine"/>.
         /// </summary>
         public bool IsSubmarine => Type == VehicleType.Submarine;
 
@@ -368,6 +480,7 @@ namespace GTA
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Vehicle"/> is wanted by the police.
         /// </summary>
+        /// <remarks></remarks>
         /// <value>
         ///   <see langword="true" /> if this <see cref="Vehicle"/> is wanted by the police; otherwise, <see langword="false" />.
         /// </value>
@@ -447,7 +560,7 @@ namespace GTA
         public bool CanStandOnTop => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.NativeMemory.VehicleFlag1.CanStandOnTop);
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="Vehicle"/> can jump.
+        /// Gets a value indicating whether this <see cref="Vehicle"/> has jumping functionality.
         /// </summary>
         /// <value>
         /// <see langword="true" /> if this <see cref="Vehicle"/> can jump; otherwise, <see langword="false" />.
@@ -468,11 +581,13 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets whether this vehicle has low-friction tires equipped.
-        /// Only works on Automobiles, Helicopters, and Planes.
+        /// Sets whether this <see cref="Vehicle"/> has reduced grip.
         /// </summary>
+        /// <remarks>
+        /// This property only affects Automobiles, Helicopters, and Planes.
+        /// </remarks>
         /// <value>
-        /// <see langword="true" /> to equip this <see cref="Vehicle"/> with low-friction tires; otherwise, <see langword="false" />.
+        /// <see langword="true"/> to reduce the grip of this <see cref="Vehicle"/>; otherwise, <see langword="false"/>.
         /// </value>
         public bool HasLowerFrictionTires
         {
@@ -571,7 +686,7 @@ namespace GTA
         #region Health
 
         /// <summary>
-        /// Gets or sets this <see cref="Vehicle"/>s body health.
+        /// Gets or sets the body health of this <see cref="Vehicle"/>.
         /// </summary>
         public float BodyHealth
         {
@@ -580,7 +695,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// <para>Gets or sets this <see cref="Vehicle"/> engine health.</para>
+        /// Gets or sets this <see cref="Vehicle"/>'s engine health.
         /// <para>
         /// When this value is less than 0.0, the engine will not work.
         /// </para>
@@ -691,7 +806,7 @@ namespace GTA
         #region Radio
 
         /// <summary>
-        /// Turns this <see cref="Vehicle"/>s radio on or off.
+        /// Sets whether the Radio of this <see cref="Vehicle"/> is enabled.
         /// </summary>
         public bool IsRadioEnabled
         {
@@ -1167,11 +1282,12 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets this <see cref="Vehicle"/>s forward speed.
+        /// Sets this <see cref="Vehicle"/>s forward speed in m/s.
         /// </summary>
-        /// <value>
-        /// The forward speed in m/s.
-        /// </value>
+        /// <remarks>
+        /// If this <see cref="IsTrain"/> for this <see cref="Vehicle"/> returns <c>true</c>,
+        /// both the speed and the cruise speed are set to the passed <c>value</c>.
+        /// </remarks>
         public float ForwardSpeed
         {
             set
@@ -1189,7 +1305,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets the blades speed for this heli.
+        /// Gets or sets the speed of the Heli Blades if <see cref="IsRotaryWingAircraft"/> returns <c>true</c>.
         /// </summary>
         public float HeliBladesSpeed
         {
@@ -1323,7 +1439,7 @@ namespace GTA
         #region Alarm
 
         /// <summary>
-        /// Sets a value indicating whether this <see cref="Vehicle"/> has an alarm set.
+        /// Gets or sets a value indicating whether this <see cref="Vehicle"/> has an alarm set.
         /// </summary>
         /// <value>
         ///   <see langword="true" /> if this <see cref="Vehicle"/> has an alarm set; otherwise, <see langword="false" />.
@@ -1342,6 +1458,7 @@ namespace GTA
             }
             set => Function.Call(Hash.SET_VEHICLE_ALARM, Handle, value);
         }
+
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> is sounding its alarm.
         /// </summary>
@@ -1384,8 +1501,14 @@ namespace GTA
         }
 
         /// <summary>
-        /// Starts sounding the alarm on this <see cref="Vehicle"/>.
+        /// Starts the vehicle alarm, if possible.
         /// </summary>
+        /// <remarks>
+        /// The alarm will sound only when all of the following conditions are met:
+        /// - <see cref="Vehicle.Type"/> is <see cref="VehicleType.Automobile"/>
+        /// - <see cref="IsAlarmSet"/> is <see langword="true"/>
+        /// - The vehicle is not considered destroyed (<see cref="IsConsideredDestroyed"/> is <see langword="false"/>)
+        /// </remarks>
         public void StartAlarm()
         {
             Function.Call(Hash.START_VEHICLE_ALARM, Handle);
@@ -1422,6 +1545,7 @@ namespace GTA
                 return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CanUseSirenOffset, 1);
             }
         }
+
         /// <summary>
         /// Sets the value that determines this <see cref="Vehicle"/> can use siren if a given <see langword="bool"/> is <see langword="false"/>
         /// or the <see langword="bool"/> is <see langword="true"/> and <see cref="CanUseSiren"/> returns <see langword="true"/> on the <see cref="Vehicle"/>.
@@ -1708,9 +1832,12 @@ namespace GTA
         }
 
         /// <summary>
-        /// Returns <see langword="true"/> if there are any bang or scuff decals on this <see cref="Vehicle"/>.
+        /// Gets a value indicating whether this <see cref="Vehicle"/> has any damage decals.
         /// </summary>
         public bool HasDamageDecals => Function.Call<bool>(Hash.GET_DOES_VEHICLE_HAVE_DAMAGE_DECALS, Handle);
+
+
+        /// <inheritdoc cref="Vehicle.HasDamageDecals"/>
         [Obsolete("Use Vehicle.HasDamageDecals instead."), EditorBrowsable(EditorBrowsableState.Never)]
         public bool IsDamaged => Function.Call<bool>(Hash.GET_DOES_VEHICLE_HAVE_DAMAGE_DECALS, Handle);
 
@@ -1720,7 +1847,7 @@ namespace GTA
         /// </summary>
         /// <returns>
         /// <see langword="true"/> if the <see cref="Vehicle"/> is not destroyed (<see cref="IsConsideredDestroyed"/>
-        /// returns <see langword="false"/>) and both <see cref="PetrolTankHealth"/> and <see cref="EngineHealth"/> is
+        /// returns <see langword="false"/>) and both <see cref="PetrolTankHealth"/> and <see cref="EngineHealth"/> are
         /// greater than 0.0f; otherwise, <see langword="false"/>.
         /// </returns>
         public bool IsDriveable
@@ -1733,8 +1860,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets the value that indicates whether this <see cref="Vehicle"/> is forced to be undriveable
-        /// (but still enterable).
+        /// Sets an internal flag which prevents the engine from being started.
         /// </summary>
         public bool IsUndriveable
         {
@@ -1771,25 +1897,36 @@ namespace GTA
             }
         }
 
+        /// <summary>
+        /// Indicates whether the rear bumper of this <see cref="Vehicle"/> is detached.
+        /// </summary>
         public bool IsRearBumperBrokenOff => Function.Call<bool>(Hash.IS_VEHICLE_BUMPER_BROKEN_OFF, Handle, false);
 
+        /// <summary>
+        /// Indicates whether the front bumper of this <see cref="Vehicle"/> is detached.
+        /// </summary>
         public bool IsFrontBumperBrokenOff => Function.Call<bool>(Hash.IS_VEHICLE_BUMPER_BROKEN_OFF, Handle, true);
 
         /// <summary>
-        /// Sets the value that indicates whether this <see cref="Vehicle"/> has strong axles
-        /// so that its axles dont break easily.
+        /// Sets a value indicating whether this <see cref="Vehicle"/> has strong axles, meaning they won't break as easily.
         /// </summary>
         public bool IsAxlesStrong
         {
             set => Function.Call<bool>(Hash.SET_VEHICLE_HAS_STRONG_AXLES, Handle, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the Tires of this <see cref="Vehicle"/> can burst.
+        /// </summary>
         public bool CanTiresBurst
         {
             get => Function.Call<bool>(Hash.GET_VEHICLE_TYRES_CAN_BURST, Handle);
             set => Function.Call(Hash.SET_VEHICLE_TYRES_CAN_BURST, Handle, value);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the Tires of this <see cref="Vehicle"/> can break.
+        /// </summary>
         public bool CanWheelsBreak
         {
             get
@@ -1805,6 +1942,9 @@ namespace GTA
             set => Function.Call(Hash.SET_VEHICLE_WHEELS_CAN_BREAK, Handle, value);
         }
 
+        /// <summary>
+        /// Sets a value indicating whether this <see cref="Vehicle"/> can be visibly damaged.
+        /// </summary>
         public bool CanBeVisiblyDamaged
         {
             set => Function.Call(Hash.SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED, Handle, value);
@@ -1953,6 +2093,9 @@ namespace GTA
 
         #region Doors & Locks
 
+        /// <summary>
+        /// Gets whether this <see cref="Vehicle"/> has a roof.
+        /// </summary>
         public bool HasRoof => Function.Call<bool>(Hash.DOES_VEHICLE_HAVE_ROOF, Handle);
 
         public VehicleRoofState RoofState
@@ -2023,6 +2166,9 @@ namespace GTA
 
         #region Burnout
 
+        /// <summary>
+        /// Gets whether this <see cref="Vehicle"/> is performing a burnout.
+        /// </summary>
         public bool IsInBurnout => Function.Call<bool>(Hash.IS_VEHICLE_IN_BURNOUT, Handle);
 
         public bool IsBurnoutForced
@@ -2045,14 +2191,29 @@ namespace GTA
 
         #region Occupants
 
+        /// <summary>
+        /// Gets the <see cref="Ped"/> occupying the driver seat, or <see langword="null"/> if the seat is unoccupied.
+        /// </summary>
         public Ped Driver => GetPedOnSeat(VehicleSeat.Driver);
 
+        /// <summary>
+        /// Gets the <see cref="Ped"/> occupying the specified <see cref="VehicleSeat"/>, or <see langword="null"/> if the seat is unoccupied.
+        /// </summary>
         public Ped GetPedOnSeat(VehicleSeat seat)
         {
             int handle = Function.Call<int>(Hash.GET_PED_IN_VEHICLE_SEAT, Handle, (int)seat);
             return handle != 0 ? new Ped(handle) : null;
         }
 
+
+        /// <summary>
+        /// Gets an array of all <see cref="Ped"/>s in this <see cref="Vehicle"/>.
+        /// </summary>
+        /// <remarks>
+        /// Returns an empty array if there are no occupants.
+        /// If this <see cref="Vehicle"/> has a <see cref="Driver"/>, the driver will be at index 0.
+        /// Remaining occupants are ordered according to their seat assignment.
+        /// </remarks>
         public Ped[] Occupants
         {
             get
@@ -2079,6 +2240,13 @@ namespace GTA
             }
         }
 
+        /// <summary>
+        /// Gets an array of all passengers in this <see cref="Vehicle"/>.
+        /// </summary>
+        /// <remarks>
+        /// Returns an empty array if there are no passengers.
+        /// The occupants are ordered according to their seat assignment.
+        /// </remarks>
         public Ped[] Passengers
         {
             get
@@ -2101,8 +2269,14 @@ namespace GTA
             }
         }
 
+        /// <summary>
+        /// Gets the number of passenger <see cref="Ped"/>s, excluding the <see cref="Driver"/>.
+        /// </summary>
         public int PassengerCount => Function.Call<int>(Hash.GET_VEHICLE_NUMBER_OF_PASSENGERS, Handle, false, true);
 
+        /// <summary>
+        /// Gets the number of passengers this <see cref="Vehicle"/> can carry, excluding the <see cref="Driver"/>.
+        /// </summary>
         public int PassengerCapacity => Function.Call<int>(Hash.GET_VEHICLE_MAX_NUMBER_OF_PASSENGERS, Handle);
 
         /// <summary>
@@ -2150,6 +2324,13 @@ namespace GTA
             return new Ped(pedHandle);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the specified <see cref="VehicleSeat"/> is unoccupied.
+        /// </summary>
+        /// <param name="seat">The seat to check.</param>
+        /// <returns>
+        /// <see langword="true"/> if the seat is unoccupied; otherwise, <see langword="false"/>.
+        /// </returns>
         public bool IsSeatFree(VehicleSeat seat)
         {
             return Function.Call<bool>(Hash.IS_VEHICLE_SEAT_FREE, Handle, (int)seat);
@@ -2159,11 +2340,27 @@ namespace GTA
 
         #region Positioning
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> is considered as stopped.
+        /// </summary>
         public bool IsStopped => Function.Call<bool>(Hash.IS_VEHICLE_STOPPED, Handle);
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Vehicle"/> is considered stopped.
+        /// </summary>
+        /// <remarks>
+        /// Returns <see langword="true"/> when the <see cref="Driver"/> <c>CVehicleIntelligence</c> is waiting for traffic lights; otherwise, <see langword="false"/>.
+        /// </remarks>
         public bool IsStoppedAtTrafficLights => Function.Call<bool>(Hash.IS_VEHICLE_STOPPED_AT_TRAFFIC_LIGHTS, Handle);
 
+        /// <summary>
+        /// Gets a value indicating whether all <see cref="Wheels"/> of this vehicle are in contact with anything.
+        /// </summary>
+        /// <remarks>
+        /// Returns <see langword="true"/> when the all <see cref="Wheels"/> are in contact with anything; otherwise, <see langword="false"/>.
+        /// </remarks>
         public bool IsOnAllWheels => Function.Call<bool>(Hash.IS_VEHICLE_ON_ALL_WHEELS, Handle);
+
 
         public bool PlaceOnGround()
         {
@@ -2239,7 +2436,9 @@ namespace GTA
         /// The current restricted ammo count for specified weapon index if the <see cref="Vehicle"/> exists and the weapon index is valid
         /// (can be a negative value other than -1); otherwise, -1, which is the same as the default value set when the <see cref="Vehicle"/> just spawned.
         /// </returns>
-        /// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.944.2 or earlier game versions.</exception>
+        /// <exception cref="GameVersionNotSupportedException">
+        /// Thrown if called in game versions earlier than <c>v1.0.1011.1</c>.
+        /// </exception>
         public int GetRestrictedAmmoCount(int vehicleWeaponIndex)
         {
             if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1011_1)
@@ -2267,7 +2466,9 @@ namespace GTA
         /// When set positive, will count down with every fire and prevent firing at 0.
         /// Set -1 (or another negative value) to disable restricted ammo, which will result in the same result as when the <see cref="Vehicle"/> just spawned.
         /// </param>
-        /// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.877.1 or earlier game versions.</exception>
+        /// <exception cref="GameVersionNotSupportedException">
+        /// Thrown if called in game versions earlier than <c>v1.0.944.2</c>.
+        /// </exception>
         public void SetRestrictedAmmoCount(int vehicleWeaponIndex, int ammoCount)
         {
             if (Game.FileVersion < VersionConstsForGameVersion.v1_0_944_2)
@@ -2279,10 +2480,8 @@ namespace GTA
         }
 
         /// <summary>
-        /// <para>
-        /// Sets the current bomb ammo count on this <see cref="Vehicle"/>, which does not make the game prevent from using bombs
+        /// Gets or sets the current bomb ammo count on this <see cref="Vehicle"/>, which does not make the game prevent from using bombs
         /// but can be read/write across scripts.
-        /// </para>
         /// <para>
         /// Not available in v1.0.1103.2 or earlier game versions.
         /// </para>
@@ -2314,10 +2513,8 @@ namespace GTA
         }
 
         /// <summary>
-        /// <para>
-        /// Sets the current countermeasure ammo count on this <see cref="Vehicle"/>, which does not make the game prevent from using bombs
+        /// Gets or sets the current countermeasure ammo count on this <see cref="Vehicle"/>, which does not make the game prevent from using bombs
         /// but can be read/write across scripts.
-        /// </para>
         /// <para>
         /// Not available in v1.0.1103.2 or earlier game versions.
         /// </para>
@@ -2381,35 +2578,38 @@ namespace GTA
         public void CloseBombBay() => Function.Call(Hash.CLOSE_BOMB_BAY_DOORS, Handle);
 
         /// <summary>
-        /// Sets the heli control lagging scalar.
-        /// The control lags more with smaller value.
+        /// Sets the <see cref="VehicleType.Helicopter"/> control lagging scalar, values are clamped between <see langword="0.0f"/> and <see langword="1.0f"/>
         /// </summary>
+        /// <remarks>
+        /// With smaller values, controlling Yaw, Pitch and Roll takes longer to blend to the desired input.
+        /// </remarks>
         public void SetHeliYawPitchRollMult(float mult)
             => Function.Call(Hash.SET_HELI_CONTROL_LAGGING_RATE_SCALAR, Handle, mult);
 
         /// <summary>
-        /// Generates the pick up rope for cargobob.
+        /// Creates a <see cref="CargobobHook"/> pickup hook if this <see cref="Vehicle"/> is a Cargobob.
         /// </summary>
         public void DropCargobobHook(CargobobHook hook)
             => Function.Call(Hash.CREATE_PICK_UP_ROPE_FOR_CARGOBOB, Handle, (int)hook);
 
         /// <summary>
-        /// Removes the pick up rope for cargobob.
+        /// Removes the pickup hook if this <see cref="Vehicle"/> is a Cargobob.
         /// </summary>
         public void RetractCargobobHook()
             => Function.Call(Hash.REMOVE_PICK_UP_ROPE_FOR_CARGOBOB, Handle);
 
         /// <summary>
-        /// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
-        /// pick-up magnet gadget.
+        /// Gets a value indicating whether this Cargobob <see cref="Vehicle"/> currently has a <see cref="CargobobHook.Hook"/> or
+        /// <see cref="CargobobHook.Magnet"/> gadget.
         /// </summary>
         public bool IsCargobobHookActive()
             => Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICK_UP_ROPE, Handle) || Function.Call<bool>(Hash.DOES_CARGOBOB_HAVE_PICKUP_MAGNET, Handle);
 
         /// <summary>
-        /// Gets the value that indicates if this cargobob <see cref="Vehicle"/> currently has a pick-up hook or
-        /// pick-up magnet gadget.
+        /// Gets a value indicating whether this Cargobob <see cref="Vehicle"/> currently has the specified <see cref="CargobobHook"/> gadget active.
         /// </summary>
+        /// <param name="hook">The <see cref="CargobobHook"/> to check for.</param>
+        /// <returns><see langword="true"/> if this Cargobob has the specified hook active; otherwise, <see cref="false"/></returns>
         public bool IsCargobobHookActive(CargobobHook hook)
         {
             switch (hook)
@@ -2423,6 +2623,9 @@ namespace GTA
             return false;
         }
 
+        /// <summary>
+        /// Activates the <see cref="CargobobHook.Magnet"/> of this Cargobob.
+        /// </summary>
         public void CargoBobMagnetGrabVehicle()
         {
             if (IsCargobobHookActive(CargobobHook.Magnet))
@@ -2431,6 +2634,9 @@ namespace GTA
             }
         }
 
+        /// <summary>
+        /// Disables the <see cref="CargobobHook.Magnet"/> of this Cargobob.
+        /// </summary>
         public void CargoBobMagnetReleaseVehicle()
         {
             if (IsCargobobHookActive(CargobobHook.Magnet))
@@ -2446,14 +2652,20 @@ namespace GTA
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has tow arms.
         /// </summary>
+        /// <remarks>
+        /// Works by checking whether <see cref="Entity.Bones"/> of this <see cref="Vehicle"/> has the <c>"tow_arm"</c> bone.
+        /// </remarks>
         /// <value>
         ///   <see langword="true" /> if this <see cref="Vehicle"/> has tow arms; otherwise, <see langword="false" />.
         /// </value>
         public bool HasTowArm => Bones.Contains("tow_arm");
 
         /// <summary>
-        /// Sets a tow truck arm position, 0.0 on the ground 1.0 in the air.
+        /// Sets the desired tow arm position of this <see cref="Vehicle"/>
         /// </summary>
+        /// <remarks>
+        /// <see langword="0.0f"/>: fully lowered; <see langword="1.0f"/>: fully raised.
+        /// </remarks>
         public float TowArmPosition
         {
             set => Function.Call(Hash.SET_VEHICLE_TOW_TRUCK_ARM_POSITION, Handle, value);
@@ -2547,7 +2759,7 @@ namespace GTA
         #region Trailer Attach Point
 
         /// <summary>
-        /// Gets a trailer vehicle if this <see cref="Vehicle"/> has trailer attach points and one of them has a trailer.
+        /// Gets the trailer <see cref="Vehicle"/> atleast one trailer attach point of this <see cref="Vehicle"/> is attached to.
         /// </summary>
         /// <returns>
         /// A trailer <see cref="Vehicle"/> if this <see cref="Vehicle"/> has a trailer attach point (gadget) that has
@@ -2583,7 +2795,7 @@ namespace GTA
             => Function.Call(Hash.DETACH_VEHICLE_FROM_TRAILER, Handle);
 
         /// <summary>
-        /// Checks if this (truck) <see cref="Vehicle"/> is attached to a trailer <see cref="Vehicle"/>.
+        /// Gets a value indicating whether this (truck) <see cref="Vehicle"/> is attached to a trailer <see cref="Vehicle"/>.
         /// </summary>
         public bool IsAttachedToTrailer => Function.Call<bool>(Hash.IS_VEHICLE_ATTACHED_TO_TRAILER, Handle);
 
@@ -2597,16 +2809,14 @@ namespace GTA
         public void SetTrailerLegsRaised() => Function.Call(Hash.SET_TRAILER_LEGS_RAISED, Handle);
 
         /// <summary>
-        /// <para>
-        /// Instantly lowers the trailers legs.
-        /// </para>
+        /// Instantly lowers the trailers legs of this <see cref="Vehicle"/>.
         /// <para>
         /// Currently not available in the game version earlier than v1.0.1103.2 (technically possible to backport the
         /// feature for the earlier versions).
         /// </para>
         /// </summary>
         /// <exception cref="GameVersionNotSupportedException">
-        /// Thrown when called in one of the game version earlier than v1.0.1103.2.
+        /// Thrown if called in game versions earlier than <c>v1.0.1103.2</c>.
         /// </exception>
         public void SetTrailerLegsLowered()
         {
@@ -2680,7 +2890,7 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets active vehicle mission type.
+        /// Gets the active <see cref="VehicleMissionType"/> of this <see cref="Vehicle"/>.
         /// </summary>
         public VehicleMissionType GetActiveMissionType()
         {
@@ -2813,10 +3023,15 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets the value indicating whether wings are enabled for the special flight mode,
+        /// Gets or sets a value indicating whether wings are enabled for the special flight mode,
         /// which is used for <see cref="VehicleHash.Deluxo"/> and <see cref="VehicleHash.Oppressor2"/>.
-        /// Only available in v1.0.1290.1 or later.
         /// </summary>
+        /// <remarks>
+        /// Returns <see langword="false"/> prior to <c>v1.0.1290.1</c>;
+        /// </remarks>
+        /// <exception cref="GameVersionNotSupportedException">
+        /// Thrown if called in game versions earlier than <c>v1.0.1290.1</c>.
+        /// </exception>
         public bool AreWingsEnabledForSpecialFlightMode
         {
             get
