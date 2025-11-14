@@ -137,6 +137,7 @@
     <CsCompile Include="Console.cs" />
     <CsCompile Include="FVector3.cs" />
     <CsCompile Include="ScrWeaponHudStats.cs" />
+    <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="Log.cs" />
     <CsCompile Include="MemDataMarshal.cs" />
     <CsCompile Include="MemScanner.cs" />
@@ -177,7 +178,8 @@
 	WarningLevel="%(CsCompile.WarningLevel)" 
 	WarningsAsErrors="%(CsCompile.WarningsAsErrors)" 
 	WarningsNotAsErrors="%(CsCompile.WarningsNotAsErrors)" 
-	ToolExe="$(CscToolExe)" ToolPath="$(CscToolPath)" />
+	ToolExe="$(CscToolExe)" 
+	ToolPath="$(CscToolPath)" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">

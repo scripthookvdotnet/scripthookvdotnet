@@ -1796,7 +1796,7 @@ namespace SHVDN
                 return;
             }
 
-            var eventInfo = new Tuple<bool, KeyEventArgs>(status, e);
+            var eventInfo = new KeyboardEvent(status, e);
 
             // we are only interested in the running script list as a lock target
             _rwLock.EnterReadLock();
