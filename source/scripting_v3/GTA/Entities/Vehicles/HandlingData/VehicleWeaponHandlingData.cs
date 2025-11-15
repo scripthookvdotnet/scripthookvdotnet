@@ -187,13 +187,8 @@ namespace GTA
                 for (int i = 0; i < result.Length; i++)
                 {
                     int modTypeForNative = SHVDN.MemDataMarshal.ReadInt32(MemoryAddress + memberOffset + i * 4);
-                    if (modTypeForNative == (int)VehicleModType.None)
-                    {
-                        result[i] = VehicleModType.None;
-                        continue;
-                    }
 
-                    result[i] = GetModTypeForNativeFunction(modTypeForNative);
+                    result[i] = VehicleModTypeHelpers.FromIndex(modTypeForNative);
                 }
 
                 return result;
@@ -223,7 +218,7 @@ namespace GTA
                         continue;
                     }
 
-                    arrayToFill[i] = GetModTypeValueForInternalGameCode(currentValue);
+                    arrayToFill[i] = currentValue.ToCorrectedValue();
                 }
 
                 int memberOffset
@@ -449,49 +444,6 @@ namespace GTA
                     SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + memberOffset + i * 4, arrayToFill[i]);
                 }
             }
-        }
-
-        private int GetModTypeValueForInternalGameCode(VehicleModType modTypeForNativeFunction)
-        {
-            // This kind of correction was introduced in b393 so return the same value if the game version is earlier than b393
-            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
-            {
-                return (int)modTypeForNativeFunction;
-            }
-
-            int modTypeForNativeFunctionInt = (int)modTypeForNativeFunction;
-            if (modTypeForNativeFunctionInt > 10)
-            {
-                if ((uint)modTypeForNativeFunctionInt > 24u)
-                {
-                    return modTypeForNativeFunctionInt - 14;
-                }
-                else
-                {
-                    return modTypeForNativeFunctionInt + 25;
-                }
-            }
-
-            return modTypeForNativeFunctionInt;
-        }
-
-        private VehicleModType GetModTypeForNativeFunction(int modTypeForInternalCode)
-        {
-            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
-            {
-                return (VehicleModType)modTypeForInternalCode;
-            }
-
-            if (35 < modTypeForInternalCode && modTypeForInternalCode < 50)
-            {
-                return (VehicleModType)(modTypeForInternalCode - 25);
-            }
-            else if (10 < modTypeForInternalCode && modTypeForInternalCode < 36)
-            {
-                return (VehicleModType)(modTypeForInternalCode + 14);
-            }
-
-            return (VehicleModType)modTypeForInternalCode;
         }
 
         /// <summary>
