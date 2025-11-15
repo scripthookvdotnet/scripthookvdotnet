@@ -19,27 +19,6 @@ namespace GTA
     public static class World
     {
         #region Fields
-        private static readonly string[] s_weatherNames = {
-            "EXTRASUNNY",
-            "CLEAR",
-            "CLOUDS",
-            "SMOG",
-            "FOGGY",
-            "OVERCAST",
-            "RAIN",
-            "THUNDER",
-            "CLEARING",
-            "NEUTRAL",
-            "SNOW",
-            "BLIZZARD",
-            "SNOWLIGHT",
-            "XMAS",
-            "HALLOWEEN"
-        };
-
-        private static readonly uint[] s_weatherHashes = s_weatherNames
-            .Select(name => StringHash.AtStringHash(name))
-            .ToArray();
 
         static readonly GregorianCalendar s_calendar = new();
 
@@ -158,9 +137,9 @@ namespace GTA
         {
             get
             {
-                for (int i = 0; i < s_weatherNames.Length; i++)
+                for (int i = 0; i < WeatherHelpers.s_weatherCount; i++)
                 {
-                    if (Function.Call<uint>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == s_weatherHashes[i])
+                    if (Function.Call<uint>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == WeatherHelpers.GetHash(i))
                     {
                         return (Weather)i;
                     }
@@ -172,7 +151,7 @@ namespace GTA
             {
                 if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
                 {
-                    Function.Call(Hash.SET_WEATHER_TYPE_NOW, s_weatherNames[(int)value]);
+                    Function.Call(Hash.SET_WEATHER_TYPE_NOW, value.GetName());
                 }
             }
         }
@@ -186,9 +165,9 @@ namespace GTA
         {
             get
             {
-                for (int i = 0; i < s_weatherNames.Length; i++)
+                for (int i = 0; i < WeatherHelpers.s_weatherCount; i++)
                 {
-                    if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, s_weatherNames[i]))
+                    if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, WeatherHelpers.GetName(i)))
                     {
                         return (Weather)i;
                     }
@@ -209,7 +188,7 @@ namespace GTA
                 {
                     Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
                 }
-                Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, s_weatherHashes[(int)value], 0.0f);
+                Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, value.GetHash(), 0.0f);
             }
         }
 
@@ -222,7 +201,7 @@ namespace GTA
         {
             if (Enum.IsDefined(typeof(Weather), weather) && weather != Weather.Unknown)
             {
-                Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, s_weatherNames[(int)weather], duration);
+                Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, weather.GetHash(), duration);
             }
         }
 

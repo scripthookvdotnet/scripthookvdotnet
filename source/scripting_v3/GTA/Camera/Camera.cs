@@ -15,13 +15,6 @@ namespace GTA
     /// </summary>
     public sealed class Camera : PoolObject, ISpatial
     {
-        internal static readonly string[] s_shakeNames =
-        {
-            "HAND_SHAKE", "SMALL_EXPLOSION_SHAKE", "MEDIUM_EXPLOSION_SHAKE", "LARGE_EXPLOSION_SHAKE", "JOLT_SHAKE",
-            "VIBRATE_SHAKE", "ROAD_VIBRATION_SHAKE", "DRUNK_SHAKE", "SKY_DIVING_SHAKE", "FAMILY5_DRUG_TRIP_SHAKE",
-            "DEATH_FAIL_IN_EFFECT_SHAKE", "WOBBLY_SHAKE",
-        };
-
         public Camera(int handle) : base(handle)
         {
         }
@@ -385,7 +378,7 @@ namespace GTA
         /// <param name="amplitude">The amplitude of the shaking.</param>
         public void Shake(CameraShake shakeType, float amplitude)
         {
-            Function.Call(Hash.SHAKE_CAM, Handle, s_shakeNames[(int)shakeType], amplitude);
+            Function.Call(Hash.SHAKE_CAM, Handle, shakeType.GetName(), amplitude);
         }
         /// <summary>
         /// Apples a predefined shake to the camera.
