@@ -1179,11 +1179,6 @@ namespace GTA
         /// </value>
         public bool IsRespondingToEvent(EventType eventType)
         {
-            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1868_0)
-            {
-                return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
-            }
-
             // GetValue() is an extension method for EventType that returns the aligned value for the current game build!
             return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, eventType.GetValue());
         }
