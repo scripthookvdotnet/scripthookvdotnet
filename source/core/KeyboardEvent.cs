@@ -2,10 +2,10 @@ using System.Windows.Forms;
 
 namespace SHVDN
 {
-    public struct KeyboardEvent
+    public readonly struct KeyboardEvent
     {
-        public KeyEventArgs Args;
-        public bool IsDown;
+        public readonly KeyEventArgs Args;
+        public readonly bool IsDown;
 
         public KeyboardEvent(KeyEventArgs args)
         {
