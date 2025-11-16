@@ -168,4 +168,42 @@ namespace GTA
         PedSeenDeadPed,
         Invalid = -1,
     }
+
+    internal static class EventTypeExtensions
+    {
+        internal static int GetValue(this EventType eventType) => EventTypeHelpers.GetValue(eventType);
+        
+    }
+
+    internal static class EventTypeHelpers
+    {
+        internal static int GetValue(EventType eventType)
+        {
+            int value = (int)eventType;
+
+            if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1868_0)
+            {
+                return value;
+            }
+
+            if (eventType is EventType.Incapacitated or EventType.ShockingBrokenGlass)
+            {
+                ThrowHelper.ThrowArgumentException(
+                    $"{nameof(EventType)}.{nameof(eventType)} is not available in game versions prior to v1.0.1868.0!",
+                    nameof(eventType));
+            }
+
+            if (value >= 77)
+            {
+                return value - 2;
+            }
+
+            if (value >= 36)
+            {
+                return value - 1;
+            }
+
+            return value;
+        }
+    }
 }

@@ -1165,12 +1165,7 @@ namespace GTA
 
         public bool HasReceivedEvent(EventType eventType)
         {
-            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1868_0)
-            {
-                return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
-            }
-
-            return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, (int)eventType);
+            return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, eventType.GetValue());
         }
 
         /// <summary>
@@ -1182,35 +1177,7 @@ namespace GTA
         /// </value>
         public bool IsRespondingToEvent(EventType eventType)
         {
-            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1868_0)
-            {
-                return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, GetEventTypeIndexForB1737OrOlder(eventType));
-            }
-
-            return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, (int)eventType);
-        }
-
-        private int GetEventTypeIndexForB1737OrOlder(EventType eventType)
-        {
-            if (eventType == EventType.Incapacitated)
-            {
-                ThrowHelper.ThrowArgumentException("EventType.Incapacitated is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
-            }
-            if (eventType == EventType.ShockingBrokenGlass)
-            {
-                ThrowHelper.ThrowArgumentException("EventType.ShockingBrokenGlass is not available in the game versions prior to v1.0.1868.0.", nameof(eventType));
-            }
-
-            int eventTypeCorrected = (int)eventType;
-            if (eventTypeCorrected >= (int)EventType.ShockingCarAlarm)
-            {
-                eventTypeCorrected -= 2;
-            }
-            else if (eventTypeCorrected >= (int)EventType.LeaderEnteredCarAsDriver)
-            {
-                --eventTypeCorrected;
-            }
-            return eventTypeCorrected;
+            return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, eventType.GetValue());
         }
 
         #endregion
