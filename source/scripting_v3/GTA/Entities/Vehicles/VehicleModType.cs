@@ -54,4 +54,60 @@ namespace GTA
         Windows,
         Livery = 48
     }
+
+    internal static class VehicleModTypeExtensions
+    {
+        /// <summary>
+        /// Returns the value of this <see cref="VehicleModType"/> aligned to the game build.
+        /// </summary>
+        /// <param name="modType">The <see cref="VehicleModType"/> to correct.</param>
+        /// <returns>The corrected integer value based on game version.</returns>
+        internal static int GetValue(this VehicleModType modType) => VehicleModTypeHelpers.GetValue(modType);
+    }
+
+    internal static class VehicleModTypeHelpers
+    {
+        internal static int GetValue(VehicleModType modType)
+        {
+            // This kind of correction was introduced in b393 so return the same value if the game version is earlier than b393
+            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
+            {
+                return (int)modType;
+            }
+
+            int valueAsInt = (int)modType;
+
+            if (valueAsInt > 24)
+            {
+                return valueAsInt - 14;
+            }
+
+            if (valueAsInt > 10)
+            {
+                return valueAsInt + 25;
+            }
+
+            return valueAsInt;
+        }
+
+        internal static VehicleModType FromIndex(int value)
+        {
+            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
+            {
+                return (VehicleModType)value;
+            }
+
+            if (value is > 35 and < 50)
+            {
+                return (VehicleModType)(value - 25);
+            }
+
+            if (value is > 10 and < 36)
+            {
+                return (VehicleModType)(value + 14);
+            }
+
+            return (VehicleModType)value;
+        }
+    }
 }
