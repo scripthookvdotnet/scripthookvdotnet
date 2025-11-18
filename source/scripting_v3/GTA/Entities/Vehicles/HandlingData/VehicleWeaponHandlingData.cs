@@ -193,7 +193,7 @@ namespace GTA
                         continue;
                     }
 
-                    result[i] = VehicleModTypeHelpers.FromIndex(modTypeForNative);
+                    result[i] = VehicleModTypeHelpers.FromInternalValue(modTypeForNative);
                 }
 
                 return result;
@@ -223,7 +223,7 @@ namespace GTA
                         continue;
                     }
 
-                    arrayToFill[i] = currentValue.GetValue();
+                    arrayToFill[i] = currentValue.GetInternalValue();
                 }
 
                 int memberOffset

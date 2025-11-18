@@ -169,15 +169,17 @@ namespace GTA
         Invalid = -1,
     }
 
+    /// <summary>
+    /// Non-public extension class for <see cref="EventType"/>.
+    /// </summary>
     internal static class EventTypeExtensions
     {
-        internal static int GetValue(this EventType eventType) => EventTypeHelpers.GetValue(eventType);
-        
+        internal static int GetInternalValue(this EventType eventType) => EventTypeHelpers.GetInternalValue(eventType);
     }
 
     internal static class EventTypeHelpers
     {
-        internal static int GetValue(EventType eventType)
+        internal static int GetInternalValue(EventType eventType)
         {
             int value = (int)eventType;
 

@@ -1165,7 +1165,7 @@ namespace GTA
 
         public bool HasReceivedEvent(EventType eventType)
         {
-            return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, eventType.GetValue());
+            return Function.Call<bool>(Hash.HAS_PED_RECEIVED_EVENT, Handle, eventType.GetInternalValue());
         }
 
         /// <summary>
@@ -1177,7 +1177,7 @@ namespace GTA
         /// </value>
         public bool IsRespondingToEvent(EventType eventType)
         {
-            return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, eventType.GetValue());
+            return Function.Call<bool>(Hash.IS_PED_RESPONDING_TO_EVENT, Handle, eventType.GetInternalValue());
         }
 
         #endregion
@@ -2736,7 +2736,7 @@ namespace GTA
                 ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(modifier));
             }
 
-            Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_NATIVE, Handle, speechName, modifier.GetName());
+            Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_NATIVE, Handle, speechName, modifier.GetInternalName());
         }
         public void PlayAmbientSpeech(string speechName, string voiceName, SpeechModifier modifier = SpeechModifier.Standard)
         {
@@ -2745,7 +2745,7 @@ namespace GTA
                 ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(modifier));
             }
 
-            Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_WITH_VOICE_NATIVE, Handle, speechName, voiceName, modifier.GetName(), 0);
+            Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_WITH_VOICE_NATIVE, Handle, speechName, voiceName, modifier.GetInternalName(), 0);
         }
         /// <summary>
         /// Stops currently playing speech (pain, ambient, scripted, breathing).

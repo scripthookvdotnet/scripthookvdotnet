@@ -55,6 +55,9 @@ namespace GTA
         Livery = 48
     }
 
+    /// <summary>
+    /// Non-public extension class for <see cref="VehicleModType"/>.
+    /// </summary>
     internal static class VehicleModTypeExtensions
     {
         /// <summary>
@@ -62,12 +65,12 @@ namespace GTA
         /// </summary>
         /// <param name="modType">The <see cref="VehicleModType"/> to correct.</param>
         /// <returns>The corrected integer value based on game version.</returns>
-        internal static int GetValue(this VehicleModType modType) => VehicleModTypeHelpers.GetValue(modType);
+        internal static int GetInternalValue(this VehicleModType modType) => VehicleModTypeHelpers.GetInternalValue(modType);
     }
 
     internal static class VehicleModTypeHelpers
     {
-        internal static int GetValue(VehicleModType modType)
+        internal static int GetInternalValue(VehicleModType modType)
         {
             // This kind of correction was introduced in b393 so return the same value if the game version is earlier than b393
             if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
@@ -90,7 +93,7 @@ namespace GTA
             return valueAsInt;
         }
 
-        internal static VehicleModType FromIndex(int value)
+        internal static VehicleModType FromInternalValue(int value)
         {
             if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
             {

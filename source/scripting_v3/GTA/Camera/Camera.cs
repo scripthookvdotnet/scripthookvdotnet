@@ -378,7 +378,7 @@ namespace GTA
         /// <param name="amplitude">The amplitude of the shaking.</param>
         public void Shake(CameraShake shakeType, float amplitude)
         {
-            Function.Call(Hash.SHAKE_CAM, Handle, shakeType.GetName(), amplitude);
+            Function.Call(Hash.SHAKE_CAM, Handle, shakeType.GetInternalName(), amplitude);
         }
         /// <summary>
         /// Apples a predefined shake to the camera.

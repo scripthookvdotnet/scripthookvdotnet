@@ -21,9 +21,12 @@ namespace GTA
         Wobbly,
     }
 
+    /// <summary>
+    /// Non-public extension class for <see cref="CameraShake"/>.
+    /// </summary>
     internal static class CameraShakeExtensions
     {
-        internal static string GetName(this CameraShake value) => CameraShakeHelpers.GetName(value);
+        internal static string GetInternalName(this CameraShake value) => CameraShakeHelpers.GetInternalName(value);
     }
 
     internal static class CameraShakeHelpers
@@ -46,6 +49,6 @@ namespace GTA
 
         internal static int s_shakeCount = s_shakeNames.Length;
 
-        internal static string GetName(CameraShake shake) => s_shakeNames[(int)shake];
+        internal static string GetInternalName(CameraShake shake) => s_shakeNames[(int)shake];
     }
 }

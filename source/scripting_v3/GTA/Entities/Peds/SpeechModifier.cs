@@ -46,9 +46,12 @@ namespace GTA
         ShoutedCritical,
     }
 
+    /// <summary>
+    /// Non-public extension class for <see cref="SpeechModifier"/>.
+    /// </summary>
     internal static class SpeechModifierExtensions
     {
-        internal static string GetName(this SpeechModifier value) => SpeechModifierHelpers.GetName(value);
+        internal static string GetInternalName(this SpeechModifier value) => SpeechModifierHelpers.GetInternalName(value);
     }
 
     internal static class SpeechModifierHelpers
@@ -94,6 +97,6 @@ namespace GTA
         };
 
         internal static readonly int s_modiferCount = s_speechModifierNames.Length;
-        internal static string GetName(SpeechModifier modifier) => s_speechModifierNames[(int)modifier];
+        internal static string GetInternalName(SpeechModifier modifier) => s_speechModifierNames[(int)modifier];
     }
 }

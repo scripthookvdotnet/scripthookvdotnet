@@ -139,7 +139,7 @@ namespace GTA
             {
                 for (int i = 0; i < WeatherHelpers.s_weatherCount; i++)
                 {
-                    if (Function.Call<uint>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == WeatherHelpers.GetHash(i))
+                    if (Function.Call<uint>(Hash.GET_PREV_WEATHER_TYPE_HASH_NAME) == WeatherHelpers.GetNameHash(i))
                     {
                         return (Weather)i;
                     }
@@ -151,7 +151,7 @@ namespace GTA
             {
                 if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
                 {
-                    Function.Call(Hash.SET_WEATHER_TYPE_NOW, WeatherHelpers.GetName(value));
+                    Function.Call(Hash.SET_WEATHER_TYPE_NOW, WeatherHelpers.GetInternalName(value));
                 }
             }
         }
@@ -167,7 +167,7 @@ namespace GTA
             {
                 for (int i = 0; i < WeatherHelpers.s_weatherCount; i++)
                 {
-                    if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, WeatherHelpers.GetName(i)))
+                    if (Function.Call<bool>(Hash.IS_NEXT_WEATHER_TYPE, WeatherHelpers.GetInternalName(i)))
                     {
                         return (Weather)i;
                     }
@@ -188,7 +188,7 @@ namespace GTA
                 {
                     Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
                 }
-                Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, value.GetHash(), 0.0f);
+                Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, value.GetNameHash(), 0.0f);
             }
         }
 
@@ -201,7 +201,7 @@ namespace GTA
         {
             if (Enum.IsDefined(typeof(Weather), weather) && weather != Weather.Unknown)
             {
-                Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, WeatherHelpers.GetName(weather), duration);
+                Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, WeatherHelpers.GetInternalName(weather), duration);
             }
         }
 

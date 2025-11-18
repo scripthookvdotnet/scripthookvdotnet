@@ -26,10 +26,14 @@ namespace GTA
         Christmas,
         Halloween,
     }
+
+    /// <summary>
+    /// Non-public extension class for <see cref="Weather"/>.
+    /// </summary>
     internal static class WeatherExtensions
     {
-        internal static string GetName(this Weather weather) => WeatherHelpers.GetName(weather);
-        internal static uint GetHash(this Weather weather) => WeatherHelpers.GetHash(weather);
+        internal static string GetInternalName(this Weather weather) => WeatherHelpers.GetInternalName(weather);
+        internal static uint GetNameHash(this Weather weather) => WeatherHelpers.GetNameHash(weather);
     }
 
     internal static class WeatherHelpers
@@ -58,10 +62,10 @@ namespace GTA
 
         internal static int s_weatherCount = s_weatherNames.Length;
 
-        internal static string GetName(Weather weather) => s_weatherNames[(int)weather];
-        internal static string GetName(int weather) => s_weatherNames[weather];
+        internal static string GetInternalName(Weather weather) => s_weatherNames[(int)weather];
+        internal static string GetInternalName(int weather) => s_weatherNames[weather];
 
-        internal static uint GetHash(Weather weather) => s_weatherHashes[(int)weather];
-        internal static uint GetHash(int weather) => s_weatherHashes[weather];
+        internal static uint GetNameHash(Weather weather) => s_weatherHashes[(int)weather];
+        internal static uint GetNameHash(int weather) => s_weatherHashes[weather];
     }
 }
