@@ -22,13 +22,21 @@ namespace GTA
     }
 
     /// <summary>
-    /// Non-public extension class for <see cref="CameraShake"/>.
+    /// Provides  <see langword="internal"/> extension methods for <see cref="CameraShake"/>.
     /// </summary>
     internal static class CameraShakeExtensions
     {
+        /// <summary>
+        /// Returns the name of this <see cref="CameraShake"/> aligned to the game build.
+        /// </summary>
+        /// <param name="value">The <see cref="CameraShake"/> to correct.</param>
+        /// <returns>The corrected integer value based on game build.</returns>
         internal static string GetInternalName(this CameraShake value) => CameraShakeHelpers.GetInternalName(value);
     }
 
+    /// <summary>
+    /// Provides <see langword="internal"/> helpers for <see cref="CameraShake"/>.
+    /// </summary>
     internal static class CameraShakeHelpers
     {
         private static readonly string[] s_shakeNames =
@@ -47,8 +55,16 @@ namespace GTA
             "WOBBLY_SHAKE",
         };
 
-        internal static int s_shakeCount = s_shakeNames.Length;
+        /// <summary>
+        /// Gets the count of known <see cref="CameraShake"/>s.
+        /// </summary>
+        internal static readonly int s_shakeCount = s_shakeNames.Length;
 
+        /// <summary>
+        /// Returns the name of a <see cref="CameraShake"/> aligned to the game build.
+        /// </summary>
+        /// <param name="shake">The <see cref="CameraShake"/> to correct.</param>
+        /// <returns>The corrected integer value based on game build.</returns>
         internal static string GetInternalName(CameraShake shake) => s_shakeNames[(int)shake];
     }
 }

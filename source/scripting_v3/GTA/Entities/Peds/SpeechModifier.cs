@@ -47,13 +47,21 @@ namespace GTA
     }
 
     /// <summary>
-    /// Non-public extension class for <see cref="SpeechModifier"/>.
+    /// Provides <see langword="internal"/> extension methods for <see cref="SpeechModifier"/>.
     /// </summary>
     internal static class SpeechModifierExtensions
     {
+        /// <summary>
+        /// Gets the internal name for the specified <see cref="SpeechModifier"/>.
+        /// </summary>
+        /// <param name="value">The modifier.</param>
+        /// <returns>The internal name.</returns>
         internal static string GetInternalName(this SpeechModifier value) => SpeechModifierHelpers.GetInternalName(value);
     }
 
+    /// <summary>
+    /// Provides <see langword="internal"/> helpers for <see cref="SpeechModifier"/>.
+    /// </summary>
     internal static class SpeechModifierHelpers
     {
         private static readonly string[] s_speechModifierNames = {
@@ -96,7 +104,16 @@ namespace GTA
             "SPEECH_PARAMS_SHOUTED_CRITICAL",
         };
 
+        /// <summary>
+        /// Gets the count of known <see cref="SpeechModifier"/>s.
+        /// </summary>
         internal static readonly int s_modiferCount = s_speechModifierNames.Length;
-        internal static string GetInternalName(SpeechModifier modifier) => s_speechModifierNames[(int)modifier];
+
+        /// <summary>
+        /// Returns the name of a <see cref="SpeechModifier"/> aligned to the game build.
+        /// </summary>
+        /// <param name="speechModifier">The <see cref="SpeechModifier"/> to correct.</param>
+        /// <returns>The corrected integer value based on game build.</returns>
+        internal static string GetInternalName(SpeechModifier speechModifier) => s_speechModifierNames[(int)speechModifier];
     }
 }

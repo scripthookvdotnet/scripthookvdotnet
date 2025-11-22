@@ -170,15 +170,28 @@ namespace GTA
     }
 
     /// <summary>
-    /// Non-public extension class for <see cref="EventType"/>.
+    /// Provides <see langword="internal"/> extension methods for <see cref="EventType"/>.
     /// </summary>
     internal static class EventTypeExtensions
     {
+        /// <summary>
+        /// Returns the value of this <see cref="EventType"/> aligned to the game build.
+        /// </summary>
+        /// <param name="eventType">The <see cref="EventType"/> to correct.</param>
+        /// <returns>The corrected integer value based on game build.</returns>
         internal static int GetInternalValue(this EventType eventType) => EventTypeHelpers.GetInternalValue(eventType);
     }
 
+    /// <summary>
+    /// Provides <see langword="internal"/> helpers for <see cref="EventType"/>.
+    /// </summary>
     internal static class EventTypeHelpers
     {
+        /// <summary>
+        /// Returns the value of a <see cref="EventType"/> aligned to the game build.
+        /// </summary>
+        /// <param name="eventType">The <see cref="EventType"/> to correct.</param>
+        /// <returns>The corrected integer value based on game build.</returns>
         internal static int GetInternalValue(EventType eventType)
         {
             int value = (int)eventType;
