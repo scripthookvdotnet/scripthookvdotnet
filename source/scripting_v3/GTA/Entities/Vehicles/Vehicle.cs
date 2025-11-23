@@ -253,6 +253,7 @@ namespace GTA
         /// <returns>
         /// <see langword="true"/> if the extra is enabled; otherwise, <see langword="false"/>.
         /// </returns>
+        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Enabled instead!")]
         public bool IsExtraOn(int extra)
         {
             return Function.Call<bool>(Hash.IS_VEHICLE_EXTRA_TURNED_ON, Handle, extra);
@@ -265,6 +266,7 @@ namespace GTA
         /// <returns>
         /// <see langword="true"/> if the extra exists; otherwise, <see langword="false"/>.
         /// </returns>
+        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Exists() instead!")]
         public bool ExtraExists(int extra)
         {
             return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
@@ -275,6 +277,7 @@ namespace GTA
         /// </summary>
         /// <param name="extra">The extra to enable or disable.</param>
         /// <param name="toggle"><see langword="true"/> to enable the extra; <see langword="false"/> to disable it.</param>
+        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Enabled instead!")]
         public void ToggleExtra(int extra, bool toggle)
         {
             Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
