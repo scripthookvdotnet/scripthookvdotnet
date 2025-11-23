@@ -52,5 +52,23 @@ namespace GTA
         /// </returns>
         public bool Contains(VehicleExtraIndex extra) => _vehicleExtras.ContainsKey(extra);
 
+        /// <summary>
+        /// Converts this <see cref="VehicleExtraCollection"/> into an array of
+        /// <see cref="VehicleExtra"/>s.
+        /// </summary>
+        /// <returns>An array containing all extras in this collection.</returns>
+        public VehicleExtra[] ToArray()
+        {
+            var res = new VehicleExtra[_vehicleExtras.Count];
+
+            int i = 0;
+            
+            foreach (KeyValuePair<VehicleExtraIndex, VehicleExtra> extraPair in _vehicleExtras)
+            {
+                res[i++] = extraPair.Value;
+            }
+
+            return res;
+        }
     }
 }
