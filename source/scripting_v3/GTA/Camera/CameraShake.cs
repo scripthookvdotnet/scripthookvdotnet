@@ -22,7 +22,7 @@ namespace GTA
     }
 
     /// <summary>
-    /// Provides  <see langword="internal"/> extension methods for <see cref="CameraShake"/>.
+    /// Provides <see langword="internal"/> extension methods for <see cref="CameraShake"/>.
     /// </summary>
     internal static class CameraShakeExtensions
     {
