@@ -1,5 +1,8 @@
 namespace GTA
 {
+    /// <summary>
+    /// Represents valid <see cref="VehicleExtra"/>s for <see cref="Vehicle"/>s.
+    /// </summary>
     public enum VehicleExtraIndex
     {
         Extra1 = 1,

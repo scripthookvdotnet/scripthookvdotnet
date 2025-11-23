@@ -4,9 +4,16 @@ namespace GTA
 {
     public sealed class VehicleExtraCollection
     {
+        /// <summary>
+        /// Represents the max numbers of <see cref="VehicleExtra"/>s a <see cref="Vehicle"/> can have.
+        /// /// </summary>
         private const int MaxExtras = 12;
+
         private Dictionary<VehicleExtraIndex, VehicleExtra> _vehicleExtras = new();
 
+        /// <summary>
+        /// Gets the owner <see cref="Vehicle"/> of this <see cref="VehicleExtraCollection"/>.
+        /// </summary>
         public Vehicle Owner { get; private set; }
 
         internal VehicleExtraCollection(Vehicle vehicle)

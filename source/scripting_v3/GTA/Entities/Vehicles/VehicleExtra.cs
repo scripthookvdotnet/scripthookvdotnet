@@ -4,9 +4,20 @@ namespace GTA
 {
     public class VehicleExtra
     {
+        /// <summary>
+        /// Gets the owner <see cref="Vehicle"/> of this <see cref="VehicleExtra"/>.
+        /// </summary>
         public Vehicle Owner { get; private set; }
+
+        /// <summary>
+        /// Gets the <see cref="VehicleExtraIndex"/> of this <see cref="VehicleExtra"/>.
+        /// </summary>
         public VehicleExtraIndex Index { get; private set; }
 
+
+        /// <summary>
+        /// Gets the name of the <see cref="EntityBone"/> for this <see cref="VehicleExtra"/>.
+        /// </summary>
         public string BoneName { get; private set; }
 
         internal VehicleExtra(Vehicle owner, VehicleExtraIndex index)
@@ -17,6 +28,12 @@ namespace GTA
             UpdateBoneName();
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="VehicleExtra"/> is enabled.
+        /// </summary>
+        /// <remarks>
+        /// If this <see cref="VehicleExtra"/> was detached, setting this property to <see langword="true"/> will not affect its state and create a new one instead.
+        /// </remarks>
         public bool Enabled
         {
             get => Function.Call<bool>(Hash.IS_VEHICLE_EXTRA_TURNED_ON, Owner, (int)Index);
@@ -44,6 +61,13 @@ namespace GTA
             return Owner.DetachFragmentPart(fragmentGroup);
         }
 
+        /// <summary>
+        /// Gets whether this <see cref="VehicleExtra"/> exists for the <see cref="Owner"/> vehicle.
+        /// </summary>
+        /// <remarks>
+        /// If the extra is disabled, this will still return <see langword="true"/>.
+        /// </remarks>
+        /// <returns><see langword="true"/> if this <see cref="VehicleExtra"/> exists; otherwise <see langword="false"/>.</returns>
         public bool Exists() => Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Owner, (int)Index);
 
         private void UpdateBoneName()
