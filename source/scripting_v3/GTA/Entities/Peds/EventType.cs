@@ -168,4 +168,57 @@ namespace GTA
         PedSeenDeadPed,
         Invalid = -1,
     }
+
+    /// <summary>
+    /// Provides <see langword="internal"/> extension methods for <see cref="EventType"/>.
+    /// </summary>
+    internal static class EventTypeExtensions
+    {
+        /// <summary>
+        /// Returns the value of this <see cref="EventType"/> aligned to the game build.
+        /// </summary>
+        /// <param name="eventType">The <see cref="EventType"/> to correct.</param>
+        /// <returns>The corrected integer value based on game build.</returns>
+        internal static int GetInternalValue(this EventType eventType) => EventTypeHelpers.GetInternalValue(eventType);
+    }
+
+    /// <summary>
+    /// Provides <see langword="internal"/> helpers for <see cref="EventType"/>.
+    /// </summary>
+    internal static class EventTypeHelpers
+    {
+        /// <summary>
+        /// Returns the value of a <see cref="EventType"/> aligned to the game build.
+        /// </summary>
+        /// <param name="eventType">The <see cref="EventType"/> to correct.</param>
+        /// <returns>The corrected integer value based on game build.</returns>
+        internal static int GetInternalValue(EventType eventType)
+        {
+            int value = (int)eventType;
+
+            if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_1868_0)
+            {
+                return value;
+            }
+
+            if (eventType is EventType.Incapacitated or EventType.ShockingBrokenGlass)
+            {
+                ThrowHelper.ThrowArgumentException(
+                    $"{nameof(EventType)}.{nameof(eventType)} is not available in game versions prior to v1.0.1868.0!",
+                    nameof(eventType));
+            }
+
+            if (value >= 77)
+            {
+                return value - 2;
+            }
+
+            if (value >= 36)
+            {
+                return value - 1;
+            }
+
+            return value;
+        }
+    }
 }
