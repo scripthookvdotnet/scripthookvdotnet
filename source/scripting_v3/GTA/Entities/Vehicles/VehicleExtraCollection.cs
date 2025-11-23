@@ -34,5 +34,16 @@ namespace GTA
                 return vehicleExtra;
             }
         }
+
+        /// <summary>
+        /// Checks whether a specific <see cref="VehicleExtraIndex"/> exists in this
+        /// <see cref="VehicleExtraCollection"/>.
+        /// </summary>
+        /// <param name="extra">The extra index to test for availability.</param>
+        /// <returns>
+        /// <c>true</c> if the extra exists in this collection; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Contains(VehicleExtraIndex extra) => _vehicleExtras.ContainsKey(extra);
+
     }
 }
