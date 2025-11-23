@@ -17,6 +17,7 @@ namespace GTA
         #region Fields
         VehicleDoorCollection _doors;
         VehicleModCollection _mods;
+        VehicleExtraCollection _extras;
         VehicleWheelCollection _wheels;
         VehicleWindowCollection _windows;
         #endregion
@@ -169,7 +170,6 @@ namespace GTA
             set => Function.Call(Hash.SET_VEHICLE_ENVEFF_SCALE, Handle, value);
         }
 
-
         /// <summary>
         /// Gets the <see cref="VehicleModCollection"/> for this <see cref="Vehicle"/>.
         /// </summary>
@@ -184,6 +184,11 @@ namespace GTA
         /// Gets the <see cref="VehicleWindowCollection"/> for this <see cref="Vehicle"/>.
         /// </summary>
         public VehicleWindowCollection Windows => _windows ??= new VehicleWindowCollection(this);
+
+        /// <summary>
+        /// Gets the <see cref="VehicleExtraCollection"/> for this <see cref="Vehicle"/>.
+        /// </summary>
+        public VehicleExtraCollection Extras => _extras ??= new VehicleExtraCollection(this);
 
         /// <summary>
         /// Washes this <see cref="Vehicle"/> by setting the value of <see cref="DirtLevel"/> to <see langword="0.0f"/>.
@@ -213,6 +218,34 @@ namespace GTA
             Function.Call(Hash.SET_HYDRAULICS_CONTROL, Handle, toggle);
         }
 
+        /// <summary>
+        /// Overrides this <see cref="Vehicle"/>'s audio game object with another so the vehicle has different various
+        /// vehicle sounds such as horn, door, suspension, and start sequences.
+        /// </summary>
+        /// <param name="gameObjectName">
+        /// <para>
+        /// The audio game object name. Case-insensitive in ASCII characters since the string will be hashed using
+        /// (almost) the same function as <see cref="StringHash.AtStringHash(string, uint)"/> uses.
+        /// </para>
+        /// <para>
+        /// Generally accepts the internal game name of the <see cref="Vehicle"/> to source an audio profile from,
+        /// such as "sentinel" or "deluxe". All vanilla vehicles use unique game audio objects as of v1.0.2944.0
+        /// because none of them have <c>audioNameHash</c> override in vehicles.meta. For mod vehicles, you might
+        /// want to check if <c>audioNameHash</c> is overridden.
+        /// </para>
+        /// <para>
+        /// You can use any names listed as items of any audio type of vehicle, boat, bicycle, aeroplane, helicopter,
+        /// or train. You can find one with the term <c>Item type="[some type]"</c> ("[some type]" can be
+        /// <c>Vehicle</c>, <c>Boat</c>, <c>Bicycle</c>, <c>Aeroplane</c>, <c>Helicopter</c>, <c>Train</c>)
+        /// in <c>game.dat[some number].rel</c> in CodeWalker. "BJXL_ARMENIAN_3" and "STRETCH_MICHAEL_4" are registered
+        /// as the vehicle type for 2 ysc scripts for example, and you can use them.
+        /// </para>
+        /// </param>
+        public void ForceUseAudioGameObject(string gameObjectName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, gameObjectName);
+
+        #endregion
+
+        #region Extras
         /// <summary>
         /// Determines whether the specified <c>extra</c> is currently enabled on this <see cref="Vehicle"/>.
         /// </summary>
@@ -246,31 +279,6 @@ namespace GTA
         {
             Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
         }
-
-        /// <summary>
-        /// Overrides this <see cref="Vehicle"/>'s audio game object with another so the vehicle has different various
-        /// vehicle sounds such as horn, door, suspension, and start sequences.
-        /// </summary>
-        /// <param name="gameObjectName">
-        /// <para>
-        /// The audio game object name. Case-insensitive in ASCII characters since the string will be hashed using
-        /// (almost) the same function as <see cref="StringHash.AtStringHash(string, uint)"/> uses.
-        /// </para>
-        /// <para>
-        /// Generally accepts the internal game name of the <see cref="Vehicle"/> to source an audio profile from,
-        /// such as "sentinel" or "deluxe". All vanilla vehicles use unique game audio objects as of v1.0.2944.0
-        /// because none of them have <c>audioNameHash</c> override in vehicles.meta. For mod vehicles, you might
-        /// want to check if <c>audioNameHash</c> is overridden.
-        /// </para>
-        /// <para>
-        /// You can use any names listed as items of any audio type of vehicle, boat, bicycle, aeroplane, helicopter,
-        /// or train. You can find one with the term <c>Item type="[some type]"</c> ("[some type]" can be
-        /// <c>Vehicle</c>, <c>Boat</c>, <c>Bicycle</c>, <c>Aeroplane</c>, <c>Helicopter</c>, <c>Train</c>)
-        /// in <c>game.dat[some number].rel</c> in CodeWalker. "BJXL_ARMENIAN_3" and "STRETCH_MICHAEL_4" are registered
-        /// as the vehicle type for 2 ysc scripts for example, and you can use them.
-        /// </para>
-        /// </param>
-        public void ForceUseAudioGameObject(string gameObjectName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, gameObjectName);
 
         #endregion
 
