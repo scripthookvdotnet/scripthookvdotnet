@@ -22,4 +22,44 @@ namespace GTA
         Extra15,
         Extra16,
     }
+
+    internal static class VehicleExtraExtensions
+    {
+        /// <summary>
+        /// Returns the internal bone name for this <see cref="VehicleExtraIndex"/>.
+        /// </summary>
+        /// <param name="extra">The extra index whose bone name should be resolved.</param>
+        /// <returns>
+        /// The bone name for the specified <see cref="VehicleExtraIndex"/>.
+        /// <para>
+        /// Special case: <see cref="VehicleExtraIndex.Extra10"/> returns <c>extra_ten</c>.  
+        /// All other values return <c>extra_{index}</c>.
+        /// </para>
+        /// </returns>
+        internal static string GetBoneName(this VehicleExtraIndex extra) => VehicleExtraHelpers.GetBoneName(extra);
+    }
+
+    internal static class VehicleExtraHelpers
+    {
+        /// <summary>
+        /// Returns the internal bone name for the specified <see cref="VehicleExtraIndex"/>.
+        /// </summary>
+        /// <param name="extra">The extra index whose bone name should be resolved.</param>
+        /// <returns>
+        /// The bone name for the specified <see cref="VehicleExtraIndex"/>.
+        /// <para>
+        /// Special case: <see cref="VehicleExtraIndex.Extra10"/> returns <c>extra_ten</c>.  
+        /// All other values return <c>extra_{index}</c>.
+        /// </para>
+        /// </returns>
+        internal static string GetBoneName(VehicleExtraIndex extra)
+        {
+            if (extra == VehicleExtraIndex.Extra10)
+            {
+                return "extra_ten";
+            }
+
+            return $"extra_{(int)extra}";
+        }
+    }
 }

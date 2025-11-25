@@ -4,6 +4,8 @@ namespace GTA
 {
     public class VehicleExtra
     {
+        private string _boneName { get; set; }
+
         /// <summary>
         /// Gets the owner <see cref="Vehicle"/> of this <see cref="VehicleExtra"/>.
         /// </summary>
@@ -14,18 +16,12 @@ namespace GTA
         /// </summary>
         public VehicleExtraIndex Index { get; private set; }
 
-
-        /// <summary>
-        /// Gets the name of the <see cref="EntityBone"/> for this <see cref="VehicleExtra"/>.
-        /// </summary>
-        public string BoneName { get; private set; }
-
         internal VehicleExtra(Vehicle owner, VehicleExtraIndex index)
         {
             Owner = owner;
             Index = index;
 
-            UpdateBoneName();
+            _boneName = Index.GetBoneName();
         }
 
         /// <summary>
@@ -69,10 +65,5 @@ namespace GTA
         /// </remarks>
         /// <returns><see langword="true"/> if this <see cref="VehicleExtra"/> exists; otherwise <see langword="false"/>.</returns>
         public bool Exists() => Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Owner, (int)Index);
-
-        private void UpdateBoneName()
-        {
-            BoneName = $"extra_{(Index == VehicleExtraIndex.Extra10 ? "ten" : (int)Index + 1)}";
-        }
     }
 }
