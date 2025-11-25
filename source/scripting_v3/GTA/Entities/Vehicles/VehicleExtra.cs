@@ -16,6 +16,11 @@ namespace GTA
         /// </summary>
         public VehicleExtraIndex Index { get; private set; }
 
+        /// <summary>
+        /// Gets the <see cref="EntityBone"/> of this <see cref="VehicleExtra"/>.
+        /// </summary>
+        public EntityBone Bone => Owner.Bones[_boneName];
+
         internal VehicleExtra(Vehicle owner, VehicleExtraIndex index)
         {
             Owner = owner;
@@ -53,8 +58,7 @@ namespace GTA
         /// <returns><see langword="true"/> if this <see cref="VehicleExtra"/> was detached; otherwise <see langword="false"/>.</returns>
         public bool BreakOff()
         {
-            int fragmentGroup = Owner.Bones[BoneName].FragmentGroupIndex;
-            return Owner.DetachFragmentPart(fragmentGroup);
+            return Owner.DetachFragmentPart(Bone.FragmentGroupIndex);
         }
 
         /// <summary>
