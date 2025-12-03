@@ -1,8 +1,10 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace GTA
 {
-    public sealed class VehicleExtraCollection
+    public sealed class VehicleExtraCollection : IEnumerable<VehicleExtra>, IEnumerable
     {
         /// <summary>
         /// Represents the max numbers of <see cref="VehicleExtra"/>s a <see cref="Vehicle"/> can have.
@@ -69,6 +71,85 @@ namespace GTA
             }
 
             return res;
+        }
+
+        public Enumerator GetEnumerator() => new(this);
+
+        IEnumerator<VehicleExtra> IEnumerable<VehicleExtra>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable<VehicleExtra>)this).GetEnumerator();
+
+        public struct Enumerator : IEnumerator<VehicleExtra>, IEnumerator
+        {
+            private const int NotStarted = -1;
+            private const int EndedOrDisposed = -2;
+
+            private int _index;
+
+            private readonly VehicleExtraCollection _extraCollection;
+            private VehicleExtra _currentElement;
+
+            internal Enumerator(VehicleExtraCollection extraCollection)
+            {
+                _extraCollection = extraCollection;
+                _currentElement = null;
+
+                _index = NotStarted;
+            }
+
+            public readonly VehicleExtra Current
+            {
+                get
+                {
+                    if (_index < 0)
+                        ThrowEnumerationNotStartedOrEnded();
+                    return _currentElement;
+                }
+            }
+
+
+            readonly object IEnumerator.Current => Current;
+
+            public bool MoveNext()
+            {
+                if (_index == EndedOrDisposed)
+                    return false;
+
+                _index++;
+
+                VehicleExtra currentInstance = _extraCollection[(VehicleExtraIndex)_index];
+
+                if (currentInstance == null)
+                {
+                    Dispose();
+
+                    return false;
+                }
+
+                _currentElement = currentInstance;
+                return true;
+            }
+
+            void IEnumerator.Reset()
+            {
+                _currentElement = null;
+
+                _index = NotStarted;
+            }
+
+            public void Dispose()
+            {
+                _currentElement = null;
+
+                _index = EndedOrDisposed;
+            }
+
+            private readonly void ThrowEnumerationNotStartedOrEnded()
+            {
+                throw new InvalidOperationException(_index == NotStarted
+                    ? "Enumeration has not started. Call MoveNext."
+                    : "Enumeration already finished.");
+            }
         }
     }
 }
