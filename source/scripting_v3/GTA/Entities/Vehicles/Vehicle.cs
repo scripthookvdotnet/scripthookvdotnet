@@ -17,6 +17,7 @@ namespace GTA
         #region Fields
         VehicleDoorCollection _doors;
         VehicleModCollection _mods;
+        VehicleExtraCollection _extras;
         VehicleWheelCollection _wheels;
         VehicleWindowCollection _windows;
         #endregion
@@ -169,7 +170,6 @@ namespace GTA
             set => Function.Call(Hash.SET_VEHICLE_ENVEFF_SCALE, Handle, value);
         }
 
-
         /// <summary>
         /// Gets the <see cref="VehicleModCollection"/> for this <see cref="Vehicle"/>.
         /// </summary>
@@ -184,6 +184,11 @@ namespace GTA
         /// Gets the <see cref="VehicleWindowCollection"/> for this <see cref="Vehicle"/>.
         /// </summary>
         public VehicleWindowCollection Windows => _windows ??= new VehicleWindowCollection(this);
+
+        /// <summary>
+        /// Gets the <see cref="VehicleExtraCollection"/> for this <see cref="Vehicle"/>.
+        /// </summary>
+        public VehicleExtraCollection Extras => _extras ??= new VehicleExtraCollection(this);
 
         /// <summary>
         /// Washes this <see cref="Vehicle"/> by setting the value of <see cref="DirtLevel"/> to <see langword="0.0f"/>.
@@ -214,40 +219,6 @@ namespace GTA
         }
 
         /// <summary>
-        /// Determines whether the specified <c>extra</c> is currently enabled on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="extra">The extra to check.</param>
-        /// <returns>
-        /// <see langword="true"/> if the extra is enabled; otherwise, <see langword="false"/>.
-        /// </returns>
-        public bool IsExtraOn(int extra)
-        {
-            return Function.Call<bool>(Hash.IS_VEHICLE_EXTRA_TURNED_ON, Handle, extra);
-        }
-
-        /// <summary>
-        /// Determines whether the specified <c>extra</c> exists on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="extra">The extra to check.</param>
-        /// <returns>
-        /// <see langword="true"/> if the extra exists; otherwise, <see langword="false"/>.
-        /// </returns>
-        public bool ExtraExists(int extra)
-        {
-            return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
-        }
-
-        /// <summary>
-        /// Enables or disables the specified <c>extra</c> on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="extra">The extra to enable or disable.</param>
-        /// <param name="toggle"><see langword="true"/> to enable the extra; <see langword="false"/> to disable it.</param>
-        public void ToggleExtra(int extra, bool toggle)
-        {
-            Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
-        }
-
-        /// <summary>
         /// Overrides this <see cref="Vehicle"/>'s audio game object with another so the vehicle has different various
         /// vehicle sounds such as horn, door, suspension, and start sequences.
         /// </summary>
@@ -271,6 +242,46 @@ namespace GTA
         /// </para>
         /// </param>
         public void ForceUseAudioGameObject(string gameObjectName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, gameObjectName);
+
+        #endregion
+
+        #region Extras
+        /// <summary>
+        /// Determines whether the specified <c>extra</c> is currently enabled on this <see cref="Vehicle"/>.
+        /// </summary>
+        /// <param name="extra">The extra to check.</param>
+        /// <returns>
+        /// <see langword="true"/> if the extra is enabled; otherwise, <see langword="false"/>.
+        /// </returns>
+        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Enabled instead!")]
+        public bool IsExtraOn(int extra)
+        {
+            return Function.Call<bool>(Hash.IS_VEHICLE_EXTRA_TURNED_ON, Handle, extra);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <c>extra</c> exists on this <see cref="Vehicle"/>.
+        /// </summary>
+        /// <param name="extra">The extra to check.</param>
+        /// <returns>
+        /// <see langword="true"/> if the extra exists; otherwise, <see langword="false"/>.
+        /// </returns>
+        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Exists() instead!")]
+        public bool ExtraExists(int extra)
+        {
+            return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
+        }
+
+        /// <summary>
+        /// Enables or disables the specified <c>extra</c> on this <see cref="Vehicle"/>.
+        /// </summary>
+        /// <param name="extra">The extra to enable or disable.</param>
+        /// <param name="toggle"><see langword="true"/> to enable the extra; <see langword="false"/> to disable it.</param>
+        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Enabled instead!")]
+        public void ToggleExtra(int extra, bool toggle)
+        {
+            Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
+        }
 
         #endregion
 
