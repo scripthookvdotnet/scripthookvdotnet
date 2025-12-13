@@ -6668,19 +6668,19 @@ namespace SHVDN
         {
             #region Fields
             internal FragInst* _fragInst;
-            internal int _fragmentGroupIndex;
+            internal int _componentIndex;
             internal bool _wasNewFragInstCreated;
             #endregion
 
-            internal FragInstBreakOffAboveTask(FragInst* fragInst, int fragmentGroupIndex)
+            internal FragInstBreakOffAboveTask(FragInst* fragInst, int componentIndex)
             {
                 this._fragInst = fragInst;
-                this._fragmentGroupIndex = fragmentGroupIndex;
+                this._componentIndex = componentIndex;
             }
 
             public void Run()
             {
-                _wasNewFragInstCreated = s_fragInst__BreakOffAboveFunc(_fragInst, _fragmentGroupIndex) != null;
+                _wasNewFragInstCreated = s_fragInst__BreakOffAboveFunc(_fragInst, _componentIndex) != null;
             }
         }
 
