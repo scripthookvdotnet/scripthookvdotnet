@@ -694,7 +694,7 @@ namespace SHVDN
             address = MemScanner.FindPatternNaive("\x0F\xBE\x5E\x06\x48\x8B\xCF\xFF\x50\x00\x8B\xD3\x48\x8B\xC8\xE8\x00\x00\x00\x00\x8B\x4E", "xxxxxxxxx?xxxxxx????xx");
             if (address != null)
             {
-                s_detachFragmentPartByIndexFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(new IntPtr(*(int*)(address + 16) + address + 20));
+                s_fragInst__BreakOffAboveFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(new IntPtr(*(int*)(address + 16) + address + 20));
             }
             address = MemScanner.FindPatternBmh("\x74\x56\x48\x8B\x0D\x00\x00\x00\x00\x41\x0F\xB7\xD0\x45\x33\xC9\x45\x33\xC0", "xxxxx????xxxxxxxxxx");
             if (address != null)
@@ -6357,7 +6357,7 @@ namespace SHVDN
         #region -- Fragment Object for Entity --
 
         private static int s_getFragInstVFuncOffset;
-        private static delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> s_detachFragmentPartByIndexFunc;
+        private static delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> s_fragInst__BreakOffAboveFunc;
         private static ulong** s_phSimulatorInstPtr;
         private static int s_colliderCapacityOffset;
         private static int s_colliderCountOffset;
@@ -6680,7 +6680,7 @@ namespace SHVDN
 
             public void Run()
             {
-                _wasNewFragInstCreated = s_detachFragmentPartByIndexFunc(_fragInst, _fragmentGroupIndex) != null;
+                _wasNewFragInstCreated = s_fragInst__BreakOffAboveFunc(_fragInst, _fragmentGroupIndex) != null;
             }
         }
 
