@@ -6664,7 +6664,7 @@ namespace SHVDN
             }
         }
 
-        internal sealed class DetachFragmentPartByIndexTask : IScriptTask
+        internal sealed class FragInstBreakOffAboveTask : IScriptTask
         {
             #region Fields
             internal FragInst* _fragInst;
@@ -6672,7 +6672,7 @@ namespace SHVDN
             internal bool _wasNewFragInstCreated;
             #endregion
 
-            internal DetachFragmentPartByIndexTask(FragInst* fragInst, int fragmentGroupIndex)
+            internal FragInstBreakOffAboveTask(FragInst* fragInst, int fragmentGroupIndex)
             {
                 this._fragInst = fragInst;
                 this._fragmentGroupIndex = fragmentGroupIndex;
@@ -6720,7 +6720,7 @@ namespace SHVDN
                 return false;
             }
 
-            var task = new DetachFragmentPartByIndexTask(fragInst, fragmentGroupIndex);
+            var task = new FragInstBreakOffAboveTask(fragInst, fragmentGroupIndex);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
             return task._wasNewFragInstCreated;
