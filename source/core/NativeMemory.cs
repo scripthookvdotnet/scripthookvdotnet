@@ -6695,6 +6695,8 @@ namespace SHVDN
             return GetFragmentGroupCountOfFragInst(fragInst);
         }
 
+        // Since we can't rename `Entity.DetachFragmentPart(int fragmentGroupIndex)` in v3 API for the sake of
+        // compatibility, we might as well leave the name of this method as is.
         public static bool DetachFragmentPartByIndex(IntPtr entityAddress, int fragmentGroupIndex)
         {
             if (fragmentGroupIndex < 0)
