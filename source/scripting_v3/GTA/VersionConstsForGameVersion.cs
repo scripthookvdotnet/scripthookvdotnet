@@ -66,5 +66,7 @@ namespace GTA
         internal static Version v1_0_3274_0 => new(1, 0, 3274, 0);
         internal static Version v1_0_3323_0 => new(1, 0, 3323, 0);
         internal static Version v1_0_3337_0 => new(1, 0, 3337, 0);
+        internal static Version v1_0_3586_0 => new(1, 0, 3586, 0);
+        internal static Version v1_0_3717_0 => new(1, 0, 3717, 0);
     }
 }
