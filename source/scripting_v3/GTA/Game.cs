@@ -470,7 +470,7 @@ namespace GTA
             // `CControlMgr::GetMainFrontendControl(bool bAllowDisabling)` is called with the argument `false`,
             // where the function returns the main player (actual) `CControl` for almost all cases as `bAllowDisabling`
             // is set to `false`.
-            return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, (int)control);
+            return Function.Call<int>(Hash.GET_CONTROL_VALUE, 0, control.GetInternalValue());
         }
         /// <summary>
         /// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f.
@@ -483,7 +483,7 @@ namespace GTA
         /// </remarks>
         public static float GetControlValueNormalized(Control control)
         {
-            return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, (int)control);
+            return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, control.GetInternalValue());
         }
         /// <summary>
         /// Gets an analog value of a <see cref="Control"/> input between -1.0f and 1.0f even if
@@ -493,7 +493,7 @@ namespace GTA
         /// <returns>The normalized <see cref="Control"/> value between -1.0f and 1.0f.</returns>
         public static float GetDisabledControlValueNormalized(Control control)
         {
-            return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, (int)control);
+            return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, control.GetInternalValue());
         }
         /// <summary>
         /// Sets the value of a <see cref="Control"/> for the next frame (not this frame) if the control is enabled.
@@ -507,7 +507,7 @@ namespace GTA
         /// </remarks>
         public static void SetControlValueNormalized(Control control, float value)
         {
-            Function.Call(Hash.SET_CONTROL_VALUE_NEXT_FRAME, 0, (int)control, value);
+            Function.Call(Hash.SET_CONTROL_VALUE_NEXT_FRAME, 0, control.GetInternalValue(), value);
         }
 
         /// <summary>
@@ -543,7 +543,7 @@ namespace GTA
         /// </remarks>
         public static bool IsControlPressed(Control control)
         {
-            return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, (int)control);
+            return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, control.GetInternalValue());
         }
         /// <summary>
         /// Gets whether a <see cref="Control"/> was just pressed/down this frame and was not pressed/down last frame.
@@ -566,7 +566,7 @@ namespace GTA
         /// </remarks>
         public static bool IsControlJustPressed(Control control)
         {
-            return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, (int)control);
+            return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, control.GetInternalValue());
         }
         /// <summary>
         /// Gets whether a <see cref="Control"/> was just released/up this frame and was not released/up last frame.
@@ -589,7 +589,7 @@ namespace GTA
         /// </remarks>
         public static bool IsControlJustReleased(Control control)
         {
-            return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, (int)control);
+            return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, control.GetInternalValue());
         }
         /// <summary>
         /// Gets whether a <see cref="Control"/> is enabled and currently pressed/down.
@@ -607,7 +607,7 @@ namespace GTA
         /// </returns>
         public static bool IsEnabledControlPressed(Control control)
         {
-            return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, (int)control);
+            return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, control.GetInternalValue());
         }
         /// <summary>
         /// Gets whether a <see cref="Control"/> is enabled and pressed/down this frame and was not pressed/down
@@ -627,7 +627,7 @@ namespace GTA
         /// </returns>
         public static bool IsEnabledControlJustPressed(Control control)
         {
-            return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, (int)control);
+            return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, control.GetInternalValue());
         }
         /// <summary>
         /// Gets whether a <see cref="Control"/> is enabled and was just released/up this frame and was not released/up
@@ -647,7 +647,7 @@ namespace GTA
         /// </returns>
         public static bool IsEnabledControlJustReleased(Control control)
         {
-            return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, (int)control);
+            return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, control.GetInternalValue());
         }
 
         /// <summary>
@@ -659,7 +659,7 @@ namespace GTA
         /// </returns>
         public static bool IsControlEnabled(Control control)
         {
-            return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, (int)control);
+            return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, control.GetInternalValue());
         }
         /// <summary>
         /// Enables the action input for the given <see cref="Control"/> and related action inputs in the control
@@ -671,7 +671,7 @@ namespace GTA
         /// </param>
         public static void EnableControlThisFrame(Control control)
         {
-            Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)control, true);
+            Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, control.GetInternalValue(), true);
         }
         /// <summary>
         /// Disables the action input for the given <see cref="Control"/> and related action inputs in the control
@@ -683,7 +683,7 @@ namespace GTA
         /// </param>
         public static void DisableControlThisFrame(Control control)
         {
-            Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, (int)control, true);
+            Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, control.GetInternalValue(), true);
         }
         /// <summary>
         /// Enables all <see cref="Control"/>s this frame.

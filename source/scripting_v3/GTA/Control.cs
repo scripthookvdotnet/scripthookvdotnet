@@ -380,5 +380,99 @@ namespace GTA
         UseArmor,
         VehicleShiftGearUp,
         VehicleShiftGearDown,
+
+        //v1.0.3717.0 additions
+        CreatorSwitchCamera = 1365,
+        CreatorToggleOrbitCamera,
+        CreatorCameraDecrease,
+        CreatorCameraIncrease,
+        CreatorMenuAccept,
+        CreatorMenuCancel,
+        CreatorMenuDelete,
+        CreatorFastAdjust,
+        CreatorFineAdjust,
+        CreatorFastZoom,
+        CreatorList,
+        CreatorAltMenuEntry,
+        CreatorWarpAndEdit,
+        CreatorTabLeft,
+        CreatorTabRight,
+        CreatorRotateLeft,
+        CreatorRotateRight,
+        CreatorFovIncrease,
+        CreatorFovDecrease,
+        CreatorExtraOptions1,
+        CreatorExtraOptions2,
+        CreatorContextMenu,
+        CreatorMenuUp,
+        CreatorMenuDown,
+        CreatorAdjustLeft,
+        CreatorAdjustRight,
+        CreatorResetFov,
+        CreatorEntityRaise,
+        CreatorEntityLower,
+        CreatorToggleDescriptions,
+        CreatorMenu,
+        CreatorMoveLr,
+        CreatorMoveUd,
+        CreatorMoveUpOnly,
+        CreatorMoveDownOnly,
+        CreatorMoveLeftOnly,
+        CreatorMoveRightOnly,
+    }
+
+    public static class ControlExtensions
+    {
+        /// <summary>
+        /// Returns the value of this <see cref="Control"/> aligned to the game build.
+        /// </summary>
+        /// <param name="control">The <see cref="Control"/> to correct.</param>
+        /// <returns>The corrected integer value based on game build.</returns>
+        public static int GetInternalValue(this Control control) => ControlHelpers.GetInternalValue(control);
+    }
+
+    public static class ControlHelpers
+    {
+        /// <summary>
+        /// Returns the value of a <see cref="Control"/> aligned to the game build.
+        /// </summary>
+        /// <param name="control">The <see cref="Control"/> to correct.</param>
+        /// <returns>The corrected integer value based on game build.</returns>
+        public static int GetInternalValue(Control control)
+        {
+            int val = (int)control;
+            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_3717_0)
+            {
+                if (val >= 1365)
+                {
+                    ThrowHelper.ThrowArgumentException(nameof(control) + " is not supported in versions prior to b3717!");
+                }
+
+                return val;
+            }
+
+            if (val <= 256 /* Control.CreatorDelete */)
+            {
+                return val;
+            }
+
+            if (val < 365)
+            {
+                return val + 37;
+            }
+
+            // In b3717 and later, new controls were added starting from index 1365
+            // The first actual value in the RAGE engine enum is 257.
+            const int NewControlsStart = 1365;
+            if (val >= NewControlsStart)
+            {
+                const int RageBase = 257;
+
+                return val - NewControlsStart + RageBase;
+            }
+
+            ThrowHelper.ThrowArgumentException(nameof(control) + " is not currently supported!");
+            return -1;
+        }
     }
 }
