@@ -715,35 +715,6 @@ namespace SHVDN
                 InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 49);
             }
 
-            // These 2 nopping are done by trainers such as Simple Trainer, Menyoo, and Enhanced Native Trainer, but we try to do this if they are not done yet
-            #region -- Bypass model requests block for some models --
-            // Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
-            address = MemScanner.FindPatternBmh("\x40\x84\x00\x74\x13\xE8\x00\x00\x00\x00\x48\x85\xC0\x75\x09\x38\x45\x57\x0F\x84", "xx?xxx????xxxxxxxxxx");
-            if (address != null)
-            {
-                // Find address to patch because some of the instructions are changed and offset differs between b1290 and b1180
-                // Skip the region where there are no "lea rcx, [rbp+6F]"
-                address = MemScanner.FindPatternNaive("\x33\xC1\x48\x8D\x4D\x6F", "xxxxxx", new IntPtr(address + 0x3A), 0x30);
-                address = address != null ? (address + 0x16) : null;
-                if (address != null && *address != 0x90)
-                {
-                    const int BytesToWriteInstructions = 0x18;
-                    byte[] nopBytes = Enumerable.Repeat((byte)0x90, BytesToWriteInstructions).ToArray();
-                    Marshal.Copy(nopBytes, 0, new IntPtr(address), BytesToWriteInstructions);
-                }
-            }
-            #endregion
-            #region -- Bypass is player model allowed to spawn checks --
-            address = MemScanner.FindPatternBmh("\x74\x12\x48\x8B\x10\x48\x8B\xC8\xFF\x52\x30\x84\xC0\x74\x05\x48\x8B\xC3", "xxxxxxxxxxxxxxxxxx");
-            address = address != null ? (address + 11) : null;
-            if (address != null && *address != 0x90)
-            {
-                const int BytesToWriteInstructions = 4;
-                byte[] nopBytes = Enumerable.Repeat((byte)0x90, BytesToWriteInstructions).ToArray();
-                Marshal.Copy(nopBytes, 0, new IntPtr(address), BytesToWriteInstructions);
-            }
-            #endregion
-
             // Generate vehicle model list
             var vehicleHashesGroupedByClass = new List<int>[0x20];
             for (int i = 0; i < 0x20; i++)
