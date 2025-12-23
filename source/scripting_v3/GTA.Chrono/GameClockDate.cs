@@ -321,7 +321,7 @@ namespace GTA.Chrono
             {
                 if (dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek > IsoDayOfWeek.Sunday)
                 {
-                    ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(dayOfWeek));
+                    ThrowHelper.ThrowEnumArgumentOutOfRangeException(nameof(dayOfWeek));
                 }
 
                 ThrowHelper.ThrowArgumentOutOfRangeException(nameof(week), week, 1,

@@ -2806,7 +2806,7 @@ namespace GTA
         {
             if (modifier < 0 || (int)modifier >= _speechModifierNames.Length)
             {
-                ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(modifier));
+                ThrowHelper.ThrowEnumArgumentOutOfRangeException(nameof(modifier));
             }
 
             Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_NATIVE, Handle, speechName, _speechModifierNames[(int)modifier]);
@@ -2815,7 +2815,7 @@ namespace GTA
         {
             if (modifier < 0 || (int)modifier >= _speechModifierNames.Length)
             {
-                ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(modifier));
+                ThrowHelper.ThrowEnumArgumentOutOfRangeException(nameof(modifier));
             }
 
             Function.Call(Hash.PLAY_PED_AMBIENT_SPEECH_WITH_VOICE_NATIVE, Handle, speechName, voiceName, _speechModifierNames[(int)modifier], 0);
@@ -3050,7 +3050,7 @@ namespace GTA
             // The native doesn't check the current frag type child count when access to the frag type child for the corresponding component index if the entity is ped
             if ((int)component < (int)RagdollComponent.Buttocks || (int)component > (int)RagdollComponent.Head)
             {
-                ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(component));
+                ThrowHelper.ThrowEnumArgumentOutOfRangeException(nameof(component));
             }
 
             Function.Call(Hash.APPLY_FORCE_TO_ENTITY, Handle, (int)forceType, force.X, force.Y, force.Z, offset.X, offset.Y, offset.Z, (int)component, relativeForce, relativeOffset, scaleByMass, triggerAudio, scaleByTimeScale);
@@ -3108,7 +3108,7 @@ namespace GTA
             // The native doesn't check the current frag type child count when access to the frag type child for the corresponding component index if the entity is ped
             if ((int)component < (int)RagdollComponent.Buttocks || (int)component > (int)RagdollComponent.Head)
             {
-                ThrowHelper.ArgumentOutOfRangeException_Enum_Value(nameof(component));
+                ThrowHelper.ThrowEnumArgumentOutOfRangeException(nameof(component));
             }
 
             Function.Call(Hash.APPLY_FORCE_TO_ENTITY_CENTER_OF_MASS, Handle, (int)forceType, force.X, force.Y, force.Z, (int)component, relativeForce, scaleByMass, applyToChildren);

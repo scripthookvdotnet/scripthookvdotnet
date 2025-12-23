@@ -176,7 +176,7 @@ namespace GTA
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal static void ArgumentOutOfRangeException_Enum_Value(string paramName)
+        internal static void ThrowEnumArgumentOutOfRangeException(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, "Enum value was out of legal range.");
         }
