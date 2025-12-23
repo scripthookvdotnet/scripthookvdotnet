@@ -18,6 +18,7 @@ namespace GTA
 {
     internal static class ThrowHelper
     {
+        #region ThrowArgumentNullException
         /// <summary>
         /// Throws an <see cref="ArgumentNullException"/> for the specified parameter.
         /// </summary>
@@ -41,6 +42,10 @@ namespace GTA
             throw new ArgumentNullException(paramName, message);
         }
 
+        #endregion
+
+        #region ThrowArgumentOutOfRangeException
+
         /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException"/> for the specified parameter.
         /// </summary>
@@ -63,6 +68,10 @@ namespace GTA
         {
             throw new ArgumentOutOfRangeException(paramName, message);
         }
+
+        #endregion
+
+        #region ThrowArgumentException
 
         /// <summary>
         /// Throws an <see cref="ArgumentException"/>.
@@ -97,6 +106,10 @@ namespace GTA
             throw new ArgumentException(message, paramName);
         }
 
+        #endregion
+
+        #region ThrowArgumentOutOfRangeException & ThrowEnumArgumentOutOfRangeException
+
         /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException"/> for the specified parameter with the given range information.
         /// </summary>
@@ -117,6 +130,21 @@ namespace GTA
         {
             throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString(CultureInfo.InvariantCulture)}, {maxInclusive.ToString(CultureInfo.InvariantCulture)}].");
         }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> with a parameter name for an enum value out of legal
+        /// range, which means the value is not defined.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void ThrowEnumArgumentOutOfRangeException(string paramName)
+        {
+            throw new ArgumentOutOfRangeException(paramName, "Enum value was out of legal range.");
+        }
+
+        #endregion
+
+        #region CheckArgumentRange
 
         /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is not within the specified range.
@@ -148,6 +176,8 @@ namespace GTA
             }
         }
 
+        #endregion
+
         /// <summary>
         /// Throws an <see cref="ArgumentException"/> for the specified parameter when a floating-point value is NaN.
         /// </summary>
@@ -157,17 +187,6 @@ namespace GTA
         internal static void ThrowArgumentExceptionForNaN(string paramName)
         {
             throw new ArgumentException("The floating-point value cannot be NaN.", paramName);
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentOutOfRangeException"/> with a parameter name for an enum value out of legal
-        /// range, which means the value is not defined.
-        /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException"/>
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        internal static void ThrowEnumArgumentOutOfRangeException(string paramName)
-        {
-            throw new ArgumentOutOfRangeException(paramName, "Enum value was out of legal range.");
         }
 
         /// <summary>
