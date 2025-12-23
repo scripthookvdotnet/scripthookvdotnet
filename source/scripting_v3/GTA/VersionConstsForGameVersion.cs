@@ -66,5 +66,14 @@ namespace GTA
         internal static readonly Version v1_0_3274_0 = new(1, 0, 3274, 0);
         internal static readonly Version v1_0_3323_0 = new(1, 0, 3323, 0);
         internal static readonly Version v1_0_3337_0 = new(1, 0, 3337, 0);
+        internal static readonly Version v1_0_3351_0 = new(1, 0, 3351, 0);
+        internal static readonly Version v1_0_3407_0 = new(1, 0, 3407, 0);
+        internal static readonly Version v1_0_3411_0 = new(1, 0, 3411, 0);
+        internal static readonly Version v1_0_3442_0 = new(1, 0, 3442, 0);
+        internal static readonly Version v1_0_3504_0 = new(1, 0, 3504, 0);
+        internal static readonly Version v1_0_3521_0 = new(1, 0, 3521, 0);
+        internal static readonly Version v1_0_3570_0 = new(1, 0, 3570, 0);
+        internal static readonly Version v1_0_3586_0 = new(1, 0, 3586, 0);
+        internal static readonly Version v1_0_3717_0 = new(1, 0, 3717, 0);
     }
 }
