@@ -119,14 +119,28 @@ namespace GTA
         /// <param name="maxInclusive">The inclusive maximum allowed value.</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal static void ThrowArgumentOutOfRangeException(string paramName, long value, long minInclusive, long maxInclusive)
+        internal static void ThrowArgumentOutOfRangeException(string paramName, int value, int minInclusive, int maxInclusive)
         {
             throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString(CultureInfo.InvariantCulture)}, {maxInclusive.ToString(CultureInfo.InvariantCulture)}].");
         }
 
-        ///<inheritdoc cref="ThrowArgumentOutOfRangeException(string, long, long, long)"/>
+        ///<inheritdoc cref="ThrowArgumentOutOfRangeException(string, int, int, int)"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void ThrowArgumentOutOfRangeException(string paramName, float value, float minInclusive, float maxInclusive)
+        {
+            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString(CultureInfo.InvariantCulture)}, {maxInclusive.ToString(CultureInfo.InvariantCulture)}].");
+        }
+
+        ///<inheritdoc cref="ThrowArgumentOutOfRangeException(string, int, int, int)"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, double value, double minInclusive, double maxInclusive)
+        {
+            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString(CultureInfo.InvariantCulture)}, {maxInclusive.ToString(CultureInfo.InvariantCulture)}].");
+        }
+
+        ///<inheritdoc cref="ThrowArgumentOutOfRangeException(string, int, int, int)"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void ThrowArgumentOutOfRangeException(string paramName, long value, long minInclusive, long maxInclusive)
         {
             throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString(CultureInfo.InvariantCulture)}, {maxInclusive.ToString(CultureInfo.InvariantCulture)}].");
         }
