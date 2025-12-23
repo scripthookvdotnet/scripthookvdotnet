@@ -165,7 +165,7 @@ namespace GTA
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal static void ThrowArgumentException_Arg_CannotBeNaN(string paramName)
+        internal static void ThrowArgumentExceptionForNaN(string paramName)
         {
             throw new ArgumentException("GameClockDuration does not accept floating point Not-a-Number values.", nameof(paramName));
         }
