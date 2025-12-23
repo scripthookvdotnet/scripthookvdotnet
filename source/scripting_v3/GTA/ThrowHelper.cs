@@ -148,10 +148,15 @@ namespace GTA
             }
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> for the specified parameter when a floating-point value is NaN.
+        /// </summary>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <exception cref="ArgumentException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentExceptionForNaN(string paramName)
         {
-            throw new ArgumentException("GameClockDuration does not accept floating point Not-a-Number values.", nameof(paramName));
+            throw new ArgumentException("The floating-point value cannot be NaN.", paramName);
         }
 
         /// <summary>
