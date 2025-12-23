@@ -19,9 +19,9 @@ namespace GTA
     internal static class ThrowHelper
     {
         /// <summary>
-        /// Throws an <see cref="ArgumentNullException"/>.
+        /// Throws an <see cref="ArgumentNullException"/> for the specified parameter.
         /// </summary>
-        /// <param name="paramName">The name of the parameter that caused the exception.</param>
+        /// <param name="paramName">The name of the parameter.</param>
         /// <exception cref="ArgumentNullException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentNullException(string paramName)
@@ -30,10 +30,10 @@ namespace GTA
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentNullException"/>.
+        /// Throws an <see cref="ArgumentNullException"/> for the specified parameter with the provided message.
         /// </summary>
-        /// <param name="paramName">The name of the parameter that caused the exception.</param>
-        /// <param name="message">A message that describes the error.</param>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="message">The error message.</param>
         /// <exception cref="ArgumentNullException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentNullException(string paramName, string message)
@@ -42,9 +42,9 @@ namespace GTA
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentOutOfRangeException"/>.
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> for the specified parameter.
         /// </summary>
-        /// <param name="paramName">The name of the parameter that caused the exception.</param>
+        /// <param name="paramName">The name of the parameter.</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName)
@@ -53,10 +53,10 @@ namespace GTA
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentOutOfRangeException"/>.
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> for the specified parameter with the provided message.
         /// </summary>
-        /// <param name="paramName">The name of the parameter that caused the exception.</param>
-        /// <param name="message">The message that describes the error.</param>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="message">The error message.</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, string message)
@@ -75,9 +75,9 @@ namespace GTA
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentException"/>.
+        /// Throws an <see cref="ArgumentException"/> with the provided message.
         /// </summary>
-        /// <param name="message">The error message that explains the reason for the exception.</param>
+        /// <param name="message">The error message.</param>
         /// <exception cref="ArgumentException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException(string message)
@@ -86,10 +86,10 @@ namespace GTA
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentException"/>.
+        /// Throws an <see cref="ArgumentException"/> for the specified parameter with the provided message.
         /// </summary>
-        /// <param name="message">The error message that explains the reason for the exception.</param>
-        /// <param name="paramName">The name of the parameter that caused the current exception.</param>
+        /// <param name="message">The error message.</param>
+        /// <param name="paramName">The name of the parameter.</param>
         /// <exception cref="ArgumentException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException(string message, string paramName)
@@ -98,12 +98,12 @@ namespace GTA
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info.
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> for the specified parameter with the given range information.
         /// </summary>
-        /// <param name="paramName">The name of the parameter that caused the exception.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
-        /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
+        /// <param name="paramName">The name of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="minInclusive">The inclusive minimum allowed value.</param>
+        /// <param name="maxInclusive">The inclusive maximum allowed value.</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, long value, long minInclusive, long maxInclusive)
@@ -111,14 +111,7 @@ namespace GTA
             throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString(CultureInfo.InvariantCulture)}, {maxInclusive.ToString(CultureInfo.InvariantCulture)}].");
         }
 
-        /// <summary>
-        /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info.
-        /// </summary>
-        /// <param name="paramName">The name of the parameter that caused the exception.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
-        /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
-        /// <exception cref="ArgumentOutOfRangeException"/>
+        ///<inheritdoc cref="ThrowArgumentOutOfRangeException(string, long, long, long)"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, double value, double minInclusive, double maxInclusive)
         {
@@ -126,16 +119,16 @@ namespace GTA
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info if
-        /// <paramref name="value"/> is not in the range.
+        /// Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is not within the specified range.
         /// </summary>
         /// <param name="paramName">The name of the parameter.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
-        /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="minInclusive">The inclusive minimum allowed value.</param>
+        /// <param name="maxInclusive">The inclusive maximum allowed value.</param>
         /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
+        /// Thrown if <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
         /// </exception>
+
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void CheckArgumentRange(string paramName, long value, long minInclusive, long maxInclusive)
         {
@@ -145,17 +138,7 @@ namespace GTA
             }
         }
 
-        /// <summary>
-        /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info if
-        /// <paramref name="value"/> is not in the range.
-        /// </summary>
-        /// <param name="paramName">The name of the parameter.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
-        /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
-        /// </exception>
+        /// <inheritdoc cref="CheckArgumentRange(string, long, long, long)"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void CheckArgumentRange(string paramName, int value, int minInclusive, int maxInclusive)
         {
