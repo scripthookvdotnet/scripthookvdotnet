@@ -11,6 +11,7 @@
 // https://github.com/dotnet/runtime/blob/8c090757a69370e46da63dfae9f4ed44cc90ec01/src/libraries/System.Private.CoreLib/src/System/ThrowHelper.cs
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace GTA
 {
@@ -21,6 +22,7 @@ namespace GTA
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the exception.</param>
         /// <exception cref="NullReferenceException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentNullException(string paramName)
         {
             throw new ArgumentNullException(paramName);
@@ -31,6 +33,7 @@ namespace GTA
         /// <param name="paramName">The name of the parameter that caused the exception.</param>
         /// <param name="message">A message that describes the error.</param>
         /// <exception cref="NullReferenceException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentNullException(string paramName, string message)
         {
             throw new ArgumentNullException(paramName, message);
@@ -41,6 +44,7 @@ namespace GTA
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the exception.</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName);
@@ -52,6 +56,7 @@ namespace GTA
         /// <param name="paramName">The name of the parameter that caused the exception.</param>
         /// <param name="message">The message that describes the error.</param>
         /// <exception cref="ArgumentException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, string message)
         {
             throw new ArgumentOutOfRangeException(paramName, message);
@@ -61,6 +66,7 @@ namespace GTA
         /// Throws an <see cref="ArgumentException"/>.
         /// </summary>
         /// <exception cref="ArgumentException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException()
         {
             throw new ArgumentException();
@@ -71,6 +77,7 @@ namespace GTA
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <exception cref="ArgumentException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException(string message)
         {
             throw new ArgumentException(message);
@@ -82,6 +89,7 @@ namespace GTA
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="paramName">The name of the parameter that caused the current exception.</param>
         /// <exception cref="ArgumentException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException(string message, string paramName)
         {
             throw new ArgumentException(message, paramName);
@@ -95,6 +103,7 @@ namespace GTA
         /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
         /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, long value, long minInclusive, long maxInclusive)
         {
             throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString()}, {maxInclusive.ToString()}].");
@@ -108,6 +117,7 @@ namespace GTA
         /// <param name="minInclusive">The min value of the acceptable range inclusive.</param>
         /// <param name="maxInclusive">The max value of the acceptable range inclusive.</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, double value, double minInclusive, double maxInclusive)
         {
             throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString()}, {maxInclusive.ToString()}].");
@@ -124,6 +134,7 @@ namespace GTA
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
         /// </exception>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void CheckArgumentRange(string paramName, long value, long minInclusive, long maxInclusive)
         {
             if (value < minInclusive || value > maxInclusive)
@@ -142,6 +153,7 @@ namespace GTA
         /// <exception cref="ArgumentOutOfRangeException">
         /// <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
         /// </exception>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void CheckArgumentRange(string paramName, int value, int minInclusive, int maxInclusive)
         {
             if (value < minInclusive || value > maxInclusive)
@@ -150,6 +162,7 @@ namespace GTA
             }
         }
 
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentException_Arg_CannotBeNaN(string paramName)
         {
             throw new ArgumentException("GameClockDuration does not accept floating point Not-a-Number values.", nameof(paramName));
@@ -160,16 +173,19 @@ namespace GTA
         /// range, which means the value is not defined.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ArgumentOutOfRangeException_Enum_Value(string paramName)
         {
             throw new ArgumentOutOfRangeException(paramName, "Enum value was out of legal range.");
         }
+
 
         /// <summary>
         /// Throws an <see cref="InvalidOperationException"/>.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         /// <exception cref="InvalidOperationException"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowInvalidOperationException(string message)
         {
             throw new InvalidOperationException(message);
