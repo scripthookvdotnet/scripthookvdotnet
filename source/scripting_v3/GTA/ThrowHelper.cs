@@ -27,6 +27,7 @@ namespace GTA
         {
             throw new ArgumentNullException(paramName);
         }
+
         /// <summary>
         /// Throws an <see cref="NullReferenceException"/>.
         /// </summary>
@@ -142,6 +143,7 @@ namespace GTA
                 ThrowArgumentOutOfRangeException(paramName, value, minInclusive, maxInclusive);
             }
         }
+
         /// <summary>
         /// Throws an <see cref="ArgumentOutOfRangeException"/> with the acceptable range info if
         /// <paramref name="value"/> is not in the range.
@@ -178,7 +180,6 @@ namespace GTA
         {
             throw new ArgumentOutOfRangeException(paramName, "Enum value was out of legal range.");
         }
-
 
         /// <summary>
         /// Throws an <see cref="InvalidOperationException"/>.
