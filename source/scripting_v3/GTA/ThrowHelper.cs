@@ -11,6 +11,7 @@
 // https://github.com/dotnet/runtime/blob/8c090757a69370e46da63dfae9f4ed44cc90ec01/src/libraries/System.Private.CoreLib/src/System/ThrowHelper.cs
 
 using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace GTA
@@ -107,7 +108,7 @@ namespace GTA
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, long value, long minInclusive, long maxInclusive)
         {
-            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString()}, {maxInclusive.ToString()}].");
+            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString(CultureInfo.InvariantCulture)}, {maxInclusive.ToString(CultureInfo.InvariantCulture)}].");
         }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace GTA
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, double value, double minInclusive, double maxInclusive)
         {
-            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString()}, {maxInclusive.ToString()}].");
+            throw new ArgumentOutOfRangeException(paramName, value, $"Value should be in range [{minInclusive.ToString(CultureInfo.InvariantCulture)}, {maxInclusive.ToString(CultureInfo.InvariantCulture)}].");
         }
 
         /// <summary>
