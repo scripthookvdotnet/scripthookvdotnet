@@ -19,10 +19,10 @@ namespace GTA
     internal static class ThrowHelper
     {
         /// <summary>
-        /// Throws an <see cref="NullReferenceException"/>.
+        /// Throws an <see cref="ArgumentNullException"/>.
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the exception.</param>
-        /// <exception cref="NullReferenceException"/>
+        /// <exception cref="ArgumentNullException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentNullException(string paramName)
         {
@@ -30,11 +30,11 @@ namespace GTA
         }
 
         /// <summary>
-        /// Throws an <see cref="NullReferenceException"/>.
+        /// Throws an <see cref="ArgumentNullException"/>.
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the exception.</param>
         /// <param name="message">A message that describes the error.</param>
-        /// <exception cref="NullReferenceException"/>
+        /// <exception cref="ArgumentNullException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentNullException(string paramName, string message)
         {
@@ -53,11 +53,11 @@ namespace GTA
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentException"/>.
+        /// Throws an <see cref="ArgumentOutOfRangeException"/>.
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the exception.</param>
         /// <param name="message">The message that describes the error.</param>
-        /// <exception cref="ArgumentException"/>
+        /// <exception cref="ArgumentOutOfRangeException"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal static void ThrowArgumentOutOfRangeException(string paramName, string message)
         {
