@@ -156,9 +156,8 @@ namespace GTA
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if <paramref name="value"/> is not between <paramref name="minInclusive"/> and <paramref name="maxInclusive"/>.
         /// </exception>
-
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal static void CheckArgumentRange(string paramName, long value, long minInclusive, long maxInclusive)
+        internal static void CheckArgumentRange(string paramName, int value, int minInclusive, int maxInclusive)
         {
             if (value < minInclusive || value > maxInclusive)
             {
@@ -166,9 +165,29 @@ namespace GTA
             }
         }
 
-        /// <inheritdoc cref="CheckArgumentRange(string, long, long, long)"/>
+        /// <inheritdoc cref="CheckArgumentRange(string, int, int, int)"/>
         [MethodImpl(MethodImplOptions.NoInlining)]
-        internal static void CheckArgumentRange(string paramName, int value, int minInclusive, int maxInclusive)
+        internal static void CheckArgumentRange(string paramName, float value, float minInclusive, float maxInclusive)
+        {
+            if (value < minInclusive || value > maxInclusive)
+            {
+                ThrowArgumentOutOfRangeException(paramName, value, minInclusive, maxInclusive);
+            }
+        }
+
+        /// <inheritdoc cref="CheckArgumentRange(string, int, int, int)"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void CheckArgumentRange(string paramName, double value, double minInclusive, double maxInclusive)
+        {
+            if (value < minInclusive || value > maxInclusive)
+            {
+                ThrowArgumentOutOfRangeException(paramName, value, minInclusive, maxInclusive);
+            }
+        }
+
+        /// <inheritdoc cref="CheckArgumentRange(string, int, int, int)"/>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        internal static void CheckArgumentRange(string paramName, long value, long minInclusive, long maxInclusive)
         {
             if (value < minInclusive || value > maxInclusive)
             {
