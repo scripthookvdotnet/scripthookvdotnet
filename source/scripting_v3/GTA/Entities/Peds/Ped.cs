@@ -263,6 +263,57 @@ namespace GTA
         /// </summary>
         public bool IsTakingOffHelmet => Function.Call<bool>(Hash.IS_PED_TAKING_OFF_HELMET, Handle);
 
+        /// <summary>
+        /// Applies blood to this <see cref="Ped"/> at the specified world-space position.
+        /// </summary>
+        /// <param name="zone">The <see cref="PedDamageZone"/> to apply the effect to.</param>
+        /// <param name="position">The <see cref="Vector3"/> world-space position where the blood effect should appear on the ped.</param>
+        /// <param name="bloodDamage">The <see cref="PedBloodDamage"/> preset to apply.</param>
+        public void ApplyBloodDamage(PedDamageZone zone, Vector3 position, PedBloodDamage bloodDamage)
+        {
+            Function.Call(Hash.APPLY_PED_BLOOD, Handle, (int)zone, position.X, position.Y, position.Z, bloodDamage.ToInternalName());
+        }
+
+        /// <summary>
+        /// Applies blood to this <see cref="Ped"/> at a specified position within a damage zone.
+        /// </summary>
+        /// <param name="zone">The <see cref="PedDamageZone"/> to apply the effect to.</param>
+        /// <param name="position">
+        /// The normalized <see cref="Vector2"/> UV position within the damage zone where the blood effect should appear.
+        /// </param>
+        /// <param name="bloodDamage">The <see cref="PedBloodDamage"/> preset to apply.</param>
+        public void ApplyBloodDamage(PedDamageZone zone, Vector2 position, PedBloodDamage bloodDamage)
+        {
+            Function.Call(Hash.APPLY_PED_BLOOD_BY_ZONE, Handle, (int)zone, position.X, position.Y, bloodDamage.ToInternalName());
+        }
+
+        /// <summary>
+        /// Applies blood to this <see cref="Ped"/> at a specified position within a damage zone, with control over rotation, scale, frame, and age.
+        /// </summary>
+        /// <param name="zone">The <see cref="PedDamageZone"/> to apply the effect to.</param>
+        /// <param name="position">
+        /// The normalized <see cref="Vector2"/> UV position within the damage zone where the blood effect should appear.
+        /// <para>Values range from (0,0) at the bottom-left of the zone to (1,1) at the top-right.</para>
+        /// </param>
+        /// <param name="bloodDamage">The <see cref="PedBloodDamage"/> preset to apply.</param>
+        /// <param name="rotation">
+        /// The rotation angle in degrees to apply to the blood decal.
+        /// </param>
+        /// <param name="scale">
+        /// The scale factor of the blood decal. Typical range is 0.0f to 1.0f, based on the MinSize/MaxSize parameters in <c>peddamage.xml</c>.
+        /// </param>
+        /// <param name="frameIndex">
+        /// The frame of the blood decal to use.
+        /// When set to -1 (default), a random frame is chosen.
+        /// </param>
+        /// <param name="woundAge">
+        /// The age in seconds of the blood effect. A value of 0.0f generates a fresh wound, higher values simulate older blood.
+        /// </param>
+        public void ApplyBloodDamage(PedDamageZone zone, Vector2 position, PedBloodDamage bloodDamage, float rotation, float scale, int frameIndex = -1, float woundAge = 0.0f)
+        {
+            Function.Call(Hash.APPLY_PED_BLOOD_SPECIFIC, Handle, (int)zone, position.X, position.Y, rotation, scale, frameIndex, woundAge);
+        }
+
         public void ClearBloodDamage()
         {
             Function.Call(Hash.CLEAR_PED_BLOOD_DAMAGE, Handle);
