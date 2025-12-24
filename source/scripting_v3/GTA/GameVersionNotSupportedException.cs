@@ -107,14 +107,14 @@ namespace GTA
             { VersionConstsForGameVersion.v1_0_3323_0, GameVersion.v1_0_3323_0 },
             { VersionConstsForGameVersion.v1_0_3337_0, GameVersion.v1_0_3337_0 },
             { VersionConstsForGameVersion.v1_0_3351_0, GameVersion.v1_0_3351_0 },
-            { VersionConstsForGameVersion.v1_0_3407_0, GameVersion.V1_0_3407_0 },
-            { VersionConstsForGameVersion.v1_0_3411_0, GameVersion.V1_0_3411_0 },
-            { VersionConstsForGameVersion.v1_0_3442_0, GameVersion.V1_0_3442_0 },
-            { VersionConstsForGameVersion.v1_0_3504_0, GameVersion.V1_0_3504_0 },
-            { VersionConstsForGameVersion.v1_0_3521_0, GameVersion.V1_0_3521_0 },
-            { VersionConstsForGameVersion.v1_0_3570_0, GameVersion.V1_0_3570_0 },
-            { VersionConstsForGameVersion.v1_0_3586_0, GameVersion.V1_0_3586_0 },
-            { VersionConstsForGameVersion.v1_0_3717_0, GameVersion.V1_0_3717_0 },
+            { VersionConstsForGameVersion.v1_0_3407_0, GameVersion.v1_0_3407_0 },
+            { VersionConstsForGameVersion.v1_0_3411_0, GameVersion.v1_0_3411_0 },
+            { VersionConstsForGameVersion.v1_0_3442_0, GameVersion.v1_0_3442_0 },
+            { VersionConstsForGameVersion.v1_0_3504_0, GameVersion.v1_0_3504_0 },
+            { VersionConstsForGameVersion.v1_0_3521_0, GameVersion.v1_0_3521_0 },
+            { VersionConstsForGameVersion.v1_0_3570_0, GameVersion.v1_0_3570_0 },
+            { VersionConstsForGameVersion.v1_0_3586_0, GameVersion.v1_0_3586_0 },
+            { VersionConstsForGameVersion.v1_0_3717_0, GameVersion.v1_0_3717_0 },
         };
 
         internal GameVersionNotSupportedException(Version minSupportedGameVersion, string className, string propertyOrMethodName) : base(BuildErrorMessage(minSupportedGameVersion, className, propertyOrMethodName))
