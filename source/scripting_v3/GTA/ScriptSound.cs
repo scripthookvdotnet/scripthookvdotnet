@@ -112,9 +112,9 @@ namespace GTA
         /// <param name="position">The new position.</param>
         public void UpdatePosition(Vector3 position)
         {
-            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_678_1)
+            if (Game.FileVersion < ExeVersionConsts.v1_0_678_1)
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_678_1), nameof(ScriptSound), nameof(UpdatePosition));
+                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_678_1), nameof(ScriptSound), nameof(UpdatePosition));
             }
 
             Function.Call(Hash.UPDATE_SOUND_COORD, Id, position.X, position.Y, position.Z);

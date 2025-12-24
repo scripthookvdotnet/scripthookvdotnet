@@ -82,7 +82,7 @@ namespace GTA
         {
             // This kind of correction was introduced in b393,
             // so we can return the same value if we are below that b393.
-            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
+            if (Game.FileVersion < ExeVersionConsts.v1_0_393_2)
             {
                 return (int)modType;
             }
@@ -111,7 +111,7 @@ namespace GTA
         /// </returns>
         internal static VehicleModType FromInternalValue(int value)
         {
-            if (Game.FileVersion < VersionConstsForGameVersion.v1_0_393_2)
+            if (Game.FileVersion < ExeVersionConsts.v1_0_393_2)
             {
                 return (VehicleModType)value;
             }

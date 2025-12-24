@@ -1409,7 +1409,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2 ? 0x168 : 0x160;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1180_2 ? 0x168 : 0x160;
                 return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + offset);
             }
             set
@@ -1419,7 +1419,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1180_2 ? 0x168 : 0x160;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1180_2 ? 0x168 : 0x160;
                 SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + offset, value);
             }
         }

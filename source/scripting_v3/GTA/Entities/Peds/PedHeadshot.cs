@@ -46,7 +46,7 @@ namespace GTA
         /// </remarks>
         public static PedHeadshot RegisterHiRes(Ped ped)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_877_1, nameof(PedHeadshot), nameof(RegisterHiRes));
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_877_1, nameof(PedHeadshot), nameof(RegisterHiRes));
 
             int handle = Function.Call<int>(Hash.REGISTER_PEDHEADSHOT_HIRES, ped);
             return handle != 0 ? new PedHeadshot(handle) : null;

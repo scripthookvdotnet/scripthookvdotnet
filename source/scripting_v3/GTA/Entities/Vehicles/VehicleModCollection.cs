@@ -311,9 +311,9 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_505_2), nameof(VehicleModCollection), nameof(TrimColor));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(VehicleModCollection), nameof(TrimColor));
                 }
 
                 int color;
@@ -326,9 +326,9 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_505_2), nameof(VehicleModCollection), nameof(TrimColor));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(VehicleModCollection), nameof(TrimColor));
                 }
 
                 Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_5, _owner.Handle, (int)value);
@@ -338,9 +338,9 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_505_2), nameof(VehicleModCollection), nameof(DashboardColor));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(VehicleModCollection), nameof(DashboardColor));
                 }
 
                 int color;
@@ -353,9 +353,9 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_505_2)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_505_2), nameof(VehicleModCollection), nameof(DashboardColor));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(VehicleModCollection), nameof(DashboardColor));
                 }
 
                 Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_6, _owner.Handle, (int)value);

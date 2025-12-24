@@ -55,7 +55,7 @@ namespace GTA
         {
             get
             {
-                if (!IsValid || Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
+                if (!IsValid || Game.FileVersion < ExeVersionConsts.v1_0_1493_0)
                 {
                     return Vector3.Zero;
                 }
@@ -64,9 +64,9 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_1493_0)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(VectorAngularDampingMin));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(VectorAngularDampingMin));
                 }
                 if (!IsValid)
                 {
@@ -91,7 +91,7 @@ namespace GTA
                     return Vector3.Zero;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x30 : 0x20;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x30 : 0x20;
                 return new Vector3(SHVDN.MemDataMarshal.ReadVector3(MemoryAddress + offset));
             }
             set
@@ -101,7 +101,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x30 : 0x20;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x30 : 0x20;
                 SHVDN.MemDataMarshal.WriteVector3(MemoryAddress + offset, value.ToInternalFVector3());
             }
         }
@@ -116,7 +116,7 @@ namespace GTA
         {
             get
             {
-                if (!IsValid || Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
+                if (!IsValid || Game.FileVersion < ExeVersionConsts.v1_0_1493_0)
                 {
                     return Vector3.Zero;
                 }
@@ -125,9 +125,9 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_1493_0)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(VectorLinearDampingMin));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(VectorLinearDampingMin));
                 }
                 if (!IsValid)
                 {
@@ -152,7 +152,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x70 : 0x50;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x70 : 0x50;
                 return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + offset);
             }
             set
@@ -162,7 +162,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x70 : 0x50;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x70 : 0x50;
                 SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + offset, value);
             }
         }
@@ -181,7 +181,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x7C : 0x5C;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x7C : 0x5C;
                 return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + offset);
             }
             set
@@ -191,7 +191,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x7C : 0x5C;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x7C : 0x5C;
                 SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + offset, value);
             }
         }
@@ -210,7 +210,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x90 : 0x70;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x90 : 0x70;
                 return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + offset);
             }
             set
@@ -220,7 +220,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x90 : 0x70;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x90 : 0x70;
                 SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + offset, value);
             }
         }
@@ -243,7 +243,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x9C : 0x7C;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x9C : 0x7C;
                 return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + offset);
             }
             set
@@ -253,7 +253,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0x9C : 0x7C;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0x9C : 0x7C;
                 SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + offset, value);
             }
         }
@@ -272,7 +272,7 @@ namespace GTA
                     return 0.0f;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0xA0 : 0x80;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0xA0 : 0x80;
                 return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + offset);
             }
             set
@@ -282,7 +282,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_1493_0 ? 0xA0 : 0x80;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_1493_0 ? 0xA0 : 0x80;
                 SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + offset, value);
             }
         }
@@ -297,7 +297,7 @@ namespace GTA
         {
             get
             {
-                if (!IsValid || Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
+                if (!IsValid || Game.FileVersion < ExeVersionConsts.v1_0_1493_0)
                 {
                     return 0.0f;
                 }
@@ -306,9 +306,9 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_1493_0)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(MinSpeedForThrustFalloff));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(MinSpeedForThrustFalloff));
                 }
                 if (!IsValid)
                 {
@@ -329,7 +329,7 @@ namespace GTA
         {
             get
             {
-                if (!IsValid || Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
+                if (!IsValid || Game.FileVersion < ExeVersionConsts.v1_0_1493_0)
                 {
                     return 0.0f;
                 }
@@ -338,9 +338,9 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1493_0)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_1493_0)
                 {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((VersionConstsForGameVersion.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(BrakingThrustScale));
+                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1493_0), nameof(SpecialFlightHandlingData), nameof(BrakingThrustScale));
                 }
                 if (!IsValid)
                 {

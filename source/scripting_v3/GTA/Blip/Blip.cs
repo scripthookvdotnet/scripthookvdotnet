@@ -42,8 +42,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5E,
-                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5C,
+                    Version v when v >= ExeVersionConsts.v1_0_944_2 => 0x5E,
+                    Version v when v >= ExeVersionConsts.v1_0_463_1 => 0x5C,
                     _ => 0x58
                 };
 
@@ -67,8 +67,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x60,
-                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5E,
+                    Version v when v >= ExeVersionConsts.v1_0_944_2 => 0x60,
+                    Version v when v >= ExeVersionConsts.v1_0_463_1 => 0x5E,
                     _ => 0x5A
                 };
 
@@ -104,8 +104,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x5D,
-                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5B,
+                    Version v when v >= ExeVersionConsts.v1_0_944_2 => 0x5D,
+                    Version v when v >= ExeVersionConsts.v1_0_463_1 => 0x5B,
                     _ => 0x57
                 };
 
@@ -130,8 +130,8 @@ namespace GTA
 
                 int offset = Game.FileVersion switch
                 {
-                    Version v when v >= VersionConstsForGameVersion.v1_0_944_2 => 0x61,
-                    Version v when v >= VersionConstsForGameVersion.v1_0_463_1 => 0x5F,
+                    Version v when v >= ExeVersionConsts.v1_0_944_2 => 0x61,
+                    Version v when v >= ExeVersionConsts.v1_0_463_1 => 0x5F,
                     _ => 0x5B
                 };
 
@@ -283,7 +283,7 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion >= VersionConstsForGameVersion.v1_0_2060_1)
+                if (Game.FileVersion >= ExeVersionConsts.v1_0_2060_1)
                 {
                     return Function.Call<int>(Hash.GET_BLIP_ROTATION, Handle);
                 }
@@ -295,13 +295,13 @@ namespace GTA
                 }
 
                 Version gameVersion = Game.FileVersion;
-                if (gameVersion >= VersionConstsForGameVersion.v1_0_944_2)
+                if (gameVersion >= ExeVersionConsts.v1_0_944_2)
                 {
                     return (int)SHVDN.MemDataMarshal.ReadFloat(address + 0x58);
                 }
                 else
                 {
-                    int offset = gameVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 0x58 : 0x54;
+                    int offset = gameVersion >= ExeVersionConsts.v1_0_463_1 ? 0x58 : 0x54;
                     return SHVDN.MemDataMarshal.ReadInt16(address + offset);
                 }
             }
@@ -326,13 +326,13 @@ namespace GTA
                 }
 
                 Version gameVersion = Game.FileVersion;
-                if (gameVersion >= VersionConstsForGameVersion.v1_0_944_2)
+                if (gameVersion >= ExeVersionConsts.v1_0_944_2)
                 {
                     return SHVDN.MemDataMarshal.ReadFloat(address + 0x58);
                 }
                 else
                 {
-                    int offset = gameVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 0x58 : 0x54;
+                    int offset = gameVersion >= ExeVersionConsts.v1_0_463_1 ? 0x58 : 0x54;
                     return (float)SHVDN.MemDataMarshal.ReadInt16(address + offset);
                 }
             }
@@ -351,14 +351,14 @@ namespace GTA
                 }
 
                 Version gameVersion = Game.FileVersion;
-                if (gameVersion >= VersionConstsForGameVersion.v1_0_944_2)
+                if (gameVersion >= ExeVersionConsts.v1_0_944_2)
                 {
                     SHVDN.MemDataMarshal.WriteFloat(address + 0x58, valueNormalized);
                     return;
                 }
                 else
                 {
-                    int offset = gameVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 0x58 : 0x54;
+                    int offset = gameVersion >= ExeVersionConsts.v1_0_463_1 ? 0x58 : 0x54;
                     SHVDN.MemDataMarshal.WriteInt16(address + offset, (short)valueNormalized);
                 }
             }
@@ -414,7 +414,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 0x54 : 0x50;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_463_1 ? 0x54 : 0x50;
                 return SHVDN.MemDataMarshal.ReadFloat(address + offset);
             }
             set
@@ -425,7 +425,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = Game.FileVersion >= VersionConstsForGameVersion.v1_0_463_1 ? 0x54 : 0x50;
+                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_463_1 ? 0x54 : 0x50;
                 SHVDN.MemDataMarshal.WriteFloat(address + offset, value);
             }
         }
@@ -551,7 +551,7 @@ namespace GTA
 
                 int bitIndex = Game.FileVersion switch
                 {
-                    Version v when v >= VersionConstsForGameVersion.v1_0_2699_0 => 17,
+                    Version v when v >= ExeVersionConsts.v1_0_2699_0 => 17,
                     _ => 16
                 };
                 return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, bitIndex);

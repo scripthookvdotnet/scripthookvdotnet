@@ -491,7 +491,7 @@ namespace GTA
             // You can actually call `SET_TYRE_WEAR_RATE` in RPH and FiveM.
             get
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_1868_0)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_1868_0)
                 {
                     return 0f;
                 }
@@ -506,7 +506,7 @@ namespace GTA
             }
             set
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1868_0, nameof(VehicleWheel), nameof(WearMultiplier));
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1868_0, nameof(VehicleWheel), nameof(WearMultiplier));
 
                 IntPtr address = MemoryAddress;
                 if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelTireWearRateOffset == 0)
@@ -535,7 +535,7 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_2060_0)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_2060_0)
                 {
                     return 0f;
                 }
@@ -550,7 +550,7 @@ namespace GTA
             }
             set
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2060_0, nameof(VehicleWheel), nameof(WearMultiplier));
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_2060_0, nameof(VehicleWheel), nameof(WearMultiplier));
 
                 IntPtr address = MemoryAddress;
                 if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelMaxGripDiffFromWearRateOffset == 0)
@@ -582,7 +582,7 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < VersionConstsForGameVersion.v1_0_2060_0)
+                if (Game.FileVersion < ExeVersionConsts.v1_0_2060_0)
                 {
                     return 0f;
                 }
@@ -597,7 +597,7 @@ namespace GTA
             }
             set
             {
-                GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2060_0, nameof(VehicleWheel), nameof(WearMultiplier));
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_2060_0, nameof(VehicleWheel), nameof(WearMultiplier));
 
                 IntPtr address = MemoryAddress;
                 if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CWheelWearRateScaleOffset == 0)
@@ -698,7 +698,7 @@ namespace GTA
         /// </exception>
         public void SetHydraulicSuspensionRaiseFactor(float raiseFactor)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_505_2, nameof(VehicleWheel), nameof(SetHydraulicSuspensionRaiseFactor));
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_505_2, nameof(VehicleWheel), nameof(SetHydraulicSuspensionRaiseFactor));
             ThrowIfNotListedInScriptIndex(nameof(SetHydraulicSuspensionRaiseFactor));
 
             Function.Call(Hash.SET_HYDRAULIC_SUSPENSION_RAISE_FACTOR, Vehicle, (int)ScriptIndex, raiseFactor);
@@ -727,7 +727,7 @@ namespace GTA
         /// </exception>
         public float GetHydraulicSuspensionRaiseFactor()
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_2372_0, nameof(VehicleWheel), nameof(SetHydraulicSuspensionRaiseFactor));
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_2372_0, nameof(VehicleWheel), nameof(SetHydraulicSuspensionRaiseFactor));
             ThrowIfNotListedInScriptIndex(nameof(GetHydraulicSuspensionRaiseFactor));
 
             return Function.Call<float>(Hash.GET_HYDRAULIC_SUSPENSION_RAISE_FACTOR, Vehicle, (int)ScriptIndex);

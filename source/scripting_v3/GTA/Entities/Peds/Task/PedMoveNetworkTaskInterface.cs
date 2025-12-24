@@ -75,7 +75,7 @@ namespace GTA
         /// </param>
         public void SetNetworkClipSet(AtHashValue clipSet, AtHashValue varClipSet = default)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1493_0,
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1493_0,
                 nameof(PedMoveNetworkTaskInterface), nameof(SetNetworkClipSet));
 
             Function.Call(Hash.SET_TASK_MOVE_NETWORK_ANIM_SET, Ped, clipSet, varClipSet);
@@ -116,7 +116,7 @@ namespace GTA
         /// </remarks>
         public void SetSignalFloatLerpRate(string signalName, float lerpRate)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1493_0,
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1493_0,
                 nameof(PedMoveNetworkTaskInterface), nameof(SetSignalFloatLerpRate));
 
             Function.Call(Hash.SET_TASK_MOVE_NETWORK_SIGNAL_FLOAT_LERP_RATE, Ped, signalName, lerpRate);
@@ -140,7 +140,7 @@ namespace GTA
         /// </summary>
         public float GetSignalFloat(string signalName)
         {
-            GameVersionNotSupportedException.ThrowIfNotSupported(VersionConstsForGameVersion.v1_0_1493_0,
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1493_0,
                 nameof(PedMoveNetworkTaskInterface), nameof(GetSignalFloat));
 
             return Function.Call<float>(Hash.GET_TASK_MOVE_NETWORK_SIGNAL_FLOAT, Ped, signalName);
