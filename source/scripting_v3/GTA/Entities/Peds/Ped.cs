@@ -3,12 +3,12 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using GTA.Math;
-using GTA.Native;
-using GTA.NaturalMotion;
 using System;
 using System.ComponentModel;
 using System.Linq;
+using GTA.Math;
+using GTA.Native;
+using GTA.NaturalMotion;
 
 namespace GTA
 {
@@ -2955,6 +2955,27 @@ namespace GTA
 
         public PedMoveNetworkTaskInterface MoveNetworkTaskInterface
             => _moveNetworkInterface ?? (_moveNetworkInterface = new PedMoveNetworkTaskInterface(this));
+
+        /// <summary>
+        /// Sets a facial animation override for this <see cref="Ped"/>.
+        /// </summary>
+        /// <param name="facialAnimation">
+        /// The facial animation to set as override.
+        /// </param>
+        /// <remarks>
+        /// Not every facial animation works for every <see cref="Ped"/> model/gender.
+        /// </remarks>
+        public void SetFacialAnimationOverride(PedFacialAnimation facialAnimation)
+            => Function.Call(Hash.SET_FACIAL_IDLE_ANIM_OVERRIDE, Handle, facialAnimation.GetAnimationName(), 0);
+
+        /// <summary>
+        /// Resets the facial animation for this <see cref="Ped"/>.
+        /// </summary>
+        /// <remarks>
+        /// Sets the facial animation to the default of <see cref="PedFacialAnimation.Mood_Normal_1"/>.
+        /// </remarks>
+        public void ResetFacialAnimationOverride()
+            => SetFacialAnimationOverride(PedFacialAnimation.Mood_Normal_1);
 
         #endregion
 
