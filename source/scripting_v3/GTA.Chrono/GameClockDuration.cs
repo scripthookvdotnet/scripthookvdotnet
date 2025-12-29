@@ -395,7 +395,7 @@ namespace GTA.Chrono
         {
             if (double.IsNaN(factor))
             {
-                ThrowHelper.ThrowArgumentException_Arg_CannotBeNaN(nameof(factor));
+                ThrowHelper.ThrowArgumentExceptionForNaN(nameof(factor));
             }
 
             long durationSecs = duration._secs;
@@ -496,7 +496,7 @@ namespace GTA.Chrono
         {
             if (double.IsNaN(divisor))
             {
-                ThrowHelper.ThrowArgumentException_Arg_CannotBeNaN(nameof(divisor));
+                ThrowHelper.ThrowArgumentExceptionForNaN(nameof(divisor));
             }
 
             long durationSecs = duration._secs;
