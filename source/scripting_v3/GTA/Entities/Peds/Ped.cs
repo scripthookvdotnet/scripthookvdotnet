@@ -2881,6 +2881,75 @@ namespace GTA
         }
 
         /// <summary>
+        /// Overrides the facial idle animation for this <see cref="Ped"/> with the specified <see cref="CrClipAsset"/>.
+        /// </summary>
+        /// <param name="clipAsset">The <see cref="CrClipAsset"/> to use as the facial idle animation.</param>
+        /// <remarks>
+        /// <b>Note:</b> If the <see cref="CrClipDictionary"/> of the specified <see cref="CrClipAsset"/> is not suitable for this <see cref="Ped"/>, this method will have no effect.
+        /// </remarks>
+        public void SetFacialIdleAnimationOverride(CrClipAsset clipAsset)
+            => Function.Call(Hash.SET_FACIAL_IDLE_ANIM_OVERRIDE, Handle, clipAsset.ClipName, clipAsset.ClipDictionary.Name);
+
+        /// <summary>
+        /// Overrides the facial idle animation for this <see cref="Ped"/> with the specified animation name, using the current facial animation <see cref="ClipSet"/> of this <see cref="Ped"/>.
+        /// </summary>
+        /// <param name="animName">The name of the facial idle animation to apply.</param>
+        /// <remarks>
+        /// <b>Note:</b> If the current facial animation <see cref="ClipSet"/> of this <see cref="Ped"/> does not contain the specified animation, the override will not take effect.
+        /// </remarks>
+        public void SetFacialIdleAnimationOverride(string animName)
+            => Function.Call(Hash.SET_FACIAL_IDLE_ANIM_OVERRIDE, Handle, animName, null);
+
+        /// <summary>
+        /// Overrides the facial idle animation for this <see cref="Ped"/> with the specified animation, using the current facial animation <see cref="ClipSet"/> of this <see cref="Ped"/>.
+        /// </summary>
+        /// <param name="anim">The facial idle animation to apply.</param>
+        public void SetFacialIdleAnimationOverride(CommonPedFacialAnimation anim)
+            => SetFacialIdleAnimationOverride(anim.GetAnimationName());
+
+        /// <summary>
+        /// Sets the facial clipset this <see cref="Ped"/> should use.
+        /// </summary>
+        /// <param name="clipSet">The <see cref="ClipSet"/> to use.</param>
+        /// <remarks>The specified <see cref="ClipSet"/> must be loaded before calling this method.</remarks>
+        public void SetFacialClipset(ClipSet clipSet)
+            => Function.Call(Hash.SET_FACIAL_CLIPSET, Handle, clipSet.Name);
+
+        /// <summary>
+        /// Plays the specified facial animation on this <see cref="Ped"/>.
+        /// </summary>
+        /// <param name="clipAsset">The <see cref="CrClipAsset"/> to use as the facial animation.</param>
+        /// <remarks>
+        /// <para><b>Note:</b> If the <see cref="CrClipDictionary"/> of the specified <see cref="CrClipAsset"/> is not suitable for this <see cref="Ped"/>, this method will have no effect.</para>
+        /// The specified <see cref="CrClipAsset"/> must be loaded before calling this method, or the animation will not play.
+        /// </remarks>
+        public void PlayFacialAnimation(CrClipAsset clipAsset)
+            => Function.Call(Hash.PLAY_FACIAL_ANIM, Handle, clipAsset.ClipName, clipAsset.ClipDictionary.Name);
+
+        /// <summary>
+        /// Plays the specified facial animation for this <see cref="Ped"/>, using the current facial animation <see cref="ClipSet"/> of this <see cref="Ped"/>.
+        /// </summary>
+        /// <param name="animName">The name of the facial animation to apply.</param>
+        /// <remarks>
+        /// <b>Note:</b> If the current facial animation <see cref="ClipSet"/> of this <see cref="Ped"/> does not contain the specified animation, this method will have no effect.
+        /// </remarks>
+        public void PlayFacialAnimation(string animName)
+            => Function.Call(Hash.PLAY_FACIAL_ANIM, Handle, animName, null);
+
+        /// <summary>
+        /// Plays the specified facial animation for this <see cref="Ped"/>, using the current facial animation <see cref="ClipSet"/> of this <see cref="Ped"/>.
+        /// </summary>
+        /// <param name="anim">The facial animation to apply.</param>
+        public void PlayFacialAnimation(CommonPedFacialAnimation anim)
+            => PlayFacialAnimation(anim.GetAnimationName());
+
+        /// <summary>
+        /// Clears any facial idle animation override set on this <see cref="Ped"/> and restores the default facial idle animation.
+        /// </summary>
+        public void ClearFacialIdleAnimationOverride()
+            => Function.Call(Hash.CLEAR_FACIAL_IDLE_ANIM_OVERRIDE, Handle);
+
+        /// <summary>
         /// Sets the movement clipset this <see cref="Ped"/> should use.
         /// Do not forget to stream in/load the clipset you want to load, or the method silently will fail.
         /// </summary>
