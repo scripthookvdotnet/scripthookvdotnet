@@ -13,7 +13,7 @@ namespace GTA
         /// <summary>
         /// Ped is not in a valid parachute landing state.
         /// </summary>
-        Invalid,
+        Invalid = -1,
         Slow,
         /// <summary>
         /// Ped is landing at regular speed (they are stumbling).
