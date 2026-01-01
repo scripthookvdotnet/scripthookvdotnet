@@ -10,6 +10,7 @@ namespace GTA
     /// </summary>
     public enum RelationshipGroupHash : uint
     {
+        None = 0,
         /// <summary>
         /// The player (<c>"PLAYER"</c>) relationship group hash.
         /// </summary>
