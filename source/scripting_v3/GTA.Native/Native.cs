@@ -118,7 +118,37 @@ namespace GTA.Native
     /// </summary>
     public sealed class InputArgument
     {
+        /// <summary>
+        /// Gets a static <see cref="InputArgument"/> that represents a writable
+        /// pointer whose value is intentionally ignored.
+        /// </summary>
+        /// <remarks>
+        /// Use this when a script or native function requires a pointer for an
+        /// <c>out</c> parameter, but the produced value is not needed.
+        /// The pointer refers to an internal static storage location that is valid
+        /// for the lifetime of the process.
+        ///
+        /// <para>
+        /// <b>Warning:</b> Never pass this to a native function that writes more than
+        /// 8 bytes.
+        /// </para>
+        /// </remarks>
+        internal static readonly InputArgument DiscardPtr64;
+
+        /// <summary>
+        /// This holds data that was discarded, content is unpredictable.
+        /// </summary>
+        private static ulong _discardData;
+
         internal ulong _data;
+
+        unsafe static InputArgument()
+        {
+            fixed (ulong* ptr = &_discardData)
+            {
+                DiscardPtr64 = new InputArgument((ulong)ptr);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InputArgument"/> class to a script function input argument.

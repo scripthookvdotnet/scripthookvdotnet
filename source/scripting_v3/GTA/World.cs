@@ -182,13 +182,12 @@ namespace GTA
                     return;
                 }
 
-                int currentWeatherHash, nextWeatherHash;
-                float weatherTransition;
+                int weatherHash;
                 unsafe
                 {
-                    Function.Call(Hash.GET_CURR_WEATHER_STATE, &currentWeatherHash, &nextWeatherHash, &weatherTransition);
+                    Function.Call(Hash.GET_CURR_WEATHER_STATE, &weatherHash, InputArgument.DiscardPtr64, InputArgument.DiscardPtr64);
                 }
-                Function.Call(Hash.SET_CURR_WEATHER_STATE, currentWeatherHash, value.GetNameHash(), 0.0f);
+                Function.Call(Hash.SET_CURR_WEATHER_STATE, weatherHash, value.GetNameHash(), 0.0f);
             }
         }
 

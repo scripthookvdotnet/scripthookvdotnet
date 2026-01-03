@@ -254,13 +254,13 @@ namespace GTA
         {
             get
             {
-                int color1, color2;
+                int primaryColorIndex;
                 unsafe
                 {
-                    Function.Call(Hash.GET_VEHICLE_COLOURS, _owner.Handle, &color1, &color2);
+                    Function.Call(Hash.GET_VEHICLE_COLOURS, _owner.Handle, &primaryColorIndex, InputArgument.DiscardPtr64);
                 }
 
-                return (VehicleColor)color1;
+                return (VehicleColor)primaryColorIndex;
             }
             set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, (int)value, (int)SecondaryColor);
         }
@@ -268,13 +268,13 @@ namespace GTA
         {
             get
             {
-                int color1, color2;
+                int secondaryColorIndex;
                 unsafe
                 {
-                    Function.Call(Hash.GET_VEHICLE_COLOURS, _owner.Handle, &color1, &color2);
+                    Function.Call(Hash.GET_VEHICLE_COLOURS, _owner.Handle, InputArgument.DiscardPtr64, &secondaryColorIndex);
                 }
 
-                return (VehicleColor)color2;
+                return (VehicleColor)secondaryColorIndex;
             }
             set => Function.Call(Hash.SET_VEHICLE_COLOURS, _owner.Handle, (int)PrimaryColor, (int)value);
         }
@@ -283,13 +283,13 @@ namespace GTA
         {
             get
             {
-                int color1, color2;
+                int rimColorIndex;
                 unsafe
                 {
-                    Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS, _owner.Handle, &color1, &color2);
+                    Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS, _owner.Handle, InputArgument.DiscardPtr64, &rimColorIndex);
                 }
 
-                return (VehicleColor)color2;
+                return (VehicleColor)rimColorIndex;
             }
             set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, (int)PearlescentColor, (int)value);
         }
@@ -297,13 +297,13 @@ namespace GTA
         {
             get
             {
-                int color1, color2;
+                int pearlescentColorIndex;
                 unsafe
                 {
-                    Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS, _owner.Handle, &color1, &color2);
+                    Function.Call(Hash.GET_VEHICLE_EXTRA_COLOURS, _owner.Handle, &pearlescentColorIndex, InputArgument.DiscardPtr64);
                 }
 
-                return (VehicleColor)color1;
+                return (VehicleColor)pearlescentColorIndex;
             }
             set => Function.Call(Hash.SET_VEHICLE_EXTRA_COLOURS, _owner.Handle, (int)value, (int)RimColor);
         }
@@ -316,13 +316,13 @@ namespace GTA
                     GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(VehicleModCollection), nameof(TrimColor));
                 }
 
-                int color;
+                int trimColorIndex;
                 unsafe
                 {
-                    Function.Call(Hash.GET_VEHICLE_EXTRA_COLOUR_5, _owner.Handle, &color);
+                    Function.Call(Hash.GET_VEHICLE_EXTRA_COLOUR_5, _owner.Handle, &trimColorIndex);
                 }
 
-                return (VehicleColor)color;
+                return (VehicleColor)trimColorIndex;
             }
             set
             {

@@ -1649,13 +1649,13 @@ namespace GTA
         {
             get
             {
-                bool lightState1, lightState2;
+                bool areLightsOn;
                 unsafe
                 {
-                    Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
+                    Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &areLightsOn, InputArgument.DiscardPtr64);
                 }
 
-                return lightState1;
+                return areLightsOn;
             }
             [Obsolete("The setter of Vehicle.AreLightsOn is obsolete. Use Vehicle.SetScriptedLightSetting instead."),
             EditorBrowsable(EditorBrowsableState.Never)]
@@ -1686,13 +1686,13 @@ namespace GTA
         {
             get
             {
-                bool lightState1, lightState2;
+                bool highbeamState;
                 unsafe
                 {
-                    Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, &lightState1, &lightState2);
+                    Function.Call(Hash.GET_VEHICLE_LIGHTS_STATE, Handle, InputArgument.DiscardPtr64, &highbeamState);
                 }
 
-                return lightState2;
+                return highbeamState;
             }
             set => Function.Call(Hash.SET_VEHICLE_FULLBEAM, Handle, value);
         }

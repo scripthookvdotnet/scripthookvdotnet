@@ -90,10 +90,9 @@ namespace GTA
             get
             {
                 bool hasLeader;
-                int count;
                 unsafe
                 {
-                    Function.Call(Hash.GET_GROUP_SIZE, Handle, &hasLeader, &count);
+                    Function.Call(Hash.GET_GROUP_SIZE, Handle, &hasLeader, InputArgument.DiscardPtr64);
                 }
 
                 return hasLeader;
@@ -107,13 +106,12 @@ namespace GTA
         {
             get
             {
-                bool hasLeader;
-                int count;
+                int memberCount;
                 unsafe
                 {
-                    Function.Call(Hash.GET_GROUP_SIZE, Handle, &hasLeader, &count);
+                    Function.Call(Hash.GET_GROUP_SIZE, Handle, InputArgument.DiscardPtr64, &memberCount);
                 }
-                return count;
+                return memberCount;
             }
         }
 
