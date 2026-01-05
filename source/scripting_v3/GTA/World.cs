@@ -2840,16 +2840,17 @@ namespace GTA
         /// Gets the next position on the street where a <see cref="Vehicle"/> can be placed.  Considers switched off nodes, where ambient vehicles will not spawn.
         /// </summary>
         /// <param name="position">The position to check around.</param>
-        /// <param name="unoccupied">if set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
         public static Vector3 GetNextPositionOnStreet(Vector2 position, bool unoccupied = false)
         {
             return GetNextPositionOnStreet(new Vector3(position.X, position.Y, 0f), unoccupied);
         }
+
         /// <summary>
         /// Gets the next position on the street where a <see cref="Vehicle"/> can be placed. Considers switched off nodes, where ambient vehicles will not spawn.
         /// </summary>
         /// <param name="position">The position to check around.</param>
-        /// <param name="unoccupied">if set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
         public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied = false)
         {
             if (unoccupied)
@@ -2880,7 +2881,7 @@ namespace GTA
         /// Gets the next boat position on water where a boat <see cref="Vehicle"/> can be placed. Considers switched off nodes, where ambient vehicles will not spawn.
         /// </summary>
         /// <param name="position">The position to check around.</param>
-        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
         public static Vector3 GetNextPositionOnWater(Vector2 position, bool unoccupied = false)
             => GetNextPositionOnWater(new Vector3(position.X, position.Y, 0f), unoccupied);
 
@@ -2888,7 +2889,7 @@ namespace GTA
         /// Gets the next boat position on water where a boat <see cref="Vehicle"/> can be placed. Considers switched off nodes, where ambient vehicles will not spawn.
         /// </summary>
         /// <param name="position">The position to check around.</param>
-        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
         public static Vector3 GetNextPositionOnWater(Vector3 position, bool unoccupied = false)
         {
             if (unoccupied)
@@ -2932,7 +2933,7 @@ namespace GTA
         /// Gets the next position on the street where a <see cref="Vehicle"/> can be placed with the heading of the ambient traffic flow at this position. Considers switched off nodes, where ambient vehicles will not spawn.
         /// </summary>
         /// <param name="position">The position to check around.</param>
-        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
         /// <param name="heading">The heading of the ambient traffic flow.</param>
         public static Vector3 GetNextPositionOnStreetWithHeading(Vector2 position, out float heading, bool unoccupied = false)
             => GetNextPositionOnStreetWithHeading(new Vector3(position.X, position.Y, 0f), out heading, unoccupied);
@@ -2941,7 +2942,7 @@ namespace GTA
         /// Gets the next position on the street where a <see cref="Vehicle"/> can be placed with the heading of the ambient traffic flow at this position. Considers switched off nodes, where ambient vehicles will not spawn.
         /// </summary>
         /// <param name="position">The position to check around.</param>
-        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
         /// <param name="heading">The heading of the ambient traffic flow.</param>
         public static Vector3 GetNextPositionOnStreetWithHeading(Vector3 position, out float heading, bool unoccupied = false)
         {
