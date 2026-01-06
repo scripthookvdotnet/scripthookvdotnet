@@ -136,8 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="Console.cs" />
-    <CsCompile Include="FVector3.cs" />
-    <CsCompile Include="ScrWeaponHudStats.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="Log.cs" />
     <CsCompile Include="MemDataMarshal.cs" />
@@ -154,6 +152,51 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="Enums\CScriptResourceTypeNameIndex.cs" />
+    <CsCompile Include="Enums\EntityTypeInternal.cs" />
+    <CsCompile Include="Enums\ModelInfoClassType.cs" />
+    <CsCompile Include="Enums\PoolType.cs" />
+    <CsCompile Include="Enums\Vehicle\VehicleFlag1.cs" />
+    <CsCompile Include="Enums\Vehicle\VehicleFlag2.cs" />
+    <CsCompile Include="Enums\Vehicle\VehiclePathNodeProperties.cs" />
+    <CsCompile Include="Enums\Vehicle\VehicleStructClassType.cs" />
+    <CsCompile Include="Structs\CAttacker.cs" />
+    <CsCompile Include="Structs\CGameScriptResouce.cs" />
+    <CsCompile Include="Structs\CModelList.cs" />
+    <CsCompile Include="Structs\CTask.cs" />
+    <CsCompile Include="Structs\DragDrawable.cs" />
+    <CsCompile Include="Structs\EntityDamageRecordForReturnValue.cs" />
+    <CsCompile Include="Structs\FVector3.cs" />
+    <CsCompile Include="Structs\FragCacheEntry.cs" />
+    <CsCompile Include="Structs\Frag\FragInst.cs" />
+    <CsCompile Include="Structs\Frag\FragPhysicsLod.cs" />
+    <CsCompile Include="Structs\Frag\FragPhysicsLodGroup.cs" />
+    <CsCompile Include="Structs\Frag\FragTypeChild.cs" />
+    <CsCompile Include="Structs\Frag\GtaFragType.cs" />
+    <CsCompile Include="Structs\FwBasePool.cs" />
+    <CsCompile Include="Structs\FwScriptGuidPool.cs" />
+    <CsCompile Include="Structs\HashEntry.cs" />
+    <CsCompile Include="Structs\HashNode.cs" />
+    <CsCompile Include="Structs\ItemInfo.cs" />
+    <CsCompile Include="Structs\Path\CPathNode.cs" />
+    <CsCompile Include="Structs\Path\CPathNodeLink.cs" />
+    <CsCompile Include="Structs\Path\CPathRegion.cs" />
+    <CsCompile Include="Structs\PedPersonality.cs" />
+    <CsCompile Include="Structs\PgHashMap.cs" />
+    <CsCompile Include="Structs\RageAtArrayPtr.cs" />
+    <CsCompile Include="Structs\RageSysMemPoolAllocator.cs" />
+    <CsCompile Include="Structs\ScreenInfo.cs" />
+    <CsCompile Include="Structs\ScrWeaponHudStats.cs" />
+    <CsCompile Include="Structs\Skeleton\CrBoneData.cs" />
+    <CsCompile Include="Structs\Skeleton\CrSkeleton.cs" />
+    <CsCompile Include="Structs\Skeleton\CrSkeletonData.cs" />
+    <CsCompile Include="Structs\Weapon\WeaponComponentInfo.cs" />
+    <CsCompile Include="Structs\Weapon\WeaponComponentPointHeader.cs" />
+    <CsCompile Include="Structs\Ysc\YscScriptHeader.cs" />
+    <CsCompile Include="Structs\Ysc\YscScriptTable.cs" />
+    <CsCompile Include="Structs\Ysc\YscScriptTableItem.cs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Compile C# source files -->

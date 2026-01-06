@@ -9,10 +9,9 @@
     <CsCompile Include="ScriptDomain.cs" />
     <CsCompile Include="StringMarshal.cs" />
     <CsCompile Include="CheapThreadSafeStopwatch.cs" />
-    <CsCompile Include="FVector3.cs" />
     <CsCompile Include="MemDataMarshal.cs" />
     <CsCompile Include="MemScanner.cs" />
-    <CsCompile Include="ScrWeaponHudStats.cs" />
+    <CsCompile Include="KeyboardEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -23,5 +22,162 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Structs">
+      <UniqueIdentifier>{a4f13c56-d1ce-48d6-aa8a-a16c50e323b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\Path">
+      <UniqueIdentifier>{12cd1bf1-85bd-4e97-80ea-fbe1b3816020}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\Frag">
+      <UniqueIdentifier>{f5aa51a5-962a-485b-90ca-714d34b11b97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\Skeleton">
+      <UniqueIdentifier>{0bc9b1f9-9704-430f-bff7-8fadef8b28af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\Weapon">
+      <UniqueIdentifier>{06e15a8d-26fe-4b0a-9a99-898d8b17691d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Structs\Ysc">
+      <UniqueIdentifier>{08285d85-c75a-4315-9c4a-1912c12ca15e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enums">
+      <UniqueIdentifier>{856d0490-9e97-4e4f-9ca5-5eb54438060c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enums\Vehicle">
+      <UniqueIdentifier>{2115f7f1-65dc-4378-8033-be6a402d5712}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="Structs\CAttacker.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\CGameScriptResouce.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\CModelList.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\CTask.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\DragDrawable.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\EntityDamageRecordForReturnValue.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\FragCacheEntry.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+	<CsCompile Include="Structs\FVector3.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\FwBasePool.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\FwScriptGuidPool.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\HashEntry.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\HashNode.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\ItemInfo.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\PedPersonality.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\PgHashMap.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\RageAtArrayPtr.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\RageSysMemPoolAllocator.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\ScreenInfo.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Path\CPathNode.cs">
+      <Filter>Structs\Path</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Path\CPathNodeLink.cs">
+      <Filter>Structs\Path</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Path\CPathRegion.cs">
+      <Filter>Structs\Path</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Frag\FragInst.cs">
+      <Filter>Structs\Frag</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Frag\FragPhysicsLod.cs">
+      <Filter>Structs\Frag</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Frag\FragPhysicsLodGroup.cs">
+      <Filter>Structs\Frag</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Frag\FragTypeChild.cs">
+      <Filter>Structs\Frag</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Frag\GtaFragType.cs">
+      <Filter>Structs\Frag</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Ysc\YscScriptHeader.cs">
+      <Filter>Structs\Ysc</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Ysc\YscScriptTable.cs">
+      <Filter>Structs\Ysc</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Ysc\YscScriptTableItem.cs">
+      <Filter>Structs\Ysc</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Weapon\WeaponComponentInfo.cs">
+      <Filter>Structs\Weapon</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Weapon\WeaponComponentPointHeader.cs">
+      <Filter>Structs\Weapon</Filter>
+    </CsCompile>
+	<CsCompile Include="Structs\ScrWeaponHudStats.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Skeleton\CrBoneData.cs">
+      <Filter>Structs\Skeleton</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Skeleton\CrSkeleton.cs">
+      <Filter>Structs\Skeleton</Filter>
+    </CsCompile>
+    <CsCompile Include="Structs\Skeleton\CrSkeletonData.cs">
+      <Filter>Structs\Skeleton</Filter>
+    </CsCompile>
+    <CsCompile Include="Enums\Vehicle\VehicleFlag1.cs">
+      <Filter>Enums\Vehicle</Filter>
+    </CsCompile>
+    <CsCompile Include="Enums\Vehicle\VehicleFlag2.cs">
+      <Filter>Enums\Vehicle</Filter>
+    </CsCompile>
+    <CsCompile Include="Enums\Vehicle\VehiclePathNodeProperties.cs">
+      <Filter>Enums\Vehicle</Filter>
+    </CsCompile>
+    <CsCompile Include="Enums\Vehicle\VehicleStructClassType.cs">
+      <Filter>Enums\Vehicle</Filter>
+    </CsCompile>
+    <CsCompile Include="Enums\CScriptResourceTypeNameIndex.cs">
+      <Filter>Enums</Filter>
+    </CsCompile>
+    <CsCompile Include="Enums\EntityTypeInternal.cs">
+      <Filter>Enums</Filter>
+    </CsCompile>
+    <CsCompile Include="Enums\ModelInfoClassType.cs">
+      <Filter>Enums</Filter>
+    </CsCompile>
+    <CsCompile Include="Enums\PoolType.cs">
+      <Filter>Enums</Filter>
+    </CsCompile>
   </ItemGroup>
 </Project>
