@@ -246,13 +246,7 @@ namespace GTA.UI
         public bool Centered
         {
             get => Alignment == Alignment.Center;
-            set
-            {
-                if (value)
-                {
-                    Alignment = Alignment.Center;
-                }
-            }
+            set => Alignment = value ? Alignment.Center : Alignment.Left;
         }
 
         /// <summary>
