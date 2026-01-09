@@ -2620,7 +2620,7 @@ namespace GTA
         /// Gets a value indicating whether this Cargobob <see cref="Vehicle"/> currently has the specified <see cref="CargobobHook"/> gadget active.
         /// </summary>
         /// <param name="hook">The <see cref="CargobobHook"/> to check for.</param>
-        /// <returns><see langword="true"/> if this Cargobob has the specified hook active; otherwise, <see cref="false"/></returns>
+        /// <returns><see langword="true"/> if this Cargobob has the specified hook active; otherwise, <see langword="false"/></returns>
         public bool IsCargobobHookActive(CargobobHook hook)
         {
             switch (hook)
