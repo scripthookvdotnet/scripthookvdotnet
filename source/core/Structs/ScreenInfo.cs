@@ -7,12 +7,12 @@ namespace SHVDN
     {
         // these fields should be in pixel coordinates
         [FieldOffset(0x14)]
-        internal uint left;
+        internal uint Left;
         [FieldOffset(0x18)]
-        internal uint right;
+        internal uint Right;
         [FieldOffset(0x1C)]
-        internal uint top;
+        internal uint Top;
         [FieldOffset(0x20)]
-        internal uint bottom;
+        internal uint Bottom;
     }
 }

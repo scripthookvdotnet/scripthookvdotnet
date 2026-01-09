@@ -6,15 +6,15 @@ namespace SHVDN
     public unsafe struct ItemInfo
     {
         [FieldOffset(0x0)]
-        public ulong * vTable;
+        public ulong* vTable;
         [FieldOffset(0x10)]
-        public uint nameHash;
+        public uint NameHash;
         [FieldOffset(0x14)]
-        public uint modelHash;
+        public uint ModelHash;
         [FieldOffset(0x18)]
-        public uint audioHash;
+        public uint AudioHash;
         [FieldOffset(0x1C)]
-        public uint slot;
+        public uint Slot;
 
         public uint GetClassNameHash()
         {

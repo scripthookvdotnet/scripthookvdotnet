@@ -6,20 +6,20 @@ namespace SHVDN
     internal unsafe struct CrSkeletonData
     {
         [FieldOffset(0x10)]
-        internal PgHashMap boneHashMap;
+        internal PgHashMap BoneHashMap;
         [FieldOffset(0x20)]
-        internal CrBoneData* boneData;
+        internal CrBoneData* BoneData;
         [FieldOffset(0x5E)]
-        internal ushort boneCount;
+        internal ushort BoneCount;
 
         /// <summary>
         /// Gets the bone index from specified bone id. Note that bone indexes are sequential values and bone ids are not sequential ones.
         /// </summary>
         public int GetBoneIndexByBoneId(int boneId)
         {
-            if (boneHashMap.elementCount == 0)
+            if (BoneHashMap.ElementCount == 0)
             {
-                if (boneId < boneCount)
+                if (boneId < BoneCount)
                 {
                     return boneId;
                 }
@@ -27,12 +27,12 @@ namespace SHVDN
                 return -1;
             }
 
-            if (boneHashMap.bucketCount == 0)
+            if (BoneHashMap.BucketCount == 0)
             {
                 return -1;
             }
 
-            if (boneHashMap.Get((uint)boneId, out int returnBoneId))
+            if (BoneHashMap.Get((uint)boneId, out int returnBoneId))
             {
                 return returnBoneId;
             }
@@ -45,12 +45,12 @@ namespace SHVDN
         /// </summary>
         internal int GetBoneIdByIndex(int boneIndex)
         {
-            if (boneIndex < 0 || boneIndex >= boneCount)
+            if (boneIndex < 0 || boneIndex >= BoneCount)
             {
                 return -1;
             }
 
-            return ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->boneId;
+            return ((CrBoneData*)((ulong)BoneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->BoneId;
         }
 
         /// <summary>
@@ -58,15 +58,15 @@ namespace SHVDN
         /// </summary>
         internal void GetNextSiblingBoneIndexAndId(int boneIndex, out int nextSiblingBoneIndex, out int nextSiblingBoneId)
         {
-            if (boneIndex < 0 || boneIndex >= boneCount)
+            if (boneIndex < 0 || boneIndex >= BoneCount)
             {
                 nextSiblingBoneIndex = -1;
                 nextSiblingBoneId = -1;
                 return;
             }
 
-            var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
-            ushort nextSiblingBoneIndexFetched = crBoneData->nextSiblingBoneIndex;
+            var crBoneData = ((CrBoneData*)((ulong)BoneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
+            ushort nextSiblingBoneIndexFetched = crBoneData->NextSiblingBoneIndex;
             if (nextSiblingBoneIndexFetched == 0xFFFF)
             {
                 nextSiblingBoneIndex = -1;
@@ -91,15 +91,15 @@ namespace SHVDN
         /// </summary>
         internal void GetParentBoneIndexAndId(int boneIndex, out int parentBoneIndex, out int parentBoneId)
         {
-            if (boneIndex < 0 || boneIndex >= boneCount)
+            if (boneIndex < 0 || boneIndex >= BoneCount)
             {
                 parentBoneIndex = -1;
                 parentBoneId = -1;
                 return;
             }
 
-            var crBoneData = ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
-            ushort nextParentBoneIndexFetched = crBoneData->parentBoneIndex;
+            var crBoneData = ((CrBoneData*)((ulong)BoneData + (uint)sizeof(CrBoneData) * (uint)boneIndex));
+            ushort nextParentBoneIndexFetched = crBoneData->ParentBoneIndex;
             if (nextParentBoneIndexFetched == 0xFFFF)
             {
                 parentBoneIndex = -1;
@@ -124,12 +124,12 @@ namespace SHVDN
         /// </summary>
         internal string GetBoneName(int boneIndex)
         {
-            if (boneIndex < 0 || boneIndex >= boneCount)
+            if (boneIndex < 0 || boneIndex >= BoneCount)
             {
                 return null;
             }
 
-            return ((CrBoneData*)((ulong)boneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->Name;
+            return ((CrBoneData*)((ulong)BoneData + (uint)sizeof(CrBoneData) * (uint)boneIndex))->Name;
         }
     }
 }

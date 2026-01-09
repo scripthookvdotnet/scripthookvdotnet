@@ -744,9 +744,9 @@ namespace SHVDN
             {
                 for (int i = 0; i < s_modelHashEntries; i++)
                 {
-                    for (HashNode* cur = ((HashNode**)s_modelHashTable)[i]; cur != null; cur = cur->next)
+                    for (HashNode* cur = ((HashNode**)s_modelHashTable)[i]; cur != null; cur = cur->Next)
                     {
-                        ushort data = cur->data;
+                        ushort data = cur->Data;
                         bool bitTest = ((*(int*)(s_modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
                         if (data >= s_modelNum1 || !bitTest)
                         {
@@ -765,16 +765,16 @@ namespace SHVDN
                             switch ((ModelInfoClassType)(*(byte*)(addr2 + 157) & 0x1F))
                             {
                                 case ModelInfoClassType.Weapon:
-                                    weaponObjectHashes.Add(cur->hash);
+                                    weaponObjectHashes.Add(cur->Hash);
                                     break;
                                 case ModelInfoClassType.Vehicle:
                                     // Avoid loading stub vehicles since it will crash the game
-                                    if (stubVehicles.Contains((uint)cur->hash))
+                                    if (stubVehicles.Contains((uint)cur->Hash))
                                     {
                                         continue;
                                     }
 
-                                    vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->hash);
+                                    vehicleHashesGroupedByClass[*(byte*)(addr2 + vehicleClassOffset) & 0x1F].Add(cur->Hash);
 
                                     // Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
                                     // The values for CAmphibiousAutomobile and CAmphibiousQuadBike were inserted between those for CSubmarineCar and CHeli in b944.
@@ -784,11 +784,11 @@ namespace SHVDN
                                         vehicleTypeInt += 2;
                                     }
 
-                                    vehicleHashesGroupedByType[vehicleTypeInt].Add(cur->hash);
+                                    vehicleHashesGroupedByType[vehicleTypeInt].Add(cur->Hash);
 
                                     break;
                                 case ModelInfoClassType.Ped:
-                                    pedHashes.Add(cur->hash);
+                                    pedHashes.Add(cur->Hash);
                                     break;
                             }
                         }
@@ -838,7 +838,7 @@ namespace SHVDN
                 return;
             }
 
-            YscScriptHeader* shopControllerHeader = shopControllerItem->header;
+            YscScriptHeader* shopControllerHeader = shopControllerItem->Header;
 
             string enableCarsGlobalPattern;
             if (gameVersion >= 80)
@@ -1139,8 +1139,8 @@ namespace SHVDN
 
         private static CrSkeleton* GetEntityCrSkeletonOfFragInst(FragInst* fragInst)
         {
-            FragCacheEntry* fragCacheEntry = fragInst->fragCacheEntry;
-            GtaFragType* gtaFragType = fragInst->gtaFragType;
+            FragCacheEntry* fragCacheEntry = fragInst->FragCacheEntry;
+            GtaFragType* gtaFragType = fragInst->GtaFragType;
 
             // Check if either pointer is null just like native functions that take a bone index argument
             if (fragCacheEntry == null || gtaFragType == null)
@@ -1148,7 +1148,7 @@ namespace SHVDN
                 return null;
             }
 
-            return fragCacheEntry->crSkeleton;
+            return fragCacheEntry->CrSkeleton;
         }
 
         public static int GetBoneIdForEntityBoneIndex(int entityHandle, int boneIndex)
@@ -1164,7 +1164,7 @@ namespace SHVDN
                 return -1;
             }
 
-            return crSkeleton->skeletonData->GetBoneIdByIndex(boneIndex);
+            return crSkeleton->SkeletonData->GetBoneIdByIndex(boneIndex);
         }
         public static void GetNextSiblingBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex, out int nextSiblingBoneIndex, out int nextSiblingBoneTag)
         {
@@ -1183,7 +1183,7 @@ namespace SHVDN
                 return;
             }
 
-            crSkeleton->skeletonData->GetNextSiblingBoneIndexAndId(boneIndex, out nextSiblingBoneIndex, out nextSiblingBoneTag);
+            crSkeleton->SkeletonData->GetNextSiblingBoneIndexAndId(boneIndex, out nextSiblingBoneIndex, out nextSiblingBoneTag);
         }
         public static void GetParentBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex, out int parentBoneIndex, out int parentBoneTag)
         {
@@ -1202,7 +1202,7 @@ namespace SHVDN
                 return;
             }
 
-            crSkeleton->skeletonData->GetParentBoneIndexAndId(boneIndex, out parentBoneIndex, out parentBoneTag);
+            crSkeleton->SkeletonData->GetParentBoneIndexAndId(boneIndex, out parentBoneIndex, out parentBoneTag);
         }
         public static string GetEntityBoneName(int entityHandle, int boneIndex)
         {
@@ -1217,12 +1217,12 @@ namespace SHVDN
                 return null;
             }
 
-            return crSkeleton->skeletonData->GetBoneName(boneIndex);
+            return crSkeleton->SkeletonData->GetBoneName(boneIndex);
         }
         public static int GetEntityBoneCount(int handle)
         {
             CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(handle);
-            return crSkeleton != null ? crSkeleton->boneCount : 0;
+            return crSkeleton != null ? crSkeleton->BoneCount : 0;
         }
         public static IntPtr GetEntityBoneTransformMatrixAddress(int handle)
         {
@@ -1247,7 +1247,7 @@ namespace SHVDN
                 return IntPtr.Zero;
             }
 
-            if (boneIndex < crSkeleton->boneCount)
+            if (boneIndex < crSkeleton->BoneCount)
             {
                 return crSkeleton->GetBoneObjectMatrixAddress((boneIndex));
             }
@@ -1267,7 +1267,7 @@ namespace SHVDN
                 return IntPtr.Zero;
             }
 
-            if (boneIndex < crSkeleton->boneCount)
+            if (boneIndex < crSkeleton->BoneCount)
             {
                 return crSkeleton->GetBoneGlobalMatrixAddress(boneIndex);
             }
@@ -1390,9 +1390,9 @@ namespace SHVDN
         {
             var cAttacker = (CAttacker*)((byte*)cAttackerArrayAddress + index * NativeMemory.ElementSizeOfCAttackerArrayOfEntity);
 
-            ulong attackerEntityAddress = cAttacker->attackerEntityAddress;
-            int weaponHash = cAttacker->weaponHash;
-            int gameTime = cAttacker->gameTime;
+            ulong attackerEntityAddress = cAttacker->AttackerEntityAddress;
+            int weaponHash = cAttacker->WeaponHash;
+            int gameTime = cAttacker->GameTime;
             int attackerHandle = attackerEntityAddress != 0 ? GetEntityHandleFromAddress(new IntPtr((long)attackerEntityAddress)) : 0;
 
             return new EntityDamageRecordForReturnValue(attackerHandle, weaponHash, gameTime);
@@ -1959,7 +1959,7 @@ namespace SHVDN
             public static IntPtr GetSubHandlingData(IntPtr handlingDataAddr, int handlingType)
             {
                 var subHandlingArray = (RageAtArrayPtr*)(handlingDataAddr + SubHandlingDataArrayOffset);
-                ushort subHandlingCount = subHandlingArray->size;
+                ushort subHandlingCount = subHandlingArray->Size;
                 if (subHandlingCount <= 0)
                 {
                     return IntPtr.Zero;
@@ -2691,7 +2691,7 @@ namespace SHVDN
                     return Array.Empty<uint>();
                 }
 
-                ushort weaponInventoryCount = weaponInventoryArray->size;
+                ushort weaponInventoryCount = weaponInventoryArray->Size;
                 var result = new List<uint>(weaponInventoryCount);
                 for (int i = 0; i < weaponInventoryCount; i++)
                 {
@@ -2699,7 +2699,7 @@ namespace SHVDN
                     ItemInfo* weaponInfo = *(ItemInfo**)(itemAddress + 0x8);
                     if (weaponInfo != null)
                     {
-                        result.Add(weaponInfo->nameHash);
+                        result.Add(weaponInfo->NameHash);
                     }
                 }
 
@@ -2715,7 +2715,7 @@ namespace SHVDN
                     return false;
                 }
 
-                int arraySize = weaponInventoryArray->size;
+                int arraySize = weaponInventoryArray->Size;
                 if (arraySize == 0)
                 {
                     weaponHash = 0;
@@ -2734,7 +2734,7 @@ namespace SHVDN
                         ItemInfo* weaponInfo = *(ItemInfo**)(currentItem + 0x8);
                         if (slotHashOfCurrentItem == slotHash && weaponInfo != null)
                         {
-                            weaponHash = weaponInfo->nameHash;
+                            weaponHash = weaponInfo->NameHash;
                             return true;
                         }
 
@@ -2815,8 +2815,8 @@ namespace SHVDN
                     ScreenInfo* screenInfoAddr = s_getMainScreenInfoFunc(generalScreenInfoAddr);
 
                     resolutionResult = new Size(
-                        (int)(screenInfoAddr->right - screenInfoAddr->left),
-                        (int)(screenInfoAddr->bottom - screenInfoAddr->top)
+                        (int)(screenInfoAddr->Right - screenInfoAddr->Left),
+                        (int)(screenInfoAddr->Bottom - screenInfoAddr->Top)
                         );
                 }
             }
@@ -2852,14 +2852,14 @@ namespace SHVDN
 
         private static IntPtr FindCModelInfo(int modelHash)
         {
-            for (HashNode* cur = ((HashNode**)s_modelHashTable)[(uint)(modelHash) % s_modelHashEntries]; cur != null; cur = cur->next)
+            for (HashNode* cur = ((HashNode**)s_modelHashTable)[(uint)(modelHash) % s_modelHashEntries]; cur != null; cur = cur->Next)
             {
-                if (cur->hash != modelHash)
+                if (cur->Hash != modelHash)
                 {
                     continue;
                 }
 
-                ushort data = cur->data;
+                ushort data = cur->Data;
                 bool bitTest = ((*(int*)(s_modelNum2 + (ulong)(4 * data >> 5))) & (1 << (data & 0x1F))) != 0;
                 if (data >= s_modelNum1 || !bitTest)
                 {
@@ -3008,7 +3008,7 @@ namespace SHVDN
             var modelSet = (CModelList*)((ulong)s_cStreamingAddr + (uint)startOffsetOfCStreaming);
             for (uint i = 0; i < MaxModelListElementCount; i++)
             {
-                uint indexOfModelInfo = modelSet->modelMemberIndices[i];
+                uint indexOfModelInfo = modelSet->ModelMemberIndices[i];
 
                 if (indexOfModelInfo == 0xFFFF)
                 {
@@ -3145,7 +3145,7 @@ namespace SHVDN
                 return false;
             }
 
-            return pedPersonalityAddress->isMale;
+            return pedPersonalityAddress->IsMale;
         }
         public static bool IsModelAFemalePed(int modelHash)
         {
@@ -3156,7 +3156,7 @@ namespace SHVDN
                 return false;
             }
 
-            return !pedPersonalityAddress->isMale;
+            return !pedPersonalityAddress->IsMale;
         }
         public static bool IsModelHumanPed(int modelHash)
         {
@@ -3167,7 +3167,7 @@ namespace SHVDN
                 return false;
             }
 
-            return pedPersonalityAddress->isHuman;
+            return pedPersonalityAddress->IsHuman;
         }
         public static bool IsModelAnAnimalPed(int modelHash)
         {
@@ -3178,7 +3178,7 @@ namespace SHVDN
                 return false;
             }
 
-            return !pedPersonalityAddress->isHuman;
+            return !pedPersonalityAddress->IsHuman;
         }
         public static bool IsModelAGangPed(int modelHash)
         {
@@ -3189,7 +3189,7 @@ namespace SHVDN
                 return false;
             }
 
-            return pedPersonalityAddress->isGang;
+            return pedPersonalityAddress->IsGang;
         }
 
         #endregion
@@ -3300,9 +3300,9 @@ namespace SHVDN
 
             private int[] GetGuidHandlesFromFwBasePool(FwScriptGuidPool* fwScriptGuidPool, FwBasePool* fwBasePool)
             {
-                var resultList = new List<int>(fwBasePool->itemCount);
+                var resultList = new List<int>(fwBasePool->ItemCount);
 
-                uint fwBasePoolSize = fwBasePool->size;
+                uint fwBasePoolSize = fwBasePool->Size;
                 for (uint i = 0; i < fwBasePoolSize; i++)
                 {
                     if (fwScriptGuidPool->IsFull())
@@ -3336,9 +3336,9 @@ namespace SHVDN
 
             private int[] GetGuidHandlesFromRageSysMemPoolAllocator(FwScriptGuidPool* fwScriptGuidPool, RageSysMemPoolAllocator* poolAllocator)
             {
-                var resultList = new List<int>((int)poolAllocator->itemCount);
+                var resultList = new List<int>((int)poolAllocator->ItemCount);
 
-                uint poolSize = poolAllocator->size;
+                uint poolSize = poolAllocator->Size;
                 for (uint i = 0; i < poolSize; i++)
                 {
                     if (fwScriptGuidPool->IsFull())
@@ -3472,7 +3472,7 @@ namespace SHVDN
             }
 
             RageSysMemPoolAllocator* pool = *(RageSysMemPoolAllocator**)(*s_vehiclePoolAddress);
-            return (int)pool->itemCount;
+            return (int)pool->ItemCount;
         }
 
         public static int GetPedCount() => s_pedPoolAddress != null ? GetFwBasePoolCount(*s_pedPoolAddress) : 0;
@@ -3487,7 +3487,7 @@ namespace SHVDN
         private static int GetFwBasePoolCount(ulong address)
         {
             var pool = (FwBasePool*)(address);
-            return (int)pool->itemCount;
+            return (int)pool->ItemCount;
         }
 
         public static int GetVehicleCapacity()
@@ -3498,7 +3498,7 @@ namespace SHVDN
             }
 
             RageSysMemPoolAllocator* pool = *(RageSysMemPoolAllocator**)(*s_vehiclePoolAddress);
-            return (int)pool->size;
+            return (int)pool->Size;
         }
         public static int GetPedCapacity() => s_pedPoolAddress != null ? GetFwBasePoolCapacity(*s_pedPoolAddress) : 0;
         public static int GetObjectCapacity() => s_objectPoolAddress != null ? GetFwBasePoolCapacity(*s_objectPoolAddress) : 0;
@@ -3513,7 +3513,7 @@ namespace SHVDN
         private static int GetFwBasePoolCapacity(ulong address)
         {
             var pool = (FwBasePool*)(address);
-            return (int)pool->size;
+            return (int)pool->Size;
         }
 
         public static int[] GetPedHandles(int[] modelHashes = null)
@@ -3806,7 +3806,7 @@ namespace SHVDN
 
             // CInteriorProxy is not a subclass of CEntity and position data is placed at different offset
             var returnHandles = new List<int>();
-            uint poolSize = pool->size;
+            uint poolSize = pool->Size;
             float radiusSquared = radius * radius;
             for (uint i = 0; i < poolSize; i++)
             {
@@ -3842,8 +3842,8 @@ namespace SHVDN
         {
             var pool = (FwBasePool*)poolAddress;
 
-            var returnHandles = new List<int>(pool->itemCount);
-            uint poolSize = pool->size;
+            var returnHandles = new List<int>(pool->ItemCount);
+            uint poolSize = pool->Size;
             for (uint i = 0; i < poolSize; i++)
             {
                 if (pool->IsValid(i))
@@ -3860,7 +3860,7 @@ namespace SHVDN
             var pool = (FwBasePool*)poolAddress;
 
             var returnHandles = new List<int>();
-            uint poolSize = pool->size;
+            uint poolSize = pool->Size;
             float radiusSquared = radius * radius;
             float* entityPosition = stackalloc float[4];
             for (uint i = 0; i < poolSize; i++)
@@ -4419,7 +4419,7 @@ namespace SHVDN
                     return Array.Empty<int>();
                 }
 
-                ushort pathNodeLinkStartId = pathNode->startIndexOfLinks;
+                ushort pathNodeLinkStartId = pathNode->StartIndexOfLinks;
                 int pathNodeLinkCount = pathNode->LinkCount;
 
                 int[] result = new int[pathNodeLinkCount];
@@ -4767,14 +4767,14 @@ namespace SHVDN
 
                 List<int> handles = new List<int>();
                 CGameScriptResource* firstRegisteredScriptResourceItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
-                for (CGameScriptResource* item = firstRegisteredScriptResourceItem; item != null; item = item->next)
+                for (CGameScriptResource* item = firstRegisteredScriptResourceItem; item != null; item = item->Next)
                 {
-                    if (item->resourceTypeNameIndex != _typeNameIndex)
+                    if (item->ResourceTypeNameIndex != _typeNameIndex)
                     {
                         continue;
                     }
 
-                    handles.Add((int)item->counterOfPool);
+                    handles.Add((int)item->CounterOfPool);
                 }
 
                 if (handles.Count == 0)
@@ -4812,14 +4812,14 @@ namespace SHVDN
                 }
 
                 CGameScriptResource* firstRegisteredScriptResourceItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
-                for (CGameScriptResource* item = firstRegisteredScriptResourceItem; item != null; item = item->next)
+                for (CGameScriptResource* item = firstRegisteredScriptResourceItem; item != null; item = item->Next)
                 {
-                    if (item->counterOfPool != _targetHandle)
+                    if (item->CounterOfPool != _targetHandle)
                     {
                         continue;
                     }
 
-                    _returnAddress = new IntPtr((long)((byte*)(_poolAddress) + item->indexOfPool * _elementSize));
+                    _returnAddress = new IntPtr((long)((byte*)(_poolAddress) + item->IndexOfPool * _elementSize));
                     break;
                 }
             }
@@ -4850,8 +4850,8 @@ namespace SHVDN
 
                 CGameScriptResource* firstItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
                 for (_result = firstItem;
-                    _result != null && (_result->resourceTypeNameIndex != _resourceType || _result->indexOfPool != _targetIndex);
-                    _result = _result->next
+                    _result != null && (_result->ResourceTypeNameIndex != _resourceType || _result->IndexOfPool != _targetIndex);
+                    _result = _result->Next
                     )
                 {
                     ;
@@ -5279,7 +5279,7 @@ namespace SHVDN
                 return null;
             }
 
-            ushort weaponAndAmmoInfoElementCount = s_weaponAndAmmoInfoArrayPtr->size;
+            ushort weaponAndAmmoInfoElementCount = s_weaponAndAmmoInfoArrayPtr->Size;
 
             if (weaponAndAmmoInfoElementCount == 0)
             {
@@ -5292,13 +5292,13 @@ namespace SHVDN
                 int indexToRead = (low + high) >> 1;
                 var weaponOrAmmoInfo = (ItemInfo*)s_weaponAndAmmoInfoArrayPtr->GetElementAddress(indexToRead);
 
-                if (weaponOrAmmoInfo->nameHash == nameHash)
+                if (weaponOrAmmoInfo->NameHash == nameHash)
                 {
                     return weaponOrAmmoInfo;
                 }
 
                 // The array is sorted in ascending order
-                if (weaponOrAmmoInfo->nameHash <= nameHash)
+                if (weaponOrAmmoInfo->NameHash <= nameHash)
                 {
                     low = indexToRead + 1;
                 }
@@ -5349,13 +5349,13 @@ namespace SHVDN
                 int indexToRead = (low + high) >> 1;
                 var weaponComponentInfo = (WeaponComponentInfo*)cWeaponComponentArrayFirstPtr[indexToRead];
 
-                if (weaponComponentInfo->nameHash == nameHash)
+                if (weaponComponentInfo->NameHash == nameHash)
                 {
                     return weaponComponentInfo;
                 }
 
                 // The array is sorted in ascending order
-                if (weaponComponentInfo->nameHash <= nameHash)
+                if (weaponComponentInfo->NameHash <= nameHash)
                 {
                     low = indexToRead + 1;
                 }
@@ -5416,14 +5416,14 @@ namespace SHVDN
                 return new List<uint>();
             }
 
-            ushort weaponAndAmmoInfoElementCount = s_weaponAndAmmoInfoArrayPtr->size;
+            ushort weaponAndAmmoInfoElementCount = s_weaponAndAmmoInfoArrayPtr->Size;
             var resultList = new List<uint>();
 
             for (int i = 0; i < weaponAndAmmoInfoElementCount; i++)
             {
                 var weaponOrAmmoInfo = (ItemInfo*)s_weaponAndAmmoInfoArrayPtr->GetElementAddress(i);
 
-                if (!CanPedEquip(weaponOrAmmoInfo) && !s_disallowWeaponHashSetForHumanPedsOnFoot.Contains(weaponOrAmmoInfo->nameHash))
+                if (!CanPedEquip(weaponOrAmmoInfo) && !s_disallowWeaponHashSetForHumanPedsOnFoot.Contains(weaponOrAmmoInfo->NameHash))
                 {
                     continue;
                 }
@@ -5433,7 +5433,7 @@ namespace SHVDN
                 const uint CWeaponInfoNameHash = 0x861905B4;
                 if (classNameHash == CWeaponInfoNameHash)
                 {
-                    resultList.Add(weaponOrAmmoInfo->nameHash);
+                    resultList.Add(weaponOrAmmoInfo->NameHash);
                 }
             }
 
@@ -5441,7 +5441,7 @@ namespace SHVDN
 
             bool CanPedEquip(ItemInfo* weaponInfoAddress)
             {
-                return weaponInfoAddress->modelHash != 0 && weaponInfoAddress->slot != 0;
+                return weaponInfoAddress->ModelHash != 0 && weaponInfoAddress->Slot != 0;
             }
         }
 
@@ -5517,7 +5517,7 @@ namespace SHVDN
                 return 0xDE4BE9F8;
             }
 
-            return weaponComponentInfo->locNameHash;
+            return weaponComponentInfo->LocNameHash;
         }
 
         #endregion
@@ -5608,13 +5608,13 @@ namespace SHVDN
             }
 
 
-            CrSkeletonData* crSkeletonData = fragInst->gtaFragType->fragDrawable->crSkeletonData;
+            CrSkeletonData* crSkeletonData = fragInst->GtaFragType->FragDrawable->CrSkeletonData;
             if (crSkeletonData == null)
             {
                 return -1;
             }
 
-            ushort boneCount = crSkeletonData->boneCount;
+            ushort boneCount = crSkeletonData->BoneCount;
             if (boneIndex >= boneCount)
             {
                 return -1;
@@ -5626,7 +5626,7 @@ namespace SHVDN
                 return -1;
             }
 
-            byte fragmentGroupCount = fragPhysicsLod->fragmentGroupCount;
+            byte fragmentGroupCount = fragPhysicsLod->FragmentGroupCount;
 
             for (int i = 0; i < fragmentGroupCount; i++)
             {
@@ -5637,7 +5637,7 @@ namespace SHVDN
                     continue;
                 }
 
-                if (boneIndex == crSkeletonData->GetBoneIndexByBoneId(fragTypeChild->boneId))
+                if (boneIndex == crSkeletonData->GetBoneIndexByBoneId(fragTypeChild->BoneId))
                 {
                     return i;
                 }
@@ -5710,13 +5710,13 @@ namespace SHVDN
                 return false;
             }
 
-            FragCacheEntry* fragCache = fragInst->fragCacheEntry;
+            FragCacheEntry* fragCache = fragInst->FragCacheEntry;
             if (fragCache == null)
             {
                 return false;
             }
 
-            CrSkeleton* crSkel = fragCache->crSkeleton;
+            CrSkeleton* crSkel = fragCache->CrSkeleton;
             if (crSkel == null)
             {
                 return false;
@@ -5728,7 +5728,7 @@ namespace SHVDN
         private static int GetFragmentGroupCountOfFragInst(FragInst* fragInst)
         {
             FragPhysicsLod* fragPhysicsLod = fragInst->GetAppropriateFragPhysicsLod();
-            return fragPhysicsLod != null ? fragPhysicsLod->fragmentGroupCount : 0;
+            return fragPhysicsLod != null ? fragPhysicsLod->FragmentGroupCount : 0;
         }
 
 
@@ -5779,7 +5779,7 @@ namespace SHVDN
             ulong pedIntelligenceAddr = *(ulong*)(pedAddress + Ped.PedIntelligenceOffset);
 
             CTask* activeTask = s_getActiveTaskFunc(*(ulong*)((byte*)pedIntelligenceAddr + Ped.CTaskTreePedOffset));
-            if (activeTask != null && activeTask->taskTypeIndex == s_cTaskNmScriptControlTypeIndex)
+            if (activeTask != null && activeTask->TaskTypeIndex == s_cTaskNmScriptControlTypeIndex)
             {
                 return true;
             }
@@ -5805,7 +5805,7 @@ namespace SHVDN
                     continue;
                 }
 
-                if (taskInEvent->taskTypeIndex == s_cTaskNmScriptControlTypeIndex)
+                if (taskInEvent->TaskTypeIndex == s_cTaskNmScriptControlTypeIndex)
                 {
                     return true;
                 }

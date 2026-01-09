@@ -7,10 +7,10 @@ namespace SHVDN
     internal struct CAttacker
     {
         [FieldOffset(0x0)]
-        internal ulong attackerEntityAddress;
+        internal ulong AttackerEntityAddress;
         [FieldOffset(0x8)]
-        internal int weaponHash;
+        internal int WeaponHash;
         [FieldOffset(0xC)]
-        internal int gameTime;
+        internal int GameTime;
     }
 }

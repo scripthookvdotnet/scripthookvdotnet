@@ -8,18 +8,18 @@ namespace SHVDN
         [FieldOffset(0x0)]
         internal ulong* vTable;
         [FieldOffset(0x10)]
-        internal uint nameHash;
+        internal uint NameHash;
         [FieldOffset(0x14)]
-        internal uint modelHash;
+        internal uint ModelHash;
         [FieldOffset(0x18)]
-        internal uint locNameHash;
+        internal uint LocNameHash;
         [FieldOffset(0x1C)]
-        internal uint locDescHash;
+        internal uint LocDescHash;
         [FieldOffset(0x40)]
-        internal bool shownOnWheel;
+        internal bool ShownOnWheel;
         [FieldOffset(0x41)]
-        internal bool createObject;
+        internal bool CreateObject;
         [FieldOffset(0x42)]
-        internal bool applyWeaponTint;
+        internal bool ApplyWeaponTint;
     }
 }

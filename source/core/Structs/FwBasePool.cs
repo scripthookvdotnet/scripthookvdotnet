@@ -22,13 +22,13 @@ namespace SHVDN
     internal struct FwBasePool
     {
         [FieldOffset(0x00)]
-        public ulong poolStartAddress;
+        public ulong PoolStartAddress;
         [FieldOffset(0x08)]
-        public IntPtr byteArray;
+        public IntPtr ByteArray;
         [FieldOffset(0x10)]
-        public uint size;
+        public uint Size;
         [FieldOffset(0x14)]
-        public uint itemSize;
+        public uint ItemSize;
         // The "first" index should be at 0x18 and The "last" index should be at 0x1C in production builds
         // according to the layout in a debug build around v1.0.2699.0, but the "first" and the "last" aren't
         // related to about the order.
@@ -36,7 +36,7 @@ namespace SHVDN
         // by reading as a 4-byte value, applying left shift by 2 and SIGNED right shift (`SAR` in assembly code)
         // by 2, and then return the calculated value.
         [FieldOffset(0x20)]
-        public ushort itemCount;
+        public ushort ItemCount;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsValid(uint index)
@@ -55,7 +55,7 @@ namespace SHVDN
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ulong GetAddress(uint index)
         {
-            return ((Mask(index) & (poolStartAddress + index * itemSize)));
+            return ((Mask(index) & (PoolStartAddress + index * ItemSize)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -73,16 +73,16 @@ namespace SHVDN
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetGuidHandleFromAddress(ulong address)
         {
-            if (address < poolStartAddress || address >= poolStartAddress + size * itemSize)
+            if (address < PoolStartAddress || address >= PoolStartAddress + Size * ItemSize)
             {
                 return 0;
             }
-            ulong offset = address - poolStartAddress;
-            if (offset % itemSize != 0)
+            ulong offset = address - PoolStartAddress;
+            if (offset % ItemSize != 0)
             {
                 return 0;
             }
-            uint indexOfPool = (uint)(offset / itemSize);
+            uint indexOfPool = (uint)(offset / ItemSize);
             return (int)((indexOfPool << 8) + GetCounter(indexOfPool));
         }
 
@@ -91,7 +91,7 @@ namespace SHVDN
         {
             unsafe
             {
-                byte* byteArrayPtr = (byte*)byteArray.ToPointer();
+                byte* byteArrayPtr = (byte*)ByteArray.ToPointer();
                 return (byte)(byteArrayPtr[index] & 0x7F);
             }
         }
@@ -101,7 +101,7 @@ namespace SHVDN
         {
             unsafe
             {
-                byte* byteArrayPtr = (byte*)byteArray.ToPointer();
+                byte* byteArrayPtr = (byte*)ByteArray.ToPointer();
                 long num1 = byteArrayPtr[index] & 0x80;
                 return (ulong)(~((num1 | -num1) >> 63));
             }

@@ -6,6 +6,6 @@ namespace SHVDN
     internal unsafe struct CModelList
     {
         [FieldOffset(0x0)]
-        internal fixed uint modelMemberIndices[0x100];
+        internal fixed uint ModelMemberIndices[0x100];
     }
 }

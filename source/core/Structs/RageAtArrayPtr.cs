@@ -9,17 +9,18 @@ namespace SHVDN
     public unsafe struct RageAtArrayPtr
     {
         [FieldOffset(0x0)]
-        public ulong * data;
+        public ulong * Data;
         [FieldOffset(0x8)]
-        public ushort size;
+        public ushort Size;
         [FieldOffset(0xA)]
-        public ushort capacity;
+        public ushort Capacity;
         // rage::atArray always has 4-byte padding at the end
         [FieldOffset(0xC)]
         private fixed char padding[4];
+
         public ulong GetElementAddress(int i)
         {
-            return data[i];
+            return Data[i];
         }
     }
 }
