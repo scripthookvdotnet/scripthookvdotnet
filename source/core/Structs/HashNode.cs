@@ -5,9 +5,9 @@ namespace SHVDN
     [StructLayout(LayoutKind.Sequential)]
     internal unsafe struct HashNode
     {
-        internal int hash;
-        internal ushort data;
-        internal ushort padding;
-        internal HashNode* next;
+        internal int Hash;
+        internal ushort Data;
+        internal ushort Padding;
+        internal HashNode* Next;
     }
 }

@@ -6,6 +6,6 @@ namespace SHVDN
     internal unsafe struct FragCacheEntry
     {
         [FieldOffset(0x178)]
-        internal CrSkeleton* crSkeleton;
+        internal CrSkeleton* CrSkeleton;
     }
 }

@@ -6,25 +6,25 @@ namespace SHVDN
     internal unsafe struct FragInst
     {
         [FieldOffset(0x68)]
-        internal FragCacheEntry* fragCacheEntry;
+        internal FragCacheEntry* FragCacheEntry;
         [FieldOffset(0x78)]
-        internal GtaFragType* gtaFragType;
+        internal GtaFragType* GtaFragType;
         [FieldOffset(0xB8)]
-        internal uint unkType;
+        internal uint UnkType;
 
         internal FragPhysicsLod* GetAppropriateFragPhysicsLod()
         {
-            FragPhysicsLodGroup* fragPhysicsLodGroup = gtaFragType->fragPhysicsLODGroup;
+            FragPhysicsLodGroup* fragPhysicsLodGroup = GtaFragType->FragPhysicsLODGroup;
             if (fragPhysicsLodGroup == null)
             {
                 return null;
             }
-            switch (unkType)
+            switch (UnkType)
             {
                 case 0:
                 case 1:
                 case 2:
-                    return fragPhysicsLodGroup->GetFragPhysicsLodByIndex((int) unkType);
+                    return fragPhysicsLodGroup->GetFragPhysicsLodByIndex((int)UnkType);
                 default:
                     return fragPhysicsLodGroup->GetFragPhysicsLodByIndex(0);
             }

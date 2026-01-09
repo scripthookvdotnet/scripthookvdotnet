@@ -8,14 +8,14 @@ namespace SHVDN
         [FieldOffset(0x0)]
         internal ulong* vTable;
         [FieldOffset(0x8)]
-        internal CScriptResourceTypeNameIndex resourceTypeNameIndex;
+        internal CScriptResourceTypeNameIndex ResourceTypeNameIndex;
         [FieldOffset(0xC)]
-        internal uint counterOfPool;
+        internal uint CounterOfPool;
         [FieldOffset(0x10)]
-        internal uint indexOfPool;
+        internal uint IndexOfPool;
         [FieldOffset(0x18)]
-        internal CGameScriptResource* next;
+        internal CGameScriptResource* Next;
         [FieldOffset(0x20)]
-        internal CGameScriptResource* prev;
+        internal CGameScriptResource* Prev;
     }
 }

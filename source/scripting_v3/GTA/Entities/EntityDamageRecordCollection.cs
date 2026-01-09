@@ -33,9 +33,9 @@ namespace GTA
                 }
 
                 SHVDN.EntityDamageRecordForReturnValue returnDamageRecord = SHVDN.NativeMemory.GetEntityDamageRecordEntryAtIndex(_owner.MemoryAddress, i);
-                Entity attackerEntity = returnDamageRecord.attackerEntityHandle != 0 ? Entity.FromHandle(returnDamageRecord.attackerEntityHandle) : null;
+                Entity attackerEntity = returnDamageRecord.AttackerEntityHandle != 0 ? Entity.FromHandle(returnDamageRecord.AttackerEntityHandle) : null;
 
-                yield return new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)returnDamageRecord.weaponHash, returnDamageRecord.gameTime);
+                yield return new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)returnDamageRecord.WeaponHash, returnDamageRecord.GameTime);
             }
         }
 
@@ -59,8 +59,8 @@ namespace GTA
             for (int i = 0; i < returnDamageRecords.Length; i++)
             {
                 SHVDN.EntityDamageRecordForReturnValue damageRecord = damageEntries[i];
-                Entity attackerEntity = damageRecord.attackerEntityHandle != 0 ? Entity.FromHandle(damageRecord.attackerEntityHandle) : null;
-                returnDamageRecords[i] = new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)damageRecord.weaponHash, damageRecord.gameTime);
+                Entity attackerEntity = damageRecord.AttackerEntityHandle != 0 ? Entity.FromHandle(damageRecord.AttackerEntityHandle) : null;
+                returnDamageRecords[i] = new EntityDamageRecord(_owner, attackerEntity, (WeaponHash)damageRecord.WeaponHash, damageRecord.GameTime);
             }
 
             return returnDamageRecords;

@@ -18,7 +18,7 @@ namespace SHVDN
         [FieldOffset(0x14)]
         internal uint StreetNameHash;
         [FieldOffset(0x1A)]
-        internal ushort startIndexOfLinks;
+        internal ushort StartIndexOfLinks;
         // These 2 fields should be multiplied by 4 when you convert back to float
         [FieldOffset(0x1C)]
         internal short PositionX;

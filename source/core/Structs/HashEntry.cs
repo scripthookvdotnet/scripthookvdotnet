@@ -4,8 +4,8 @@ namespace SHVDN
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     internal unsafe struct HashEntry
     {
-        internal uint hash;
-        internal int data;
-        internal HashEntry* next;
+        internal uint Hash;
+        internal int Data;
+        internal HashEntry* Next;
     }
 }

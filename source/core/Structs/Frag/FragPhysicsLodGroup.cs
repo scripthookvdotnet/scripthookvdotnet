@@ -6,8 +6,8 @@ namespace SHVDN
     internal unsafe struct FragPhysicsLodGroup
     {
         [FieldOffset(0x10)]
-        internal fixed ulong fragPhysicsLODAddresses[3];
+        internal fixed ulong FragPhysicsLODAddresses[3];
 
-        internal FragPhysicsLod* GetFragPhysicsLodByIndex(int index) => (FragPhysicsLod*)((ulong*)fragPhysicsLODAddresses[index]);
+        internal FragPhysicsLod* GetFragPhysicsLodByIndex(int index) => (FragPhysicsLod*)((ulong*)FragPhysicsLODAddresses[index]);
     }
 }

@@ -10,16 +10,16 @@ namespace SHVDN
         // Translation (vector3) is between 0x10 - 0x1C
         // Scale (vector3?) is between 0x20 - 0x2C
         [FieldOffset(0x30)]
-        internal ushort nextSiblingBoneIndex;
+        internal ushort NextSiblingBoneIndex;
         [FieldOffset(0x32)]
-        internal ushort parentBoneIndex;
+        internal ushort ParentBoneIndex;
         [FieldOffset(0x38)]
-        internal IntPtr namePtr;
+        internal IntPtr NamePtr;
         [FieldOffset(0x42)]
-        internal ushort boneIndex;
+        internal ushort BoneIndex;
         [FieldOffset(0x44)]
-        internal ushort boneId;
+        internal ushort BoneId;
 
-        internal string Name => namePtr == default ? null : Marshal.PtrToStringAnsi(namePtr);
+        internal string Name => NamePtr == default ? null : Marshal.PtrToStringAnsi(NamePtr);
     }
 }

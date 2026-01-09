@@ -5,14 +5,15 @@ namespace SHVDN
     [StructLayout(LayoutKind.Sequential)]
     public struct EntityDamageRecordForReturnValue
     {
-        public int attackerEntityHandle;
-        public int weaponHash;
-        public int gameTime;
+        public int AttackerEntityHandle;
+        public int WeaponHash;
+        public int GameTime;
+
         public EntityDamageRecordForReturnValue(int attackerEntityHandle, int weaponHash, int gameTime)
         {
-            this.attackerEntityHandle = attackerEntityHandle;
-            this.weaponHash = weaponHash;
-            this.gameTime = gameTime;
+            AttackerEntityHandle = attackerEntityHandle;
+            WeaponHash = weaponHash;
+            GameTime = gameTime;
         }
     }
 }

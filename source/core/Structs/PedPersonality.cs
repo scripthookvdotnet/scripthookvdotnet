@@ -6,10 +6,10 @@ namespace SHVDN
     internal struct PedPersonality
     {
         [FieldOffset(0x7C)]
-        internal bool isMale;
+        internal bool IsMale;
         [FieldOffset(0x7D)]
-        internal bool isHuman;
+        internal bool IsHuman;
         [FieldOffset(0x7F)]
-        internal bool isGang;
+        internal bool IsGang;
     }
 }

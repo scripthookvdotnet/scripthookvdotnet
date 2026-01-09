@@ -12,20 +12,20 @@ namespace SHVDN
         // Without ScriptHookV, the default value is hardcoded and may be different between different game versions (the value is 300 in b372 and 700 in b2824).
         // The default value (when running without ScriptHookV) can be found by searching the dumped exe or the game memory with "D7 A8 11 73" (0x7311A8D7).
         [FieldOffset(0x10)]
-        internal uint maxCount;
+        internal uint MaxCount;
         [FieldOffset(0x14)]
-        internal int itemSize;
+        internal int ItemSize;
         [FieldOffset(0x18)]
-        internal int firstEmptySlot;
+        internal int FirstEmptySlot;
         [FieldOffset(0x1C)]
-        internal int emptySlots;
+        internal int EmptySlots;
         [FieldOffset(0x20)]
-        internal uint itemCount;
+        internal uint ItemCount;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool IsFull()
         {
-            return maxCount - (itemCount & 0x3FFFFFFF) <= 256;
+            return MaxCount - (ItemCount & 0x3FFFFFFF) <= 256;
         }
     }
 }
