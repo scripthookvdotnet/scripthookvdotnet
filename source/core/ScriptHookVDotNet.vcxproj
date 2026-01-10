@@ -161,7 +161,7 @@
     <CsCompile Include="Enums\Vehicle\VehicleFlags.cs" />
     <CsCompile Include="Enums\Vehicle\VehicleModelInfoFlags.cs" />
     <CsCompile Include="Enums\Vehicle\VehiclePathNodeProperties.cs" />
-    <CsCompile Include="Enums\Vehicle\VehicleStructClassType.cs" />
+    <CsCompile Include="Enums\Vehicle\VehicleType.cs" />
     <CsCompile Include="Structs\WeaponDamageInfo.cs" />
     <CsCompile Include="Structs\CGameScriptResouce.cs" />
     <CsCompile Include="Structs\CModelList.cs" />
