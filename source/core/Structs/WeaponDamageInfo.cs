@@ -4,7 +4,7 @@ namespace SHVDN
 {
     // the size is at least 0x10 in all game versions
     [StructLayout(LayoutKind.Explicit, Size = 0x10)]
-    internal struct CAttacker
+    internal struct WeaponDamageInfo
     {
         [FieldOffset(0x0)]
         public ulong AttackerEntityAddress;
