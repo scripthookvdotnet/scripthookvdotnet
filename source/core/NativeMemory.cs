@@ -1388,7 +1388,7 @@ namespace SHVDN
 
         private static EntityDamageRecordForReturnValue GetEntityDamageRecordEntryAtIndexInternal(ulong cAttackerArrayAddress, uint index)
         {
-            var cAttacker = (CAttacker*)((byte*)cAttackerArrayAddress + index * NativeMemory.ElementSizeOfCAttackerArrayOfEntity);
+            var cAttacker = (WeaponDamageInfo*)((byte*)cAttackerArrayAddress + index * NativeMemory.ElementSizeOfCAttackerArrayOfEntity);
 
             ulong attackerEntityAddress = cAttacker->AttackerEntityAddress;
             int weaponHash = cAttacker->WeaponHash;

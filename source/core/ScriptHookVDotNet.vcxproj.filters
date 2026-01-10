@@ -50,7 +50,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CsCompile Include="Structs\CAttacker.cs">
+    <CsCompile Include="Structs\WeaponDamageInfo.cs">
       <Filter>Structs</Filter>
     </CsCompile>
     <CsCompile Include="Structs\CGameScriptResouce.cs">
@@ -71,7 +71,7 @@
     <CsCompile Include="Structs\FragCacheEntry.cs">
       <Filter>Structs</Filter>
     </CsCompile>
-	<CsCompile Include="Structs\FVector3.cs">
+    <CsCompile Include="Structs\FVector3.cs">
       <Filter>Structs</Filter>
     </CsCompile>
     <CsCompile Include="Structs\FwBasePool.cs">
@@ -143,7 +143,7 @@
     <CsCompile Include="Structs\Weapon\WeaponComponentPointHeader.cs">
       <Filter>Structs\Weapon</Filter>
     </CsCompile>
-	<CsCompile Include="Structs\ScrWeaponHudStats.cs">
+    <CsCompile Include="Structs\ScrWeaponHudStats.cs">
       <Filter>Structs</Filter>
     </CsCompile>
     <CsCompile Include="Structs\Skeleton\CrBoneData.cs">
