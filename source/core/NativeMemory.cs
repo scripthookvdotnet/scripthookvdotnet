@@ -3274,7 +3274,7 @@ namespace SHVDN
                     return;
                 }
 
-                var fwScriptGuidPool = (FwScriptGuidPool*)(*NativeMemory.s_fwScriptGuidPoolAddress);
+                var fwScriptGuidPool = (FwBasePool*)(*NativeMemory.s_fwScriptGuidPoolAddress);
 
                 switch (_poolType)
                 {
@@ -3298,11 +3298,11 @@ namespace SHVDN
                 }
             }
 
-            private int[] GetGuidHandlesFromFwBasePool(FwScriptGuidPool* fwScriptGuidPool, FwBasePool* fwBasePool)
+            private int[] GetGuidHandlesFromFwBasePool(FwBasePool* fwScriptGuidPool, FwBasePool* fwBasePool)
             {
-                var resultList = new List<int>(fwBasePool->ItemCount);
+                var resultList = new List<int>(fwBasePool->SlotsUsed);
 
-                uint fwBasePoolSize = fwBasePool->Size;
+                uint fwBasePoolSize = fwBasePool->Capacity;
                 for (uint i = 0; i < fwBasePoolSize; i++)
                 {
                     if (fwScriptGuidPool->IsFull())
@@ -3334,7 +3334,7 @@ namespace SHVDN
                 return resultList.ToArray();
             }
 
-            private int[] GetGuidHandlesFromRageSysMemPoolAllocator(FwScriptGuidPool* fwScriptGuidPool, RageSysMemPoolAllocator* poolAllocator)
+            private int[] GetGuidHandlesFromRageSysMemPoolAllocator(FwBasePool* fwScriptGuidPool, RageSysMemPoolAllocator* poolAllocator)
             {
                 var resultList = new List<int>((int)poolAllocator->ItemCount);
 
@@ -3370,7 +3370,7 @@ namespace SHVDN
                 return resultList.ToArray();
             }
 
-            private int[] GetGuidHandlesFromProjectilePool(FwScriptGuidPool* fwScriptGuidPool,
+            private int[] GetGuidHandlesFromProjectilePool(FwBasePool* fwScriptGuidPool,
                 ulong* projectilePool, int itemCount, int maxItemCount, Func<IntPtr, bool> predicate)
             {
                 int projectilesLeft = itemCount;
@@ -3487,7 +3487,7 @@ namespace SHVDN
         private static int GetFwBasePoolCount(ulong address)
         {
             var pool = (FwBasePool*)(address);
-            return (int)pool->ItemCount;
+            return (int)pool->SlotsUsed;
         }
 
         public static int GetVehicleCapacity()
@@ -3513,7 +3513,7 @@ namespace SHVDN
         private static int GetFwBasePoolCapacity(ulong address)
         {
             var pool = (FwBasePool*)(address);
-            return (int)pool->Size;
+            return (int)pool->Capacity;
         }
 
         public static int[] GetPedHandles(int[] modelHashes = null)
@@ -3806,7 +3806,7 @@ namespace SHVDN
 
             // CInteriorProxy is not a subclass of CEntity and position data is placed at different offset
             var returnHandles = new List<int>();
-            uint poolSize = pool->Size;
+            uint poolSize = pool->Capacity;
             float radiusSquared = radius * radius;
             for (uint i = 0; i < poolSize; i++)
             {
@@ -3842,8 +3842,8 @@ namespace SHVDN
         {
             var pool = (FwBasePool*)poolAddress;
 
-            var returnHandles = new List<int>(pool->ItemCount);
-            uint poolSize = pool->Size;
+            var returnHandles = new List<int>(pool->SlotsUsed);
+            uint poolSize = pool->Capacity;
             for (uint i = 0; i < poolSize; i++)
             {
                 if (pool->IsValid(i))
@@ -3860,7 +3860,7 @@ namespace SHVDN
             var pool = (FwBasePool*)poolAddress;
 
             var returnHandles = new List<int>();
-            uint poolSize = pool->Size;
+            uint poolSize = pool->Capacity;
             float radiusSquared = radius * radius;
             float* entityPosition = stackalloc float[4];
             for (uint i = 0; i < poolSize; i++)

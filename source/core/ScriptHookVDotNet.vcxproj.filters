@@ -77,9 +77,6 @@
     <CsCompile Include="Structs\FwBasePool.cs">
       <Filter>Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\FwScriptGuidPool.cs">
-      <Filter>Structs</Filter>
-    </CsCompile>
     <CsCompile Include="Structs\HashEntry.cs">
       <Filter>Structs</Filter>
     </CsCompile>
