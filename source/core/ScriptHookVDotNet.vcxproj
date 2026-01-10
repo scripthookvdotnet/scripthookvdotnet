@@ -155,7 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="Enums\ScriptResourceType.cs" />
-    <CsCompile Include="Enums\EntityTypeInternal.cs" />
+    <CsCompile Include="Enums\EntityType.cs" />
     <CsCompile Include="Enums\ModelInfoClassType.cs" />
     <CsCompile Include="Enums\PoolType.cs" />
     <CsCompile Include="Enums\Vehicle\VehicleFlag1.cs" />

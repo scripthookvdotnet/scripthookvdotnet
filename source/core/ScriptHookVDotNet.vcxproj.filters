@@ -167,7 +167,7 @@
     <CsCompile Include="Enums\ScriptResourceType.cs">
       <Filter>Enums</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\EntityTypeInternal.cs">
+    <CsCompile Include="Enums\EntityType.cs">
       <Filter>Enums</Filter>
     </CsCompile>
     <CsCompile Include="Enums\ModelInfoClassType.cs">
