@@ -460,7 +460,7 @@ namespace GTA
                     }
 
                     ulong itemAddress = weaponInventoryArray->GetElementAddress(index);
-                    SHVDN.ItemInfo* weaponInfo = *(SHVDN.ItemInfo**)(itemAddress + 0x8);
+                    SHVDN.CItemInfo* weaponInfo = *(SHVDN.CItemInfo**)(itemAddress + 0x8);
                     if (weaponInfo == null)
                     {
                         return null;

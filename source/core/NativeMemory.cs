@@ -2696,7 +2696,7 @@ namespace SHVDN
                 for (int i = 0; i < weaponInventoryCount; i++)
                 {
                     ulong itemAddress = weaponInventoryArray->GetElementAddress(i);
-                    ItemInfo* weaponInfo = *(ItemInfo**)(itemAddress + 0x8);
+                    CItemInfo* weaponInfo = *(CItemInfo**)(itemAddress + 0x8);
                     if (weaponInfo != null)
                     {
                         result.Add(weaponInfo->NameHash);
@@ -2731,7 +2731,7 @@ namespace SHVDN
                         ulong currentItem = weaponInventoryArray->GetElementAddress(indexToRead);
 
                         uint slotHashOfCurrentItem = *(uint*)(currentItem);
-                        ItemInfo* weaponInfo = *(ItemInfo**)(currentItem + 0x8);
+                        CItemInfo* weaponInfo = *(CItemInfo**)(currentItem + 0x8);
                         if (slotHashOfCurrentItem == slotHash && weaponInfo != null)
                         {
                             weaponHash = weaponInfo->NameHash;
@@ -5272,7 +5272,7 @@ namespace SHVDN
 
         private static int s_weaponInfoHumanNameHashOffset;
 
-        private static ItemInfo* FindItemInfoFromWeaponAndAmmoInfoArray(uint nameHash)
+        private static CItemInfo* FindItemInfoFromWeaponAndAmmoInfoArray(uint nameHash)
         {
             if (s_weaponAndAmmoInfoArrayPtr == null)
             {
@@ -5290,7 +5290,7 @@ namespace SHVDN
             while (true)
             {
                 int indexToRead = (low + high) >> 1;
-                var weaponOrAmmoInfo = (ItemInfo*)s_weaponAndAmmoInfoArrayPtr->GetElementAddress(indexToRead);
+                var weaponOrAmmoInfo = (CItemInfo*)s_weaponAndAmmoInfoArrayPtr->GetElementAddress(indexToRead);
 
                 if (weaponOrAmmoInfo->NameHash == nameHash)
                 {
@@ -5314,9 +5314,9 @@ namespace SHVDN
             }
         }
 
-        private static ItemInfo* FindWeaponInfo(uint nameHash)
+        private static CItemInfo* FindWeaponInfo(uint nameHash)
         {
-            ItemInfo* itemInfoPtr = FindItemInfoFromWeaponAndAmmoInfoArray(nameHash);
+            CItemInfo* itemInfoPtr = FindItemInfoFromWeaponAndAmmoInfoArray(nameHash);
 
             if (itemInfoPtr == null)
             {
@@ -5375,7 +5375,7 @@ namespace SHVDN
 
         public static uint GetAttachmentPointHash(uint weaponHash, uint componentHash)
         {
-            ItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
+            CItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
 
             if (weaponInfo == null)
             {
@@ -5421,7 +5421,7 @@ namespace SHVDN
 
             for (int i = 0; i < weaponAndAmmoInfoElementCount; i++)
             {
-                var weaponOrAmmoInfo = (ItemInfo*)s_weaponAndAmmoInfoArrayPtr->GetElementAddress(i);
+                var weaponOrAmmoInfo = (CItemInfo*)s_weaponAndAmmoInfoArrayPtr->GetElementAddress(i);
 
                 if (!CanPedEquip(weaponOrAmmoInfo) && !s_disallowWeaponHashSetForHumanPedsOnFoot.Contains(weaponOrAmmoInfo->NameHash))
                 {
@@ -5439,7 +5439,7 @@ namespace SHVDN
 
             return resultList;
 
-            bool CanPedEquip(ItemInfo* weaponInfoAddress)
+            bool CanPedEquip(CItemInfo* weaponInfoAddress)
             {
                 return weaponInfoAddress->ModelHash != 0 && weaponInfoAddress->Slot != 0;
             }
@@ -5463,7 +5463,7 @@ namespace SHVDN
 
         public static List<uint> GetAllCompatibleWeaponComponentHashes(uint weaponHash)
         {
-            ItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
+            CItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
 
             if (weaponInfo == null)
             {
@@ -5496,7 +5496,7 @@ namespace SHVDN
 
         public static uint GetHumanNameHashOfWeaponInfo(uint weaponHash)
         {
-            ItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
+            CItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
 
             if (weaponInfo == null)
                 // hashed value of WT_INVALID
