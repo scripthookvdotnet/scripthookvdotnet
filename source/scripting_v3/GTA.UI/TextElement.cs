@@ -244,7 +244,7 @@ namespace GTA.UI
         /// <value>
         ///   <see langword="true" /> if centered; otherwise, <see langword="false" />.
         /// </value>
-        [Obsolete("`TextElement.Alignment` is obsolete because it is redundant and setting the property to false is " +
+        [Obsolete("`TextElement.Centered` is obsolete because it is redundant and setting the property to false is " +
             "confusing. Use `TextElement.Alignment` instead."), EditorBrowsable(EditorBrowsableState.Never)]
         public bool Centered
         {
