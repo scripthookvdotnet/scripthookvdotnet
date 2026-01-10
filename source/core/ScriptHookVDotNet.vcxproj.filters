@@ -137,7 +137,7 @@
     <CsCompile Include="Structs\Weapon\WeaponComponentInfo.cs">
       <Filter>Structs\Weapon</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Weapon\WeaponComponentPointHeader.cs">
+    <CsCompile Include="Structs\Weapon\WeaponComponentPoint.cs">
       <Filter>Structs\Weapon</Filter>
     </CsCompile>
     <CsCompile Include="Structs\ScrWeaponHudStats.cs">

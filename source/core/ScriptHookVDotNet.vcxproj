@@ -192,7 +192,7 @@
     <CsCompile Include="Structs\Skeleton\CrSkeleton.cs" />
     <CsCompile Include="Structs\Skeleton\CrSkeletonData.cs" />
     <CsCompile Include="Structs\Weapon\WeaponComponentInfo.cs" />
-    <CsCompile Include="Structs\Weapon\WeaponComponentPointHeader.cs" />
+    <CsCompile Include="Structs\Weapon\WeaponComponentPoint.cs" />
     <CsCompile Include="Structs\Ysc\YscScriptHeader.cs" />
     <CsCompile Include="Structs\Ysc\YscScriptTable.cs" />
     <CsCompile Include="Structs\Ysc\YscScriptTableItem.cs" />
