@@ -1148,7 +1148,7 @@ namespace SHVDN
                 return null;
             }
 
-            return fragCacheEntry->CrSkeleton;
+            return fragCacheEntry->InitialSkeleton;
         }
 
         public static int GetBoneIdForEntityBoneIndex(int entityHandle, int boneIndex)
@@ -5716,7 +5716,7 @@ namespace SHVDN
                 return false;
             }
 
-            CrSkeleton* crSkel = fragCache->CrSkeleton;
+            CrSkeleton* crSkel = fragCache->InitialSkeleton;
             if (crSkel == null)
             {
                 return false;
