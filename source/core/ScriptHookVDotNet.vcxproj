@@ -176,7 +176,6 @@
     <CsCompile Include="Structs\Frag\FragTypeChild.cs" />
     <CsCompile Include="Structs\Frag\GtaFragType.cs" />
     <CsCompile Include="Structs\FwBasePool.cs" />
-    <CsCompile Include="Structs\FwScriptGuidPool.cs" />
     <CsCompile Include="Structs\HashEntry.cs" />
     <CsCompile Include="Structs\HashNode.cs" />
     <CsCompile Include="Structs\ItemInfo.cs" />

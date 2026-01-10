@@ -22,25 +22,36 @@ namespace SHVDN
     internal struct FwBasePool
     {
         [FieldOffset(0x00)]
-        public ulong PoolStartAddress;
+        public ulong PoolAddress;
 
         [FieldOffset(0x08)]
-        public IntPtr ByteArray;
+        public IntPtr Flags;
 
+        // The max count value should be at least 3072 as long as ScriptHookV is installed.
+        // Without ScriptHookV, the default value is hardcoded and may be different between different game versions (the value is 300 in b372 and 700 in b2824).
+        // The default value (when running without ScriptHookV) can be found by searching the dumped exe or the game memory with "D7 A8 11 73" (0x7311A8D7).
         [FieldOffset(0x10)]
-        public uint Size;
+        public uint Capacity;
 
         [FieldOffset(0x14)]
-        public uint ItemSize;
+        public uint SlotSize;
 
-        // The "first" index should be at 0x18 and The "last" index should be at 0x1C in production builds
-        // according to the layout in a debug build around v1.0.2699.0, but the "first" and the "last" aren't
-        // related to about the order.
-        // WARNING: according to `rage::fwBasePoolTracker::GetNoOfUsedSpaces`, this field is supposed to be read
-        // by reading as a 4-byte value, applying left shift by 2 and SIGNED right shift (`SAR` in assembly code)
-        // by 2, and then return the calculated value.
+        [FieldOffset(0x18)]
+        public int FirstEmptySlot;
+
+        [FieldOffset(0x1C)]
+        public int LastEmptySlot;
+
         [FieldOffset(0x20)]
-        public ushort ItemCount;
+        private ushort _slotsUsedAndFlags;
+
+        public int SlotsUsed => _slotsUsedAndFlags & 0x3FFFFFFF;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsFull()
+        {
+            return Capacity - SlotsUsed <= 256;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsValid(uint index)
@@ -59,7 +70,7 @@ namespace SHVDN
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ulong GetAddress(uint index)
         {
-            return ((Mask(index) & (PoolStartAddress + index * ItemSize)));
+            return ((Mask(index) & (PoolAddress + index * SlotSize)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -77,16 +88,19 @@ namespace SHVDN
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public int GetGuidHandleFromAddress(ulong address)
         {
-            if (address < PoolStartAddress || address >= PoolStartAddress + Size * ItemSize)
+            if (address < PoolAddress || address >= PoolAddress + Capacity * SlotSize)
             {
                 return 0;
             }
-            ulong offset = address - PoolStartAddress;
-            if (offset % ItemSize != 0)
+
+            ulong offset = address - PoolAddress;
+
+            if (offset % SlotSize != 0)
             {
                 return 0;
             }
-            uint indexOfPool = (uint)(offset / ItemSize);
+
+            uint indexOfPool = (uint)(offset / SlotSize);
             return (int)((indexOfPool << 8) + GetCounter(indexOfPool));
         }
 
@@ -95,8 +109,8 @@ namespace SHVDN
         {
             unsafe
             {
-                byte* byteArrayPtr = (byte*)ByteArray.ToPointer();
-                return (byte)(byteArrayPtr[index] & 0x7F);
+                byte* flagsPtr = (byte*)Flags.ToPointer();
+                return (byte)(flagsPtr[index] & 0x7F);
             }
         }
 
@@ -105,8 +119,9 @@ namespace SHVDN
         {
             unsafe
             {
-                byte* byteArrayPtr = (byte*)ByteArray.ToPointer();
-                long num1 = byteArrayPtr[index] & 0x80;
+                byte* flagsPtr = (byte*)Flags.ToPointer();
+                long num1 = flagsPtr[index] & 0x80;
+
                 return (ulong)(~((num1 | -num1) >> 63));
             }
         }
