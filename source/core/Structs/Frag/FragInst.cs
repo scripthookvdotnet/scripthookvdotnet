@@ -12,7 +12,7 @@ namespace SHVDN
         public GtaFragType* GtaFragType;
 
         [FieldOffset(0xB8)]
-        public uint UnkType;
+        public uint Guid;
 
         public FragPhysicsLod* GetAppropriateFragPhysicsLod()
         {
@@ -21,12 +21,12 @@ namespace SHVDN
             {
                 return null;
             }
-            switch (UnkType)
+            switch (Guid)
             {
                 case 0:
                 case 1:
                 case 2:
-                    return fragPhysicsLodGroup->GetFragPhysicsLodByIndex((int)UnkType);
+                    return fragPhysicsLodGroup->GetFragPhysicsLodByIndex((int)Guid);
                 default:
                     return fragPhysicsLodGroup->GetFragPhysicsLodByIndex(0);
             }
