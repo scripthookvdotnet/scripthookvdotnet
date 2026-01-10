@@ -4747,11 +4747,11 @@ namespace SHVDN
         internal sealed class GetAllCScriptResourceHandlesTask : IScriptTask
         {
             #region Fields
-            internal CScriptResourceTypeNameIndex _typeNameIndex;
+            internal ScriptResourceType _typeNameIndex;
             internal int[] _returnHandles = Array.Empty<int>();
             #endregion
 
-            internal GetAllCScriptResourceHandlesTask(CScriptResourceTypeNameIndex typeNameIndex)
+            internal GetAllCScriptResourceHandlesTask(ScriptResourceType typeNameIndex)
             {
                 this._typeNameIndex = typeNameIndex;
             }
@@ -4828,12 +4828,12 @@ namespace SHVDN
         internal sealed class GetCScriptResourceByIndexTask : IScriptTask
         {
             #region Fields
-            internal CScriptResourceTypeNameIndex _resourceType;
+            internal ScriptResourceType _resourceType;
             internal uint _targetIndex;
             internal CGameScriptResource* _result;
             #endregion
 
-            internal GetCScriptResourceByIndexTask(CScriptResourceTypeNameIndex resourceType, uint index)
+            internal GetCScriptResourceByIndexTask(ScriptResourceType resourceType, uint index)
             {
                 this._resourceType = resourceType;
                 this._targetIndex = index;
@@ -4871,7 +4871,7 @@ namespace SHVDN
 
         public static int[] GetCheckpointHandles()
         {
-            var task = new GetAllCScriptResourceHandlesTask(CScriptResourceTypeNameIndex.Checkpoint);
+            var task = new GetAllCScriptResourceHandlesTask(ScriptResourceType.Checkpoint);
 
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
@@ -4899,7 +4899,7 @@ namespace SHVDN
                 return false;
             }
 
-            var task = new GetCScriptResourceByIndexTask(CScriptResourceTypeNameIndex.ScaleformMovie, handle);
+            var task = new GetCScriptResourceByIndexTask(ScriptResourceType.ScaleformMovie, handle);
 
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
