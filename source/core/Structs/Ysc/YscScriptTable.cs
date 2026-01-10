@@ -6,11 +6,11 @@ namespace SHVDN
     internal unsafe struct YscScriptTable
     {
         [FieldOffset(0x0)]
-        internal YscScriptTableItem* TablePtr;
+        public YscScriptTableItem* TablePtr;
         [FieldOffset(0x18)]
-        internal uint Count;
+        public uint Count;
 
-        internal YscScriptTableItem* FindScript(int hash)
+        public YscScriptTableItem* FindScript(int hash)
         {
             if (TablePtr == null)
             {
