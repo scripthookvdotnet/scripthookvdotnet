@@ -3,7 +3,7 @@ using System;
 namespace SHVDN
 {
     [Flags]
-    public enum VehicleFlag2 : ulong
+    public enum VehicleModelInfoFlags : ulong
     {
         IsTank = 0x200,
         HasBulletProofGlass = 0x1000,

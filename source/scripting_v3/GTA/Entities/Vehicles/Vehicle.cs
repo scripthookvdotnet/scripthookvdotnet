@@ -75,7 +75,7 @@ namespace GTA
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has bulletproof glass.
         /// </summary>
-        public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag2.HasBulletProofGlass);
+        public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleModelInfoFlags.HasBulletProofGlass);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has Lowrider Hydraulics.
@@ -85,7 +85,7 @@ namespace GTA
         /// </remarks>
         public bool HasLowriderHydraulics
             => Game.FileVersion >= ExeVersionConsts.v1_0_505_2
-            && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag2.HasLowriderHydraulics);
+            && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleModelInfoFlags.HasLowriderHydraulics);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has Donk Hydraulics.
@@ -95,7 +95,7 @@ namespace GTA
         /// </remarks>
         public bool HasDonkHydraulics
             => Game.FileVersion >= ExeVersionConsts.v1_0_505_2
-            && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag2.HasLowriderDonkHydraulics);
+            && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleModelInfoFlags.HasLowriderDonkHydraulics);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has a Parachute.

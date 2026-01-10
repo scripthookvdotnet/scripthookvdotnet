@@ -179,7 +179,7 @@ namespace GTA
         /// <value>
         /// <see langword="true" /> if this <see cref="Model"/> is a donk car; otherwise, <see langword="false" />.
         /// </value>
-        public bool IsDonk => SHVDN.NativeMemory.HasVehicleFlag(Hash, SHVDN.VehicleFlag2.HasLowriderDonkHydraulics);
+        public bool IsDonk => SHVDN.NativeMemory.HasVehicleFlag(Hash, SHVDN.VehicleModelInfoFlags.HasLowriderDonkHydraulics);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Model"/> is an electric vehicle.
@@ -258,7 +258,7 @@ namespace GTA
         /// <value>
         /// <see langword="true" /> if this <see cref="Model"/> is a regular lowrider; otherwise, <see langword="false" />.
         /// </value>
-        public bool IsLowrider => SHVDN.NativeMemory.HasVehicleFlag(Hash, SHVDN.VehicleFlag2.HasLowriderHydraulics);
+        public bool IsLowrider => SHVDN.NativeMemory.HasVehicleFlag(Hash, SHVDN.VehicleModelInfoFlags.HasLowriderHydraulics);
         /// <summary>
         /// Gets a value indicating whether this <see cref="Model"/> is a movable interior loader (also known as MLO or MILO).
         /// </summary>
@@ -343,7 +343,7 @@ namespace GTA
         /// <value>
         /// <see langword="true" /> if this <see cref="Model"/> is a tank; otherwise, <see langword="false" />.
         /// </value>
-        public bool IsTank => SHVDN.NativeMemory.HasVehicleFlag(Hash, SHVDN.VehicleFlag2.IsTank);
+        public bool IsTank => SHVDN.NativeMemory.HasVehicleFlag(Hash, SHVDN.VehicleModelInfoFlags.IsTank);
         /// <summary>
         /// Gets a value indicating whether this <see cref="Model"/> is a train.
         /// </summary>

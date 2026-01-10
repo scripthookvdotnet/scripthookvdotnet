@@ -3071,7 +3071,7 @@ namespace SHVDN
         }
 
         public static bool HasVehicleFlag(int modelHash, VehicleFlag1 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x0);
-        public static bool HasVehicleFlag(int modelHash, VehicleFlag2 flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x8);
+        public static bool HasVehicleFlag(int modelHash, VehicleModelInfoFlags flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x8);
         private static bool HasVehicleFlagInternal(int modelHash, ulong flag, int flagOffset)
         {
             if (Vehicle.FirstVehicleFlagsOffset == 0)
