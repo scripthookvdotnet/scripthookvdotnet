@@ -5401,7 +5401,7 @@ namespace SHVDN
                     uint componentHashInItemArray = *(uint*)(weaponAttachPointElementAddr + j * 0x8);
                     if (componentHashInItemArray == componentHash)
                     {
-                        return ((WeaponComponentPointHeader*)(weaponAttachPointElementStartAddr + i * s_weaponAttachPointElementSize))->AttachBoneHash;
+                        return ((WeaponComponentPoint*)(weaponAttachPointElementStartAddr + i * s_weaponAttachPointElementSize))->AttachBoneHash;
                     }
                 }
             }

@@ -12,7 +12,7 @@ namespace SHVDN
     /// updates (e.g. `<c>m_AttachBoneId</c>` takes 0x5C bytes in b2699 and takes 0x64 bytes in b3095).
     /// </remarks>
     [StructLayout(LayoutKind.Explicit, Size = 0x8)]
-    internal struct WeaponComponentPointHeader
+    internal struct WeaponComponentPoint
     {
         /// <summary>
         /// The attach bone hash for the `<c>m_AttachBone</c>` field, where the type is
