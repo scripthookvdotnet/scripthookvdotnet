@@ -2889,11 +2889,11 @@ namespace SHVDN
             return ModelInfoType.Invalid;
         }
 
-        private static VehicleStructClassType GetVehicleStructClass(IntPtr modelInfoAddress)
+        private static VehicleType GetVehicleStructClass(IntPtr modelInfoAddress)
         {
             if (GetModelInfoType(modelInfoAddress) != ModelInfoType.Vehicle)
             {
-                return VehicleStructClassType.None;
+                return VehicleType.None;
             }
 
             int typeInt = (*(int*)((byte*)modelInfoAddress.ToPointer() + s_vehicleTypeOffsetInModelInfo));
@@ -2905,7 +2905,7 @@ namespace SHVDN
                 typeInt += 2;
             }
 
-            return (VehicleStructClassType)typeInt;
+            return (VehicleType)typeInt;
 
         }
         public static int GetVehicleType(int modelHash)
@@ -3030,27 +3030,27 @@ namespace SHVDN
         public static bool IsModelABlimp(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
-            return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Blimp;
+            return GetVehicleStructClass(modelInfo) == VehicleType.Blimp;
         }
         public static bool IsModelAMotorcycle(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
-            return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Bike;
+            return GetVehicleStructClass(modelInfo) == VehicleType.Bike;
         }
         public static bool IsModelASubmarine(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
-            return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Submarine;
+            return GetVehicleStructClass(modelInfo) == VehicleType.Submarine;
         }
         public static bool IsModelASubmarineCar(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
-            return GetVehicleStructClass(modelInfo) == VehicleStructClassType.SubmarineCar;
+            return GetVehicleStructClass(modelInfo) == VehicleType.SubmarineCar;
         }
         public static bool IsModelATrailer(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
-            return GetVehicleStructClass(modelInfo) == VehicleStructClassType.Trailer;
+            return GetVehicleStructClass(modelInfo) == VehicleType.Trailer;
         }
         public static bool IsModelAMlo(int modelHash)
         {

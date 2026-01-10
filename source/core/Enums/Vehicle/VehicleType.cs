@@ -1,6 +1,6 @@
 namespace SHVDN
 {
-    internal enum VehicleStructClassType
+    internal enum VehicleType
     {
         None = -1,
         Automobile = 0x0,
