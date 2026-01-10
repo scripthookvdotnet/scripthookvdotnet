@@ -9,7 +9,7 @@ namespace SHVDN
         public ulong* vTable;
 
         [FieldOffset(0x8)]
-        public CScriptResourceTypeNameIndex ResourceTypeNameIndex;
+        public ScriptResourceType ResourceTypeNameIndex;
 
         [FieldOffset(0xC)]
         public uint CounterOfPool;

@@ -154,7 +154,7 @@
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
   </ItemGroup>
   <ItemGroup>
-    <CsCompile Include="Enums\CScriptResourceTypeNameIndex.cs" />
+    <CsCompile Include="Enums\ScriptResourceType.cs" />
     <CsCompile Include="Enums\EntityTypeInternal.cs" />
     <CsCompile Include="Enums\ModelInfoClassType.cs" />
     <CsCompile Include="Enums\PoolType.cs" />

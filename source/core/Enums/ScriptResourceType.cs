@@ -1,6 +1,6 @@
 namespace SHVDN
 {
-    internal enum CScriptResourceTypeNameIndex : ushort
+    internal enum ScriptResourceType : ushort
     {
         Checkpoint = 6,
         RelGroup = 20,
