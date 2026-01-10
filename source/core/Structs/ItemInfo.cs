@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace SHVDN
 {
     [StructLayout(LayoutKind.Explicit, Size = 0x20)]
-    public unsafe struct ItemInfo
+    public unsafe struct CItemInfo
     {
         [FieldOffset(0x0)]
         public ulong* vTable;
