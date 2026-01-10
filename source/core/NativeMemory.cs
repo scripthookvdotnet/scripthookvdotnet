@@ -4284,7 +4284,7 @@ namespace SHVDN
                     for (uint i = 0; i < MaxCPathRegionCount; i++)
                     {
                         CPathRegion* pathRegion = GetCPathRegion(i);
-                        if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
+                        if (pathRegion == null || pathRegion->IsNodeArrValid)
                         {
                             continue;
                         }
@@ -4311,7 +4311,7 @@ namespace SHVDN
                 foreach (uint areaId in GetAreaIdsInRange(x, y, radius))
                 {
                     CPathRegion* pathRegion = GetCPathRegion(areaId);
-                    if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
+                    if (pathRegion == null || pathRegion->IsNodeArrValid)
                     {
                         continue;
                     }
@@ -4340,7 +4340,7 @@ namespace SHVDN
                 foreach (uint areaId in GetAreaIdsInRange(x, y, radius))
                 {
                     CPathRegion* pathRegion = GetCPathRegion(areaId);
-                    if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
+                    if (pathRegion == null || pathRegion->IsNodeArrValid)
                     {
                         continue;
                     }
@@ -4381,7 +4381,7 @@ namespace SHVDN
                 foreach (uint areaId in GetAreaIdsInArea(minX, minY, maxX, maxY))
                 {
                     CPathRegion* pathRegion = GetCPathRegion(areaId);
-                    if (pathRegion == null || pathRegion->NodeArrayPtr == IntPtr.Zero)
+                    if (pathRegion == null || pathRegion->IsNodeArrValid)
                     {
                         continue;
                     }

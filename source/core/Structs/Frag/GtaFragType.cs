@@ -6,8 +6,8 @@ namespace SHVDN
     internal unsafe struct GtaFragType
     {
         [FieldOffset(0x30)]
-        internal FragDrawable* FragDrawable;
+        public FragDrawable* FragDrawable;
         [FieldOffset(0xF0)]
-        internal FragPhysicsLodGroup* FragPhysicsLODGroup;
+        public FragPhysicsLodGroup* FragPhysicsLODGroup;
     }
 }

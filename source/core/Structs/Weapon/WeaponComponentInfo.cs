@@ -6,20 +6,20 @@ namespace SHVDN
     internal unsafe struct WeaponComponentInfo
     {
         [FieldOffset(0x0)]
-        internal ulong* vTable;
+        public ulong* vTable;
         [FieldOffset(0x10)]
-        internal uint NameHash;
+        public uint NameHash;
         [FieldOffset(0x14)]
-        internal uint ModelHash;
+        public uint ModelHash;
         [FieldOffset(0x18)]
-        internal uint LocNameHash;
+        public uint LocNameHash;
         [FieldOffset(0x1C)]
-        internal uint LocDescHash;
+        public uint LocDescHash;
         [FieldOffset(0x40)]
-        internal bool ShownOnWheel;
+        public bool ShownOnWheel;
         [FieldOffset(0x41)]
-        internal bool CreateObject;
+        public bool CreateObject;
         [FieldOffset(0x42)]
-        internal bool ApplyWeaponTint;
+        public bool ApplyWeaponTint;
     }
 }

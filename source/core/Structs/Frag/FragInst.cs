@@ -6,13 +6,13 @@ namespace SHVDN
     internal unsafe struct FragInst
     {
         [FieldOffset(0x68)]
-        internal FragCacheEntry* FragCacheEntry;
+        public FragCacheEntry* FragCacheEntry;
         [FieldOffset(0x78)]
-        internal GtaFragType* GtaFragType;
+        public GtaFragType* GtaFragType;
         [FieldOffset(0xB8)]
-        internal uint UnkType;
+        public uint UnkType;
 
-        internal FragPhysicsLod* GetAppropriateFragPhysicsLod()
+        public FragPhysicsLod* GetAppropriateFragPhysicsLod()
         {
             FragPhysicsLodGroup* fragPhysicsLodGroup = GtaFragType->FragPhysicsLODGroup;
             if (fragPhysicsLodGroup == null)

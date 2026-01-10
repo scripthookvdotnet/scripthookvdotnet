@@ -7,18 +7,18 @@ namespace SHVDN
     internal unsafe struct CrSkeleton
     {
         [FieldOffset(0x00)]
-        internal CrSkeletonData* SkeletonData;
+        public CrSkeletonData* SkeletonData;
         // this field has a pointer to one matrix, not a pointer to an array of matrices for all bones
         [FieldOffset(0x8)]
-        internal ulong BoneTransformMatrixPtr;
+        public ulong BoneTransformMatrixPtr;
         // object matrices (entity-local space)
         [FieldOffset(0x10)]
-        internal ulong BoneObjectMatrixArrayPtr;
+        public ulong BoneObjectMatrixArrayPtr;
         // global matrices (world space)
         [FieldOffset(0x18)]
-        internal ulong BoneGlobalMatrixArrayPtr;
+        public ulong BoneGlobalMatrixArrayPtr;
         [FieldOffset(0x20)]
-        internal int BoneCount;
+        public int BoneCount;
 
         public IntPtr GetTransformMatrixAddress()
         {

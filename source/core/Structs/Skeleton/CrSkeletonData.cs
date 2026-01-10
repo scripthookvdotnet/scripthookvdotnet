@@ -6,11 +6,11 @@ namespace SHVDN
     internal unsafe struct CrSkeletonData
     {
         [FieldOffset(0x10)]
-        internal PgHashMap BoneHashMap;
+        public PgHashMap BoneHashMap;
         [FieldOffset(0x20)]
-        internal CrBoneData* BoneData;
+        public CrBoneData* BoneData;
         [FieldOffset(0x5E)]
-        internal ushort BoneCount;
+        public ushort BoneCount;
 
         /// <summary>
         /// Gets the bone index from specified bone id. Note that bone indexes are sequential values and bone ids are not sequential ones.
@@ -43,7 +43,7 @@ namespace SHVDN
         /// <summary>
         /// Gets the bone id from specified bone index. Note that bone indexes are sequential values and bone ids are not sequential ones.
         /// </summary>
-        internal int GetBoneIdByIndex(int boneIndex)
+        public int GetBoneIdByIndex(int boneIndex)
         {
             if (boneIndex < 0 || boneIndex >= BoneCount)
             {
@@ -56,7 +56,7 @@ namespace SHVDN
         /// <summary>
         /// Gets the next sibling bone index of specified bone index.
         /// </summary>
-        internal void GetNextSiblingBoneIndexAndId(int boneIndex, out int nextSiblingBoneIndex, out int nextSiblingBoneId)
+        public void GetNextSiblingBoneIndexAndId(int boneIndex, out int nextSiblingBoneIndex, out int nextSiblingBoneId)
         {
             if (boneIndex < 0 || boneIndex >= BoneCount)
             {
@@ -89,7 +89,7 @@ namespace SHVDN
         /// <summary>
         /// Gets the next parent bone index of specified bone index.
         /// </summary>
-        internal void GetParentBoneIndexAndId(int boneIndex, out int parentBoneIndex, out int parentBoneId)
+        public void GetParentBoneIndexAndId(int boneIndex, out int parentBoneIndex, out int parentBoneId)
         {
             if (boneIndex < 0 || boneIndex >= BoneCount)
             {
@@ -122,7 +122,7 @@ namespace SHVDN
         /// <summary>
         /// Gets the bone name string from specified bone index.
         /// </summary>
-        internal string GetBoneName(int boneIndex)
+        public string GetBoneName(int boneIndex)
         {
             if (boneIndex < 0 || boneIndex >= BoneCount)
             {

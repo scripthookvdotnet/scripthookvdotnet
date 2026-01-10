@@ -7,31 +7,31 @@ namespace SHVDN
     internal unsafe struct YscScriptHeader
     {
         [FieldOffset(0x10)]
-        internal byte** CodeBlocksOffset;
+        public byte** CodeBlocksOffset;
         [FieldOffset(0x1C)]
-        internal int CodeLength;
+        public int CodeLength;
         [FieldOffset(0x24)]
-        internal int LocalCount;
+        public int LocalCount;
         [FieldOffset(0x2C)]
-        internal int NativeCount;
+        public int NativeCount;
         [FieldOffset(0x30)]
-        internal long* LocalOffset;
+        public long* LocalOffset;
         [FieldOffset(0x40)]
-        internal long* NativeOffset;
+        public long* NativeOffset;
         [FieldOffset(0x58)]
-        internal int NameHash;
+        public int NameHash;
 
-        internal int CodePageCount()
+        public int CodePageCount()
         {
             return (CodeLength + 0x3FFF) >> 14;
         }
 
-        internal int GetCodePageSize(int page)
+        public int GetCodePageSize(int page)
         {
             return (page < 0 || page >= CodePageCount() ? 0 : (page == CodePageCount() - 1) ? CodeLength & 0x3FFF : 0x4000);
         }
 
-        internal IntPtr GetCodePageAddress(int page)
+        public IntPtr GetCodePageAddress(int page)
         {
             return new IntPtr(CodeBlocksOffset[page]);
         }

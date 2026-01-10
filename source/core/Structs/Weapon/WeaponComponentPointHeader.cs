@@ -19,12 +19,12 @@ namespace SHVDN
         /// `<c>atHashWithStringNotFinal</c>` (basically just a `<c>u32</c>` hash).
         /// </summary>
         [FieldOffset(0x0)]
-        internal uint AttachBoneHash;
+        public uint AttachBoneHash;
         /// <summary>
         /// The corresponding bone hierarchy id (index) for the attach bone for the `<c>m_AttachBoneId</c>` field,
         /// where the type is `<c>eHierarchyId</c>` (a `<c>i32</c>`/`<c>s32</c>` enum).
         /// </summary>
         [FieldOffset(0x4)]
-        internal uint AttachBoneId;
+        public uint AttachBoneId;
     }
 }

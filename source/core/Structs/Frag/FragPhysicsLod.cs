@@ -6,18 +6,19 @@ namespace SHVDN
     internal unsafe struct FragPhysicsLod
     {
         [FieldOffset(0xD0)]
-        internal ulong FragTypeChildArr;
-        [FieldOffset(0x11E)]
-        internal byte FragmentGroupCount;
+        private ulong _fragTypeChildArr;
 
-        internal FragTypeChild* GetFragTypeChild(int index)
+        [FieldOffset(0x11E)]
+        public byte FragmentGroupCount;
+
+        public FragTypeChild* GetFragTypeChild(int index)
         {
             if (index >= FragmentGroupCount)
             {
                 return null;
             }
 
-            return (FragTypeChild*)*((ulong*)FragTypeChildArr + index);
+            return (FragTypeChild*)*((ulong*)_fragTypeChildArr + index);
         }
     }
 }

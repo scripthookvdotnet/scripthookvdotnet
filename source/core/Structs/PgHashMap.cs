@@ -6,18 +6,18 @@ namespace SHVDN
     internal unsafe struct PgHashMap
     {
         [FieldOffset(0x0)]
-        internal ulong* Buckets;
+        public ulong* Buckets;
         [FieldOffset(0x8)]
-        internal ushort BucketCount;
+        public ushort BucketCount;
         [FieldOffset(0xA)]
-        internal ushort ElementCount;
+        public ushort ElementCount;
 
-        internal ulong GetBucketAddress(int index)
+        public ulong GetBucketAddress(int index)
         {
             return Buckets[index];
         }
 
-        internal bool Get(uint hash, out int value)
+        public bool Get(uint hash, out int value)
         {
             ulong* firstEntryAddr = (ulong*)GetBucketAddress((int)(hash % BucketCount));
             for (var hashEntry = (HashEntry*)firstEntryAddr; hashEntry != null; hashEntry = hashEntry->Next)
