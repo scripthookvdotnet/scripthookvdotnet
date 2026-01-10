@@ -6,6 +6,6 @@ namespace SHVDN
     internal unsafe struct FragDrawable
     {
         [FieldOffset(0x18)]
-        public CrSkeletonData* CrSkeletonData;
+        public CrSkeletonData* SkeletonData;
     }
 }

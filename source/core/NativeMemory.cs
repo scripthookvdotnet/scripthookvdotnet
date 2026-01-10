@@ -5608,7 +5608,7 @@ namespace SHVDN
             }
 
 
-            CrSkeletonData* crSkeletonData = fragInst->GtaFragType->FragDrawable->CrSkeletonData;
+            CrSkeletonData* crSkeletonData = fragInst->GtaFragType->FragDrawable->SkeletonData;
             if (crSkeletonData == null)
             {
                 return -1;
