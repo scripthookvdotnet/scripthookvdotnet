@@ -3115,7 +3115,7 @@ namespace SHVDN
             return new IntPtr((long)s_getHandlingDataByHash(new IntPtr(&handlingNameHash)));
         }
 
-        private static PersonalityData* GetPedPersonalityElementAddress(IntPtr modelInfoAddress)
+        private static PersonalityData* GetModelPersonalityDataAddress(IntPtr modelInfoAddress)
         {
             if (modelInfoAddress == IntPtr.Zero ||
                 s_pedPersonalitiesArrayAddr == null ||
@@ -3138,7 +3138,7 @@ namespace SHVDN
         }
         public static bool IsModelAMalePed(int modelHash)
         {
-            PersonalityData* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+            PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
 
             if (pedPersonalityAddress == null)
             {
@@ -3149,7 +3149,7 @@ namespace SHVDN
         }
         public static bool IsModelAFemalePed(int modelHash)
         {
-            PersonalityData* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+            PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
 
             if (pedPersonalityAddress == null)
             {
@@ -3160,7 +3160,7 @@ namespace SHVDN
         }
         public static bool IsModelHumanPed(int modelHash)
         {
-            PersonalityData* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+            PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
 
             if (pedPersonalityAddress == null)
             {
@@ -3171,7 +3171,7 @@ namespace SHVDN
         }
         public static bool IsModelAnAnimalPed(int modelHash)
         {
-            PersonalityData* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+            PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
 
             if (pedPersonalityAddress == null)
             {
@@ -3182,7 +3182,7 @@ namespace SHVDN
         }
         public static bool IsModelAGangPed(int modelHash)
         {
-            PersonalityData* pedPersonalityAddress = GetPedPersonalityElementAddress(FindCModelInfo(modelHash));
+            PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
 
             if (pedPersonalityAddress == null)
             {
