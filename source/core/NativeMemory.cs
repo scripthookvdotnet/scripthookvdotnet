@@ -5779,7 +5779,7 @@ namespace SHVDN
             ulong pedIntelligenceAddr = *(ulong*)(pedAddress + Ped.PedIntelligenceOffset);
 
             CTask* activeTask = s_getActiveTaskFunc(*(ulong*)((byte*)pedIntelligenceAddr + Ped.CTaskTreePedOffset));
-            if (activeTask != null && activeTask->TaskTypeIndex == s_cTaskNmScriptControlTypeIndex)
+            if (activeTask != null && activeTask->TaskType == s_cTaskNmScriptControlTypeIndex)
             {
                 return true;
             }
@@ -5805,7 +5805,7 @@ namespace SHVDN
                     continue;
                 }
 
-                if (taskInEvent->TaskTypeIndex == s_cTaskNmScriptControlTypeIndex)
+                if (taskInEvent->TaskType == s_cTaskNmScriptControlTypeIndex)
                 {
                     return true;
                 }
