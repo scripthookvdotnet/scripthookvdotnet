@@ -152,7 +152,7 @@
     <CsCompile Include="Structs\Skeleton\CrSkeletonData.cs">
       <Filter>Structs\Skeleton</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\Vehicle\VehicleFlag1.cs">
+    <CsCompile Include="Enums\Vehicle\VehicleFlags.cs">
       <Filter>Enums\Vehicle</Filter>
     </CsCompile>
     <CsCompile Include="Enums\Vehicle\VehicleModelInfoFlags.cs">

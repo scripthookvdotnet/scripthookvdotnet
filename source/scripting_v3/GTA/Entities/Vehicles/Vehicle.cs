@@ -560,7 +560,7 @@ namespace GTA
         /// </value>
         public bool AllowRappel => Game.FileVersion >= ExeVersionConsts.v1_0_757_2
             ? Function.Call<bool>(Hash.DOES_VEHICLE_ALLOW_RAPPEL, Handle)
-            : SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag1.AllowsRappel);
+            : SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlags.AllowsRappel);
 
         /// <summary>
         /// Gets a value indicating whether <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed.
@@ -568,7 +568,7 @@ namespace GTA
         /// <value>
         /// <see langword="true" /> if <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed; otherwise, <see langword="false" />.
         /// </value>
-        public bool CanStandOnTop => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag1.CanStandOnTop);
+        public bool CanStandOnTop => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlags.CanStandOnTop);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has jumping functionality.

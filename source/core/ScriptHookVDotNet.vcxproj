@@ -158,7 +158,7 @@
     <CsCompile Include="Enums\EntityType.cs" />
     <CsCompile Include="Enums\ModelInfoClassType.cs" />
     <CsCompile Include="Enums\PoolType.cs" />
-    <CsCompile Include="Enums\Vehicle\VehicleFlag1.cs" />
+    <CsCompile Include="Enums\Vehicle\VehicleFlags.cs" />
     <CsCompile Include="Enums\Vehicle\VehicleModelInfoFlags.cs" />
     <CsCompile Include="Enums\Vehicle\VehiclePathNodeProperties.cs" />
     <CsCompile Include="Enums\Vehicle\VehicleStructClassType.cs" />
