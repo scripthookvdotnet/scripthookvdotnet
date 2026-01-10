@@ -7,8 +7,10 @@ namespace SHVDN
     {
         [FieldOffset(0x10)]
         public PgHashMap BoneHashMap;
+
         [FieldOffset(0x20)]
         public CrBoneData* BoneData;
+
         [FieldOffset(0x5E)]
         public ushort BoneCount;
 

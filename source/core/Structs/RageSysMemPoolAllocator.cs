@@ -19,8 +19,10 @@ namespace SHVDN
             // (type: "rage::atIteratablePool<rage::sysMemPoolAllocator::PoolNode>").
             [FieldOffset(0x00)]
             public ulong* PoolAddress;
+
             [FieldOffset(0x08)]
             public uint Size;
+
             [FieldOffset(0x30)]
             public uint* BitArray;
 

@@ -7,6 +7,7 @@ namespace SHVDN
     {
         [FieldOffset(0x0)]
         public YscScriptTableItem* TablePtr;
+
         [FieldOffset(0x18)]
         public uint Count;
 

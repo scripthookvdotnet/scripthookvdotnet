@@ -7,34 +7,47 @@ namespace SHVDN
     {
         [FieldOffset(0x0)]
         public CPathNode* Next;
+
         [FieldOffset(0x8)]
         public CPathNode* Previous;
         // Note: CPathNode in the game is supposed to have rage::CNodeAddress (4-byte union, which has
         // a regular uint32_t field and bit fields) at 0x10
+
         [FieldOffset(0x10)]
         public ushort AreaId;
+
         [FieldOffset(0x12)]
         public ushort NodeId;
+
         [FieldOffset(0x14)]
         public uint StreetNameHash;
+
         [FieldOffset(0x1A)]
         public ushort StartIndexOfLinks;
         // These 2 fields should be multiplied by 4 when you convert back to float
+
         [FieldOffset(0x1C)]
         public short PositionX;
+
         [FieldOffset(0x1E)]
         public short PositionY;
+
         [FieldOffset(0x20)]
         private ushort _flags1;
         // This field should be multiplied by 32 when you convert back to float
+
         [FieldOffset(0x22)]
         public short PositionZ;
+
         [FieldOffset(0x24)]
         private byte _flags2;
+
         [FieldOffset(0x25)]
         private byte _flags3AndLinkCount;
+
         [FieldOffset(0x26)]
         private byte _flags4;
+
         // 1st to 4th bits are used for density
         [FieldOffset(0x27)]
         private byte _flag5AndDensity;
@@ -71,85 +84,107 @@ namespace SHVDN
         {
             // for those wondering the proper implementation in GET_VEHICLE_NODE_PROPERTIES, you can find it with "41 0F B6 40 27 83 E0 0F 89 07 41 F6 40 20 08" (tested with b372, b2699, and b2944)
             VehiclePathNodeProperties propertyFlags = VehiclePathNodeProperties.None;
+
             if ((_flags1 & 8) != 0)
             {
                 propertyFlags |= VehiclePathNodeProperties.OffRoad;
             }
+
             if ((_flags1 & 0x10) != 0)
             {
                 propertyFlags |= VehiclePathNodeProperties.OnPlayersRoad;
             }
+
             if ((_flags1 & 0x20) != 0)
             {
                 propertyFlags |= VehiclePathNodeProperties.NoBigVehicles;
             }
+
             if ((_flags2 & 0x80) != 0)
             {
                 propertyFlags |= VehiclePathNodeProperties.SwitchedOff;
             }
+
             if ((_flags4 & 0x1) != 0)
             {
                 propertyFlags |= VehiclePathNodeProperties.TunnelOrInterior;
             }
+
             // equivalent to "if (*(uint32_t*)(CPathNode + 36) & 0x70000000)" in C or C++
             if ((_flag5AndDensity & 0x70) != 0)
             {
                 propertyFlags |= VehiclePathNodeProperties.LeadsToDeadEnd;
             }
+
             // The water/boat bit takes precedence over this highway flag
             if (((_flags2 & 0x40) != 0 || (_flags2 & 0x20) == 0))
             {
                 propertyFlags |= VehiclePathNodeProperties.Highway;
             }
+
+
             if (((_flags2 >> 8) & 1) != 0)
             {
                 propertyFlags |= VehiclePathNodeProperties.Junction;
             }
+
             if ((_flags1 & 0xF800) == 0x7800)
             {
                 propertyFlags |= VehiclePathNodeProperties.TrafficLight;
             }
+
             if ((_flags1 & 0xF800) == 0x8000)
             {
                 propertyFlags |= VehiclePathNodeProperties.GiveWay;
             }
+
             if ((_flags2 & 0x20) != 0)
             {
                 propertyFlags |= VehiclePathNodeProperties.Boat;
             }
+
             if ((_flags2 & 1) != 0)
             {
                 propertyFlags |= VehiclePathNodeProperties.DontAllowGps;
             }
+
             return propertyFlags;
         }
+
         public bool IsInArea(float x1, float y1, float z1, float x2, float y2, float z2)
         {
             float posXUncompressed = (float) PositionX / 4;
             float posYUncompressed = (float) PositionY / 4;
             float posZUncompressed = (float) PositionZ / 32;
+
             if (posXUncompressed < x1 || posXUncompressed > x2)
             {
                 return false;
             }
+
             if (posYUncompressed < y1 || posYUncompressed > y2)
             {
                 return false;
             }
+
             if (posZUncompressed < z1 || posYUncompressed > z2)
             {
                 return false;
             }
+
             return true;
         }
+
         public bool IsInCircle(float x, float y, float z, float radius)
         {
             float posXUncompressed = (float) PositionX / 4;
             float posYUncompressed = (float) PositionY / 4;
             float posZUncompressed = (float) PositionZ / 32;
+
             float deltaX = (float) x - posXUncompressed;
             float deltaY = (float) y - posYUncompressed;
             float deltaZ = (float) z - posZUncompressed;
+
             return ((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ)) <= radius * radius;
         }
     }

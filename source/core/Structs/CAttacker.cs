@@ -8,8 +8,10 @@ namespace SHVDN
     {
         [FieldOffset(0x0)]
         public ulong AttackerEntityAddress;
+
         [FieldOffset(0x8)]
         public int WeaponHash;
+
         [FieldOffset(0xC)]
         public int GameTime;
     }

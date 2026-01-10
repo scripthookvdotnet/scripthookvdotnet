@@ -7,12 +7,16 @@ namespace SHVDN
     {
         [FieldOffset(0x0)]
         public ulong* vTable;
+
         [FieldOffset(0x10)]
         public uint NameHash;
+
         [FieldOffset(0x14)]
         public uint ModelHash;
+
         [FieldOffset(0x18)]
         public uint AudioHash;
+
         [FieldOffset(0x1C)]
         public uint Slot;
 

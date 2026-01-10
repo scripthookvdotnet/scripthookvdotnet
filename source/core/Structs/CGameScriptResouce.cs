@@ -7,14 +7,19 @@ namespace SHVDN
     {
         [FieldOffset(0x0)]
         public ulong* vTable;
+
         [FieldOffset(0x8)]
         public CScriptResourceTypeNameIndex ResourceTypeNameIndex;
+
         [FieldOffset(0xC)]
         public uint CounterOfPool;
+
         [FieldOffset(0x10)]
         public uint IndexOfPool;
+
         [FieldOffset(0x18)]
         public CGameScriptResource* Next;
+
         [FieldOffset(0x20)]
         public CGameScriptResource* Prev;
     }

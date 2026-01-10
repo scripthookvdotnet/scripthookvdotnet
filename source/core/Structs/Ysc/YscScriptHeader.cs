@@ -8,16 +8,22 @@ namespace SHVDN
     {
         [FieldOffset(0x10)]
         public byte** CodeBlocksOffset;
+
         [FieldOffset(0x1C)]
         public int CodeLength;
+
         [FieldOffset(0x24)]
         public int LocalCount;
+
         [FieldOffset(0x2C)]
         public int NativeCount;
+
         [FieldOffset(0x30)]
         public long* LocalOffset;
+
         [FieldOffset(0x40)]
         public long* NativeOffset;
+
         [FieldOffset(0x58)]
         public int NameHash;
 

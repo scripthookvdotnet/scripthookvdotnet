@@ -7,8 +7,10 @@ namespace SHVDN
     {
         [FieldOffset(0x0)]
         public ulong* Buckets;
+
         [FieldOffset(0x8)]
         public ushort BucketCount;
+
         [FieldOffset(0xA)]
         public ushort ElementCount;
 

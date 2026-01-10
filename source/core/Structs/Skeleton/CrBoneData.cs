@@ -11,12 +11,16 @@ namespace SHVDN
         // Scale (vector3?) is between 0x20 - 0x2C
         [FieldOffset(0x30)]
         public ushort NextSiblingBoneIndex;
+
         [FieldOffset(0x32)]
         public ushort ParentBoneIndex;
+
         [FieldOffset(0x38)]
         public IntPtr NamePtr;
+
         [FieldOffset(0x42)]
         public ushort BoneIndex;
+
         [FieldOffset(0x44)]
         public ushort BoneId;
 

@@ -8,6 +8,7 @@ namespace SHVDN
     {
         [FieldOffset(0x0)]
         public YscScriptHeader* Header;
+
         [FieldOffset(0xC)]
         public int Hash;
 

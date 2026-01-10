@@ -14,8 +14,10 @@ namespace SHVDN
     {
         [FieldOffset(0x0)]
         public float X;
+
         [FieldOffset(0x4)]
         public float Y;
+
         [FieldOffset(0x8)]
         public float Z;
 

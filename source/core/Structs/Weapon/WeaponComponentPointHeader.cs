@@ -20,6 +20,7 @@ namespace SHVDN
         /// </summary>
         [FieldOffset(0x0)]
         public uint AttachBoneHash;
+
         /// <summary>
         /// The corresponding bone hierarchy id (index) for the attach bone for the `<c>m_AttachBoneId</c>` field,
         /// where the type is `<c>eHierarchyId</c>` (a `<c>i32</c>`/`<c>s32</c>` enum).

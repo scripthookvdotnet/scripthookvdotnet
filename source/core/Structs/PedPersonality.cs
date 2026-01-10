@@ -7,8 +7,10 @@ namespace SHVDN
     {
         [FieldOffset(0x7C)]
         public bool IsMale;
+
         [FieldOffset(0x7D)]
         public bool IsHuman;
+
         [FieldOffset(0x7F)]
         public bool IsGang;
     }
