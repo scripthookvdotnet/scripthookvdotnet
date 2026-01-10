@@ -1518,12 +1518,12 @@ namespace SHVDN
                 return 0;
             }
 
-            var targetCEntityType = (EntityTypeInternal)(*(byte*)(targetCEntityAddress + 0x28));
+            var targetCEntityType = (EntityType)(*(byte*)(targetCEntityAddress + 0x28));
             switch (targetCEntityType)
             {
-                case EntityTypeInternal.Vehicle:
-                case EntityTypeInternal.Ped:
-                case EntityTypeInternal.Object:
+                case EntityType.Vehicle:
+                case EntityType.Ped:
+                case EntityType.Object:
                     return GetEntityHandleFromAddress(targetCEntityAddress);
                 default:
                     return 0;
