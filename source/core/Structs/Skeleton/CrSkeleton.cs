@@ -8,15 +8,19 @@ namespace SHVDN
     {
         [FieldOffset(0x00)]
         public CrSkeletonData* SkeletonData;
+
         // this field has a pointer to one matrix, not a pointer to an array of matrices for all bones
         [FieldOffset(0x8)]
         public ulong BoneTransformMatrixPtr;
         // object matrices (entity-local space)
+
         [FieldOffset(0x10)]
         public ulong BoneObjectMatrixArrayPtr;
         // global matrices (world space)
+
         [FieldOffset(0x18)]
         public ulong BoneGlobalMatrixArrayPtr;
+
         [FieldOffset(0x20)]
         public int BoneCount;
 

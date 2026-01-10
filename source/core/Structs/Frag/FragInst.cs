@@ -7,8 +7,10 @@ namespace SHVDN
     {
         [FieldOffset(0x68)]
         public FragCacheEntry* FragCacheEntry;
+
         [FieldOffset(0x78)]
         public GtaFragType* GtaFragType;
+
         [FieldOffset(0xB8)]
         public uint UnkType;
 

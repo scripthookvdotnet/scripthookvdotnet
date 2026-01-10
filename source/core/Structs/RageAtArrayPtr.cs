@@ -10,10 +10,13 @@ namespace SHVDN
     {
         [FieldOffset(0x0)]
         public ulong * Data;
+
         [FieldOffset(0x8)]
         public ushort Size;
+
         [FieldOffset(0xA)]
         public ushort Capacity;
+
         // rage::atArray always has 4-byte padding at the end
         [FieldOffset(0xC)]
         private fixed char padding[4];

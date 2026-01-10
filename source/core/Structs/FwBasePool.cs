@@ -23,12 +23,16 @@ namespace SHVDN
     {
         [FieldOffset(0x00)]
         public ulong PoolStartAddress;
+
         [FieldOffset(0x08)]
         public IntPtr ByteArray;
+
         [FieldOffset(0x10)]
         public uint Size;
+
         [FieldOffset(0x14)]
         public uint ItemSize;
+
         // The "first" index should be at 0x18 and The "last" index should be at 0x1C in production builds
         // according to the layout in a debug build around v1.0.2699.0, but the "first" and the "last" aren't
         // related to about the order.

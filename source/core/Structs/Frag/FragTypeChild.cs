@@ -7,6 +7,7 @@ namespace SHVDN
     {
         [FieldOffset(0x10)]
         public ushort BoneIndex;
+
         [FieldOffset(0x12)]
         public ushort BoneId;
     }

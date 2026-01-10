@@ -7,6 +7,7 @@ namespace SHVDN
     {
         [FieldOffset(0x30)]
         public FragDrawable* FragDrawable;
+
         [FieldOffset(0xF0)]
         public FragPhysicsLodGroup* FragPhysicsLODGroup;
     }

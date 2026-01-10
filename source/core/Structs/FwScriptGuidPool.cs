@@ -13,12 +13,16 @@ namespace SHVDN
         // The default value (when running without ScriptHookV) can be found by searching the dumped exe or the game memory with "D7 A8 11 73" (0x7311A8D7).
         [FieldOffset(0x10)]
         public uint MaxCount;
+
         [FieldOffset(0x14)]
         public int ItemSize;
+
         [FieldOffset(0x18)]
         public int FirstEmptySlot;
+
         [FieldOffset(0x1C)]
         public int EmptySlots;
+
         [FieldOffset(0x20)]
         public uint ItemCount;
 
