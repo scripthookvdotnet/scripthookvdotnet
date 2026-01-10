@@ -762,12 +762,12 @@ namespace SHVDN
                         ulong addr2 = *(ulong*)(addr1);
                         if (addr2 != 0)
                         {
-                            switch ((ModelInfoClassType)(*(byte*)(addr2 + 157) & 0x1F))
+                            switch ((ModelInfoType)(*(byte*)(addr2 + 157) & 0x1F))
                             {
-                                case ModelInfoClassType.Weapon:
+                                case ModelInfoType.Weapon:
                                     weaponObjectHashes.Add(cur->Hash);
                                     break;
-                                case ModelInfoClassType.Vehicle:
+                                case ModelInfoType.Vehicle:
                                     // Avoid loading stub vehicles since it will crash the game
                                     if (stubVehicles.Contains((uint)cur->Hash))
                                     {
@@ -787,7 +787,7 @@ namespace SHVDN
                                     vehicleHashesGroupedByType[vehicleTypeInt].Add(cur->Hash);
 
                                     break;
-                                case ModelInfoClassType.Ped:
+                                case ModelInfoType.Ped:
                                     pedHashes.Add(cur->Hash);
                                     break;
                             }
@@ -2879,19 +2879,19 @@ namespace SHVDN
             return IntPtr.Zero;
         }
 
-        private static ModelInfoClassType GetModelInfoClass(IntPtr address)
+        private static ModelInfoType GetModelInfoType(IntPtr address)
         {
             if (address != IntPtr.Zero)
             {
-                return ((ModelInfoClassType)((*(byte*)((ulong)address.ToInt64() + 157) & 0x1F)));
+                return ((ModelInfoType)((*(byte*)((ulong)address.ToInt64() + 157) & 0x1F)));
             }
 
-            return ModelInfoClassType.Invalid;
+            return ModelInfoType.Invalid;
         }
 
         private static VehicleStructClassType GetVehicleStructClass(IntPtr modelInfoAddress)
         {
-            if (GetModelInfoClass(modelInfoAddress) != ModelInfoClassType.Vehicle)
+            if (GetModelInfoType(modelInfoAddress) != ModelInfoType.Vehicle)
             {
                 return VehicleStructClassType.None;
             }
@@ -3025,7 +3025,7 @@ namespace SHVDN
         public static bool IsModelAPed(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
-            return GetModelInfoClass(modelInfo) == ModelInfoClassType.Ped;
+            return GetModelInfoType(modelInfo) == ModelInfoType.Ped;
         }
         public static bool IsModelABlimp(int modelHash)
         {
@@ -3055,14 +3055,14 @@ namespace SHVDN
         public static bool IsModelAMlo(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
-            return GetModelInfoClass(modelInfo) == ModelInfoClassType.Mlo;
+            return GetModelInfoType(modelInfo) == ModelInfoType.Mlo;
         }
 
         public static string GetVehicleMakeName(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
 
-            if (GetModelInfoClass(modelInfo) == ModelInfoClassType.Vehicle)
+            if (GetModelInfoType(modelInfo) == ModelInfoType.Vehicle)
             {
                 return StringMarshal.PtrToStringUtf8(modelInfo + s_vehicleMakeNameOffsetInModelInfo);
             }
@@ -3081,7 +3081,7 @@ namespace SHVDN
 
             IntPtr modelInfo = FindCModelInfo(modelHash);
 
-            if (GetModelInfoClass(modelInfo) != ModelInfoClassType.Vehicle)
+            if (GetModelInfoType(modelInfo) != ModelInfoType.Vehicle)
             {
                 return false;
             }
@@ -3102,7 +3102,7 @@ namespace SHVDN
         public static IntPtr GetHandlingDataByModelHash(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
-            if (GetModelInfoClass(modelInfo) != ModelInfoClassType.Vehicle)
+            if (GetModelInfoType(modelInfo) != ModelInfoType.Vehicle)
             {
                 return IntPtr.Zero;
             }
@@ -3125,7 +3125,7 @@ namespace SHVDN
                 return null;
             }
 
-            if (GetModelInfoClass(modelInfoAddress) != ModelInfoClassType.Ped)
+            if (GetModelInfoType(modelInfoAddress) != ModelInfoType.Ped)
             {
                 return null;
             }

@@ -1,6 +1,6 @@
 namespace SHVDN
 {
-    internal enum ModelInfoClassType
+    internal enum ModelInfoType
     {
         Invalid = 0,
         Object = 1,
