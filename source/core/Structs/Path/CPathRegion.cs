@@ -44,7 +44,7 @@ namespace SHVDN
 
         public CPathNode* GetPathNode(uint nodeId)
         {
-            if (_nodeArrayPtr == IntPtr.Zero && nodeId >= NodeCount)
+            if (_nodeArrayPtr == IntPtr.Zero || nodeId >= NodeCount)
             {
                 return null;
             }
@@ -55,7 +55,7 @@ namespace SHVDN
 
         public CPathNodeLink* GetPathNodeLink(uint index)
         {
-            if (_nodeLinkArrayPtr == IntPtr.Zero && index >= NodeLinkCount)
+            if (_nodeLinkArrayPtr == IntPtr.Zero || index >= NodeLinkCount)
             {
                 return null;
             }
