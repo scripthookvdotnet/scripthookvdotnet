@@ -153,21 +153,19 @@ namespace SHVDN
 
         public bool IsInArea(float x1, float y1, float z1, float x2, float y2, float z2)
         {
-            float posXUncompressed = (float) PositionX / 4;
-            float posYUncompressed = (float) PositionY / 4;
-            float posZUncompressed = (float) PositionZ / 32;
+            FVector3 uncompressedPos = UncompressedPosition;
 
-            if (posXUncompressed < x1 || posXUncompressed > x2)
+            if (uncompressedPos.X < x1 || uncompressedPos.X > x2)
             {
                 return false;
             }
 
-            if (posYUncompressed < y1 || posYUncompressed > y2)
+            if (uncompressedPos.Y < y1 || uncompressedPos.Y > y2)
             {
                 return false;
             }
 
-            if (posZUncompressed < z1 || posYUncompressed > z2)
+            if (uncompressedPos.Z < z1 || uncompressedPos.Z > z2)
             {
                 return false;
             }
@@ -177,13 +175,11 @@ namespace SHVDN
 
         public bool IsInCircle(float x, float y, float z, float radius)
         {
-            float posXUncompressed = (float) PositionX / 4;
-            float posYUncompressed = (float) PositionY / 4;
-            float posZUncompressed = (float) PositionZ / 32;
+            FVector3 uncompressedPos = UncompressedPosition;
 
-            float deltaX = (float) x - posXUncompressed;
-            float deltaY = (float) y - posYUncompressed;
-            float deltaZ = (float) z - posZUncompressed;
+            float deltaX = (float) x - uncompressedPos.X;
+            float deltaY = (float) y - uncompressedPos.Y;
+            float deltaZ = (float) z - uncompressedPos.Z;
 
             return ((deltaX * deltaX) + (deltaY * deltaY) + (deltaZ * deltaZ)) <= radius * radius;
         }
