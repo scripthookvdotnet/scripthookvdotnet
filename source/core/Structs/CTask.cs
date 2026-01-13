@@ -7,6 +7,6 @@ namespace SHVDN
     internal struct CTask
     {
         [FieldOffset(0x34)]
-        internal ushort taskTypeIndex;
+        public ushort TaskType;
     }
 }

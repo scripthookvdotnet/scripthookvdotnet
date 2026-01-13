@@ -7,13 +7,15 @@ namespace SHVDN
     internal unsafe struct YscScriptTableItem
     {
         [FieldOffset(0x0)]
-        internal YscScriptHeader* header;
+        public YscScriptHeader* Header;
+
         [FieldOffset(0xC)]
-        internal int hash;
+        public int Hash;
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool IsLoaded()
+        public bool IsLoaded()
         {
-            return header != null;
+            return Header != null;
         }
     }
 }

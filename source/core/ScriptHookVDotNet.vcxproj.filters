@@ -50,7 +50,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CsCompile Include="Structs\CAttacker.cs">
+    <CsCompile Include="Structs\WeaponDamageInfo.cs">
       <Filter>Structs</Filter>
     </CsCompile>
     <CsCompile Include="Structs\CGameScriptResouce.cs">
@@ -71,13 +71,10 @@
     <CsCompile Include="Structs\FragCacheEntry.cs">
       <Filter>Structs</Filter>
     </CsCompile>
-	<CsCompile Include="Structs\FVector3.cs">
+    <CsCompile Include="Structs\FVector3.cs">
       <Filter>Structs</Filter>
     </CsCompile>
     <CsCompile Include="Structs\FwBasePool.cs">
-      <Filter>Structs</Filter>
-    </CsCompile>
-    <CsCompile Include="Structs\FwScriptGuidPool.cs">
       <Filter>Structs</Filter>
     </CsCompile>
     <CsCompile Include="Structs\HashEntry.cs">
@@ -140,10 +137,10 @@
     <CsCompile Include="Structs\Weapon\WeaponComponentInfo.cs">
       <Filter>Structs\Weapon</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Weapon\WeaponComponentPointHeader.cs">
+    <CsCompile Include="Structs\Weapon\WeaponComponentPoint.cs">
       <Filter>Structs\Weapon</Filter>
     </CsCompile>
-	<CsCompile Include="Structs\ScrWeaponHudStats.cs">
+    <CsCompile Include="Structs\ScrWeaponHudStats.cs">
       <Filter>Structs</Filter>
     </CsCompile>
     <CsCompile Include="Structs\Skeleton\CrBoneData.cs">
@@ -155,22 +152,22 @@
     <CsCompile Include="Structs\Skeleton\CrSkeletonData.cs">
       <Filter>Structs\Skeleton</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\Vehicle\VehicleFlag1.cs">
+    <CsCompile Include="Enums\Vehicle\VehicleFlags.cs">
       <Filter>Enums\Vehicle</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\Vehicle\VehicleFlag2.cs">
+    <CsCompile Include="Enums\Vehicle\VehicleModelInfoFlags.cs">
       <Filter>Enums\Vehicle</Filter>
     </CsCompile>
     <CsCompile Include="Enums\Vehicle\VehiclePathNodeProperties.cs">
       <Filter>Enums\Vehicle</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\Vehicle\VehicleStructClassType.cs">
+    <CsCompile Include="Enums\Vehicle\VehicleType.cs">
       <Filter>Enums\Vehicle</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\CScriptResourceTypeNameIndex.cs">
+    <CsCompile Include="Enums\ScriptResourceType.cs">
       <Filter>Enums</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\EntityTypeInternal.cs">
+    <CsCompile Include="Enums\EntityType.cs">
       <Filter>Enums</Filter>
     </CsCompile>
     <CsCompile Include="Enums\ModelInfoClassType.cs">

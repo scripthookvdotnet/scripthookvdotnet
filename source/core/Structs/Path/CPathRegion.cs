@@ -7,46 +7,61 @@ namespace SHVDN
     internal unsafe struct CPathRegion
     {
         [FieldOffset(0x10)]
-        internal IntPtr NodeArrayPtr;
+        private IntPtr _nodeArrayPtr;
+
         [FieldOffset(0x18)]
-        internal uint NodeCount;
+        public uint NodeCount;
+
         [FieldOffset(0x1C)]
-        internal uint NodeCountVehicle;
+        public uint NodeCountVehicle;
+
         [FieldOffset(0x20)]
-        internal uint NodeCountPed;
+        public uint NodeCountPed;
+
         [FieldOffset(0x28)]
-        internal IntPtr NodeLinkArrayPtr;
+        private IntPtr _nodeLinkArrayPtr;
+
         [FieldOffset(0x30)]
-        internal uint NodeLinkCount;
+        public uint NodeLinkCount;
+
         [FieldOffset(0x38)]
-        internal IntPtr VirtualJunctionArrayPtr;
+        private IntPtr _virtualJunctionArrayPtr;
+
         [FieldOffset(0x40)]
-        internal IntPtr HeightSampleArrayPtr;
+        private IntPtr _heightSampleArrayPtr;
+
         // `CPathRegion.JunctionMap` is at 0x50, which has a `rage::CPathRegion::JunctionMapContainer`.
         // `rage::CPathRegion::JunctionMapContainer` is practically an alias of
-        // `rage::atBinaryMap<int,unsigned int>`. `rage::atBinaryMap` internally has a bool (at the 0x0 offset)
+        // `rage::atBinaryMap<int,unsigned int>`. `rage::atBinaryMap` publicly has a bool (at the 0x0 offset)
         // that represents whether the content is sorted before the `rage::atArray` field.
         [FieldOffset(0x60)]
-        internal uint JunctionCount;
+        public uint JunctionCount;
+
         [FieldOffset(0x64)]
-        internal uint HeightSampleCount;
-        internal CPathNode * GetPathNode(uint nodeId)
+        public uint HeightSampleCount;
+
+        public bool IsNodeArrValid => _nodeArrayPtr == IntPtr.Zero;
+
+        public CPathNode* GetPathNode(uint nodeId)
         {
-            if (NodeArrayPtr == IntPtr.Zero && nodeId >= NodeCount)
+            if (_nodeArrayPtr == IntPtr.Zero || nodeId >= NodeCount)
             {
                 return null;
             }
             return GetPathNodeUnsafe(nodeId);
         }
-        internal CPathNode * GetPathNodeUnsafe(uint nodeId) => (CPathNode * )((ulong) NodeArrayPtr + nodeId * (uint) sizeof(CPathNode));
-        internal CPathNodeLink * GetPathNodeLink(uint index)
+
+        public CPathNode* GetPathNodeUnsafe(uint nodeId) => (CPathNode*)((ulong)_nodeArrayPtr + nodeId * (uint) sizeof(CPathNode));
+
+        public CPathNodeLink* GetPathNodeLink(uint index)
         {
-            if (NodeLinkArrayPtr == IntPtr.Zero && index >= NodeLinkCount)
+            if (_nodeLinkArrayPtr == IntPtr.Zero || index >= NodeLinkCount)
             {
                 return null;
             }
             return GetPathNodeLinkUnsafe(index);
         }
-        internal CPathNodeLink * GetPathNodeLinkUnsafe(uint index) => (CPathNodeLink * )((ulong) NodeLinkArrayPtr + index * (uint) sizeof(CPathNodeLink));
+
+        public CPathNodeLink* GetPathNodeLinkUnsafe(uint index) => (CPathNodeLink*)((ulong)_nodeLinkArrayPtr + index * (uint) sizeof(CPathNodeLink));
     }
 }

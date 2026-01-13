@@ -18,27 +18,29 @@ namespace SHVDN
             // m_pool at offset 0x0 takes 0x60 byte
             // (type: "rage::atIteratablePool<rage::sysMemPoolAllocator::PoolNode>").
             [FieldOffset(0x00)]
-            internal ulong* poolAddress;
+            public ulong* PoolAddress;
+
             [FieldOffset(0x08)]
-            internal uint size;
+            public uint Size;
+
             [FieldOffset(0x30)]
-            internal uint* bitArray;
+            public uint* BitArray;
 
             // m_freeList at 0x60 takes 0x18 bytes (type: "rage::inlist<rage::sysMemPoolAllocator::FreeNode,8>").
             // The struct contains m_head, m_tail and m_size fields.
             [FieldOffset(0x60)]
-            internal uint itemCount;
+            public uint ItemCount;
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal bool IsValid(uint i)
+            public bool IsValid(uint i)
             {
-                return ((bitArray[i >> 5] >> ((int)i & 0x1F)) & 1) != 0;
+                return ((BitArray[i >> 5] >> ((int)i & 0x1F)) & 1) != 0;
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            internal ulong GetAddress(uint i)
+            public ulong GetAddress(uint i)
             {
-                return poolAddress[i];
+                return PoolAddress[i];
             }
         }
 }

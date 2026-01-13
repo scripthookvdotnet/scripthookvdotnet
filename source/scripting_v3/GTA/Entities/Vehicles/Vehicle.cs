@@ -75,7 +75,7 @@ namespace GTA
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has bulletproof glass.
         /// </summary>
-        public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag2.HasBulletProofGlass);
+        public bool HasBulletProofGlass => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleModelInfoFlags.HasBulletProofGlass);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has Lowrider Hydraulics.
@@ -85,7 +85,7 @@ namespace GTA
         /// </remarks>
         public bool HasLowriderHydraulics
             => Game.FileVersion >= ExeVersionConsts.v1_0_505_2
-            && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag2.HasLowriderHydraulics);
+            && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleModelInfoFlags.HasLowriderHydraulics);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has Donk Hydraulics.
@@ -95,7 +95,7 @@ namespace GTA
         /// </remarks>
         public bool HasDonkHydraulics
             => Game.FileVersion >= ExeVersionConsts.v1_0_505_2
-            && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag2.HasLowriderDonkHydraulics);
+            && SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleModelInfoFlags.HasLowriderDonkHydraulics);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has a Parachute.
@@ -560,7 +560,7 @@ namespace GTA
         /// </value>
         public bool AllowRappel => Game.FileVersion >= ExeVersionConsts.v1_0_757_2
             ? Function.Call<bool>(Hash.DOES_VEHICLE_ALLOW_RAPPEL, Handle)
-            : SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag1.AllowsRappel);
+            : SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlags.AllowsRappel);
 
         /// <summary>
         /// Gets a value indicating whether <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed.
@@ -568,7 +568,7 @@ namespace GTA
         /// <value>
         /// <see langword="true" /> if <see cref="Ped"/>s can stand on this <see cref="Vehicle"/> regardless of <see cref="Vehicle"/>s speed; otherwise, <see langword="false" />.
         /// </value>
-        public bool CanStandOnTop => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlag1.CanStandOnTop);
+        public bool CanStandOnTop => SHVDN.NativeMemory.HasVehicleFlag(Model.Hash, SHVDN.VehicleFlags.CanStandOnTop);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Vehicle"/> has jumping functionality.

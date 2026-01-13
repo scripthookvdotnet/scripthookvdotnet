@@ -3,7 +3,7 @@ using System;
 namespace SHVDN
 {
     [Flags]
-    public enum VehicleFlag1 : ulong
+    public enum VehicleFlags : ulong
     {
         Big = 0x2,
         IsVan = 0x20,

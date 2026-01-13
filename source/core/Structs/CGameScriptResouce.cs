@@ -6,16 +6,21 @@ namespace SHVDN
     internal unsafe struct CGameScriptResource
     {
         [FieldOffset(0x0)]
-        internal ulong* vTable;
+        public ulong* vTable;
+
         [FieldOffset(0x8)]
-        internal CScriptResourceTypeNameIndex resourceTypeNameIndex;
+        public ScriptResourceType ResourceTypeNameIndex;
+
         [FieldOffset(0xC)]
-        internal uint counterOfPool;
+        public uint CounterOfPool;
+
         [FieldOffset(0x10)]
-        internal uint indexOfPool;
+        public uint IndexOfPool;
+
         [FieldOffset(0x18)]
-        internal CGameScriptResource* next;
+        public CGameScriptResource* Next;
+
         [FieldOffset(0x20)]
-        internal CGameScriptResource* prev;
+        public CGameScriptResource* Prev;
     }
 }

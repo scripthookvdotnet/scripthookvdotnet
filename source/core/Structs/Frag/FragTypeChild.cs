@@ -6,8 +6,9 @@ namespace SHVDN
     internal struct FragTypeChild
     {
         [FieldOffset(0x10)]
-        internal ushort boneIndex;
+        public ushort BoneIndex;
+
         [FieldOffset(0x12)]
-        internal ushort boneId;
+        public ushort BoneId;
     }
 }

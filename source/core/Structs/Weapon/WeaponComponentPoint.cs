@@ -12,19 +12,20 @@ namespace SHVDN
     /// updates (e.g. `<c>m_AttachBoneId</c>` takes 0x5C bytes in b2699 and takes 0x64 bytes in b3095).
     /// </remarks>
     [StructLayout(LayoutKind.Explicit, Size = 0x8)]
-    internal struct WeaponComponentPointHeader
+    internal struct WeaponComponentPoint
     {
         /// <summary>
         /// The attach bone hash for the `<c>m_AttachBone</c>` field, where the type is
         /// `<c>atHashWithStringNotFinal</c>` (basically just a `<c>u32</c>` hash).
         /// </summary>
         [FieldOffset(0x0)]
-        internal uint AttachBoneHash;
+        public uint AttachBoneHash;
+
         /// <summary>
         /// The corresponding bone hierarchy id (index) for the attach bone for the `<c>m_AttachBoneId</c>` field,
         /// where the type is `<c>eHierarchyId</c>` (a `<c>i32</c>`/`<c>s32</c>` enum).
         /// </summary>
         [FieldOffset(0x4)]
-        internal uint AttachBoneId;
+        public uint AttachBoneId;
     }
 }

@@ -70,7 +70,7 @@ namespace GTA
 
                 unsafe
                 {
-                    return ((SHVDN.RageAtArrayPtr*)(pedInventoryAddr + 0x18))->size;
+                    return ((SHVDN.RageAtArrayPtr*)(pedInventoryAddr + 0x18))->Size;
                 }
             }
         }
@@ -454,19 +454,19 @@ namespace GTA
                     }
 
                     var weaponInventoryArray = (SHVDN.RageAtArrayPtr*)(pedInventoryAddr + 0x18);
-                    if (index >= weaponInventoryArray->size)
+                    if (index >= weaponInventoryArray->Size)
                     {
                         return null;
                     }
 
                     ulong itemAddress = weaponInventoryArray->GetElementAddress(index);
-                    SHVDN.ItemInfo* weaponInfo = *(SHVDN.ItemInfo**)(itemAddress + 0x8);
+                    SHVDN.CItemInfo* weaponInfo = *(SHVDN.CItemInfo**)(itemAddress + 0x8);
                     if (weaponInfo == null)
                     {
                         return null;
                     }
 
-                    var weaponHash = (WeaponHash)weaponInfo->nameHash;
+                    var weaponHash = (WeaponHash)weaponInfo->NameHash;
                     if (_weaponCollection.weapons.TryGetValue(weaponHash, out Weapon weapon))
                     {
                         return weapon;
