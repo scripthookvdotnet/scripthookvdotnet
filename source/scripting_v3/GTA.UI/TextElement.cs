@@ -3,13 +3,14 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using GTA.Math;
-using GTA.Native;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
+using GTA.Math;
+using GTA.Native;
 
 namespace GTA.UI
 {
@@ -243,16 +244,12 @@ namespace GTA.UI
         /// <value>
         ///   <see langword="true" /> if centered; otherwise, <see langword="false" />.
         /// </value>
+        [Obsolete("`TextElement.Centered` is obsolete because it is redundant and setting the property to false is " +
+            "confusing. Use `TextElement.Alignment` instead."), EditorBrowsable(EditorBrowsableState.Never)]
         public bool Centered
         {
             get => Alignment == Alignment.Center;
-            set
-            {
-                if (value)
-                {
-                    Alignment = Alignment.Center;
-                }
-            }
+            set => Alignment = value ? Alignment.Center : Alignment.Left;
         }
 
         /// <summary>

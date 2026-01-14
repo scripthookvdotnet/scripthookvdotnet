@@ -136,8 +136,6 @@
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="Console.cs" />
-    <CsCompile Include="FVector3.cs" />
-    <CsCompile Include="ScrWeaponHudStats.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="Log.cs" />
     <CsCompile Include="MemDataMarshal.cs" />
@@ -155,32 +153,54 @@
   <ItemGroup>
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="Enums\ScriptResourceType.cs" />
+    <CsCompile Include="Enums\EntityType.cs" />
+    <CsCompile Include="Enums\ModelInfoClassType.cs" />
+    <CsCompile Include="Enums\PoolType.cs" />
+    <CsCompile Include="Enums\Vehicle\VehicleFlags.cs" />
+    <CsCompile Include="Enums\Vehicle\VehicleModelInfoFlags.cs" />
+    <CsCompile Include="Enums\Vehicle\VehiclePathNodeProperties.cs" />
+    <CsCompile Include="Enums\Vehicle\VehicleType.cs" />
+    <CsCompile Include="Structs\WeaponDamageInfo.cs" />
+    <CsCompile Include="Structs\CGameScriptResouce.cs" />
+    <CsCompile Include="Structs\CModelList.cs" />
+    <CsCompile Include="Structs\CTask.cs" />
+    <CsCompile Include="Structs\DragDrawable.cs" />
+    <CsCompile Include="Structs\EntityDamageRecordForReturnValue.cs" />
+    <CsCompile Include="Structs\FVector3.cs" />
+    <CsCompile Include="Structs\FragCacheEntry.cs" />
+    <CsCompile Include="Structs\Frag\FragInst.cs" />
+    <CsCompile Include="Structs\Frag\FragPhysicsLod.cs" />
+    <CsCompile Include="Structs\Frag\FragPhysicsLodGroup.cs" />
+    <CsCompile Include="Structs\Frag\FragTypeChild.cs" />
+    <CsCompile Include="Structs\Frag\GtaFragType.cs" />
+    <CsCompile Include="Structs\FwBasePool.cs" />
+    <CsCompile Include="Structs\HashEntry.cs" />
+    <CsCompile Include="Structs\HashNode.cs" />
+    <CsCompile Include="Structs\ItemInfo.cs" />
+    <CsCompile Include="Structs\Path\CPathNode.cs" />
+    <CsCompile Include="Structs\Path\CPathNodeLink.cs" />
+    <CsCompile Include="Structs\Path\CPathRegion.cs" />
+    <CsCompile Include="Structs\PedPersonality.cs" />
+    <CsCompile Include="Structs\PgHashMap.cs" />
+    <CsCompile Include="Structs\RageAtArrayPtr.cs" />
+    <CsCompile Include="Structs\RageSysMemPoolAllocator.cs" />
+    <CsCompile Include="Structs\ScreenInfo.cs" />
+    <CsCompile Include="Structs\ScrWeaponHudStats.cs" />
+    <CsCompile Include="Structs\Skeleton\CrBoneData.cs" />
+    <CsCompile Include="Structs\Skeleton\CrSkeleton.cs" />
+    <CsCompile Include="Structs\Skeleton\CrSkeletonData.cs" />
+    <CsCompile Include="Structs\Weapon\WeaponComponentInfo.cs" />
+    <CsCompile Include="Structs\Weapon\WeaponComponentPoint.cs" />
+    <CsCompile Include="Structs\Ysc\YscScriptHeader.cs" />
+    <CsCompile Include="Structs\Ysc\YscScriptTable.cs" />
+    <CsCompile Include="Structs\Ysc\YscScriptTableItem.cs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <!-- Compile C# source files -->
-  <Target 
-  Name="CsCompile" 
-  BeforeTargets="ClCompile" 
-  Inputs="@(CsCompile)" 
-  Outputs="$(IntDir)$(TargetName).netmodule">
-    <Csc Sources="@(CsCompile)" 
-	AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)" 
-	DebugType="%(CsCompile.DebugType)" 
-	DefineConstants="%(CsCompile.DefineConstants)" 
-	DisabledWarnings="%(CsCompile.NoWarn)" 
-	DocumentationFile="$(IntDir)$(TargetName).xdc" 
-	EmitDebugInformation="%(CsCompile.DebugSymbols)" 
-	LangVersion="%(CsCompile.LangVersion)" 
-	Optimize="%(CsCompile.Optimize)" 
-	OutputAssembly="$(IntDir)$(TargetName).netmodule" 
-	PdbFile="$(IntDir)$(TargetName).netmodule.pdb" 
-	TargetType="Module" 
-	TreatWarningsAsErrors="%(CsCompile.TreatWarningsAsErrors)" 
-	Utf8Output="%(CsCompile.Utf8Output)" 
-	WarningLevel="%(CsCompile.WarningLevel)" 
-	WarningsAsErrors="%(CsCompile.WarningsAsErrors)" 
-	WarningsNotAsErrors="%(CsCompile.WarningsNotAsErrors)" 
-	ToolExe="$(CscToolExe)" 
-	ToolPath="$(CscToolPath)" />
+  <Target Name="CsCompile" BeforeTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
+    <Csc Sources="@(CsCompile)" AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)" DebugType="%(CsCompile.DebugType)" DefineConstants="%(CsCompile.DefineConstants)" DisabledWarnings="%(CsCompile.NoWarn)" DocumentationFile="$(IntDir)$(TargetName).xdc" EmitDebugInformation="%(CsCompile.DebugSymbols)" LangVersion="%(CsCompile.LangVersion)" Optimize="%(CsCompile.Optimize)" OutputAssembly="$(IntDir)$(TargetName).netmodule" PdbFile="$(IntDir)$(TargetName).netmodule.pdb" TargetType="Module" TreatWarningsAsErrors="%(CsCompile.TreatWarningsAsErrors)" Utf8Output="%(CsCompile.Utf8Output)" WarningLevel="%(CsCompile.WarningLevel)" WarningsAsErrors="%(CsCompile.WarningsAsErrors)" WarningsNotAsErrors="%(CsCompile.WarningsNotAsErrors)" ToolExe="$(CscToolExe)" ToolPath="$(CscToolPath)" />
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
