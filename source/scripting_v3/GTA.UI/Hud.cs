@@ -100,13 +100,14 @@ namespace GTA.UI
         public static void UnlockRadarPosition() => Function.Call(Hash.UNLOCK_MINIMAP_POSITION);
 
         /// <summary>
-        /// Sets how far the minimap should be zoomed in.
+        /// Gets or sets how far the minimap should be zoomed in.
         /// </summary>
-        /// <value>
-        /// The radar zoom; accepts values from 0 to 200.
-        /// </value>
+        /// <remarks>
+        /// If bigmap is enabled, the max value is 6000; otherwise 1500.
+        /// </remarks>
         public static int RadarZoom
         {
+            get => SHVDN.NativeMemory.RadarZoomValue;
             set => Function.Call(Hash.SET_RADAR_ZOOM, value);
         }
     }

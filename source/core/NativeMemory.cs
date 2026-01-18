@@ -715,6 +715,12 @@ namespace SHVDN
                 InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 49);
             }
 
+            address = MemScanner.FindPatternBmh("\x8D\x43\x64\x89\x05\x00\x00\x00\x00", "xxxxx????");
+            if (address != null)
+            {
+                s_radarZoomValueAddress = (int*)(*(int*)(address + 5) + address + 9);
+            }
+
             // Generate vehicle model list
             var vehicleHashesGroupedByClass = new List<int>[0x20];
             for (int i = 0; i < 0x20; i++)
@@ -4603,6 +4609,28 @@ namespace SHVDN
                 float deltaY = yCenter - nearestY;
 
                 return (deltaX * deltaX + deltaY * deltaY) <= (radius * radius);
+            }
+        }
+
+        #endregion
+
+        #region -- HUD Data --
+
+        private static int* s_radarZoomValueAddress;
+
+        // We should not add a write field for this, we can just use SET_RADAR_ZOOM,
+        // which also performs some other checks and sets more values.
+        public static int RadarZoomValue
+        {
+            get
+            {
+                if (s_radarZoomValueAddress == null)
+                {
+                    return 0;
+                }
+
+                //When SET_RADAR_ZOOM writes to this field, it is set to the desired value + 100 in both tested versions(b427 and b3586).
+                return (*s_radarZoomValueAddress) - 100;
             }
         }
 
