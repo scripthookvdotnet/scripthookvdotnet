@@ -17,6 +17,44 @@ namespace GTA.UI
     public class CustomSprite : ISpriteElement, IWorldDrawableElement
     {
         /// <summary>
+        /// Gets the full path to the sprite on the disk.
+        /// </summary>
+        public string Path { get; private set; }
+
+        /// <summary>
+        /// Loads the texture from the specified path.
+        /// </summary>
+        public void LoadTexture(string path)
+        {
+            if(Path == path)
+            {
+                return;
+            }
+
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException(path);
+            }
+
+            if (!s_textures.TryGetValue(path, out _id))
+            {
+                _id = SHVDN.NativeMemory.CreateTexture(path);
+                s_textures.Add(path, _id);
+            }
+
+            Path = path;
+
+            if (!s_indexes.ContainsKey(_id))
+            {
+                s_indexes.Add(_id, 0);
+            }
+            if (!s_lastDraw.ContainsKey(_id))
+            {
+                s_lastDraw.Add(_id, 0);
+            }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CustomSprite"/> class used for drawing external textures on the screen.
         /// </summary>
         /// <param name="filename">Full path to location of the <see cref="CustomSprite"/> on the disc.</param>
@@ -64,29 +102,7 @@ namespace GTA.UI
         /// <exception cref="FileNotFoundException">Thrown if the specified file doesn't exist</exception>
         public CustomSprite(string filename, SizeF size, PointF position, Color color, float rotation, bool centered)
         {
-            if (!File.Exists(filename))
-            {
-                throw new FileNotFoundException(filename);
-            }
-
-            if (s_textures.TryGetValue(filename, out int texture))
-            {
-                _id = texture;
-            }
-            else
-            {
-                _id = SHVDN.NativeMemory.CreateTexture(filename);
-                s_textures.Add(filename, _id);
-            }
-
-            if (!s_indexes.ContainsKey(_id))
-            {
-                s_indexes.Add(_id, 0);
-            }
-            if (!s_lastDraw.ContainsKey(_id))
-            {
-                s_lastDraw.Add(_id, 0);
-            }
+            LoadTexture(filename);
 
             Enabled = true;
             Size = size;
