@@ -178,5 +178,16 @@ namespace GTA
         {
             return Handle.GetHashCode();
         }
+
+        /// <summary>
+        /// Attempts to get the memory address of this object.
+        /// </summary>
+        /// <param name="address">The memory address if successful; otherwise, <see cref="IntPtr.Zero"/>.</param>
+        /// <returns><see langword="true"/> if the memory address is valid; otherwise, <see langword="false"/>.</returns>
+        private bool TryGetMemoryAddress(out IntPtr address)
+        {
+            address = MemoryAddress;
+            return address != IntPtr.Zero;
+        }
     }
 }
