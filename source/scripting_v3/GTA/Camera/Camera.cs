@@ -101,6 +101,12 @@ namespace GTA
         /// </summary>
         public IntPtr MemoryAddress => SHVDN.NativeMemory.GetCameraAddress(Handle);
 
+        private bool TryGetMemoryAddress(out IntPtr address)
+        {
+            address = MemoryAddress;
+            return address != IntPtr.Zero;
+        }
+
         /// <summary>
         /// Gets the memory address of the matrix for this <see cref="Camera"/>.
         /// </summary>
@@ -108,11 +114,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return IntPtr.Zero;
-                }
 
                 return (SHVDN.MemDataMarshal.ReadByte(address + 0x220) & 1) == 0 ? address + 0x30 : address + 0x110;
             }

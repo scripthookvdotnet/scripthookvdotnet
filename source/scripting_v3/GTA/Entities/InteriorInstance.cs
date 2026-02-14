@@ -48,11 +48,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 return new Model(SHVDN.NativeMemory.GetModelHashFromEntity(address));
             }
@@ -65,11 +62,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return Matrix.Zero;
-                }
 
                 return new Matrix(SHVDN.MemDataMarshal.ReadMatrix(address + 0x60));
             }
@@ -85,11 +79,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return Vector3.Zero;
-                }
 
                 unsafe
                 {
@@ -108,11 +99,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return Quaternion.Zero;
-                }
 
                 unsafe
                 {
@@ -134,11 +122,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return Vector3.Zero;
-                }
 
                 return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x90));
             }
@@ -152,11 +137,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return null;
-                }
 
                 int interiorProxyHandle = SHVDN.NativeMemory.GetInteriorProxyHandleFromInteriorInst(Handle);
                 return interiorProxyHandle != 0 ? new InteriorProxy(interiorProxyHandle) : null;

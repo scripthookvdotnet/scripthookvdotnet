@@ -34,11 +34,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 int offset = Game.FileVersion switch
                 {
@@ -59,11 +56,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 int offset = Game.FileVersion switch
                 {
@@ -96,11 +90,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 int offset = Game.FileVersion switch
                 {
@@ -122,11 +113,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 int offset = Game.FileVersion switch
                 {
@@ -172,8 +160,7 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
+                if (!TryGetMemoryAddress(out IntPtr address))
                 {
                     // The same value is set when the game creates a blip
                     return System.Drawing.Color.FromArgb(unchecked((int)0xFF5DB6E5));
@@ -206,11 +193,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return null;
-                }
 
                 ushort nameLength = (ushort)SHVDN.MemDataMarshal.ReadInt16(address + 0x30);
 
@@ -239,21 +223,15 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 return SHVDN.MemDataMarshal.ReadInt32(address + 0x38);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteInt32(address + 0x38, value);
             }
@@ -288,11 +266,8 @@ namespace GTA
                     return Function.Call<int>(Hash.GET_BLIP_ROTATION, Handle);
                 }
 
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 Version gameVersion = Game.FileVersion;
                 if (gameVersion >= ExeVersionConsts.v1_0_944_2)
@@ -319,11 +294,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 Version gameVersion = Game.FileVersion;
                 if (gameVersion >= ExeVersionConsts.v1_0_944_2)
@@ -338,11 +310,8 @@ namespace GTA
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return;
-                }
 
                 float valueNormalized = value % 360;
                 if (valueNormalized < 0)
@@ -380,21 +349,15 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + 0x50);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + 0x50, value);
             }
@@ -408,22 +371,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 int offset = Game.FileVersion >= ExeVersionConsts.v1_0_463_1 ? 0x54 : 0x50;
                 return SHVDN.MemDataMarshal.ReadFloat(address + offset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return;
-                }
 
                 int offset = Game.FileVersion >= ExeVersionConsts.v1_0_463_1 ? 0x54 : 0x50;
                 SHVDN.MemDataMarshal.WriteFloat(address + offset, value);
@@ -438,11 +395,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 return SHVDN.MemDataMarshal.ReadInt16(address + 0x44);
             }
@@ -459,11 +413,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
-                }
 
                 int returnValue = SHVDN.MemDataMarshal.ReadUInt16(address + 0x44);
                 if (returnValue == 0xFFFF)
@@ -491,11 +442,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 4);
             }
@@ -513,11 +461,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return false;
-                }
 
                 const int PropertyFlagsOffset = 0x20;
                 // This bit is the greatest bit that isn't get shifted by adding the flag for the gold tick, which can
@@ -543,11 +488,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return false;
-                }
 
                 int bitIndex = Game.FileVersion switch
                 {
@@ -569,11 +511,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 17);
             }
@@ -591,11 +530,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 18);
             }
@@ -613,11 +549,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 19);
             }
@@ -635,11 +568,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 20);
             }
@@ -699,11 +629,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 14);
             }
@@ -720,11 +647,8 @@ namespace GTA
         /// Returns <see langword="null" /> if the <see cref="Blip"/> does not exist.
         public string GetAppropriateName()
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address))
                 return null;
-            }
 
             ushort nameLength = (ushort)SHVDN.MemDataMarshal.ReadInt16(address + 0x30);
 
@@ -817,6 +741,17 @@ namespace GTA
         public override int GetHashCode()
         {
             return Handle.GetHashCode();
+        }
+
+        /// <summary>
+        /// Attempts to get the memory address of this object.
+        /// </summary>
+        /// <param name="address">The memory address if successful; otherwise, <see cref="IntPtr.Zero"/>.</param>
+        /// <returns><see langword="true"/> if the memory address is valid; otherwise, <see langword="false"/>.</returns>
+        private bool TryGetMemoryAddress(out IntPtr address)
+        {
+            address = MemoryAddress;
+            return address != IntPtr.Zero;
         }
     }
 }

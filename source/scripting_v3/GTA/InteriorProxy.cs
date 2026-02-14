@@ -51,6 +51,12 @@ namespace GTA
         /// </summary>
         public IntPtr MemoryAddress => SHVDN.NativeMemory.GetInteriorProxyAddress(Handle);
 
+        private bool TryGetMemoryAddress(out IntPtr address)
+        {
+            address = MemoryAddress;
+            return address != IntPtr.Zero;
+        }
+
         /// <summary>
         /// Gets or sets the position of this <see cref="AnimatedBuilding"/>.
         /// </summary>
@@ -61,11 +67,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return Vector3.Zero;
-                }
 
                 return new Vector3(SHVDN.MemDataMarshal.ReadVector3(address + 0x70));
             }
@@ -79,11 +82,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return null;
-                }
 
                 int interiorInstHandle = SHVDN.NativeMemory.GetAssociatedInteriorInstHandleFromInteriorProxy(Handle);
                 return interiorInstHandle != 0 ? new InteriorInstance(interiorInstHandle) : null;
@@ -98,11 +98,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return default;
-                }
 
                 return new Model(SHVDN.MemDataMarshal.ReadInt32(address + 0xE4));
             }
