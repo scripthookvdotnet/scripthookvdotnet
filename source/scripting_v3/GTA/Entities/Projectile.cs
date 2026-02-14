@@ -46,11 +46,8 @@ namespace GTA
 
         private int GetOwnerEntityInternal()
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero || SHVDN.NativeMemory.ProjectileOwnerOffset == 0)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.ProjectileOwnerOffset == 0)
                 return 0;
-            }
 
             IntPtr entityAddress = SHVDN.MemDataMarshal.ReadAddress(address + SHVDN.NativeMemory.ProjectileOwnerOffset);
             if (entityAddress == IntPtr.Zero)
@@ -68,11 +65,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.ProjectileAmmoInfoOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.ProjectileAmmoInfoOffset == 0)
                     return 0;
-                }
 
                 return (WeaponHash)SHVDN.MemDataMarshal.ReadInt32(address + SHVDN.NativeMemory.ProjectileAmmoInfoOffset + 0x8);
             }
@@ -83,11 +77,9 @@ namespace GTA
         /// </summary>
         public void Explode()
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address))
+
                 return;
-            }
 
             SHVDN.NativeMemory.ExplodeProjectile(address);
         }

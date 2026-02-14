@@ -222,11 +222,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return IntPtr.Zero;
-                }
 
                 return SHVDN.MemDataMarshal.ReadAddress(address + SHVDN.NativeMemory.Ped.PedIntelligenceOffset);
             }
@@ -386,11 +383,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.SweatOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.SweatOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.SweatOffset);
             }
@@ -455,21 +449,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset == 0)
                     return -2f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessHeightOffset, value);
             }
@@ -482,21 +471,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset == 0)
                     return -2f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessHeightOffset, value);
             }
@@ -525,21 +509,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset == 0)
                     return 0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.LowerWetnessLevelOffset, value);
             }
@@ -566,21 +545,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset == 0)
                     return 0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.UpperWetnessLevelOffset, value);
             }
@@ -594,11 +568,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.IsUsingWetEffectOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.IsUsingWetEffectOffset == 0)
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.IsUsingWetEffectOffset, 0);
             }
@@ -637,11 +608,9 @@ namespace GTA
         /// </remarks>
         public void Wet(float height, float wetLevel)
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address))
+
                 return;
-            }
 
             Wet(height);
 
@@ -691,21 +660,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.ArmorOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.ArmorOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.ArmorOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.ArmorOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.ArmorOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.ArmorOffset, value);
             }
@@ -1687,11 +1651,8 @@ namespace GTA
                     return KnockOffVehicleType.Default;
                 }
 
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return KnockOffVehicleType.Default;
-                }
 
                 // The knock off vehicle type value uses the first 2 bits
                 return (KnockOffVehicleType)(SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Ped.KnockOffVehicleTypeOffset) & 3);
@@ -1790,11 +1751,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return null;
-                }
 
                 // GET_VEHICLE_PED_IS_IN isn't reliable at getting last vehicle since it returns 0 when the ped is going to a door of some vehicle or opening one.
                 // Also, the native returns the vehicle's handle the ped is getting in when ped is getting in it (which is not the last vehicle), though the 2nd parameter name is supposed to be "ConsiderEnteringAsInVehicle" as a leaked header suggests.
@@ -1812,11 +1770,8 @@ namespace GTA
             get
             {
                 // In b2699 or later, GET_VEHICLE_PED_IS_IN always returns the last vehicle without checking the driving flag even when the 2nd argument is set to false.
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return null;
-                }
 
                 int vehicleHandle = SHVDN.NativeMemory.Ped.GetVehicleHandlePedIsIn(address);
                 return vehicleHandle != 0 ? new Vehicle(vehicleHandle) : null;
@@ -1846,11 +1801,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return null;
-                }
 
                 int entityHandle = SHVDN.NativeMemory.Ped.GetGroundPhysicalOfCPed(address);
                 return entityHandle != 0 ? FromHandle(entityHandle) : null;
@@ -1867,11 +1819,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset == 0)
                     return VehicleSeat.None;
-                }
 
                 int seatIndex = SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset);
                 return (seatIndex >= 0 && IsInVehicle()) ? (VehicleSeat)(seatIndex - 1) : VehicleSeat.None;
@@ -2230,11 +2179,9 @@ namespace GTA
         /// </summary>
         public void ClearKillerRecord()
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.SourceOfDeathOffset == 0)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.SourceOfDeathOffset == 0)
+
                 return;
-            }
 
             SHVDN.MemDataMarshal.WriteAddress(address + SHVDN.NativeMemory.Ped.SourceOfDeathOffset, IntPtr.Zero);
         }
@@ -2245,11 +2192,9 @@ namespace GTA
         /// </summary>
         public void ClearCauseOfDeathRecord()
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.CauseOfDeathOffset == 0)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.CauseOfDeathOffset == 0)
+
                 return;
-            }
 
             SHVDN.MemDataMarshal.WriteInt32(address + SHVDN.NativeMemory.Ped.CauseOfDeathOffset, 0);
         }
@@ -2260,11 +2205,9 @@ namespace GTA
         /// </summary>
         public void ClearTimeOfDeathRecord()
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.TimeOfDeathOffset == 0)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.TimeOfDeathOffset == 0)
+
                 return;
-            }
 
             SHVDN.MemDataMarshal.WriteInt32(address + SHVDN.NativeMemory.Ped.TimeOfDeathOffset, 0);
         }
@@ -2371,11 +2314,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset == 0)
                     return false;
-                }
 
                 return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Ped.DropsWeaponsWhenDeadOffset, 14);
             }
@@ -2422,21 +2362,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.InjuryHealthThresholdOffset, value);
             }
@@ -2456,21 +2391,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Ped.FatalInjuryHealthThresholdOffset, value);
             }

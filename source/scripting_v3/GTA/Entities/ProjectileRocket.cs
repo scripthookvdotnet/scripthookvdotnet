@@ -64,21 +64,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketCachedTargetPosOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketCachedTargetPosOffset == 0)
                     return Vector3.Zero;
-                }
 
                 return new Vector3(MemDataMarshal.ReadVector3(address + NativeMemory.ProjectileRocketCachedTargetPosOffset));
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketCachedTargetPosOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketCachedTargetPosOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteVector3(address + NativeMemory.ProjectileRocketCachedTargetPosOffset,
                     value.ToInternalFVector3());
@@ -93,21 +88,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketLaunchDirOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketLaunchDirOffset == 0)
                     return Vector3.Zero;
-                }
 
                 return new Vector3(MemDataMarshal.ReadVector3(address + NativeMemory.ProjectileRocketLaunchDirOffset));
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketLaunchDirOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketLaunchDirOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteVector3(address + NativeMemory.ProjectileRocketLaunchDirOffset,
                     value.ToInternalFVector3());
@@ -128,21 +118,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlightModelInputPitchOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlightModelInputPitchOffset == 0)
                     return Vector3.Zero;
-                }
 
                 return new Vector3(MemDataMarshal.ReadVector3(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset));
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlightModelInputPitchOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlightModelInputPitchOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteVector3(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset,
                     value.ToInternalFVector3());
@@ -156,21 +141,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlightModelInputPitchOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlightModelInputPitchOffset == 0)
                     return 0;
-                }
 
                 return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlightModelInputPitchOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlightModelInputPitchOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketFlightModelInputPitchOffset, value);
             }
@@ -183,21 +163,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlightModelInputRollOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlightModelInputRollOffset == 0)
                     return 0;
-                }
 
                 return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketFlightModelInputRollOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlightModelInputRollOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlightModelInputRollOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketFlightModelInputRollOffset, value);
             }
@@ -210,21 +185,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlightModelInputYawOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlightModelInputYawOffset == 0)
                     return 0;
-                }
 
                 return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketFlightModelInputYawOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlightModelInputYawOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlightModelInputYawOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketFlightModelInputYawOffset, value);
             }
@@ -237,21 +207,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketTimeBeforeHomingOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketTimeBeforeHomingOffset == 0)
                     return 0;
-                }
 
                 return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketTimeBeforeHomingOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketTimeBeforeHomingOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingOffset, value);
             }
@@ -266,21 +231,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset == 0)
                     return 0;
-                }
 
                 return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketTimeBeforeHomingAngleBreakOffset, value);
             }
@@ -293,21 +253,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketLauncherSpeedOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketLauncherSpeedOffset == 0)
                     return 0;
-                }
 
                 return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketLauncherSpeedOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketLauncherSpeedOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketLauncherSpeedOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketLauncherSpeedOffset, value);
             }
@@ -322,21 +277,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketTimeSinceLaunchOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketTimeSinceLaunchOffset == 0)
                     return 0;
-                }
 
                 return MemDataMarshal.ReadFloat(address + NativeMemory.ProjectileRocketTimeSinceLaunchOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketTimeSinceLaunchOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketTimeSinceLaunchOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteFloat(address + NativeMemory.ProjectileRocketTimeSinceLaunchOffset, value);
             }
@@ -437,21 +387,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketCachedDirectionOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketCachedDirectionOffset == 0)
                     return Vector3.Zero;
-                }
 
                 return new Vector3(MemDataMarshal.ReadVector3(address + NativeMemory.ProjectileRocketCachedDirectionOffset));
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || NativeMemory.ProjectileRocketCachedDirectionOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketCachedDirectionOffset == 0)
+
                     return;
-                }
 
                 MemDataMarshal.WriteVector3(address + NativeMemory.ProjectileRocketCachedDirectionOffset,
                     value.ToInternalFVector3());
@@ -482,21 +427,16 @@ namespace GTA
 
         private bool GetProjectileRocketFlag(byte bit)
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlagsOffset == 0)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlagsOffset == 0)
                 return false;
-            }
 
             return MemDataMarshal.IsBitSet(address + NativeMemory.ProjectileRocketFlagsOffset, bit);
         }
         private void SetProjectileRocketFlag(byte bit, bool value)
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero || NativeMemory.ProjectileRocketFlagsOffset == 0)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address) || NativeMemory.ProjectileRocketFlagsOffset == 0)
+
                 return;
-            }
 
             MemDataMarshal.SetBit(address + NativeMemory.ProjectileRocketFlagsOffset, bit, value);
         }

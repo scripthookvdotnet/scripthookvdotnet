@@ -63,11 +63,8 @@ namespace GTA
         /// </returns>
         public Projectile AsProjectile()
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address))
                 return null;
-            }
 
             // `CObject::GetAsCProjectile` should return the same address if the vfunc is overridden by `CProjectile`'s
             // implementation and it should return false otherwise
@@ -84,11 +81,8 @@ namespace GTA
         /// </returns>
         public ProjectileRocket AsProjectileRocket()
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address))
                 return null;
-            }
 
             // `CObject::GetAsCProjectileRocket` should return the same address if the vfunc is overridden by
             // `CProjectileRocket`'s implementation and it should return false otherwise
@@ -105,11 +99,8 @@ namespace GTA
         /// </returns>
         public ProjectileThrown AsProjectileThrown()
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address))
                 return null;
-            }
 
             // `CObject::GetAsCProjectileThrown` should return the same address if the vfunc is overridden by
             // `CProjectileThrown`'s implementation and it should return false otherwise
