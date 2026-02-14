@@ -458,21 +458,15 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.DisablePretendOccupantOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.DisablePretendOccupantOffset == 0)
                     return false;
-                }
 
                 return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.DisablePretendOccupantOffset, 7);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.DisablePretendOccupantOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.DisablePretendOccupantOffset == 0)
                     return;
-                }
 
                 // SET_DISABLE_PRETEND_OCCUPANTS changes the value only if the population type is set to 6 or 7, so change the value manually
                 SHVDN.MemDataMarshal.SetBit(address + SHVDN.NativeMemory.Vehicle.DisablePretendOccupantOffset, 7, !value);
@@ -499,11 +493,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.IsWantedOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.IsWantedOffset == 0)
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.IsWantedOffset, 3);
             }
@@ -520,11 +511,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.NeedsToBeHotwiredOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.NeedsToBeHotwiredOffset == 0)
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.NeedsToBeHotwiredOffset, 2);
             }
@@ -541,11 +529,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.PreviouslyOwnedByPlayerOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.PreviouslyOwnedByPlayerOffset == 0)
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.PreviouslyOwnedByPlayerOffset, 1);
             }
@@ -637,11 +622,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.VehicleTypeOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.VehicleTypeOffset == 0)
                     return VehicleType.None;
-                }
 
                 int vehTypeInt = SHVDN.MemDataMarshal.ReadInt32(address + SHVDN.NativeMemory.Vehicle.VehicleTypeOffset);
                 if (vehTypeInt >= 6 && Game.FileVersion < ExeVersionConsts.v1_0_944_2)
@@ -664,11 +646,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.LodMultiplierOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.LodMultiplierOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.LodMultiplierOffset);
             }
@@ -682,11 +661,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.HandlingDataOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HandlingDataOffset == 0)
                     return new HandlingData(IntPtr.Zero);
-                }
 
                 return new HandlingData(SHVDN.MemDataMarshal.ReadAddress(MemoryAddress + SHVDN.NativeMemory.Vehicle.HandlingDataOffset));
             }
@@ -750,11 +726,8 @@ namespace GTA
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.HeliTailBoomHealthOffset == 0 || !IsHeliOrBlimp)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HeliTailBoomHealthOffset == 0 || !IsHeliOrBlimp)
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.HeliTailBoomHealthOffset, value);
             }
@@ -776,11 +749,8 @@ namespace GTA
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.HeliMainRotorHealthOffset == 0 || !IsHeliOrBlimp)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HeliMainRotorHealthOffset == 0 || !IsHeliOrBlimp)
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.HeliMainRotorHealthOffset, value);
             }
@@ -802,11 +772,8 @@ namespace GTA
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.HeliTailRotorHealthOffset == 0 || !IsHeliOrBlimp)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HeliTailRotorHealthOffset == 0 || !IsHeliOrBlimp)
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.HeliTailRotorHealthOffset, value);
             }
@@ -868,11 +835,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.IsEngineStartingOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.IsEngineStartingOffset == 0)
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.IsEngineStartingOffset, 5);
             }
@@ -893,11 +857,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.EngineTemperatureOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.EngineTemperatureOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.EngineTemperatureOffset);
             }
@@ -915,11 +876,8 @@ namespace GTA
                     return 0.0f;
                 }
 
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.EnginePowerMultiplierOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.EnginePowerMultiplierOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.EnginePowerMultiplierOffset);
             }
@@ -939,21 +897,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.OilLevelOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.OilLevelOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.OilLevelOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.OilLevelOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.OilLevelOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.OilLevelOffset, value);
             }
@@ -966,11 +919,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0.0f;
-                }
 
                 return HandlingData.OilVolume;
             }
@@ -983,21 +933,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.FuelLevelOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.FuelLevelOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.FuelLevelOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.FuelLevelOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.FuelLevelOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.FuelLevelOffset, value);
             }
@@ -1010,11 +955,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0.0f;
-                }
 
                 return HandlingData.PetrolTankVolume;
             }
@@ -1045,21 +987,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.HighGearOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HighGearOffset == 0)
                     return 0;
-                }
 
                 return SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Vehicle.HighGearOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.HighGearOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HighGearOffset == 0)
+
                     return;
-                }
 
                 if (Game.FileVersion >= ExeVersionConsts.v1_0_1604_0)
                 {
@@ -1084,21 +1021,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.NextGearOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.NextGearOffset == 0)
                     return 0;
-                }
 
                 return SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Vehicle.NextGearOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.NextGearOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.NextGearOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteByte(address + SHVDN.NativeMemory.Vehicle.NextGearOffset, (byte)value);
             }
@@ -1111,21 +1043,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.GearOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.GearOffset == 0)
                     return 0;
-                }
 
                 return SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Vehicle.GearOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.GearOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.GearOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteByte(address + SHVDN.NativeMemory.Vehicle.GearOffset, (byte)value);
             }
@@ -1150,21 +1077,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.ClutchOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.ClutchOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.ClutchOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.ClutchOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.ClutchOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.ClutchOffset, value);
             }
@@ -1177,21 +1099,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.AccelerationOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.AccelerationOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.AccelerationOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.AccelerationOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.AccelerationOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.AccelerationOffset, value);
             }
@@ -1204,21 +1121,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.BrakePowerOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.BrakePowerOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.BrakePowerOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.BrakePowerOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.BrakePowerOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.BrakePowerOffset, value);
             }
@@ -1231,21 +1143,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.ThrottlePowerOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.ThrottlePowerOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.ThrottlePowerOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.ThrottlePowerOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.ThrottlePowerOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.ThrottlePowerOffset, value);
             }
@@ -1282,11 +1189,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.WheelSpeedOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.WheelSpeedOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.WheelSpeedOffset);
             }
@@ -1322,11 +1226,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.HeliBladesSpeedOffset == 0 || !IsRotaryWingAircraft)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HeliBladesSpeedOffset == 0 || !IsRotaryWingAircraft)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.HeliBladesSpeedOffset);
             }
@@ -1351,21 +1252,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CurrentRpmOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.CurrentRpmOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.CurrentRpmOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CurrentRpmOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.CurrentRpmOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.CurrentRpmOffset, value);
             }
@@ -1378,11 +1274,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.AccelerationOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.AccelerationOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.AccelerationOffset);
             }
@@ -1398,21 +1291,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SteeringAngleOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SteeringAngleOffset == 0)
                     return 0.0f;
-                }
 
                 return (float)(SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SteeringAngleOffset) * (180.0 / System.Math.PI));
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SteeringAngleOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SteeringAngleOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.SteeringAngleOffset, (float)(value * (System.Math.PI / 180.0)));
             }
@@ -1425,21 +1313,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SteeringScaleOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SteeringScaleOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SteeringScaleOffset);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SteeringScaleOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SteeringScaleOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.SteeringScaleOffset, value);
             }
@@ -1459,11 +1342,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.AlarmTimeOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.AlarmTimeOffset == 0)
                     return false;
-                }
 
                 return (ushort)SHVDN.MemDataMarshal.ReadInt16(address + SHVDN.NativeMemory.Vehicle.AlarmTimeOffset) == ushort.MaxValue; //The alarm is set when the value is 0xFFFF
             }
@@ -1490,22 +1370,17 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.AlarmTimeOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.AlarmTimeOffset == 0)
                     return 0;
-                }
 
                 ushort alarmTime = (ushort)SHVDN.MemDataMarshal.ReadInt16(address + SHVDN.NativeMemory.Vehicle.AlarmTimeOffset);
                 return alarmTime != ushort.MaxValue ? alarmTime : 0;
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || (ushort)value == ushort.MaxValue || SHVDN.NativeMemory.Vehicle.AlarmTimeOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || (ushort)value == ushort.MaxValue || SHVDN.NativeMemory.Vehicle.AlarmTimeOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteInt16(address + SHVDN.NativeMemory.Vehicle.AlarmTimeOffset, (short)value);
             }
@@ -1547,11 +1422,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CanUseSirenOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.CanUseSirenOffset == 0)
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CanUseSirenOffset, 1);
             }
@@ -1565,11 +1437,8 @@ namespace GTA
         /// <returns>Returns <see langword="true"/> if the supplied value can be set.</returns>
         public bool TrySetCanUseSiren(bool value)
         {
-            IntPtr address = MemoryAddress;
-            if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CanUseSirenOffset == 0)
-            {
+            if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.CanUseSirenOffset == 0)
                 return false;
-            }
 
             if (value && !CanUseSiren)
             {
@@ -1707,11 +1576,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.IsInteriorLightOnOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.IsInteriorLightOnOffset == 0)
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.IsInteriorLightOnOffset, 6);
             }
@@ -1781,11 +1647,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.LightsMultiplierOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.LightsMultiplierOffset == 0)
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.LightsMultiplierOffset);
             }
@@ -1814,22 +1677,17 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
-                    // Return true if the entity does not exist, just like IS_ENTITY_DEAD will return true in the same condition
+                // Return true if the entity does not exist, just like IS_ENTITY_DEAD will return true in the same condition
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return true;
-                }
 
                 return (SHVDN.MemDataMarshal.ReadByte(address + 0xD8) & 7) == 3;
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
+
                     return;
-                }
 
                 int targetValue = SHVDN.MemDataMarshal.ReadByte(address + 0xD8) & 0xF8;
 
@@ -1883,11 +1741,9 @@ namespace GTA
             get => Function.Call<bool>(Hash.GET_IS_LEFT_VEHICLE_HEADLIGHT_DAMAGED, Handle);
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.SetBit(address + SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset, 0, value);
             }
@@ -1898,11 +1754,9 @@ namespace GTA
             get => Function.Call<bool>(Hash.GET_IS_RIGHT_VEHICLE_HEADLIGHT_DAMAGED, Handle);
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset == 0)
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.SetBit(address + SHVDN.NativeMemory.Vehicle.IsHeadlightDamagedOffset, 1, value);
             }
@@ -1942,11 +1796,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.CanWheelBreakOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.CanWheelBreakOffset == 0)
                     return false;
-                }
 
                 return !SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.CanWheelBreakOffset, 6);
             }
@@ -1972,11 +1823,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.DropsMoneyWhenBlownUpOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.DropsMoneyWhenBlownUpOffset == 0)
                     return false;
-                }
 
                 // Check if the vehicle class is CAutomobile or a subclass of it
                 if ((uint)Type <= 10)
@@ -2412,11 +2260,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.ProvidesCoverOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.ProvidesCoverOffset == 0)
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.Vehicle.ProvidesCoverOffset, 2);
             }
@@ -2950,11 +2795,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset == 0)
                     return 0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset);
             }
@@ -2979,11 +2821,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset == 0)
                     return 0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset);
             }
@@ -3008,11 +2847,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset == 0)
                     return 0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset);
             }
@@ -3023,11 +2859,10 @@ namespace GTA
                     GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1290_1), nameof(Vehicle), nameof(SpecialFlightModeWingRatio));
                 }
 
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
+
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset, value);
             }
@@ -3047,11 +2882,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
                     return false;
-                }
 
                 return SHVDN.MemDataMarshal.ReadByte(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset) != 0;
             }

@@ -24,6 +24,12 @@ namespace GTA
         /// </summary>
         public IntPtr MemoryAddress => SHVDN.NativeMemory.GetPtfxAddress(Handle);
 
+        private bool TryGetMemoryAddress(out IntPtr address)
+        {
+            address = MemoryAddress;
+            return address != IntPtr.Zero;
+        }
+
         /// <summary>
         /// Gets the <see cref="GTA.Entity"/> this <see cref="ParticleEffect"/> is attached to or <see langword="null" /> if there is none.
         /// </summary>
@@ -62,11 +68,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return Vector3.Zero;
-                }
 
                 address = SHVDN.MemDataMarshal.ReadAddress(address + 32);
                 if (address == IntPtr.Zero)
@@ -78,11 +81,9 @@ namespace GTA
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
+
                     return;
-                }
 
                 address = SHVDN.MemDataMarshal.ReadAddress(address + 32);
                 if (address == IntPtr.Zero)
@@ -114,11 +115,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return default;
-                }
 
                 address = SHVDN.MemDataMarshal.ReadAddress(address + 32) + 320;
                 byte r = Convert.ToByte(SHVDN.MemDataMarshal.ReadFloat(address) * 255f);
@@ -129,11 +127,9 @@ namespace GTA
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
+
                     return;
-                }
 
                 address = SHVDN.MemDataMarshal.ReadAddress(address + 32) + 320;
                 SHVDN.MemDataMarshal.WriteFloat(address, value.R / 255f);
@@ -155,21 +151,16 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(SHVDN.MemDataMarshal.ReadAddress(address + 32) + 336);
             }
             set
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
+
                     return;
-                }
 
                 SHVDN.MemDataMarshal.WriteFloat(SHVDN.MemDataMarshal.ReadAddress(address + 32) + 336, value);
             }
@@ -182,11 +173,8 @@ namespace GTA
         {
             get
             {
-                IntPtr address = MemoryAddress;
-                if (address == IntPtr.Zero)
-                {
+                if (!TryGetMemoryAddress(out IntPtr address))
                     return 0.0f;
-                }
 
                 return SHVDN.MemDataMarshal.ReadFloat(SHVDN.MemDataMarshal.ReadAddress(address + 32) + 384);
             }

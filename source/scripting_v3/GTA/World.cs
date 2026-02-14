@@ -2840,16 +2840,17 @@ namespace GTA
         /// Gets the next position on the street where a <see cref="Vehicle"/> can be placed.  Considers switched off nodes, where ambient vehicles will not spawn.
         /// </summary>
         /// <param name="position">The position to check around.</param>
-        /// <param name="unoccupied">if set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
         public static Vector3 GetNextPositionOnStreet(Vector2 position, bool unoccupied = false)
         {
             return GetNextPositionOnStreet(new Vector3(position.X, position.Y, 0f), unoccupied);
         }
+
         /// <summary>
         /// Gets the next position on the street where a <see cref="Vehicle"/> can be placed. Considers switched off nodes, where ambient vehicles will not spawn.
         /// </summary>
         /// <param name="position">The position to check around.</param>
-        /// <param name="unoccupied">if set to <see langword="true" /> only find positions that dont already have a vehicle in them.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
         public static Vector3 GetNextPositionOnStreet(Vector3 position, bool unoccupied = false)
         {
             if (unoccupied)
@@ -2872,6 +2873,93 @@ namespace GTA
             {
                 return position;
             }
+
+            return Vector3.Zero;
+        }
+
+        /// <summary>
+        /// Gets the next boat position on water where a boat <see cref="Vehicle"/> can be placed. Considers switched off nodes, where ambient vehicles will not spawn.
+        /// </summary>
+        /// <param name="position">The position to check around.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
+        public static Vector3 GetNextPositionOnWater(Vector2 position, bool unoccupied = false)
+            => GetNextPositionOnWater(new Vector3(position.X, position.Y, 0f), unoccupied);
+
+        /// <summary>
+        /// Gets the next boat position on water where a boat <see cref="Vehicle"/> can be placed. Considers switched off nodes, where ambient vehicles will not spawn.
+        /// </summary>
+        /// <param name="position">The position to check around.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
+        public static Vector3 GetNextPositionOnWater(Vector3 position, bool unoccupied = false)
+        {
+            if (unoccupied)
+            {
+                for (int i = 1; i < 40; i++)
+                {
+                    var node = GetNode(position, i);
+
+                    if (IsNotBoatNodeOrNull(node))
+                        continue;
+
+                    var nodePos = node.Position;
+
+                    if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, nodePos.X, nodePos.Y, nodePos.Z, 5.0f, 5.0f, 5.0f, 0))
+                        return nodePos;
+                }
+            }
+            else 
+            {
+                var node = GetNode(position, 1);
+
+                if (!IsNotBoatNodeOrNull(node))
+                    return node.Position;
+            }
+
+            static PathNode GetNode(Vector3 position, int nthClosest)
+                => PathFind.GetNthClosestVehicleNode(position, nthClosest, GetClosestVehicleNodeFlags.IncludeSwitchedOffNodes | GetClosestVehicleNodeFlags.IncludeBoatNodes);
+
+            static bool IsNotBoatNodeOrNull(PathNode node)
+            {
+                if (node is null)
+                    return true;
+
+                return !node.GetVehicleNodePropertyFlags().HasFlag(VehiclePathNodePropertyFlags.Boat);
+            }
+
+            return Vector3.Zero;
+        }
+
+        /// <summary>
+        /// Gets the next position on the street where a <see cref="Vehicle"/> can be placed with the heading of the ambient traffic flow at this position. Considers switched off nodes, where ambient vehicles will not spawn.
+        /// </summary>
+        /// <param name="position">The position to check around.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
+        /// <param name="heading">The heading of the ambient traffic flow.</param>
+        public static Vector3 GetNextPositionOnStreetWithHeading(Vector2 position, out float heading, bool unoccupied = false)
+            => GetNextPositionOnStreetWithHeading(new Vector3(position.X, position.Y, 0f), out heading, unoccupied);
+
+        /// <summary>
+        /// Gets the next position on the street where a <see cref="Vehicle"/> can be placed with the heading of the ambient traffic flow at this position. Considers switched off nodes, where ambient vehicles will not spawn.
+        /// </summary>
+        /// <param name="position">The position to check around.</param>
+        /// <param name="unoccupied">If set to <see langword="true" /> only find positions that don't already have a vehicle in them.</param>
+        /// <param name="heading">The heading of the ambient traffic flow.</param>
+        public static Vector3 GetNextPositionOnStreetWithHeading(Vector3 position, out float heading, bool unoccupied = false)
+        {
+            heading = 0f;
+            if (unoccupied)
+            {
+                for (int i = 1; i < 40; i++)
+                {
+                    if (!PathFind.GetNthClosestVehicleNodePositionWithHeading(position, i, out position, out heading, out int _, GetClosestVehicleNodeFlags.IncludeSwitchedOffNodes))
+                        continue;
+
+                    if (!Function.Call<bool>(Hash.IS_POINT_OBSCURED_BY_A_MISSION_ENTITY, position.X, position.Y, position.Z, 5.0f, 5.0f, 5.0f, 0))
+                        return position;
+                }
+            }
+            else if (PathFind.GetNthClosestVehicleNodePositionWithHeading(position, 1, out position, out heading, out int _, GetClosestVehicleNodeFlags.IncludeSwitchedOffNodes))
+                return position;
 
             return Vector3.Zero;
         }
