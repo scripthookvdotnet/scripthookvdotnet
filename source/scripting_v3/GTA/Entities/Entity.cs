@@ -81,9 +81,20 @@ namespace GTA
         }
 
         /// <summary>
+        /// Determines whether the specified entity is null, has an invalid memory address, or does not exist in the game world.
+        /// </summary>
+        public static bool IsNullOrNotExisting(Entity entity)
+            => entity is null || entity.IsInvalid || !entity.Exists();
+
+        /// <summary>
         /// Gets the memory address where the <see cref="Entity"/> is stored in memory.
         /// </summary>
         public IntPtr MemoryAddress => SHVDN.NativeMemory.GetEntityAddress(Handle);
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Entity"/> has an invalid memory address.
+        /// </summary>
+        public bool IsInvalid => MemoryAddress == IntPtr.Zero;
 
         /// <summary>
         /// Gets the type of the current <see cref="Entity"/>.
