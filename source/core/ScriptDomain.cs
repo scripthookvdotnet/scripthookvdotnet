@@ -337,7 +337,7 @@ namespace SHVDN
                 else
                 {
                     Log.Message(Log.Level.Error, "Could not find `GTA.Script` type in ",
-                        Path.GetFileName(apiAsm.Location), ".", "Report to the developers of SHVDN as this should be " +
+                        Path.GetFileName(apiAsm.Location), ".", "Report to the developers of SHVDN, as this should be " +
                         "a bug.");
                 }
             }
@@ -346,8 +346,8 @@ namespace SHVDN
             if (_scriptingApiAsms.Count == 0)
             {
                 Log.Message(Log.Level.Error, "No scripting API .dll files (\"ScriptHookVDotNet*.dll\") were loaded, " +
-                    "and therefore ScriptHookVDotNet can't load any scripts or have the console work including " +
-                    "the reload feature except for displaying logs. Make sure *at least* ScriptHookVDotNet3.dll is in" +
+                    "and therefore ScriptHookVDotNet can't load any scripts or have the console work, including " +
+                    "the reload feature, except for displaying logs. Make sure *at least* ScriptHookVDotNet3.dll is in" +
                     "the root directory, so the console can work and scripts that are built against only " +
                     "ScriptHookVDotNet3.dll (the v3 API) can work.");
 
@@ -551,7 +551,7 @@ namespace SHVDN
             if (!foundfirstNonDeprecatedScriptApi && !foundLastDeprecatedScriptApi)
             {
                 Log.Message(Log.Level.Error, "Could not compile ", scriptFileName, " because " +
-                    "there are not any loaded scripting APIs to compile scripts.");
+                    "there are no loaded scripting APIs to compile scripts.");
                 return false;
             }
 
@@ -1332,7 +1332,7 @@ namespace SHVDN
                     int scriptCountUsingDeprecatedApi = DeprecatedScriptAssemblyNamesPerApiVersion.Values.Aggregate(0, (result, current) => result + current.Count);
 
                     PostTickerToFeed(
-                        message: $"~s~INFO: ~b~{scriptCountUsingDeprecatedApi.ToString()}~s~ scripts are running but are using the v2 API (ScriptHookVDotNet2.dll), which ~o~is deprecated and not actively supported~s~. It may stop being supported in the future, disabling to run the scripts. You could contact the author(s) or find alternatives to avoid the issue. See the console outputs or the log file for more details.",
+                        message: $"~s~INFO: ~b~{scriptCountUsingDeprecatedApi.ToString()}~s~ scripts are running but are using the v2 API (ScriptHookVDotNet2.dll), which ~o~is deprecated and not actively supported~s~. It may stop being supported in the future, disabling the ability to run the scripts. You could contact the author(s) or find alternatives to avoid the issue. See the console outputs or the log file for more details.",
                         isImportant: true,
                         cacheMessage: false
                     );
