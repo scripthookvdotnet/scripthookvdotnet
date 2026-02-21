@@ -702,7 +702,7 @@ namespace SHVDN
                 else
                 {
                     Log.Message(Log.Level.Info, "Found no compatible scripts in ", Path.GetFileName(filename),
-                    " but loaded for scripts.");
+                    " but loaded as a library.");
                 }
                 return false;
             }
