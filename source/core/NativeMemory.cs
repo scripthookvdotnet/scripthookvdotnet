@@ -4636,7 +4636,13 @@ namespace SHVDN
                     return 0;
                 }
 
-                //When SET_RADAR_ZOOM writes to this field, it is set to the desired value + 100 in both tested versions(b427 and b3586).
+                if (*s_radarZoomValueAddress == 0)
+                {
+                    return 0;
+                }
+
+                // SET_RADAR_ZOOM adds FORCED_MIN_ZOOM_VALUE to the value if not 0.
+                // The value has been 100 in b427 and b3586.
                 return (*s_radarZoomValueAddress) - 100;
             }
         }
