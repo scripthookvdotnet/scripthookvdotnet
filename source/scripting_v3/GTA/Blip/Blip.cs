@@ -106,9 +106,11 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets this <see cref="Blip"/>s label to the given number.
+        /// Gets or sets the number label of this <see cref="Blip"/>.
         /// </summary>
-        /// <remarks>returns <c>-1</c> if the internal value of this property value is between <c>0x80</c> to <c>0xFF</c>.</remarks>
+        /// <remarks>
+        /// Valid range is <c>0–127</c>. Returns <c>-1</c> if the game does not display a number on the blip.
+        /// </remarks>
         public int NumberLabel
         {
             get
@@ -123,15 +125,10 @@ namespace GTA
                     _ => 0x5B
                 };
 
-                int returnValue = (int)SHVDN.MemDataMarshal.ReadByte(address + offset);
+                int val = (sbyte)SHVDN.MemDataMarshal.ReadByte(address + offset);
 
-                // the game does not show a number label on the blip if the value is between 0x80 to 0xFF
-                if ((returnValue & 0x80) != 0)
-                {
-                    return -1;
-                }
-
-                return returnValue;
+                // The game does not show a number for negative values.
+                return val < 0 ? -1 : val;
             }
             set => Function.Call(Hash.SHOW_NUMBER_ON_BLIP, Handle, value);
         }
