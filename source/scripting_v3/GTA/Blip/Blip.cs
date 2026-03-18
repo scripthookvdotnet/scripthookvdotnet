@@ -399,7 +399,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address))
                     return 0;
 
-                return SHVDN.MemDataMarshal.ReadInt16(address + 0x44);
+                return SHVDN.MemDataMarshal.ReadUInt16(address + 0x44);
             }
             set => Function.Call(Hash.SET_BLIP_FLASH_INTERVAL, Handle, value);
         }
