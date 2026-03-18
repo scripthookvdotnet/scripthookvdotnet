@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Drawing;
 using GTA.Math;
 using GTA.Native;
+using GTA.UI;
 
 namespace GTA
 {
@@ -163,7 +164,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address))
                 {
                     // The same value is set when the game creates a blip
-                    return System.Drawing.Color.FromArgb(unchecked((int)0xFF5DB6E5));
+                    return HudColors.GetColor(HudColor.Blue);
                 }
 
                 return System.Drawing.Color.FromArgb(SHVDN.MemDataMarshal.ReadInt32(address + 0x4C));
