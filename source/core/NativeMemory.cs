@@ -179,7 +179,14 @@ namespace SHVDN
                 s_objectPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
             }
 
-            address = MemScanner.FindPatternBmh("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
+            if (GameFileVersion >= new Version(1, 0, 3788, 0))
+            {
+                address = MemScanner.FindPatternBmh("\x4C\x8B\x05\x00\x00\x00\x00\x41\x3B\x50\x00\x7D\x00\x49\x8B\x40", "xxx????xxx?x?xxx");
+            }
+            else
+            {
+                address = MemScanner.FindPatternBmh("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
+            }
             if (address != null)
             {
                 s_fwScriptGuidPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
@@ -208,10 +215,10 @@ namespace SHVDN
             {
                 s_interiorInstPoolAddress = (ulong*)(*(int*)(address + 23) + address + 27);
             }
-            address = MemScanner.FindPatternBmh("\x0F\x85\xA3\x00\x00\x00\x8B\x52\x0C\x48\x8B\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x48\x85\xC0\x0F\x84\x8B\x00\x00\x00\x45\x33\xC9\x45\x33\xC0", "xxxxxxxxxxxx????x????xxxxxxxxxxxxxxx");
+            address = MemScanner.FindPatternBmh("\x48\x8B\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x66\x89\x03", "xxx????x????xxx");
             if (address != null)
             {
-                s_interiorProxyPoolAddress = (ulong*)(*(int*)(address + 12) + address + 16);
+                s_interiorProxyPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
             }
 
             address = MemScanner.FindPatternBmh("\x0F\x84\x87\x00\x00\x00\xFF\xC9\x74\x79\xFF\xC9\x74\x6B\x66\x0F\x6E\x35", "xxxxxxxxxxxxxxxxxx");
@@ -329,10 +336,10 @@ namespace SHVDN
                 s_getCGameScriptHandlerAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(new IntPtr(*(int*)(address - 19) + address - 15));
             }
 
-            address = MemScanner.FindPatternBmh("\x4C\x8D\x05\x00\x00\x00\x00\x0F\xB7\xC1", "xxx????xxx");
+            address = MemScanner.FindPatternBmh("\x3B\x35\x00\x00\x00\x00\x74\x00\x48\x81\xFD", "xx????x?xxx");
             if (address != null)
             {
-                s_radarBlipPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+                s_radarBlipPoolAddress = (ulong*)(*(int*)(address - 4) + address);
             }
             address = MemScanner.FindPatternBmh("\xFF\xC6\x49\x83\xC6\x08\x3B\x35\x00\x00\x00\x00\x7C\x9B", "xxxxxxxx????xx");
             if (address != null)
@@ -452,10 +459,10 @@ namespace SHVDN
             }
 
             // Find camera objects
-            address = MemScanner.FindPatternBmh("\x48\x8B\xC8\xEB\x02\x33\xC9\x48\x85\xC9\x74\x26", "xxxxxxxxxxxx");
+            address = MemScanner.FindPatternBmh("\x48\x8B\x0D\x00\x00\x00\x00\x48\x8B\xD7\xE8\x00\x00\x00\x00\x8B\xD8\x8B\xC3", "xxx????xxxx????xxxx");
             if (address != null)
             {
-                s_cameraPoolAddress = (ulong*)(*(int*)(address - 9) + address - 5);
+                s_cameraPoolAddress = (ulong*)(*(int*)(address + 3) + address + 7);
             }
 
             address = MemScanner.FindPatternBmh("\x48\x8B\xC7\xF3\x0F\x10\x0D", "xxxxxxx");
@@ -708,11 +715,11 @@ namespace SHVDN
                 s_colliderCountOffset = s_colliderCapacityOffset + 4;
             }
 
-            address = MemScanner.FindPatternBmh("\x7E\x63\x48\x89\x5C\x24\x08\x57\x48\x83\xEC\x20", "xxxxxxxxxxxx");
+            address = MemScanner.FindPatternBmh("\x48\x8B\x1D\x00\x00\x00\x00\x48\x85\xDB\x74\x04\x48\x8B\x5B\x48", "xxx????xxxxxxxxx");
             if (address != null)
             {
-                InteriorProxyPtrFromGameplayCamAddress = (ulong*)(*(int*)(address + 37) + address + 41);
-                InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 49);
+                InteriorProxyPtrFromGameplayCamAddress = (ulong*)(*(int*)(address + 3) + address + 7);
+                InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 15);
             }
 
             address = MemScanner.FindPatternBmh("\x8D\x43\x64\x89\x05\x00\x00\x00\x00", "xxxxx????");
@@ -1778,7 +1785,7 @@ namespace SHVDN
                     {
                         int unkVehHeadlightOffset = *(int*)(address + 3);
                         byte* unkFuncAddr = (*(int*)(address + 8) + address + 12);
-                        address = MemScanner.FindPatternBmh("\x8B\xC3\x8B\xCB\x48\xC1\xE8\x05\x83\xE1\x1F", "xxxxxxxxxxx", new IntPtr(unkFuncAddr), 0x200u);
+                        address = MemScanner.FindPatternBmh("\x8B\x00\x8B\x00\x48\xC1\xE8\x05\x83\xE1\x1F\x8B\x84\x00\x00\x00\x00\x00\x0F\xA3\xC8\x73", "x?x?xxxxxxxxx?????xxxx", new IntPtr(unkFuncAddr), 0x200u);
                         if (address != null)
                         {
                             IsHeadlightDamagedOffset = *(int*)(address + 14) + unkVehHeadlightOffset;
@@ -1924,11 +1931,11 @@ namespace SHVDN
                     CWheelDynamicFlagsOffset = *(int*)(address + 6);
                 }
 
-                address = MemScanner.FindPatternBmh("\x74\x21\x8B\xD7\x48\x8B\xCB\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8", "xxxxxxxx????xxxx");
+                address = MemScanner.FindPatternBmh("\x48\x85\xC0\x74\x00\x8B\x00\x48\x8B\x00\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8", "xxxx?x?xx?x????xxxx");
                 if (address != null)
                 {
-                    s_fixVehicleWheelFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr(*(int*)(address + 16) + address + 20));
-                    address = MemScanner.FindPatternNaive("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 20));
+                    s_fixVehicleWheelFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr(*(int*)(address + 19) + address + 23));
+                    address = MemScanner.FindPatternNaive("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 23));
                     ShouldShowOnlyVehicleTiresWithPositiveHealthOffset = *(int*)(address + 2);
                 }
 
@@ -1937,7 +1944,7 @@ namespace SHVDN
                 {
                     address = MemScanner.FindPatternBmh("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
                     s_punctureVehicleTireNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x10)));
-                    address = MemScanner.FindPatternBmh("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\xF1\xF6\x80", "xxxxxxx????xxxxx");
+                    address = MemScanner.FindPatternBmh("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\x00\xF6\x80", "xxxxxxx????xx?xx");
                     s_burstVehicleTireOnRimNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr((long)(address - 0xB)));
                 }
                 else
