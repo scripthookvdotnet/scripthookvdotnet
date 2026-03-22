@@ -33,7 +33,7 @@ For script developers, please note that new APIs included in new nightly builds 
 In other words, **you should build your scripts against stable versions but not nightly versions unless you build your scripts for testing some of the new APIs added in nightly versions, so you won't accidentally use anything not available in any stable versions. Building scripts against nightly versions may make scripts not work as intended in SHVDN versions different from the versions they are built against! No compatibility support will be provided for nightly-only features!**
 
 ## Installation
-* Extract all the files in the root folder from the zip file into your game folder except for `README.txt` and the 2 folders.
+* Extract all the files in the root folder from the zip file into your game folder (where `GTA5.exe` is) except for `README.txt` and the 2 folders.
     * The XML files in the `Docs` folder are provided solely as API documentation for script developers.
 * When you update, **always make sure to update at least all the asi and the .dll files together! No support will be provided if you cherry-pick them and that causes problems!** The following files are the ones you must update together:
     * `ScriptHookVDotNet.asi`
