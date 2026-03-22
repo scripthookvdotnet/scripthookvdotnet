@@ -400,6 +400,7 @@ namespace GTA
         Kanjo = 409049982u,
         KanjoSJ = 4230891418u,
         Khamelion = 544021352u,
+        Khanjali = 2859440138u,
         Khanjari = 2859440138u,
         Komoda = 3460613305u,
         Kosatka = 1336872304u,
