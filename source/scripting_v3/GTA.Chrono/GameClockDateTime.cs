@@ -392,11 +392,11 @@ namespace GTA.Chrono
             if (_date.TryAddMonths(months, out GameClockDate date))
             {
                 dateTime = default;
-                return false;
+                return true;
             }
 
             dateTime = new GameClockDateTime(date, _time);
-            return true;
+            return false;
         }
 
         /// <summary>
