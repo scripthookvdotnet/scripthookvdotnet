@@ -26,7 +26,7 @@ namespace SHVDN
             _spinLock = new SpinLock();
         }
 
-        public TimeSpan Elapsed => new TimeSpan(ElapsedMilliseconds);
+        public TimeSpan Elapsed => new TimeSpan((long)ElapsedMilliseconds * TimeSpan.TicksPerMillisecond);
 
         public uint ElapsedMilliseconds
         {
