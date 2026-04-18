@@ -284,7 +284,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="value">The vector to negate.</param>
         /// <returns>A vector facing in the opposite direction.</returns>
-        public static Vector4 operator -(Vector4 value) => new(-value.X, -value.Y, -value.Z, -value.Z);
+        public static Vector4 operator -(Vector4 value) => new(-value.X, -value.Y, -value.Z, -value.W);
 
         /// <summary>
         /// Scales a vector by the given value.
