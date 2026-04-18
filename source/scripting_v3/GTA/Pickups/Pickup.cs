@@ -37,7 +37,7 @@ namespace GTA
             {
                 // GET_PICKUP_OBJECT returns -1 (not 0) if the pickup placement has no object or is invalid
                 int objHandle = Function.Call<int>(Hash.GET_PICKUP_OBJECT, Handle);
-                return objHandle == -1 ? new PickupObject(objHandle) : null;
+                return objHandle != -1 ? new PickupObject(objHandle) : null;
             }
         }
 
