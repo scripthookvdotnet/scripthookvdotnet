@@ -35,6 +35,10 @@ namespace GTA.UI
         /// </summary>
         public void Delete() => Function.Call(Hash.THEFEED_REMOVE_ITEM, Handle);
 
+        public bool Equals(FeedPost other)
+        {
+            return Handle == other.Handle;
+        }
         public override bool Equals(object obj)
         {
             if (obj is FeedPost feedItem)
