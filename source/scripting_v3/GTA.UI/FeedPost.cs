@@ -5,7 +5,7 @@
 
 using GTA.Native;
 
-namespace GTA
+namespace GTA.UI
 {
     /// <summary>
     /// Represents a feed post (for the gameStream).
