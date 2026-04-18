@@ -191,8 +191,8 @@ namespace GTA
         /// <summary>
         ///	Sets the camera view mode for the specified context.
         /// </summary>
-        public static CamViewMode SetCamViewModeForContext(CamViewModeContext context, CamViewMode viewMode)
-            => Function.Call<CamViewMode>(Hash.SET_CAM_VIEW_MODE_FOR_CONTEXT, (int)context, (int)viewMode);
+        public static void SetCamViewModeForContext(CamViewModeContext context, CamViewMode viewMode)
+            => Function.Call(Hash.SET_CAM_VIEW_MODE_FOR_CONTEXT, (int)context, (int)viewMode);
 
         /// <summary>
         /// Returns the view mode context for the active gameplay camera.
