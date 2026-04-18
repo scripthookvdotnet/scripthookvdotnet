@@ -529,7 +529,7 @@ namespace GTA
                 }
 
                 // SET_ENTITY_MAX_HEALTH doesn't care about overflow either
-                SHVDN.MemDataMarshal.WriteUInt16(address + SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset, (ushort)System.Math.Ceiling(value));
+                SHVDN.MemDataMarshal.WriteUInt16(cPlayerInfo + SHVDN.NativeMemory.CPlayerInfoMaxHealthOffset, (ushort)System.Math.Ceiling(value));
                 #endregion
             }
         }
