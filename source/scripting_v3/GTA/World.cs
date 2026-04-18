@@ -2714,7 +2714,7 @@ namespace GTA
             unsafe
             {
                 float returnZ;
-                foundCollision = Function.Call<bool>(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &returnZ, waterAsGround, ignoreDistToWaterLevelCheck);
+                foundCollision = Function.Call<bool>(Hash.GET_GROUND_Z_EXCLUDING_OBJECTS_FOR_3D_COORD, position.X, position.Y, position.Z, &returnZ, waterAsGround, ignoreDistToWaterLevelCheck);
                 height = returnZ;
             }
 
