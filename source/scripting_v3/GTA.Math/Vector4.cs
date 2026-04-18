@@ -156,6 +156,8 @@ namespace GTA.Math
             float num = 1 / length;
             X *= num;
             Y *= num;
+            Z *= num;
+            W *= num;
         }
 
         /// <summary>
