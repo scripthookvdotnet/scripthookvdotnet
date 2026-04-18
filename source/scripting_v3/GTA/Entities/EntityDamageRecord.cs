@@ -83,7 +83,7 @@ namespace GTA
         {
             if (obj is EntityDamageRecord entityDamageRecord)
             {
-                Equals(entityDamageRecord);
+                return Equals(entityDamageRecord);
             }
 
             return false;
