@@ -292,7 +292,7 @@ namespace GTA.Math
         /// <param name="vector">The vector to scale.</param>
         /// <param name="scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static Vector4 operator *(Vector4 vector, float scale) => new(vector.X * scale, vector.Y * scale, vector.Z * scale, vector.Z * scale);
+        public static Vector4 operator *(Vector4 vector, float scale) => new(vector.X * scale, vector.Y * scale, vector.Z * scale, vector.W * scale);
 
         /// <summary>
         /// Scales a vector by the given value.
