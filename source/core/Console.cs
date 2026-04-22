@@ -57,6 +57,51 @@ namespace SHVDN
             uint virtualKeyCode, uint scanCode, byte[] keyboardState,
             [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
 
+        private KeyManager _keyManager = new();
+
+
+        public Console()
+        {
+            // Register Key Actions
+            _keyManager.Register(Keys.PageUp, PageUp);
+            _keyManager.Register(Keys.PageDown, PageDown);
+            _keyManager.Register(Keys.Back, BackwardDeleteChar);
+            _keyManager.Register(Keys.Back | Keys.Alt, BackwardKillWord);
+            _keyManager.Register(Keys.Delete, ForwardDeleteChar);
+            _keyManager.Register(Keys.Left, MoveCursorLeft);
+            _keyManager.Register(Keys.Left | Keys.Control, BackwardWord);
+            _keyManager.Register(Keys.Right, MoveCursorRight);
+            _keyManager.Register(Keys.Right | Keys.Control, ForwardWord);
+            _keyManager.Register(Keys.Insert | Keys.Shift, AddClipboardContent);
+            _keyManager.Register(Keys.Home, MoveCursorToBegOfLine);
+            _keyManager.Register(Keys.End, MoveCursorToEndOfLine);
+            _keyManager.Register(Keys.Up, NextCandidate);
+            _keyManager.Register(Keys.Down, PreviousCandidate);
+            _keyManager.Register(Keys.Enter, CompileExpression);
+            _keyManager.Register(Keys.Escape, Close);
+            _keyManager.Register(Keys.Tab, CompleteCandidate);
+
+            _keyManager.Register(Keys.A | Keys.Control, MoveCursorToBegOfLine);
+            _keyManager.Register(Keys.B | Keys.Control, MoveCursorLeft);
+            _keyManager.Register(Keys.B | Keys.Alt, MoveCursorRight);
+            _keyManager.Register(Keys.D | Keys.Alt, KillWord);
+            _keyManager.Register(Keys.D | Keys.Control, ForwardDeleteChar);
+            _keyManager.Register(Keys.E | Keys.Control, MoveCursorToEndOfLine);
+            _keyManager.Register(Keys.F | Keys.Control, MoveCursorRight);
+            _keyManager.Register(Keys.F | Keys.Alt, ForwardWord);
+            _keyManager.Register(Keys.H | Keys.Control, BackwardDeleteChar);
+            _keyManager.Register(Keys.P | Keys.Control, GoUpCommandList);
+            _keyManager.Register(Keys.N | Keys.Control, GoDownCommandList);
+            _keyManager.Register(Keys.K | Keys.Control, BackwardKillLine);
+            _keyManager.Register(Keys.U | Keys.Control, KillLine);
+            _keyManager.Register(Keys.M | Keys.Control, CompileExpression);
+            _keyManager.Register(Keys.L | Keys.Control, Clear);
+            _keyManager.Register(Keys.V | Keys.Control, AddClipboardContent);
+            _keyManager.Register(Keys.W | Keys.Control, UnixWordRubout);
+            _keyManager.Register(Keys.T | Keys.Alt, TransposeTwoWords);
+            _keyManager.Register(Keys.T | Keys.Control, TransposeTwoChars);
+        }
+
         /// <summary>
         /// Gets or sets whether the console is open.
         /// </summary>
@@ -529,330 +574,93 @@ namespace SHVDN
                 return; // Only interested in key down events and do not need to handle events when the console is not open
             }
 
-            var e = new KeyEventArgs(keys);
 
-            if (e.KeyCode == Keys.PageUp)
+            if (!_keyManager.TryHandle(keys))
             {
-                PageUp();
-                return;
+                var e = new KeyEventArgs(keys);
+
+                var buf = new StringBuilder(256);
+                byte[] keyboardState = new byte[256];
+                keyboardState[(int)Keys.Menu] = e.Alt ? (byte)0xff : (byte)0;
+                keyboardState[(int)Keys.ShiftKey] = e.Shift ? (byte)0xff : (byte)0;
+                keyboardState[(int)Keys.ControlKey] = e.Control ? (byte)0xff : (byte)0;
+
+                // Translate key event to character for text input
+                ToUnicode((uint)e.KeyCode, 0, keyboardState, buf, 256, 0);
+                AddToInput(buf.ToString());
             }
-            if (e.KeyCode == Keys.PageDown)
+        }
+
+        private void NextCandidate()
+        {
+            _selectedCandidateIndex = (_selectedCandidateIndex - 1 + _commandCandidates.Count) % (_commandCandidates.Count == 0 ? 1 : _commandCandidates.Count);
+        }
+
+        private void PreviousCandidate()
+        {
+            _selectedCandidateIndex = (_selectedCandidateIndex + 1) % (_commandCandidates.Count == 0 ? 1 : _commandCandidates.Count);
+        }
+
+        private void CompleteCandidate()
+        {
+            if (_commandCandidates.Count > 0)
             {
-                PageDown();
-                return;
-            }
+                lock (_lock)
+                {
+                    if (_selectedCandidateIndex >= 0 && _selectedCandidateIndex < _commandCandidates.Count)
+                    {
+                        string candidate = _commandCandidates[_selectedCandidateIndex];
+                        int parenIndex = candidate.IndexOf('(');
+                        int closeParenIndex = candidate.IndexOf(')');
+                        bool hasParams = (closeParenIndex - parenIndex > 1);
 
-            switch (e.KeyCode)
-            {
-                case Keys.Back:
-                    if (e.Alt)
-                    {
-                        BackwardKillWord();
-                    }
-                    else
-                    {
-                        BackwardDeleteChar();
-                    }
-
-                    break;
-                case Keys.Delete:
-                    ForwardDeleteChar();
-                    break;
-                case Keys.Left:
-                    if (e.Control)
-                    {
-                        BackwardWord();
-                    }
-                    else
-                    {
-                        MoveCursorLeft();
-                    }
-
-                    break;
-                case Keys.Right:
-                    if (e.Control)
-                    {
-                        ForwardWord();
-                    }
-                    else
-                    {
-                        MoveCursorRight();
-                    }
-
-                    break;
-                case Keys.Insert:
-                    if (e.Shift)
-                    {
-                        AddClipboardContent();
-                    }
-
-                    break;
-                case Keys.Home:
-                    MoveCursorToBegOfLine();
-                    break;
-                case Keys.End:
-                    MoveCursorToEndOfLine();
-                    break;
-                case Keys.Up:
-                    _selectedCandidateIndex = (_selectedCandidateIndex - 1 + _commandCandidates.Count) % (_commandCandidates.Count == 0 ? 1 : _commandCandidates.Count);
-                    break;
-                case Keys.Down:
-                    _selectedCandidateIndex = (_selectedCandidateIndex + 1) % (_commandCandidates.Count == 0 ? 1 : _commandCandidates.Count);
-                    break;
-                case Keys.Enter:
-                    CompileExpression();
-                    break;
-                case Keys.Escape:
-                    IsOpen = false;
-                    break;
-                case Keys.B:
-                    if (e.Control)
-                    {
-                        MoveCursorLeft();
-                    }
-                    else if (e.Alt)
-                    {
-                        BackwardWord();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.D:
-                    if (e.Alt)
-                    {
-                        KillWord();
-                    }
-                    else if (e.Control)
-                    {
-                        ForwardDeleteChar();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.F:
-                    if (e.Control)
-                    {
-                        MoveCursorRight();
-                    }
-                    else if (e.Alt)
-                    {
-                        ForwardWord();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.H:
-                    if (e.Control)
-                    {
-                        BackwardDeleteChar();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.A:
-                    if (e.Control)
-                    {
-                        MoveCursorToBegOfLine();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.E:
-                    if (e.Control)
-                    {
-                        MoveCursorToEndOfLine();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.P:
-                    if (e.Control)
-                    {
-                        GoUpCommandList();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.K:
-                    if (e.Control)
-                    {
-                        BackwardKillLine();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.M:
-                    if (e.Control)
-                    {
-                        CompileExpression();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.N:
-                    if (e.Control)
-                    {
-                        GoDownCommandList();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.L:
-                    if (e.Control)
-                    {
-                        Clear();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.T:
-                    if (e.Alt)
-                    {
-                        TransposeTwoWords();
-                    }
-                    else if (e.Control)
-                    {
-                        TransposeTwoChars();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.U:
-                    if (e.Control)
-                    {
-                        KillLine();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.V:
-                    if (e.Control)
-                    {
-                        AddClipboardContent();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.W:
-                    if (e.Control)
-                    {
-                        UnixWordRubout();
-                    }
-                    else
-                    {
-                        goto default;
-                    }
-
-                    break;
-                case Keys.Tab:
-                    if (_commandCandidates.Count > 0)
-                    {
-                        lock (_lock)
+                        if (parenIndex >= 0)
                         {
-                            if (_selectedCandidateIndex >= 0 && _selectedCandidateIndex < _commandCandidates.Count)
+                            if (hasParams)
                             {
-                                string candidate = _commandCandidates[_selectedCandidateIndex];
-                                int parenIndex = candidate.IndexOf('(');
-                                int closeParenIndex = candidate.IndexOf(')');
-                                bool hasParams = (closeParenIndex - parenIndex > 1);
-
-                                if (parenIndex >= 0)
-                                {
-                                    if (hasParams)
-                                    {
-                                        string cmdName = candidate.Substring(0, parenIndex);
-                                        _input = $"{cmdName}(\"\")";
-                                        _cursorPos = cmdName.Length + 2; 
-                                    }
-                                    else
-                                    {
-                                        _input = candidate.Substring(0, closeParenIndex + 1);
-                                        _cursorPos = _input.Length;
-                                    }
-                                    UpdateCommandCandidates();
-                                }
-                                else
-                                {
-                                    _input = candidate;
-                                    _cursorPos = _input.Length;
-                                    UpdateCommandCandidates();
-                                }
+                                string cmdName = candidate.Substring(0, parenIndex);
+                                _input = $"{cmdName}(\"\")";
+                                _cursorPos = cmdName.Length + 2;
                             }
-                            else if (_commandCandidates.Count > 1)
+                            else
                             {
-                                var names = _commandCandidates
-                                    .Select(c => {
-                                        int idx = c.IndexOf('(');
-                                        return idx > 0 ? c.Substring(0, idx) : c;
-                                    })
-                                    .ToList();
-
-                                string prefix = LongestCommonPrefix(names, _input);
-
-                                if (prefix.Length > _input.Length)
-                                {
-                                    _input = prefix;
-                                    _cursorPos = _input.Length;
-                                    UpdateCommandCandidates();
-                                }
+                                _input = candidate.Substring(0, closeParenIndex + 1);
+                                _cursorPos = _input.Length;
                             }
+                            UpdateCommandCandidates();
+                        }
+                        else
+                        {
+                            _input = candidate;
+                            _cursorPos = _input.Length;
+                            UpdateCommandCandidates();
                         }
                     }
-                    break;
-                default:
-                    var buf = new StringBuilder(256);
-                    byte[] keyboardState = new byte[256];
-                    keyboardState[(int)Keys.Menu] = e.Alt ? (byte)0xff : (byte)0;
-                    keyboardState[(int)Keys.ShiftKey] = e.Shift ? (byte)0xff : (byte)0;
-                    keyboardState[(int)Keys.ControlKey] = e.Control ? (byte)0xff : (byte)0;
+                    else if (_commandCandidates.Count > 1)
+                    {
+                        var names = _commandCandidates
+                            .Select(c => {
+                                int idx = c.IndexOf('(');
+                                return idx > 0 ? c.Substring(0, idx) : c;
+                            })
+                            .ToList();
 
-                    // Translate key event to character for text input
-                    ToUnicode((uint)e.KeyCode, 0, keyboardState, buf, 256, 0);
-                    AddToInput(buf.ToString());
-                    break;
+                        string prefix = LongestCommonPrefix(names, _input);
+
+                        if (prefix.Length > _input.Length)
+                        {
+                            _input = prefix;
+                            _cursorPos = _input.Length;
+                            UpdateCommandCandidates();
+                        }
+                    }
+                }
             }
+        }
+
+        private void Close()
+        {
+            IsOpen = false;
         }
 
         private void PageUp()
@@ -1512,5 +1320,85 @@ namespace SHVDN
         internal string Name => MethodInfo.Name;
         internal string Namespace => MethodInfo.DeclaringType.FullName;
         internal MethodInfo MethodInfo { get; set; }
+    }
+
+    public class KeyManager
+    {
+        public class KeyBinding
+        {
+            public Keys Combined { get; }
+            public Action Action { get; }
+
+            public KeyBinding(Keys combined, Action action)
+            {
+                Combined = combined;
+                Action = action;
+            }
+        }
+
+        private readonly Dictionary<Keys, List<KeyBinding>> _bindings = new();
+
+        private const Keys KeyCodeMask = (Keys)0xFF;
+        private const Keys ModMask = Keys.Control | Keys.Shift | Keys.Alt;
+
+        public void Register(Keys combined, Action action)
+        {
+            var key = combined & KeyCodeMask;
+
+            if (!_bindings.TryGetValue(key, out var list))
+            {
+                list = new List<KeyBinding>();
+                _bindings[key] = list;
+            }
+
+            list.Add(new KeyBinding(combined, action));
+        }
+
+        public bool TryHandle(Keys input)
+        {
+            var key = input & KeyCodeMask;
+            var mods = input & ModMask;
+
+            if (!_bindings.TryGetValue(key, out var list))
+                return false;
+
+            KeyBinding best = null;
+            int bestScore = -1;
+
+            foreach (var binding in list)
+            {
+                var requiredMods = binding.Combined & ModMask;
+
+                if ((mods & requiredMods) != requiredMods)
+                    continue;
+
+                int score = CountBits((uint)requiredMods);
+
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    best = binding;
+                }
+            }
+
+            if(best == null)
+            {
+                return false;
+            }
+
+            best.Action();
+            return true;
+        }
+
+        private static int CountBits(uint value)
+        {
+            int count = 0;
+            while (value != 0)
+            {
+                value &= value - 1; // clear lowest set bit
+                count++;
+            }
+            return count;
+        }
     }
 }
