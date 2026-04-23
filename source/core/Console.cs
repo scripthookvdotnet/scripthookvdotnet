@@ -1174,9 +1174,9 @@ namespace SHVDN
                     return compilerResult.CompiledAssembly.GetType("ConsoleInput").GetMethod("Execute");
                 }
 
-                PrintError($"Couldn't compile input expression: {capturedInput}");
-
                 var errors = new StringBuilder();
+
+                errors.AppendLine($"Couldn't compile input expression: {capturedInput}");
 
                 for (int i = 0; i < compilerResult.Errors.Count; ++i)
                 {
