@@ -106,7 +106,21 @@ namespace SHVDN
 
 
             _keyManager.Register(Keys.Enter, CompileExpression);
-            _keyManager.Register(Keys.Escape, Close);
+
+            _keyManager.Register(Keys.Escape, () =>
+            {
+                lock (_lock)
+                {
+                    if (_hideCandidates || _commandCandidates.Count == 0)
+                    {
+                        Close();
+                        return;
+                    }
+
+                    _hideCandidates = true;
+                }          
+            });
+
             _keyManager.Register(Keys.Tab, CompleteCandidate);
 
             _keyManager.Register(Keys.A | Keys.Control, MoveCursorToBegOfLine);
