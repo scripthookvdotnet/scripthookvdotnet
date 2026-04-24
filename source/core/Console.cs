@@ -32,6 +32,7 @@ namespace SHVDN
         private bool _shouldBlockControls;
         private Task<MethodInfo> _compilerTask;
         private List<string> _commandCandidates = new();
+        private bool _hideCandidates = false;
         private int _selectedCandidateIndex = -1;
 
         // We need a lock because tick calls and keyboard events are fired on different threads, even if we don't use
@@ -75,10 +76,51 @@ namespace SHVDN
             _keyManager.Register(Keys.Insert | Keys.Shift, AddClipboardContent);
             _keyManager.Register(Keys.Home, MoveCursorToBegOfLine);
             _keyManager.Register(Keys.End, MoveCursorToEndOfLine);
-            _keyManager.Register(Keys.Up, NextCandidate);
-            _keyManager.Register(Keys.Down, PreviousCandidate);
+            _keyManager.Register(Keys.Up, () =>
+            {
+                lock (_lock)
+                {
+                    if (_hideCandidates || _commandCandidates.Count == 0)
+                    {
+                        GoUpCommandList();
+                        return;
+                    }
+
+                    NextCandidate();
+                }
+            });
+
+            _keyManager.Register(Keys.Down, () =>
+            {
+                lock (_lock)
+                {
+                    if (_hideCandidates || _commandCandidates.Count == 0)
+                    {
+                        GoDownCommandList();
+                        return;
+                    }
+
+                    PreviousCandidate();
+                }
+            });
+
+
             _keyManager.Register(Keys.Enter, CompileExpression);
-            _keyManager.Register(Keys.Escape, Close);
+
+            _keyManager.Register(Keys.Escape, () =>
+            {
+                lock (_lock)
+                {
+                    if (_hideCandidates || _commandCandidates.Count == 0)
+                    {
+                        Close();
+                        return;
+                    }
+
+                    _hideCandidates = true;
+                }          
+            });
+
             _keyManager.Register(Keys.Tab, CompleteCandidate);
 
             _keyManager.Register(Keys.A | Keys.Control, MoveCursorToBegOfLine);
@@ -552,7 +594,7 @@ namespace SHVDN
                 }
 
                 // Draw command candidates
-                if (_commandCandidates.Count > 0)
+                if (!_hideCandidates && _commandCandidates.Count > 0)
                 {
                     for (int i = 0; i < _commandCandidates.Count && i < 5; i++)
                     {
@@ -562,6 +604,7 @@ namespace SHVDN
                 }
             }
         }
+
         /// <summary>
         /// Keyboard handling logic of the console.
         /// </summary>
@@ -588,6 +631,12 @@ namespace SHVDN
                 // Translate key event to character for text input
                 ToUnicode((uint)e.KeyCode, 0, keyboardState, buf, 256, 0);
                 AddToInput(buf.ToString());
+
+                //We only want to show candidates again if the actual input has changed.
+                lock (_lock)
+                {
+                    _hideCandidates = false;
+                }
             }
         }
 
