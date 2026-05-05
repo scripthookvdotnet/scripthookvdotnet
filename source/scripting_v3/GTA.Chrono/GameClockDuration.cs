@@ -56,7 +56,7 @@ namespace GTA.Chrono
         /// <summary>
         /// Represents the zero <see cref="GameClockDuration"/> value. This field is read-only.
         /// </summary>
-        public static GameClockDuration Zero = new(0);
+        public static readonly GameClockDuration Zero = new(0);
 
         /// <summary>
         /// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
