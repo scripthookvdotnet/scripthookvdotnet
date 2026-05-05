@@ -56,21 +56,21 @@ namespace GTA.Chrono
         /// <summary>
         /// Represents the zero <see cref="GameClockDuration"/> value. This field is read-only.
         /// </summary>
-        public static GameClockDuration Zero = new(0);
+        public static readonly GameClockDuration Zero = new(0);
 
         /// <summary>
         /// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
         /// <see cref="GameClockDateTime.MinValue"/> to <see cref="GameClockDateTime.MaxValue"/>.
         /// This field is read-only.
         /// </summary>
-        public static GameClockDuration MaxValue = new(MaxSecDifference);
+        public static readonly GameClockDuration MaxValue = new(MaxSecDifference);
 
         /// <summary>
         /// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
         /// <see cref="GameClockDateTime.MaxValue"/> to <see cref="GameClockDateTime.MinValue"/>.
         /// This field is read-only.
         /// </summary>
-        public static GameClockDuration MinValue = new(MinSecDifference);
+        public static readonly GameClockDuration MinValue = new(MinSecDifference);
 
         /// <summary>
         /// Gets the hours component of the time interval represented by the current <see cref="GameClockDuration"/>
