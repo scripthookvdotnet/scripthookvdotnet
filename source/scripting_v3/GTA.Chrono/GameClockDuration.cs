@@ -63,7 +63,7 @@ namespace GTA.Chrono
         /// <see cref="GameClockDateTime.MinValue"/> to <see cref="GameClockDateTime.MaxValue"/>.
         /// This field is read-only.
         /// </summary>
-        public static GameClockDuration MaxValue = new(MaxSecDifference);
+        public static readonly GameClockDuration MaxValue = new(MaxSecDifference);
 
         /// <summary>
         /// Represents the maximum <see cref="GameClockDuration"/> value, which can represent the duration from
