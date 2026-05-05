@@ -113,6 +113,36 @@ namespace GTA.Math
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> structure.
         /// </summary>
+        /// <param name="row0">The first row of the matrix.</param>
+        /// <param name="row1">The second row of the matrix.</param>
+        /// <param name="row2">The third row of the matrix.</param>
+        /// <param name="row3">The fourth row of the matrix.</param>
+        public Matrix(Vector4 row0, Vector4 row1, Vector4 row2, Vector4 row3)
+        {
+            M11 = row0.X;
+            M12 = row0.Y;
+            M13 = row0.Z;
+            M14 = row0.W;
+
+            M21 = row1.X;
+            M22 = row1.Y;
+            M23 = row1.Z;
+            M24 = row1.W;
+
+            M31 = row2.X;
+            M32 = row2.Y;
+            M33 = row2.Z;
+            M34 = row2.W;
+
+            M41 = row3.X;
+            M42 = row3.Y;
+            M43 = row3.Z;
+            M44 = row3.W;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> structure.
+        /// </summary>
         /// <param name="values">The values to assign to the components of the matrix. This must be an array with sixteen elements.</param>
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="values"/> is <see langword="null" />.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="values"/> contains more or less than sixteen elements.</exception>
