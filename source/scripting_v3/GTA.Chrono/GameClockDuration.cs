@@ -70,7 +70,7 @@ namespace GTA.Chrono
         /// <see cref="GameClockDateTime.MaxValue"/> to <see cref="GameClockDateTime.MinValue"/>.
         /// This field is read-only.
         /// </summary>
-        public static GameClockDuration MinValue = new(MinSecDifference);
+        public static readonly GameClockDuration MinValue = new(MinSecDifference);
 
         /// <summary>
         /// Gets the hours component of the time interval represented by the current <see cref="GameClockDuration"/>
