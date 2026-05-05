@@ -42,7 +42,7 @@ namespace GTA.Chrono
         /// <value>
         /// The smallest possible value of <see cref="GameClockTime"/>, which is 00:00:00 (midnight).
         /// </value>
-        public static GameClockTime MinValue = new(0);
+        public static readonly GameClockTime MinValue = new(0);
 
         /// <summary>
         /// Gets the hour component of the time represented by this instance.
