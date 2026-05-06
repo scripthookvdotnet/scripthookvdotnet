@@ -728,6 +728,22 @@ namespace SHVDN
                 s_radarZoomValueAddress = (int*)(*(int*)(address + 5) + address + 9);
             }
 
+            // Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
+            address = MemScanner.FindPatternBmh("\x74\x00\x00\x00\x00\x74\x00\xe8\x00\x00\x00\x00\x48\x85\xc0\x75\x00\x38\x00\x00\x0f\x84\x00\x00\x00\x00\x48\x8d\x4d\x00\xe8\x00\x00\x00\x00\x66\x89\x45\x00\x8b\x45\x00\x8b\xc8\x33\x4d", "x????x?x????xxxx?x??xx????xxx?x????xxx?xx?xxxx");
+            if (address != null)
+            {
+                address = MemScanner.FindPatternNaive("\x25\xff\xff\xff\x3f", "xxxxx", new IntPtr(address + 0x2E), 0x7c);
+
+                if (address != null)
+                {
+                    address += 0x10;
+
+                    const int BytesToWriteInstructions = 0x18;
+                    byte[] nopBytes = Enumerable.Repeat((byte)0x90, BytesToWriteInstructions).ToArray();
+                    Marshal.Copy(nopBytes, 0, new IntPtr(address), BytesToWriteInstructions);
+                }
+            }
+
             // Generate vehicle model list
             var vehicleHashesGroupedByClass = new List<int>[0x20];
             for (int i = 0; i < 0x20; i++)
