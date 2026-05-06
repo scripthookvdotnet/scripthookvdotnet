@@ -387,9 +387,13 @@ namespace GTA.Math
         /// <summary>
         /// Interpolates between two quaternions, using spherical linear interpolation.
         /// </summary>
-        /// <param name="start">Start quaternion.</param>
-        /// <param name="end">End quaternion.</param>
-        /// <param name="amount">Value between 0 and 1 indicating the weight of <paramref name="end"/>.</param>
+        /// <param name="start">Start quaternion. Returns this value when <paramref name="amount"/> is 0.</param>
+        /// <param name="end">End quaternion. Returns this value when <paramref name="amount"/> is 1.</param>
+        /// <param name="amount">
+        /// The interpolation amount ratio where `<c>0</c>` indicates <paramref name="start"/> and `<c>1</c>` indicates
+        /// <paramref name="end"/>.
+        /// This value is unclamped.
+        /// </param>
         /// <returns>The spherical linear interpolation of the two quaternions.</returns>
         public static Quaternion Slerp(Quaternion start, Quaternion end, float amount)
         {
