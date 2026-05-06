@@ -406,63 +406,15 @@ namespace GTA.Math
             return result;
         }
 
-        /// <summary>
-        /// Interpolates between two quaternions, using spherical linear interpolation. The parameter /t/ is not clamped.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="t"></param>
-        public static Quaternion SlerpUnclamped(Quaternion a, Quaternion b, float t)
-        {
-            if (a.LengthSquared() == 0.0f)
-            {
-                if (b.LengthSquared() == 0.0f)
-                {
-                    return Identity;
-                }
-                return b;
-            }
-            else if (b.LengthSquared() == 0.0f)
-            {
-                return a;
-            }
-
-
-            float cosHalfAngle = a.W * b.W + Vector3.Dot(a.Axis, b.Axis);
-
-            if (cosHalfAngle >= 1.0f || cosHalfAngle <= -1.0f)
-            {
-                return a;
-            }
-
-            if (cosHalfAngle < 0.0f)
-            {
-                b.X = -b.X;
-                b.Y = -b.Y;
-                b.Z = -b.Z;
-                b.W = -b.W;
-                cosHalfAngle = -cosHalfAngle;
-            }
-
-            float blendA;
-            float blendB;
-            if (cosHalfAngle < 0.99f)
-            {
-                float halfAngle = (float)System.Math.Acos(cosHalfAngle);
-                float sinHalfAngle = (float)System.Math.Sin(halfAngle);
-                float oneOverSinHalfAngle = 1.0f / sinHalfAngle;
-                blendA = (float)System.Math.Sin(halfAngle * (1.0f - t)) * oneOverSinHalfAngle;
-                blendB = (float)System.Math.Sin(halfAngle * t) * oneOverSinHalfAngle;
-            }
-            else
-            {
-                blendA = 1.0f - t;
-                blendB = t;
-            }
-
-            var result = new Quaternion(blendA * a.Axis + blendB * b.Axis, blendA * a.W + blendB * b.W);
-            return result.LengthSquared() > 0.0f ? Normalize(result) : Identity;
-        }
+        /// <param name="a">Start quaternion. Returns this value when <paramref name="t"/> is 0.</param>
+        /// <param name="b">End quaternion. Returns this value when <paramref name="t"/> is 1.</param>
+        /// <param name="t">
+        /// The interpolation amount ratio where `<c>0</c>` indicates <paramref name="a"/> and `<c>1</c>` indicates
+        /// <paramref name="b"/>.
+        /// This value is unclamped.
+        /// </param>
+        ///  <inheritdoc cref="Slerp(Quaternion, Quaternion, float)"/>
+        public static Quaternion SlerpUnclamped(Quaternion a, Quaternion b, float t) => Slerp(a, b, t);
 
         /// <summary>
         /// Creates a rotation which rotates from fromDirection to toDirection.
