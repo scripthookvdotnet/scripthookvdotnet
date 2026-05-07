@@ -441,13 +441,7 @@ namespace GTA
         /// </value>
         public bool ShowRoute
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return false;
-
-                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 4);
-            }
+            get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.Route);
             set => Function.Call(Hash.SET_BLIP_ROUTE, Handle, value);
         }
 
@@ -460,16 +454,7 @@ namespace GTA
         /// </value>
         public bool ShowsTick
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return false;
-
-                const int PropertyFlagsOffset = 0x20;
-                // This bit is the greatest bit that isn't get shifted by adding the flag for the gold tick, which can
-                // be added by `SHOW_GOLD_TICK_ON_BLIP` since b2699.
-                return SHVDN.MemDataMarshal.IsBitSet(address + PropertyFlagsOffset, 15);
-            }
+            get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.ShowTick);
             set => Function.Call(Hash.SHOW_TICK_ON_BLIP, Handle, value);
         }
 
@@ -487,18 +472,7 @@ namespace GTA
             EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShowsDollarSign
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return false;
-
-                int bitIndex = Game.FileVersion switch
-                {
-                    Version v when v >= ExeVersionConsts.v1_0_2699_0 => 17,
-                    _ => 16
-                };
-                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, bitIndex);
-            }
+            get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.ShowForSale);
             set => Function.Call(Hash.SHOW_TICK_ON_BLIP, Handle, value);
         }
 
@@ -510,13 +484,7 @@ namespace GTA
         /// </value>
         public bool ShowsHeadingIndicator
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return false;
-
-                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 17);
-            }
+            get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.ShowHeadingIndicator);
             set => Function.Call(Hash.SHOW_HEADING_INDICATOR_ON_BLIP, Handle, value);
         }
 
@@ -529,13 +497,7 @@ namespace GTA
         /// </value>
         public bool ShowsOutlineIndicator
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return false;
-
-                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 18);
-            }
+            get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.ShowOutlineIndicator);
             set => Function.Call(Hash.SHOW_OUTLINE_INDICATOR_ON_BLIP, Handle, value);
         }
 
@@ -548,13 +510,7 @@ namespace GTA
         /// </value>
         public bool ShowsFriendIndicator
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return false;
-
-                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 19);
-            }
+            get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.ShowFriendIndicator);
             set => Function.Call(Hash.SHOW_FRIEND_INDICATOR_ON_BLIP, Handle, value);
         }
 
@@ -567,13 +523,7 @@ namespace GTA
         /// </value>
         public bool ShowsCrewIndicator
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return false;
-
-                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 20);
-            }
+            get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.ShowCrewIndicator);
             set => Function.Call(Hash.SHOW_CREW_INDICATOR_ON_BLIP, Handle, value);
         }
 
@@ -628,13 +578,7 @@ namespace GTA
         /// </value>
         public bool IsHiddenOnLegend
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return false;
-
-                return SHVDN.MemDataMarshal.IsBitSet(address + 0x20, 14);
-            }
+            get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.HiddenOnLegend);
             set => Function.Call(Hash.SET_BLIP_HIDDEN_ON_LEGEND, Handle, value);
         }
 
