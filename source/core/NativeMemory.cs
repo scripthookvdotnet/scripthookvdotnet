@@ -4797,6 +4797,38 @@ namespace SHVDN
             bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(blipAddress + 8) == (((uint)blipHandle >> 0x10));
         }
 
+
+        public static bool GetBlipPropertyFlag(IntPtr address, BlipPropertyFlags flag)
+        {
+            if(address == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            int bit = GetBitForBlipPropertyFlag(flag);
+            
+            return bit != -1 && MemDataMarshal.IsBitSet(address + 0x20, bit);
+        }
+
+        private static int GetBitForBlipPropertyFlag(BlipPropertyFlags flag)
+        {
+            int value = (int)flag;
+
+            if(value >= (int)BlipPropertyFlags.ShowGoldTick)
+            {
+                if(GameFileVersion >= new Version(1, 0, 2699, 0))
+                {
+                    value--;
+                }
+                else if(flag == BlipPropertyFlags.ShowGoldTick)
+                {
+                    return -1;
+                }
+            }
+
+            return value;
+        }
+
         #endregion
 
         #region -- CScriptResource Data --
