@@ -50,6 +50,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <CsCompile Include="Structs\BlipPropertyFlags.cs">
+      <Filter>Structs</Filter>
+    </CsCompile>
     <CsCompile Include="Structs\WeaponDamageInfo.cs">
       <Filter>Structs</Filter>
     </CsCompile>
