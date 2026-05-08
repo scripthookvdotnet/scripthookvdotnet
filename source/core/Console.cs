@@ -20,12 +20,16 @@ namespace SHVDN
     public sealed class Console : MarshalByRefObject
     {
         private int _cursorPos = 0;
+        private int _lastCursorPos = 0;
+        private string _lastRenderedCursorInput = string.Empty;
         private int _lastCursorBlinkTick = 0;
         private bool _cursorVisible = false;
         private int _commandPos = -1;
         private int _currentPage = 1;
         private bool _isOpen = false;
         private string _input = string.Empty;
+        private string _lastInput = string.Empty;
+        private string _lastRenderedInput = string.Empty;
         private List<string> _lineHistory = new();
         private List<string> _commandHistory; // This must be set via CommandHistory property
         private ConcurrentQueue<string[]> _outputQueue = new();
@@ -563,11 +567,32 @@ namespace SHVDN
             string currInput = null;
             int currLineHistCount = 0;
             int currPage = 0;
+
+            string inputRender;
+            string cursorRender;
+
             lock (_lock)
             {
                 currInput = _input;
                 currLineHistCount = _lineHistory.Count;
                 currPage = _currentPage;
+
+                if (_input != _lastInput)
+                {
+                    _lastInput = _input;
+                    _lastRenderedInput = EscapeTokens(_input);
+
+                    _lastCursorPos = -1;
+                }
+
+                if (_cursorPos != _lastCursorPos)
+                {
+                    _lastCursorPos = _cursorPos;
+                    _lastRenderedCursorInput = EscapeTokens(_input.Substring(0, _cursorPos));
+                }
+
+                inputRender = _lastRenderedInput;
+                cursorRender = _lastRenderedCursorInput;
             }
 
             // Draw background
@@ -578,7 +603,7 @@ namespace SHVDN
             // Draw input prefix
             DrawText(0, ConsoleHeight, "$>", s_prefixColor);
             // Draw input text
-            DrawText(25, ConsoleHeight, currInput, compilerTask == null ? s_inputColor : s_inputColorBusy);
+            DrawText(25, ConsoleHeight, inputRender, compilerTask == null ? s_inputColor : s_inputColorBusy);
             // Draw page information
             DrawText(5, ConsoleHeight + InputHeight, "Page " + currPage + "/" + System.Math.Max(1, ((currLineHistCount + (LinesPerPage - 1)) / LinesPerPage)), s_inputColor);
 
@@ -593,7 +618,7 @@ namespace SHVDN
                 // Draw blinking cursor
                 if (_cursorVisible)
                 {
-                    float lengthBetweenInputStartAndCursor = GetTextLength(currInput.Substring(0, _cursorPos)) - GetMarginLength();
+                    float lengthBetweenInputStartAndCursor = GetTextLength(cursorRender) - GetMarginLength();
                     DrawRect(26 + (lengthBetweenInputStartAndCursor * ConsoleWidth), ConsoleHeight + 2, 2, InputHeight - 4, Color.White);
                 }
 
@@ -1265,7 +1290,7 @@ namespace SHVDN
 
                 var errors = new StringBuilder();
 
-                errors.AppendLine($"Couldn't compile input expression: {capturedInput}");
+                errors.AppendLine($"Couldn't compile input expression: {EscapeTokens(capturedInput)}");
 
                 for (int i = 0; i < compilerResult.Errors.Count; ++i)
                 {
@@ -1333,6 +1358,30 @@ namespace SHVDN
         public override object InitializeLifetimeService()
         {
             return null;
+        }
+
+        private static string EscapeTokens(string str)
+        {
+            StringBuilder sb = new();
+
+            int start = 0;
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == '~')
+                {
+                    sb.Append(str.Substring(start, i - start));
+
+                    sb.Append('\\');
+                    sb.Append(str[i]);
+
+                    start = i + 1;
+                }
+            }
+
+            sb.Append(str.Substring(start));
+
+            return sb.ToString();
         }
 
         private static unsafe void DrawRect(float x, float y, int width, int height, Color color)
