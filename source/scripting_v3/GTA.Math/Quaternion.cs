@@ -402,11 +402,14 @@ namespace GTA.Math
             float opposite;
             float inverse;
             float dot = Dot(start, end);
+            // Can't use `System.Math.Sign`, because we want to avoid `opposite` being zero when the dot product is
+            // exactly zero
+            float dotSign = dot >= 0.0f ? 1.0f : -1.0f;
 
             if (System.Math.Abs(dot) > (1.0f - kEpsilon))
             {
                 inverse = 1.0f - amount;
-                opposite = amount * System.Math.Sign(dot);
+                opposite = amount * dotSign;
             }
             else
             {
@@ -414,7 +417,7 @@ namespace GTA.Math
                 float invSin = (float)(1.0 / System.Math.Sin(aCos));
 
                 inverse = (float)(System.Math.Sin((1.0f - amount) * aCos) * invSin);
-                opposite = (float)(System.Math.Sin(amount * aCos) * invSin * System.Math.Sign(dot));
+                opposite = (float)(System.Math.Sin(amount * aCos) * invSin * dotSign);
             }
 
             result.X = (inverse * start.X) + (opposite * end.X);
