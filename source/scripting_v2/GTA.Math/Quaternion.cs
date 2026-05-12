@@ -431,7 +431,11 @@ namespace GTA.Math
 
             if (w >= 1e-6f * NormAB)
             {
-                result = new Quaternion(Vector3.Cross(fromDirection, toDirection), w);
+                // The axis is equal to `Cross(fromDirection, toDirection)`
+			    result.X = fromDirection.Y * toDirection.Z - fromDirection.Z * toDirection.Y;
+			    result.Y = fromDirection.Z * toDirection.X - fromDirection.X * toDirection.Z;
+			    result.Z = fromDirection.X * toDirection.Y - fromDirection.Y * toDirection.X;
+			    result.W = w;
             }
             else
             {
