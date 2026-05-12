@@ -153,6 +153,20 @@ namespace GTA
         {
             Function.Call(Hash.DRAW_SCALEFORM_MOVIE_FULLSCREEN, Handle, 255, 255, 255, 255, 0);
         }
+        /// <summary>
+        /// Renders two movies with masking between this foreground movie and the specified background movie.
+        /// </summary>
+        /// <param name="background">
+        /// The background <see cref="Scaleform"/> movie. Must be loaded before calling this method.
+        /// </param>
+        // Although `DRAW_SCALEFORM_MOVIE_FULLSCREEN_MASKED` is typically called with the 2nd argument being
+        // a handle for a scaleform with the suffix "_CELEBRATION_FG", the implementation code of
+        // `DRAW_SCALEFORM_MOVIE_FULLSCREEN_MASKED` does set the background masked movie ID of `CScriptHud` to the 2nd
+        // argument. Hence, the 2nd argument being named "background".
+        public void Render2DMasked(Scaleform background)
+        {
+            Function.Call(Hash.DRAW_SCALEFORM_MOVIE_FULLSCREEN_MASKED, Handle, background.Handle, 255, 255, 255, 255);
+        }
         public void Render2DScreenSpace(PointF position, PointF size)
         {
             float x = position.X / UI.Screen.Width;
