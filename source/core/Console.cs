@@ -40,10 +40,14 @@ namespace SHVDN
         private List<string> _commandCandidates = new();
         private bool _hideCandidates = false;
         private int _selectedCandidateIndex = -1;
+        private readonly Dictionary<TextLayoutCacheKey, int> _lineCountCache = new();
+        private readonly Dictionary<TextLayoutCacheKey, List<string>> _renderLineCache = new();
+        private Size _cachedResolution = Size.Empty;
 
         // We need a lock because tick calls and keyboard events are fired on different threads, even if we don't use
         // a dedicated thread in order to avoid a fiber from SHV
         private readonly object _lock = new();
+        private readonly object _textLayoutCacheLock = new();
 
         private const int BaseWidth = 1280;
         private const int BaseHeight = 720;
@@ -51,6 +55,14 @@ namespace SHVDN
         private const int ConsoleHeight = BaseHeight / 3;
         private const int InputHeight = 20;
         private const int LinesPerPage = 16;
+        private const float ConsoleTextScale = 0.35f;
+        private const float OutputTextX = 2f;
+        private const float OutputLineHeight = 14f;
+        private const int TextWrapSafetyBackoff = 2;
+        private const int WordWrapSafetyBackoff = 1;
+        private const int MaxTextCommandBytes = /* MaxNumberOfSubStringsInPrintCommand */ 4 * 99;
+        private const int MaxLineCountCacheEntries = 2048;
+        private const int MaxRenderLineCacheEntries = 512;
 
         private static readonly Color s_inputColor = Color.White;
         private static readonly Color s_inputColorBusy = Color.DarkGray;
@@ -345,6 +357,7 @@ namespace SHVDN
             {
                 _lineHistory.Clear();
                 _currentPage = 1;
+                ClearTextLayoutCaches();
             }
         }
 
@@ -354,7 +367,7 @@ namespace SHVDN
         /// <param name="msg">The composite format string.</param>
         public void PrintMessage(string headerStr, string msg)
         {
-            AddLines(headerStr + " ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+            AddLines(headerStr + " ", new[] { NormalizeNewlinesForGtaText(msg) });
         }
         /// <summary>
         /// Writes a message to the console.
@@ -368,7 +381,7 @@ namespace SHVDN
                 msg = String.Format(msg, args);
             }
 
-            AddLines(headerStr + " ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+            AddLines(headerStr + " ", new[] { NormalizeNewlinesForGtaText(msg) });
         }
 
         const string DebugMessageHeaderStr = "[~b~DEBUG~w~]";
@@ -567,6 +580,10 @@ namespace SHVDN
             string currInput = null;
             int currLineHistCount = 0;
             int currPage = 0;
+            List<string> lineHistorySnapshot;
+            List<string> commandCandidatesSnapshot;
+            bool hideCandidates;
+            int selectedCandidateIndex;
 
             string inputRender;
             string cursorRender;
@@ -576,6 +593,10 @@ namespace SHVDN
                 currInput = _input;
                 currLineHistCount = _lineHistory.Count;
                 currPage = _currentPage;
+                lineHistorySnapshot = new List<string>(_lineHistory);
+                commandCandidatesSnapshot = new List<string>(_commandCandidates);
+                hideCandidates = _hideCandidates;
+                selectedCandidateIndex = _selectedCandidateIndex;
 
                 if (_input != _lastInput)
                 {
@@ -604,8 +625,21 @@ namespace SHVDN
             DrawText(0, ConsoleHeight, "$>", s_prefixColor);
             // Draw input text
             DrawText(25, ConsoleHeight, inputRender, compilerTask == null ? s_inputColor : s_inputColorBusy);
+
+            List<string> displayLineHistory = SplitHistoryIntoRenderLines(lineHistorySnapshot, OutputTextX, 0f);
+            currLineHistCount = displayLineHistory.Count;
+            int totalPages = System.Math.Max(1, ((currLineHistCount + (LinesPerPage - 1)) / LinesPerPage));
+            if (currPage > totalPages)
+            {
+                currPage = totalPages;
+                lock (_lock)
+                {
+                    _currentPage = currPage;
+                }
+            }
+
             // Draw page information
-            DrawText(5, ConsoleHeight + InputHeight, "Page " + currPage + "/" + System.Math.Max(1, ((currLineHistCount + (LinesPerPage - 1)) / LinesPerPage)), s_inputColor);
+            DrawText(5, ConsoleHeight + InputHeight, "Page " + currPage + "/" + totalPages, s_inputColor);
 
             lock (_lock)
             {
@@ -622,23 +656,23 @@ namespace SHVDN
                     DrawRect(26 + (lengthBetweenInputStartAndCursor * ConsoleWidth), ConsoleHeight + 2, 2, InputHeight - 4, Color.White);
                 }
 
-                // Draw console history text
-                int historyOffset = currLineHistCount - (LinesPerPage * currPage);
-                int historyLength = historyOffset + LinesPerPage;
-                for (int i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
-                {
-                    DrawText(2, (float)((i - historyOffset) * 14), _lineHistory[i], s_outputColor);
-                }
-
                 // Draw command candidates
-                if (!_hideCandidates && _commandCandidates.Count > 0)
+                if (!hideCandidates && commandCandidatesSnapshot.Count > 0)
                 {
-                    for (int i = 0; i < _commandCandidates.Count && i < 5; i++)
+                    for (int i = 0; i < commandCandidatesSnapshot.Count && i < 5; i++)
                     {
-                        var color = (i == _selectedCandidateIndex) ? Color.Yellow : Color.White;
-                        DrawText(25, ConsoleHeight + InputHeight + 16 + i * 16, _commandCandidates[i], color);
+                        var color = (i == selectedCandidateIndex) ? Color.Yellow : Color.White;
+                        DrawText(25, ConsoleHeight + InputHeight + 16 + i * 16, commandCandidatesSnapshot[i], color);
                     }
                 }
+            }
+
+            // Draw console history text after GTA-layout splitting so wrapped output consumes real rows.
+            int historyOffset = currLineHistCount - (LinesPerPage * currPage);
+            int historyLength = System.Math.Min(currLineHistCount, historyOffset + LinesPerPage);
+            for (int i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
+            {
+                DrawConsoleOutputText(OutputTextX, (float)((i - historyOffset) * OutputLineHeight), displayLineHistory[i], s_outputColor);
             }
         }
 
@@ -754,9 +788,18 @@ namespace SHVDN
 
         private void PageUp()
         {
+            List<string> lineHistorySnapshot;
             lock (_lock)
             {
-                if (_currentPage < ((_lineHistory.Count + LinesPerPage - 1) / LinesPerPage))
+                lineHistorySnapshot = new List<string>(_lineHistory);
+            }
+
+            int renderLineCount = GetHistoryRenderLineCount(lineHistorySnapshot, OutputTextX, 0f);
+            int totalPages = System.Math.Max(1, ((renderLineCount + LinesPerPage - 1) / LinesPerPage));
+
+            lock (_lock)
+            {
+                if (_currentPage < totalPages)
                 {
                     _currentPage++;
                 }
@@ -1360,6 +1403,16 @@ namespace SHVDN
             return null;
         }
 
+        private static string NormalizeNewlinesForGtaText(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return string.Empty;
+            }
+
+            return str.Replace("\r\n", "~n~").Replace("\n", "~n~").Replace("\r", "~n~");
+        }
+
         private static string EscapeTokens(string str)
         {
             StringBuilder sb = new();
@@ -1399,11 +1452,701 @@ namespace SHVDN
         private static unsafe void DrawText(float x, float y, string text, Color color)
         {
             NativeFunc.Invoke(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0); // Chalet London :>
-            NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
+            NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, ConsoleTextScale, ConsoleTextScale);
             NativeFunc.Invoke(0xBE6B23FFA53FB442 /* SET_TEXT_COLOUR */, color.R, color.G, color.B, color.A);
             NativeFunc.Invoke(0x25FBB336DF1804CB /* BEGIN_TEXT_COMMAND_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
             NativeFunc.PushLongString(text, 99);
             NativeFunc.Invoke(0xCD015E5BB0D96A57 /* END_TEXT_COMMAND_DISPLAY_TEXT */, (x / BaseWidth), (y / BaseHeight));
+        }
+
+        private static unsafe void DrawConsoleOutputText(float x, float y, string text, Color color)
+        {
+            NativeFunc.Invoke(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0); // Chalet London :>
+            NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, ConsoleTextScale, ConsoleTextScale);
+            NativeFunc.Invoke(0xBE6B23FFA53FB442 /* SET_TEXT_COLOUR */, color.R, color.G, color.B, color.A);
+            NativeFunc.Invoke(0x63145D9C883A1A70 /* SET_TEXT_WRAP */, x / BaseWidth, 1f);
+            NativeFunc.Invoke(0x25FBB336DF1804CB /* BEGIN_TEXT_COMMAND_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
+            // GTA only accepts roughly four variable substrings for END_TEXT_COMMAND_DISPLAY_TEXT.
+            // Very long outputs therefore still need several draw calls, which SplitIntoRenderLines provides.
+            NativeFunc.PushLongString(text, 99);
+            NativeFunc.Invoke(0xCD015E5BB0D96A57 /* END_TEXT_COMMAND_DISPLAY_TEXT */, (x / BaseWidth), (y / BaseHeight));
+            NativeFunc.Invoke(0x63145D9C883A1A70 /* SET_TEXT_WRAP */, 0f, 1f);
+        }
+
+        private List<string> SplitHistoryIntoRenderLines(List<string> history, float x, float y)
+        {
+            var displayLines = new List<string>();
+            foreach (string line in history)
+            {
+                displayLines.AddRange(SplitIntoRenderLines(line, x, y));
+            }
+
+            return displayLines;
+        }
+
+        private int GetHistoryRenderLineCount(List<string> history, float x, float y)
+        {
+            int count = 0;
+            foreach (string line in history)
+            {
+                count += SplitIntoRenderLines(line, x, y).Count;
+            }
+
+            return count;
+        }
+
+        private List<string> SplitIntoRenderLines(string text, float x, float y)
+        {
+            text ??= string.Empty;
+
+            Size resolution = EnsureTextLayoutCacheResolution();
+            TextLayoutCacheKey cacheKey = CreateTextLayoutCacheKey(text, x, y, resolution);
+            lock (_textLayoutCacheLock)
+            {
+                if (_renderLineCache.TryGetValue(cacheKey, out List<string> cachedLines))
+                {
+                    return cachedLines;
+                }
+            }
+
+            var lines = new List<string>();
+            foreach (string paragraph in SplitOnGtaNewlineTokens(text))
+            {
+                if (paragraph.Length == 0)
+                {
+                    lines.Add(string.Empty);
+                    continue;
+                }
+
+                TextFormattingState formattingState = default;
+                int startIndex = 0;
+                while (startIndex < paragraph.Length)
+                {
+                    string renderPrefix = formattingState.CreatePrefix();
+                    string renderText = renderPrefix + paragraph.Substring(startIndex);
+                    int splitIndex = FindSplitIndex(renderText, 1, x, y, resolution);
+                    if (splitIndex >= renderText.Length)
+                    {
+                        lines.Add(renderText);
+                        break;
+                    }
+
+                    if (splitIndex <= 0)
+                    {
+                        splitIndex = FindNextPlainTextSplitIndex(renderText, 1);
+                    }
+
+                    if (renderPrefix.Length > 0 && splitIndex <= renderPrefix.Length)
+                    {
+                        splitIndex = FindNextPlainTextSplitIndex(renderText, renderPrefix.Length + 1);
+                    }
+
+                    splitIndex = System.Math.Max(1, System.Math.Min(splitIndex, renderText.Length));
+                    string segment = renderText.Substring(0, splitIndex);
+                    lines.Add(segment);
+
+                    formattingState = GetActiveFormattingState(segment);
+                    startIndex += System.Math.Max(1, splitIndex - renderPrefix.Length);
+                }
+            }
+
+            lock (_textLayoutCacheLock)
+            {
+                EnforceCacheLimit(_renderLineCache, MaxRenderLineCacheEntries);
+                _renderLineCache[cacheKey] = lines;
+            }
+            return lines;
+        }
+
+        private int FindSplitIndex(string text, int targetLine, float x, float y, Size resolution)
+        {
+            int low = 1;
+            int high = 1;
+            while (high < text.Length &&
+                IsTextCommandSafeLength(text, high) &&
+                GetLineCount(text.Substring(0, high), x, y, resolution) <= targetLine)
+            {
+                low = high + 1;
+                high = System.Math.Min(text.Length, high * 2);
+            }
+
+            if (high >= text.Length &&
+                IsTextCommandSafeLength(text, text.Length) &&
+                GetLineCount(text, x, y, resolution) <= targetLine)
+            {
+                return text.Length;
+            }
+
+            high = System.Math.Min(high, text.Length);
+            while (low < high)
+            {
+                int mid = low + ((high - low) / 2);
+                if (!IsTextCommandSafeLength(text, mid) ||
+                    GetLineCount(text.Substring(0, mid), x, y, resolution) > targetLine)
+                {
+                    high = mid;
+                }
+                else
+                {
+                    low = mid + 1;
+                }
+            }
+
+            int splitIndex = FindPreviousPlainTextSplitIndex(text, low - 1);
+            while (splitIndex > 0 &&
+                (!IsTextCommandSafeLength(text, splitIndex) ||
+                GetLineCount(text.Substring(0, splitIndex), x, y, resolution) > targetLine))
+            {
+                splitIndex = FindPreviousPlainTextSplitIndex(text, splitIndex - 1);
+            }
+
+            int wordSplitIndex = FindPreviousWordSplitIndex(text, splitIndex);
+            if (wordSplitIndex > 0 &&
+                IsTextCommandSafeLength(text, wordSplitIndex) &&
+                GetLineCount(text.Substring(0, wordSplitIndex), x, y, resolution) <= targetLine)
+            {
+                return MoveTrailingTokenRunToNextLine(text, BackOffWordSplitIndex(text, wordSplitIndex, WordWrapSafetyBackoff));
+            }
+
+            return MoveTrailingTokenRunToNextLine(text, BackOffPlainTextSplitIndex(text, splitIndex, TextWrapSafetyBackoff));
+        }
+
+        private int GetLineCount(string text, float x, float y)
+        {
+            return GetLineCount(text, x, y, EnsureTextLayoutCacheResolution());
+        }
+
+        private unsafe int GetLineCount(string text, float x, float y, Size resolution)
+        {
+            text ??= string.Empty;
+
+            TextLayoutCacheKey cacheKey = CreateTextLayoutCacheKey(text, x, y, resolution);
+            lock (_textLayoutCacheLock)
+            {
+                if (_lineCountCache.TryGetValue(cacheKey, out int cachedCount))
+                {
+                    return cachedCount;
+                }
+            }
+
+            float normalizedX = x / BaseWidth;
+            float normalizedY = y / BaseHeight;
+            NativeFunc.Invoke(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0);
+            NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, ConsoleTextScale, ConsoleTextScale);
+            NativeFunc.Invoke(0x63145D9C883A1A70 /* SET_TEXT_WRAP */, normalizedX, 1f);
+            NativeFunc.Invoke(0x521FB041D93DD0E4 /* BEGIN_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING */, NativeMemory.CellEmailBcon);
+            NativeFunc.PushLongString(text, 99);
+            int lineCount = *(int*)NativeFunc.Invoke(0x9040DFB09BE75706 /* END_TEXT_COMMAND_GET_NUMBER_OF_LINES_FOR_STRING */, normalizedX, normalizedY);
+            NativeFunc.Invoke(0x63145D9C883A1A70 /* SET_TEXT_WRAP */, 0f, 1f);
+
+            lineCount = System.Math.Max(1, lineCount);
+            lock (_textLayoutCacheLock)
+            {
+                EnforceCacheLimit(_lineCountCache, MaxLineCountCacheEntries);
+                _lineCountCache[cacheKey] = lineCount;
+            }
+
+            return lineCount;
+        }
+
+        private unsafe Size EnsureTextLayoutCacheResolution()
+        {
+            int width = BaseWidth;
+            int height = BaseHeight;
+            ulong* args = stackalloc ulong[2];
+            args[0] = (ulong)(&width);
+            args[1] = (ulong)(&height);
+            NativeFunc.Invoke(0x873C9F3104101DD3 /* GET_ACTUAL_SCREEN_RESOLUTION */, args, 2);
+
+            var resolution = new Size(width, height);
+            if (resolution != _cachedResolution)
+            {
+                _cachedResolution = resolution;
+                ClearTextLayoutCaches();
+            }
+
+            return resolution;
+        }
+
+        private void ClearTextLayoutCaches()
+        {
+            lock (_textLayoutCacheLock)
+            {
+                _lineCountCache.Clear();
+                _renderLineCache.Clear();
+            }
+        }
+
+        private static void EnforceCacheLimit<TKey, TValue>(Dictionary<TKey, TValue> cache, int maxEntries)
+        {
+            if (cache.Count < maxEntries)
+            {
+                return;
+            }
+
+            cache.Clear();
+        }
+
+        private static TextLayoutCacheKey CreateTextLayoutCacheKey(string text, float x, float y, Size resolution)
+        {
+            return new TextLayoutCacheKey(text, x, y, ConsoleTextScale, resolution);
+        }
+
+        private static List<string> SplitOnGtaNewlineTokens(string text)
+        {
+            var result = new List<string>();
+            int start = 0;
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (IsGtaTokenAt(text, i, out int tokenEnd) &&
+                    string.Equals(text.Substring(i + 1, tokenEnd - i - 1), "n", StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(text.Substring(start, i - start));
+                    start = tokenEnd + 1;
+                    i = tokenEnd;
+                }
+            }
+
+            result.Add(text.Substring(start));
+            return result;
+        }
+
+        private static TextFormattingState GetActiveFormattingState(string text)
+        {
+            TextFormattingState state = default;
+
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (IsCondensedStartTagAt(text, i))
+                {
+                    state.IsCondensedActive = true;
+                    i += 2;
+                    continue;
+                }
+
+                if (IsCondensedEndTagAt(text, i))
+                {
+                    state.IsCondensedActive = false;
+                    i += 3;
+                    continue;
+                }
+
+                if (!IsGtaTokenAt(text, i, out int tokenEnd))
+                {
+                    continue;
+                }
+
+                string tokenContent = text.Substring(i + 1, tokenEnd - i - 1);
+                if (IsDefaultColorResetToken(tokenContent))
+                {
+                    state.ActiveColorToken = string.Empty;
+                }
+                else if (IsPersistentColorToken(tokenContent))
+                {
+                    state.ActiveColorToken = text.Substring(i, tokenEnd - i + 1);
+                }
+                else if (IsBoldToken(tokenContent))
+                {
+                    state.IsBoldActive = !state.IsBoldActive;
+                }
+                else if (IsItalicToken(tokenContent))
+                {
+                    state.IsItalicActive = !state.IsItalicActive;
+                }
+
+                i = tokenEnd;
+            }
+
+            return state;
+        }
+
+        private static bool IsDefaultColorResetToken(string tokenContent)
+        {
+            return string.Equals(tokenContent, "s", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsPersistentColorToken(string tokenContent)
+        {
+            if (tokenContent.StartsWith("HUD_COLOUR_", StringComparison.OrdinalIgnoreCase) ||
+                tokenContent.StartsWith("HC_", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            if (tokenContent.Length != 1)
+            {
+                return false;
+            }
+
+            switch (char.ToLowerInvariant(tokenContent[0]))
+            {
+                case 'r':
+                case 'g':
+                case 'b':
+                case 'f':
+                case 'y':
+                case 'c':
+                case 't':
+                case 'o':
+                case 'p':
+                case 'q':
+                case 'm':
+                case 'l':
+                case 'd':
+                case 'v':
+                case 'u':
+                case 'w':
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private static bool IsBoldToken(string tokenContent)
+        {
+            return string.Equals(tokenContent, "h", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(tokenContent, "bold", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsItalicToken(string tokenContent)
+        {
+            return string.Equals(tokenContent, "italic", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsCondensedStartTagAt(string text, int index)
+        {
+            return index + 2 < text.Length &&
+                text[index] == '<' &&
+                char.ToUpperInvariant(text[index + 1]) == 'C' &&
+                text[index + 2] == '>';
+        }
+
+        private static bool IsCondensedEndTagAt(string text, int index)
+        {
+            return index + 3 < text.Length &&
+                text[index] == '<' &&
+                text[index + 1] == '/' &&
+                char.ToUpperInvariant(text[index + 2]) == 'C' &&
+                text[index + 3] == '>';
+        }
+
+        private struct TextFormattingState
+        {
+            public string ActiveColorToken;
+            public bool IsBoldActive;
+            public bool IsItalicActive;
+            public bool IsCondensedActive;
+
+            public string CreatePrefix()
+            {
+                if (string.IsNullOrEmpty(ActiveColorToken) && !IsBoldActive && !IsItalicActive && !IsCondensedActive)
+                {
+                    return string.Empty;
+                }
+
+                var prefix = new StringBuilder();
+                if (IsCondensedActive)
+                {
+                    prefix.Append("<C>");
+                }
+
+                prefix.Append(ActiveColorToken);
+                if (IsBoldActive)
+                {
+                    prefix.Append("~h~");
+                }
+
+                if (IsItalicActive)
+                {
+                    prefix.Append("~italic~");
+                }
+
+                return prefix.ToString();
+            }
+        }
+
+        private struct TextLayoutCacheKey : IEquatable<TextLayoutCacheKey>
+        {
+            private readonly string _text;
+            private readonly float _x;
+            private readonly float _y;
+            private readonly float _scale;
+            private readonly int _resolutionWidth;
+            private readonly int _resolutionHeight;
+
+            public TextLayoutCacheKey(string text, float x, float y, float scale, Size resolution)
+            {
+                _text = text ?? string.Empty;
+                _x = x;
+                _y = y;
+                _scale = scale;
+                _resolutionWidth = resolution.Width;
+                _resolutionHeight = resolution.Height;
+            }
+
+            public bool Equals(TextLayoutCacheKey other)
+            {
+                return _x.Equals(other._x) &&
+                    _y.Equals(other._y) &&
+                    _scale.Equals(other._scale) &&
+                    _resolutionWidth == other._resolutionWidth &&
+                    _resolutionHeight == other._resolutionHeight &&
+                    string.Equals(_text, other._text, StringComparison.Ordinal);
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is TextLayoutCacheKey other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hash = 17;
+                    hash = (hash * 31) + (_text?.GetHashCode() ?? 0);
+                    hash = (hash * 31) + _x.GetHashCode();
+                    hash = (hash * 31) + _y.GetHashCode();
+                    hash = (hash * 31) + _scale.GetHashCode();
+                    hash = (hash * 31) + _resolutionWidth;
+                    hash = (hash * 31) + _resolutionHeight;
+                    return hash;
+                }
+            }
+        }
+
+        private static int FindPreviousPlainTextSplitIndex(string text, int index)
+        {
+            for (int i = System.Math.Min(index, text.Length - 1); i > 0; i--)
+            {
+                if (IsPlainTextSplitIndex(text, i))
+                {
+                    return i;
+                }
+            }
+
+            return 0;
+        }
+
+        private static bool IsTextCommandSafeLength(string text, int length)
+        {
+            int byteCount = 0;
+            int end = System.Math.Min(length, text.Length);
+            for (int i = 0; i < end; i++)
+            {
+                char chr = text[i];
+                if (chr < 0x80)
+                {
+                    byteCount += 1;
+                }
+                else if (chr < 0x800)
+                {
+                    byteCount += 2;
+                }
+                else if (char.IsHighSurrogate(chr) && i + 1 < end && char.IsLowSurrogate(text[i + 1]))
+                {
+                    byteCount += 4;
+                    i++;
+                }
+                else
+                {
+                    byteCount += 3;
+                }
+
+                if (byteCount > MaxTextCommandBytes)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static int FindNextPlainTextSplitIndex(string text, int index)
+        {
+            for (int i = System.Math.Max(1, index); i < text.Length; i++)
+            {
+                if (IsPlainTextSplitIndex(text, i))
+                {
+                    return i;
+                }
+            }
+
+            return text.Length;
+        }
+
+        private static int FindPreviousWordSplitIndex(string text, int index)
+        {
+            int searchStart = System.Math.Min(index, text.Length - 1);
+            for (int i = searchStart; i > 0; i--)
+            {
+                if (!IsPlainTextSplitIndex(text, i))
+                {
+                    continue;
+                }
+
+                if (char.IsWhiteSpace(text[i - 1]) || char.IsWhiteSpace(text[i]))
+                {
+                    return i;
+                }
+            }
+
+            return 0;
+        }
+
+        private static int BackOffPlainTextSplitIndex(string text, int index, int count)
+        {
+            int splitIndex = index;
+            for (int i = 0; i < count; i++)
+            {
+                int previousSplitIndex = FindPreviousPlainTextSplitIndex(text, splitIndex - 1);
+                if (previousSplitIndex <= 0)
+                {
+                    break;
+                }
+
+                splitIndex = previousSplitIndex;
+            }
+
+            return splitIndex;
+        }
+
+        private static int BackOffWordSplitIndex(string text, int index, int count)
+        {
+            int splitIndex = index;
+            for (int i = 0; i < count; i++)
+            {
+                int previousSplitIndex = FindPreviousWordSplitIndex(text, splitIndex - 1);
+                if (previousSplitIndex <= 0)
+                {
+                    break;
+                }
+
+                splitIndex = previousSplitIndex;
+            }
+
+            return splitIndex;
+        }
+
+        private static int MoveTrailingTokenRunToNextLine(string text, int index)
+        {
+            int searchIndex = System.Math.Min(index, text.Length);
+            int tokenStart = -1;
+            bool foundToken = false;
+
+            while (searchIndex > 0)
+            {
+                int previousIndex = searchIndex - 1;
+                if (char.IsWhiteSpace(text[previousIndex]))
+                {
+                    searchIndex--;
+                    continue;
+                }
+
+                if (!TryGetTokenEndingAt(text, previousIndex, out int currentTokenStart))
+                {
+                    break;
+                }
+
+                tokenStart = currentTokenStart;
+                searchIndex = currentTokenStart;
+                foundToken = true;
+            }
+
+            if (!foundToken || tokenStart <= 0)
+            {
+                return index;
+            }
+
+            return tokenStart;
+        }
+
+        private static bool TryGetTokenEndingAt(string text, int tokenEnd, out int tokenStart)
+        {
+            tokenStart = -1;
+            if (tokenEnd <= 0 || tokenEnd >= text.Length || text[tokenEnd] != '~' || IsEscapedTilde(text, tokenEnd))
+            {
+                return false;
+            }
+
+            for (int i = tokenEnd - 1; i >= 0; i--)
+            {
+                if (text[i] != '~' || IsEscapedTilde(text, i))
+                {
+                    continue;
+                }
+
+                tokenStart = i;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool IsPlainTextSplitIndex(string text, int index)
+        {
+            if (index <= 0 || index >= text.Length)
+            {
+                return index == text.Length;
+            }
+
+            if (text[index - 1] == '\\' && text[index] == '~')
+            {
+                return false;
+            }
+
+            return !IsGtaTokenCharacter(text, index - 1) && !IsGtaTokenCharacter(text, index);
+        }
+
+        private static bool IsGtaTokenCharacter(string text, int index)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (!IsGtaTokenAt(text, i, out int tokenEnd))
+                {
+                    continue;
+                }
+
+                if (index >= i && index <= tokenEnd)
+                {
+                    return true;
+                }
+
+                i = tokenEnd;
+            }
+
+            return false;
+        }
+
+        private static bool IsGtaTokenAt(string text, int index, out int tokenEnd)
+        {
+            tokenEnd = -1;
+            if (index < 0 || index >= text.Length || text[index] != '~' || IsEscapedTilde(text, index))
+            {
+                return false;
+            }
+
+            for (int i = index + 1; i < text.Length; i++)
+            {
+                if (text[i] == '~' && !IsEscapedTilde(text, i))
+                {
+                    tokenEnd = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsEscapedTilde(string text, int index)
+        {
+            int backslashCount = 0;
+            for (int i = index - 1; i >= 0 && text[i] == '\\'; i--)
+            {
+                backslashCount++;
+            }
+
+            return (backslashCount & 1) != 0;
         }
 
         private static unsafe void DisableControlsThisFrame()
@@ -1420,7 +2163,7 @@ namespace SHVDN
         private static unsafe float GetTextLength(string text)
         {
             NativeFunc.Invoke(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0);
-            NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
+            NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, ConsoleTextScale, ConsoleTextScale);
             NativeFunc.Invoke(0x54CE8AC98E120CAB /* BEGIN_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
             NativeFunc.PushLongString(text, 98); // 99 byte string chunks don't process properly in END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT
             return *(float*)NativeFunc.Invoke(0x85F061DA64ED2F67 /* END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT */, true);
