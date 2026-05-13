@@ -126,50 +126,20 @@ namespace SHVDN
 
             while (currentPos < str.Length)
             {
-                int codePointSize = 0;
-
-                // Calculate the UTF-8 code point size of the current character
-                char chr = str[currentPos];
-                if (chr < 0x80)
-                {
-                    codePointSize = 1;
-                }
-                else if (chr < 0x800)
-                {
-                    codePointSize = 2;
-                }
-                else if (chr < 0x10000)
-                {
-                    codePointSize = 3;
-                }
-                else
-                {
-                    #region Surrogate check
-                    const int lowSurrogateStart = 0xD800;
-                    const int highSurrogateStart = 0xD800;
-
-                    int temp1 = (int)chr - highSurrogateStart;
-                    if (temp1 >= 0 && temp1 <= 0x7ff)
-                    {
-                        // Found a high surrogate
-                        if (currentPos < str.Length - 1)
-                        {
-                            int temp2 = str[currentPos + 1] - lowSurrogateStart;
-                            if (temp2 >= 0 && temp2 <= 0x3ff)
-                            {
-                                // Found a low surrogate
-                                codePointSize = 4;
-                            }
-                        }
-                    }
-                    #endregion
-                }
+                int codePointSize = GetUtf8CodePointSize(str, currentPos);
 
                 if (currentUtf8StrLength + codePointSize > maxLengthUtf8)
                 {
-                    action(str.Substring(startPos, currentPos - startPos));
+                    int splitPos = FindTokenSafeSplitPosition(str, startPos, currentPos);
+                    if (splitPos <= startPos)
+                    {
+                        splitPos = currentPos;
+                    }
 
-                    startPos = currentPos;
+                    action(str.Substring(startPos, splitPos - startPos));
+
+                    startPos = splitPos;
+                    currentPos = splitPos;
                     currentUtf8StrLength = 0;
                 }
                 else
@@ -193,6 +163,84 @@ namespace SHVDN
             {
                 action(str.Substring(startPos, str.Length - startPos));
             }
+        }
+
+        private static int GetUtf8CodePointSize(string str, int index)
+        {
+            char chr = str[index];
+            if (char.IsHighSurrogate(chr) && index < str.Length - 1 && char.IsLowSurrogate(str[index + 1]))
+            {
+                return 4;
+            }
+
+            if (chr < 0x80)
+            {
+                return 1;
+            }
+
+            return chr < 0x800 ? 2 : 3;
+        }
+
+        private static int FindTokenSafeSplitPosition(string str, int startPos, int preferredSplitPos)
+        {
+            int splitPos = preferredSplitPos;
+            while (splitPos > startPos && IsInsideRockstarFormatToken(str, splitPos))
+            {
+                splitPos--;
+            }
+
+            return splitPos;
+        }
+
+        private static bool IsInsideRockstarFormatToken(string str, int index)
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (!IsRockstarFormatTokenAt(str, i, out int tokenEnd))
+                {
+                    continue;
+                }
+
+                if (index > i && index <= tokenEnd)
+                {
+                    return true;
+                }
+
+                i = tokenEnd;
+            }
+
+            return false;
+        }
+
+        private static bool IsRockstarFormatTokenAt(string str, int index, out int tokenEnd)
+        {
+            tokenEnd = -1;
+            if (index < 0 || index >= str.Length || str[index] != '~' || IsEscapedTilde(str, index))
+            {
+                return false;
+            }
+
+            for (int i = index + 1; i < str.Length; i++)
+            {
+                if (str[i] == '~' && !IsEscapedTilde(str, i))
+                {
+                    tokenEnd = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsEscapedTilde(string str, int index)
+        {
+            int backslashCount = 0;
+            for (int i = index - 1; i >= 0 && str[i] == '\\'; i--)
+            {
+                backslashCount++;
+            }
+
+            return (backslashCount & 1) != 0;
         }
 
         /// <summary>
