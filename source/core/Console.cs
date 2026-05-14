@@ -330,7 +330,6 @@ namespace SHVDN
         private void AddClipboardContent()
         {
             string text = Clipboard.GetText();
-            text = text.Replace("\n", string.Empty); // TODO Keep this?
 
             AddToInput(text);
         }
