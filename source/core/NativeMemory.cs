@@ -4997,6 +4997,55 @@ namespace SHVDN
 
         #endregion
 
+        #region -- Script Fire --
+
+        internal sealed class DoesCScriptResourceExistByCounterTask : IScriptTask
+        {
+            internal ScriptResourceType _resourceType;
+            internal int _targetCounter;
+            internal bool _result;
+
+            internal DoesCScriptResourceExistByCounterTask(ScriptResourceType resourceType, int counter)
+            {
+                _resourceType = resourceType;
+                _targetCounter = counter;
+            }
+
+            public void Run()
+            {
+                ulong cGameScriptHandlerAddress = s_getCGameScriptHandlerAddressFunc();
+
+                if (cGameScriptHandlerAddress == 0)
+                {
+                    return;
+                }
+
+                CGameScriptResource* firstItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
+                for (CGameScriptResource* item = firstItem; item != null; item = item->Next)
+                {
+                    if (item->ResourceTypeNameIndex == _resourceType && (int)item->CounterOfPool == _targetCounter)
+                    {
+                        _result = true;
+                        return;
+                    }
+                }
+            }
+        }
+
+        public static bool IsScriptFireHandleValid(int handle)
+        {
+            if (handle == 0 || handle == -1)
+            {
+                return false;
+            }
+
+            var task = new DoesCScriptResourceExistByCounterTask(ScriptResourceType.ScriptFire, handle);
+            ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
+            return task._result;
+        }
+
+        #endregion
+
         #region -- Waypoint Info Array --
 
         private static ulong* s_waypointInfoArrayStartAddress;
