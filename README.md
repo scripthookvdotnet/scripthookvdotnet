@@ -18,7 +18,7 @@ The issues page should be primarily used for bug reports and focused enhancement
 ## Downloads
 The stable builds can be downloaded from the [Releases](https://github.com/scripthookvdotnet/scripthookvdotnet/releases) page.
 You need to use the ASI file and the DLL files for APIs in an archive of the same version as the internal structure can be changed without notice.  
-**If you are using the game version v1.0.3258.0 or later, use the nightly version `v3.6.0-nightly.89` or later (see below for nightly version details), or downgrade the game to v1.0.3179.0 or earlier! `v3.6.0` and `v3.5.1` have [a compatibility issue with the game version v1.0.3258.0 and later game versions](https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1451)!**
+**If you are using the game version v1.0.3258.0 or later and installing SHVDN *as a user*, use the nightly version `v3.6.0-nightly.89` or later (see below for nightly version details), or downgrade the game to v1.0.3179.0 or earlier! `v3.6.0` and `v3.5.1` have [a compatibility issue with the game version v1.0.3258.0 and later game versions](https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1451)!** For script developers: you should build your scripts against stable versions rather than nightly ones unless you acknowledge that public features that aren't in stable versions can get breaking changes. Even if some stable versions don't work, that is not important when building against ones. See below for details.
 
 For newer builds, check out the [Nightly Builds](https://github.com/scripthookvdotnet/scripthookvdotnet-nightly/releases). You don't have to sign in to GitHub to download nightly releases.  
 Here are some of the notes you should be aware of when using a nightly version (from v3.6.0):
@@ -31,6 +31,7 @@ Here are some of the notes you should be aware of when using a nightly version (
 
 For script developers, please note that new APIs included in new nightly builds but not included in any stable versions are subject to change without notice, so it is not advisable to use any of them for public/production builds of your scripts.
 In other words, **you should build your scripts against stable versions but not nightly versions unless you build your scripts for testing some of the new APIs added in nightly versions, so you won't accidentally use anything not available in any stable versions. Building scripts against nightly versions may make scripts not work as intended in SHVDN versions different from the versions they are built against! No compatibility support will be provided for nightly-only features!**
+Even if no stable versions of SHVDN work in any game versions, you can build against stable API versions of SHVDN and tell users to use nightly versions until a newer stable version of SHVDN is released.
 
 ## Installation
 * Extract all the files in the root folder from the zip file into your game folder (where `GTA5.exe` is) except for `README.txt` and the 2 folders.
