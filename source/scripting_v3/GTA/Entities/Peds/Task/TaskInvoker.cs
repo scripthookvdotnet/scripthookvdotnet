@@ -2018,19 +2018,6 @@ namespace GTA
                 targetOffset.Z);
         }
         /// <summary>
-        /// Tells the <see cref="Ped"/> in a plane to land. The <see cref="Ped"/> will try to land in between the start
-        /// and end coords.
-        /// </summary>
-        /// <remarks>
-        /// Cannot be used in a <see cref="TaskSequence"/> since <c>TASK_PLANE_CHASE</c> does not expect the zero
-        /// handle for task sequences.
-        /// </remarks>
-        public void PlaneChase(Vehicle plane, Vector3 runWayStart, Vector3 runWayEnd)
-        {
-            Function.Call(Hash.TASK_PLANE_CHASE, _ped.Handle, plane.Handle, runWayStart.X, runWayStart.Y,
-                runWayStart.Z, runWayEnd.X, runWayEnd.Y, runWayEnd.Z);
-        }
-        /// <summary>
         /// Tells the <see cref="Ped"/> in a heli to chase an <see cref="Entity"/>. The <see cref="Ped"/> must be in
         /// a heli.
         /// </summary>
