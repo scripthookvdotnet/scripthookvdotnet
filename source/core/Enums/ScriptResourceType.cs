@@ -5,5 +5,6 @@ namespace SHVDN
         Checkpoint = 6,
         RelationshipGroup = 20,
         ScaleformMovie = 21,
+        ScriptFire = 2,
     }
 }
