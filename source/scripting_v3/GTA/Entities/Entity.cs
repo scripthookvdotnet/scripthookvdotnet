@@ -3360,7 +3360,7 @@ namespace GTA
             unsafe
             {
                 (CrClipDictionary clipDict, string clipName) = crClipAsset;
-                bool foundEventTag = Function.Call<bool>(Hash.FIND_ANIM_EVENT_PHASE, Handle, clipDict, clipName, eventName, &startPhaseTemp, &endPhaseTemp);
+                bool foundEventTag = Function.Call<bool>(Hash.FIND_ANIM_EVENT_PHASE, clipDict, clipName, eventName, &startPhaseTemp, &endPhaseTemp);
 
                 startPhase = startPhaseTemp;
                 endPhase = endPhaseTemp;
