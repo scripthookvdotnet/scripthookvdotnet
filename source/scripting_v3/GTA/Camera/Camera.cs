@@ -468,19 +468,17 @@ namespace GTA
         /// <param name="duration">The duration of any interpolation in milliseconds.</param>
         /// <param name="graphTypePos">The camera graph type for position transition.</param>
         /// <param name="graphTypeRot">The camera graph type for rotation transition.</param>
-        /// <param name="rotOrder">The rotation order in world space.</param>
         public void InterpTo(Camera destinationCam, int duration,
             CamFrameInterpolatorCurveType graphTypePos = CamFrameInterpolatorCurveType.SinAccelDecel,
-            CamFrameInterpolatorCurveType graphTypeRot = CamFrameInterpolatorCurveType.SinAccelDecel,
-            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
+            CamFrameInterpolatorCurveType graphTypeRot = CamFrameInterpolatorCurveType.SinAccelDecel)
         {
             Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, destinationCam.Handle, Handle, duration, (int)graphTypePos,
-                (int)graphTypeRot, (int)rotOrder);
+                (int)graphTypeRot);
         }
         /// <summary>
         /// Sets a cam active which will be interpolated too from this <see cref="Camera"/>.
         /// </summary>
-        [Obsolete("Use Camera.InterpTo(Camera, int, CamFrameInterpolatorCurveType, CamFrameInterpolatorCurveType, EulerRotationOrder) instead."),
+        [Obsolete("Use Camera.InterpTo(Camera, int, CamFrameInterpolatorCurveType, CamFrameInterpolatorCurveType) instead."),
         EditorBrowsable(EditorBrowsableState.Never)]
         public void InterpTo(Camera to, int duration, int easePosition, int easeRotation)
         {
