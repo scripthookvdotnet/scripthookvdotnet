@@ -3117,7 +3117,7 @@ namespace GTA
         public void SetIKTarget(IKPart ikPart, PedBone targetBone, Vector3 targetOffset, IKTargetFlags flags,
             int blendInTimeMS = -1, int blendOutTimeMS = -1)
         {
-            Function.Call(Hash.SET_IK_TARGET, (int)ikPart, targetBone.Owner, targetBone.Tag, targetOffset.X,
+            Function.Call(Hash.SET_IK_TARGET, Handle, (int)ikPart, targetBone.Owner, targetBone.Tag, targetOffset.X,
                 targetOffset.Y, targetOffset.Z, (int)flags, blendInTimeMS, blendOutTimeMS);
         }
 
@@ -3145,7 +3145,7 @@ namespace GTA
         public void SetIKTarget(IKPart ikPart, EntityBone targetBone, Vector3 targetOffset, IKTargetFlags flags,
             int blendInTimeMS = -1, int blendOutTimeMS = -1)
         {
-            Function.Call(Hash.SET_IK_TARGET, (int)ikPart, targetBone.Owner, targetBone.Tag, targetOffset.X,
+            Function.Call(Hash.SET_IK_TARGET, Handle, (int)ikPart, targetBone.Owner, targetBone.Tag, targetOffset.X,
                 targetOffset.Y, targetOffset.Z, (int)flags, blendInTimeMS, blendOutTimeMS);
         }
 
@@ -3184,7 +3184,7 @@ namespace GTA
         public void SetIKTarget(IKPart ikPart, Entity targetEntity, int boneTag, Vector3 targetOffset,
             IKTargetFlags flags, int blendInTimeMS = -1, int blendOutTimeMS = -1)
         {
-            Function.Call(Hash.SET_IK_TARGET, (int)ikPart, targetEntity, boneTag, targetOffset.X, targetOffset.Y,
+            Function.Call(Hash.SET_IK_TARGET, Handle, (int)ikPart, targetEntity, boneTag, targetOffset.X, targetOffset.Y,
                 targetOffset.Z, (int)flags, blendInTimeMS, blendOutTimeMS);
         }
 
@@ -3208,7 +3208,7 @@ namespace GTA
         public void SetIKTarget(IKPart ikPart, Vector3 target, IKTargetFlags flags, int blendInTimeMS = -1,
             int blendOutTimeMS = -1)
         {
-            Function.Call(Hash.SET_IK_TARGET, (int)ikPart, 0, -1, target.X, target.Y, target.Z, (int)flags,
+            Function.Call(Hash.SET_IK_TARGET, Handle, (int)ikPart, 0, -1, target.X, target.Y, target.Z, (int)flags,
                 blendInTimeMS, blendOutTimeMS);
         }
 
