@@ -18,7 +18,7 @@ namespace GTA
         /// <param name="maxChildrenCount">The maximum number of children fires. Must be less than 25 or else the fire will not be created.</param>
         /// <param name="isGasFire">If true, makes the fire look like it originates from a line of gasoline.</param>
         /// <returns>The created <see cref="ScriptFire"/> instance.</returns>
-        public static ScriptFire StartScriptFire(Vector3 position, int maxChildrenCount, bool isGasFire)
+        public static ScriptFire StartScriptFire(Vector3 position, int maxChildrenCount, bool isGasFire = false)
         {
             int handle = Function.Call<int>(Hash.START_SCRIPT_FIRE, position.X, position.Y, position.Z, maxChildrenCount, isGasFire);
             return new ScriptFire(handle);
