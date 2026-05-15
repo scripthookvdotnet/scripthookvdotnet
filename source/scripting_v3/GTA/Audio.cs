@@ -81,7 +81,7 @@ namespace GTA
         /// <param name="enableOnReplay"><inheritdoc cref="ScriptSound.PlaySoundFrontend(string, string, bool)" path="/param[@name='enableOnReplay']"/></param>.
         public static void PlaySoundAndForget(string soundName, string setName, bool enableOnReplay = true)
         {
-            Function.Call(Hash.PLAY_SOUND, -1, soundName, setName, enableOnReplay);
+            Function.Call(Hash.PLAY_SOUND, -1, soundName, setName, /* bOverNetwork */ false, /* NetworkRange */ 0, enableOnReplay);
         }
         /// <summary>
         /// Plays back a sound "frontend" - at full volume, panned centrally, but do not track of sounds.
