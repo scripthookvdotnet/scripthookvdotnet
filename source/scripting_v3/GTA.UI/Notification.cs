@@ -149,7 +149,7 @@ namespace GTA.UI
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
 
-            int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK, title, (int)iconType, null, isImportant);
+            int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK_TU, title, (int)iconType, null, isImportant);
             return handle != -1 ? new FeedPost(handle) : null;
         }
         /// <summary>
@@ -183,7 +183,7 @@ namespace GTA.UI
         {
             BeginTextCommandForFeedPostAndPushLongString(message);
 
-            int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK, title, (int)iconType, null, isImportant,
+            int handle = Function.Call<int>(Hash.END_TEXT_COMMAND_THEFEED_POST_UNLOCK_TU_WITH_COLOR, title, (int)iconType, null, isImportant,
                 (int)titleColor, titleIsLiteral);
             return handle != -1 ? new FeedPost(handle) : null;
         }
