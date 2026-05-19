@@ -77,7 +77,7 @@ namespace SHVDN
             _keyManager.Register(Keys.Left | Keys.Control, BackwardWord);
             _keyManager.Register(Keys.Right, MoveCursorRight);
             _keyManager.Register(Keys.Right | Keys.Control, ForwardWord);
-            _keyManager.Register(Keys.Insert | Keys.Shift, AddClipboardContent);
+            _keyManager.Register(Keys.Insert | Keys.Shift, AddClipboardContent, KeyManager.ThreadOverride.InputThread);
             _keyManager.Register(Keys.Home, MoveCursorToBegOfLine);
             _keyManager.Register(Keys.End, MoveCursorToEndOfLine);
             _keyManager.Register(Keys.Up, () =>
@@ -133,7 +133,7 @@ namespace SHVDN
             _keyManager.Register(Keys.U | Keys.Control, KillLine);
             _keyManager.Register(Keys.M | Keys.Control, CompileExpression);
             _keyManager.Register(Keys.L | Keys.Control, Clear);
-            _keyManager.Register(Keys.V | Keys.Control, AddClipboardContent);
+            _keyManager.Register(Keys.V | Keys.Control, AddClipboardContent, KeyManager.ThreadOverride.InputThread);
             _keyManager.Register(Keys.W | Keys.Control, UnixWordRubout);
             _keyManager.Register(Keys.T | Keys.Alt, TransposeTwoWords);
             _keyManager.Register(Keys.T | Keys.Control, TransposeTwoChars);
@@ -279,7 +279,7 @@ namespace SHVDN
             string text = Clipboard.GetText();
             text = text.Replace("\n", string.Empty); // TODO Keep this?
 
-            AddToInput(text);
+            _keyManager.EnqueueAction(() => { AddToInput(text); }, KeyManager.ThreadOverride.ClrThread);
         }
 
         /// <summary>
@@ -1363,6 +1363,18 @@ namespace SHVDN
             {
                 action();
             }
+        }
+
+        public void EnqueueAction(Action action, ThreadOverride ownerThread = ThreadOverride.None)
+        {
+            ConcurrentQueue<Action> queue = GetThreadQueue(ownerThread);
+
+            if (queue == null)
+            {
+                return;
+            }
+
+            queue.Enqueue(action);
         }
 
         private ConcurrentQueue<Action> GetThreadQueue(ThreadOverride thread)
