@@ -13,16 +13,11 @@ namespace GTA
     /// <summary>
     /// A class which handles rendering of Scaleform elements.
     /// </summary>
-    public sealed class Scaleform : IDisposable, INativeValue
+    public sealed partial class Scaleform : IDisposable, INativeValue
     {
         internal Scaleform(int handle)
         {
             Handle = handle;
-        }
-        [Obsolete("The Scaleform constructor with a string parameter is obsolete. Use Scaleform.RequestMovie instead.")]
-        public Scaleform(string scaleformID)
-        {
-            Handle = Function.Call<int>(Hash.REQUEST_SCALEFORM_MOVIE, scaleformID);
         }
 
         /// <summary>

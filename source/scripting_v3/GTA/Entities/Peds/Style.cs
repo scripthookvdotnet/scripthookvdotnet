@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace GTA
 {
-    public sealed class Style
+    public sealed partial class Style
     {
         #region Fields
 
@@ -65,10 +65,6 @@ namespace GTA
                 return variation;
             }
         }
-
-        [Obsolete("Use the indexer overload with the type PedPropAnchorPoint instead."),
-         EditorBrowsable(EditorBrowsableState.Never)]
-        public PedProp this[PedPropType propId] => this[(PedPropAnchorPoint)propId];
 
         public PedProp[] GetAllProps()
         {

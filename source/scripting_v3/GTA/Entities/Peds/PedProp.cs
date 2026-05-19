@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace GTA
 {
-    public sealed class PedProp : IPedVariation
+    public sealed partial class PedProp : IPedVariation
     {
         #region Fields
         readonly Ped _ped;
@@ -28,10 +28,6 @@ namespace GTA
         }
 
         public string Name => AnchorPoint.ToString();
-
-        [Obsolete("PedProp.Type is obsolete, use PedProp.AnchorPoint instead."),
-         EditorBrowsable(EditorBrowsableState.Never)]
-        public PedPropType Type => (PedPropType)AnchorPoint;
 
         public PedPropAnchorPoint AnchorPoint
         {
@@ -121,16 +117,6 @@ namespace GTA
                     (int)anchorPoint, drawableIndex)));
 
         public bool HasVariations => Count > 1;
-
-        [Obsolete("PedProp.HasTextureVariations is obsolete because it does not make sense " +
-                  "as texture count cannot be determined without specifying both prop position id and drawable id."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public bool HasTextureVariations => Count > 1 && TextureCount > 1;
-
-        [Obsolete("PedProp.HasAnyVariations is obsolete because it does not make sense " +
-          "as texture count cannot be determined without specifying both prop position id and drawable id."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public bool HasAnyVariations => HasVariations;
 
         public override string ToString()
         {

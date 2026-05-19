@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace GTA
 {
-    public sealed class TaskInvoker
+    public sealed partial class TaskInvoker
     {
         #region Fields
         readonly Ped _ped;
@@ -27,17 +27,6 @@ namespace GTA
         public void AchieveHeading(float heading, int timeout = 0)
         {
             Function.Call(Hash.TASK_ACHIEVE_HEADING, _ped.Handle, heading, timeout);
-        }
-
-        [Obsolete("Use TaskInvoker.AimGunAtEntity for entity targets instead.")]
-        public void AimAt(Entity target, int duration)
-        {
-            Function.Call(Hash.TASK_AIM_GUN_AT_ENTITY, _ped.Handle, target.Handle, duration, 0);
-        }
-        [Obsolete("Use TaskInvoker.AimGunAtPosition for coordinate targets instead.")]
-        public void AimAt(Vector3 target, int duration)
-        {
-            Function.Call(Hash.TASK_AIM_GUN_AT_COORD, _ped.Handle, target.X, target.Y, target.Z, duration, 0, 0);
         }
 
         /// <summary>
@@ -151,22 +140,10 @@ namespace GTA
         {
             Function.Call(Hash.TASK_VEHICLE_DRIVE_WANDER, _ped.Handle, vehicle.Handle, speed, (int)drivingFlags);
         }
-        [Obsolete("Use TaskInvoker.CruiseWithVehicle(Vehicle, float, VehicleDrivingFlags) instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public void CruiseWithVehicle(Vehicle vehicle, float speed, DrivingStyle style = DrivingStyle.Normal)
-        {
-            Function.Call(Hash.TASK_VEHICLE_DRIVE_WANDER, _ped.Handle, vehicle.Handle, speed, (int)style);
-        }
 
         public void DriveTo(Vehicle vehicle, Vector3 target, float speed, VehicleDrivingFlags drivingFlags, float radius)
         {
             Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, (int)drivingFlags, radius);
-        }
-        [Obsolete("Use DriveTo(Vehicle, Vector3, float, VehicleDrivingFlags, float) instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public void DriveTo(Vehicle vehicle, Vector3 target, float radius, float speed, DrivingStyle style = DrivingStyle.Normal)
-        {
-            Function.Call(Hash.TASK_VEHICLE_DRIVE_TO_COORD_LONGRANGE, _ped.Handle, vehicle.Handle, target.X, target.Y, target.Z, speed, (int)style, radius);
         }
 
         public void EnterAnyVehicle(VehicleSeat seat = VehicleSeat.Any, int timeout = -1, float speed = 1f, EnterVehicleFlags flag = EnterVehicleFlags.None)
@@ -342,27 +319,6 @@ namespace GTA
             => Function.Call(Hash.TASK_PUT_PED_DIRECTLY_INTO_MELEE, _ped.Handle, target, blendIn, -1f,
                 strafePhaseSync, (uint)aiCombatFlags);
 
-        [Obsolete("Use TaskInvoker.Combat instead.")]
-        public void FightAgainst(Ped target)
-        {
-            Function.Call(Hash.TASK_COMBAT_PED, _ped.Handle, target.Handle, 0, 16);
-        }
-        [Obsolete("Use TaskInvoker.CombatTimed instead.")]
-        public void FightAgainst(Ped target, int duration)
-        {
-            Function.Call(Hash.TASK_COMBAT_PED_TIMED, _ped.Handle, target.Handle, duration, 0);
-        }
-        [Obsolete("Use TaskInvoker.CombatHatedTargetsAroundPed instead.")]
-        public void FightAgainstHatedTargets(float radius)
-        {
-            Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED, _ped.Handle, radius, 0);
-        }
-        [Obsolete("Use TaskInvoker.CombatHatedTargetsAroundPedTimed instead.")]
-        public void FightAgainstHatedTargets(float radius, int duration)
-        {
-            Function.Call(Hash.TASK_COMBAT_HATED_TARGETS_AROUND_PED_TIMED, _ped.Handle, radius, duration, 0);
-        }
-
         public void FleeFrom(Ped ped, int duration = -1) => FleeFrom(ped, 100f, duration);
         public void FleeFrom(Ped otherPed, float safeDistance, int duration)
         {
@@ -453,13 +409,6 @@ namespace GTA
         public void GoTo(Entity target, Vector3 offset = default(Vector3), int timeout = -1)
         {
             Function.Call(Hash.TASK_GOTO_ENTITY_OFFSET_XY, _ped.Handle, target.Handle, timeout, offset.X, offset.Y, offset.Z, 1f, true);
-        }
-
-        [Obsolete("TaskInvoker.GoTo with the position parameter may not obvious enough to suggest it uses navigation mesh. Use TaskInvoker.FollowNavMeshTo instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public void GoTo(Vector3 position, int timeout = -1)
-        {
-            Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD, _ped.Handle, position.X, position.Y, position.Z, 1f, timeout, 0f, 0, 0f);
         }
 
         public void GoStraightTo(Vector3 position, int timeout = -1, float targetHeading = 0f, float distanceToSlide = 0f)
@@ -1130,12 +1079,6 @@ namespace GTA
         {
             Function.Call(Hash.TASK_STAND_STILL, _ped.Handle, duration);
         }
-
-        [Obsolete("TaskInvoker.StartScenario is obsolete, use TaskInvoker.StartScenarioInPlace instead.")]
-        public void StartScenario(string name, float heading) => StartScenarioInPlace(name);
-
-        [Obsolete("TaskInvoker.StartScenario is obsolete, use TaskInvoker.StartScenarioAtPosition instead.")]
-        public void StartScenario(string name, Vector3 position, float heading) => StartScenarioAtPosition(name, position, heading, playIntroClip: false);
 
         /// <summary>
         /// Puts this <see cref="Ped"/> into the given scenario immediately in place.
@@ -2036,9 +1979,6 @@ namespace GTA
             Function.Call(Hash.TASK_VEHICLE_SHOOT_AT_PED, _ped.Handle, target.Handle, 20f);
         }
 
-        [Obsolete("TaskInvoke.Wait is obsolete, use TaskInvoker.Pause instead.")]
-        public void Wait(int duration) => Pause(duration);
-
         /// <summary>
         /// Tells the <see cref="Ped"/> to wander.
         /// </summary>
@@ -2047,8 +1987,6 @@ namespace GTA
             // the 3rd argument is actually a flag value, but only the 1st bit is used as of b2845
             Function.Call(Hash.TASK_WANDER_STANDARD, _ped.Handle, heading, keepMovingWhilstWaitingForFirstPath ? 1 : 0);
         }
-        [Obsolete("the overload of TaskInvoker.WanderAround with no parameters is obsolete, use TaskInvoker.Wander instead.")]
-        public void WanderAround() => Wander(0, false);
 
         /// <inheritdoc cref="WanderAround(Vector3, float, float, float)"/>
         public void WanderAround(Vector3 position, float radius) => WanderAround(position, radius, 0, 0);
@@ -2134,12 +2072,6 @@ namespace GTA
                 : (AnimationBlendDelta.NormalBlendOut.Value);
 
             Function.Call(Hash.STOP_ANIM_TASK, _ped.Handle, clipDict, clipName, deltaArg);
-        }
-
-        [Obsolete("Use StopScriptedAnimationTask instead.")]
-        public void ClearAnimation(string animSet, string animName)
-        {
-            Function.Call(Hash.STOP_ANIM_TASK, _ped.Handle, animSet, animName, -4f);
         }
     }
 }
