@@ -492,7 +492,7 @@ namespace SHVDN
             // Disable controls while the console is open
             DisableControlsThisFrame();
 
-            _keyManager.DequeueActions();
+            _keyManager.DequeueActions(KeyManager.ThreadOverride.ClrThread);
 
             if (_input != _lastInput)
             {
@@ -582,6 +582,9 @@ namespace SHVDN
                 //We only want to show candidates again if the actual input has changed.
                 _hideCandidates = false;
             }
+
+            _keyManager.DequeueActions(KeyManager.ThreadOverride.InputThread);
+
         }
 
         private void NextCandidate()
@@ -1268,25 +1271,37 @@ namespace SHVDN
 
     public class KeyManager
     {
+        public enum ThreadOverride
+        {
+            None = ClrThread,
+
+            ClrThread = 1,
+            InputThread
+        }
+
         public class KeyBinding
         {
             public Keys Combined { get; }
             public Action Action { get; }
+            public ThreadOverride Thread { get; }
 
-            public KeyBinding(Keys combined, Action action)
+            public KeyBinding(Keys combined, Action action, ThreadOverride thread)
             {
                 Combined = combined;
                 Action = action;
+                Thread = thread;
             }
         }
 
         private readonly Dictionary<Keys, List<KeyBinding>> _bindings = new();
-        private readonly ConcurrentQueue<Action> _actionQueue = new();
 
         private const Keys KeyCodeMask = (Keys)0xFF;
         private const Keys ModMask = Keys.Control | Keys.Shift | Keys.Alt;
 
-        public void Register(Keys combined, Action action)
+        private readonly ConcurrentQueue<Action> _inputActionQueue = new();
+        private readonly ConcurrentQueue<Action> _cliActionQueue = new();
+
+        public void Register(Keys combined, Action action, ThreadOverride threadOverride = ThreadOverride.None)
         {
             var key = combined & KeyCodeMask;
 
@@ -1296,7 +1311,7 @@ namespace SHVDN
                 _bindings[key] = list;
             }
 
-            list.Add(new KeyBinding(combined, action));
+            list.Add(new KeyBinding(combined, action, threadOverride));
         }
 
         public bool TryHandle(Keys input)
@@ -1331,16 +1346,38 @@ namespace SHVDN
                 return false;
             }
 
-            _actionQueue.Enqueue(best.Action);
+            GetThreadQueue(best.Thread)?.Enqueue(best.Action);
             return true;
         }
 
-        public void DequeueActions()
+        public void DequeueActions(ThreadOverride ownerThread)
         {
-            while(_actionQueue.TryDequeue(out Action action))
+            ConcurrentQueue<Action> queue = GetThreadQueue(ownerThread);
+
+            if(queue == null)
+            {
+                return;
+            }
+
+            while (queue.TryDequeue(out Action action))
             {
                 action();
             }
+        }
+
+        private ConcurrentQueue<Action> GetThreadQueue(ThreadOverride thread)
+        {
+            if (thread == ThreadOverride.ClrThread)
+            {
+                return _cliActionQueue;
+            }
+
+            if (thread == ThreadOverride.InputThread)
+            {
+                return _inputActionQueue;
+            }
+
+            return null;
         }
 
         private static int CountBits(uint value)
