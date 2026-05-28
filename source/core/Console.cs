@@ -577,7 +577,11 @@ namespace SHVDN
 
                 // Translate key event to character for text input
                 ToUnicode((uint)e.KeyCode, 0, keyboardState, buf, 256, 0);
-                AddToInput(buf.ToString());
+
+                _keyManager.EnqueueAction(() =>
+                {
+                    AddToInput(buf.ToString());
+                });    
 
                 //We only want to show candidates again if the actual input has changed.
                 _hideCandidates = false;
