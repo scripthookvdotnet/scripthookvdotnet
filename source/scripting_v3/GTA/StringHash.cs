@@ -364,7 +364,7 @@ namespace GTA
                 return initValue;
             }
 
-            return AtPartialStringHash(Encoding.UTF8.GetBytes(input), initValue);
+            return AtLiteralStringHash(Encoding.UTF8.GetBytes(input), initValue);
         }
 
         /// <summary>
