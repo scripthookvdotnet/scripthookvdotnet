@@ -231,7 +231,7 @@ namespace GTA
                     Function.Call(Hash.CLEAR_ADDITIONAL_TEXT, 10, true);
                     Function.Call(Hash.REQUEST_ADDITIONAL_TEXT, "mod_mnu", 10);
                 }
-                string cur = string.Empty;
+                string cur;
                 switch (Type)
                 {
                     case VehicleModType.Armor:

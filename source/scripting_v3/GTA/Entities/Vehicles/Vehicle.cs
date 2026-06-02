@@ -1993,7 +1993,7 @@ namespace GTA
             get => Function.Call<VehicleLandingGearState>(Hash.GET_LANDING_GEAR_STATE, Handle);
             set
             {
-                int state = 0;
+                int state;
                 switch (value)
                 {
                     case VehicleLandingGearState.Deploying:
