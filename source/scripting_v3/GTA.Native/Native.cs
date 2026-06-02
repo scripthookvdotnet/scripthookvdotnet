@@ -138,7 +138,7 @@ namespace GTA.Native
         /// <summary>
         /// This holds data that was discarded, content is unpredictable.
         /// </summary>
-        private static ulong _discardData;
+        private static readonly ulong _discardData;
 
         internal ulong _data;
 

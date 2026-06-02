@@ -55,8 +55,8 @@ namespace GTA.Chrono
             _ordFlags = ordFlags;
         }
 
-        private static OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
-        private static OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
+        private static readonly OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
+        private static readonly OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
 
         /// <summary>
         /// Represents the largest possible value of a <see cref="GameClockDate"/>.
