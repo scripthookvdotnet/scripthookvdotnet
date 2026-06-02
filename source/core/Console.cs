@@ -26,7 +26,6 @@ namespace SHVDN
         private bool _cursorVisible = false;
         private int _commandPos = -1;
         private int _currentPage = 1;
-        private bool _isOpen = false;
         private string _input = string.Empty;
         private string _lastInput = string.Empty;
         private string _lastRenderedInput = string.Empty;
@@ -41,7 +40,9 @@ namespace SHVDN
         private int _selectedCandidateIndex = -1;
 
         // We use volatile here as keyboard events are fired on a different thread.
+        private volatile bool _isOpen = false;
         private volatile bool _hideCandidates = false;
+        private volatile bool _requestStateToggle = false;
 
         private const int BaseWidth = 1280;
         private const int BaseHeight = 720;
@@ -145,19 +146,16 @@ namespace SHVDN
         public bool IsOpen
         {
             get => _isOpen;
-            set
+        }
+
+        public void Toggle()
+        {
+            if (_requestStateToggle)
             {
-                DisableControlsThisFrame();
-
-                _isOpen = value;
-                if (_isOpen)
-                {
-                    return;
-                }
-
-                _lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
-                _shouldBlockControls = true;
+                return;
             }
+
+            _requestStateToggle = true;
         }
 
         /// <summary>
@@ -471,6 +469,14 @@ namespace SHVDN
                 }
             }
 
+
+            if (_requestStateToggle)
+            {
+                _isOpen = !_isOpen;
+
+                _requestStateToggle = false;
+            }
+
             if (!IsOpen)
             {
                 // Hack so the input gets blocked long enough
@@ -658,9 +664,20 @@ namespace SHVDN
             }
         }
 
+        private void Open()
+        {
+            DisableControlsThisFrame();
+
+            _isOpen = true;
+        }
+
         private void Close()
         {
-            IsOpen = false;
+            DisableControlsThisFrame();
+
+            _lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
+            _shouldBlockControls = true;
+            _isOpen = false;
         }
 
         private void PageUp()
