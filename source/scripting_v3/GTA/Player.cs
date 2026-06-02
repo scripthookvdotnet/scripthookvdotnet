@@ -586,7 +586,7 @@ namespace GTA
         #endregion
 
         /// <summary>
-        /// Gets or sets the maximum amount of armor this <see cref="Player"/> can have.
+        /// Gets or sets the maximum amount of health this <see cref="Player"/> can have.
         /// The value range is between 0 and 65535.
         /// </summary>
         /// <remarks>
