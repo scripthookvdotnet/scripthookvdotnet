@@ -1,4 +1,3 @@
-using GTA.Math;
 using SHVDN;
 
 namespace GTA

@@ -4,7 +4,6 @@
 //
 
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using GTA.Math;
 using GTA.Native;

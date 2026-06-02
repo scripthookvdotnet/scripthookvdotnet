@@ -7,7 +7,6 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace GTA
 {
