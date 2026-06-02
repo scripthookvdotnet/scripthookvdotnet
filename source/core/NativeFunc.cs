@@ -239,9 +239,9 @@ namespace SHVDN
         /// <summary>
         /// Executes a script function inside the current script domain.
         /// </summary>
-        /// <param name="hash">The function has to call.</param>
-        /// <param name="argPtr">A pointer of function arguments.</param>
-        /// <param name="argCount">The length of <paramref name="argPtr" />.</param>
+        /// <param name="hash">The function to call.</param>
+        /// <param name="argPtr">A pointer to the function arguments.</param>
+        /// <param name="argCount">The number of arguments in <paramref name="argPtr" />.</param>
         /// <returns>A pointer to the return value of the call.</returns>
         public static ulong* Invoke(ulong hash, ulong* argPtr, int argCount)
         {
@@ -260,9 +260,9 @@ namespace SHVDN
         /// <summary>
         /// Executes a script function inside the current script domain.
         /// </summary>
-        /// <param name="hash">The function has to call.</param>
-        /// <param name="argPtr">A pointer of function arguments.</param>
-        /// <param name="argCount">The length of <paramref name="argPtr" />.</param>
+        /// <param name="hash">The function to call.</param>
+        /// <param name="argPtr">A pointer to the function arguments.</param>
+        /// <param name="argCount">The number of arguments in <paramref name="argPtr" />.</param>
         /// <returns>A pointer to the return value of the call.</returns>
         public static ulong* InvokeLongBlockingFunc(ulong hash, ulong* argPtr, int argCount)
         {
@@ -281,7 +281,7 @@ namespace SHVDN
         /// <summary>
         /// Executes a script function inside the current script domain.
         /// </summary>
-        /// <param name="hash">The function has to call.</param>
+        /// <param name="hash">The function to call.</param>
         /// <param name="args">A list of function arguments.</param>
         /// <returns>A pointer to the return value of the call.</returns>
         public static ulong* Invoke(ulong hash, params ulong[] args)
