@@ -187,7 +187,7 @@
     <CsCompile Include="Structs\PgHashMap.cs" />
     <CsCompile Include="Structs\RageAtArrayPtr.cs" />
     <CsCompile Include="Structs\RageSysMemPoolAllocator.cs" />
-    <CsCompile Include="Structs\ScreenInfo.cs" />
+    <CsCompile Include="Structs\GridMonitor.cs" />
     <CsCompile Include="Structs\ScrWeaponHudStats.cs" />
     <CsCompile Include="Structs\Skeleton\CrBoneData.cs" />
     <CsCompile Include="Structs\Skeleton\CrSkeleton.cs" />

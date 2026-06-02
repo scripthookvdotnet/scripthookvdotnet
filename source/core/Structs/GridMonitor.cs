@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace SHVDN
 {
     [StructLayout(LayoutKind.Explicit, Size = 0x30)]
-    internal struct ScreenInfo
+    internal struct GridMonitor
     {
         // these fields should be in pixel coordinates
         [FieldOffset(0x14)]
