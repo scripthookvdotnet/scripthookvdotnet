@@ -3,8 +3,6 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using System;
-using System.ComponentModel;
 using GTA.Graphics;
 using GTA.Native;
 
