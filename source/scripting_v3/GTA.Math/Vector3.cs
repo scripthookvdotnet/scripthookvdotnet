@@ -23,11 +23,6 @@ using System.Runtime.InteropServices;
 
 namespace GTA.Math
 {
-    internal sealed class Random
-    {
-        internal static System.Random Instance = new();
-    }
-
     /// <summary>
     /// Represents a vector with four single-precision floating-point values that can be used to represent 3D
     /// coordinates or any other triplet of numeric values.
@@ -389,7 +384,7 @@ namespace GTA.Math
         public static Vector3 RandomXY()
         {
             Vector3 v = Zero;
-            double radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
+            double radian = RandomHelper.Instance.NextDouble() * 2 * System.Math.PI;
 
             v.X = (float)(System.Math.Cos(radian));
             v.Y = (float)(System.Math.Sin(radian));
@@ -403,8 +398,8 @@ namespace GTA.Math
         public static Vector3 RandomXYZ()
         {
             Vector3 v = Zero;
-            double radian = Random.Instance.NextDouble() * 2.0 * System.Math.PI;
-            double cosTheta = (Random.Instance.NextDouble() * 2.0) - 1.0;
+            double radian = RandomHelper.Instance.NextDouble() * 2.0 * System.Math.PI;
+            double cosTheta = (RandomHelper.Instance.NextDouble() * 2.0) - 1.0;
             double theta = System.Math.Acos(cosTheta);
 
             v.X = (float)(System.Math.Sin(theta) * System.Math.Cos(radian));

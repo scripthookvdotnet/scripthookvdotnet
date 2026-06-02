@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using Random = System.Random;
 
 namespace GTA
 {
@@ -1140,7 +1139,7 @@ namespace GTA
                 return null;
             }
 
-            Random rand = Math.Random.Instance;
+            Random rand = RandomHelper.Instance;
             Model pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
 
             // the model should be loaded at this moment, so call `CREATE_PED` immediately
@@ -1192,7 +1191,7 @@ namespace GTA
                 return null;
             }
 
-            Random rand = Math.Random.Instance;
+            Random rand = RandomHelper.Instance;
             Model pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
 
             // the model should be loaded at this moment, so call CREATE_VEHICLE immediately

@@ -247,7 +247,7 @@ namespace GTA.Math
         public static Vector2 RandomXY()
         {
             Vector2 v;
-            double radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
+            double radian = RandomHelper.Instance.NextDouble() * 2 * System.Math.PI;
             v.X = (float)(System.Math.Cos(radian));
             v.Y = (float)(System.Math.Sin(radian));
             v.Normalize();
