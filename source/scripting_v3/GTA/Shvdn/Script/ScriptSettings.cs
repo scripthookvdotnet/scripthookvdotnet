@@ -44,9 +44,9 @@ namespace GTA
                 return result;
             }
 
-            string line = null;
+            string line;
             string tempSectionName = string.Empty;
-            StreamReader reader = null;
+            StreamReader reader;
 
             try
             {
@@ -134,8 +134,7 @@ namespace GTA
                 }
             }
 
-            StreamWriter writer = null;
-
+            StreamWriter writer;
             try
             {
                 writer = File.CreateText(_fileName);
