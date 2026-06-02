@@ -14,7 +14,7 @@ namespace GTA
     /// <summary>
     /// Represents a vehicle wheel for a vehicle (internally for a <c>CWheel</c> struct).
     /// </summary>
-    public sealed class VehicleWheel
+    public sealed partial class VehicleWheel
     {
         #region Fields
         IntPtr _cachedAddress;
@@ -105,13 +105,6 @@ namespace GTA
         {
             get;
         }
-
-        /// <summary>
-        /// Gets the script wheel index for native functions.
-        /// </summary>
-        [Obsolete("Use VehicleWheel.BoneId or VehicleWheel.ScriptIndex instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public int Index => (int)ScriptIndex;
 
         /// <summary>
         /// Gets the script wheel index for native functions.

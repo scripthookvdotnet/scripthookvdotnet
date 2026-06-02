@@ -12,7 +12,7 @@ using System.Linq;
 
 namespace GTA
 {
-    public sealed class Vehicle : Entity
+    public sealed partial class Vehicle : Entity
     {
         #region Fields
         VehicleDoorCollection _doors;
@@ -242,46 +242,6 @@ namespace GTA
         /// </para>
         /// </param>
         public void ForceUseAudioGameObject(string gameObjectName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, gameObjectName);
-
-        #endregion
-
-        #region Extras
-        /// <summary>
-        /// Determines whether the specified <c>extra</c> is currently enabled on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="extra">The extra to check.</param>
-        /// <returns>
-        /// <see langword="true"/> if the extra is enabled; otherwise, <see langword="false"/>.
-        /// </returns>
-        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Enabled instead!")]
-        public bool IsExtraOn(int extra)
-        {
-            return Function.Call<bool>(Hash.IS_VEHICLE_EXTRA_TURNED_ON, Handle, extra);
-        }
-
-        /// <summary>
-        /// Determines whether the specified <c>extra</c> exists on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="extra">The extra to check.</param>
-        /// <returns>
-        /// <see langword="true"/> if the extra exists; otherwise, <see langword="false"/>.
-        /// </returns>
-        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Exists() instead!")]
-        public bool ExtraExists(int extra)
-        {
-            return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
-        }
-
-        /// <summary>
-        /// Enables or disables the specified <c>extra</c> on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="extra">The extra to enable or disable.</param>
-        /// <param name="toggle"><see langword="true"/> to enable the extra; <see langword="false"/> to disable it.</param>
-        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Enabled instead!")]
-        public void ToggleExtra(int extra, bool toggle)
-        {
-            Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
-        }
 
         #endregion
 
@@ -965,17 +925,6 @@ namespace GTA
         #endregion
 
         #region Performance & Driving
-
-        /// <summary>
-        /// Gets or sets the gears value of this <see cref="Vehicle"/>.
-        /// </summary>
-        [Obsolete("Use Vehicle.HighGear for the high gear value and Vehicle.CurrentGear for the current gear value instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public int Gears
-        {
-            get => HighGear;
-            set => HighGear = value;
-        }
 
         /// <summary>
         /// Gets or sets the high gear value of this <see cref="Vehicle"/>.
@@ -1705,11 +1654,6 @@ namespace GTA
         /// </summary>
         public bool HasDamageDecals => Function.Call<bool>(Hash.GET_DOES_VEHICLE_HAVE_DAMAGE_DECALS, Handle);
 
-
-        /// <inheritdoc cref="Vehicle.HasDamageDecals"/>
-        [Obsolete("Use Vehicle.HasDamageDecals instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public bool IsDamaged => Function.Call<bool>(Hash.GET_DOES_VEHICLE_HAVE_DAMAGE_DECALS, Handle);
-
         /// <summary>
         /// Gets the value that indicates whether this <see cref="Vehicle"/> is driveable.
         /// For the setter, it behaves in the same way as <see cref="IsUndriveable"/> except that this setter negates the value.
@@ -1864,11 +1808,6 @@ namespace GTA
         public void ApplyDamageDeformation(Vector3 position, float damage, float deformation, bool localDamage)
         {
             Function.Call(Hash.SET_VEHICLE_DAMAGE, Handle, position.X, position.Y, position.Z, damage, deformation, localDamage);
-        }
-        [Obsolete("Use ApplyDamageDeformation instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public void ApplyDamage(Vector3 position, float damageAmount, float radius)
-        {
-            Function.Call(Hash.SET_VEHICLE_DAMAGE, Handle, position.X, position.Y, position.Z, damageAmount, radius);
         }
 
         /// <summary>
@@ -2560,12 +2499,6 @@ namespace GTA
         {
             Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicleBone.Owner, vehicleBone.Index,
                 attachPointOffset.X, attachPointOffset.Y, attachPointOffset.Z);
-        }
-        [Obsolete("Vehicle.TowVehicle(Vehicle, bool) is obsolete because the bone index parameter is incorrectly used " +
-            "as a bool parameter. Use one of the other overload instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public void TowVehicle(Vehicle vehicle, bool rear)
-        {
-            Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicle.Handle, rear, 0f, 0f, 0f);
         }
 
         /// <summary>
