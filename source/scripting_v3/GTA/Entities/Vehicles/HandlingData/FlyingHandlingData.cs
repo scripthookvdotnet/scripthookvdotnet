@@ -551,14 +551,11 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets an unknown resistance value to rotation or speed.
+        /// Gets or sets angular damping applied to rotational motion at high speeds (pitch, yaw, roll).
         /// </summary>
         /// <remarks>
-        /// When you set a <see cref="Vector3"/> with some components zero, the airplane will behave the same in corresponding axes before the new value is set.
+        /// Controls how strongly the vehicle resists rotation at higher velocities.
         /// </remarks>
-        /// <value>
-        /// An unknown resistance value to rotation or speed.
-        /// </value>
         public Vector3 VectorSpeedResistance
         {
             get
