@@ -80,10 +80,6 @@ namespace SHVDN
 
                 Encoding.UTF8.GetBytes(s, 0, s.Length, s_strBufferForStringToCoTaskMemUtf8, 0);
                 IntPtr dest = Marshal.AllocCoTaskMem(byteCountUtf8 + 1);
-                if (dest == IntPtr.Zero)
-                {
-                    throw new OutOfMemoryException();
-                }
 
                 Marshal.Copy(s_strBufferForStringToCoTaskMemUtf8, 0, dest, byteCountUtf8);
 
