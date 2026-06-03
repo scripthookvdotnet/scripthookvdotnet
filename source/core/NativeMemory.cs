@@ -228,7 +228,7 @@ namespace SHVDN
                 s_physicalScrenHeightAddr = (int*)(*(int*)(address + 0x1A) + address + 0x1E);
                 s_grcDeviceAddr = new IntPtr((long*)(*(int*)(address + 0x2B) + address + 0x2F));
 
-                s_unkScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)((long*)(*(int*)(address + 0x30) + address + 0x34));
+                s_updateMonitorConfigurationFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)((long*)(*(int*)(address + 0x30) + address + 0x34));
                 s_isUsingMultiScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, bool>)((long*)(*(int*)(address + 0x38) + address + 0x3C));
                 s_getMainScreenInfoFunc = (delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*>)((long*)(*(int*)(address + 0x50) + address + 0x54));
             }
@@ -2819,7 +2819,7 @@ namespace SHVDN
         /// <remarks>
         /// May need to be called in the main thread if the game is using multiple screens.
         /// </remarks>
-        private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr> s_unkScreenFunc;
+        private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr> s_updateMonitorConfigurationFunc;
         /// <remarks>
         /// Returns only either 0 or 1.
         /// </remarks>
@@ -2836,11 +2836,11 @@ namespace SHVDN
             {
                 resolutionResult = new Size(*s_physicalScrenWidthAddr, *s_physicalScrenHeightAddr);
 
-                IntPtr generalScreenInfoAddr = s_unkScreenFunc(s_grcDeviceAddr);
+                IntPtr generalScreenInfoAddr = s_updateMonitorConfigurationFunc(s_grcDeviceAddr);
                 if (s_isUsingMultiScreenFunc(generalScreenInfoAddr))
                 {
                     // A lot of functions call this function twice for some reason, so we call it twice for safely
-                    generalScreenInfoAddr = s_unkScreenFunc(s_grcDeviceAddr);
+                    generalScreenInfoAddr = s_updateMonitorConfigurationFunc(s_grcDeviceAddr);
                     GridMonitor* screenInfoAddr = s_getMainScreenInfoFunc(generalScreenInfoAddr);
 
                     resolutionResult = new Size(
