@@ -22,13 +22,13 @@ namespace GTA
         /// </summary>
         Balance = 2,
 
-        [Obsolete]
+        [Obsolete("Use RagdollType.Relax instead.")]
         Normal = 0,
-        [Obsolete]
+        [Obsolete("Use RagdollType.ScriptControl instead.")]
         StiffLegs,
-        [Obsolete]
+        [Obsolete("Use RagdollType.Balance instead.")]
         NarrowLegs,
-        [Obsolete]
+        [Obsolete("This value does not exist, it behaves the same like RagdollType.Balance. Use RagdollType.Balance instead.")]
         WideLegs,
     }
 }
