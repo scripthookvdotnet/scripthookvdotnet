@@ -224,7 +224,7 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\x0F\x84\x87\x00\x00\x00\xFF\xC9\x74\x79\xFF\xC9\x74\x6B\x66\x0F\x6E\x35", "xxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_physicalScrenWidthAddr = (int*)(*(int*)(address + 0x12) + address + 0x16);
+                s_uiWidthAddr = (int*)(*(int*)(address + 0x12) + address + 0x16);
                 s_physicalScrenHeightAddr = (int*)(*(int*)(address + 0x1A) + address + 0x1E);
                 s_grcDeviceAddr = new IntPtr((long*)(*(int*)(address + 0x2B) + address + 0x2F));
 
@@ -2813,7 +2813,7 @@ namespace SHVDN
 
         #region -- Screen Data --
 
-        private static int* s_physicalScrenWidthAddr;
+        private static int* s_uiWidthAddr;
         private static int* s_physicalScrenHeightAddr;
         private static IntPtr s_grcDeviceAddr;
         /// <remarks>
@@ -2834,7 +2834,7 @@ namespace SHVDN
 
             public void Run()
             {
-                resolutionResult = new Size(*s_physicalScrenWidthAddr, *s_physicalScrenHeightAddr);
+                resolutionResult = new Size(*s_uiWidthAddr, *s_physicalScrenHeightAddr);
 
                 IntPtr generalScreenInfoAddr = s_updateMonitorConfigurationFunc(s_grcDeviceAddr);
                 if (s_isUsingMultiScreenFunc(generalScreenInfoAddr))
