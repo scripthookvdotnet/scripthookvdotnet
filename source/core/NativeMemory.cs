@@ -226,7 +226,7 @@ namespace SHVDN
             {
                 s_physicalScrenWidthAddr = (int*)(*(int*)(address + 0x12) + address + 0x16);
                 s_physicalScrenHeightAddr = (int*)(*(int*)(address + 0x1A) + address + 0x1E);
-                s_screenInfoAddr = new IntPtr((long*)(*(int*)(address + 0x2B) + address + 0x2F));
+                s_grcDeviceAddr = new IntPtr((long*)(*(int*)(address + 0x2B) + address + 0x2F));
 
                 s_unkScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)((long*)(*(int*)(address + 0x30) + address + 0x34));
                 s_isUsingMultiScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, bool>)((long*)(*(int*)(address + 0x38) + address + 0x3C));
@@ -2815,7 +2815,7 @@ namespace SHVDN
 
         private static int* s_physicalScrenWidthAddr;
         private static int* s_physicalScrenHeightAddr;
-        private static IntPtr s_screenInfoAddr;
+        private static IntPtr s_grcDeviceAddr;
         /// <remarks>
         /// May need to be called in the main thread if the game is using multiple screens.
         /// </remarks>
@@ -2836,11 +2836,11 @@ namespace SHVDN
             {
                 resolutionResult = new Size(*s_physicalScrenWidthAddr, *s_physicalScrenHeightAddr);
 
-                IntPtr generalScreenInfoAddr = s_unkScreenFunc(s_screenInfoAddr);
+                IntPtr generalScreenInfoAddr = s_unkScreenFunc(s_grcDeviceAddr);
                 if (s_isUsingMultiScreenFunc(generalScreenInfoAddr))
                 {
                     // A lot of functions call this function twice for some reason, so we call it twice for safely
-                    generalScreenInfoAddr = s_unkScreenFunc(s_screenInfoAddr);
+                    generalScreenInfoAddr = s_unkScreenFunc(s_grcDeviceAddr);
                     GridMonitor* screenInfoAddr = s_getMainScreenInfoFunc(generalScreenInfoAddr);
 
                     resolutionResult = new Size(
