@@ -225,7 +225,7 @@ namespace SHVDN
             if (address != null)
             {
                 s_uiWidthAddr = (int*)(*(int*)(address + 0x12) + address + 0x16);
-                s_physicalScrenHeightAddr = (int*)(*(int*)(address + 0x1A) + address + 0x1E);
+                s_uiHeightAddr = (int*)(*(int*)(address + 0x1A) + address + 0x1E);
                 s_grcDeviceAddr = new IntPtr((long*)(*(int*)(address + 0x2B) + address + 0x2F));
 
                 s_updateMonitorConfigurationFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)((long*)(*(int*)(address + 0x30) + address + 0x34));
@@ -2814,7 +2814,7 @@ namespace SHVDN
         #region -- Screen Data --
 
         private static int* s_uiWidthAddr;
-        private static int* s_physicalScrenHeightAddr;
+        private static int* s_uiHeightAddr;
         private static IntPtr s_grcDeviceAddr;
         /// <remarks>
         /// May need to be called in the main thread if the game is using multiple screens.
@@ -2834,7 +2834,7 @@ namespace SHVDN
 
             public void Run()
             {
-                resolutionResult = new Size(*s_uiWidthAddr, *s_physicalScrenHeightAddr);
+                resolutionResult = new Size(*s_uiWidthAddr, *s_uiHeightAddr);
 
                 IntPtr generalScreenInfoAddr = s_updateMonitorConfigurationFunc(s_grcDeviceAddr);
                 if (s_isUsingMultiScreenFunc(generalScreenInfoAddr))
