@@ -20,7 +20,7 @@ namespace GTA
     {
         #region Fields
         readonly string _fileName;
-        Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
+        readonly Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
         #endregion
 
         ScriptSettings(string fileName)

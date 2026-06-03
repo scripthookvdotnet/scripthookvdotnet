@@ -17,7 +17,7 @@ namespace GTA.NaturalMotion
     public class Message
     {
         #region Fields
-        private string _message;
+        private readonly string _message;
         private Dictionary<string, (int value, Type type)> _boolIntFloatArguments;
         private Dictionary<string, object> _stringVector3ArrayArguments;
         private static readonly Dictionary<string, (int value, Type type)> s_stopArgument = new() { { "start", (0, typeof(bool)) } };

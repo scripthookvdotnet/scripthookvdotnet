@@ -13,8 +13,8 @@ namespace GTA
         #region Fields
 
         readonly Ped _ped;
-        Dictionary<PedPropAnchorPoint, PedProp> _pedProps = new();
-        Dictionary<PedComponentType, PedComponent> _pedComponents = new();
+        readonly Dictionary<PedPropAnchorPoint, PedProp> _pedProps = new();
+        readonly Dictionary<PedComponentType, PedComponent> _pedComponents = new();
 
         #endregion
 

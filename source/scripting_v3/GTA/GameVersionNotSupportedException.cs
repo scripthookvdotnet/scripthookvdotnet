@@ -41,7 +41,7 @@ namespace GTA
     {
         public Version MinimumSupportedGameFileVersion { get; }
 
-        private Dictionary<Version, GameVersion> _supportedGameVersionEnumMaps
+        private readonly Dictionary<Version, GameVersion> _supportedGameVersionEnumMaps
             = new Dictionary<Version, GameVersion>
         {
             { ExeVersionConsts.v1_0_335_2, GameVersion.v1_0_335_2_Steam },

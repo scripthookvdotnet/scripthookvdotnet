@@ -11,7 +11,7 @@ namespace GTA
         /// /// </summary>
         private const int MaxExtras = 12;
 
-        private Dictionary<VehicleExtraIndex, VehicleExtra> _vehicleExtras = new();
+        private readonly Dictionary<VehicleExtraIndex, VehicleExtra> _vehicleExtras = new();
 
         /// <summary>
         /// Gets the owner <see cref="Vehicle"/> of this <see cref="VehicleExtraCollection"/>.
