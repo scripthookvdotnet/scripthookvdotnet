@@ -621,7 +621,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HandlingDataOffset == 0)
                     return new HandlingData(IntPtr.Zero);
 
-                return new HandlingData(SHVDN.MemDataMarshal.ReadAddress(MemoryAddress + SHVDN.NativeMemory.Vehicle.HandlingDataOffset));
+                return new HandlingData(SHVDN.MemDataMarshal.ReadAddress(address + SHVDN.NativeMemory.Vehicle.HandlingDataOffset));
             }
         }
 
@@ -2692,7 +2692,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset == 0)
                     return 0f;
 
-                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset);
             }
             set
             {
@@ -2715,7 +2715,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset == 0)
                     return 0f;
 
-                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset);
             }
             set
             {
@@ -2738,7 +2738,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset == 0)
                     return 0f;
 
-                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset);
             }
             set
             {
@@ -2749,7 +2749,7 @@ namespace GTA
 
                     return;
 
-                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset, value);
             }
         }
 
@@ -2770,7 +2770,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
                     return false;
 
-                return SHVDN.MemDataMarshal.ReadByte(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset) != 0;
+                return SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset) != 0;
             }
             set
             {
