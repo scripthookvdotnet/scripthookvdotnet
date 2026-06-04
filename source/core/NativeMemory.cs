@@ -229,7 +229,7 @@ namespace SHVDN
                 s_grcDeviceAddr = new IntPtr((long*)(*(int*)(address + 0x2B) + address + 0x2F));
 
                 s_updateMonitorConfigurationFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)((long*)(*(int*)(address + 0x30) + address + 0x34));
-                s_isUsingMultiScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, bool>)((long*)(*(int*)(address + 0x38) + address + 0x3C));
+                s_isMultiheadFunc = (delegate* unmanaged[Stdcall]<IntPtr, bool>)((long*)(*(int*)(address + 0x38) + address + 0x3C));
                 s_getLandscapeMonitorFunc = (delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*>)((long*)(*(int*)(address + 0x50) + address + 0x54));
             }
 
@@ -2823,7 +2823,7 @@ namespace SHVDN
         /// <remarks>
         /// Returns only either 0 or 1.
         /// </remarks>
-        private static delegate* unmanaged[Stdcall]<IntPtr, bool> s_isUsingMultiScreenFunc;
+        private static delegate* unmanaged[Stdcall]<IntPtr, bool> s_isMultiheadFunc;
         private static delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*> s_getLandscapeMonitorFunc;
 
         internal sealed class GetMainWindowResoltionTask : IScriptTask
@@ -2837,7 +2837,7 @@ namespace SHVDN
                 resolutionResult = new Size(*s_uiWidthAddr, *s_uiHeightAddr);
 
                 IntPtr generalScreenInfoAddr = s_updateMonitorConfigurationFunc(s_grcDeviceAddr);
-                if (s_isUsingMultiScreenFunc(generalScreenInfoAddr))
+                if (s_isMultiheadFunc(generalScreenInfoAddr))
                 {
                     // A lot of functions call this function twice for some reason, so we call it twice for safely
                     generalScreenInfoAddr = s_updateMonitorConfigurationFunc(s_grcDeviceAddr);
