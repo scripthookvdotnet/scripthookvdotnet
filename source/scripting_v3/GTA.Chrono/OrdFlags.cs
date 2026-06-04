@@ -39,7 +39,7 @@ namespace GTA.Chrono
 
         internal uint Value => _value;
 
-        internal uint Ordinal => (_value >> 4);
+        internal uint Ordinal => _value >> 4;
 
         internal static OrdFlags? New(int ordinal, YearFlags flags)
         {
@@ -64,7 +64,7 @@ namespace GTA.Chrono
 
         internal YearFlags Flags => new((byte)(_value & 0b1111));
 
-        internal bool IsLeapYear => ((_value & 0b1000) == 0);
+        internal bool IsLeapYear => (_value & 0b1000) == 0;
 
         internal static OrdFlags FromOrdinalDateUnchecked(int year, int ordinal)
         {

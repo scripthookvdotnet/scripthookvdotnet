@@ -82,12 +82,12 @@ namespace GTA.Chrono
         /// <summary>
         /// Gets the minute component of the time represented by this instance.
         /// </summary>
-        public int Minute => ((_secs / 60) % 60);
+        public int Minute => _secs / 60 % 60;
 
         /// <summary>
         /// Gets the second component of the time represented by this instance.
         /// </summary>
-        public int Second => (_secs % 60);
+        public int Second => _secs % 60;
 
         /// <summary>
         /// Gets the number of seconds past the last midnight.
@@ -259,7 +259,7 @@ namespace GTA.Chrono
             if (obj is not GameClockTime otherTime)
                 throw new ArgumentException();
 
-            long t = (otherTime)._secs;
+            long t = otherTime._secs;
             if (_secs > t) return 1;
             if (_secs < t) return -1;
             return 0;

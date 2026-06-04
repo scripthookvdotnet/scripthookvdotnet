@@ -321,7 +321,7 @@ namespace GTA.Math
                     ThrowHelper.ThrowArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
                 }
 
-                return this[(row * 4) + column];
+                return this[row * 4 + column];
             }
 
             set
@@ -336,7 +336,7 @@ namespace GTA.Math
                     ThrowHelper.ThrowArgumentOutOfRangeException(nameof(row), "Rows and columns for matrices run from 0 to 3, inclusive.");
                 }
 
-                this[(row * 4) + column] = value;
+                this[row * 4 + column] = value;
             }
         }
 
@@ -364,7 +364,7 @@ namespace GTA.Math
 
             for (int i = 0; i < 3; i++)
             {
-                float squareSum = (this[i, 0] * this[i, 0]) + (this[i, 1] * this[i, 1]) + (this[i, 2] * this[i, 2]);
+                float squareSum = this[i, 0] * this[i, 0] + this[i, 1] * this[i, 1] + this[i, 2] * this[i, 2];
                 if (squareSum > tolerance)
                 {
                     scale[i] = (float)System.Math.Sqrt(squareSum);
@@ -397,16 +397,16 @@ namespace GTA.Math
         /// <returns>The determinant of the matrix.</returns>
         public readonly float Determinant()
         {
-            float temp1 = (M33 * M44) - (M34 * M43);
-            float temp2 = (M32 * M44) - (M34 * M42);
-            float temp3 = (M32 * M43) - (M33 * M42);
-            float temp4 = (M31 * M44) - (M34 * M41);
-            float temp5 = (M31 * M43) - (M33 * M41);
-            float temp6 = (M31 * M42) - (M32 * M41);
+            float temp1 = M33 * M44 - M34 * M43;
+            float temp2 = M32 * M44 - M34 * M42;
+            float temp3 = M32 * M43 - M33 * M42;
+            float temp4 = M31 * M44 - M34 * M41;
+            float temp5 = M31 * M43 - M33 * M41;
+            float temp6 = M31 * M42 - M32 * M41;
 
-            return ((((M11 * (((M22 * temp1) - (M23 * temp2)) + (M24 * temp3))) - (M12 * (((M21 * temp1) -
-                (M23 * temp4)) + (M24 * temp5)))) + (M13 * (((M21 * temp2) - (M22 * temp4)) + (M24 * temp6)))) -
-                (M14 * (((M21 * temp3) - (M22 * temp5)) + (M23 * temp6))));
+            return M11 * (M22 * temp1 - M23 * temp2 + M24 * temp3) - M12 * (M21 * temp1 -
+                       M23 * temp4 + M24 * temp5) + M13 * (M21 * temp2 - M22 * temp4 + M24 * temp6) -
+                   M14 * (M21 * temp3 - M22 * temp5 + M23 * temp6);
         }
 
         readonly float Det3x3(float M11, float M12, float M13, float M21, float M22, float M23, float M31, float M32, float M33)
@@ -519,9 +519,9 @@ namespace GTA.Math
             res.M33 = M33;
 
             // Set translation to: `transpose([original rotation]) * (-[original translation])`
-            res.M41 = ((M13 * M43) + (M11 * M41) + (M12 * M42)) * -1f;
-            res.M42 = ((M23 * M43) + (M21 * M41) + (M22 * M42)) * -1f;
-            res.M43 = ((M33 * M43) + (M31 * M41) + (M32 * M42)) * -1f;
+            res.M41 = (M13 * M43 + M11 * M41 + M12 * M42) * -1f;
+            res.M42 = (M23 * M43 + M21 * M41 + M22 * M42) * -1f;
+            res.M43 = (M33 * M43 + M31 * M41 + M32 * M42) * -1f;
 
             // Set affine transform to none
             res.M14 = 0f;
@@ -621,9 +621,9 @@ namespace GTA.Math
         /// <returns>The vector transformed by the inverse of the given <see cref="Matrix"/>.</returns>
         public readonly Vector3 InverseTransformVector(Vector3 vector)
         {
-            float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
-            float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
-            float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
+            float scaleXSquared = new Vector3(M11, M12, M13).LengthSquared();
+            float scaleYSquared = new Vector3(M21, M22, M23).LengthSquared();
+            float scaleZSquared = new Vector3(M31, M32, M33).LengthSquared();
 
             if (System.Math.Abs(1f - scaleXSquared) > F32Epsilon || System.Math.Abs(1f - scaleYSquared) > F32Epsilon || System.Math.Abs(1f - scaleZSquared) > F32Epsilon)
             {
@@ -768,22 +768,22 @@ namespace GTA.Math
         public static Matrix Multiply(Matrix left, Matrix right)
         {
             Matrix result;
-            result.M11 = (left.M11 * right.M11) + (left.M12 * right.M21) + (left.M13 * right.M31) + (left.M14 * right.M41);
-            result.M12 = (left.M11 * right.M12) + (left.M12 * right.M22) + (left.M13 * right.M32) + (left.M14 * right.M42);
-            result.M13 = (left.M11 * right.M13) + (left.M12 * right.M23) + (left.M13 * right.M33) + (left.M14 * right.M43);
-            result.M14 = (left.M11 * right.M14) + (left.M12 * right.M24) + (left.M13 * right.M34) + (left.M14 * right.M44);
-            result.M21 = (left.M21 * right.M11) + (left.M22 * right.M21) + (left.M23 * right.M31) + (left.M24 * right.M41);
-            result.M22 = (left.M21 * right.M12) + (left.M22 * right.M22) + (left.M23 * right.M32) + (left.M24 * right.M42);
-            result.M23 = (left.M21 * right.M13) + (left.M22 * right.M23) + (left.M23 * right.M33) + (left.M24 * right.M43);
-            result.M24 = (left.M21 * right.M14) + (left.M22 * right.M24) + (left.M23 * right.M34) + (left.M24 * right.M44);
-            result.M31 = (left.M31 * right.M11) + (left.M32 * right.M21) + (left.M33 * right.M31) + (left.M34 * right.M41);
-            result.M32 = (left.M31 * right.M12) + (left.M32 * right.M22) + (left.M33 * right.M32) + (left.M34 * right.M42);
-            result.M33 = (left.M31 * right.M13) + (left.M32 * right.M23) + (left.M33 * right.M33) + (left.M34 * right.M43);
-            result.M34 = (left.M31 * right.M14) + (left.M32 * right.M24) + (left.M33 * right.M34) + (left.M34 * right.M44);
-            result.M41 = (left.M41 * right.M11) + (left.M42 * right.M21) + (left.M43 * right.M31) + (left.M44 * right.M41);
-            result.M42 = (left.M41 * right.M12) + (left.M42 * right.M22) + (left.M43 * right.M32) + (left.M44 * right.M42);
-            result.M43 = (left.M41 * right.M13) + (left.M42 * right.M23) + (left.M43 * right.M33) + (left.M44 * right.M43);
-            result.M44 = (left.M41 * right.M14) + (left.M42 * right.M24) + (left.M43 * right.M34) + (left.M44 * right.M44);
+            result.M11 = left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31 + left.M14 * right.M41;
+            result.M12 = left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32 + left.M14 * right.M42;
+            result.M13 = left.M11 * right.M13 + left.M12 * right.M23 + left.M13 * right.M33 + left.M14 * right.M43;
+            result.M14 = left.M11 * right.M14 + left.M12 * right.M24 + left.M13 * right.M34 + left.M14 * right.M44;
+            result.M21 = left.M21 * right.M11 + left.M22 * right.M21 + left.M23 * right.M31 + left.M24 * right.M41;
+            result.M22 = left.M21 * right.M12 + left.M22 * right.M22 + left.M23 * right.M32 + left.M24 * right.M42;
+            result.M23 = left.M21 * right.M13 + left.M22 * right.M23 + left.M23 * right.M33 + left.M24 * right.M43;
+            result.M24 = left.M21 * right.M14 + left.M22 * right.M24 + left.M23 * right.M34 + left.M24 * right.M44;
+            result.M31 = left.M31 * right.M11 + left.M32 * right.M21 + left.M33 * right.M31 + left.M34 * right.M41;
+            result.M32 = left.M31 * right.M12 + left.M32 * right.M22 + left.M33 * right.M32 + left.M34 * right.M42;
+            result.M33 = left.M31 * right.M13 + left.M32 * right.M23 + left.M33 * right.M33 + left.M34 * right.M43;
+            result.M34 = left.M31 * right.M14 + left.M32 * right.M24 + left.M33 * right.M34 + left.M34 * right.M44;
+            result.M41 = left.M41 * right.M11 + left.M42 * right.M21 + left.M43 * right.M31 + left.M44 * right.M41;
+            result.M42 = left.M41 * right.M12 + left.M42 * right.M22 + left.M43 * right.M32 + left.M44 * right.M42;
+            result.M43 = left.M41 * right.M13 + left.M42 * right.M23 + left.M43 * right.M33 + left.M44 * right.M43;
+            result.M44 = left.M41 * right.M14 + left.M42 * right.M24 + left.M43 * right.M34 + left.M44 * right.M44;
             return result;
         }
 
@@ -925,22 +925,22 @@ namespace GTA.Math
         public static Matrix Lerp(Matrix start, Matrix end, float amount)
         {
             Matrix result;
-            result.M11 = start.M11 + ((end.M11 - start.M11) * amount);
-            result.M12 = start.M12 + ((end.M12 - start.M12) * amount);
-            result.M13 = start.M13 + ((end.M13 - start.M13) * amount);
-            result.M14 = start.M14 + ((end.M14 - start.M14) * amount);
-            result.M21 = start.M21 + ((end.M21 - start.M21) * amount);
-            result.M22 = start.M22 + ((end.M22 - start.M22) * amount);
-            result.M23 = start.M23 + ((end.M23 - start.M23) * amount);
-            result.M24 = start.M24 + ((end.M24 - start.M24) * amount);
-            result.M31 = start.M31 + ((end.M31 - start.M31) * amount);
-            result.M32 = start.M32 + ((end.M32 - start.M32) * amount);
-            result.M33 = start.M33 + ((end.M33 - start.M33) * amount);
-            result.M34 = start.M34 + ((end.M34 - start.M34) * amount);
-            result.M41 = start.M41 + ((end.M41 - start.M41) * amount);
-            result.M42 = start.M42 + ((end.M42 - start.M42) * amount);
-            result.M43 = start.M43 + ((end.M43 - start.M43) * amount);
-            result.M44 = start.M44 + ((end.M44 - start.M44) * amount);
+            result.M11 = start.M11 + (end.M11 - start.M11) * amount;
+            result.M12 = start.M12 + (end.M12 - start.M12) * amount;
+            result.M13 = start.M13 + (end.M13 - start.M13) * amount;
+            result.M14 = start.M14 + (end.M14 - start.M14) * amount;
+            result.M21 = start.M21 + (end.M21 - start.M21) * amount;
+            result.M22 = start.M22 + (end.M22 - start.M22) * amount;
+            result.M23 = start.M23 + (end.M23 - start.M23) * amount;
+            result.M24 = start.M24 + (end.M24 - start.M24) * amount;
+            result.M31 = start.M31 + (end.M31 - start.M31) * amount;
+            result.M32 = start.M32 + (end.M32 - start.M32) * amount;
+            result.M33 = start.M33 + (end.M33 - start.M33) * amount;
+            result.M34 = start.M34 + (end.M34 - start.M34) * amount;
+            result.M41 = start.M41 + (end.M41 - start.M41) * amount;
+            result.M42 = start.M42 + (end.M42 - start.M42) * amount;
+            result.M43 = start.M43 + (end.M43 - start.M43) * amount;
+            result.M44 = start.M44 + (end.M44 - start.M44) * amount;
             return result;
         }
 
@@ -953,7 +953,7 @@ namespace GTA.Math
         {
             Matrix result;
             float cos = (float)System.Math.Cos(angle);
-            float sin = (float)(System.Math.Sin(angle));
+            float sin = (float)System.Math.Sin(angle);
 
             result.M11 = 1.0f;
             result.M12 = 0.0f;
@@ -983,8 +983,8 @@ namespace GTA.Math
         public static Matrix RotationY(float angle)
         {
             Matrix result;
-            float cos = (float)(System.Math.Cos(angle));
-            float sin = (float)(System.Math.Sin(angle));
+            float cos = (float)System.Math.Cos(angle);
+            float sin = (float)System.Math.Sin(angle);
 
             result.M11 = cos;
             result.M12 = 0.0f;
@@ -1014,8 +1014,8 @@ namespace GTA.Math
         public static Matrix RotationZ(float angle)
         {
             Matrix result;
-            float cos = (float)(System.Math.Cos(angle));
-            float sin = (float)(System.Math.Sin(angle));
+            float cos = (float)System.Math.Cos(angle);
+            float sin = (float)System.Math.Sin(angle);
 
             result.M11 = cos;
             result.M12 = sin;
@@ -1054,8 +1054,8 @@ namespace GTA.Math
             float x = axis.X;
             float y = axis.Y;
             float z = axis.Z;
-            float cos = (float)(System.Math.Cos(angle));
-            float sin = (float)(System.Math.Sin(angle));
+            float cos = (float)System.Math.Cos(angle);
+            float sin = (float)System.Math.Sin(angle);
             float xx = x * x;
             float yy = y * y;
             float zz = z * z;
@@ -1063,17 +1063,17 @@ namespace GTA.Math
             float xz = x * z;
             float yz = y * z;
 
-            result.M11 = xx + (cos * (1.0f - xx));
-            result.M12 = (xy - (cos * xy)) + (sin * z);
-            result.M13 = (xz - (cos * xz)) - (sin * y);
+            result.M11 = xx + cos * (1.0f - xx);
+            result.M12 = xy - cos * xy + sin * z;
+            result.M13 = xz - cos * xz - sin * y;
             result.M14 = 0.0f;
-            result.M21 = (xy - (cos * xy)) - (sin * z);
-            result.M22 = yy + (cos * (1.0f - yy));
-            result.M23 = (yz - (cos * yz)) + (sin * x);
+            result.M21 = xy - cos * xy - sin * z;
+            result.M22 = yy + cos * (1.0f - yy);
+            result.M23 = yz - cos * yz + sin * x;
             result.M24 = 0.0f;
-            result.M31 = (xz - (cos * xz)) + (sin * y);
-            result.M32 = (yz - (cos * yz)) - (sin * x);
-            result.M33 = zz + (cos * (1.0f - zz));
+            result.M31 = xz - cos * xz + sin * y;
+            result.M32 = yz - cos * yz - sin * x;
+            result.M33 = zz + cos * (1.0f - zz);
             result.M34 = 0.0f;
             result.M41 = 0.0f;
             result.M42 = 0.0f;
@@ -1101,17 +1101,17 @@ namespace GTA.Math
             float yw = rotation.Y * rotation.W;
             float yz = rotation.Y * rotation.Z;
             float xw = rotation.X * rotation.W;
-            result.M11 = 1.0f - (2.0f * (yy + zz));
+            result.M11 = 1.0f - 2.0f * (yy + zz);
             result.M12 = 2.0f * (xy + zw);
             result.M13 = 2.0f * (zx - yw);
             result.M14 = 0.0f;
             result.M21 = 2.0f * (xy - zw);
-            result.M22 = 1.0f - (2.0f * (zz + xx));
+            result.M22 = 1.0f - 2.0f * (zz + xx);
             result.M23 = 2.0f * (yz + xw);
             result.M24 = 0.0f;
             result.M31 = 2.0f * (zx + yw);
             result.M32 = 2.0f * (yz - xw);
-            result.M33 = 1.0f - (2.0f * (yy + xx));
+            result.M33 = 1.0f - 2.0f * (yy + xx);
             result.M34 = 0.0f;
             result.M41 = 0.0f;
             result.M42 = 0.0f;
@@ -1337,9 +1337,9 @@ namespace GTA.Math
         /// <param name="tolerance">The error tolerance.</param>
         public void RemoveScaling(float tolerance)
         {
-            float scaleXSquared = (new Vector3(M11, M12, M13)).LengthSquared();
-            float scaleYSquared = (new Vector3(M21, M22, M23)).LengthSquared();
-            float scaleZSquared = (new Vector3(M31, M32, M33)).LengthSquared();
+            float scaleXSquared = new Vector3(M11, M12, M13).LengthSquared();
+            float scaleYSquared = new Vector3(M21, M22, M23).LengthSquared();
+            float scaleZSquared = new Vector3(M31, M32, M33).LengthSquared();
 
             if (System.Math.Abs(1f - scaleXSquared) > tolerance)
             {
@@ -1513,22 +1513,22 @@ namespace GTA.Math
         public static Matrix operator *(Matrix left, Matrix right)
         {
             Matrix result;
-            result.M11 = (left.M11 * right.M11) + (left.M12 * right.M21) + (left.M13 * right.M31) + (left.M14 * right.M41);
-            result.M12 = (left.M11 * right.M12) + (left.M12 * right.M22) + (left.M13 * right.M32) + (left.M14 * right.M42);
-            result.M13 = (left.M11 * right.M13) + (left.M12 * right.M23) + (left.M13 * right.M33) + (left.M14 * right.M43);
-            result.M14 = (left.M11 * right.M14) + (left.M12 * right.M24) + (left.M13 * right.M34) + (left.M14 * right.M44);
-            result.M21 = (left.M21 * right.M11) + (left.M22 * right.M21) + (left.M23 * right.M31) + (left.M24 * right.M41);
-            result.M22 = (left.M21 * right.M12) + (left.M22 * right.M22) + (left.M23 * right.M32) + (left.M24 * right.M42);
-            result.M23 = (left.M21 * right.M13) + (left.M22 * right.M23) + (left.M23 * right.M33) + (left.M24 * right.M43);
-            result.M24 = (left.M21 * right.M14) + (left.M22 * right.M24) + (left.M23 * right.M34) + (left.M24 * right.M44);
-            result.M31 = (left.M31 * right.M11) + (left.M32 * right.M21) + (left.M33 * right.M31) + (left.M34 * right.M41);
-            result.M32 = (left.M31 * right.M12) + (left.M32 * right.M22) + (left.M33 * right.M32) + (left.M34 * right.M42);
-            result.M33 = (left.M31 * right.M13) + (left.M32 * right.M23) + (left.M33 * right.M33) + (left.M34 * right.M43);
-            result.M34 = (left.M31 * right.M14) + (left.M32 * right.M24) + (left.M33 * right.M34) + (left.M34 * right.M44);
-            result.M41 = (left.M41 * right.M11) + (left.M42 * right.M21) + (left.M43 * right.M31) + (left.M44 * right.M41);
-            result.M42 = (left.M41 * right.M12) + (left.M42 * right.M22) + (left.M43 * right.M32) + (left.M44 * right.M42);
-            result.M43 = (left.M41 * right.M13) + (left.M42 * right.M23) + (left.M43 * right.M33) + (left.M44 * right.M43);
-            result.M44 = (left.M41 * right.M14) + (left.M42 * right.M24) + (left.M43 * right.M34) + (left.M44 * right.M44);
+            result.M11 = left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31 + left.M14 * right.M41;
+            result.M12 = left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32 + left.M14 * right.M42;
+            result.M13 = left.M11 * right.M13 + left.M12 * right.M23 + left.M13 * right.M33 + left.M14 * right.M43;
+            result.M14 = left.M11 * right.M14 + left.M12 * right.M24 + left.M13 * right.M34 + left.M14 * right.M44;
+            result.M21 = left.M21 * right.M11 + left.M22 * right.M21 + left.M23 * right.M31 + left.M24 * right.M41;
+            result.M22 = left.M21 * right.M12 + left.M22 * right.M22 + left.M23 * right.M32 + left.M24 * right.M42;
+            result.M23 = left.M21 * right.M13 + left.M22 * right.M23 + left.M23 * right.M33 + left.M24 * right.M43;
+            result.M24 = left.M21 * right.M14 + left.M22 * right.M24 + left.M23 * right.M34 + left.M24 * right.M44;
+            result.M31 = left.M31 * right.M11 + left.M32 * right.M21 + left.M33 * right.M31 + left.M34 * right.M41;
+            result.M32 = left.M31 * right.M12 + left.M32 * right.M22 + left.M33 * right.M32 + left.M34 * right.M42;
+            result.M33 = left.M31 * right.M13 + left.M32 * right.M23 + left.M33 * right.M33 + left.M34 * right.M43;
+            result.M34 = left.M31 * right.M14 + left.M32 * right.M24 + left.M33 * right.M34 + left.M34 * right.M44;
+            result.M41 = left.M41 * right.M11 + left.M42 * right.M21 + left.M43 * right.M31 + left.M44 * right.M41;
+            result.M42 = left.M41 * right.M12 + left.M42 * right.M22 + left.M43 * right.M32 + left.M44 * right.M42;
+            result.M43 = left.M41 * right.M13 + left.M42 * right.M23 + left.M43 * right.M33 + left.M44 * right.M43;
+            result.M44 = left.M41 * right.M14 + left.M42 * right.M24 + left.M43 * right.M34 + left.M44 * right.M44;
             return result;
         }
 
@@ -1717,10 +1717,10 @@ namespace GTA.Math
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
         public readonly bool Equals(Matrix other)
         {
-            return (M11 == other.M11 && M12 == other.M12 && M13 == other.M13 && M14 == other.M14 &&
-                M21 == other.M21 && M22 == other.M22 && M23 == other.M23 && M24 == other.M24 &&
-                M31 == other.M31 && M32 == other.M32 && M33 == other.M33 && M34 == other.M34 &&
-                M41 == other.M41 && M42 == other.M42 && M43 == other.M43 && M44 == other.M44);
+            return M11 == other.M11 && M12 == other.M12 && M13 == other.M13 && M14 == other.M14 &&
+                   M21 == other.M21 && M22 == other.M22 && M23 == other.M23 && M24 == other.M24 &&
+                   M31 == other.M31 && M32 == other.M32 && M33 == other.M33 && M34 == other.M34 &&
+                   M41 == other.M41 && M42 == other.M42 && M43 == other.M43 && M44 == other.M44;
         }
     }
 }

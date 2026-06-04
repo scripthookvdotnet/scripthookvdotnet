@@ -21,7 +21,7 @@ namespace GTA.Chrono
                 // Otherwise, `rhs` is `int.MinValue`, then we have `r - int.MinValue`, which is what we wanted (and will
                 // not overflow for negative `r`).
                 // We can't use Math.Abs(int) for int.MinValue, because it throws OverflowException for int.MinValue.
-                return (rhs < 0) ? (r - rhs) : (r + rhs);
+                return rhs < 0 ? r - rhs : r + rhs;
             }
 
             return r;
@@ -32,7 +32,7 @@ namespace GTA.Chrono
             int q = lhs / rhs;
             if (lhs % rhs < 0)
             {
-                return (rhs > 0) ? (q - 1) : (q + 1);
+                return rhs > 0 ? q - 1 : q + 1;
             }
 
             return q;
@@ -52,7 +52,7 @@ namespace GTA.Chrono
                 // Otherwise, `rhs` is `int.MinValue`, then we have `r - int.MinValue`, which is what we wanted (and will
                 // not overflow for negative `r`).
                 // We can't use Math.Abs(int) for int.MinValue, because it throws OverflowException for int.MinValue.
-                return (rhs < 0) ? (r - rhs) : (r + rhs);
+                return rhs < 0 ? r - rhs : r + rhs;
             }
 
             return r;
@@ -63,7 +63,7 @@ namespace GTA.Chrono
             long q = lhs / rhs;
             if (lhs % rhs < 0)
             {
-                return (rhs > 0) ? (q - 1) : (q + 1);
+                return rhs > 0 ? q - 1 : q + 1;
             }
 
             return q;

@@ -76,8 +76,8 @@ namespace GTA.Math
             axis = Vector3.Normalize(axis);
 
             float half = angle * 0.5f;
-            float sin = (float)(System.Math.Sin(half));
-            float cos = (float)(System.Math.Cos(half));
+            float sin = (float)System.Math.Sin(half);
+            float cos = (float)System.Math.Cos(half);
 
             X = axis.X * sin;
             Y = axis.Y * sin;
@@ -112,7 +112,7 @@ namespace GTA.Math
                     return Vector3.Zero;
                 }
 
-                float length = 1.0f - (W * W);
+                float length = 1.0f - W * W;
                 if (length == 0f)
                 {
                     return Vector3.UnitX;
@@ -126,19 +126,19 @@ namespace GTA.Math
         /// <summary>
         /// Gets the angle of the quaternion.
         /// </summary>
-        public readonly float Angle => ((System.Math.Abs(W) <= 1.0f) ? 2.0f * (float)(System.Math.Acos(W)) : 0.0f);
+        public readonly float Angle => System.Math.Abs(W) <= 1.0f ? 2.0f * (float)System.Math.Acos(W) : 0.0f;
 
         /// <summary>
         /// Calculates the length of the quaternion.
         /// </summary>
         /// <returns>The length of the quaternion.</returns>
-        public readonly float Length() => (float)System.Math.Sqrt((X * X) + (Y * Y) + (Z * Z) + (W * W));
+        public readonly float Length() => (float)System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
 
         /// <summary>
         /// Calculates the squared length of the quaternion.
         /// </summary>
         /// <returns>The squared length of the quaternion.</returns>
-        public readonly float LengthSquared() => (X * X) + (Y * Y) + (Z * Z) + (W * W);
+        public readonly float LengthSquared() => X * X + Y * Y + Z * Z + W * W;
 
         /// <summary>
         /// Converts the quaternion into a unit quaternion.
@@ -252,10 +252,10 @@ namespace GTA.Math
             float rz = right.Z;
             float rw = right.W;
 
-            quaternion.X = (lx * rw + rx * lw) + (ly * rz) - (lz * ry);
-            quaternion.Y = (ly * rw + ry * lw) + (lz * rx) - (lx * rz);
-            quaternion.Z = (lz * rw + rz * lw) + (lx * ry) - (ly * rx);
-            quaternion.W = (lw * rw) - (lx * rx + ly * ry + lz * rz);
+            quaternion.X = lx * rw + rx * lw + ly * rz - lz * ry;
+            quaternion.Y = ly * rw + ry * lw + lz * rx - lx * rz;
+            quaternion.Z = lz * rw + rz * lw + lx * ry - ly * rx;
+            quaternion.W = lw * rw - (lx * rx + ly * ry + lz * rz);
 
             return quaternion;
         }
@@ -323,7 +323,7 @@ namespace GTA.Math
         public static Quaternion Invert(Quaternion quaternion)
         {
             Quaternion result = Zero;
-            float lengthSq = 1.0f / ((quaternion.X * quaternion.X) + (quaternion.Y * quaternion.Y) + (quaternion.Z * quaternion.Z) + (quaternion.W * quaternion.W));
+            float lengthSq = 1.0f / (quaternion.X * quaternion.X + quaternion.Y * quaternion.Y + quaternion.Z * quaternion.Z + quaternion.W * quaternion.W);
 
             result.X = -quaternion.X * lengthSq;
             result.Y = -quaternion.Y * lengthSq;
@@ -339,7 +339,7 @@ namespace GTA.Math
         /// <param name="left">First source quaternion.</param>
         /// <param name="right">Second source quaternion.</param>
         /// <returns>The dot product of the two quaternions.</returns>
-        public static float Dot(Quaternion left, Quaternion right) => (left.X * right.X) + (left.Y * right.Y) + (left.Z * right.Z) + (left.W * right.W);
+        public static float Dot(Quaternion left, Quaternion right) => left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
 
         /// <summary>
         /// Performs a linear interpolation between two quaternion.
@@ -357,21 +357,21 @@ namespace GTA.Math
         {
             Quaternion result = Zero;
             float inverse = 1.0f - amount;
-            float dot = (start.X * end.X) + (start.Y * end.Y) + (start.Z * end.Z) + (start.W * end.W);
+            float dot = start.X * end.X + start.Y * end.Y + start.Z * end.Z + start.W * end.W;
 
             if (dot >= 0.0f)
             {
-                result.X = (inverse * start.X) + (amount * end.X);
-                result.Y = (inverse * start.Y) + (amount * end.Y);
-                result.Z = (inverse * start.Z) + (amount * end.Z);
-                result.W = (inverse * start.W) + (amount * end.W);
+                result.X = inverse * start.X + amount * end.X;
+                result.Y = inverse * start.Y + amount * end.Y;
+                result.Z = inverse * start.Z + amount * end.Z;
+                result.W = inverse * start.W + amount * end.W;
             }
             else
             {
-                result.X = (inverse * start.X) - (amount * end.X);
-                result.Y = (inverse * start.Y) - (amount * end.Y);
-                result.Z = (inverse * start.Z) - (amount * end.Z);
-                result.W = (inverse * start.W) - (amount * end.W);
+                result.X = inverse * start.X - amount * end.X;
+                result.Y = inverse * start.Y - amount * end.Y;
+                result.Z = inverse * start.Z - amount * end.Z;
+                result.W = inverse * start.W - amount * end.W;
             }
 
             float invLength = 1.0f / result.Length();
@@ -398,7 +398,7 @@ namespace GTA.Math
         public static Quaternion Slerp(Quaternion start, Quaternion end, float amount)
         {
             Quaternion result = Zero;
-            float kEpsilon = (float)(1.192093E-07);
+            float kEpsilon = (float)1.192093E-07;
             float opposite;
             float inverse;
             float dot = Dot(start, end);
@@ -406,7 +406,7 @@ namespace GTA.Math
             // exactly zero
             float dotSign = dot >= 0.0f ? 1.0f : -1.0f;
 
-            if (System.Math.Abs(dot) > (1.0f - kEpsilon))
+            if (System.Math.Abs(dot) > 1.0f - kEpsilon)
             {
                 inverse = 1.0f - amount;
                 opposite = amount * dotSign;
@@ -420,10 +420,10 @@ namespace GTA.Math
                 opposite = (float)(System.Math.Sin(amount * aCos) * invSin * dotSign);
             }
 
-            result.X = (inverse * start.X) + (opposite * end.X);
-            result.Y = (inverse * start.Y) + (opposite * end.Y);
-            result.Z = (inverse * start.Z) + (opposite * end.Z);
-            result.W = (inverse * start.W) + (opposite * end.W);
+            result.X = inverse * start.X + opposite * end.X;
+            result.Y = inverse * start.Y + opposite * end.Y;
+            result.Z = inverse * start.Z + opposite * end.Z;
+            result.W = inverse * start.W + opposite * end.W;
 
             return result;
         }
@@ -452,7 +452,7 @@ namespace GTA.Math
         /// </summary>
         public static Quaternion FromToRotation(Vector3 fromDirection, Vector3 toDirection)
         {
-            float NormAB = (float)(System.Math.Sqrt(fromDirection.LengthSquared() * fromDirection.LengthSquared()));
+            float NormAB = (float)System.Math.Sqrt(fromDirection.LengthSquared() * fromDirection.LengthSquared());
 
             float w = NormAB + Vector3.Dot(fromDirection, toDirection);
             Quaternion Result;
@@ -503,11 +503,11 @@ namespace GTA.Math
         public static float AngleBetween(Quaternion a, Quaternion b)
         {
             float dot = Dot(a, b);
-            return (float)((System.Math.Acos(System.Math.Min(System.Math.Abs(dot), 1.0f)) * 2.0 * (180.0f / System.Math.PI)));
+            return (float)(System.Math.Acos(System.Math.Min(System.Math.Abs(dot), 1.0f)) * 2.0 * (180.0f / System.Math.PI));
         }
 
-        const float Deg2Rad = (float)((System.Math.PI / 180.0));
-        const float Rad2Deg = (float)((180.0 / System.Math.PI));
+        const float Deg2Rad = (float)(System.Math.PI / 180.0);
+        const float Rad2Deg = (float)(180.0 / System.Math.PI);
 
         /// <summary>
         /// <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x-axis, and y degrees around the y-axis (in that order).</para>
@@ -589,52 +589,52 @@ namespace GTA.Math
             Quaternion result = Zero;
 
             float halfX = x * 0.5f * Deg2Rad;
-            float sinX = (float)(System.Math.Sin((halfX)));
-            float cosX = (float)(System.Math.Cos((halfX)));
+            float sinX = (float)System.Math.Sin(halfX);
+            float cosX = (float)System.Math.Cos(halfX);
             float halfY = y * 0.5f * Deg2Rad;
-            float sinY = (float)(System.Math.Sin((halfY)));
-            float cosY = (float)(System.Math.Cos((halfY)));
+            float sinY = (float)System.Math.Sin(halfY);
+            float cosY = (float)System.Math.Cos(halfY);
             float halfZ = z * 0.5f * Deg2Rad;
-            float sinZ = (float)(System.Math.Sin((halfZ)));
-            float cosZ = (float)(System.Math.Cos((halfZ)));
+            float sinZ = (float)System.Math.Sin(halfZ);
+            float cosZ = (float)System.Math.Cos(halfZ);
 
             switch (rotationOrder)
             {
                 case EulerRotationOrder.XYZ:
-                    result.X = (sinX * cosY * cosZ) - (cosX * sinY * sinZ);
-                    result.Y = (cosX * sinY * cosZ) + (sinX * cosY * sinZ);
-                    result.Z = (cosX * cosY * sinZ) - (sinX * sinY * cosZ);
-                    result.W = (cosY * cosX * cosZ) + (sinY * sinX * sinZ);
+                    result.X = sinX * cosY * cosZ - cosX * sinY * sinZ;
+                    result.Y = cosX * sinY * cosZ + sinX * cosY * sinZ;
+                    result.Z = cosX * cosY * sinZ - sinX * sinY * cosZ;
+                    result.W = cosY * cosX * cosZ + sinY * sinX * sinZ;
                     break;
                 case EulerRotationOrder.XZY:
-                    result.X = (cosX * sinY * sinZ) + (sinX * cosY * cosZ);
-                    result.Y = (cosX * sinY * cosZ) + (sinX * cosY * sinZ);
-                    result.Z = (cosX * cosY * sinZ) - (sinX * sinY * cosZ);
-                    result.W = (cosX * cosY * cosZ) - (sinX * sinY * sinZ);
+                    result.X = cosX * sinY * sinZ + sinX * cosY * cosZ;
+                    result.Y = cosX * sinY * cosZ + sinX * cosY * sinZ;
+                    result.Z = cosX * cosY * sinZ - sinX * sinY * cosZ;
+                    result.W = cosX * cosY * cosZ - sinX * sinY * sinZ;
                     break;
                 case EulerRotationOrder.YXZ:
-                    result.X = (sinX * cosY * cosZ) - (cosX * sinY * sinZ);
-                    result.Y = (cosX * sinY * cosZ) + (sinX * cosY * sinZ);
-                    result.Z = (cosX * cosY * sinZ) + (sinX * sinY * cosZ);
-                    result.W = (cosY * cosX * cosZ) - (sinY * sinX * sinZ);
+                    result.X = sinX * cosY * cosZ - cosX * sinY * sinZ;
+                    result.Y = cosX * sinY * cosZ + sinX * cosY * sinZ;
+                    result.Z = cosX * cosY * sinZ + sinX * sinY * cosZ;
+                    result.W = cosY * cosX * cosZ - sinY * sinX * sinZ;
                     break;
                 case EulerRotationOrder.YZX:
-                    result.X = (sinX * cosY * cosZ) - (cosX * sinY * sinZ);
-                    result.Y = (cosX * sinY * cosZ) - (sinX * cosY * sinZ);
-                    result.Z = (cosX * cosY * sinZ) + (sinX * sinY * cosZ);
-                    result.W = (cosY * cosX * cosZ) + (sinY * sinX * sinZ);
+                    result.X = sinX * cosY * cosZ - cosX * sinY * sinZ;
+                    result.Y = cosX * sinY * cosZ - sinX * cosY * sinZ;
+                    result.Z = cosX * cosY * sinZ + sinX * sinY * cosZ;
+                    result.W = cosY * cosX * cosZ + sinY * sinX * sinZ;
                     break;
                 case EulerRotationOrder.ZXY:
-                    result.X = (cosX * sinY * sinZ) + (sinX * cosY * cosZ);
-                    result.Y = (cosX * sinY * cosZ) - (sinX * cosY * sinZ);
-                    result.Z = (cosX * cosY * sinZ) - (sinX * sinY * cosZ);
-                    result.W = (cosY * cosX * cosZ) + (sinY * sinX * sinZ);
+                    result.X = cosX * sinY * sinZ + sinX * cosY * cosZ;
+                    result.Y = cosX * sinY * cosZ - sinX * cosY * sinZ;
+                    result.Z = cosX * cosY * sinZ - sinX * sinY * cosZ;
+                    result.W = cosY * cosX * cosZ + sinY * sinX * sinZ;
                     break;
                 case EulerRotationOrder.ZYX:
-                    result.X = (cosX * sinY * sinZ) + (sinX * cosY * cosZ);
-                    result.Y = (cosX * sinY * cosZ) - (sinX * cosY * sinZ);
-                    result.Z = (cosX * cosY * sinZ) + (sinX * sinY * cosZ);
-                    result.W = (cosY * cosX * cosZ) - (sinY * sinX * sinZ);
+                    result.X = cosX * sinY * sinZ + sinX * cosY * cosZ;
+                    result.Y = cosX * sinY * cosZ - sinX * cosY * sinZ;
+                    result.Z = cosX * cosY * sinZ + sinX * sinY * cosZ;
+                    result.W = cosY * cosX * cosZ - sinY * sinX * sinZ;
                     break;
                 default:
                     ThrowHelper.ThrowArgumentException("Enum value was out of legal range.", nameof(rotationOrder));
@@ -691,93 +691,93 @@ namespace GTA.Math
         const float SingularityThreshold = 0.4999995f;
         private readonly Vector3 ToEulerYXZ()
         {
-            float singularityTest = (Y * Z) + (X * W);
+            float singularityTest = Y * Z + X * W;
 
             if (singularityTest > SingularityThreshold)
             {
-                float m10 = 2 * ((X * Y) + (Z * W));
-                float m00 = 2 * ((W * W) + (X * X)) - 1;
+                float m10 = 2 * (X * Y + Z * W);
+                float m00 = 2 * (W * W + X * X) - 1;
 
                 return new Vector3(90f, (float)System.Math.Atan2(m10, m00) * Rad2Deg, 0f);
             }
             if (singularityTest < -SingularityThreshold)
             {
-                float m10 = 2 * ((X * Y) + (Z * W));
-                float m00 = 2 * ((W * W) + (X * X)) - 1;
+                float m10 = 2 * (X * Y + Z * W);
+                float m00 = 2 * (W * W + X * X) - 1;
 
                 return new Vector3(-90f, (float)System.Math.Atan2(-m10, m00) * Rad2Deg, 0f);
             }
 
             float rotX = (float)System.Math.Asin(2 * singularityTest);
 
-            float m20 = 2 * ((X * Z) - (Y * W));
-            float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+            float m20 = 2 * (X * Z - Y * W);
+            float m22 = 2 * (W * W + Z * Z) - 1;
             float rotY = (float)System.Math.Atan2(-m20, m22);
 
-            float m01 = 2 * ((X * Y) - (Z * W));
-            float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+            float m01 = 2 * (X * Y - Z * W);
+            float m11 = 2 * (W * W + Y * Y) - 1;
             float rotZ = (float)System.Math.Atan2(-m01, m11);
 
             return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
         }
         private readonly Vector3 ToEulerXYZ()
         {
-            float singularityTest = (X * Z) - (Y * W);
+            float singularityTest = X * Z - Y * W;
 
             if (singularityTest < -SingularityThreshold)
             {
-                float m01 = 2 * ((X * Y) - (Z * W));
-                float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+                float m01 = 2 * (X * Y - Z * W);
+                float m11 = 2 * (W * W + Y * Y) - 1;
 
                 return new Vector3((float)System.Math.Atan2(m01, m11) * Rad2Deg, 90f, 0f);
             }
 
             if (singularityTest > SingularityThreshold)
             {
-                float m01 = 2 * ((X * Y) - (Z * W));
-                float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+                float m01 = 2 * (X * Y - Z * W);
+                float m11 = 2 * (W * W + Y * Y) - 1;
 
                 return new Vector3((float)System.Math.Atan2(-m01, m11) * Rad2Deg, -90f, 0f);
             }
 
-            float m21 = 2 * ((Y * Z) + (X * W));
-            float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+            float m21 = 2 * (Y * Z + X * W);
+            float m22 = 2 * (W * W + Z * Z) - 1;
             float rotX = (float)System.Math.Atan2(m21, m22);
 
             float rotY = (float)System.Math.Asin(-2 * singularityTest);
 
-            float m10 = 2 * ((X * Y) + (Z * W));
-            float m00 = 2 * ((W * W) + (X * X)) - 1;
+            float m10 = 2 * (X * Y + Z * W);
+            float m00 = 2 * (W * W + X * X) - 1;
             float rotZ = (float)System.Math.Atan2(m10, m00);
 
             return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
         }
         private readonly Vector3 ToEulerXZY()
         {
-            float singularityTest = (X * Y) + (Z * W);
+            float singularityTest = X * Y + Z * W;
 
             if (singularityTest > SingularityThreshold)
             {
-                float m02 = 2 * ((X * Z) + (Y * W));
-                float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+                float m02 = 2 * (X * Z + Y * W);
+                float m22 = 2 * (W * W + Z * Z) - 1;
 
                 return new Vector3((float)System.Math.Atan2(m02, m22) * Rad2Deg, 0f, 90f);
             }
 
             if (singularityTest < -SingularityThreshold)
             {
-                float m02 = 2 * ((X * Z) + (Y * W));
-                float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+                float m02 = 2 * (X * Z + Y * W);
+                float m22 = 2 * (W * W + Z * Z) - 1;
 
                 return new Vector3((float)System.Math.Atan2(-m02, m22) * Rad2Deg, 0f, -90f);
             }
 
-            float m12 = 2 * ((Y * Z) - (X * W));
-            float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+            float m12 = 2 * (Y * Z - X * W);
+            float m11 = 2 * (W * W + Y * Y) - 1;
             float rotX = (float)System.Math.Atan2(-m12, m11);
 
-            float m20 = 2 * ((X * Z) - (Y * W));
-            float m00 = 2 * ((W * W) + (X * X)) - 1;
+            float m20 = 2 * (X * Z - Y * W);
+            float m00 = 2 * (W * W + X * X) - 1;
             float rotY = (float)System.Math.Atan2(-m20, m00);
 
             float rotZ = (float)System.Math.Asin(2 * singularityTest);
@@ -786,30 +786,30 @@ namespace GTA.Math
         }
         private readonly Vector3 ToEulerYZX()
         {
-            float singularityTest = (X * Y) - (Z * W);
+            float singularityTest = X * Y - Z * W;
 
             if (singularityTest > SingularityThreshold)
             {
-                float m12 = 2 * ((Y * Z) - (X * W));
-                float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+                float m12 = 2 * (Y * Z - X * W);
+                float m22 = 2 * (W * W + Z * Z) - 1;
 
                 return new Vector3(0f, (float)System.Math.Atan2(-m12, m22) * Rad2Deg, -90f);
             }
 
             if (singularityTest < -SingularityThreshold)
             {
-                float m12 = 2 * ((Y * Z) - (X * W));
-                float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+                float m12 = 2 * (Y * Z - X * W);
+                float m22 = 2 * (W * W + Z * Z) - 1;
 
                 return new Vector3(0f, (float)System.Math.Atan2(m12, m22) * Rad2Deg, 90f);
             }
 
-            float m21 = 2 * ((Y * Z) + (X * W));
-            float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+            float m21 = 2 * (Y * Z + X * W);
+            float m11 = 2 * (W * W + Y * Y) - 1;
             float rotX = (float)System.Math.Atan2(m21, m11);
 
-            float m02 = 2 * ((X * Z) + (Y * W));
-            float m00 = 2 * ((W * W) + (X * X)) - 1;
+            float m02 = 2 * (X * Z + Y * W);
+            float m00 = 2 * (W * W + X * X) - 1;
             float rotY = (float)System.Math.Atan2(m02, m00);
 
             float rotZ = (float)System.Math.Asin(-2 * singularityTest);
@@ -818,64 +818,64 @@ namespace GTA.Math
         }
         private readonly Vector3 ToEulerZXY()
         {
-            float singularityTest = (Y * Z) - (X * W);
+            float singularityTest = Y * Z - X * W;
 
             if (singularityTest > SingularityThreshold)
             {
-                float m20 = 2 * ((X * Z) - (Y * W));
-                float m00 = 2 * ((W * W) + (X * X)) - 1;
+                float m20 = 2 * (X * Z - Y * W);
+                float m00 = 2 * (W * W + X * X) - 1;
 
                 return new Vector3(-90f, 0f, (float)System.Math.Atan2(-m20, m00) * Rad2Deg);
             }
 
             if (singularityTest < -SingularityThreshold)
             {
-                float m20 = 2 * ((X * Z) - (Y * W));
-                float m00 = 2 * ((W * W) + (X * X)) - 1;
+                float m20 = 2 * (X * Z - Y * W);
+                float m00 = 2 * (W * W + X * X) - 1;
 
                 return new Vector3(90f, 0f, (float)System.Math.Atan2(m20, m00) * Rad2Deg);
             }
 
             float rotX = (float)System.Math.Asin(-2 * singularityTest);
 
-            float m02 = 2 * ((X * Z) + (Y * W));
-            float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+            float m02 = 2 * (X * Z + Y * W);
+            float m22 = 2 * (W * W + Z * Z) - 1;
             float rotY = (float)System.Math.Atan2(m02, m22);
 
-            float m10 = 2 * ((X * Y) + (Z * W));
-            float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+            float m10 = 2 * (X * Y + Z * W);
+            float m11 = 2 * (W * W + Y * Y) - 1;
             float rotZ = (float)System.Math.Atan2(m10, m11);
 
             return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
         }
         private readonly Vector3 ToEulerZYX()
         {
-            float singularityTest = (X * Z) + (Y * W);
+            float singularityTest = X * Z + Y * W;
 
             if (singularityTest > SingularityThreshold)
             {
-                float m21 = 2 * ((Y * Z) + (X * W));
-                float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+                float m21 = 2 * (Y * Z + X * W);
+                float m11 = 2 * (W * W + Y * Y) - 1;
 
                 return new Vector3(0f, 90f, (float)System.Math.Atan2(m21, m11) * Rad2Deg);
             }
 
             if (singularityTest < -SingularityThreshold)
             {
-                float m21 = 2 * ((Y * Z) + (X * W));
-                float m11 = 2 * ((W * W) + (Y * Y)) - 1;
+                float m21 = 2 * (Y * Z + X * W);
+                float m11 = 2 * (W * W + Y * Y) - 1;
 
                 return new Vector3(0f, -90f, (float)System.Math.Atan2(-m21, m11) * Rad2Deg);
             }
 
-            float m12 = 2 * ((Y * Z) - (X * W));
-            float m22 = 2 * ((W * W) + (Z * Z)) - 1;
+            float m12 = 2 * (Y * Z - X * W);
+            float m22 = 2 * (W * W + Z * Z) - 1;
             float rotX = (float)System.Math.Atan2(-m12, m22);
 
             float rotY = (float)System.Math.Asin(2 * singularityTest);
 
-            float m01 = 2 * ((X * Y) - (Z * W));
-            float m00 = 2 * ((W * W) + (X * X)) - 1;
+            float m01 = 2 * (X * Y - Z * W);
+            float m00 = 2 * (W * W + X * X) - 1;
             float rotZ = (float)System.Math.Atan2(-m01, m00);
 
             return new Vector3(rotX * Rad2Deg, rotY * Rad2Deg, rotZ * Rad2Deg);
@@ -896,8 +896,8 @@ namespace GTA.Math
             axis = Vector3.Normalize(axis);
 
             float half = angle * 0.5f;
-            float sin = (float)(System.Math.Sin((half)));
-            float cos = (float)(System.Math.Cos((half)));
+            float sin = (float)System.Math.Sin(half);
+            float cos = (float)System.Math.Cos(half);
 
             result.X = axis.X * sin;
             result.Y = axis.Y * sin;
@@ -930,7 +930,7 @@ namespace GTA.Math
                 result.Y = (matrix.M31 - matrix.M13) * sqrt;
                 result.Z = (matrix.M12 - matrix.M21) * sqrt;
             }
-            else if ((matrix.M11 >= matrix.M22) && (matrix.M11 >= matrix.M33))
+            else if (matrix.M11 >= matrix.M22 && matrix.M11 >= matrix.M33)
             {
                 sqrt = (float)System.Math.Sqrt(1.0f + matrix.M11 - matrix.M22 - matrix.M33);
                 half = 0.5f / sqrt;
@@ -984,19 +984,19 @@ namespace GTA.Math
             Quaternion result = Zero;
 
             float halfYaw = yaw * 0.5f;
-            float sinYaw = (float)(System.Math.Sin((halfYaw)));
-            float cosYaw = (float)(System.Math.Cos((halfYaw)));
+            float sinYaw = (float)System.Math.Sin(halfYaw);
+            float cosYaw = (float)System.Math.Cos(halfYaw);
             float halfPitch = pitch * 0.5f;
-            float sinPitch = (float)(System.Math.Sin((halfPitch)));
-            float cosPitch = (float)(System.Math.Cos((halfPitch)));
+            float sinPitch = (float)System.Math.Sin(halfPitch);
+            float cosPitch = (float)System.Math.Cos(halfPitch);
             float halfRoll = roll * 0.5f;
-            float sinRoll = (float)(System.Math.Sin((halfRoll)));
-            float cosRoll = (float)(System.Math.Cos((halfRoll)));
+            float sinRoll = (float)System.Math.Sin(halfRoll);
+            float cosRoll = (float)System.Math.Cos(halfRoll);
 
-            result.X = (cosRoll * sinPitch * cosYaw) + (sinRoll * cosPitch * sinYaw);
-            result.Y = (sinRoll * cosPitch * cosYaw) - (cosRoll * sinPitch * sinYaw);
-            result.Z = (cosRoll * cosPitch * sinYaw) - (sinRoll * sinPitch * cosYaw);
-            result.W = (cosRoll * cosPitch * cosYaw) + (sinRoll * sinPitch * sinYaw);
+            result.X = cosRoll * sinPitch * cosYaw + sinRoll * cosPitch * sinYaw;
+            result.Y = sinRoll * cosPitch * cosYaw - cosRoll * sinPitch * sinYaw;
+            result.Z = cosRoll * cosPitch * sinYaw - sinRoll * sinPitch * cosYaw;
+            result.W = cosRoll * cosPitch * cosYaw + sinRoll * sinPitch * sinYaw;
 
             return result;
         }
@@ -1111,10 +1111,10 @@ namespace GTA.Math
             float rz = right.Z;
             float rw = right.W;
 
-            quaternion.X = (lx * rw + rx * lw) + (ly * rz) - (lz * ry);
-            quaternion.Y = (ly * rw + ry * lw) + (lz * rx) - (lx * rz);
-            quaternion.Z = (lz * rw + rz * lw) + (lx * ry) - (ly * rx);
-            quaternion.W = (lw * rw) - (lx * rx + ly * ry + lz * rz);
+            quaternion.X = lx * rw + rx * lw + ly * rz - lz * ry;
+            quaternion.Y = ly * rw + ry * lw + lz * rx - lx * rz;
+            quaternion.Z = lz * rw + rz * lw + lx * ry - ly * rx;
+            quaternion.W = lw * rw - (lx * rx + ly * ry + lz * rz);
 
             return quaternion;
         }
@@ -1177,10 +1177,10 @@ namespace GTA.Math
             float rw = right.W * invNorm;
 
             // Multiply part.
-            quaternion.X = (lx * rw + rx * lw) + (ly * rz) - (lz * ry);
-            quaternion.Y = (ly * rw + ry * lw) + (lz * rx) - (lx * rz);
-            quaternion.Z = (lz * rw + rz * lw) + (lx * ry) - (ly * rx);
-            quaternion.W = (lw * rw) - (lx * rx + ly * ry + lz * rz);
+            quaternion.X = lx * rw + rx * lw + ly * rz - lz * ry;
+            quaternion.Y = ly * rw + ry * lw + lz * rx - lx * rz;
+            quaternion.Z = lz * rw + rz * lw + lx * ry - ly * rx;
+            quaternion.W = lw * rw - (lx * rx + ly * ry + lz * rz);
 
             return quaternion;
         }
@@ -1214,7 +1214,7 @@ namespace GTA.Math
             float q0 = rotation.W;
             float q0Square = rotation.W * rotation.W;
             var q = new Vector3(rotation.X, rotation.Y, rotation.Z);
-            return ((q0Square - q.LengthSquared()) * point) + (2 * Vector3.Dot(q, point) * q) + (2 * q0 * Vector3.Cross(q, point));
+            return (q0Square - q.LengthSquared()) * point + 2 * Vector3.Dot(q, point) * q + 2 * q0 * Vector3.Cross(q, point);
         }
 
         /// <summary>
@@ -1321,6 +1321,6 @@ namespace GTA.Math
         /// </summary>
         /// <param name="other">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public readonly bool Equals(Quaternion other) => (X == other.X && Y == other.Y && Z == other.Z && W == other.W);
+        public readonly bool Equals(Quaternion other) => X == other.X && Y == other.Y && Z == other.Z && W == other.W;
     }
 }

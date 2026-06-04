@@ -349,7 +349,7 @@ namespace GTA
             get
             {
                 VehicleType vehicleType = Type;
-                return ((uint)vehicleType - 8) <= 1;
+                return (uint)vehicleType - 8 <= 1;
             }
         }
 
@@ -362,7 +362,7 @@ namespace GTA
             get
             {
                 VehicleType vehicleType = Type;
-                return ((uint)vehicleType - 8) <= 2;
+                return (uint)vehicleType - 8 <= 2;
             }
         }
 
@@ -384,7 +384,7 @@ namespace GTA
             get
             {
                 VehicleType vehicleType = Type;
-                return (vehicleType == VehicleType.Motorcycle || vehicleType == VehicleType.Bicycle);
+                return vehicleType == VehicleType.Motorcycle || vehicleType == VehicleType.Bicycle;
             }
         }
 

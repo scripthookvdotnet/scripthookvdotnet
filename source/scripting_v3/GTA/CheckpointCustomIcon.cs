@@ -38,7 +38,7 @@ namespace GTA
                     return Number;
                 }
 
-                return (byte)(90 + (int)_style * 10 + Number);
+                return (byte)((int)_style * 10 + 90 + Number);
             }
             set
             {

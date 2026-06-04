@@ -50,7 +50,7 @@ namespace GTA
         /// <summary>
         /// Indicates whether <see cref="Hash"/> of this <see cref="DecisionMaker"/> is set to <c>0</c>, which can be created by <see langword="default"/> operator.
         /// </summary>
-        public bool IsNullValue => (Hash == 0);
+        public bool IsNullValue => Hash == 0;
 
         public bool Equals(DecisionMaker group)
         {

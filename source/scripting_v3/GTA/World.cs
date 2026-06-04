@@ -21,7 +21,7 @@ namespace GTA
         static readonly GregorianCalendar s_calendar = new();
 
         // removes gang and animal ped models just like CREATE_RANDOM_PED does
-        static readonly Func<Model, bool> s_defaultPredicateForCreateRandomPed = (x => x.IsHumanPed && !x.IsGangPed);
+        static readonly Func<Model, bool> s_defaultPredicateForCreateRandomPed = x => x.IsHumanPed && !x.IsGangPed;
         #endregion
 
         #region Weather & Effects

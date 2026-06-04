@@ -2067,8 +2067,8 @@ namespace GTA
         {
             (CrClipDictionary clipDict, string clipName) = crClipAsset;
             float deltaArg = blendOutDelta.HasValue
-                ? (float)(blendOutDelta.GetValueOrDefault())
-                : (AnimationBlendDelta.NormalBlendOut.Value);
+                ? (float)blendOutDelta.GetValueOrDefault()
+                : AnimationBlendDelta.NormalBlendOut.Value;
 
             Function.Call(Hash.STOP_ANIM_TASK, _ped.Handle, clipDict, clipName, deltaArg);
         }

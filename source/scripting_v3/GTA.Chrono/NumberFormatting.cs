@@ -51,7 +51,7 @@ namespace GTA.Chrono
             {
                 uint temp = '0' + value;
                 value /= 10;
-                *cur = (char)(temp - (value * 10));
+                *cur = (char)(temp - value * 10);
             }
 
             Debug.Assert(value < 10);
@@ -66,7 +66,7 @@ namespace GTA.Chrono
             {
                 ulong temp = '0' + value;
                 value /= 10;
-                *cur = (char)(temp - (value * 10));
+                *cur = (char)(temp - value * 10);
             }
 
             Debug.Assert(value < 10);

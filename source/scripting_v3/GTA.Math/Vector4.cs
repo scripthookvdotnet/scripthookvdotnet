@@ -130,7 +130,7 @@ namespace GTA.Math
         /// <returns>The length of the vector.</returns>
         public readonly float Length()
         {
-            return (float)System.Math.Sqrt((X * X) + (Y * Y) + (Z * Z) + (W * W));
+            return (float)System.Math.Sqrt(X * X + Y * Y + Z * Z + W * W);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace GTA.Math
         /// <returns>The squared length of the vector.</returns>
         public readonly float LengthSquared()
         {
-            return (X * X) + (Y * Y) + (Z * Z) + (W * W);
+            return X * X + Y * Y + Z * Z + W * W;
         }
 
         /// <summary>
@@ -170,20 +170,20 @@ namespace GTA.Math
         public static Vector4 Clamp(Vector4 value, Vector4 min, Vector4 max)
         {
             float x = value.X;
-            x = (x > max.X) ? max.X : x;
-            x = (x < min.X) ? min.X : x;
+            x = x > max.X ? max.X : x;
+            x = x < min.X ? min.X : x;
 
             float y = value.Y;
-            y = (y > max.Y) ? max.Y : y;
-            y = (y < min.Y) ? min.Y : y;
+            y = y > max.Y ? max.Y : y;
+            y = y < min.Y ? min.Y : y;
 
             float z = value.Z;
-            z = (z > max.Z) ? max.Z : z;
-            z = (z < min.Z) ? min.Z : z;
+            z = z > max.Z ? max.Z : z;
+            z = z < min.Z ? min.Z : z;
 
             float w = value.W;
-            w = (w > max.W) ? max.W : w;
-            w = (w < min.W) ? min.W : w;
+            w = w > max.W ? max.W : w;
+            w = w < min.W ? min.W : w;
 
             return new Vector4(x, y, z, w);
         }
@@ -204,10 +204,10 @@ namespace GTA.Math
         {
             Vector4 vector = default;
 
-            vector.X = start.X + ((end.X - start.X) * amount);
-            vector.Y = start.Y + ((end.Y - start.Y) * amount);
-            vector.Z = start.Z + ((end.Z - start.Z) * amount);
-            vector.W = start.W + ((end.W - start.W) * amount);
+            vector.X = start.X + (end.X - start.X) * amount;
+            vector.Y = start.Y + (end.Y - start.Y) * amount;
+            vector.Z = start.Z + (end.Z - start.Z) * amount;
+            vector.W = start.W + (end.W - start.W) * amount;
 
             return vector;
         }
@@ -230,7 +230,7 @@ namespace GTA.Math
         /// <param name="right">Second source vector.</param>
         /// <returns>The dot product of the two vectors.</returns>
         public static float Dot(Vector4 left, Vector4 right)
-            => (left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W);
+            => left.X * right.X + left.Y * right.Y + left.Z * right.Z + left.W * right.W;
 
         /// <summary>
         /// Returns a vector containing the smallest components of the specified vectors.
@@ -241,10 +241,10 @@ namespace GTA.Math
         public static Vector4 Min(Vector4 left, Vector4 right)
         {
             Vector4 vector = default;
-            vector.X = (left.X < right.X) ? left.X : right.X;
-            vector.Y = (left.Y < right.Y) ? left.Y : right.Y;
-            vector.Z = (left.Z < right.Z) ? left.Z : right.Z;
-            vector.W = (left.W < right.W) ? left.W : right.W;
+            vector.X = left.X < right.X ? left.X : right.X;
+            vector.Y = left.Y < right.Y ? left.Y : right.Y;
+            vector.Z = left.Z < right.Z ? left.Z : right.Z;
+            vector.W = left.W < right.W ? left.W : right.W;
             return vector;
         }
         /// <summary>
@@ -256,10 +256,10 @@ namespace GTA.Math
         public static Vector4 Max(Vector4 left, Vector4 right)
         {
             Vector4 vector = default;
-            vector.X = (left.X > right.X) ? left.X : right.X;
-            vector.Y = (left.Y > right.Y) ? left.Y : right.Y;
-            vector.Z = (left.Z > right.Z) ? left.Z : right.Z;
-            vector.W = (left.W > right.W) ? left.W : right.W;
+            vector.X = left.X > right.X ? left.X : right.X;
+            vector.Y = left.Y > right.Y ? left.Y : right.Y;
+            vector.Z = left.Z > right.Z ? left.Z : right.Z;
+            vector.W = left.W > right.W ? left.W : right.W;
             return vector;
         }
 

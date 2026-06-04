@@ -349,8 +349,8 @@ namespace GTA.Chrono
             YearFlags flags = YearFlags.FromYear(year);
             uint nWeeks = flags.IsoWeekCount;
 
-            if ((dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek > IsoDayOfWeek.Sunday) ||
-                (week < 1 || week > nWeeks))
+            if (dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek > IsoDayOfWeek.Sunday ||
+                week < 1 || week > nWeeks)
             {
                 date = default;
                 return false;
@@ -521,7 +521,7 @@ namespace GTA.Chrono
 
             // Determine new year (without taking months into account for now). Return null if the new year is not in
             // the range of int32.
-            if ((years > 0 && _year > (int.MaxValue - years)) || (years < 0 && _year < (int.MinValue - years)))
+            if ((years > 0 && _year > int.MaxValue - years) || (years < 0 && _year < int.MinValue - years))
             {
                 return null;
             }
@@ -1081,7 +1081,7 @@ namespace GTA.Chrono
         {
             return month switch
             {
-                2 => (flags.IsLeapYear ? 29 : 28),
+                2 => flags.IsLeapYear ? 29 : 28,
                 4 or 6 or 9 or 11 => 30,
                 _ => 31,
             };

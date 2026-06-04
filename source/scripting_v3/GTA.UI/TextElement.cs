@@ -303,7 +303,7 @@ namespace GTA.UI
                 switch (Alignment)
                 {
                     case Alignment.Center:
-                        Function.Call(Hash.SET_TEXT_WRAP, x - (w / 2), x + (w / 2));
+                        Function.Call(Hash.SET_TEXT_WRAP, x - w / 2, x + w / 2);
                         break;
                     case Alignment.Left:
                         Function.Call(Hash.SET_TEXT_WRAP, x, x + w);
@@ -477,7 +477,7 @@ namespace GTA.UI
                 switch (Alignment)
                 {
                     case Alignment.Center:
-                        Function.Call(Hash.SET_TEXT_WRAP, x - (w / 2), x + (w / 2));
+                        Function.Call(Hash.SET_TEXT_WRAP, x - w / 2, x + w / 2);
                         break;
                     case Alignment.Left:
                         Function.Call(Hash.SET_TEXT_WRAP, x, x + w);

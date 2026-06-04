@@ -843,7 +843,7 @@ namespace GTA
                 unsafe
                 {
                     float* returnVectorPtr = SHVDN.NativeMemory.GetEntityAngularVelocity(address);
-                    return (quaternionInverted * new Vector3(returnVectorPtr[0], returnVectorPtr[1], returnVectorPtr[2]));
+                    return quaternionInverted * new Vector3(returnVectorPtr[0], returnVectorPtr[1], returnVectorPtr[2]);
                 }
             }
             set

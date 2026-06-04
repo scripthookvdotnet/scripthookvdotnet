@@ -98,9 +98,9 @@ namespace GTA
         /// variations.
         /// </summary>
         private static bool IsPedPropDrawableVariationValid(Ped ped, PedPropAnchorPoint anchorPoint, int drawableIndex)
-            => (drawableIndex >= 0 &&
-                (drawableIndex < Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, ped.Handle,
-                    (int)anchorPoint)));
+            => drawableIndex >= 0 &&
+                drawableIndex < Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, ped.Handle,
+                    (int)anchorPoint);
 
         /// <summary>
         /// Returns a value that indicates whether the drawable index is valid for the specified <see cref="Ped"/>
@@ -110,9 +110,9 @@ namespace GTA
         /// </summary>
         private static bool IsPedPropTextureVariationValid(Ped ped, PedPropAnchorPoint anchorPoint, int drawableIndex,
             int textureIndex)
-            => (textureIndex >= 0 &&
-                (textureIndex < Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, ped.Handle,
-                    (int)anchorPoint, drawableIndex)));
+            => textureIndex >= 0 &&
+                textureIndex < Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, ped.Handle,
+                    (int)anchorPoint, drawableIndex);
 
         public bool HasVariations => Count > 1;
 

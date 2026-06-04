@@ -35,7 +35,7 @@ namespace GTA
 
             public bool MoveNext()
             {
-                if (currentIndex++ < (collection.MemberCount - 1))
+                if (currentIndex++ < collection.MemberCount - 1)
                 {
                     current = currentIndex < 0 ? collection.Leader : collection.GetMember(currentIndex);
 

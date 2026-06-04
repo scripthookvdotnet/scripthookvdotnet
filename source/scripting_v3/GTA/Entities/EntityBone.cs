@@ -30,7 +30,7 @@ namespace GTA
         {
             Owner = owner;
             Index = boneIndex;
-            Tag = (boneIndex != -1) ? boneTag : -1;
+            Tag = boneIndex != -1 ? boneTag : -1;
         }
         internal EntityBone(Entity owner, string boneName) : this(owner, Function.Call<int>(Hash.GET_ENTITY_BONE_INDEX_BY_NAME, owner.NativeValue, boneName))
         {
@@ -350,7 +350,7 @@ namespace GTA
                     return;
                 }
 
-                SHVDN.MemDataMarshal.WriteVector3((address + 0x30), value.ToInternalFVector3());
+                SHVDN.MemDataMarshal.WriteVector3(address + 0x30, value.ToInternalFVector3());
             }
         }
 
