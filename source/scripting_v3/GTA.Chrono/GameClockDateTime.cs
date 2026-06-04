@@ -585,9 +585,9 @@ namespace GTA.Chrono
                 // this is the minimum number that is large enough to contain any date time string and is multiple of 4
                 const int BufferLen = 28;
                 char* buffer = stackalloc char[BufferLen];
-                GameClockDateTimeFormat.TryFormatDateS(this._date, buffer, BufferLen, out int charWritten);
+                GameClockDateTimeFormat.TryFormatDateS(_date, buffer, BufferLen, out int charWritten);
                 buffer[charWritten++] = ' ';
-                GameClockDateTimeFormat.TryFormatTimeS(this._time, buffer + charWritten, BufferLen - charWritten,
+                GameClockDateTimeFormat.TryFormatTimeS(_time, buffer + charWritten, BufferLen - charWritten,
                     out int timeWritten);
                 charWritten += timeWritten;
 

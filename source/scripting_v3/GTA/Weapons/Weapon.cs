@@ -22,7 +22,7 @@ namespace GTA
         }
         internal Weapon(Ped owner, WeaponHash hash)
         {
-            this._owner = owner;
+            _owner = owner;
             Hash = hash;
         }
 
