@@ -143,10 +143,7 @@ namespace GTA
                 && Function.Call<bool>(Hash.IS_ROCKET_BOOST_ACTIVE, Handle);
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_944_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_944_2), nameof(Vehicle), nameof(IsRocketBoostActive));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_944_2, nameof(Vehicle), nameof(IsRocketBoostActive));
 
                 Function.Call(Hash.SET_ROCKET_BOOST_ACTIVE, Handle, value);
             }
@@ -2236,10 +2233,7 @@ namespace GTA
         /// </exception>
         public int GetRestrictedAmmoCount(int vehicleWeaponIndex)
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_1011_1)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1011_1), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1011_1, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
             return Function.Call<int>(Hash.GET_VEHICLE_WEAPON_RESTRICTED_AMMO, Handle, vehicleWeaponIndex);
         }
@@ -2266,10 +2260,7 @@ namespace GTA
         /// </exception>
         public void SetRestrictedAmmoCount(int vehicleWeaponIndex, int ammoCount)
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_944_2)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_944_2), nameof(Vehicle), nameof(SetRestrictedAmmoCount));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_944_2, nameof(Vehicle), nameof(SetRestrictedAmmoCount));
 
             Function.Call(Hash.SET_VEHICLE_WEAPON_RESTRICTED_AMMO, Handle, vehicleWeaponIndex, ammoCount);
         }
@@ -2289,19 +2280,13 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1180_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1180_2), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1180_2, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
                 return Function.Call<int>(Hash.GET_VEHICLE_BOMB_AMMO, Handle);
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1180_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1180_2), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1180_2, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
                 Function.Call(Hash.SET_VEHICLE_BOMB_AMMO, Handle, value);
             }
@@ -2322,19 +2307,13 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1180_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1180_2), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1180_2, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
                 return Function.Call<int>(Hash.GET_VEHICLE_COUNTERMEASURE_AMMO, Handle);
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1180_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1180_2), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1180_2, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
                 Function.Call(Hash.SET_VEHICLE_COUNTERMEASURE_AMMO, Handle, value);
             }
@@ -2670,10 +2649,7 @@ namespace GTA
         /// </summary>
         public void StopBringingToHalt()
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_1103_2)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1103_2), nameof(Vehicle), nameof(StopBringingToHalt));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1103_2, nameof(Vehicle), nameof(StopBringingToHalt));
 
             Function.Call(Hash.STOP_BRINGING_VEHICLE_TO_HALT, Handle);
         }
@@ -2695,10 +2671,7 @@ namespace GTA
         /// <param name="allowPlayerToCancel">Whether to allow the player to cancel parachuting before the vehicle lands</param>
         public void StartParachuting(bool allowPlayerToCancel)
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_944_2)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_944_2), nameof(Vehicle), nameof(StartParachuting));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_944_2, nameof(Vehicle), nameof(StartParachuting));
 
             if (HasParachute)
             {
@@ -2735,10 +2708,7 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1290_1)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1290_1), nameof(Vehicle), nameof(SpecialFlightModeTargetRatio));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1290_1, nameof(Vehicle), nameof(SpecialFlightModeTargetRatio));
 
                 Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_TARGET_RATIO, Handle, value);
             }
@@ -2761,10 +2731,7 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1290_1)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1290_1), nameof(Vehicle), nameof(SpecialFlightModeCurrentRatio));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1290_1, nameof(Vehicle), nameof(SpecialFlightModeCurrentRatio));
 
                 Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_RATIO, Handle, value);
             }
@@ -2787,10 +2754,7 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1290_1)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1290_1), nameof(Vehicle), nameof(SpecialFlightModeWingRatio));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1290_1, nameof(Vehicle), nameof(SpecialFlightModeWingRatio));
 
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
 
@@ -2822,10 +2786,7 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1290_1)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1290_1), nameof(Vehicle), nameof(AreWingsEnabledForSpecialFlightMode));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1290_1, nameof(Vehicle), nameof(AreWingsEnabledForSpecialFlightMode));
 
                 Function.Call(Hash.SET_DISABLE_HOVER_MODE_FLIGHT, Handle, !value);
             }

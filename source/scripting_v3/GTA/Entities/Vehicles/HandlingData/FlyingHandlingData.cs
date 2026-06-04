@@ -600,10 +600,7 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1180_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1180_2), nameof(FlyingHandlingData), nameof(ExtraLiftWithRoll));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1180_2, nameof(FlyingHandlingData), nameof(ExtraLiftWithRoll));
 
                 if (!IsValid)
                 {
