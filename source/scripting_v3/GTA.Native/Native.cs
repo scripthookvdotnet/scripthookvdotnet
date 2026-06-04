@@ -164,10 +164,7 @@ namespace GTA.Native
         /// <param name="value">The value.</param>
         public InputArgument(IntPtr value)
         {
-            unsafe
-            {
-                _data = (ulong)value.ToInt64();
-            }
+            _data = (ulong)value.ToInt64();
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="InputArgument"/> class and converts a managed object to a script function input argument.
@@ -175,10 +172,7 @@ namespace GTA.Native
         /// <param name="value">The object to convert.</param>
         public InputArgument(object value)
         {
-            unsafe
-            {
-                _data = Function.ObjectToNative(value);
-            }
+            _data = Function.ObjectToNative(value);
         }
 
         /// <summary>
@@ -389,10 +383,7 @@ namespace GTA.Native
         /// </summary>
         public static OutputArgument Alloc(int size)
         {
-            unsafe
-            {
-                return new OutputArgument(size);
-            }
+            return new OutputArgument(size);
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputArgument"/> where the storage has a block of memory of
@@ -3265,7 +3256,7 @@ namespace GTA.Native
         /// </summary>
         /// <param name="value">The string to set the <see cref="GlobalVariable"/> to.</param>
         /// <param name="maxSize">The maximum size of the string. Can be found for a given global variable by checking the decompiled scripts from the game.</param>
-        public unsafe void WriteString(string value, int maxSize)
+        public void WriteString(string value, int maxSize)
         {
             if (maxSize % 8 != 0 || maxSize <= 0 || maxSize > 64)
             {
@@ -3331,7 +3322,7 @@ namespace GTA.Native
         /// </summary>
         /// <param name="index">The index the <see cref="GlobalVariable"/> is stored in the structure. For example the Y component of a Vector3 is at index 1.</param>
         /// <returns>The <see cref="GlobalVariable"/> at the index given.</returns>
-        public unsafe GlobalVariable GetStructField(int index)
+        public GlobalVariable GetStructField(int index)
         {
             if (index < 0)
             {
@@ -3346,7 +3337,7 @@ namespace GTA.Native
         /// </summary>
         /// <param name="itemSize">The number of items stored in each array index. For example an array of Vector3s takes up 3 items.</param>
         /// <returns>The array of <see cref="GlobalVariable"/>s.</returns>
-        public unsafe GlobalVariable[] GetArray(int itemSize)
+        public GlobalVariable[] GetArray(int itemSize)
         {
             if (itemSize <= 0)
             {
@@ -3376,7 +3367,7 @@ namespace GTA.Native
         /// <param name="index">The array index.</param>
         /// <param name="itemSize">The number of items stored in each array index. For example an array of Vector3s takes up 3 items.</param>
         /// <returns>The <see cref="GlobalVariable"/> at the index given.</returns>
-        public unsafe GlobalVariable GetArrayItem(int index, int itemSize)
+        public GlobalVariable GetArrayItem(int index, int itemSize)
         {
             if (itemSize <= 0)
             {
