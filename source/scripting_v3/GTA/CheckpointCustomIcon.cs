@@ -134,7 +134,7 @@ namespace GTA
 
         public override string ToString()
         {
-            return Style.ToString() + Number.ToString();
+            return Style + Number.ToString();
         }
     }
 }
