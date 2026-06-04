@@ -43,7 +43,7 @@ namespace GTA.Native
         static NativeHelper()
         {
             var ptrToStrMethod = new DynamicMethod("PtrToStructure<" + typeof(T) + ">", typeof(T),
-                new [] { typeof(IntPtr) }, typeof(NativeHelper<T>), true);
+                new[] { typeof(IntPtr) }, typeof(NativeHelper<T>), true);
 
             ILGenerator generator = ptrToStrMethod.GetILGenerator();
             generator.Emit(OpCodes.Ldarg_0);

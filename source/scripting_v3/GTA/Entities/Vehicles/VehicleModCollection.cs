@@ -97,7 +97,7 @@ namespace GTA
             {
                 if (_owner.Model.IsBicycle || _owner.Model.IsBike)
                 {
-                    return new VehicleWheelType[] { VehicleWheelType.BikeWheels };
+                    return new[] { VehicleWheelType.BikeWheels };
                 }
 
                 if (!_owner.Model.IsCar)
@@ -129,7 +129,7 @@ namespace GTA
                     case VehicleHash.Minivan2:
                     case VehicleHash.SlamVan3:
                     case VehicleHash.Faction3:
-                        res.AddRange(new VehicleWheelType[] { VehicleWheelType.BennysOriginals, VehicleWheelType.BennysBespoke });
+                        res.AddRange(new[] { VehicleWheelType.BennysOriginals, VehicleWheelType.BennysBespoke });
                         break;
                     case VehicleHash.SultanRS:
                     case VehicleHash.Banshee2:
