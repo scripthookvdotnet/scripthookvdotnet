@@ -559,7 +559,7 @@ namespace GTA.Chrono
             if (day > dayMax)
             {
                 day = dayMax;
-            };
+            }
 
             return FromMdfUnchecked(year, new MonthDayFlags(month, day, flags));
         }
