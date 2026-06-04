@@ -2826,7 +2826,7 @@ namespace SHVDN
         private static delegate* unmanaged[Stdcall]<IntPtr, bool> s_isMultiheadFunc;
         private static delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*> s_getLandscapeMonitorFunc;
 
-        internal sealed class GetMainWindowResoltionTask : IScriptTask
+        internal sealed class GetMainWindowResolutionTask : IScriptTask
         {
             #region Fields
             internal Size resolutionResult;
@@ -2853,7 +2853,7 @@ namespace SHVDN
 
         public static Size GetMainWindowResolution()
         {
-            var task = new GetMainWindowResoltionTask();
+            var task = new GetMainWindowResolutionTask();
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
             return task.resolutionResult;
         }
