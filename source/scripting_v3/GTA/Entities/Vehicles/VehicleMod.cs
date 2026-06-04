@@ -149,20 +149,16 @@ namespace GTA
                         {
                             return Game.GetLocalizedString("CMOD_WHE_0");
                         }
-                        else
-                        {
-                            return Game.GetLocalizedString("CMOD_WHE_B_0");
-                        }
+
+                        return Game.GetLocalizedString("CMOD_WHE_B_0");
                     }
                     if (index >= count / 2)
                     {
                         return Game.GetLocalizedString("CHROME") + " " +
                                Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index));
                     }
-                    else
-                    {
-                        return Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index));
-                    }
+
+                    return Game.GetLocalizedString(Function.Call<string>(Hash.GET_MOD_TEXT_LABEL, Vehicle.Handle, (int)Type, index));
                 }
 
                 switch (Type)
@@ -197,28 +193,26 @@ namespace GTA
                     }
                     return LocalizedTypeName + " " + (index + 1).ToString();
                 }
-                else
-                {
-                    switch (Type)
-                    {
-                        case VehicleModType.AirFilter:
-                            if (Vehicle.Model == VehicleHash.Tornado)
-                            {
-                            }
-                            break;
-                        case VehicleModType.Struts:
-                            switch ((VehicleHash)Vehicle.Model)
-                            {
-                                case VehicleHash.Banshee:
-                                case VehicleHash.Banshee2:
-                                case VehicleHash.SultanRS:
-                                    return Game.GetLocalizedString("CMOD_COL5_41");
-                            }
-                            break;
 
-                    }
-                    return Game.GetLocalizedString("CMOD_DEF_0");
+                switch (Type)
+                {
+                    case VehicleModType.AirFilter:
+                        if (Vehicle.Model == VehicleHash.Tornado)
+                        {
+                        }
+                        break;
+                    case VehicleModType.Struts:
+                        switch ((VehicleHash)Vehicle.Model)
+                        {
+                            case VehicleHash.Banshee:
+                            case VehicleHash.Banshee2:
+                            case VehicleHash.SultanRS:
+                                return Game.GetLocalizedString("CMOD_COL5_41");
+                        }
+                        break;
+
                 }
+                return Game.GetLocalizedString("CMOD_DEF_0");
             }
         }
 

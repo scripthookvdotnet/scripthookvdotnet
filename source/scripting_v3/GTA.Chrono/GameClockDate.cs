@@ -511,11 +511,9 @@ namespace GTA.Chrono
                 date = nullableDate.GetValueOrDefault();
                 return true;
             }
-            else
-            {
-                date = default;
-                return false;
-            }
+
+            date = default;
+            return false;
         }
 
         private GameClockDate? DiffMonths(long months)
@@ -1010,7 +1008,8 @@ namespace GTA.Chrono
             {
                 return 1;
             }
-            else if (thisYear < otherYear)
+
+            if (thisYear < otherYear)
             {
                 return -1;
             }
@@ -1021,7 +1020,8 @@ namespace GTA.Chrono
             {
                 return 1;
             }
-            else if (thisOrdinal < otherOrdinal)
+
+            if (thisOrdinal < otherOrdinal)
             {
                 return -1;
             }

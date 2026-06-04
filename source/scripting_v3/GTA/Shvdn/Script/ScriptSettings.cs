@@ -73,7 +73,8 @@ namespace GTA
                         tempSectionName = line.Substring(1, line.IndexOf("]", StringComparison.Ordinal) - 1).Trim();
                         continue;
                     }
-                    else if (line.Contains("="))
+
+                    if (line.Contains("="))
                     {
                         int index = line.IndexOf("=", StringComparison.Ordinal);
                         string key = line.Substring(0, index).Trim();

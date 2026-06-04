@@ -2679,7 +2679,8 @@ namespace GTA
                 {
                     return outPos;
                 }
-                else if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
+
+                if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
                 {
                     return outPos;
                 }

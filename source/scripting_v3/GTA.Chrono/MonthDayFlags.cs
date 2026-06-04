@@ -55,11 +55,9 @@ namespace GTA.Chrono
                 // Array is indexed from `1 to Internals.MaxOl`, with a `0` index having a meaningless value.
                 return new MonthDayFlags(of.Value + ((uint)Internals.OlToMdl[ol] << 3));
             }
-            else
-            {
-                // throwing an exception here would be reasonable, but we are just going on with a safe value.
-                return new MonthDayFlags(0);
-            }
+
+            // throwing an exception here would be reasonable, but we are just going on with a safe value.
+            return new MonthDayFlags(0);
         }
 
         internal bool IsValid

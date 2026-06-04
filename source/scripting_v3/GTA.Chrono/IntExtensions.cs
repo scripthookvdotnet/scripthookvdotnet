@@ -23,10 +23,8 @@ namespace GTA.Chrono
                 // We can't use Math.Abs(int) for int.MinValue, because it throws OverflowException for int.MinValue.
                 return (rhs < 0) ? (r - rhs) : (r + rhs);
             }
-            else
-            {
-                return r;
-            }
+
+            return r;
         }
 
         public static int DivEuclid(this int lhs, int rhs)
@@ -56,10 +54,8 @@ namespace GTA.Chrono
                 // We can't use Math.Abs(int) for int.MinValue, because it throws OverflowException for int.MinValue.
                 return (rhs < 0) ? (r - rhs) : (r + rhs);
             }
-            else
-            {
-                return r;
-            }
+
+            return r;
         }
 
         public static long DivEuclid(this long lhs, long rhs)

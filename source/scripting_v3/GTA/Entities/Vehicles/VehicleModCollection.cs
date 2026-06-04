@@ -198,10 +198,8 @@ namespace GTA
                 {
                     return this[VehicleModType.Livery].Index;
                 }
-                else
-                {
-                    return Function.Call<int>(Hash.GET_VEHICLE_LIVERY, _owner.Handle);
-                }
+
+                return Function.Call<int>(Hash.GET_VEHICLE_LIVERY, _owner.Handle);
             }
             set
             {
