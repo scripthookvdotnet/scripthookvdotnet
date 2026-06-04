@@ -2435,10 +2435,7 @@ namespace GTA
         /// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.463.1 or earlier game versions.</exception>
         public static bool GetGroundHeightExcludingProps(Vector3 position, out float height, GetGroundHeightMode mode = GetGroundHeightMode.Normal)
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(GetGroundHeightExcludingProps), nameof(GetGroundHeightExcludingProps));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_505_2, nameof(GetGroundHeightExcludingProps), nameof(GetGroundHeightExcludingProps));
 
             bool foundCollision;
 

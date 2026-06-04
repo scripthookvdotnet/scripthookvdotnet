@@ -173,10 +173,8 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1103_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1103_2), nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1103_2, nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
+
                 if (!IsValid)
                 {
                     return Array.Empty<VehicleModType>();
@@ -200,10 +198,8 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1103_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1103_2), nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1103_2, nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
+
                 if (value.Length > s_elemCountForWeaponPropertyArrays)
                 {
                     ThrowHelper.ThrowArgumentException($"The amount of {nameof(VehicleModType)} values values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));
