@@ -78,7 +78,7 @@ namespace GTA
         public int Alpha
         {
             get => Function.Call<int>(Hash.GET_BLIP_ALPHA, Handle);
-            set => Function.Call(Hash.SET_BLIP_ALPHA, Handle, (int)value);
+            set => Function.Call(Hash.SET_BLIP_ALPHA, Handle, value);
         }
 
         /// <summary>

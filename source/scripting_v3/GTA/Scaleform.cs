@@ -121,7 +121,7 @@ namespace GTA
                         Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT, (float)argDouble);
                         break;
                     case bool argBool:
-                        Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL, (bool)argBool);
+                        Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL, argBool);
                         break;
                     case ScaleformArgumentTXD argTxd:
                         Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_TEXTURE_NAME_STRING, argTxd._txd);

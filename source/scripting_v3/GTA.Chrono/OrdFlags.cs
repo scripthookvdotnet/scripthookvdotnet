@@ -43,7 +43,7 @@ namespace GTA.Chrono
 
         internal static OrdFlags? New(int ordinal, YearFlags flags)
         {
-            var of = new OrdFlags((int)ordinal, flags);
+            var of = new OrdFlags(ordinal, flags);
             return of.Validate();
         }
 

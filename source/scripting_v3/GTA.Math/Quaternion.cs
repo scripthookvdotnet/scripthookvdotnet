@@ -76,8 +76,8 @@ namespace GTA.Math
             axis = Vector3.Normalize(axis);
 
             float half = angle * 0.5f;
-            float sin = (float)(System.Math.Sin((double)(half)));
-            float cos = (float)(System.Math.Cos((double)(half)));
+            float sin = (float)(System.Math.Sin(half));
+            float cos = (float)(System.Math.Cos(half));
 
             X = axis.X * sin;
             Y = axis.Y * sin;
@@ -589,14 +589,14 @@ namespace GTA.Math
             Quaternion result = Zero;
 
             float halfX = x * 0.5f * Deg2Rad;
-            float sinX = (float)(System.Math.Sin((double)(halfX)));
-            float cosX = (float)(System.Math.Cos((double)(halfX)));
+            float sinX = (float)(System.Math.Sin((halfX)));
+            float cosX = (float)(System.Math.Cos((halfX)));
             float halfY = y * 0.5f * Deg2Rad;
-            float sinY = (float)(System.Math.Sin((double)(halfY)));
-            float cosY = (float)(System.Math.Cos((double)(halfY)));
+            float sinY = (float)(System.Math.Sin((halfY)));
+            float cosY = (float)(System.Math.Cos((halfY)));
             float halfZ = z * 0.5f * Deg2Rad;
-            float sinZ = (float)(System.Math.Sin((double)(halfZ)));
-            float cosZ = (float)(System.Math.Cos((double)(halfZ)));
+            float sinZ = (float)(System.Math.Sin((halfZ)));
+            float cosZ = (float)(System.Math.Cos((halfZ)));
 
             switch (rotationOrder)
             {
@@ -896,8 +896,8 @@ namespace GTA.Math
             axis = Vector3.Normalize(axis);
 
             float half = angle * 0.5f;
-            float sin = (float)(System.Math.Sin((double)(half)));
-            float cos = (float)(System.Math.Cos((double)(half)));
+            float sin = (float)(System.Math.Sin((half)));
+            float cos = (float)(System.Math.Cos((half)));
 
             result.X = axis.X * sin;
             result.Y = axis.Y * sin;
@@ -984,14 +984,14 @@ namespace GTA.Math
             Quaternion result = Zero;
 
             float halfYaw = yaw * 0.5f;
-            float sinYaw = (float)(System.Math.Sin((double)(halfYaw)));
-            float cosYaw = (float)(System.Math.Cos((double)(halfYaw)));
+            float sinYaw = (float)(System.Math.Sin((halfYaw)));
+            float cosYaw = (float)(System.Math.Cos((halfYaw)));
             float halfPitch = pitch * 0.5f;
-            float sinPitch = (float)(System.Math.Sin((double)(halfPitch)));
-            float cosPitch = (float)(System.Math.Cos((double)(halfPitch)));
+            float sinPitch = (float)(System.Math.Sin((halfPitch)));
+            float cosPitch = (float)(System.Math.Cos((halfPitch)));
             float halfRoll = roll * 0.5f;
-            float sinRoll = (float)(System.Math.Sin((double)(halfRoll)));
-            float cosRoll = (float)(System.Math.Cos((double)(halfRoll)));
+            float sinRoll = (float)(System.Math.Sin((halfRoll)));
+            float cosRoll = (float)(System.Math.Cos((halfRoll)));
 
             result.X = (cosRoll * sinPitch * cosYaw) + (sinRoll * cosPitch * sinYaw);
             result.Y = (sinRoll * cosPitch * cosYaw) - (cosRoll * sinPitch * sinYaw);
