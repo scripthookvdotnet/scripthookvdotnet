@@ -3075,13 +3075,13 @@ namespace GTA.Native
                 return InstanceCreator<long, T>.Create((long)(*value));
             }
 
-            if (typeof(T) == typeof(Math.Vector2))
+            if (typeof(T) == typeof(Vector2))
             {
                 float* data = (float*)value;
                 return InstanceCreator<float, float, T>.Create(data[0], data[2]);
 
             }
-            if (typeof(T) == typeof(Math.Vector3))
+            if (typeof(T) == typeof(Vector3))
             {
                 float* data = (float*)value;
                 return InstanceCreator<float, float, float, T>.Create(data[0], data[2], data[4]);
@@ -3215,18 +3215,18 @@ namespace GTA.Native
                 throw new InvalidOperationException("Cannot write string values via 'Write<string>', use 'WriteString' instead.");
             }
 
-            if (typeof(T) == typeof(Math.Vector2))
+            if (typeof(T) == typeof(Vector2))
             {
-                var val = (Math.Vector2)(object)value;
+                var val = (Vector2)(object)value;
                 float* data = (float*)(MemoryAddress.ToPointer());
 
                 data[0] = val.X;
                 data[2] = val.Y;
                 return;
             }
-            if (typeof(T) == typeof(Math.Vector3))
+            if (typeof(T) == typeof(Vector3))
             {
-                var val = (Math.Vector3)(object)(value);
+                var val = (Vector3)(object)(value);
                 float* data = (float*)(MemoryAddress.ToPointer());
 
                 data[0] = val.X;

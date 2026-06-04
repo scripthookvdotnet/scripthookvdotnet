@@ -59,7 +59,7 @@ namespace GTA
         {
             // According to NativeDB and the internal .sch, this should return a boolean,
             // but the actual implementation behaves like a void function instead.
-            set => Function.Call(Native.Hash.SET_FLASH_LIGHT_FADE_DISTANCE, value);
+            set => Function.Call(Hash.SET_FLASH_LIGHT_FADE_DISTANCE, value);
         }
 
         public WeaponComponentHash ComponentHash
