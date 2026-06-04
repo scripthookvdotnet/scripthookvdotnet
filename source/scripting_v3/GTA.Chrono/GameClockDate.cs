@@ -903,14 +903,14 @@ namespace GTA.Chrono
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
-        /// <param name="value">An object to compare with this instance.</param>
+        /// <param name="obj">An object to compare with this instance.</param>
         /// <returns>
-        /// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockDate"/> object that represents
+        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockDate"/> object that represents
         /// the same game clock date as the current <see cref="GameClockDate"/> structure; otherwise, false.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object obj)
         {
-            if (value is GameClockDate duration)
+            if (obj is GameClockDate duration)
             {
                 return Equals(duration);
             }
@@ -966,19 +966,19 @@ namespace GTA.Chrono
         /// <see cref="GameClockDate"/> value, and returns an integer that indicates whether this instance is earlier
         /// than, the same as, or later than the specified <see cref="GameClockDate"/> value.
         /// </summary>
-        /// <param name="value">A boxed object to compare, or <see langword="null"/>.</param>
+        /// <param name="obj">A boxed object to compare, or <see langword="null"/>.</param>
         /// <returns>
         /// A signed number indicating the relative values of this instance and the value parameter. Less than zero if
         /// this instance is earlier than value. Zero if this instance is the same as value. Greater than zero if this
         /// instance is later than value.
         /// </returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="value"/> is not a <see cref="GameClockDate"/>.
+        /// <paramref name="obj"/> is not a <see cref="GameClockDate"/>.
         /// </exception>
-        public int CompareTo(object value)
+        public int CompareTo(object obj)
         {
-            if (value == null) return 1;
-            if (value is not GameClockDate otherDuration)
+            if (obj == null) return 1;
+            if (obj is not GameClockDate otherDuration)
                 throw new ArgumentException();
 
             return CompareTo(otherDuration);

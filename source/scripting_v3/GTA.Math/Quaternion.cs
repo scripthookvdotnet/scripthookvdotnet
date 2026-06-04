@@ -1287,13 +1287,13 @@ namespace GTA.Math
         /// <param name="format">
         /// A standard or custom numeric format string that defines the format of individual elements.
         /// </param>
-        /// <param name="provider">
+        /// <param name="formatProvider">
         /// A format provider that supplies culture-specific formatting information.
         /// </param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public readonly string ToString(string format, IFormatProvider provider)
-            => string.Format("X:{0} Y:{1} Z:{2} W:{3}", X.ToString(format, provider), Y.ToString(format, provider),
-                Z.ToString(format, provider), W.ToString(format, provider));
+        public readonly string ToString(string format, IFormatProvider formatProvider)
+            => string.Format("X:{0} Y:{1} Z:{2} W:{3}", X.ToString(format, formatProvider), Y.ToString(format, formatProvider),
+                Z.ToString(format, formatProvider), W.ToString(format, formatProvider));
 
         /// <summary>
         /// Returns the hash code for this instance.

@@ -377,13 +377,13 @@ namespace GTA.Math
         /// <param name="format">
         /// A standard or custom numeric format string that defines the format of individual elements.
         /// </param>
-        /// <param name="provider">
+        /// <param name="formatProvider">
         /// A format provider that supplies culture-specific formatting information.
         /// </param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public readonly string ToString(string format, IFormatProvider provider)
+        public readonly string ToString(string format, IFormatProvider formatProvider)
         {
-            return $"X:{X.ToString(format, provider)} Y:{Y.ToString(format, provider)} Z:{Z.ToString(format, provider)} W:{W.ToString(format, provider)}";
+            return $"X:{X.ToString(format, formatProvider)} Y:{Y.ToString(format, formatProvider)} Z:{Z.ToString(format, formatProvider)} W:{W.ToString(format, formatProvider)}";
         }
 
         public readonly bool Equals(Vector4 other) => X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z) && W.Equals(other.W);

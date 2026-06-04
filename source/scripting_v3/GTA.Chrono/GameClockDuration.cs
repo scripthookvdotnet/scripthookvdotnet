@@ -179,19 +179,19 @@ namespace GTA.Chrono
         /// <see cref="GameClockDuration"/> value, and returns an integer that indicates whether this instance is
         /// less than, the same as, or greater than the specified <see cref="GameClockDuration"/> value.
         /// </summary>
-        /// <param name="value">A boxed object to compare, or <see langword="null"/>.</param>
+        /// <param name="obj">A boxed object to compare, or <see langword="null"/>.</param>
         /// <returns>
         /// A signed number indicating the relative values of this instance and the value parameter. Less than zero if
         /// this instance is less than value. Zero if this instance is the same as value. Greater than zero if this
         /// instance is greater than value.
         /// </returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="value"/> is not a <see cref="GameClockDuration"/>.
+        /// <paramref name="obj"/> is not a <see cref="GameClockDuration"/>.
         /// </exception>
-        public int CompareTo(object value)
+        public int CompareTo(object obj)
         {
-            if (value == null) return 1;
-            if (!(value is GameClockDuration otherDuration))
+            if (obj == null) return 1;
+            if (!(obj is GameClockDuration otherDuration))
                 throw new ArgumentException();
 
             long t = (otherDuration)._secs;
@@ -596,15 +596,15 @@ namespace GTA.Chrono
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
-        /// <param name="value">An object to compare with this instance.</param>
+        /// <param name="obj">An object to compare with this instance.</param>
         /// <returns>
-        /// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockDuration"/> object that
+        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockDuration"/> object that
         /// represents the same game clock duration as the current <see cref="GameClockDuration"/> structure;
         /// otherwise, false.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object obj)
         {
-            if (value is GameClockDuration duration)
+            if (obj is GameClockDuration duration)
             {
                 return Equals(duration);
             }
