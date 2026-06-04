@@ -316,7 +316,7 @@ namespace GTA.Chrono
         /// The addition wraps around and ignores integral number of days.
         /// </remarks>
         public static GameClockTime operator +(GameClockTime time, GameClockDuration duration)
-            => new GameClockTime((time._secs + 86400 + (int)(duration.WholeSeconds % 86400)) % 86400);
+            => new((time._secs + 86400 + (int)(duration.WholeSeconds % 86400)) % 86400);
 
         /// <summary>
         /// Subtracts a specified duration from a specified time and returns a new time.
@@ -331,7 +331,7 @@ namespace GTA.Chrono
         /// The subtraction wraps around and ignores integral number of days.
         /// </remarks>
         public static GameClockTime operator -(GameClockTime time, GameClockDuration duration)
-            => new GameClockTime((time._secs + 86400 - (int)(duration.WholeSeconds % 86400)) % 86400);
+            => new((time._secs + 86400 - (int)(duration.WholeSeconds % 86400)) % 86400);
 
         /// <summary>
         /// Subtracts a specified from the current time, yielding a signed duration.

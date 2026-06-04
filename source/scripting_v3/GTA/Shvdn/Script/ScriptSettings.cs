@@ -280,12 +280,12 @@ namespace GTA
         {
             if (!_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyValuePairs))
             {
-                value = default(T);
+                value = default;
                 return false;
             }
             if (!keyValuePairs.TryGetValue(keyName, out List<string> valueList))
             {
-                value = default(T);
+                value = default;
                 return false;
             }
 
@@ -307,7 +307,7 @@ namespace GTA
             }
             catch (Exception)
             {
-                value = default(T);
+                value = default;
                 return false;
             }
         }

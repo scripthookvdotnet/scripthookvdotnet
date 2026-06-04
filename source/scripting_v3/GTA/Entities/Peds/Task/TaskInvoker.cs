@@ -405,7 +405,7 @@ namespace GTA
             Function.Call(Hash.TASK_FOLLOW_NAV_MESH_TO_COORD_ADVANCED, _ped.Handle, position.X, position.Y, position.Z, moveBlendRatio.Value, timeBeforeWarp, radius, (int)navigationFlags, slideToCoordHeading, maxSlopeNavigable, clampMaxSearchDistance, finalHeading);
         }
 
-        public void GoTo(Entity target, Vector3 offset = default(Vector3), int timeout = -1)
+        public void GoTo(Entity target, Vector3 offset = default, int timeout = -1)
         {
             Function.Call(Hash.TASK_GOTO_ENTITY_OFFSET_XY, _ped.Handle, target.Handle, timeout, offset.X, offset.Y, offset.Z, 1f, true);
         }

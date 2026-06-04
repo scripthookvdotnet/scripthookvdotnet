@@ -30,7 +30,7 @@ namespace GTA
         };
 
         internal static readonly Dictionary<VehicleWheelBoneId, ScriptVehicleWheelIndex> vehicleScriptWheelIndicesForBoneIds
-            = new Dictionary<VehicleWheelBoneId, ScriptVehicleWheelIndex>(10)
+            = new(10)
         {
             { VehicleWheelBoneId.WheelLeftFront, ScriptVehicleWheelIndex.CarFrontLeft },
             { VehicleWheelBoneId.WheelRightFront, ScriptVehicleWheelIndex.CarFrontRight },

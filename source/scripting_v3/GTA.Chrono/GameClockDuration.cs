@@ -312,8 +312,7 @@ namespace GTA.Chrono
             return new GameClockDuration(seconds);
         }
 
-        public static GameClockDuration FromTimeSpan(TimeSpan timeSpan)
-            => new GameClockDuration(timeSpan.Ticks / TimeSpan.TicksPerSecond);
+        public static GameClockDuration FromTimeSpan(TimeSpan timeSpan) => new(timeSpan.Ticks / TimeSpan.TicksPerSecond);
 
         public GameClockDuration Abs() => (_secs < 0) ? new GameClockDuration(-_secs) : this;
 
@@ -480,7 +479,7 @@ namespace GTA.Chrono
         /// <paramref name="divisor"/>.
         /// </returns>
         public static GameClockDuration operator /(GameClockDuration duration, long divisor)
-            => new GameClockDuration(duration._secs / divisor);
+            => new(duration._secs / divisor);
 
         /// <summary>
         /// Returns a new TimeSpan object whose value is the result of dividing the specified
