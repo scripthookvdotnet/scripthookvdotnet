@@ -230,7 +230,7 @@ namespace SHVDN
 
                 s_updateMonitorConfigurationFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)((long*)(*(int*)(address + 0x30) + address + 0x34));
                 s_isUsingMultiScreenFunc = (delegate* unmanaged[Stdcall]<IntPtr, bool>)((long*)(*(int*)(address + 0x38) + address + 0x3C));
-                s_getMainScreenInfoFunc = (delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*>)((long*)(*(int*)(address + 0x50) + address + 0x54));
+                s_getLandscapeMonitorFunc = (delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*>)((long*)(*(int*)(address + 0x50) + address + 0x54));
             }
 
             // Find euphoria functions
@@ -2824,7 +2824,7 @@ namespace SHVDN
         /// Returns only either 0 or 1.
         /// </remarks>
         private static delegate* unmanaged[Stdcall]<IntPtr, bool> s_isUsingMultiScreenFunc;
-        private static delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*> s_getMainScreenInfoFunc;
+        private static delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*> s_getLandscapeMonitorFunc;
 
         internal sealed class GetMainWindowResoltionTask : IScriptTask
         {
@@ -2841,7 +2841,7 @@ namespace SHVDN
                 {
                     // A lot of functions call this function twice for some reason, so we call it twice for safely
                     generalScreenInfoAddr = s_updateMonitorConfigurationFunc(s_grcDeviceAddr);
-                    GridMonitor* screenInfoAddr = s_getMainScreenInfoFunc(generalScreenInfoAddr);
+                    GridMonitor* screenInfoAddr = s_getLandscapeMonitorFunc(generalScreenInfoAddr);
 
                     resolutionResult = new Size(
                         (int)(screenInfoAddr->Right - screenInfoAddr->Left),
