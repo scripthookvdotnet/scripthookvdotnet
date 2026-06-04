@@ -874,13 +874,7 @@ namespace GTA
         /// </summary>
         public float OilVolume
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return 0.0f;
-
-                return HandlingData.OilVolume;
-            }
+            get => HandlingData.OilVolume;
         }
 
         /// <summary>
@@ -910,13 +904,7 @@ namespace GTA
         /// </summary>
         public float PetrolTankVolume
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return 0.0f;
-
-                return HandlingData.PetrolTankVolume;
-            }
+            get => HandlingData.PetrolTankVolume;
         }
 
         #endregion

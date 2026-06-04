@@ -82,9 +82,6 @@ namespace GTA
         {
             get
             {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return null;
-
                 int interiorInstHandle = SHVDN.NativeMemory.GetAssociatedInteriorInstHandleFromInteriorProxy(Handle);
                 return interiorInstHandle != 0 ? new InteriorInstance(interiorInstHandle) : null;
             }
