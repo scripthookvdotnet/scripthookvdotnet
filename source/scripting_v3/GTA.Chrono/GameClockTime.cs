@@ -244,19 +244,19 @@ namespace GTA.Chrono
         /// <see cref="GameClockTime"/> value, and returns an integer that indicates whether this instance is earlier
         /// than, the same as, or later than the specified <see cref="GameClockTime"/> value.
         /// </summary>
-        /// <param name="value">A boxed object to compare, or <see langword="null"/>.</param>
+        /// <param name="obj">A boxed object to compare, or <see langword="null"/>.</param>
         /// <returns>
         /// A signed number indicating the relative values of this instance and the value parameter. Less than zero if
         /// this instance is earlier than value. Zero if this instance is the same as value. Greater than zero if this
         /// instance is later than value.
         /// </returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="value"/> is not a <see cref="GameClockTime"/>.
+        /// <paramref name="obj"/> is not a <see cref="GameClockTime"/>.
         /// </exception>
-        public int CompareTo(object value)
+        public int CompareTo(object obj)
         {
-            if (value == null) return 1;
-            if (value is not GameClockTime otherTime)
+            if (obj == null) return 1;
+            if (obj is not GameClockTime otherTime)
                 throw new ArgumentException();
 
             long t = (otherTime)._secs;
