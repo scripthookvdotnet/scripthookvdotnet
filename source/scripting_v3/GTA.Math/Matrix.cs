@@ -1644,26 +1644,26 @@ namespace GTA.Math
         /// <param name="format">
         /// A standard or custom numeric format string that defines the format of individual elements.
         /// </param>
-        /// <param name="provider">
+        /// <param name="formatProvider">
         /// A format provider that supplies culture-specific formatting information.
         /// </param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public readonly string ToString(string format, IFormatProvider provider)
+        public readonly string ToString(string format, IFormatProvider formatProvider)
         {
-            return string.Format(provider,
+            return string.Format(formatProvider,
                 "[M11:{0} M12:{1} M13:{2} M14:{3}] [M21:{4} M22:{5} M23:{6} M24:{7}]" +
                 "[M31:{8} M32:{9} M33:{10} M34:{11}] [M41:{12} M42:{13} M43:{14} M44:{15}]",
-                M11.ToString(format, provider), M12.ToString(format, provider),
-                M13.ToString(format, provider), M14.ToString(format, provider),
+                M11.ToString(format, formatProvider), M12.ToString(format, formatProvider),
+                M13.ToString(format, formatProvider), M14.ToString(format, formatProvider),
 
-                M21.ToString(format, provider), M22.ToString(format, provider),
-                M23.ToString(format, provider), M24.ToString(format, provider),
+                M21.ToString(format, formatProvider), M22.ToString(format, formatProvider),
+                M23.ToString(format, formatProvider), M24.ToString(format, formatProvider),
 
-                M31.ToString(format, provider), M32.ToString(format, provider),
-                M33.ToString(format, provider), M34.ToString(format, provider),
+                M31.ToString(format, formatProvider), M32.ToString(format, formatProvider),
+                M33.ToString(format, formatProvider), M34.ToString(format, formatProvider),
 
-                M41.ToString(format, provider), M42.ToString(format, provider),
-                M43.ToString(format, provider), M44.ToString(format, provider)
+                M41.ToString(format, formatProvider), M42.ToString(format, formatProvider),
+                M43.ToString(format, formatProvider), M44.ToString(format, formatProvider)
                 );
         }
 

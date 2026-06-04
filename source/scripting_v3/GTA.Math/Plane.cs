@@ -258,13 +258,13 @@ namespace GTA.Math
         /// <param name="format">
         /// A standard or custom numeric format string that defines the format of individual elements.
         /// </param>
-        /// <param name="provider">
+        /// <param name="formatProvider">
         /// A format provider that supplies culture-specific formatting information.
         /// </param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public readonly string ToString(string format, IFormatProvider provider)
+        public readonly string ToString(string format, IFormatProvider formatProvider)
         {
-            return $"Normal:{Normal.ToString(format, provider)} D:{D.ToString(format, provider)}";
+            return $"Normal:{Normal.ToString(format, formatProvider)} D:{D.ToString(format, formatProvider)}";
         }
 
         public readonly bool Equals(Plane value) => Normal.Equals(value.Normal) && D.Equals(value.D);
