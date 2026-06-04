@@ -596,15 +596,15 @@ namespace GTA.Chrono
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
-        /// <param name="value">An object to compare with this instance.</param>
+        /// <param name="obj">An object to compare with this instance.</param>
         /// <returns>
-        /// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockDuration"/> object that
+        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockDuration"/> object that
         /// represents the same game clock duration as the current <see cref="GameClockDuration"/> structure;
         /// otherwise, false.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object obj)
         {
-            if (value is GameClockDuration duration)
+            if (obj is GameClockDuration duration)
             {
                 return Equals(duration);
             }

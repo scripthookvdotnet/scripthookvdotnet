@@ -269,7 +269,7 @@ namespace GTA.Math
 
         public readonly bool Equals(Plane value) => Normal.Equals(value.Normal) && D.Equals(value.D);
 
-        public override readonly bool Equals(object value) => value is Plane other && Equals(other);
+        public override readonly bool Equals(object obj) => obj is Plane other && Equals(other);
 
         public override readonly int GetHashCode()
         {
