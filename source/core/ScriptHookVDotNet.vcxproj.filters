@@ -101,7 +101,7 @@
     <CsCompile Include="Structs\RageSysMemPoolAllocator.cs">
       <Filter>Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\ScreenInfo.cs">
+    <CsCompile Include="Structs\GridMonitor.cs">
       <Filter>Structs</Filter>
     </CsCompile>
     <CsCompile Include="Structs\Path\CPathNode.cs">
