@@ -109,7 +109,7 @@ namespace GTA
         /// <summary>
         /// Gets the memory address of the matrix for this <see cref="Camera"/>.
         /// </summary>
-        IntPtr MatrixAddress
+        private IntPtr MatrixAddress
         {
             get
             {

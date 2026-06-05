@@ -11,8 +11,8 @@ namespace GTA
     public sealed class VehicleDoorCollection
     {
         #region Fields
-        readonly Vehicle _owner;
-        readonly Dictionary<VehicleDoorIndex, VehicleDoor> _vehicleDoors = new();
+        private readonly Vehicle _owner;
+        private readonly Dictionary<VehicleDoorIndex, VehicleDoor> _vehicleDoors = new();
         #endregion
 
         internal VehicleDoorCollection(Vehicle owner)

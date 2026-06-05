@@ -12,8 +12,8 @@ namespace GTA
     public sealed class Weapon
     {
         #region Fields
-        readonly Ped _owner;
-        WeaponComponentCollection _components;
+        private readonly Ped _owner;
+        private WeaponComponentCollection _components;
         #endregion
 
         internal Weapon()

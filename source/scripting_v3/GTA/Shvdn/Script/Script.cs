@@ -16,10 +16,10 @@ namespace GTA
     public abstract class Script
     {
         #region Fields
-        ScriptSettings _settings;
+        private ScriptSettings _settings;
         #endregion
 
-        class InstantiateScriptTask : SHVDN.IScriptTask
+        private class InstantiateScriptTask : SHVDN.IScriptTask
         {
             internal Type _type;
             internal SHVDN.Script _script;

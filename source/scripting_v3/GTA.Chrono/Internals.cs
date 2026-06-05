@@ -36,7 +36,7 @@ namespace GTA.Chrono
         internal const int MaxOl = 366 << 1;
         internal const int MaxMdl = (12 << 6) | (31 << 1) | 1;
 
-        const sbyte XX = -128;
+        private const sbyte XX = -128;
 
         internal static readonly sbyte[] MdlToOl = new sbyte[MaxMdl + 1] {
         XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX, XX,
