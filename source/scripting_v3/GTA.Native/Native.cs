@@ -26,7 +26,7 @@ namespace GTA.Native
 
     internal static class NativeHelper<T>
     {
-        static class CastCache<TFrom>
+        private static class CastCache<TFrom>
         {
             internal static readonly Func<TFrom, T> Cast;
 
@@ -38,7 +38,7 @@ namespace GTA.Native
             }
         }
 
-        static readonly Func<IntPtr, T> _ptrToStrFunc;
+        private static readonly Func<IntPtr, T> _ptrToStrFunc;
 
         static NativeHelper()
         {
@@ -316,7 +316,7 @@ namespace GTA.Native
     public class OutputArgument : IDisposable
     {
         #region Fields
-        bool _disposed = false;
+        private bool _disposed = false;
         internal IntPtr _storage = IntPtr.Zero;
         #endregion
 
@@ -1763,7 +1763,7 @@ namespace GTA.Native
         }
         #endregion
 
-        static unsafe T ReturnValueFromNativeIfNotNull<T>(ulong* result)
+        private static unsafe T ReturnValueFromNativeIfNotNull<T>(ulong* result)
         {
             // The result will be null when this method is called from a thread other than the main thread
             if (result == null)
@@ -1774,7 +1774,7 @@ namespace GTA.Native
             return ReturnValueFromResultAddress<T>(result);
         }
         // have to create this method to let JIT inline ReturnValueFromNativeIfNotNull
-        static void ThrowInvalidOperationExceptionForInvalidNativeCall() => throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
+        private static void ThrowInvalidOperationExceptionForInvalidNativeCall() => throw new InvalidOperationException("Native.Function.Call can only be called from the main thread.");
 
         internal static unsafe T ReturnValueFromResultAddress<T>(ulong* result)
         {
@@ -3045,7 +3045,7 @@ namespace GTA.Native
             ThrowExceptionForObjectToNative(value);
             return 0;
         }
-        static void ThrowExceptionForObjectToNative(object value) => throw new InvalidCastException(string.Concat("Unable to cast object of type '", value.GetType(), "' to native value"));
+        private static void ThrowExceptionForObjectToNative(object value) => throw new InvalidCastException(string.Concat("Unable to cast object of type '", value.GetType(), "' to native value"));
 
         /// <summary>
         /// Converts a native value to a managed object of a value type.

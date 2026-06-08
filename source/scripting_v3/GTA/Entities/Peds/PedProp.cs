@@ -10,7 +10,7 @@ namespace GTA
     public sealed partial class PedProp : IPedVariation
     {
         #region Fields
-        readonly Ped _ped;
+        private readonly Ped _ped;
         #endregion
 
         internal PedProp(Ped ped, PedPropType propId)

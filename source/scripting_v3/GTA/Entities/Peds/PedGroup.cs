@@ -15,9 +15,9 @@ namespace GTA
         public sealed class Enumerator : IEnumerator<Ped>
         {
             #region Fields
-            readonly PedGroup collection;
-            Ped current;
-            int currentIndex = -2;
+            private readonly PedGroup collection;
+            private Ped current;
+            private int currentIndex = -2;
             #endregion
 
             public Enumerator(PedGroup group)

@@ -15,9 +15,9 @@ namespace GTA
     public sealed class VehicleModCollection
     {
         #region Fields
-        readonly Vehicle _owner;
-        readonly Dictionary<VehicleModType, VehicleMod> _vehicleMods = new();
-        readonly Dictionary<VehicleToggleModType, VehicleToggleMod> _vehicleToggleMods = new();
+        private readonly Vehicle _owner;
+        private readonly Dictionary<VehicleModType, VehicleMod> _vehicleMods = new();
+        private readonly Dictionary<VehicleToggleModType, VehicleToggleMod> _vehicleToggleMods = new();
 
         private static readonly ReadOnlyDictionary<VehicleWheelType, Tuple<string, string>> _wheelNames = new(
             new Dictionary<VehicleWheelType, Tuple<string, string>>

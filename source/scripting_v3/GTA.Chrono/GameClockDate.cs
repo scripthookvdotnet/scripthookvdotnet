@@ -140,7 +140,7 @@ namespace GTA.Chrono
 
         internal MonthDayFlags MonthDayFlags => _ordFlags.ToMonthDayFlags();
 
-        static GameClockDate? FromOrdinalAndFlags(int year, int ordinal, YearFlags flags)
+        private static GameClockDate? FromOrdinalAndFlags(int year, int ordinal, YearFlags flags)
         {
             return OrdFlags.New(ordinal, flags) switch
             {
@@ -149,7 +149,7 @@ namespace GTA.Chrono
             };
         }
 
-        static GameClockDate? FromMdf(int year, MonthDayFlags mdf)
+        private static GameClockDate? FromMdf(int year, MonthDayFlags mdf)
         {
             OrdFlags? of = mdf.ToOrdFlags();
 
@@ -160,10 +160,10 @@ namespace GTA.Chrono
 
             return null;
         }
-
-        static GameClockDate FromMdfUnchecked(int year, MonthDayFlags mdf) =>
+        
+        private static GameClockDate FromMdfUnchecked(int year, MonthDayFlags mdf) =>
             new(year, mdf.ToOrdFlags().GetValueOrDefault());
-
+            
         /// <summary>
         /// Makes a new <see cref="GameClockDateTime"/> from the current date and given <see cref="GameClockTime"/>.
         /// </summary>

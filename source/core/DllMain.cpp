@@ -7,14 +7,11 @@
 
 #include <Windows.h>
 #include <atomic>
-// We won't use `std::mutex` at the moment, because it's not available in VS2019 or earlier Visual Studio versions
-// with the option `/clr` specified. We don't care the compatibility with Windows Vista (for `SRWLOCK` being missing)
-// anyway, as how .NET Framework 4.6.1+ does not support Vista.
-#include <shared_mutex>
+#include <mutex>
 
 LPVOID sTlsContextAddrOfGameMainThread = nullptr;
 DWORD sGameMainThreadId = 0;
-std::shared_mutex sGameMainThreadVarsMutex;
+std::mutex sGameMainThreadVarsMutex;
 std::atomic_bool sGameMainThreadVarsInitialized(false);
 
 std::atomic_bool sScriptDomainRequestedToReload(false);
@@ -32,14 +29,14 @@ static LPVOID GetTlsContextAddrOfGameMainThread()
 {
     {
         // lock would take too short time for shared lock to be worth it, use exclusive lock
-        std::lock_guard<std::shared_mutex> lock(sGameMainThreadVarsMutex);
+        std::lock_guard<std::mutex> lock(sGameMainThreadVarsMutex);
         return sTlsContextAddrOfGameMainThread;
     }
 }
 static DWORD GetGameMainThreadId()
 {
     {
-        std::lock_guard<std::shared_mutex> lock(sGameMainThreadVarsMutex);
+        std::lock_guard<std::mutex> lock(sGameMainThreadVarsMutex);
         return sGameMainThreadId;
     }
 }
@@ -852,7 +849,7 @@ static void ScriptMain()
     // such as a rage::SysMemAllocator instance
     if (!sGameMainThreadVarsInitialized.load(std::memory_order_acquire))
     {
-        std::lock_guard<std::shared_mutex> lock(sGameMainThreadVarsMutex);
+        std::lock_guard<std::mutex> lock(sGameMainThreadVarsMutex);
         sTlsContextAddrOfGameMainThread = GetTlsContext();
         sGameMainThreadId = GetCurrentThreadId();
         sGameMainThreadVarsInitialized.store(true, std::memory_order_release);

@@ -12,11 +12,11 @@ namespace GTA
     public sealed partial class TaskInvoker
     {
         #region Fields
-        readonly Ped _ped;
+        private readonly Ped _ped;
         #endregion
 
         // this value is unlikely to get changed in future updates as some of the script task natives use this value as a constant float value
-        const float DefaultNavmeshFinalHeading = 40000f;
+        private const float DefaultNavmeshFinalHeading = 40000f;
 
         internal TaskInvoker(Ped ped)
         {

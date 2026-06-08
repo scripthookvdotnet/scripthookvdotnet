@@ -447,7 +447,7 @@ namespace GTA.UI
             Function.Call(Hash.CLEAR_DRAW_ORIGIN);
         }
 
-        void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
+        private void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
         {
             if (!Enabled)
             {

@@ -16,7 +16,7 @@ namespace GTA
     public sealed class PedConfigFlags
     {
         #region Fields
-        readonly Ped _ped;
+        private readonly Ped _ped;
         #endregion
 
         internal PedConfigFlags(Ped ped)

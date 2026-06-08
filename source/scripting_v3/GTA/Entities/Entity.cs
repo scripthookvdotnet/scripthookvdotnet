@@ -23,8 +23,8 @@ namespace GTA
     public abstract partial class Entity : PoolObject, ISpatial
     {
         #region Fields
-        EntityBoneCollection _bones;
-        EntityDamageRecordCollection _damageRecords;
+        private EntityBoneCollection _bones;
+        private EntityDamageRecordCollection _damageRecords;
         #endregion
 
         internal Entity(int handle) : base(handle)

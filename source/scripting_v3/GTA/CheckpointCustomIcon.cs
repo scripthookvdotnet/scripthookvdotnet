@@ -9,8 +9,8 @@ namespace GTA
 {
     public struct CheckpointCustomIcon : INativeValue
     {
-        byte _number;
-        CheckpointCustomIconStyle _style;
+        private byte _number;
+        private CheckpointCustomIconStyle _style;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckpointCustomIcon" /> struct.

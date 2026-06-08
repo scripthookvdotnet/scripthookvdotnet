@@ -23,34 +23,34 @@ namespace GTA.Chrono
         }
 
         /// The number of seconds in a minute.
-        const long SecsPerMinute = 60;
+        private const long SecsPerMinute = 60;
 
         /// The number of seconds in an hour.
-        const long SecsPerHour = 3600;
+        private const long SecsPerHour = 3600;
 
         /// The number of (non-leap) seconds in days.
-        const long SecsPerDay = 86_400;
+        private const long SecsPerDay = 86_400;
 
         /// The number of (non-leap) seconds in a week.
-        const long SecsPerWeek = 604_800;
+        private const long SecsPerWeek = 604_800;
 
-        const long LeapYearCountOfInt32 = 1041529570;
-        const long NonLeapYearCountOfInt32 = 3253437726;
+        private const long LeapYearCountOfInt32 = 1041529570;
+        private const long NonLeapYearCountOfInt32 = 3253437726;
 
         /// <summary>
         /// The number of days elapsed since January 1st, the -2147483648 year until December 31st, the 2147483647 year,
         /// which will result in 1_568_704_592_609 days. Subtracted by 1 because 1 day is taken for the min date value.
         /// </summary>
-        const long DayCountUInt32YearsLaterSinceInt32MinValueYear = LeapYearCountOfInt32 * 366
+        private const long DayCountUInt32YearsLaterSinceInt32MinValueYear = LeapYearCountOfInt32 * 366
             + NonLeapYearCountOfInt32 * 365 - 1;
 
         /// <summary>
         /// The same value as 135_536_076_801_503_999 seconds.
         /// </summary>
-        const long MaxSecDifference = DayCountUInt32YearsLaterSinceInt32MinValueYear * SecsPerDay
+        private const long MaxSecDifference = DayCountUInt32YearsLaterSinceInt32MinValueYear * SecsPerDay
                                       + 23 * SecsPerHour + 59 * SecsPerMinute + 59;
 
-        const long MinSecDifference = -(DayCountUInt32YearsLaterSinceInt32MinValueYear * SecsPerDay
+        private const long MinSecDifference = -(DayCountUInt32YearsLaterSinceInt32MinValueYear * SecsPerDay
                                         + 23 * SecsPerHour + 59 * SecsPerMinute + 59);
 
         /// <summary>

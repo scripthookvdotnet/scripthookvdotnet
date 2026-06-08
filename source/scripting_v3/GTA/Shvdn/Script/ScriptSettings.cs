@@ -19,11 +19,11 @@ namespace GTA
     public sealed class ScriptSettings
     {
         #region Fields
-        readonly string _fileName;
-        readonly Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
+        private readonly string _fileName;
+        private readonly Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
         #endregion
 
-        ScriptSettings(string fileName)
+        private ScriptSettings(string fileName)
         {
             _fileName = fileName;
         }

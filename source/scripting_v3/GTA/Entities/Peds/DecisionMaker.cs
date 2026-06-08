@@ -14,7 +14,7 @@ namespace GTA
     /// </summary>
     public struct DecisionMaker : INativeValue, IEquatable<DecisionMaker>
     {
-        DecisionMaker(string name) : this()
+        private DecisionMaker(string name) : this()
         {
             Hash = (DecisionMakerTypeHash)StringHash.AtStringHash(name);
         }
