@@ -21,9 +21,9 @@ namespace GTA
     /// </remarks>
     public sealed class VehicleWeaponHandlingData : BaseSubHandlingData
     {
-        static readonly int s_elemCountForWeaponPropertyArrays;
+        private static readonly int s_elemCountForWeaponPropertyArrays;
         // Vehicle turret arrays can have up to 12 elements since b1180, but it looks like only 6 element can be actually used
-        static readonly int s_elemCountActuallyUsedForTurretPropertyArrays;
+        private static readonly int s_elemCountActuallyUsedForTurretPropertyArrays;
 
         static VehicleWeaponHandlingData()
         {

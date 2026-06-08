@@ -20,7 +20,7 @@ namespace GTA
     public sealed class TaskSequence : IDisposable
     {
         #region Fields
-        static Ped nullPed = null;
+        private static Ped nullPed = null;
         #endregion
 
         public TaskSequence()
@@ -109,7 +109,7 @@ namespace GTA
             }
         }
 
-        static void ThrowException_AddTaskCalledOnClosedSeq()
+        private static void ThrowException_AddTaskCalledOnClosedSeq()
         {
             throw new Exception("You can't add tasks to a closed sequence!");
         }

@@ -21,26 +21,26 @@ namespace GTA.Chrono
         // It would be a bit better if there were octal number literals with the prefix "0o" in C#,
         // just like how Rust, JavaScript, Go, Python 3, and Swift define the prefix for octal literals...
 #pragma warning disable IDE1006 // Naming Styles
-        static readonly YearFlags A = new(0b1000 + 5);
-        static readonly YearFlags AG = new(5);
-        static readonly YearFlags B = new(0b1000 + 4);
-        static readonly YearFlags BA = new(4);
-        static readonly YearFlags C = new(0b1000 + 3);
-        static readonly YearFlags CB = new(3);
-        static readonly YearFlags D = new(0b1000 + 2);
-        static readonly YearFlags DC = new(2);
-        static readonly YearFlags E = new(0b1000 + 1);
-        static readonly YearFlags ED = new(1);
-        static readonly YearFlags F = new(0b1000 + 7);
-        static readonly YearFlags FE = new(7);
-        static readonly YearFlags G = new(0b1000 + 6);
-        static readonly YearFlags GF = new(6);
+        private static readonly YearFlags A = new(0b1000 + 5);
+        private static readonly YearFlags AG = new(5);
+        private static readonly YearFlags B = new(0b1000 + 4);
+        private static readonly YearFlags BA = new(4);
+        private static readonly YearFlags C = new(0b1000 + 3);
+        private static readonly YearFlags CB = new(3);
+        private static readonly YearFlags D = new(0b1000 + 2);
+        private static readonly YearFlags DC = new(2);
+        private static readonly YearFlags E = new(0b1000 + 1);
+        private static readonly YearFlags ED = new(1);
+        private static readonly YearFlags F = new(0b1000 + 7);
+        private static readonly YearFlags FE = new(7);
+        private static readonly YearFlags G = new(0b1000 + 6);
+        private static readonly YearFlags GF = new(6);
 #pragma warning restore IDE1006 // Naming Styles
 
         /// <summary>
         /// Contains dominical letters.
         /// </summary>
-        static readonly YearFlags[] YearToFlags = new YearFlags[400]
+        private static readonly YearFlags[] YearToFlags = new YearFlags[400]
         {
             BA, G, F, E, DC, B, A, G, FE, D, C, B, AG, F, E, D, CB, A, G, F, ED, C, B, A, GF, E, D, C, BA,
             G, F, E, DC, B, A, G, FE, D, C, B, AG, F, E, D, CB, A, G, F, ED, C, B, A, GF, E, D, C, BA, G,

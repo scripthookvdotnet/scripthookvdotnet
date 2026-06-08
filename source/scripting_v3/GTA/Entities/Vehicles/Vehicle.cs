@@ -15,11 +15,11 @@ namespace GTA
     public sealed partial class Vehicle : Entity
     {
         #region Fields
-        VehicleDoorCollection _doors;
-        VehicleModCollection _mods;
-        VehicleExtraCollection _extras;
-        VehicleWheelCollection _wheels;
-        VehicleWindowCollection _windows;
+        private VehicleDoorCollection _doors;
+        private VehicleModCollection _mods;
+        private VehicleExtraCollection _extras;
+        private VehicleWheelCollection _wheels;
+        private VehicleWindowCollection _windows;
         #endregion
 
         internal Vehicle(int handle) : base(handle)

@@ -506,8 +506,8 @@ namespace GTA.Math
             return (float)((System.Math.Acos(System.Math.Min(System.Math.Abs(dot), 1.0f)) * 2.0 * (180.0f / System.Math.PI)));
         }
 
-        const float Deg2Rad = (float)((System.Math.PI / 180.0));
-        const float Rad2Deg = (float)((180.0 / System.Math.PI));
+        private const float Deg2Rad = (float)((System.Math.PI / 180.0));
+        private const float Rad2Deg = (float)((180.0 / System.Math.PI));
 
         /// <summary>
         /// <para>Returns a rotation that rotates z degrees around the z axis, x degrees around the x-axis, and y degrees around the y-axis (in that order).</para>
@@ -688,7 +688,7 @@ namespace GTA.Math
 
         #region Internal method for ToEuler
 
-        const float SingularityThreshold = 0.4999995f;
+        private const float SingularityThreshold = 0.4999995f;
         private readonly Vector3 ToEulerYXZ()
         {
             float singularityTest = (Y * Z) + (X * W);

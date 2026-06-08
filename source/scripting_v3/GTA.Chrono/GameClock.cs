@@ -463,14 +463,14 @@ namespace GTA.Chrono
             return dayDiff;
         }
 
-        static int AddMinuteInternal(ref int minute, ref int hour, int diff)
+        private static int AddMinuteInternal(ref int minute, ref int hour, int diff)
         {
             minute += diff;
 
             return NormalizeMinuteInternal(ref minute, ref hour);
         }
 
-        static int NormalizeMinuteInternal(ref int minute, ref int hour)
+        private static int NormalizeMinuteInternal(ref int minute, ref int hour)
         {
             int dayDiff = 0;
 
@@ -488,14 +488,14 @@ namespace GTA.Chrono
             return dayDiff;
         }
 
-        static int AddHourInternal(ref int hour, int diff)
+        private static int AddHourInternal(ref int hour, int diff)
         {
             hour += diff;
 
             return NormalizeHourInternal(ref hour);
         }
 
-        static int NormalizeHourInternal(ref int hour)
+        private static int NormalizeHourInternal(ref int hour)
         {
             int dayDiff = 0;
 

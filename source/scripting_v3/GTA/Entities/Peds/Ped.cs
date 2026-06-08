@@ -14,15 +14,15 @@ namespace GTA
     public sealed partial class Ped : Entity
     {
         #region Fields
-        TaskInvoker _tasks;
-        Euphoria _euphoria;
-        WeaponCollection _weapons;
-        Style _style;
-        PedBoneCollection _pedBones;
-        PedConfigFlags _pedConfigFlags;
-        PedResetFlags _pedResetFlags;
+        private TaskInvoker _tasks;
+        private Euphoria _euphoria;
+        private WeaponCollection _weapons;
+        private Style _style;
+        private PedBoneCollection _pedBones;
+        private PedConfigFlags _pedConfigFlags;
+        private PedResetFlags _pedResetFlags;
 
-        PedMoveNetworkTaskInterface _moveNetworkInterface;
+        private PedMoveNetworkTaskInterface _moveNetworkInterface;
         #endregion
 
         internal Ped(int handle) : base(handle)

@@ -13,7 +13,7 @@ namespace GTA
     public sealed class VehicleMod
     {
         #region Fields
-        static readonly ReadOnlyDictionary<int, Tuple<string, string>> _hornNames = new(
+        private static readonly ReadOnlyDictionary<int, Tuple<string, string>> _hornNames = new(
             new Dictionary<int, Tuple<string, string>>
             {
                 {-1,  new Tuple<string, string>("CMOD_HRN_0", "Stock Horn")},

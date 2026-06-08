@@ -16,8 +16,8 @@ namespace GTA
         public sealed class Enumerator : IEnumerator<EntityBone>
         {
             #region Fields
-            readonly EntityBoneCollection collection;
-            int currentIndex = -1; // Skip the CORE bone index(-1)
+            private readonly EntityBoneCollection collection;
+            private int currentIndex = -1; // Skip the CORE bone index(-1)
             #endregion
 
             public Enumerator(EntityBoneCollection collection)

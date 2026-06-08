@@ -306,7 +306,7 @@ namespace GTA.UI
             Function.Call(Hash.CLEAR_DRAW_ORIGIN);
         }
 
-        void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
+        private void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
         {
             if (!Enabled || !Function.Call<bool>(Hash.HAS_STREAMED_TEXTURE_DICT_LOADED, _textureDict))
             {

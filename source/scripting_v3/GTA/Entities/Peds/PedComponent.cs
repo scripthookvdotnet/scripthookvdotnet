@@ -10,7 +10,7 @@ namespace GTA
     public sealed partial class PedComponent : IPedVariation
     {
         #region Fields
-        readonly Ped _ped;
+        private readonly Ped _ped;
         #endregion
 
         internal PedComponent(Ped ped, PedComponentType componentId)
