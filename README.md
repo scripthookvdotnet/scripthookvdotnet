@@ -13,7 +13,7 @@ The issues page should be primarily used for bug reports and focused enhancement
 
 * [C++ Script Hook V by Alexander Blade](http://www.dev-c.com/gtav/scripthookv/)
 * [.NET Framework ≥ 4.8](https://dotnet.microsoft.com/download/dotnet-framework/net48)
-* [Visual C++ Redistributable for Visual Studio 2019 x64](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-studio-2015-2022)
+* [Microsoft Visual C++ Redistributable (Latest supported v14, not v14.0)](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#visual-c-v14-redistributable)
 
 ## Downloads
 The stable builds can be downloaded from the [Releases](https://github.com/scripthookvdotnet/scripthookvdotnet/releases) page.
@@ -43,7 +43,7 @@ Even if no stable versions of SHVDN work in any game versions, you can build aga
 
 ## Contributing
 
-You'll need Visual Studio 2019 or higher to open the project file and the [Script Hook V SDK](http://www.dev-c.com/gtav/scripthookv/) extracted into [/sdk](/sdk).
+You'll need Visual Studio 2022 or higher to open the project file and the [Script Hook V SDK](http://www.dev-c.com/gtav/scripthookv/) extracted into [/sdk](/sdk).
 
 Any contributions to the project are welcomed, it's recommended to use GitHub [pull requests](https://help.github.com/articles/using-pull-requests/).
 
