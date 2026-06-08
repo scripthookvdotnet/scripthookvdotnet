@@ -111,7 +111,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 1);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 1;
                 return MemDataMarshal.ReadByte(address + offset);
             }
             set
@@ -127,7 +127,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 1);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 1;
                 SHVDN.MemDataMarshal.WriteByte(address + offset, value);
             }
         }
@@ -154,7 +154,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 4;
                 return MemDataMarshal.ReadUInt32BitField(address + offset, 0, 2);
             }
             set
@@ -172,7 +172,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 4;
                 MemDataMarshal.WriteBitFieldAsUInt32(address + offset, value, 0, 2);
             }
         }
@@ -203,7 +203,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 4;
                 return MemDataMarshal.ReadUInt32BitField(address + offset, 2, 2);
             }
             set
@@ -221,7 +221,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 4;
                 MemDataMarshal.WriteBitFieldAsUInt32(address + offset, value, 2, 2);
             }
         }
@@ -248,7 +248,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 4;
                 return MemDataMarshal.ReadUInt32BitField(address + offset, 4, 4);
             }
             set
@@ -266,7 +266,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 4;
                 MemDataMarshal.WriteBitFieldAsUInt32(address + offset, value, 4, 4);
             }
         }
@@ -293,7 +293,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 4;
                 return MemDataMarshal.ReadUInt32BitField(address + offset, 8, 2);
             }
             set
@@ -311,7 +311,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 4);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 4;
                 MemDataMarshal.WriteBitFieldAsUInt32(address + offset, value, 8, 2);
             }
         }
@@ -336,7 +336,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 24);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 24;
                 return MemDataMarshal.ReadFloat(address + offset);
             }
             set
@@ -352,7 +352,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 24);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 24;
                 MemDataMarshal.WriteFloat(address + offset, value);
             }
         }
@@ -377,7 +377,7 @@ namespace GTA
                     return 0;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 28);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 28;
                 return MemDataMarshal.ReadFloat(address + offset);
             }
             set
@@ -393,7 +393,7 @@ namespace GTA
                     return;
                 }
 
-                int offset = (NativeMemory.Ped.CPed__PedResetFlagsOffset + 28);
+                int offset = NativeMemory.Ped.CPed__PedResetFlagsOffset + 28;
                 MemDataMarshal.WriteFloat(address + offset, value);
             }
         }

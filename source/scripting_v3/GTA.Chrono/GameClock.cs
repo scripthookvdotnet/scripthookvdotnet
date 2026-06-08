@@ -438,14 +438,12 @@ namespace GTA.Chrono
                 {
                     return NormalizeMinuteInternal(ref minute, ref hour);
                 }
-                else
-                {
-                    // Should not come here, because the game would crash for an invalid hour value less than -1 or
-                    // more than 25. "Invalid" minute or second values don't crash the game, but invalid hour values
-                    // do. We just don't want to throw an exception, since we could semantically normalize hour values,
-                    // which is different from invalid month values.
-                    return NormalizeHourInternal(ref hour);
-                }
+
+                // Should not come here, because the game would crash for an invalid hour value less than -1 or
+                // more than 25. "Invalid" minute or second values don't crash the game, but invalid hour values
+                // do. We just don't want to throw an exception, since we could semantically normalize hour values,
+                // which is different from invalid month values.
+                return NormalizeHourInternal(ref hour);
             }
 
             int dayDiff = 0;

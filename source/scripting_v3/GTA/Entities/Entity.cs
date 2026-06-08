@@ -133,7 +133,7 @@ namespace GTA
             IntPtr address = SHVDN.NativeMemory.GetEntityAddress(handle);
             if (address == IntPtr.Zero)
             {
-                return (EntityTypeInternal)0 /* ENTITY_TYPE_MASK_NOTHING */;
+                return 0 /* ENTITY_TYPE_MASK_NOTHING */;
             }
 
             return (EntityTypeInternal)SHVDN.MemDataMarshal.ReadByte(address + 0x28);
@@ -843,7 +843,7 @@ namespace GTA
                 unsafe
                 {
                     float* returnVectorPtr = SHVDN.NativeMemory.GetEntityAngularVelocity(address);
-                    return (quaternionInverted * new Vector3(returnVectorPtr[0], returnVectorPtr[1], returnVectorPtr[2]));
+                    return quaternionInverted * new Vector3(returnVectorPtr[0], returnVectorPtr[1], returnVectorPtr[2]);
                 }
             }
             set

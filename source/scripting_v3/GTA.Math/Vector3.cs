@@ -222,13 +222,13 @@ namespace GTA.Math
         /// Calculates the length of the vector.
         /// </summary>
         /// <returns>The length of the vector.</returns>
-        public readonly float Length() => (float)(System.Math.Sqrt((X * X) + (Y * Y) + (Z * Z)));
+        public readonly float Length() => (float)System.Math.Sqrt(X * X + Y * Y + Z * Z);
 
         /// <summary>
         /// Calculates the squared length of the vector.
         /// </summary>
         /// <returns>The squared length of the vector.</returns>
-        public readonly float LengthSquared() => (X * X) + (Y * Y) + (Z * Z);
+        public readonly float LengthSquared() => X * X + Y * Y + Z * Z;
 
         /// <summary>
         /// Converts the vector into a unit vector.
@@ -338,7 +338,7 @@ namespace GTA.Math
         public static float Angle(Vector3 from, Vector3 to)
         {
             double dot = Dot(from.Normalized, to.Normalized);
-            return (float)(System.Math.Acos((dot)) * (180.0 / System.Math.PI));
+            return (float)(System.Math.Acos(dot) * (180.0 / System.Math.PI));
         }
 
         /// <summary>
@@ -366,7 +366,7 @@ namespace GTA.Math
         /// <summary>
         /// Creates a random vector inside the circle around this position.
         /// </summary>
-        public readonly Vector3 Around(float distance) => this + (RandomXY() * distance);
+        public readonly Vector3 Around(float distance) => this + RandomXY() * distance;
 
         /// <summary>
         /// Rounds each float inside the vector to a select amount of decimal places (2 by default).
@@ -386,8 +386,8 @@ namespace GTA.Math
             Vector3 v = Zero;
             double radian = RandomHelper.Instance.NextDouble() * 2 * System.Math.PI;
 
-            v.X = (float)(System.Math.Cos(radian));
-            v.Y = (float)(System.Math.Sin(radian));
+            v.X = (float)System.Math.Cos(radian);
+            v.Y = (float)System.Math.Sin(radian);
             v.Normalize();
             return v;
         }
@@ -399,12 +399,13 @@ namespace GTA.Math
         {
             Vector3 v = Zero;
             double radian = RandomHelper.Instance.NextDouble() * 2.0 * System.Math.PI;
-            double cosTheta = (RandomHelper.Instance.NextDouble() * 2.0) - 1.0;
+            double cosTheta = RandomHelper.Instance.NextDouble() * 2.0 - 1.0;
+
             double theta = System.Math.Acos(cosTheta);
 
             v.X = (float)(System.Math.Sin(theta) * System.Math.Cos(radian));
             v.Y = (float)(System.Math.Sin(theta) * System.Math.Sin(radian));
-            v.Z = (float)(System.Math.Cos(theta));
+            v.Z = (float)System.Math.Cos(theta);
             v.Normalize();
             return v;
         }
@@ -466,16 +467,16 @@ namespace GTA.Math
         public static Vector3 Clamp(Vector3 value, Vector3 min, Vector3 max)
         {
             float x = value.X;
-            x = (x > max.X) ? max.X : x;
-            x = (x < min.X) ? min.X : x;
+            x = x > max.X ? max.X : x;
+            x = x < min.X ? min.X : x;
 
             float y = value.Y;
-            y = (y > max.Y) ? max.Y : y;
-            y = (y < min.Y) ? min.Y : y;
+            y = y > max.Y ? max.Y : y;
+            y = y < min.Y ? min.Y : y;
 
             float z = value.Z;
-            z = (z > max.Z) ? max.Z : z;
-            z = (z < min.Z) ? min.Z : z;
+            z = z > max.Z ? max.Z : z;
+            z = z < min.Z ? min.Z : z;
 
             return new Vector3(x, y, z);
         }
@@ -496,9 +497,9 @@ namespace GTA.Math
         {
             Vector3 vector = Zero;
 
-            vector.X = start.X + ((end.X - start.X) * amount);
-            vector.Y = start.Y + ((end.Y - start.Y) * amount);
-            vector.Z = start.Z + ((end.Z - start.Z) * amount);
+            vector.X = start.X + (end.X - start.X) * amount;
+            vector.Y = start.Y + (end.Y - start.Y) * amount;
+            vector.Z = start.Z + (end.Z - start.Z) * amount;
 
             return vector;
         }
@@ -520,7 +521,7 @@ namespace GTA.Math
         /// <param name="left">First source vector.</param>
         /// <param name="right">Second source vector.</param>
         /// <returns>The dot product of the two vectors.</returns>
-        public static float Dot(Vector3 left, Vector3 right) => (left.X * right.X + left.Y * right.Y + left.Z * right.Z);
+        public static float Dot(Vector3 left, Vector3 right) => left.X * right.X + left.Y * right.Y + left.Z * right.Z;
 
         /// <summary>
         /// Calculates the cross product of two vectors.
@@ -550,7 +551,7 @@ namespace GTA.Math
         /// <param name="vector">The vector to project.</param>
         /// <param name="planeNormal">Normal of the plane,  does not assume it is normalized.</param>
         /// <returns>The Projection of vector onto plane.</returns>
-        public static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal) => (vector - Project(vector, planeNormal));
+        public static Vector3 ProjectOnPlane(Vector3 vector, Vector3 planeNormal) => vector - Project(vector, planeNormal);
 
         /// <summary>
         /// Returns the reflection of a vector off a surface that has the specified normal.
@@ -563,11 +564,11 @@ namespace GTA.Math
         public static Vector3 Reflect(Vector3 vector, Vector3 normal)
         {
             Vector3 result = Zero;
-            float dot = ((vector.X * normal.X) + (vector.Y * normal.Y)) + (vector.Z * normal.Z);
+            float dot = vector.X * normal.X + vector.Y * normal.Y + vector.Z * normal.Z;
 
-            result.X = vector.X - ((2.0f * dot) * normal.X);
-            result.Y = vector.Y - ((2.0f * dot) * normal.Y);
-            result.Z = vector.Z - ((2.0f * dot) * normal.Z);
+            result.X = vector.X - 2.0f * dot * normal.X;
+            result.Y = vector.Y - 2.0f * dot * normal.Y;
+            result.Z = vector.Z - 2.0f * dot * normal.Z;
 
             return result;
         }
@@ -581,9 +582,9 @@ namespace GTA.Math
         public static Vector3 Minimize(Vector3 left, Vector3 right)
         {
             Vector3 vector = Zero;
-            vector.X = (left.X < right.X) ? left.X : right.X;
-            vector.Y = (left.Y < right.Y) ? left.Y : right.Y;
-            vector.Z = (left.Z < right.Z) ? left.Z : right.Z;
+            vector.X = left.X < right.X ? left.X : right.X;
+            vector.Y = left.Y < right.Y ? left.Y : right.Y;
+            vector.Z = left.Z < right.Z ? left.Z : right.Z;
             return vector;
         }
 
@@ -596,9 +597,9 @@ namespace GTA.Math
         public static Vector3 Maximize(Vector3 left, Vector3 right)
         {
             Vector3 vector = Zero;
-            vector.X = (left.X > right.X) ? left.X : right.X;
-            vector.Y = (left.Y > right.Y) ? left.Y : right.Y;
-            vector.Z = (left.Z > right.Z) ? left.Z : right.Z;
+            vector.X = left.X > right.X ? left.X : right.X;
+            vector.Y = left.Y > right.Y ? left.Y : right.Y;
+            vector.Z = left.Z > right.Z ? left.Z : right.Z;
             return vector;
         }
 
@@ -757,7 +758,7 @@ namespace GTA.Math
         /// </summary>
         /// <param name="other">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public readonly bool Equals(Vector3 other) => (X == other.X && Y == other.Y && Z == other.Z);
+        public readonly bool Equals(Vector3 other) => X == other.X && Y == other.Y && Z == other.Z;
 
         internal readonly SHVDN.FVector3 ToInternalFVector3() => new SHVDN.FVector3(X, Y, Z);
     }

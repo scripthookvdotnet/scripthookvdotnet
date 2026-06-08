@@ -1723,7 +1723,7 @@ namespace GTA
                     return VehicleSeat.None;
 
                 int seatIndex = SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Ped.AttachCarSeatIndexOffset);
-                return (seatIndex >= 0 && IsInVehicle()) ? (VehicleSeat)(seatIndex - 1) : VehicleSeat.None;
+                return seatIndex >= 0 && IsInVehicle() ? (VehicleSeat)(seatIndex - 1) : VehicleSeat.None;
             }
         }
 

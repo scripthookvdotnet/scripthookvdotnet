@@ -93,7 +93,7 @@ namespace GTA
                 const int MemberOffset = 0x8;
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
-                    SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + MemberOffset + i * 4, (int)arrayToFill[i]);
+                    SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + MemberOffset + i * 4, arrayToFill[i]);
                 }
             }
         }

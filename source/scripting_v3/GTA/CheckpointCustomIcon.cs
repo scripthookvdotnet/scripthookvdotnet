@@ -38,7 +38,7 @@ namespace GTA
                     return Number;
                 }
 
-                return (byte)(90 + (int)_style * 10 + Number);
+                return (byte)((int)_style * 10 + 90 + Number);
             }
             set
             {
@@ -134,7 +134,7 @@ namespace GTA
 
         public override string ToString()
         {
-            return Style.ToString() + Number.ToString();
+            return Style + Number.ToString();
         }
     }
 }

@@ -107,9 +107,9 @@ namespace GTA.Math
                 return false;
             }
 
-            dest = ((Vector3.Cross(normalB, normalC) * a.D) +
-                    (Vector3.Cross(normalC, normalA) * b.D) +
-                    (Vector3.Cross(normalA, normalB) * c.D)) /
+            dest = (Vector3.Cross(normalB, normalC) * a.D +
+                    Vector3.Cross(normalC, normalA) * b.D +
+                    Vector3.Cross(normalA, normalB) * c.D) /
                    det;
 
             return true;

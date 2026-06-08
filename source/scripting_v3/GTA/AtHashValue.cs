@@ -49,7 +49,7 @@ namespace GTA
         /// <summary>
         /// Gets the null value of <see cref="AtHashValue"/>, whose hash is zero.
         /// </summary>
-        public static AtHashValue Null => new AtHashValue(0);
+        public static AtHashValue Null => new(0);
 
         /// <summary>
         /// Returns a value that indicates whether this instance is the null <see cref="AtHashValue"/>, whose hash is
@@ -71,14 +71,14 @@ namespace GTA
         /// instead.
         /// </remarks>
         public static AtHashValue FromString(string input)
-            => new AtHashValue(StringHash.AtStringHash(input));
+            => new(StringHash.AtStringHash(input));
         /// <summary>
         /// Computes an <see cref="AtHashValue"/> from an array of <see cref="byte"/>.
         /// </summary>
         /// <param name="input">An array of <see cref="byte"/>.</param>
         /// <returns>An <see cref="AtHashValue"/> that contains the calculated hash.</returns>
         public static AtHashValue FromBytes(byte[] input)
-            => new AtHashValue(StringHash.AtStringHash(input));
+            => new(StringHash.AtStringHash(input));
         /// <summary>
         /// Computes an <see cref="AtHashValue"/> from a <see cref="string"/>.
         /// <paramref name="input"/> will be converted to a UTF-8 sequence before hashing.
@@ -89,7 +89,7 @@ namespace GTA
         /// </param>
         /// <returns>An <see cref="AtHashValue"/> that contains the calculated hash.</returns>
         public static AtHashValue FromStringUtf8(string input)
-            => new AtHashValue(StringHash.AtStringHashUtf8(input));
+            => new(StringHash.AtStringHashUtf8(input));
 
         /// <summary>
         /// Computes a joaat hash as an <see langword="uint"/> from a <see cref="string"/> that contains only ASCII

@@ -41,16 +41,16 @@ namespace GTA.Chrono
         /// The number of days elapsed since January 1st, the -2147483648 year until December 31st, the 2147483647 year,
         /// which will result in 1_568_704_592_609 days. Subtracted by 1 because 1 day is taken for the min date value.
         /// </summary>
-        private const long DayCountUInt32YearsLaterSinceInt32MinValueYear = (LeapYearCountOfInt32 * 366)
-            + (NonLeapYearCountOfInt32 * 365) - 1;
+        private const long DayCountUInt32YearsLaterSinceInt32MinValueYear = LeapYearCountOfInt32 * 366
+            + NonLeapYearCountOfInt32 * 365 - 1;
 
         /// <summary>
         /// The same value as 135_536_076_801_503_999 seconds.
         /// </summary>
-        private const long MaxSecDifference = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
+        private const long MaxSecDifference = DayCountUInt32YearsLaterSinceInt32MinValueYear * SecsPerDay
                                       + 23 * SecsPerHour + 59 * SecsPerMinute + 59;
 
-        private const long MinSecDifference = -((DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
+        private const long MinSecDifference = -(DayCountUInt32YearsLaterSinceInt32MinValueYear * SecsPerDay
                                         + 23 * SecsPerHour + 59 * SecsPerMinute + 59);
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace GTA.Chrono
         /// The hour component of the current <see cref="GameClockDuration"/> structure.
         /// The return value ranges from -23 through 23.
         /// </value>
-        public int Hours => (int)((_secs / SecsPerHour) % 24);
+        public int Hours => (int)(_secs / SecsPerHour % 24);
 
         /// <summary>
         /// Gets the minutes component of the time interval represented by the current <see cref="GameClockDuration"/>
@@ -90,7 +90,7 @@ namespace GTA.Chrono
         /// The minute component of the current <see cref="GameClockDuration"/> structure.
         /// The return value ranges from -59 through 59.
         /// </value>
-        public int Minutes => (int)((_secs / SecsPerMinute) % 60);
+        public int Minutes => (int)(_secs / SecsPerMinute % 60);
 
         /// <summary>
         /// Gets the seconds component of the time interval represented by the current <see cref="GameClockDuration"/>
@@ -194,7 +194,7 @@ namespace GTA.Chrono
             if (!(obj is GameClockDuration otherDuration))
                 throw new ArgumentException();
 
-            long t = (otherDuration)._secs;
+            long t = otherDuration._secs;
             if (_secs > t) return 1;
             if (_secs < t) return -1;
             return 0;
@@ -312,10 +312,9 @@ namespace GTA.Chrono
             return new GameClockDuration(seconds);
         }
 
-        public static GameClockDuration FromTimeSpan(TimeSpan timeSpan)
-            => new GameClockDuration(timeSpan.Ticks / TimeSpan.TicksPerSecond);
+        public static GameClockDuration FromTimeSpan(TimeSpan timeSpan) => new(timeSpan.Ticks / TimeSpan.TicksPerSecond);
 
-        public GameClockDuration Abs() => (_secs < 0) ? new GameClockDuration(-_secs) : this;
+        public GameClockDuration Abs() => _secs < 0 ? new GameClockDuration(-_secs) : this;
 
         /// <summary>
         /// Returns the specified instance of <see cref="GameClockDuration"/>.
@@ -480,7 +479,7 @@ namespace GTA.Chrono
         /// <paramref name="divisor"/>.
         /// </returns>
         public static GameClockDuration operator /(GameClockDuration duration, long divisor)
-            => new GameClockDuration(duration._secs / divisor);
+            => new(duration._secs / divisor);
 
         /// <summary>
         /// Returns a new TimeSpan object whose value is the result of dividing the specified

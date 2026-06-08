@@ -580,19 +580,16 @@ namespace GTA.Chrono
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private unsafe string ToStringInternal()
         {
-            unsafe
-            {
-                // this is the minimum number that is large enough to contain any date time string and is multiple of 4
-                const int BufferLen = 28;
-                char* buffer = stackalloc char[BufferLen];
-                GameClockDateTimeFormat.TryFormatDateS(this._date, buffer, BufferLen, out int charWritten);
-                buffer[charWritten++] = ' ';
-                GameClockDateTimeFormat.TryFormatTimeS(this._time, buffer + charWritten, BufferLen - charWritten,
-                    out int timeWritten);
-                charWritten += timeWritten;
+            // this is the minimum number that is large enough to contain any date time string and is multiple of 4
+            const int BufferLen = 28;
+            char* buffer = stackalloc char[BufferLen];
+            GameClockDateTimeFormat.TryFormatDateS(_date, buffer, BufferLen, out int charWritten);
+            buffer[charWritten++] = ' ';
+            GameClockDateTimeFormat.TryFormatTimeS(_time, buffer + charWritten, BufferLen - charWritten,
+                out int timeWritten);
+            charWritten += timeWritten;
 
-                return new string(buffer, 0, charWritten);
-            }
+            return new string(buffer, 0, charWritten);
         }
 
         /// <summary>

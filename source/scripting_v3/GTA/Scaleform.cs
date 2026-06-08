@@ -121,7 +121,7 @@ namespace GTA
                         Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_FLOAT, (float)argDouble);
                         break;
                     case bool argBool:
-                        Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL, (bool)argBool);
+                        Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_BOOL, argBool);
                         break;
                     case ScaleformArgumentTXD argTxd:
                         Function.Call(Hash.SCALEFORM_MOVIE_METHOD_ADD_PARAM_TEXTURE_NAME_STRING, argTxd._txd);
@@ -169,7 +169,7 @@ namespace GTA
             float w = size.X / UI.Screen.Width;
             float h = size.Y / UI.Screen.Height;
 
-            Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + (w * 0.5f), y + (h * 0.5f), w, h, 255, 255, 255, 255);
+            Function.Call(Hash.DRAW_SCALEFORM_MOVIE, Handle, x + w * 0.5f, y + h * 0.5f, w, h, 255, 255, 255, 255);
         }
 
         public void Render3D(Vector3 position, Vector3 rotation, Vector3 scale)

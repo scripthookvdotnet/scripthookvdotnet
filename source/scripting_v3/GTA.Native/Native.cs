@@ -43,7 +43,7 @@ namespace GTA.Native
         static NativeHelper()
         {
             var ptrToStrMethod = new DynamicMethod("PtrToStructure<" + typeof(T) + ">", typeof(T),
-                new Type[] { typeof(IntPtr) }, typeof(NativeHelper<T>), true);
+                new[] { typeof(IntPtr) }, typeof(NativeHelper<T>), true);
 
             ILGenerator generator = ptrToStrMethod.GetILGenerator();
             generator.Emit(OpCodes.Ldarg_0);
@@ -164,10 +164,7 @@ namespace GTA.Native
         /// <param name="value">The value.</param>
         public InputArgument(IntPtr value)
         {
-            unsafe
-            {
-                _data = (ulong)value.ToInt64();
-            }
+            _data = (ulong)value.ToInt64();
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="InputArgument"/> class and converts a managed object to a script function input argument.
@@ -175,10 +172,7 @@ namespace GTA.Native
         /// <param name="value">The object to convert.</param>
         public InputArgument(object value)
         {
-            unsafe
-            {
-                _data = Function.ObjectToNative(value);
-            }
+            _data = Function.ObjectToNative(value);
         }
 
         /// <summary>
@@ -347,7 +341,7 @@ namespace GTA.Native
         {
             unsafe
             {
-                *(ulong*)(_storage) = Function.ObjectToNative(value);
+                *(ulong*)_storage = Function.ObjectToNative(value);
             }
         }
         // Specify the private visibility to avoid breaking changes for scripts built against v3.6.0 or earlier,
@@ -389,10 +383,7 @@ namespace GTA.Native
         /// </summary>
         public static OutputArgument Alloc(int size)
         {
-            unsafe
-            {
-                return new OutputArgument(size);
-            }
+            return new OutputArgument(size);
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputArgument"/> where the storage has a block of memory of
@@ -1792,10 +1783,8 @@ namespace GTA.Native
             {
                 return ObjectFromNative<T>(result);
             }
-            else
-            {
-                return (T)ObjectFromNative(typeof(T), result);
-            }
+
+            return (T)ObjectFromNative(typeof(T), result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3074,16 +3063,16 @@ namespace GTA.Native
             }
             if (typeof(T) == typeof(IntPtr)) // Has to be before 'IsPrimitive' check
             {
-                return InstanceCreator<long, T>.Create((long)(*value));
+                return InstanceCreator<long, T>.Create((long)*value);
             }
 
-            if (typeof(T) == typeof(Math.Vector2))
+            if (typeof(T) == typeof(Vector2))
             {
                 float* data = (float*)value;
                 return InstanceCreator<float, float, T>.Create(data[0], data[2]);
 
             }
-            if (typeof(T) == typeof(Math.Vector3))
+            if (typeof(T) == typeof(Vector3))
             {
                 float* data = (float*)value;
                 return InstanceCreator<float, float, float, T>.Create(data[0], data[2], data[4]);
@@ -3136,7 +3125,7 @@ namespace GTA.Native
             if (typeof(INativeValue).IsAssignableFrom(type))
             {
                 // Edge case. Warning: Requires classes implementing 'INativeValue' to repeat all constructor work in the setter of 'NativeValue'
-                var result = (INativeValue)(System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type));
+                var result = (INativeValue)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(type);
                 result.NativeValue = *value;
 
                 return result;
@@ -3202,10 +3191,8 @@ namespace GTA.Native
             {
                 return (T)(object)SHVDN.StringMarshal.PtrToStringUtf8(MemoryAddress);
             }
-            else
-            {
-                return Function.ReturnValueFromResultAddress<T>((ulong*)(MemoryAddress.ToPointer()));
-            }
+
+            return Function.ReturnValueFromResultAddress<T>((ulong*)MemoryAddress.ToPointer());
         }
 
         /// <summary>
@@ -3219,19 +3206,19 @@ namespace GTA.Native
                 throw new InvalidOperationException("Cannot write string values via 'Write<string>', use 'WriteString' instead.");
             }
 
-            if (typeof(T) == typeof(Math.Vector2))
+            if (typeof(T) == typeof(Vector2))
             {
-                var val = (Math.Vector2)(object)value;
-                float* data = (float*)(MemoryAddress.ToPointer());
+                var val = (Vector2)(object)value;
+                float* data = (float*)MemoryAddress.ToPointer();
 
                 data[0] = val.X;
                 data[2] = val.Y;
                 return;
             }
-            if (typeof(T) == typeof(Math.Vector3))
+            if (typeof(T) == typeof(Vector3))
             {
-                var val = (Math.Vector3)(object)(value);
-                float* data = (float*)(MemoryAddress.ToPointer());
+                var val = (Vector3)(object)value;
+                float* data = (float*)MemoryAddress.ToPointer();
 
                 data[0] = val.X;
                 data[2] = val.Y;
@@ -3241,27 +3228,27 @@ namespace GTA.Native
 
             if (typeof(T) == typeof(bool))
             {
-                *(ulong*)(MemoryAddress.ToPointer()) = NativeHelper<ulong>.Convert(value);
+                *(ulong*)MemoryAddress.ToPointer() = NativeHelper<ulong>.Convert(value);
             }
             else if (typeof(T) == typeof(double))
             {
-                *(ulong*)(MemoryAddress.ToPointer()) = 0; // padding
-                *(float*)(MemoryAddress.ToPointer()) = NativeHelper<float>.Convert(value);
+                *(ulong*)MemoryAddress.ToPointer() = 0; // padding
+                *(float*)MemoryAddress.ToPointer() = NativeHelper<float>.Convert(value);
             }
             else if (typeof(T).IsPrimitive)
             {
                 if (typeof(T) == typeof(IntPtr))
                 {
-                    *(long*)(MemoryAddress.ToPointer()) = NativeHelper<long>.Convert(value);
+                    *(long*)MemoryAddress.ToPointer() = NativeHelper<long>.Convert(value);
                 }
                 else
                 {
-                    *(ulong*)(MemoryAddress.ToPointer()) = NativeHelper<ulong>.Convert(value);
+                    *(ulong*)MemoryAddress.ToPointer() = NativeHelper<ulong>.Convert(value);
                 }
             }
             else
             {
-                *(ulong*)(MemoryAddress.ToPointer()) = Function.ObjectToNative(value);
+                *(ulong*)MemoryAddress.ToPointer() = Function.ObjectToNative(value);
             }
         }
         /// <summary>
@@ -3269,7 +3256,7 @@ namespace GTA.Native
         /// </summary>
         /// <param name="value">The string to set the <see cref="GlobalVariable"/> to.</param>
         /// <param name="maxSize">The maximum size of the string. Can be found for a given global variable by checking the decompiled scripts from the game.</param>
-        public unsafe void WriteString(string value, int maxSize)
+        public void WriteString(string value, int maxSize)
         {
             if (maxSize % 8 != 0 || maxSize <= 0 || maxSize > 64)
             {
@@ -3301,7 +3288,7 @@ namespace GTA.Native
                 throw new IndexOutOfRangeException("The bit index has to be between 0 and 63");
             }
 
-            *(ulong*)(MemoryAddress.ToPointer()) |= (1u << index);
+            *(ulong*)MemoryAddress.ToPointer() |= 1u << index;
         }
         /// <summary>
         /// Set the value of a specific bit of the <see cref="GlobalVariable"/> to false.
@@ -3314,7 +3301,7 @@ namespace GTA.Native
                 throw new IndexOutOfRangeException("The bit index has to be between 0 and 63");
             }
 
-            *(ulong*)(MemoryAddress.ToPointer()) &= ~(1u << index);
+            *(ulong*)MemoryAddress.ToPointer() &= ~(1u << index);
         }
         /// <summary>
         /// Gets a value indicating whether a specific bit of the <see cref="GlobalVariable"/> is set.
@@ -3327,7 +3314,7 @@ namespace GTA.Native
                 throw new IndexOutOfRangeException("The bit index has to be between 0 and 63");
             }
 
-            return ((*(ulong*)(MemoryAddress.ToPointer()) >> index) & 1) != 0;
+            return ((*(ulong*)MemoryAddress.ToPointer() >> index) & 1) != 0;
         }
 
         /// <summary>
@@ -3335,14 +3322,14 @@ namespace GTA.Native
         /// </summary>
         /// <param name="index">The index the <see cref="GlobalVariable"/> is stored in the structure. For example the Y component of a Vector3 is at index 1.</param>
         /// <returns>The <see cref="GlobalVariable"/> at the index given.</returns>
-        public unsafe GlobalVariable GetStructField(int index)
+        public GlobalVariable GetStructField(int index)
         {
             if (index < 0)
             {
                 throw new IndexOutOfRangeException("The structure item index cannot be negative.");
             }
 
-            return new GlobalVariable(MemoryAddress + (8 * index));
+            return new GlobalVariable(MemoryAddress + 8 * index);
         }
 
         /// <summary>
@@ -3350,7 +3337,7 @@ namespace GTA.Native
         /// </summary>
         /// <param name="itemSize">The number of items stored in each array index. For example an array of Vector3s takes up 3 items.</param>
         /// <returns>The array of <see cref="GlobalVariable"/>s.</returns>
-        public unsafe GlobalVariable[] GetArray(int itemSize)
+        public GlobalVariable[] GetArray(int itemSize)
         {
             if (itemSize <= 0)
             {
@@ -3369,7 +3356,7 @@ namespace GTA.Native
 
             for (int i = 0; i < count; i++)
             {
-                result[i] = new GlobalVariable(MemoryAddress + 8 + (8 * itemSize * i));
+                result[i] = new GlobalVariable(MemoryAddress + 8 + 8 * itemSize * i);
             }
 
             return result;
@@ -3380,7 +3367,7 @@ namespace GTA.Native
         /// <param name="index">The array index.</param>
         /// <param name="itemSize">The number of items stored in each array index. For example an array of Vector3s takes up 3 items.</param>
         /// <returns>The <see cref="GlobalVariable"/> at the index given.</returns>
-        public unsafe GlobalVariable GetArrayItem(int index, int itemSize)
+        public GlobalVariable GetArrayItem(int index, int itemSize)
         {
             if (itemSize <= 0)
             {
@@ -3400,7 +3387,7 @@ namespace GTA.Native
                 throw new IndexOutOfRangeException($"The index {index.ToString()} was outside the array bounds.");
             }
 
-            return new GlobalVariable(MemoryAddress + 8 + (8 * itemSize * index));
+            return new GlobalVariable(MemoryAddress + 8 + 8 * itemSize * index);
         }
     }
     #endregion

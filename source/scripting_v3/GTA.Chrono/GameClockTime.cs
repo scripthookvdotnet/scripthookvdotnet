@@ -82,12 +82,12 @@ namespace GTA.Chrono
         /// <summary>
         /// Gets the minute component of the time represented by this instance.
         /// </summary>
-        public int Minute => ((_secs / 60) % 60);
+        public int Minute => _secs / 60 % 60;
 
         /// <summary>
         /// Gets the second component of the time represented by this instance.
         /// </summary>
-        public int Second => (_secs % 60);
+        public int Second => _secs % 60;
 
         /// <summary>
         /// Gets the number of seconds past the last midnight.
@@ -259,7 +259,7 @@ namespace GTA.Chrono
             if (obj is not GameClockTime otherTime)
                 throw new ArgumentException();
 
-            long t = (otherTime)._secs;
+            long t = otherTime._secs;
             if (_secs > t) return 1;
             if (_secs < t) return -1;
             return 0;
@@ -297,14 +297,11 @@ namespace GTA.Chrono
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private unsafe string ToStringInternal()
         {
-            unsafe
-            {
-                // this is the minimum number that is large enough to contain any time string
-                const int BufferLen = 8;
-                char* buffer = stackalloc char[BufferLen];
-                GameClockDateTimeFormat.TryFormatTimeS(this, buffer, BufferLen, out int written);
-                return new string(buffer, 0, written);
-            }
+            // this is the minimum number that is large enough to contain any time string
+            const int BufferLen = 8;
+            char* buffer = stackalloc char[BufferLen];
+            GameClockDateTimeFormat.TryFormatTimeS(this, buffer, BufferLen, out int written);
+            return new string(buffer, 0, written);
         }
 
         /// <summary>
@@ -319,7 +316,7 @@ namespace GTA.Chrono
         /// The addition wraps around and ignores integral number of days.
         /// </remarks>
         public static GameClockTime operator +(GameClockTime time, GameClockDuration duration)
-            => new GameClockTime((time._secs + 86400 + (int)(duration.WholeSeconds % 86400)) % 86400);
+            => new((time._secs + 86400 + (int)(duration.WholeSeconds % 86400)) % 86400);
 
         /// <summary>
         /// Subtracts a specified duration from a specified time and returns a new time.
@@ -334,7 +331,7 @@ namespace GTA.Chrono
         /// The subtraction wraps around and ignores integral number of days.
         /// </remarks>
         public static GameClockTime operator -(GameClockTime time, GameClockDuration duration)
-            => new GameClockTime((time._secs + 86400 - (int)(duration.WholeSeconds % 86400)) % 86400);
+            => new((time._secs + 86400 - (int)(duration.WholeSeconds % 86400)) % 86400);
 
         /// <summary>
         /// Subtracts a specified from the current time, yielding a signed duration.

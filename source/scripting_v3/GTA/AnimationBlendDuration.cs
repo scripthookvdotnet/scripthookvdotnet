@@ -75,11 +75,10 @@ namespace GTA
         public static AnimationBlendDuration FromBlendDelta(AnimationBlendDelta blendDelta)
         {
             // Performs the same calculation as how `fwAnimHelpers::CalcBlendDuration(float blendDelta)` does
-            float deltaFloat = (blendDelta.Value < 0 ? -blendDelta.Value : blendDelta.Value);
-            float duration = (deltaFloat == (float)AnimationBlendDelta.InstantBlendIn
+            float deltaFloat = blendDelta.Value < 0 ? -blendDelta.Value : blendDelta.Value;
+            float duration = deltaFloat == (float)AnimationBlendDelta.InstantBlendIn
                 ? 0.0f
-                : (1.0f / deltaFloat)
-                );
+                : 1.0f / deltaFloat;
 
             return new AnimationBlendDuration(duration);
         }

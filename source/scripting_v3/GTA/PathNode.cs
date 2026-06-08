@@ -36,7 +36,7 @@ namespace GTA
             get
             {
                 uint areaIdAndNodeIdCorrected = (uint)Handle - 1;
-                return ((ushort)areaIdAndNodeIdCorrected >> 0x10);
+                return (ushort)areaIdAndNodeIdCorrected >> 0x10;
             }
         }
 

@@ -224,7 +224,7 @@ namespace GTA
         /// <see langword="true"/> if <paramref name="scene"/> is the same synced scene as
         /// this <see cref="FwSyncedScene"/>; otherwise, <see langword="false"/>.
         /// </returns>
-        public bool Equals(FwSyncedScene scene) => scene != null && (Handle == scene.Handle);
+        public bool Equals(FwSyncedScene scene) => scene != null && Handle == scene.Handle;
 
         /// <summary>
         /// Determines if two <see cref="PathNode"/>s refer to the same path node.

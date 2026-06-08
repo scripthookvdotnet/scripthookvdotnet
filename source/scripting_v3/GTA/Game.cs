@@ -400,13 +400,13 @@ namespace GTA
             foreach (Button button in buttons)
             {
                 hash += (uint)button;
-                hash += (hash << 10);
-                hash ^= (hash >> 6);
+                hash += hash << 10;
+                hash ^= hash >> 6;
             }
 
-            hash += (hash << 3);
-            hash ^= (hash >> 11);
-            hash += (hash << 15);
+            hash += hash << 3;
+            hash ^= hash >> 11;
+            hash += hash << 15;
 
             return Function.Call<bool>(Hash.HAS_CHEAT_WITH_HASH_BEEN_ACTIVATED, hash, buttons.Length);
         }
@@ -764,7 +764,7 @@ namespace GTA
         {
             unsafe
             {
-                byte* address = (startAddress == IntPtr.Zero ? SHVDN.MemScanner.FindPatternNaive(pattern, mask) : SHVDN.MemScanner.FindPatternNaive(pattern, mask, startAddress));
+                byte* address = startAddress == IntPtr.Zero ? SHVDN.MemScanner.FindPatternNaive(pattern, mask) : SHVDN.MemScanner.FindPatternNaive(pattern, mask, startAddress);
                 return address == null ? IntPtr.Zero : new IntPtr(address);
             }
         }

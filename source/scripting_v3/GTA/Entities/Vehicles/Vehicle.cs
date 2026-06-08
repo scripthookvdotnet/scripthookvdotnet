@@ -349,7 +349,7 @@ namespace GTA
             get
             {
                 VehicleType vehicleType = Type;
-                return ((uint)vehicleType - 8) <= 1;
+                return (uint)vehicleType - 8 <= 1;
             }
         }
 
@@ -362,7 +362,7 @@ namespace GTA
             get
             {
                 VehicleType vehicleType = Type;
-                return ((uint)vehicleType - 8) <= 2;
+                return (uint)vehicleType - 8 <= 2;
             }
         }
 
@@ -384,7 +384,7 @@ namespace GTA
             get
             {
                 VehicleType vehicleType = Type;
-                return (vehicleType == VehicleType.Motorcycle || vehicleType == VehicleType.Bicycle);
+                return vehicleType == VehicleType.Motorcycle || vehicleType == VehicleType.Bicycle;
             }
         }
 
@@ -621,7 +621,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HandlingDataOffset == 0)
                     return new HandlingData(IntPtr.Zero);
 
-                return new HandlingData(SHVDN.MemDataMarshal.ReadAddress(MemoryAddress + SHVDN.NativeMemory.Vehicle.HandlingDataOffset));
+                return new HandlingData(SHVDN.MemDataMarshal.ReadAddress(address + SHVDN.NativeMemory.Vehicle.HandlingDataOffset));
             }
         }
 
@@ -874,13 +874,7 @@ namespace GTA
         /// </summary>
         public float OilVolume
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return 0.0f;
-
-                return HandlingData.OilVolume;
-            }
+            get => HandlingData.OilVolume;
         }
 
         /// <summary>
@@ -910,13 +904,7 @@ namespace GTA
         /// </summary>
         public float PetrolTankVolume
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return 0.0f;
-
-                return HandlingData.PetrolTankVolume;
-            }
+            get => HandlingData.PetrolTankVolume;
         }
 
         #endregion
@@ -2704,7 +2692,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset == 0)
                     return 0f;
 
-                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset);
             }
             set
             {
@@ -2727,7 +2715,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset == 0)
                     return 0f;
 
-                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset);
             }
             set
             {
@@ -2750,7 +2738,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset == 0)
                     return 0f;
 
-                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset);
             }
             set
             {
@@ -2761,7 +2749,7 @@ namespace GTA
 
                     return;
 
-                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset, value);
             }
         }
 
@@ -2782,7 +2770,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
                     return false;
 
-                return SHVDN.MemDataMarshal.ReadByte(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset) != 0;
+                return SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset) != 0;
             }
             set
             {

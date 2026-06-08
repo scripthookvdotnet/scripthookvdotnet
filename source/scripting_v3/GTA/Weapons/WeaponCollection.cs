@@ -185,7 +185,7 @@ namespace GTA
                     return bestWeapon;
                 }
 
-                var weapon = new Weapon(owner, (WeaponHash)hash);
+                var weapon = new Weapon(owner, hash);
                 weapons.Add(hash, weapon);
 
                 return weapon;
