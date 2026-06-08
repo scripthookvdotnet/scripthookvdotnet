@@ -26,7 +26,6 @@ namespace SHVDN
         private bool _cursorVisible = false;
         private int _commandPos = -1;
         private int _currentPage = 1;
-        private bool _isOpen = false;
         private string _input = string.Empty;
         private string _lastInput = string.Empty;
         private string _lastRenderedInput = string.Empty;
@@ -38,12 +37,12 @@ namespace SHVDN
         private bool _shouldBlockControls;
         private Task<MethodInfo> _compilerTask;
         private List<string> _commandCandidates = new();
-        private bool _hideCandidates = false;
         private int _selectedCandidateIndex = -1;
 
-        // We need a lock because tick calls and keyboard events are fired on different threads, even if we don't use
-        // a dedicated thread in order to avoid a fiber from SHV
-        private readonly object _lock = new();
+        // We use volatile here as keyboard events are fired on a different thread.
+        private volatile bool _isOpen = false;
+        private volatile bool _hideCandidates = false;
+        private volatile bool _requestStateToggle = false;
 
         private const int BaseWidth = 1280;
         private const int BaseHeight = 720;
@@ -79,35 +78,29 @@ namespace SHVDN
             _keyManager.Register(Keys.Left | Keys.Control, BackwardWord);
             _keyManager.Register(Keys.Right, MoveCursorRight);
             _keyManager.Register(Keys.Right | Keys.Control, ForwardWord);
-            _keyManager.Register(Keys.Insert | Keys.Shift, AddClipboardContent);
+            _keyManager.Register(Keys.Insert | Keys.Shift, AddClipboardContent, KeyManager.ThreadOverride.InputThread);
             _keyManager.Register(Keys.Home, MoveCursorToBegOfLine);
             _keyManager.Register(Keys.End, MoveCursorToEndOfLine);
             _keyManager.Register(Keys.Up, () =>
             {
-                lock (_lock)
+                if (_hideCandidates || _commandCandidates.Count == 0)
                 {
-                    if (_hideCandidates || _commandCandidates.Count == 0)
-                    {
-                        GoUpCommandList();
-                        return;
-                    }
-
-                    NextCandidate();
+                    GoUpCommandList();
+                    return;
                 }
+
+                NextCandidate();
             });
 
             _keyManager.Register(Keys.Down, () =>
             {
-                lock (_lock)
+                if (_hideCandidates || _commandCandidates.Count == 0)
                 {
-                    if (_hideCandidates || _commandCandidates.Count == 0)
-                    {
-                        GoDownCommandList();
-                        return;
-                    }
-
-                    PreviousCandidate();
+                    GoDownCommandList();
+                    return;
                 }
+
+                PreviousCandidate();
             });
 
 
@@ -115,16 +108,13 @@ namespace SHVDN
 
             _keyManager.Register(Keys.Escape, () =>
             {
-                lock (_lock)
+                if (_hideCandidates || _commandCandidates.Count == 0)
                 {
-                    if (_hideCandidates || _commandCandidates.Count == 0)
-                    {
-                        Close();
-                        return;
-                    }
+                    Close();
+                    return;
+                }
 
-                    _hideCandidates = true;
-                }          
+                _hideCandidates = true;
             });
 
             _keyManager.Register(Keys.Tab, CompleteCandidate);
@@ -144,7 +134,7 @@ namespace SHVDN
             _keyManager.Register(Keys.U | Keys.Control, KillLine);
             _keyManager.Register(Keys.M | Keys.Control, CompileExpression);
             _keyManager.Register(Keys.L | Keys.Control, Clear);
-            _keyManager.Register(Keys.V | Keys.Control, AddClipboardContent);
+            _keyManager.Register(Keys.V | Keys.Control, AddClipboardContent, KeyManager.ThreadOverride.InputThread);
             _keyManager.Register(Keys.W | Keys.Control, UnixWordRubout);
             _keyManager.Register(Keys.T | Keys.Alt, TransposeTwoWords);
             _keyManager.Register(Keys.T | Keys.Control, TransposeTwoChars);
@@ -155,29 +145,17 @@ namespace SHVDN
         /// </summary>
         public bool IsOpen
         {
-            get
-            {
-                lock (_lock)
-                {
-                    return _isOpen;
-                }
-            }
-            set
-            {
-                DisableControlsThisFrame();
+            get => _isOpen;
+        }
 
-                lock (_lock)
-                {
-                    _isOpen = value;
-                    if (_isOpen)
-                    {
-                        return;
-                    }
-
-                    _lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
-                    _shouldBlockControls = true;
-                }
+        public void Toggle()
+        {
+            if (_requestStateToggle)
+            {
+                return;
             }
+
+            _requestStateToggle = true;
         }
 
         /// <summary>
@@ -185,20 +163,8 @@ namespace SHVDN
         /// </summary>
         public List<string> CommandHistory
         {
-            get
-            {
-                lock (_lock)
-                {
-                    return _commandHistory;
-                }
-            }
-            set
-            {
-                lock (_lock)
-                {
-                    _commandHistory = value;
-                }
-            }
+            get => _commandHistory;
+            set => _commandHistory = value;
         }
 
         /// <summary>
@@ -210,15 +176,12 @@ namespace SHVDN
         {
             command.MethodInfo = methodInfo;
 
-            lock (_lock)
+            if (!_commands.ContainsKey(command.Namespace))
             {
-                if (!_commands.ContainsKey(command.Namespace))
-                {
-                    _commands[command.Namespace] = new List<ConsoleCommand>();
-                }
-
-                _commands[command.Namespace].Add(command);
+                _commands[command.Namespace] = new List<ConsoleCommand>();
             }
+
+            _commands[command.Namespace].Add(command);
         }
         /// <summary>
         /// Register all methods with a <see cref="ConsoleCommand"/> attribute in the specified type as console commands.
@@ -251,19 +214,16 @@ namespace SHVDN
             {
                 string space = method.DeclaringType.FullName;
 
-                lock (_lock)
+                if (!_commands.TryGetValue(space, out List<ConsoleCommand> command))
                 {
-                    if (!_commands.TryGetValue(space, out List<ConsoleCommand> command))
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    command.RemoveAll(x => x.MethodInfo == method);
+                command.RemoveAll(x => x.MethodInfo == method);
 
-                    if (command.Count == 0)
-                    {
-                        _commands.Remove(space);
-                    }
+                if (command.Count == 0)
+                {
+                    _commands.Remove(space);
                 }
             }
         }
@@ -303,12 +263,9 @@ namespace SHVDN
                 return;
             }
 
-            lock (_lock)
-            {
-                _input = _input.Insert(_cursorPos, text);
-                _cursorPos += text.Length;
-                UpdateCommandCandidates();
-            }
+            _input = _input.Insert(_cursorPos, text);
+            _cursorPos += text.Length;
+            UpdateCommandCandidates();
 
             ResetCursorBlinking();
         }
@@ -320,7 +277,7 @@ namespace SHVDN
             string text = Clipboard.GetText();
             text = text.Replace("\n", string.Empty); // TODO Keep this?
 
-            AddToInput(text);
+            _keyManager.EnqueueAction(() => { AddToInput(text); }, KeyManager.ThreadOverride.ClrThread);
         }
 
         /// <summary>
@@ -328,11 +285,8 @@ namespace SHVDN
         /// </summary>
         private void ClearInput()
         {
-            lock (_lock)
-            {
-                _input = string.Empty;
-                _cursorPos = 0;
-            }
+            _input = string.Empty;
+            _cursorPos = 0;
 
             ResetCursorBlinking();
         }
@@ -341,11 +295,8 @@ namespace SHVDN
         /// </summary>
         public void Clear()
         {
-            lock (_lock)
-            {
-                _lineHistory.Clear();
-                _currentPage = 1;
-            }
+            _lineHistory.Clear();
+            _currentPage = 1;
         }
 
         /// <summary>
@@ -427,32 +378,30 @@ namespace SHVDN
         public void PrintHelpText()
         {
             var help = new StringBuilder();
-            lock (_lock)
+
+            foreach (string space in _commands.Keys)
             {
-                foreach (string space in _commands.Keys)
+                help.AppendLine($"[{space}]");
+                foreach (ConsoleCommand command in _commands[space])
                 {
-                    help.AppendLine($"[{space}]");
-                    foreach (ConsoleCommand command in _commands[space])
+                    help.Append("    ~h~" + command.Name + "(");
+                    foreach (ParameterInfo arg in command.MethodInfo.GetParameters())
                     {
-                        help.Append("    ~h~" + command.Name + "(");
-                        foreach (ParameterInfo arg in command.MethodInfo.GetParameters())
-                        {
-                            help.Append(arg.ParameterType.Name + " " + arg.Name + ",");
-                        }
+                        help.Append(arg.ParameterType.Name + " " + arg.Name + ",");
+                    }
 
-                        if (command.MethodInfo.GetParameters().Length > 0)
-                        {
-                            help.Length--; // Remove trailing comma
-                        }
+                    if (command.MethodInfo.GetParameters().Length > 0)
+                    {
+                        help.Length--; // Remove trailing comma
+                    }
 
-                        if (command.Help.Length > 0)
-                        {
-                            help.AppendLine(")~h~: " + command.Help);
-                        }
-                        else
-                        {
-                            help.AppendLine(")~h~");
-                        }
+                    if (command.Help.Length > 0)
+                    {
+                        help.AppendLine(")~h~: " + command.Help);
+                    }
+                    else
+                    {
+                        help.AppendLine(")~h~");
                     }
                 }
             }
@@ -465,20 +414,17 @@ namespace SHVDN
         /// <param name="commandName">The command name to check.</param>
         internal void PrintHelpText(string commandName)
         {
-            lock (_lock)
+            foreach (string space in _commands.Keys)
             {
-                foreach (string space in _commands.Keys)
+                foreach (ConsoleCommand command in _commands[space])
                 {
-                    foreach (ConsoleCommand command in _commands[space])
+                    if (command.Name != commandName)
                     {
-                        if (command.Name != commandName)
-                        {
-                            continue;
-                        }
-
-                        PrintInfo(command.Name + ": " + command.Help);
-                        return;
+                        continue;
                     }
+
+                    PrintInfo(command.Name + ": " + command.Help);
+                    return;
                 }
             }
         }
@@ -490,19 +436,13 @@ namespace SHVDN
         {
             int nowTickCount = Environment.TickCount;
 
-            // Execute compiled input line script
-            Task<MethodInfo> compilerTask = null;
-            lock (_lock)
+            if (_compilerTask != null && _compilerTask.IsCompleted)
             {
-                compilerTask = _compilerTask;
-            }
-            if (compilerTask != null && compilerTask.IsCompleted)
-            {
-                if (compilerTask.Result != null)
+                if (_compilerTask.Result != null)
                 {
                     try
                     {
-                        object result = compilerTask.Result.Invoke(null, null);
+                        object result = _compilerTask.Result.Invoke(null, null);
                         if (result != null)
                         {
                             PrintInfo($"[Return Value]: {result}");
@@ -517,46 +457,40 @@ namespace SHVDN
                 ClearInput();
 
                 // Reset compiler task
-                lock (_lock)
-                {
-                    _compilerTask = null;
-                }
-                compilerTask = null;
+                _compilerTask = null;
             }
 
             // Add lines from concurrent queue to history
             if (_outputQueue.TryDequeue(out string[] lines))
             {
-                lock (_lock)
+                foreach (string line in lines)
                 {
-                    foreach (string line in lines)
-                    {
-                        _lineHistory.Add(line);
-                    }
+                    _lineHistory.Add(line);
                 }
+            }
+
+
+            if (_requestStateToggle)
+            {
+                _isOpen = !_isOpen;
+
+                _requestStateToggle = false;
             }
 
             if (!IsOpen)
             {
-                int lastClosedTickCount = 0;
-                bool shouldBlockControls = false;
-                lock (_lock)
-                {
-                    lastClosedTickCount = _lastClosedTickCount;
-                    shouldBlockControls = _shouldBlockControls;
-                }
                 // Hack so the input gets blocked long enough
-                if ((lastClosedTickCount - nowTickCount) > 0)
+                if ((_lastClosedTickCount - nowTickCount) > 0)
                 {
-                    if (shouldBlockControls)
+                    if (_shouldBlockControls)
                     {
                         DisableControlsThisFrame();
                     }
                 }
                 // The console is not open for more than about 24.9 days, calculating the elapsed time with 2 int tick count vars doesn't do the job
-                else if (shouldBlockControls)
+                else if (_shouldBlockControls)
                 {
-                    shouldBlockControls = false;
+                    _shouldBlockControls = false;
                 }
                 return; // Nothing more to do here when the console is not open
             }
@@ -564,35 +498,20 @@ namespace SHVDN
             // Disable controls while the console is open
             DisableControlsThisFrame();
 
-            string currInput = null;
-            int currLineHistCount = 0;
-            int currPage = 0;
+            _keyManager.DequeueActions(KeyManager.ThreadOverride.ClrThread);
 
-            string inputRender;
-            string cursorRender;
-
-            lock (_lock)
+            if (_input != _lastInput)
             {
-                currInput = _input;
-                currLineHistCount = _lineHistory.Count;
-                currPage = _currentPage;
+                _lastInput = _input;
+                _lastRenderedInput = EscapeTokens(_input);
 
-                if (_input != _lastInput)
-                {
-                    _lastInput = _input;
-                    _lastRenderedInput = EscapeTokens(_input);
+                _lastCursorPos = -1;
+            }
 
-                    _lastCursorPos = -1;
-                }
-
-                if (_cursorPos != _lastCursorPos)
-                {
-                    _lastCursorPos = _cursorPos;
-                    _lastRenderedCursorInput = EscapeTokens(_input.Substring(0, _cursorPos));
-                }
-
-                inputRender = _lastRenderedInput;
-                cursorRender = _lastRenderedCursorInput;
+            if (_cursorPos != _lastCursorPos)
+            {
+                _lastCursorPos = _cursorPos;
+                _lastRenderedCursorInput = EscapeTokens(_input.Substring(0, _cursorPos));
             }
 
             // Draw background
@@ -603,41 +522,38 @@ namespace SHVDN
             // Draw input prefix
             DrawText(0, ConsoleHeight, "$>", s_prefixColor);
             // Draw input text
-            DrawText(25, ConsoleHeight, inputRender, compilerTask == null ? s_inputColor : s_inputColorBusy);
+            DrawText(25, ConsoleHeight, _lastRenderedInput, _compilerTask == null ? s_inputColor : s_inputColorBusy);
             // Draw page information
-            DrawText(5, ConsoleHeight + InputHeight, "Page " + currPage + "/" + System.Math.Max(1, ((currLineHistCount + (LinesPerPage - 1)) / LinesPerPage)), s_inputColor);
+            DrawText(5, ConsoleHeight + InputHeight, "Page " + _currentPage + "/" + System.Math.Max(1, ((_lineHistory.Count + (LinesPerPage - 1)) / LinesPerPage)), s_inputColor);
 
-            lock (_lock)
+            if (_lastCursorBlinkTick + 500 < nowTickCount)
             {
-                if(_lastCursorBlinkTick + 500 < nowTickCount)
-                {
-                    _cursorVisible = !_cursorVisible;
-                    _lastCursorBlinkTick = nowTickCount;
-                }
+                _cursorVisible = !_cursorVisible;
+                _lastCursorBlinkTick = nowTickCount;
+            }
 
-                // Draw blinking cursor
-                if (_cursorVisible)
-                {
-                    float lengthBetweenInputStartAndCursor = GetTextLength(cursorRender) - GetMarginLength();
-                    DrawRect(26 + (lengthBetweenInputStartAndCursor * ConsoleWidth), ConsoleHeight + 2, 2, InputHeight - 4, Color.White);
-                }
+            // Draw blinking cursor
+            if (_cursorVisible)
+            {
+                float lengthBetweenInputStartAndCursor = GetTextLength(_lastRenderedCursorInput) - GetMarginLength();
+                DrawRect(26 + (lengthBetweenInputStartAndCursor * ConsoleWidth), ConsoleHeight + 2, 2, InputHeight - 4, Color.White);
+            }
 
-                // Draw console history text
-                int historyOffset = currLineHistCount - (LinesPerPage * currPage);
-                int historyLength = historyOffset + LinesPerPage;
-                for (int i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
-                {
-                    DrawText(2, (float)((i - historyOffset) * 14), _lineHistory[i], s_outputColor);
-                }
+            // Draw console history text
+            int historyOffset = _lineHistory.Count - (LinesPerPage * _currentPage);
+            int historyLength = historyOffset + LinesPerPage;
+            for (int i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
+            {
+                DrawText(2, (float)((i - historyOffset) * 14), _lineHistory[i], s_outputColor);
+            }
 
-                // Draw command candidates
-                if (!_hideCandidates && _commandCandidates.Count > 0)
+            // Draw command candidates
+            if (!_hideCandidates && _commandCandidates.Count > 0)
+            {
+                for (int i = 0; i < _commandCandidates.Count && i < 5; i++)
                 {
-                    for (int i = 0; i < _commandCandidates.Count && i < 5; i++)
-                    {
-                        var color = (i == _selectedCandidateIndex) ? Color.Yellow : Color.White;
-                        DrawText(25, ConsoleHeight + InputHeight + 16 + i * 16, _commandCandidates[i], color);
-                    }
+                    var color = (i == _selectedCandidateIndex) ? Color.Yellow : Color.White;
+                    DrawText(25, ConsoleHeight + InputHeight + 16 + i * 16, _commandCandidates[i], color);
                 }
             }
         }
@@ -667,14 +583,18 @@ namespace SHVDN
 
                 // Translate key event to character for text input
                 ToUnicode((uint)e.KeyCode, 0, keyboardState, buf, 256, 0);
-                AddToInput(buf.ToString());
+
+                _keyManager.EnqueueAction(() =>
+                {
+                    AddToInput(buf.ToString());
+                });    
 
                 //We only want to show candidates again if the actual input has changed.
-                lock (_lock)
-                {
-                    _hideCandidates = false;
-                }
+                _hideCandidates = false;
             }
+
+            _keyManager.DequeueActions(KeyManager.ThreadOverride.InputThread);
+
         }
 
         private void NextCandidate()
@@ -691,123 +611,120 @@ namespace SHVDN
         {
             if (_commandCandidates.Count > 0)
             {
-                lock (_lock)
+                if (_selectedCandidateIndex >= 0 && _selectedCandidateIndex < _commandCandidates.Count)
                 {
-                    if (_selectedCandidateIndex >= 0 && _selectedCandidateIndex < _commandCandidates.Count)
-                    {
-                        string candidate = _commandCandidates[_selectedCandidateIndex];
-                        int parenIndex = candidate.IndexOf('(');
-                        int closeParenIndex = candidate.IndexOf(')');
-                        bool hasParams = (closeParenIndex - parenIndex > 1);
+                    string candidate = _commandCandidates[_selectedCandidateIndex];
+                    int parenIndex = candidate.IndexOf('(');
+                    int closeParenIndex = candidate.IndexOf(')');
+                    bool hasParams = (closeParenIndex - parenIndex > 1);
 
-                        if (parenIndex >= 0)
+                    if (parenIndex >= 0)
+                    {
+                        if (hasParams)
                         {
-                            if (hasParams)
-                            {
-                                string cmdName = candidate.Substring(0, parenIndex);
-                                _input = $"{cmdName}(\"\")";
-                                _cursorPos = cmdName.Length + 2;
-                            }
-                            else
-                            {
-                                _input = candidate.Substring(0, closeParenIndex + 1);
-                                _cursorPos = _input.Length;
-                            }
-                            UpdateCommandCandidates();
-                            ResetCursorBlinking();
+                            string cmdName = candidate.Substring(0, parenIndex);
+                            _input = $"{cmdName}(\"\")";
+                            _cursorPos = cmdName.Length + 2;
                         }
                         else
                         {
-                            _input = candidate;
+                            _input = candidate.Substring(0, closeParenIndex + 1);
                             _cursorPos = _input.Length;
-                            UpdateCommandCandidates();
-                            ResetCursorBlinking();
                         }
+                        UpdateCommandCandidates();
+                        ResetCursorBlinking();
                     }
-                    else if (_commandCandidates.Count > 1)
+                    else
                     {
-                        var names = _commandCandidates
-                            .Select(c => {
-                                int idx = c.IndexOf('(');
-                                return idx > 0 ? c.Substring(0, idx) : c;
-                            })
-                            .ToList();
+                        _input = candidate;
+                        _cursorPos = _input.Length;
+                        UpdateCommandCandidates();
+                        ResetCursorBlinking();
+                    }
+                }
+                else if (_commandCandidates.Count > 1)
+                {
+                    var names = _commandCandidates
+                        .Select(c => {
+                            int idx = c.IndexOf('(');
+                            return idx > 0 ? c.Substring(0, idx) : c;
+                        })
+                        .ToList();
 
-                        string prefix = LongestCommonPrefix(names, _input);
+                    string prefix = LongestCommonPrefix(names, _input);
 
-                        if (prefix.Length > _input.Length)
-                        {
-                            _input = prefix;
-                            _cursorPos = _input.Length;
-                            UpdateCommandCandidates();
-                            ResetCursorBlinking();
-                        }
+                    if (prefix.Length > _input.Length)
+                    {
+                        _input = prefix;
+                        _cursorPos = _input.Length;
+                        UpdateCommandCandidates();
+                        ResetCursorBlinking();
                     }
                 }
             }
         }
 
+        private void Open()
+        {
+            DisableControlsThisFrame();
+
+            _isOpen = true;
+        }
+
         private void Close()
         {
-            IsOpen = false;
+            DisableControlsThisFrame();
+
+            _lastClosedTickCount = Environment.TickCount + 200; // Hack so the input gets blocked long enough
+            _shouldBlockControls = true;
+            _isOpen = false;
         }
 
         private void PageUp()
         {
-            lock (_lock)
+            if (_currentPage < ((_lineHistory.Count + LinesPerPage - 1) / LinesPerPage))
             {
-                if (_currentPage < ((_lineHistory.Count + LinesPerPage - 1) / LinesPerPage))
-                {
-                    _currentPage++;
-                }
+                _currentPage++;
             }
         }
 
         private void PageDown()
         {
-            lock (_lock)
+            if (_currentPage > 1)
             {
-                if (_currentPage > 1)
-                {
-                    _currentPage--;
-                }
+                _currentPage--;
             }
         }
 
         private void GoUpCommandList()
         {
-            lock (_lock)
+            if (_commandHistory.Count == 0 || _commandPos >= _commandHistory.Count - 1)
             {
-                if (_commandHistory.Count == 0 || _commandPos >= _commandHistory.Count - 1)
-                {
-                    return;
-                }
-
-                _commandPos++;
-                _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
-                // Reset cursor position to end of input text
-                _cursorPos = _input.Length;
-                UpdateCommandCandidates();
-                ResetCursorBlinking();
+                return;
             }
+
+            _commandPos++;
+            _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
+            // Reset cursor position to end of input text
+            _cursorPos = _input.Length;
+
+            UpdateCommandCandidates();
+            ResetCursorBlinking();
         }
 
         private void GoDownCommandList()
         {
-            lock (_lock)
+            if (_commandHistory.Count == 0 || _commandPos <= 0)
             {
-                if (_commandHistory.Count == 0 || _commandPos <= 0)
-                {
-                    return;
-                }
-
-                _commandPos--;
-                _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
-                _cursorPos = _input.Length;
-
-                UpdateCommandCandidates();
-                ResetCursorBlinking();
+                return;
             }
+
+            _commandPos--;
+            _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
+            _cursorPos = _input.Length;
+
+            UpdateCommandCandidates();
+            ResetCursorBlinking();
         }
 
         /// <summary>
@@ -816,35 +733,32 @@ namespace SHVDN
         /// </summary>
         private void ForwardWord()
         {
-            lock (_lock)
+            if (_cursorPos >= _input.Length)
             {
-                if (_cursorPos >= _input.Length)
-                {
-                    return;
-                }
+                return;
+            }
 
-                // Note: Char.IsLetterOrDigit returns true for most characters where `iswalnum` returns true in Windows
-                // (exactly same result in the ASCII range), but does not apply for all of them.
-                // bash (GNU readline) and zsh use `iswalnum` (zsh uses iswalnum only if tested char is a non-ASCII one)
-                // to detect if characters can be used as words for your information.
-                if (!char.IsLetterOrDigit(_input[_cursorPos]))
-                {
-                    _cursorPos++;
-                    for (; _cursorPos < _input.Length; _cursorPos++)
-                    {
-                        if (char.IsLetterOrDigit(_input[_cursorPos]))
-                        {
-                            break;
-                        }
-                    }
-                }
-
+            // Note: Char.IsLetterOrDigit returns true for most characters where `iswalnum` returns true in Windows
+            // (exactly same result in the ASCII range), but does not apply for all of them.
+            // bash (GNU readline) and zsh use `iswalnum` (zsh uses iswalnum only if tested char is a non-ASCII one)
+            // to detect if characters can be used as words for your information.
+            if (!char.IsLetterOrDigit(_input[_cursorPos]))
+            {
+                _cursorPos++;
                 for (; _cursorPos < _input.Length; _cursorPos++)
                 {
-                    if (!char.IsLetterOrDigit(_input[_cursorPos]))
+                    if (char.IsLetterOrDigit(_input[_cursorPos]))
                     {
                         break;
                     }
+                }
+            }
+
+            for (; _cursorPos < _input.Length; _cursorPos++)
+            {
+                if (!char.IsLetterOrDigit(_input[_cursorPos]))
+                {
+                    break;
                 }
             }
 
@@ -856,34 +770,31 @@ namespace SHVDN
         /// </summary>
         private void BackwardWord()
         {
-            lock (_lock)
+            if (_cursorPos == 0)
             {
-                if (_cursorPos == 0)
-                {
-                    return;
-                }
+                return;
+            }
 
-                char prevChar = _input[_cursorPos - 1];
-                if (!char.IsLetterOrDigit(prevChar))
-                {
-                    _cursorPos--;
-                    for (; _cursorPos > 0; _cursorPos--)
-                    {
-                        prevChar = _input[_cursorPos - 1];
-                        if (char.IsLetterOrDigit(prevChar))
-                        {
-                            break;
-                        }
-                    }
-                }
-
+            char prevChar = _input[_cursorPos - 1];
+            if (!char.IsLetterOrDigit(prevChar))
+            {
+                _cursorPos--;
                 for (; _cursorPos > 0; _cursorPos--)
                 {
                     prevChar = _input[_cursorPos - 1];
-                    if (!char.IsLetterOrDigit(prevChar))
+                    if (char.IsLetterOrDigit(prevChar))
                     {
                         break;
                     }
+                }
+            }
+
+            for (; _cursorPos > 0; _cursorPos--)
+            {
+                prevChar = _input[_cursorPos - 1];
+                if (!char.IsLetterOrDigit(prevChar))
+                {
+                    break;
                 }
             }
 
@@ -894,34 +805,28 @@ namespace SHVDN
         /// </summary>
         private void BackwardDeleteChar()
         {
-            lock (_lock)
+            if (_input.Length <= 0 || _cursorPos <= 0)
             {
-                if (_input.Length <= 0 || _cursorPos <= 0)
-                {
-                    return;
-                }
-
-                _input = _input.Remove(_cursorPos - 1, 1);
-                _cursorPos--;
-                UpdateCommandCandidates();
-                ResetCursorBlinking();
+                return;
             }
+
+            _input = _input.Remove(_cursorPos - 1, 1);
+            _cursorPos--;
+            UpdateCommandCandidates();
+            ResetCursorBlinking();
         }
         /// <summary>
         /// Deletes the character at point.
         /// </summary>
         private void ForwardDeleteChar()
         {
-            lock (_lock)
+            if (_input.Length <= 0 || _cursorPos >= _input.Length)
             {
-                if (_input.Length <= 0 || _cursorPos >= _input.Length)
-                {
-                    return;
-                }
-
-                _input = _input.Remove(_cursorPos, 1);
-                UpdateCommandCandidates(); 
+                return;
             }
+
+            _input = _input.Remove(_cursorPos, 1);
+            UpdateCommandCandidates();
         }
 
         /// <summary>
@@ -929,16 +834,13 @@ namespace SHVDN
         /// </summary>
         private void KillLine()
         {
-            lock (_lock)
+            if (_input.Length <= 0 || _cursorPos <= 0)
             {
-                if (_input.Length <= 0 || _cursorPos <= 0)
-                {
-                    return;
-                }
-
-                KillText(ref _input, 0, _cursorPos);
-                _cursorPos = 0;
+                return;
             }
+
+            KillText(ref _input, 0, _cursorPos);
+            _cursorPos = 0;
 
             ResetCursorBlinking();
         }
@@ -947,15 +849,12 @@ namespace SHVDN
         /// </summary>
         private void BackwardKillLine()
         {
-            lock (_lock)
+            if (_input.Length <= 0 || _cursorPos >= _input.Length)
             {
-                if (_input.Length <= 0 || _cursorPos >= _input.Length)
-                {
-                    return;
-                }
-
-                KillText(ref _input, _cursorPos, _input.Length - _cursorPos);
+                return;
             }
+
+            KillText(ref _input, _cursorPos, _input.Length - _cursorPos);
         }
         /// <summary>
         /// Kills from point to the end of the current word, or if between words, to the end of the next word.
@@ -963,29 +862,16 @@ namespace SHVDN
         /// </summary>
         private void KillWord()
         {
-            int origCursorPos = 0;
-            lock (_lock)
-            {
-                origCursorPos = _cursorPos;
-            }
+            int origCursorPos = _cursorPos;
 
             ForwardWord();
-            int currCursorPos = 0;
-            lock (_lock)
-            {
-                currCursorPos = _cursorPos;
-            }
-
-            if (currCursorPos == origCursorPos)
+            if (_cursorPos == origCursorPos)
             {
                 return;
             }
 
-            lock (_lock)
-            {
-                KillText(ref _input, origCursorPos, currCursorPos - origCursorPos);
-                _cursorPos = origCursorPos;
-            }
+            KillText(ref _input, origCursorPos, _cursorPos - origCursorPos);
+            _cursorPos = origCursorPos;
 
             ResetCursorBlinking();
         }
@@ -995,58 +881,43 @@ namespace SHVDN
         /// </summary>
         private void BackwardKillWord()
         {
-            int origCursorPos = 0;
-            lock (_lock)
-            {
-                origCursorPos = _cursorPos;
-            }
+            int origCursorPos = _cursorPos;
 
             BackwardWord();
-            int currCursorPos = 0;
-            lock (_lock)
-            {
-                currCursorPos = _cursorPos;
-            }
 
-            if (currCursorPos == origCursorPos)
+            if (_cursorPos == origCursorPos)
             {
                 return;
             }
 
-            lock (_lock)
-            {
-                KillText(ref _input, currCursorPos, origCursorPos - currCursorPos);
-            }
+            KillText(ref _input, _cursorPos, origCursorPos - _cursorPos);
         }
         /// <summary>
         /// Kills the word behind the cursor, using white space as a word boundary.
         /// </summary>
         private void UnixWordRubout()
         {
-            lock (_lock)
+            if (_cursorPos == 0)
             {
-                if (_cursorPos == 0)
-                {
-                    return;
-                }
-
-                int origCursorPos = _cursorPos;
-
-                while (_cursorPos > 0 && IsRegularWhiteSpaceOrTab(_input[_cursorPos - 1]))
-                {
-                    _cursorPos--;
-                }
-
-
-                while (_cursorPos > 0 && !IsRegularWhiteSpaceOrTab(_input[_cursorPos - 1]))
-                {
-                    _cursorPos--;
-                }
-
-
-                KillText(ref _input, _cursorPos, origCursorPos - _cursorPos);
-                ResetCursorBlinking();
+                return;
             }
+
+            int origCursorPos = _cursorPos;
+
+            while (_cursorPos > 0 && IsRegularWhiteSpaceOrTab(_input[_cursorPos - 1]))
+            {
+                _cursorPos--;
+            }
+
+
+            while (_cursorPos > 0 && !IsRegularWhiteSpaceOrTab(_input[_cursorPos - 1]))
+            {
+                _cursorPos--;
+            }
+
+
+            KillText(ref _input, _cursorPos, origCursorPos - _cursorPos);
+            ResetCursorBlinking();
 
             // yields exactly the same result as a internal "whitespace" function in bash
             static bool IsRegularWhiteSpaceOrTab(char ch) => ch == ' ' || ch == '\t';
@@ -1058,32 +929,28 @@ namespace SHVDN
         /// </summary>
         private void TransposeTwoChars()
         {
-            lock (_lock)
+            if (_input.Length < 2)
             {
-                int inputLength = _input.Length;
-                if (inputLength < 2)
-                {
-                    return;
-                }
-
-                if (_cursorPos == 0)
-                {
-                    _input = SwapTwoCharacters(_input, 0);
-                    _cursorPos = 2;
-                }
-                else if (_cursorPos < inputLength)
-                {
-                    _input = SwapTwoCharacters(_input, _cursorPos - 1);
-                    _cursorPos += 1;
-                }
-                else
-                {
-                    _input = SwapTwoCharacters(_input, _cursorPos - 2);
-                }
-
-                UpdateCommandCandidates();
-                ResetCursorBlinking();
+                return;
             }
+
+            if (_cursorPos == 0)
+            {
+                _input = SwapTwoCharacters(_input, 0);
+                _cursorPos = 2;
+            }
+            else if (_cursorPos < _input.Length)
+            {
+                _input = SwapTwoCharacters(_input, _cursorPos - 1);
+                _cursorPos += 1;
+            }
+            else
+            {
+                _input = SwapTwoCharacters(_input, _cursorPos - 2);
+            }
+
+            UpdateCommandCandidates();
+            ResetCursorBlinking();
 
             string SwapTwoCharacters(string str, int index)
             {
@@ -1101,16 +968,12 @@ namespace SHVDN
         /// </summary>
         private void TransposeTwoWords()
         {
-            int origCursorPos = 0;
-            lock (_lock)
+            if (_input.Length < 3)
             {
-                if (_input.Length < 3)
-                {
-                    return;
-                }
-
-                origCursorPos = _cursorPos;
+                return;
             }
+
+            int origCursorPos = _cursorPos;
 
             int word2End = 0;
             int word2Beg = 0;
@@ -1118,47 +981,29 @@ namespace SHVDN
             int word1End = 0;
 
             ForwardWord();
-            lock (_lock)
-            {
-                word2End = _cursorPos;
-            }
+            word2End = _cursorPos;
+
             BackwardWord();
-            lock (_lock)
-            {
-                word2Beg = _cursorPos;
-            }
+            word2Beg = _cursorPos;
+
             BackwardWord();
-            lock (_lock)
-            {
-                word1Beg = _cursorPos;
-            }
+            word1Beg = _cursorPos;
+
             ForwardWord();
-            lock (_lock)
-            {
-                word1End = _cursorPos;
-            }
+            word1End = _cursorPos;
 
             if ((word1Beg == word2Beg) || (word2Beg < word1End))
             {
-                lock (_lock)
-                {
-                    _cursorPos = origCursorPos;
-                }
+                _cursorPos = origCursorPos;
                 return;
             }
 
-            string origInput = null;
-            lock (_lock)
-            {
-                origInput = _input;
-            }
-
-            string word1 = origInput.Substring(word1Beg, word1End - word1Beg);
-            string word2 = origInput.Substring(word2Beg, word2End - word2Beg);
+            string word1 = _input.Substring(word1Beg, word1End - word1Beg);
+            string word2 = _input.Substring(word2Beg, word2End - word2Beg);
 
             // Prevent reallocation of internal array
-            var stringBuilder = new StringBuilder(origInput.Length + Math.Max((word1.Length - word2.Length), 0));
-            stringBuilder.Append(origInput);
+            var stringBuilder = new StringBuilder(_input.Length + Math.Max((word1.Length - word2.Length), 0));
+            stringBuilder.Append(_input);
 
             stringBuilder.Remove(word2Beg, word2.Length);
             stringBuilder.Insert(word2Beg, word1);
@@ -1166,13 +1011,10 @@ namespace SHVDN
             stringBuilder.Remove(word1Beg, word1.Length);
             stringBuilder.Insert(word1Beg, word2);
 
-            lock (_lock)
-            {
-                _input = stringBuilder.ToString();
-                _cursorPos = word2End;
-                UpdateCommandCandidates(); 
-            }
+            _input = stringBuilder.ToString();
+            _cursorPos = word2End;
 
+            UpdateCommandCandidates();
             ResetCursorBlinking();
         }
 
@@ -1180,17 +1022,15 @@ namespace SHVDN
         {
             Clipboard.SetText(str.Substring(startIndex, length));
             str = str.Remove(startIndex, length);
+
             UpdateCommandCandidates(); 
         }
 
         private void MoveCursorLeft()
         {
-            lock (_lock)
+            if (_cursorPos > 0)
             {
-                if (_cursorPos > 0)
-                {
-                    _cursorPos--;
-                }
+                _cursorPos--;
             }
 
             ResetCursorBlinking();
@@ -1198,12 +1038,9 @@ namespace SHVDN
 
         private void MoveCursorRight()
         {
-            lock (_lock)
+            if (_cursorPos < _input.Length)
             {
-                if (_cursorPos < _input.Length)
-                {
-                    _cursorPos++;
-                }
+                _cursorPos++;
             }
 
             ResetCursorBlinking();
@@ -1211,20 +1048,14 @@ namespace SHVDN
 
         private void MoveCursorToBegOfLine()
         {
-            lock (_lock)
-            {
-                _cursorPos = 0;
-            }
+            _cursorPos = 0;
 
             ResetCursorBlinking();
         }
 
         private void MoveCursorToEndOfLine()
         {
-            lock (_lock)
-            {
-                _cursorPos = _input.Length;
-            }
+            _cursorPos = _input.Length;
 
             ResetCursorBlinking();
         }
@@ -1233,21 +1064,17 @@ namespace SHVDN
         {
             // We need to capture the input for the task action below, so it won't read a stale reference of
             // the console input
-            string capturedInput = null;
-            lock (_lock)
+            string capturedInput = _input;
+
+            if (string.IsNullOrEmpty(capturedInput) || _compilerTask != null)
             {
-                capturedInput = _input;
+                return;
+            }
 
-                if (string.IsNullOrEmpty(capturedInput) || _compilerTask != null)
-                {
-                    return;
-                }
-
-                _commandPos = -1;
-                if (_commandHistory.LastOrDefault() != capturedInput)
-                {
-                    _commandHistory.Add(capturedInput);
-                }
+            _commandPos = -1;
+            if (_commandHistory.LastOrDefault() != capturedInput)
+            {
+                _commandHistory.Add(capturedInput);
             }
 
             Task<MethodInfo> newCompilerTask = Task.Factory.StartNew(() =>
@@ -1309,50 +1136,42 @@ namespace SHVDN
                 return null;
             });
 
-            lock (_lock)
-            {
-                _compilerTask = newCompilerTask;
-            }
+            _compilerTask = newCompilerTask;
         }
 
         private void UpdateCommandCandidates()
         {
-            string input = _input;
             _commandCandidates.Clear();
             _selectedCandidateIndex = -1;
-            if (string.IsNullOrWhiteSpace(input))
+
+            if (string.IsNullOrWhiteSpace(_input))
                 return;
 
-            lock (_lock)
+            foreach (var space in _commands.Keys)
             {
-                foreach (var space in _commands.Keys)
+                foreach (var cmd in _commands[space])
                 {
-                    foreach (var cmd in _commands[space])
-                    {
-                        var paramList = cmd.MethodInfo.GetParameters();
-                        string paramStr = string.Join(", ", paramList.Select(p => p.ParameterType.Name + " " + p.Name));
-                        string displayName = $"{cmd.Name}({paramStr})";
+                    var paramList = cmd.MethodInfo.GetParameters();
+                    string paramStr = string.Join(", ", paramList.Select(p => p.ParameterType.Name + " " + p.Name));
+                    string displayName = $"{cmd.Name}({paramStr})";
 
-                        if (displayName.Contains(input))
-                        {
-                            _commandCandidates.Add(displayName);
-                        }
+                    if (displayName.Contains(_input))
+                    {
+                        _commandCandidates.Add(displayName);
                     }
                 }
             }
+
             if (_commandCandidates.Count > 0)
                 _selectedCandidateIndex = 0;
         }
 
         private void ResetCursorBlinking()
         {
-            lock (_lock)
-            {
-                _lastCursorBlinkTick = 0;
+            _lastCursorBlinkTick = 0;
 
-                //Because we set _lastCursorBlinkTick to 0; the state will be flipped next tick.
-                _cursorVisible = false;
-            }
+            //Because we set _lastCursorBlinkTick to 0; the state will be flipped next tick.
+            _cursorVisible = false;
         }
 
         public override object InitializeLifetimeService()
@@ -1473,15 +1292,25 @@ namespace SHVDN
 
     public class KeyManager
     {
+        public enum ThreadOverride
+        {
+            None = ClrThread,
+
+            ClrThread = 1,
+            InputThread
+        }
+
         public class KeyBinding
         {
             public Keys Combined { get; }
             public Action Action { get; }
+            public ThreadOverride Thread { get; }
 
-            public KeyBinding(Keys combined, Action action)
+            public KeyBinding(Keys combined, Action action, ThreadOverride thread)
             {
                 Combined = combined;
                 Action = action;
+                Thread = thread;
             }
         }
 
@@ -1490,7 +1319,10 @@ namespace SHVDN
         private const Keys KeyCodeMask = (Keys)0xFF;
         private const Keys ModMask = Keys.Control | Keys.Shift | Keys.Alt;
 
-        public void Register(Keys combined, Action action)
+        private readonly ConcurrentQueue<Action> _inputActionQueue = new();
+        private readonly ConcurrentQueue<Action> _cliActionQueue = new();
+
+        public void Register(Keys combined, Action action, ThreadOverride threadOverride = ThreadOverride.None)
         {
             var key = combined & KeyCodeMask;
 
@@ -1500,7 +1332,7 @@ namespace SHVDN
                 _bindings[key] = list;
             }
 
-            list.Add(new KeyBinding(combined, action));
+            list.Add(new KeyBinding(combined, action, threadOverride));
         }
 
         public bool TryHandle(Keys input)
@@ -1535,8 +1367,50 @@ namespace SHVDN
                 return false;
             }
 
-            best.Action();
+            GetThreadQueue(best.Thread)?.Enqueue(best.Action);
             return true;
+        }
+
+        public void DequeueActions(ThreadOverride ownerThread)
+        {
+            ConcurrentQueue<Action> queue = GetThreadQueue(ownerThread);
+
+            if(queue == null)
+            {
+                return;
+            }
+
+            while (queue.TryDequeue(out Action action))
+            {
+                action();
+            }
+        }
+
+        public void EnqueueAction(Action action, ThreadOverride ownerThread = ThreadOverride.None)
+        {
+            ConcurrentQueue<Action> queue = GetThreadQueue(ownerThread);
+
+            if (queue == null)
+            {
+                return;
+            }
+
+            queue.Enqueue(action);
+        }
+
+        private ConcurrentQueue<Action> GetThreadQueue(ThreadOverride thread)
+        {
+            if (thread == ThreadOverride.ClrThread)
+            {
+                return _cliActionQueue;
+            }
+
+            if (thread == ThreadOverride.InputThread)
+            {
+                return _inputActionQueue;
+            }
+
+            return null;
         }
 
         private static int CountBits(uint value)

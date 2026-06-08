@@ -765,7 +765,7 @@ static void ScriptHookVDotNet_ManagedKeyboardMessage(unsigned long keycode, bool
         if (keydown && AreAllKeysPressed(ScriptHookVDotNet::consoleKeyBinding))
         {
             // Toggle open state
-            console->IsOpen = !console->IsOpen;
+            console->Toggle();
             return;
         }
 
