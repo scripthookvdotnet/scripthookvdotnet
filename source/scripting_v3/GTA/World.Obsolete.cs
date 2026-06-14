@@ -301,5 +301,17 @@ namespace GTA
             }
             return Vector3.Zero;
         }
+
+        /// <summary>
+        /// Gets the straight line distance between 2 positions.
+        /// </summary>
+        /// <param name="origin">The origin.</param>
+        /// <param name="destination">The destination.</param>
+        /// <returns>The distance.</returns>
+        [Obsolete("Use Vector3.Distance(Vector3, Vector3) instead.")]
+        public static float GetDistance(Vector3 origin, Vector3 destination)
+        {
+            return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
+        }
     }
 }
