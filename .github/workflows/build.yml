@@ -71,7 +71,8 @@ jobs:
         exit 0
 
   build:
-    runs-on: windows-latest
+    # We should use VS2022 by not specifying `windows-2025-vs2026` until we decide to migrate SHVDN to VS2026
+    runs-on: windows-2025
     needs: [define-shvdn-version]
     env:
       SHVDN_VERSION: ${{needs.define-shvdn-version.outputs.calced-version}}
@@ -81,7 +82,6 @@ jobs:
       uses: microsoft/setup-msbuild@v3
       with:
         msbuild-architecture: x64
-        vs-version: '[17.13,17.15)'
     - name: Add VSTest.Console to PATH
       working-directory: ${{env.SOLUTION_FILE_PATH}}
       run: |
