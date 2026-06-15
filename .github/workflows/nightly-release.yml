@@ -115,7 +115,7 @@ jobs:
       tag_name: ${{ steps.tag-output.outputs.result }}
     steps:
       - name: Generate Access Token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.SHVDN_APP_ID }}
@@ -186,7 +186,7 @@ jobs:
           cd "${GITHUB_WORKSPACE}/bin/Release"
           zip -r "${GITHUB_WORKSPACE}/${artifact_file_name}" *
       - name: Generate Access Token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.SHVDN_APP_ID }}
