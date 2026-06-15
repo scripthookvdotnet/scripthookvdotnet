@@ -2312,16 +2312,6 @@ namespace GTA
         #region Positioning
 
         /// <summary>
-        /// Gets the straight line distance between 2 positions.
-        /// </summary>
-        /// <param name="origin">The origin.</param>
-        /// <param name="destination">The destination.</param>
-        /// <returns>The distance.</returns>
-        public static float GetDistance(Vector3 origin, Vector3 destination)
-        {
-            return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
-        }
-        /// <summary>
         /// Calculates the travel distance using roads and paths between 2 positions.
         /// </summary>
         /// <param name="origin">The origin.</param>
