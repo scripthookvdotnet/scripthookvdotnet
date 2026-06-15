@@ -71,7 +71,7 @@ jobs:
         exit 0
 
   build:
-    # We should use VS2022 by not specifying `windows-2025-vs2026` until we decide to migrate SHVDN to VS2026
+    # `windows-2025` uses Visual Studio 2025 as of June 15, 2026 for your information
     runs-on: windows-2025
     needs: [define-shvdn-version]
     env:
