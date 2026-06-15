@@ -19,7 +19,7 @@ jobs:
       calced-version: ${{ steps.calc-current-ver-from-ref-or-ver-input.outputs.current_ver_result || steps.fetch-latest-nightly-tag-name.outputs.latest_version_for_assemblies }}
     steps:
     - name: Checkout Main Repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Use Current Ref or Version Input as Current Version If Appropriate
       id: calc-current-ver-from-ref-or-ver-input
       working-directory: ${{env.GITHUB_WORKSPACE}}
@@ -42,7 +42,7 @@ jobs:
     # later steps are performed only if the CI system needs the latest nightly version tag to determine SHVDN version
     - name: Checkout Nightly Release Repo
       if: ${{ steps.calc-current-ver-from-ref-or-ver-input.outputs.current_ver_result == '' }}
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         repository: ${{ format('{0}/scripthookvdotnet-nightly', github.repository_owner) }}
         path: nightly-repo
@@ -76,7 +76,7 @@ jobs:
     env:
       SHVDN_VERSION: ${{needs.define-shvdn-version.outputs.calced-version}}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2.0.0
       with:

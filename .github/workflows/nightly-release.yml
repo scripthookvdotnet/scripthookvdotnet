@@ -35,7 +35,7 @@ jobs:
       next_version_name_for_assemblies: ${{ steps.calc-next-tag-name.outputs.next_version_name_for_assemblies }}
     steps:
       - name: Checkout Nightly Release Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ format('{0}/scripthookvdotnet-nightly', github.repository_owner) }}
           path: nightly-repo
@@ -167,7 +167,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download Artifact from Build Workflow
         uses: actions/download-artifact@v4.1.7
         with:
