@@ -313,5 +313,68 @@ namespace GTA
         {
             return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
         }
+
+        /// <inheritdoc cref="Pickup.Create(PickupType, Vector3, PickupPlacementFlags, int, Model)"/>
+        [Obsolete("Use Pickup.Create(PickupType, Vector3, PickupPlacementFlags, int, Model) instead.")]
+        public static Pickup CreatePickup(
+            PickupType type,
+            Vector3 position,
+            PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
+            int amount = -1,
+            Model customModel = default)
+        {
+            if (customModel.Hash != 0 && !customModel.Request(1000))
+            {
+                return null;
+            }
+
+            // The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
+            int handle = Function.Call<int>(Hash.CREATE_PICKUP,
+                (int)type,
+                position.X,
+                position.Y,
+                position.Z,
+                (int)placementFlags,
+                amount,
+                true,
+                customModel.Hash);
+
+            return handle == 0 ? null : new Pickup(handle);
+        }
+
+        /// <inheritdoc cref="Pickup.Create(PickupType, Vector3, Vector3, PickupPlacementFlags, int, EulerRotationOrder, Model)"/>
+        [Obsolete("Use Pickup.Create(PickupType, Vector3, Vector3, PickupPlacementFlags, int, EulerRotationOrder, Model) instead.")]
+        public static Pickup CreatePickup(
+            PickupType type,
+            Vector3 position,
+            Vector3 rotation,
+            PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
+            int amount = -1,
+            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ,
+            Model customModel = default
+        )
+        {
+            if (customModel.Hash != 0 && !customModel.Request(1000))
+            {
+                return null;
+            }
+
+            // The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
+            int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE,
+                (int)type,
+                position.X,
+                position.Y,
+                position.Z,
+                rotation.X,
+                rotation.Y,
+                rotation.Z,
+                (int)placementFlags,
+                amount,
+                (int)rotOrder,
+                true,
+                customModel.Hash);
+
+            return handle == 0 ? null : new Pickup(handle);
+        }
     }
 }
