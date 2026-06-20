@@ -380,6 +380,42 @@ namespace GTA
             return createdPed;
         }
 
+        /// <inheritdoc cref="Vehicle.Create(Model, Vector3, float)"/>
+        [Obsolete("Use Vehicle.Create(Model, Vector3, float) instead.")]
+        public static Vehicle CreateVehicle(Model model, Vector3 position, float heading = 0f)
+        {
+            if (VehicleCount >= VehicleCapacity || !model.IsVehicle || !model.Request(1000))
+            {
+                return null;
+            }
+
+            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+        }
+
+        /// <inheritdoc cref="Vehicle.CreateRandom(Vector3, float, Func{Model, bool}"/>
+        [Obsolete("Use Vehicle.CreateRandom(Vector3, float, Func<Model, bool>) instead.")]
+        public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f, Func<Model, bool> predicate = null)
+        {
+            if (VehicleCount >= VehicleCapacity)
+            {
+                return null;
+            }
+
+            IEnumerable<Model> loadedAppropriateVehModels = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
+            Model[] filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
+            int filteredModelCount = filteredVehModels.Length;
+            if (filteredModelCount == 0)
+            {
+                return null;
+            }
+
+            Random rand = RandomHelper.Instance;
+            Model pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
+
+            // the model should be loaded at this moment, so call CREATE_VEHICLE immediately
+            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z, heading, false, false));
+        }
+
         /// <inheritdoc cref="Checkpoint.Create(CheckpointIcon, Vector3, Vector3, float, Color)"/>
         [Obsolete("Use Checkpoint.Create(CheckpointIcon, Vector3, Vector3, float, Color) instead.")]
         public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
