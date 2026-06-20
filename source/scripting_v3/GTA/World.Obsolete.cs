@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using GTA.Math;
 using GTA.Native;
 
@@ -8,6 +10,8 @@ namespace GTA
 {
     public static partial class World
     {
+        private static readonly Func<Model, bool> s_defaultPredicateForCreateRandomPed = x => x.IsHumanPed && !x.IsGangPed;
+
         /// <inheritdoc cref="GTA.Chrono.GameClock.IsPaused"/>
         [Obsolete("World.IsClockPaused is obsolete, use GTA.Chrono.IsPaused instead.")]
         public static bool IsClockPaused
@@ -313,6 +317,67 @@ namespace GTA
         public static float GetDistance(Vector3 origin, Vector3 destination)
         {
             return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
+        }
+
+        /// <inheritdoc cref="Ped.Create(Model, Vector3, float)"/>
+        [Obsolete("Use Ped.Create(Model, Vector3, float) instead.")]
+        public static Ped CreatePed(Model model, Vector3 position, float heading = 0f)
+        {
+            if (PedCount >= PedCapacity || !model.IsPed || !model.Request(1000))
+            {
+                return null;
+            }
+
+            // The first parameter "PedType" does not have actual effect, the function always eventually uses the "Pedtype"
+            // value for the model (in peds.ymt or peds.meta) instead
+            // Actually the value is read when the function is called but eventually overwritten before getting used in a meaningful way
+            return new Ped(Function.Call<int>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+        }
+
+        /// <inheritdoc cref="Ped.CreateRandom(Vector3)"/>
+        [Obsolete("Use Ped.CreateRandom(Vector3) instead.")]
+        public static Ped CreateRandomPed(Vector3 position)
+        {
+            if (PedCount >= PedCapacity)
+            {
+                return null;
+            }
+
+            return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z));
+        }
+
+        /// <inheritdoc cref="Ped.CreateRandom(Vector3, float, Func{Model, bool})"/>
+        [Obsolete("Use Ped.CreateRandom(Vector3, float, Func<Model, bool>) instead.")]
+        public static Ped CreateRandomPed(Vector3 position, float heading, Func<Model, bool> predicate = null)
+        {
+            if (PedCount >= PedCapacity)
+            {
+                return null;
+            }
+
+            IEnumerable<Model> loadedAppropriatePedModels
+                = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
+            Model[] filteredPedModels = predicate != null
+                ? loadedAppropriatePedModels.Where(predicate).ToArray()
+                : loadedAppropriatePedModels.Where(s_defaultPredicateForCreateRandomPed).ToArray();
+            int filteredModelCount = filteredPedModels.Length;
+            if (filteredModelCount == 0)
+            {
+                return null;
+            }
+
+            Random rand = RandomHelper.Instance;
+            Model pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
+
+            // the model should be loaded at this moment, so call `CREATE_PED` immediately
+            var createdPed = new Ped(Function.Call<int>(Hash.CREATE_PED, 26, pickedModel, position.X, position.Y,
+                position.Z, heading, false, false));
+
+            // Randomize variation but not ped props, just like `CREATE_RANDOM_PED` does.
+            const int Race = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
+            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, Race);
+
+            return createdPed;
         }
 
         /// <inheritdoc cref="Checkpoint.Create(CheckpointIcon, Vector3, Vector3, float, Color)"/>
