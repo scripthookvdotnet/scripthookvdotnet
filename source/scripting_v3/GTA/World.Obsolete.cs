@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using GTA.Math;
 using GTA.Native;
 
@@ -312,6 +313,48 @@ namespace GTA
         public static float GetDistance(Vector3 origin, Vector3 destination)
         {
             return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
+        }
+
+        /// <inheritdoc cref="Checkpoint.Create(CheckpointIcon, Vector3, Vector3, float, Color)"/>
+        [Obsolete("Use Checkpoint.Create(CheckpointIcon, Vector3, Vector3, float, Color) instead.")]
+        public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
+        {
+            int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
+                (int)icon,
+                position.X,
+                position.Y,
+                position.Z,
+                pointTo.X,
+                pointTo.Y,
+                pointTo.Z,
+                radius,
+                color.R,
+                color.G,
+                color.B,
+                color.A,
+                0);
+            return handle != 0 ? new Checkpoint(handle) : null;
+        }
+
+        /// <inheritdoc cref="Checkpoint.Create(CheckpointCustomIcon, Vector3, Vector3, float, Color)"/>
+        [Obsolete("Use Checkpoint.Create(CheckpointCustomIcon, Vector3, Vector3, float, Color) instead.")]
+        public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
+        {
+            int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
+                44,
+                position.X,
+                position.Y,
+                position.Z,
+                pointTo.X,
+                pointTo.Y,
+                pointTo.Z,
+                radius,
+                color.R,
+                color.G,
+                color.B,
+                color.A,
+                icon);
+            return handle != 0 ? new Checkpoint(handle) : null;
         }
 
         /// <inheritdoc cref="CreateProp(Model, Vector3, bool, bool)"/>

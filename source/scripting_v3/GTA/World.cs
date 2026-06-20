@@ -1254,61 +1254,6 @@ namespace GTA
             return Array.ConvertAll(SHVDN.NativeMemory.GetCheckpointHandles(), element => new Checkpoint(element));
         }
 
-        /// <summary>
-        /// Creates a <see cref="Checkpoint"/> in the world.
-        /// </summary>
-        /// <param name="icon">The <see cref="CheckpointIcon"/> to display inside the <see cref="Checkpoint"/>.</param>
-        /// <param name="position">The position in the World.</param>
-        /// <param name="pointTo">The position in the world where this <see cref="Checkpoint"/> should point.</param>
-        /// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
-        /// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
-        /// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
-        public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
-        {
-            int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
-                (int)icon,
-                position.X,
-                position.Y,
-                position.Z,
-                pointTo.X,
-                pointTo.Y,
-                pointTo.Z,
-                radius,
-                color.R,
-                color.G,
-                color.B,
-                color.A,
-                0);
-            return handle != 0 ? new Checkpoint(handle) : null;
-        }
-        /// <summary>
-        /// Creates a <see cref="Checkpoint"/> in the world.
-        /// </summary>
-        /// <param name="icon">The <see cref="CheckpointCustomIcon"/> to display inside the <see cref="Checkpoint"/>.</param>
-        /// <param name="position">The position in the World.</param>
-        /// <param name="pointTo">The position in the world where this <see cref="Checkpoint"/> should point.</param>
-        /// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
-        /// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
-        /// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
-        public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
-        {
-            int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
-                44,
-                position.X,
-                position.Y,
-                position.Z,
-                pointTo.X,
-                pointTo.Y,
-                pointTo.Z,
-                radius,
-                color.R,
-                color.G,
-                color.B,
-                color.A,
-                icon);
-            return handle != 0 ? new Checkpoint(handle) : null;
-        }
-
         #endregion
 
         #region Area Clearance
