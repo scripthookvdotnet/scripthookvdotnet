@@ -314,6 +314,64 @@ namespace GTA
             return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
         }
 
+        /// <inheritdoc cref="CreateProp(Model, Vector3, bool, bool)"/>
+        [Obsolete("Use Prop.Create(Model, Vector3, bool, bool) instead.")]
+        public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
+        {
+            if (PropCount >= PropCapacity || !model.Request(1000))
+            {
+                return null;
+            }
+
+            if (placeOnGround)
+            {
+                GetGroundHeight(position, out float groundHeight);
+                position.Z = groundHeight; // will be zero if the test failed since values will be initialized with zero by default in C#
+            }
+
+            return new Prop(Function.Call<int>(Hash.CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
+        }
+
+        /// <inheritdoc cref="Prop.Create(Model, Vector3, Vector3, bool, bool)"/>
+        [Obsolete("Use Prop.Create(Model, Vector3, Vector3, bool, bool) instead.")]
+        public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
+        {
+            Prop prop = CreateProp(model, position, dynamic, placeOnGround);
+
+            if (prop != null)
+            {
+                prop.Rotation = rotation;
+            }
+
+            return prop;
+        }
+
+        /// <inheritdoc cref="Prop.CreateNoOffset(Model, Vector3, bool)"/>
+        [Obsolete("Use Prop.CreateNoOffset(Model, Vector3, bool) instead.")]
+        public static Prop CreatePropNoOffset(Model model, Vector3 position, bool dynamic)
+        {
+            if (PropCount >= PropCapacity || !model.Request(1000))
+            {
+                return null;
+            }
+
+            return new Prop(Function.Call<int>(Hash.CREATE_OBJECT_NO_OFFSET, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
+        }
+
+        /// <inheritdoc cref="Prop.CreateNoOffset(Model, Vector3, Vector3, bool)"/>
+        [Obsolete("Use Prop.CreateNoOffset(Model, Vector3, Vector3, bool) instead.")]
+        public static Prop CreatePropNoOffset(Model model, Vector3 position, Vector3 rotation, bool dynamic)
+        {
+            Prop prop = CreatePropNoOffset(model, position, dynamic);
+
+            if (prop != null)
+            {
+                prop.Rotation = rotation;
+            }
+
+            return prop;
+        }
+
         /// <inheritdoc cref="Pickup.Create(PickupType, Vector3, PickupPlacementFlags, int, Model)"/>
         [Obsolete("Use Pickup.Create(PickupType, Vector3, PickupPlacementFlags, int, Model) instead.")]
         public static Pickup CreatePickup(
