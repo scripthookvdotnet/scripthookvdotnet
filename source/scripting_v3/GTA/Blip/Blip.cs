@@ -18,6 +18,24 @@ namespace GTA
         }
 
         /// <summary>
+        /// Creates a <see cref="Blip"/> at the given position on the map.
+        /// </summary>
+        /// <param name="position">The position of the blip on the map.</param>
+        public static Blip Create(Vector3 position)
+        {
+            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z));
+        }
+        /// <summary>
+        /// Creates a <see cref="Blip"/> for a circular area at the given position on the map.
+        /// </summary>
+        /// <param name="position">The position of the blip on the map.</param>
+        /// <param name="radius">The radius of the area on the map.</param>
+        public static Blip Create(Vector3 position, float radius)
+        {
+            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius));
+        }
+
+        /// <summary>
         /// Gets the memory address where the <see cref="GTA.Entity"/> is stored in memory.
         /// </summary>
         public IntPtr MemoryAddress => SHVDN.NativeMemory.GetBlipAddress(Handle);

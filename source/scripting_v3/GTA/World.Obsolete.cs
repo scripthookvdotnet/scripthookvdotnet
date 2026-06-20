@@ -319,6 +319,20 @@ namespace GTA
             return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
         }
 
+        /// <inheritdoc cref="Blip.Create(Vector3)"/>
+        [Obsolete("Use Blip.Create(Vector3) instead.")]
+        public static Blip CreateBlip(Vector3 position)
+        {
+            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z));
+        }
+
+        /// <inheritdoc cref="Blip.Create(Vector3, float)"/>\
+        [Obsolete("Use Blip.Create(Vector3, float) instead.")]
+        public static Blip CreateBlip(Vector3 position, float radius)
+        {
+            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius));
+        }
+
         /// <inheritdoc cref="Ped.Create(Model, Vector3, float)"/>
         [Obsolete("Use Ped.Create(Model, Vector3, float) instead.")]
         public static Ped CreatePed(Model model, Vector3 position, float heading = 0f)
