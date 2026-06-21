@@ -27,6 +27,52 @@ namespace GTA
         }
 
         /// <summary>
+        /// Spawns a <see cref="Vehicle"/> of the given <see cref="Model"/> at the position and heading specified.
+        /// </summary>
+        /// <param name="model">The <see cref="Model"/> of the <see cref="Vehicle"/>.</param>
+        /// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
+        /// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
+        /// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
+        public static Vehicle Create(Model model, Vector3 position, float heading = 0f)
+        {
+            if (World.VehicleCount >= World.VehicleCapacity || !model.IsVehicle || !model.Request(1000))
+            {
+                return null;
+            }
+
+            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+        }
+
+        /// <summary>
+        /// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified.
+        /// </summary>
+        /// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
+        /// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
+        /// <param name="predicate">The method that determines whether a model should be considered when choosing a random model for the <see cref="Vehicle"/>.</param>
+        /// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned.</remarks>
+        public static Vehicle CreateRandom(Vector3 position, float heading = 0f, Func<Model, bool> predicate = null)
+        {
+            if (World.VehicleCount >= World.VehicleCapacity)
+            {
+                return null;
+            }
+
+            IEnumerable<Model> loadedAppropriateVehModels = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
+            Model[] filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
+            int filteredModelCount = filteredVehModels.Length;
+            if (filteredModelCount == 0)
+            {
+                return null;
+            }
+
+            Random rand = RandomHelper.Instance;
+            Model pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
+
+            // the model should be loaded at this moment, so call CREATE_VEHICLE immediately
+            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z, heading, false, false));
+        }
+
+        /// <summary>
         /// Restores the health of this <see cref="Vehicle"/> and fixes any damage instantaneously.
         /// </summary>
         public void Repair()

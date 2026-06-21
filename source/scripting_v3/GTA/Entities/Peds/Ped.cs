@@ -3,11 +3,12 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using GTA.Math;
 using GTA.Native;
 using GTA.NaturalMotion;
-using System;
-using System.Linq;
 
 namespace GTA
 {
@@ -23,10 +24,100 @@ namespace GTA
         private PedResetFlags _pedResetFlags;
 
         private PedMoveNetworkTaskInterface _moveNetworkInterface;
+
+        // removes gang and animal ped models just like CREATE_RANDOM_PED does
+        private static readonly Func<Model, bool> s_defaultPredicateForCreateRandomPed = x => x.IsHumanPed && !x.IsGangPed;
         #endregion
 
         internal Ped(int handle) : base(handle)
         {
+        }
+
+        /// <summary>
+        /// Spawns a <see cref="Ped"/> of the given <see cref="Model"/> at the position and heading specified.
+        /// </summary>
+        /// <param name="model">The <see cref="Model"/> of the <see cref="Ped"/>.</param>
+        /// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
+        /// <param name="heading">The heading of the <see cref="Ped"/>.</param>
+        /// <remarks>returns <see langword="null" /> if the <see cref="Ped"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
+        public static Ped Create(Model model, Vector3 position, float heading = 0f)
+        {
+            if (World.PedCount >= World.PedCapacity || !model.IsPed || !model.Request(1000))
+            {
+                return null;
+            }
+
+            // The first parameter "PedType" does not have actual effect, the function always eventually uses the "Pedtype"
+            // value for the model (in peds.ymt or peds.meta) instead
+            // Actually the value is read when the function is called but eventually overwritten before getting used in a meaningful way
+            return new Ped(Function.Call<int>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+        }
+        /// <summary>
+        /// Spawns a <see cref="Ped"/> of a random <see cref="Model"/> at the position specified.
+        /// </summary>
+        /// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
+        /// <remarks>
+        /// This overload picks the least used appropriate model that is not suppressed.
+        /// This overload can pick a gangster and an animal model that do not swim or fly.
+        /// </remarks>
+        public static Ped CreateRandom(Vector3 position)
+        {
+            if (World.PedCount >= World.PedCapacity)
+            {
+                return null;
+            }
+
+            return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z));
+        }
+
+        /// <summary>
+        /// Spawns a <see cref="Ped"/> of a random <see cref="Model"/> at the position specified.
+        /// </summary>
+        /// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
+        /// <param name="heading">The heading of the <see cref="Ped"/>.</param>
+        /// <param name="predicate">
+        /// <para>
+        /// The method that determines whether a model should be considered when choosing a random model for
+        /// the <see cref="Ped"/>. If <see langword="null"/> is set, gangster and any animal models will not be chosen,
+        /// including animals that do not swim or fly. Note that <see cref="CreateRandom(GTA.Math.Vector3)"/> and
+        /// `<c>CREATE_RANDOM_PED</c>` can pick a gangster and an animal model that do not swim or fly.
+        /// </para>
+        /// <para>
+        /// The default model prohibition was to imitate how `<c>CREATE_RANDOM_PED</c>` pick a ped model, but it turned
+        /// out that the native does not filter out gang ped models or animal <see cref="Ped"/> models that do not swim
+        /// or fly after SHVDN v3.6.0 was released.
+        /// </para>
+        /// </param>
+        public static Ped CreateRandom(Vector3 position, float heading, Func<Model, bool> predicate = null)
+        {
+            if (World.PedCount >= World.PedCapacity)
+            {
+                return null;
+            }
+
+            IEnumerable<Model> loadedAppropriatePedModels
+                = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
+            Model[] filteredPedModels = predicate != null
+                ? loadedAppropriatePedModels.Where(predicate).ToArray()
+                : loadedAppropriatePedModels.Where(s_defaultPredicateForCreateRandomPed).ToArray();
+            int filteredModelCount = filteredPedModels.Length;
+            if (filteredModelCount == 0)
+            {
+                return null;
+            }
+
+            Random rand = RandomHelper.Instance;
+            Model pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
+
+            // the model should be loaded at this moment, so call `CREATE_PED` immediately
+            var createdPed = new Ped(Function.Call<int>(Hash.CREATE_PED, 26, pickedModel, position.X, position.Y,
+                position.Z, heading, false, false));
+
+            // Randomize variation but not ped props, just like `CREATE_RANDOM_PED` does.
+            const int Race = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
+            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, Race);
+
+            return createdPed;
         }
 
         /// <summary>

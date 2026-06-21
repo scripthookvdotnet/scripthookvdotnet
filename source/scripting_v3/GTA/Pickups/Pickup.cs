@@ -17,6 +17,83 @@ namespace GTA
         {
         }
 
+        /// <inheritdoc cref="Create(PickupType, Vector3, Vector3, PickupPlacementFlags, int, EulerRotationOrder, Model)"/>
+        public static Pickup Create(
+            PickupType type,
+            Vector3 position,
+            PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
+            int amount = -1,
+            Model customModel = default)
+        {
+            if (customModel.Hash != 0 && !customModel.Request(1000))
+            {
+                return null;
+            }
+
+            // The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
+            int handle = Function.Call<int>(Hash.CREATE_PICKUP,
+                (int)type,
+                position.X,
+                position.Y,
+                position.Z,
+                (int)placementFlags,
+                amount,
+                true,
+                customModel.Hash);
+
+            return handle == 0 ? null : new Pickup(handle);
+        }
+
+        /// <summary>
+        /// Creates a pickup spawner (a <see cref="Pickup"/> instance) which can be referenced by the script and will spawn a pickup whenever the player gets near.
+        /// This spawner can also regenerate the pickup after it is collected.
+        /// The spawner is removed when the script terminates.
+        /// </summary>
+        /// <param name="type">The pickup type hash.</param>
+        /// <param name="position">The pickup position to place in world space.</param>
+        /// <param name="rotation">The pickup orientation.</param>
+        /// <param name="placementFlags">The pickup placement flags.</param>
+        /// <param name="amount">
+        /// A variable amount that can be specified for some pickups, such as money or ammo.
+        /// Leave this parameter as <c>-1</c> to apply the default amount.
+        /// </param>
+        /// <param name="rotOrder">The rotation order in world space.</param>
+        /// <param name="customModel">
+        /// If set to non-zero value, this model will be used for the pickup instead of the default one.
+        /// </param>
+        public static Pickup Create(
+            PickupType type,
+            Vector3 position,
+            Vector3 rotation,
+            PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
+            int amount = -1,
+            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ,
+            Model customModel = default
+        )
+        {
+            if (customModel.Hash != 0 && !customModel.Request(1000))
+            {
+                return null;
+            }
+
+            // The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
+            int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE,
+                (int)type,
+                position.X,
+                position.Y,
+                position.Z,
+                rotation.X,
+                rotation.Y,
+                rotation.Z,
+                (int)placementFlags,
+                amount,
+                (int)rotOrder,
+                true,
+                customModel.Hash);
+
+            return handle == 0 ? null : new Pickup(handle);
+        }
+
         /// <summary>
         /// The position of this <see cref="Pickup"/> placement.
         /// </summary>

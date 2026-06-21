@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
 using GTA.Math;
 using GTA.Native;
 
@@ -7,6 +10,8 @@ namespace GTA
 {
     public static partial class World
     {
+        private static readonly Func<Model, bool> s_defaultPredicateForCreateRandomPed = x => x.IsHumanPed && !x.IsGangPed;
+
         /// <inheritdoc cref="GTA.Chrono.GameClock.IsPaused"/>
         [Obsolete("World.IsClockPaused is obsolete, use GTA.Chrono.IsPaused instead.")]
         public static bool IsClockPaused
@@ -312,6 +317,280 @@ namespace GTA
         public static float GetDistance(Vector3 origin, Vector3 destination)
         {
             return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
+        }
+
+        /// <inheritdoc cref="Blip.Create(Vector3)"/>
+        [Obsolete("Use Blip.Create(Vector3) instead.")]
+        public static Blip CreateBlip(Vector3 position)
+        {
+            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z));
+        }
+
+        /// <inheritdoc cref="Blip.Create(Vector3, float)"/>\
+        [Obsolete("Use Blip.Create(Vector3, float) instead.")]
+        public static Blip CreateBlip(Vector3 position, float radius)
+        {
+            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius));
+        }
+
+        /// <inheritdoc cref="Ped.Create(Model, Vector3, float)"/>
+        [Obsolete("Use Ped.Create(Model, Vector3, float) instead.")]
+        public static Ped CreatePed(Model model, Vector3 position, float heading = 0f)
+        {
+            if (PedCount >= PedCapacity || !model.IsPed || !model.Request(1000))
+            {
+                return null;
+            }
+
+            // The first parameter "PedType" does not have actual effect, the function always eventually uses the "Pedtype"
+            // value for the model (in peds.ymt or peds.meta) instead
+            // Actually the value is read when the function is called but eventually overwritten before getting used in a meaningful way
+            return new Ped(Function.Call<int>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+        }
+
+        /// <inheritdoc cref="Ped.CreateRandom(Vector3)"/>
+        [Obsolete("Use Ped.CreateRandom(Vector3) instead.")]
+        public static Ped CreateRandomPed(Vector3 position)
+        {
+            if (PedCount >= PedCapacity)
+            {
+                return null;
+            }
+
+            return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z));
+        }
+
+        /// <inheritdoc cref="Ped.CreateRandom(Vector3, float, Func{Model, bool})"/>
+        [Obsolete("Use Ped.CreateRandom(Vector3, float, Func<Model, bool>) instead.")]
+        public static Ped CreateRandomPed(Vector3 position, float heading, Func<Model, bool> predicate = null)
+        {
+            if (PedCount >= PedCapacity)
+            {
+                return null;
+            }
+
+            IEnumerable<Model> loadedAppropriatePedModels
+                = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
+            Model[] filteredPedModels = predicate != null
+                ? loadedAppropriatePedModels.Where(predicate).ToArray()
+                : loadedAppropriatePedModels.Where(s_defaultPredicateForCreateRandomPed).ToArray();
+            int filteredModelCount = filteredPedModels.Length;
+            if (filteredModelCount == 0)
+            {
+                return null;
+            }
+
+            Random rand = RandomHelper.Instance;
+            Model pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
+
+            // the model should be loaded at this moment, so call `CREATE_PED` immediately
+            var createdPed = new Ped(Function.Call<int>(Hash.CREATE_PED, 26, pickedModel, position.X, position.Y,
+                position.Z, heading, false, false));
+
+            // Randomize variation but not ped props, just like `CREATE_RANDOM_PED` does.
+            const int Race = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
+            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, Race);
+
+            return createdPed;
+        }
+
+        /// <inheritdoc cref="Vehicle.Create(Model, Vector3, float)"/>
+        [Obsolete("Use Vehicle.Create(Model, Vector3, float) instead.")]
+        public static Vehicle CreateVehicle(Model model, Vector3 position, float heading = 0f)
+        {
+            if (VehicleCount >= VehicleCapacity || !model.IsVehicle || !model.Request(1000))
+            {
+                return null;
+            }
+
+            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+        }
+
+        /// <inheritdoc cref="Vehicle.CreateRandom(Vector3, float, Func{Model, bool}"/>
+        [Obsolete("Use Vehicle.CreateRandom(Vector3, float, Func<Model, bool>) instead.")]
+        public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f, Func<Model, bool> predicate = null)
+        {
+            if (VehicleCount >= VehicleCapacity)
+            {
+                return null;
+            }
+
+            IEnumerable<Model> loadedAppropriateVehModels = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
+            Model[] filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
+            int filteredModelCount = filteredVehModels.Length;
+            if (filteredModelCount == 0)
+            {
+                return null;
+            }
+
+            Random rand = RandomHelper.Instance;
+            Model pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
+
+            // the model should be loaded at this moment, so call CREATE_VEHICLE immediately
+            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z, heading, false, false));
+        }
+
+        /// <inheritdoc cref="Checkpoint.Create(CheckpointIcon, Vector3, Vector3, float, Color)"/>
+        [Obsolete("Use Checkpoint.Create(CheckpointIcon, Vector3, Vector3, float, Color) instead.")]
+        public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
+        {
+            int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
+                (int)icon,
+                position.X,
+                position.Y,
+                position.Z,
+                pointTo.X,
+                pointTo.Y,
+                pointTo.Z,
+                radius,
+                color.R,
+                color.G,
+                color.B,
+                color.A,
+                0);
+            return handle != 0 ? new Checkpoint(handle) : null;
+        }
+
+        /// <inheritdoc cref="Checkpoint.Create(CheckpointCustomIcon, Vector3, Vector3, float, Color)"/>
+        [Obsolete("Use Checkpoint.Create(CheckpointCustomIcon, Vector3, Vector3, float, Color) instead.")]
+        public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
+        {
+            int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
+                44,
+                position.X,
+                position.Y,
+                position.Z,
+                pointTo.X,
+                pointTo.Y,
+                pointTo.Z,
+                radius,
+                color.R,
+                color.G,
+                color.B,
+                color.A,
+                icon);
+            return handle != 0 ? new Checkpoint(handle) : null;
+        }
+
+        /// <inheritdoc cref="CreateProp(Model, Vector3, bool, bool)"/>
+        [Obsolete("Use Prop.Create(Model, Vector3, bool, bool) instead.")]
+        public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
+        {
+            if (PropCount >= PropCapacity || !model.Request(1000))
+            {
+                return null;
+            }
+
+            if (placeOnGround)
+            {
+                GetGroundHeight(position, out float groundHeight);
+                position.Z = groundHeight; // will be zero if the test failed since values will be initialized with zero by default in C#
+            }
+
+            return new Prop(Function.Call<int>(Hash.CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
+        }
+
+        /// <inheritdoc cref="Prop.Create(Model, Vector3, Vector3, bool, bool)"/>
+        [Obsolete("Use Prop.Create(Model, Vector3, Vector3, bool, bool) instead.")]
+        public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
+        {
+            Prop prop = CreateProp(model, position, dynamic, placeOnGround);
+
+            if (prop != null)
+            {
+                prop.Rotation = rotation;
+            }
+
+            return prop;
+        }
+
+        /// <inheritdoc cref="Prop.CreateNoOffset(Model, Vector3, bool)"/>
+        [Obsolete("Use Prop.CreateNoOffset(Model, Vector3, bool) instead.")]
+        public static Prop CreatePropNoOffset(Model model, Vector3 position, bool dynamic)
+        {
+            if (PropCount >= PropCapacity || !model.Request(1000))
+            {
+                return null;
+            }
+
+            return new Prop(Function.Call<int>(Hash.CREATE_OBJECT_NO_OFFSET, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
+        }
+
+        /// <inheritdoc cref="Prop.CreateNoOffset(Model, Vector3, Vector3, bool)"/>
+        [Obsolete("Use Prop.CreateNoOffset(Model, Vector3, Vector3, bool) instead.")]
+        public static Prop CreatePropNoOffset(Model model, Vector3 position, Vector3 rotation, bool dynamic)
+        {
+            Prop prop = CreatePropNoOffset(model, position, dynamic);
+
+            if (prop != null)
+            {
+                prop.Rotation = rotation;
+            }
+
+            return prop;
+        }
+
+        /// <inheritdoc cref="Pickup.Create(PickupType, Vector3, PickupPlacementFlags, int, Model)"/>
+        [Obsolete("Use Pickup.Create(PickupType, Vector3, PickupPlacementFlags, int, Model) instead.")]
+        public static Pickup CreatePickup(
+            PickupType type,
+            Vector3 position,
+            PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
+            int amount = -1,
+            Model customModel = default)
+        {
+            if (customModel.Hash != 0 && !customModel.Request(1000))
+            {
+                return null;
+            }
+
+            // The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
+            int handle = Function.Call<int>(Hash.CREATE_PICKUP,
+                (int)type,
+                position.X,
+                position.Y,
+                position.Z,
+                (int)placementFlags,
+                amount,
+                true,
+                customModel.Hash);
+
+            return handle == 0 ? null : new Pickup(handle);
+        }
+
+        /// <inheritdoc cref="Pickup.Create(PickupType, Vector3, Vector3, PickupPlacementFlags, int, EulerRotationOrder, Model)"/>
+        [Obsolete("Use Pickup.Create(PickupType, Vector3, Vector3, PickupPlacementFlags, int, EulerRotationOrder, Model) instead.")]
+        public static Pickup CreatePickup(
+            PickupType type,
+            Vector3 position,
+            Vector3 rotation,
+            PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
+            int amount = -1,
+            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ,
+            Model customModel = default
+        )
+        {
+            if (customModel.Hash != 0 && !customModel.Request(1000))
+            {
+                return null;
+            }
+
+            // The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
+            int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE,
+                (int)type,
+                position.X,
+                position.Y,
+                position.Z,
+                rotation.X,
+                rotation.Y,
+                rotation.Z,
+                (int)placementFlags,
+                amount,
+                (int)rotOrder,
+                true,
+                customModel.Hash);
+
+            return handle == 0 ? null : new Pickup(handle);
         }
     }
 }
