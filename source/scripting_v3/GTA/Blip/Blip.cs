@@ -346,56 +346,45 @@ namespace GTA
         }
 
         /// <summary>
-        /// Sets the scale of this <see cref="Blip"/> on the map.
+        /// Gets or sets the scale of this <see cref="Blip"/> on the map.
         /// </summary>
-        public float Scale
-        {
-            set => Function.Call(Hash.SET_BLIP_SCALE, Handle, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the x-axis scale of this <see cref="Blip"/> on the map.
-        /// The value is the same as <see cref="ScaleY"/> in v1.0.393.4 or earlier versions.
-        /// </summary>
-        public float ScaleX
+        /// <remarks>
+        /// Prior to <c>b463</c> both width and height will return the same value.
+        /// In these versions the value is set to the average of both height and width.
+        /// </remarks>
+        public SizeF ScaleF
         {
             get
             {
                 if (!TryGetMemoryAddress(out IntPtr address))
-                    return 0;
+                    return new SizeF(1f, 1f);
 
-                return SHVDN.MemDataMarshal.ReadFloat(address + 0x50);
+                float scaleX = SHVDN.MemDataMarshal.ReadFloat(address + 0x50);
+
+                if (Game.FileVersion < ExeVersionConsts.v1_0_463_1)
+                    return new SizeF(scaleX, scaleX);
+
+                float scaleY = SHVDN.MemDataMarshal.ReadFloat(address + 0x54);
+
+                return new SizeF(scaleX, scaleY);
             }
             set
             {
+                if (Game.FileVersion < ExeVersionConsts.v1_0_463_1)
+                {
+                    Function.Call(Hash.SET_BLIP_SCALE, Handle, (value.Width + value.Height) / 2f);
+                }
+
+                if (Game.FileVersion >= ExeVersionConsts.v1_0_1734_0)
+                {
+                    Function.Call(Hash.SET_BLIP_SCALE_2D, Handle, value.Width, value.Height);
+                }
+
                 if (!TryGetMemoryAddress(out IntPtr address))
                     return;
 
-                SHVDN.MemDataMarshal.WriteFloat(address + 0x50, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the y-axis scale of this <see cref="Blip"/> on the map.
-        /// The value is the same as <see cref="ScaleX"/> in v1.0.393.4 or earlier versions.
-        /// </summary>
-        public float ScaleY
-        {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return 0;
-
-                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_463_1 ? 0x54 : 0x50;
-                return SHVDN.MemDataMarshal.ReadFloat(address + offset);
-            }
-            set
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return;
-
-                int offset = Game.FileVersion >= ExeVersionConsts.v1_0_463_1 ? 0x54 : 0x50;
-                SHVDN.MemDataMarshal.WriteFloat(address + offset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + 0x50, value.Width);
+                SHVDN.MemDataMarshal.WriteFloat(address + 0x54, value.Height);
             }
         }
 
