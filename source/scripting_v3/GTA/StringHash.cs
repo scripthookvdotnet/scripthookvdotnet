@@ -139,8 +139,8 @@ namespace GTA
             foreach (byte c in input)
             {
                 hash += s_normalizeCaseAndSlashLookup[c];
-                hash += (hash << 10);
-                hash ^= (hash >> 6);
+                hash += hash << 10;
+                hash ^= hash >> 6;
             }
 
             return hash;
@@ -316,7 +316,7 @@ namespace GTA
                 return initValue;
             }
 
-            return AtPartialStringHash(Encoding.ASCII.GetBytes(input), initValue);
+            return AtLiteralStringHash(Encoding.ASCII.GetBytes(input), initValue);
         }
 
         /// <summary>
@@ -339,8 +339,8 @@ namespace GTA
             foreach (byte c in input)
             {
                 hash += c;
-                hash += (hash << 10);
-                hash ^= (hash >> 6);
+                hash += hash << 10;
+                hash ^= hash >> 6;
             }
 
             return AtFinalizeHash(hash);
@@ -364,7 +364,7 @@ namespace GTA
                 return initValue;
             }
 
-            return AtPartialStringHash(Encoding.UTF8.GetBytes(input), initValue);
+            return AtLiteralStringHash(Encoding.UTF8.GetBytes(input), initValue);
         }
 
         /// <summary>
@@ -375,9 +375,9 @@ namespace GTA
         public static uint AtFinalizeHash(uint partialHashValue)
         {
             uint hash = partialHashValue;
-            hash += (hash << 3);
-            hash ^= (hash >> 11);
-            hash += (hash << 15);
+            hash += hash << 3;
+            hash ^= hash >> 11;
+            hash += hash << 15;
             return hash;
         }
 
@@ -394,8 +394,8 @@ namespace GTA
                 }
 
                 hash += s_normalizeCaseAndSlashLookup[c];
-                hash += (hash << 10);
-                hash ^= (hash >> 6);
+                hash += hash << 10;
+                hash ^= hash >> 6;
             }
 
             return hash;

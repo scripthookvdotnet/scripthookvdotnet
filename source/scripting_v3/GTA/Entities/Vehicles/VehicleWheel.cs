@@ -7,17 +7,16 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace GTA
 {
     /// <summary>
     /// Represents a vehicle wheel for a vehicle (internally for a <c>CWheel</c> struct).
     /// </summary>
-    public sealed class VehicleWheel
+    public sealed partial class VehicleWheel
     {
         #region Fields
-        IntPtr _cachedAddress;
+        private IntPtr _cachedAddress;
 
         internal static readonly VehicleWheelBoneId[] vehicleWheelBoneIndexTableForNatives = {
             VehicleWheelBoneId.WheelLeftFront,
@@ -31,7 +30,7 @@ namespace GTA
         };
 
         internal static readonly Dictionary<VehicleWheelBoneId, ScriptVehicleWheelIndex> vehicleScriptWheelIndicesForBoneIds
-            = new Dictionary<VehicleWheelBoneId, ScriptVehicleWheelIndex>(10)
+            = new(10)
         {
             { VehicleWheelBoneId.WheelLeftFront, ScriptVehicleWheelIndex.CarFrontLeft },
             { VehicleWheelBoneId.WheelRightFront, ScriptVehicleWheelIndex.CarFrontRight },
@@ -105,13 +104,6 @@ namespace GTA
         {
             get;
         }
-
-        /// <summary>
-        /// Gets the script wheel index for native functions.
-        /// </summary>
-        [Obsolete("Use VehicleWheel.BoneId or VehicleWheel.ScriptIndex instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public int Index => (int)ScriptIndex;
 
         /// <summary>
         /// Gets the script wheel index for native functions.

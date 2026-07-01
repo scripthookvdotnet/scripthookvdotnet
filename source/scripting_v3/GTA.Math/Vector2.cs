@@ -146,7 +146,7 @@ namespace GTA.Math
         /// <returns>The length of the vector.</returns>
         public readonly float Length()
         {
-            return (float)System.Math.Sqrt((X * X) + (Y * Y));
+            return (float)System.Math.Sqrt(X * X + Y * Y);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace GTA.Math
         /// <returns>The squared length of the vector.</returns>
         public readonly float LengthSquared()
         {
-            return (X * X) + (Y * Y);
+            return X * X + Y * Y;
         }
 
         /// <summary>
@@ -247,9 +247,9 @@ namespace GTA.Math
         public static Vector2 RandomXY()
         {
             Vector2 v;
-            double radian = Random.Instance.NextDouble() * 2 * System.Math.PI;
-            v.X = (float)(System.Math.Cos(radian));
-            v.Y = (float)(System.Math.Sin(radian));
+            double radian = RandomHelper.Instance.NextDouble() * 2 * System.Math.PI;
+            v.X = (float)System.Math.Cos(radian);
+            v.Y = (float)System.Math.Sin(radian);
             v.Normalize();
             return v;
         }
@@ -311,12 +311,12 @@ namespace GTA.Math
         public static Vector2 Clamp(Vector2 value, Vector2 min, Vector2 max)
         {
             float x = value.X;
-            x = (x > max.X) ? max.X : x;
-            x = (x < min.X) ? min.X : x;
+            x = x > max.X ? max.X : x;
+            x = x < min.X ? min.X : x;
 
             float y = value.Y;
-            y = (y > max.Y) ? max.Y : y;
-            y = (y < min.Y) ? min.Y : y;
+            y = y > max.Y ? max.Y : y;
+            y = y < min.Y ? min.Y : y;
 
             return new Vector2(x, y);
         }
@@ -337,8 +337,8 @@ namespace GTA.Math
         {
             Vector2 vector;
 
-            vector.X = start.X + ((end.X - start.X) * amount);
-            vector.Y = start.Y + ((end.Y - start.Y) * amount);
+            vector.X = start.X + (end.X - start.X) * amount;
+            vector.Y = start.Y + (end.Y - start.Y) * amount;
 
             return vector;
         }
@@ -360,7 +360,7 @@ namespace GTA.Math
         /// <param name="left">First source vector.</param>
         /// <param name="right">Second source vector.</param>
         /// <returns>The dot product of the two vectors.</returns>
-        public static float Dot(Vector2 left, Vector2 right) => (left.X * right.X + left.Y * right.Y);
+        public static float Dot(Vector2 left, Vector2 right) => left.X * right.X + left.Y * right.Y;
 
         /// <summary>
         /// Returns the reflection of a vector off a surface that has the specified normal.
@@ -373,10 +373,10 @@ namespace GTA.Math
         public static Vector2 Reflect(Vector2 vector, Vector2 normal)
         {
             Vector2 result;
-            float dot = ((vector.X * normal.X) + (vector.Y * normal.Y));
+            float dot = vector.X * normal.X + vector.Y * normal.Y;
 
-            result.X = vector.X - ((2.0f * dot) * normal.X);
-            result.Y = vector.Y - ((2.0f * dot) * normal.Y);
+            result.X = vector.X - 2.0f * dot * normal.X;
+            result.Y = vector.Y - 2.0f * dot * normal.Y;
 
             return result;
         }
@@ -390,8 +390,8 @@ namespace GTA.Math
         public static Vector2 Minimize(Vector2 left, Vector2 right)
         {
             Vector2 vector;
-            vector.X = (left.X < right.X) ? left.X : right.X;
-            vector.Y = (left.Y < right.Y) ? left.Y : right.Y;
+            vector.X = left.X < right.X ? left.X : right.X;
+            vector.Y = left.Y < right.Y ? left.Y : right.Y;
             return vector;
         }
         /// <summary>
@@ -403,8 +403,8 @@ namespace GTA.Math
         public static Vector2 Maximize(Vector2 left, Vector2 right)
         {
             Vector2 vector;
-            vector.X = (left.X > right.X) ? left.X : right.X;
-            vector.Y = (left.Y > right.Y) ? left.Y : right.Y;
+            vector.X = left.X > right.X ? left.X : right.X;
+            vector.Y = left.Y > right.Y ? left.Y : right.Y;
             return vector;
         }
 
@@ -507,13 +507,13 @@ namespace GTA.Math
         /// <param name="format">
         /// A standard or custom numeric format string that defines the format of individual elements.
         /// </param>
-        /// <param name="provider">
+        /// <param name="formatProvider">
         /// A format provider that supplies culture-specific formatting information.
         /// </param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public readonly string ToString(string format, IFormatProvider provider)
+        public readonly string ToString(string format, IFormatProvider formatProvider)
         {
-            return $"X:{X.ToString(format, provider)} Y:{Y.ToString(format, provider)}";
+            return $"X:{X.ToString(format, formatProvider)} Y:{Y.ToString(format, formatProvider)}";
         }
 
         /// <summary>
@@ -548,6 +548,6 @@ namespace GTA.Math
         /// </summary>
         /// <param name="other">Object to make the comparison with.</param>
         /// <returns><see langword="true" /> if the current instance is equal to the specified object; <see langword="false" /> otherwise.</returns>
-        public readonly bool Equals(Vector2 other) => (X == other.X && Y == other.Y);
+        public readonly bool Equals(Vector2 other) => X == other.X && Y == other.Y;
     }
 }

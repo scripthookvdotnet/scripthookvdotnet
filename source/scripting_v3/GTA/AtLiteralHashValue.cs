@@ -31,7 +31,7 @@ namespace GTA
         /// <summary>
         /// Gets the null value of <see cref="AtLiteralHashValue"/>, whose hash is zero.
         /// </summary>
-        public static AtLiteralHashValue Null => new AtLiteralHashValue(0);
+        public static AtLiteralHashValue Null => new(0);
 
         /// <summary>
         /// Returns a value that indicates whether this instance is the null <see cref="AtLiteralHashValue"/>,
@@ -54,14 +54,14 @@ namespace GTA
         /// instead.
         /// </remarks>
         public static AtLiteralHashValue FromString(string input)
-            => new AtLiteralHashValue(StringHash.AtLiteralStringHash(input));
+            => new(StringHash.AtLiteralStringHash(input));
         /// <summary>
         /// Computes an <see cref="AtLiteralHashValue"/> from an array of <see cref="byte"/>.
         /// </summary>
         /// <param name="input">An array of <see cref="byte"/>.</param>
         /// <returns>An <see cref="AtLiteralHashValue"/> that contains the calculated hash.</returns>
         public static AtLiteralHashValue FromBytes(byte[] input)
-            => new AtLiteralHashValue(StringHash.AtLiteralStringHash(input));
+            => new(StringHash.AtLiteralStringHash(input));
         /// <summary>
         /// Computes an <see cref="AtLiteralHashValue"/> from a <see cref="string"/>.
         /// <paramref name="input"/> will be converted to a UTF-8 sequence before hashing.
@@ -72,7 +72,7 @@ namespace GTA
         /// </param>
         /// <returns>An <see cref="AtLiteralHashValue"/> that contains the calculated hash.</returns>
         public static AtLiteralHashValue FromStringUtf8(string input)
-            => new AtLiteralHashValue(StringHash.AtLiteralStringHashUtf8(input));
+            => new(StringHash.AtLiteralStringHashUtf8(input));
 
         /// <summary>
         /// Compares this instance for equality with <paramref name="other"/>.

@@ -4,15 +4,13 @@
 //
 
 using GTA.Native;
-using System;
-using System.ComponentModel;
 
 namespace GTA
 {
-    public sealed class PedProp : IPedVariation
+    public sealed partial class PedProp : IPedVariation
     {
         #region Fields
-        readonly Ped _ped;
+        private readonly Ped _ped;
         #endregion
 
         internal PedProp(Ped ped, PedPropType propId)
@@ -28,10 +26,6 @@ namespace GTA
         }
 
         public string Name => AnchorPoint.ToString();
-
-        [Obsolete("PedProp.Type is obsolete, use PedProp.AnchorPoint instead."),
-         EditorBrowsable(EditorBrowsableState.Never)]
-        public PedPropType Type => (PedPropType)AnchorPoint;
 
         public PedPropAnchorPoint AnchorPoint
         {
@@ -104,9 +98,9 @@ namespace GTA
         /// variations.
         /// </summary>
         private static bool IsPedPropDrawableVariationValid(Ped ped, PedPropAnchorPoint anchorPoint, int drawableIndex)
-            => (drawableIndex >= 0 &&
-                (drawableIndex < Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, ped.Handle,
-                    (int)anchorPoint)));
+            => drawableIndex >= 0 &&
+                drawableIndex < Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_DRAWABLE_VARIATIONS, ped.Handle,
+                    (int)anchorPoint);
 
         /// <summary>
         /// Returns a value that indicates whether the drawable index is valid for the specified <see cref="Ped"/>
@@ -116,21 +110,11 @@ namespace GTA
         /// </summary>
         private static bool IsPedPropTextureVariationValid(Ped ped, PedPropAnchorPoint anchorPoint, int drawableIndex,
             int textureIndex)
-            => (textureIndex >= 0 &&
-                (textureIndex < Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, ped.Handle,
-                    (int)anchorPoint, drawableIndex)));
+            => textureIndex >= 0 &&
+                textureIndex < Function.Call<int>(Hash.GET_NUMBER_OF_PED_PROP_TEXTURE_VARIATIONS, ped.Handle,
+                    (int)anchorPoint, drawableIndex);
 
         public bool HasVariations => Count > 1;
-
-        [Obsolete("PedProp.HasTextureVariations is obsolete because it does not make sense " +
-                  "as texture count cannot be determined without specifying both prop position id and drawable id."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public bool HasTextureVariations => Count > 1 && TextureCount > 1;
-
-        [Obsolete("PedProp.HasAnyVariations is obsolete because it does not make sense " +
-          "as texture count cannot be determined without specifying both prop position id and drawable id."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public bool HasAnyVariations => HasVariations;
 
         public override string ToString()
         {

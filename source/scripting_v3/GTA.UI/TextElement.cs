@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,7 +13,7 @@ using GTA.Native;
 
 namespace GTA.UI
 {
-    public class TextElement : IWorldDrawableElement
+    public partial class TextElement : IWorldDrawableElement
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TextElement"/> class used for drawing text on the screen.
@@ -237,20 +236,6 @@ namespace GTA.UI
         {
             get; set;
         }
-        /// <summary>
-        /// Gets or sets a value indicating whether the alignment of this <see cref="TextElement" /> is centered.
-        /// See <see cref="Alignment"/>
-        /// </summary>
-        /// <value>
-        ///   <see langword="true" /> if centered; otherwise, <see langword="false" />.
-        /// </value>
-        [Obsolete("`TextElement.Centered` is obsolete because it is redundant and setting the property to false is " +
-            "confusing. Use `TextElement.Alignment` instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public bool Centered
-        {
-            get => Alignment == Alignment.Center;
-            set => Alignment = value ? Alignment.Center : Alignment.Left;
-        }
 
         /// <summary>
         /// Measures how many pixels in the horizontal axis this <see cref="TextElement"/> will use when drawn	against a 1280 pixel base
@@ -318,7 +303,7 @@ namespace GTA.UI
                 switch (Alignment)
                 {
                     case Alignment.Center:
-                        Function.Call(Hash.SET_TEXT_WRAP, x - (w / 2), x + (w / 2));
+                        Function.Call(Hash.SET_TEXT_WRAP, x - w / 2, x + w / 2);
                         break;
                     case Alignment.Left:
                         Function.Call(Hash.SET_TEXT_WRAP, x, x + w);
@@ -462,7 +447,7 @@ namespace GTA.UI
             Function.Call(Hash.CLEAR_DRAW_ORIGIN);
         }
 
-        void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
+        private void InternalDraw(SizeF offset, float screenWidth, float screenHeight)
         {
             if (!Enabled)
             {
@@ -492,7 +477,7 @@ namespace GTA.UI
                 switch (Alignment)
                 {
                     case Alignment.Center:
-                        Function.Call(Hash.SET_TEXT_WRAP, x - (w / 2), x + (w / 2));
+                        Function.Call(Hash.SET_TEXT_WRAP, x - w / 2, x + w / 2);
                         break;
                     case Alignment.Left:
                         Function.Call(Hash.SET_TEXT_WRAP, x, x + w);

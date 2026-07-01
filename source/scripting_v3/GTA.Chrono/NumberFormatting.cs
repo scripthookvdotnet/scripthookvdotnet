@@ -1,12 +1,10 @@
-﻿//
+//
 // Copyright (C) 2024 kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace GTA.Chrono
 {
@@ -32,12 +30,10 @@ namespace GTA.Chrono
         // which `DateTime` uses when `ToString` is called in .NET Framework 4.8 (more than 2x faster).
         internal static unsafe void WriteTwoDigits(uint value, char* ptr)
         {
-            unsafe
-            {
-                int offsetFromDigitsCharsArray = (int)(value * 2);
-                ptr[0] = TwoDigitsChars[offsetFromDigitsCharsArray];
-                ptr[1] = TwoDigitsChars[offsetFromDigitsCharsArray + 1];
-            }
+            int offsetFromDigitsCharsArray = (int)(value * 2);
+
+            ptr[0] = TwoDigitsChars[offsetFromDigitsCharsArray];
+            ptr[1] = TwoDigitsChars[offsetFromDigitsCharsArray + 1];
         }
 
         internal static unsafe void WriteFourDigits(uint value, char* ptr)
@@ -50,20 +46,17 @@ namespace GTA.Chrono
 
         internal static unsafe void WriteDigits(uint value, char* ptr, int count)
         {
-            unsafe
+            char* cur;
+            for (cur = ptr + count - 1; cur > ptr; cur--)
             {
-                char* cur;
-                for (cur = ptr + count - 1; cur > ptr; cur--)
-                {
-                    uint temp = '0' + value;
-                    value /= 10;
-                    *cur = (char)(temp - (value * 10));
-                }
-
-                Debug.Assert(value < 10);
-                Debug.Assert(cur == ptr);
-                *cur = (char)('0' + value);
+                uint temp = '0' + value;
+                value /= 10;
+                *cur = (char)(temp - value * 10);
             }
+
+            Debug.Assert(value < 10);
+            Debug.Assert(cur == ptr);
+            *cur = (char)('0' + value);
         }
 
         internal static unsafe void WriteDigits(ulong value, char* ptr, int count)
@@ -73,7 +66,7 @@ namespace GTA.Chrono
             {
                 ulong temp = '0' + value;
                 value /= 10;
-                *cur = (char)(temp - (value * 10));
+                *cur = (char)(temp - value * 10);
             }
 
             Debug.Assert(value < 10);

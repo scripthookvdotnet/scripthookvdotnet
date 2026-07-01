@@ -12,18 +12,64 @@ using System.Linq;
 
 namespace GTA
 {
-    public sealed class Vehicle : Entity
+    public sealed partial class Vehicle : Entity
     {
         #region Fields
-        VehicleDoorCollection _doors;
-        VehicleModCollection _mods;
-        VehicleExtraCollection _extras;
-        VehicleWheelCollection _wheels;
-        VehicleWindowCollection _windows;
+        private VehicleDoorCollection _doors;
+        private VehicleModCollection _mods;
+        private VehicleExtraCollection _extras;
+        private VehicleWheelCollection _wheels;
+        private VehicleWindowCollection _windows;
         #endregion
 
         internal Vehicle(int handle) : base(handle)
         {
+        }
+
+        /// <summary>
+        /// Spawns a <see cref="Vehicle"/> of the given <see cref="Model"/> at the position and heading specified.
+        /// </summary>
+        /// <param name="model">The <see cref="Model"/> of the <see cref="Vehicle"/>.</param>
+        /// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
+        /// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
+        /// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
+        public static Vehicle Create(Model model, Vector3 position, float heading = 0f)
+        {
+            if (World.VehicleCount >= World.VehicleCapacity || !model.IsVehicle || !model.Request(1000))
+            {
+                return null;
+            }
+
+            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
+        }
+
+        /// <summary>
+        /// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified.
+        /// </summary>
+        /// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
+        /// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
+        /// <param name="predicate">The method that determines whether a model should be considered when choosing a random model for the <see cref="Vehicle"/>.</param>
+        /// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned.</remarks>
+        public static Vehicle CreateRandom(Vector3 position, float heading = 0f, Func<Model, bool> predicate = null)
+        {
+            if (World.VehicleCount >= World.VehicleCapacity)
+            {
+                return null;
+            }
+
+            IEnumerable<Model> loadedAppropriateVehModels = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
+            Model[] filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
+            int filteredModelCount = filteredVehModels.Length;
+            if (filteredModelCount == 0)
+            {
+                return null;
+            }
+
+            Random rand = RandomHelper.Instance;
+            Model pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
+
+            // the model should be loaded at this moment, so call CREATE_VEHICLE immediately
+            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z, heading, false, false));
         }
 
         /// <summary>
@@ -143,10 +189,7 @@ namespace GTA
                 && Function.Call<bool>(Hash.IS_ROCKET_BOOST_ACTIVE, Handle);
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_944_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_944_2), nameof(Vehicle), nameof(IsRocketBoostActive));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_944_2, nameof(Vehicle), nameof(IsRocketBoostActive));
 
                 Function.Call(Hash.SET_ROCKET_BOOST_ACTIVE, Handle, value);
             }
@@ -242,46 +285,6 @@ namespace GTA
         /// </para>
         /// </param>
         public void ForceUseAudioGameObject(string gameObjectName) => Function.Call(Hash.FORCE_USE_AUDIO_GAME_OBJECT, Handle, gameObjectName);
-
-        #endregion
-
-        #region Extras
-        /// <summary>
-        /// Determines whether the specified <c>extra</c> is currently enabled on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="extra">The extra to check.</param>
-        /// <returns>
-        /// <see langword="true"/> if the extra is enabled; otherwise, <see langword="false"/>.
-        /// </returns>
-        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Enabled instead!")]
-        public bool IsExtraOn(int extra)
-        {
-            return Function.Call<bool>(Hash.IS_VEHICLE_EXTRA_TURNED_ON, Handle, extra);
-        }
-
-        /// <summary>
-        /// Determines whether the specified <c>extra</c> exists on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="extra">The extra to check.</param>
-        /// <returns>
-        /// <see langword="true"/> if the extra exists; otherwise, <see langword="false"/>.
-        /// </returns>
-        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Exists() instead!")]
-        public bool ExtraExists(int extra)
-        {
-            return Function.Call<bool>(Hash.DOES_EXTRA_EXIST, Handle, extra);
-        }
-
-        /// <summary>
-        /// Enables or disables the specified <c>extra</c> on this <see cref="Vehicle"/>.
-        /// </summary>
-        /// <param name="extra">The extra to enable or disable.</param>
-        /// <param name="toggle"><see langword="true"/> to enable the extra; <see langword="false"/> to disable it.</param>
-        [Obsolete("Use Vehicle.Extras[VehicleExtraIndex].Enabled instead!")]
-        public void ToggleExtra(int extra, bool toggle)
-        {
-            Function.Call(Hash.SET_VEHICLE_EXTRA, Handle, extra, !toggle);
-        }
 
         #endregion
 
@@ -392,7 +395,7 @@ namespace GTA
             get
             {
                 VehicleType vehicleType = Type;
-                return ((uint)vehicleType - 8) <= 1;
+                return (uint)vehicleType - 8 <= 1;
             }
         }
 
@@ -405,7 +408,7 @@ namespace GTA
             get
             {
                 VehicleType vehicleType = Type;
-                return ((uint)vehicleType - 8) <= 2;
+                return (uint)vehicleType - 8 <= 2;
             }
         }
 
@@ -427,7 +430,7 @@ namespace GTA
             get
             {
                 VehicleType vehicleType = Type;
-                return (vehicleType == VehicleType.Motorcycle || vehicleType == VehicleType.Bicycle);
+                return vehicleType == VehicleType.Motorcycle || vehicleType == VehicleType.Bicycle;
             }
         }
 
@@ -664,7 +667,7 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.HandlingDataOffset == 0)
                     return new HandlingData(IntPtr.Zero);
 
-                return new HandlingData(SHVDN.MemDataMarshal.ReadAddress(MemoryAddress + SHVDN.NativeMemory.Vehicle.HandlingDataOffset));
+                return new HandlingData(SHVDN.MemDataMarshal.ReadAddress(address + SHVDN.NativeMemory.Vehicle.HandlingDataOffset));
             }
         }
 
@@ -917,13 +920,7 @@ namespace GTA
         /// </summary>
         public float OilVolume
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return 0.0f;
-
-                return HandlingData.OilVolume;
-            }
+            get => HandlingData.OilVolume;
         }
 
         /// <summary>
@@ -953,29 +950,12 @@ namespace GTA
         /// </summary>
         public float PetrolTankVolume
         {
-            get
-            {
-                if (!TryGetMemoryAddress(out IntPtr address))
-                    return 0.0f;
-
-                return HandlingData.PetrolTankVolume;
-            }
+            get => HandlingData.PetrolTankVolume;
         }
 
         #endregion
 
         #region Performance & Driving
-
-        /// <summary>
-        /// Gets or sets the gears value of this <see cref="Vehicle"/>.
-        /// </summary>
-        [Obsolete("Use Vehicle.HighGear for the high gear value and Vehicle.CurrentGear for the current gear value instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public int Gears
-        {
-            get => HighGear;
-            set => HighGear = value;
-        }
 
         /// <summary>
         /// Gets or sets the high gear value of this <see cref="Vehicle"/>.
@@ -1705,11 +1685,6 @@ namespace GTA
         /// </summary>
         public bool HasDamageDecals => Function.Call<bool>(Hash.GET_DOES_VEHICLE_HAVE_DAMAGE_DECALS, Handle);
 
-
-        /// <inheritdoc cref="Vehicle.HasDamageDecals"/>
-        [Obsolete("Use Vehicle.HasDamageDecals instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public bool IsDamaged => Function.Call<bool>(Hash.GET_DOES_VEHICLE_HAVE_DAMAGE_DECALS, Handle);
-
         /// <summary>
         /// Gets the value that indicates whether this <see cref="Vehicle"/> is driveable.
         /// For the setter, it behaves in the same way as <see cref="IsUndriveable"/> except that this setter negates the value.
@@ -1865,11 +1840,6 @@ namespace GTA
         {
             Function.Call(Hash.SET_VEHICLE_DAMAGE, Handle, position.X, position.Y, position.Z, damage, deformation, localDamage);
         }
-        [Obsolete("Use ApplyDamageDeformation instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public void ApplyDamage(Vector3 position, float damageAmount, float radius)
-        {
-            Function.Call(Hash.SET_VEHICLE_DAMAGE, Handle, position.X, position.Y, position.Z, damageAmount, radius);
-        }
 
         /// <summary>
         /// Returns <see langword="true"/> if the stuck timer of this <see cref="Vehicle"/> for a passed stuck type
@@ -1993,7 +1963,7 @@ namespace GTA
             get => Function.Call<VehicleLandingGearState>(Hash.GET_LANDING_GEAR_STATE, Handle);
             set
             {
-                int state = 0;
+                int state;
                 switch (value)
                 {
                     case VehicleLandingGearState.Deploying:
@@ -2297,10 +2267,7 @@ namespace GTA
         /// </exception>
         public int GetRestrictedAmmoCount(int vehicleWeaponIndex)
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_1011_1)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1011_1), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1011_1, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
             return Function.Call<int>(Hash.GET_VEHICLE_WEAPON_RESTRICTED_AMMO, Handle, vehicleWeaponIndex);
         }
@@ -2327,10 +2294,7 @@ namespace GTA
         /// </exception>
         public void SetRestrictedAmmoCount(int vehicleWeaponIndex, int ammoCount)
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_944_2)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_944_2), nameof(Vehicle), nameof(SetRestrictedAmmoCount));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_944_2, nameof(Vehicle), nameof(SetRestrictedAmmoCount));
 
             Function.Call(Hash.SET_VEHICLE_WEAPON_RESTRICTED_AMMO, Handle, vehicleWeaponIndex, ammoCount);
         }
@@ -2350,19 +2314,13 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1180_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1180_2), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1180_2, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
                 return Function.Call<int>(Hash.GET_VEHICLE_BOMB_AMMO, Handle);
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1180_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1180_2), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1180_2, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
                 Function.Call(Hash.SET_VEHICLE_BOMB_AMMO, Handle, value);
             }
@@ -2383,19 +2341,13 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1180_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1180_2), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1180_2, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
                 return Function.Call<int>(Hash.GET_VEHICLE_COUNTERMEASURE_AMMO, Handle);
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1180_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1180_2), nameof(Vehicle), nameof(GetRestrictedAmmoCount));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1180_2, nameof(Vehicle), nameof(GetRestrictedAmmoCount));
 
                 Function.Call(Hash.SET_VEHICLE_COUNTERMEASURE_AMMO, Handle, value);
             }
@@ -2560,12 +2512,6 @@ namespace GTA
         {
             Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicleBone.Owner, vehicleBone.Index,
                 attachPointOffset.X, attachPointOffset.Y, attachPointOffset.Z);
-        }
-        [Obsolete("Vehicle.TowVehicle(Vehicle, bool) is obsolete because the bone index parameter is incorrectly used " +
-            "as a bool parameter. Use one of the other overload instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public void TowVehicle(Vehicle vehicle, bool rear)
-        {
-            Function.Call(Hash.ATTACH_VEHICLE_TO_TOW_TRUCK, Handle, vehicle.Handle, rear, 0f, 0f, 0f);
         }
 
         /// <summary>
@@ -2737,10 +2683,7 @@ namespace GTA
         /// </summary>
         public void StopBringingToHalt()
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_1103_2)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1103_2), nameof(Vehicle), nameof(StopBringingToHalt));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1103_2, nameof(Vehicle), nameof(StopBringingToHalt));
 
             Function.Call(Hash.STOP_BRINGING_VEHICLE_TO_HALT, Handle);
         }
@@ -2762,10 +2705,7 @@ namespace GTA
         /// <param name="allowPlayerToCancel">Whether to allow the player to cancel parachuting before the vehicle lands</param>
         public void StartParachuting(bool allowPlayerToCancel)
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_944_2)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_944_2), nameof(Vehicle), nameof(StartParachuting));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_944_2, nameof(Vehicle), nameof(StartParachuting));
 
             if (HasParachute)
             {
@@ -2798,14 +2738,11 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset == 0)
                     return 0f;
 
-                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightTargetRatioOffset);
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1290_1)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1290_1), nameof(Vehicle), nameof(SpecialFlightModeTargetRatio));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1290_1, nameof(Vehicle), nameof(SpecialFlightModeTargetRatio));
 
                 Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_TARGET_RATIO, Handle, value);
             }
@@ -2824,14 +2761,11 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset == 0)
                     return 0f;
 
-                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightCurrentRatioOffset);
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1290_1)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1290_1), nameof(Vehicle), nameof(SpecialFlightModeCurrentRatio));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1290_1, nameof(Vehicle), nameof(SpecialFlightModeCurrentRatio));
 
                 Function.Call(Hash.SET_SPECIAL_FLIGHT_MODE_RATIO, Handle, value);
             }
@@ -2850,21 +2784,18 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset == 0)
                     return 0f;
 
-                return SHVDN.MemDataMarshal.ReadFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset);
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset);
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1290_1)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1290_1), nameof(Vehicle), nameof(SpecialFlightModeWingRatio));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1290_1, nameof(Vehicle), nameof(SpecialFlightModeWingRatio));
 
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
 
 
                     return;
 
-                SHVDN.MemDataMarshal.WriteFloat(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset, value);
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.Vehicle.SpecialFlightWingRatioOffset, value);
             }
         }
 
@@ -2885,14 +2816,11 @@ namespace GTA
                 if (!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset == 0)
                     return false;
 
-                return SHVDN.MemDataMarshal.ReadByte(MemoryAddress + SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset) != 0;
+                return SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Vehicle.SpecialFlightAreWingsDisabledOffset) != 0;
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1290_1)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1290_1), nameof(Vehicle), nameof(AreWingsEnabledForSpecialFlightMode));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1290_1, nameof(Vehicle), nameof(AreWingsEnabledForSpecialFlightMode));
 
                 Function.Call(Hash.SET_DISABLE_HOVER_MODE_FLIGHT, Handle, !value);
             }

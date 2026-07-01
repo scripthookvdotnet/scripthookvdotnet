@@ -390,11 +390,8 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets An unknown multiplier for rear balance that have effects only when wheelieing. Should be positive.
+        /// Gets or sets a multiplier controlling how strongly the vehicle resists backward pitch when doing a wheelie.
         /// </summary>
-        /// <value>
-        /// An unknown multiplier for rear balance that have effects only when wheelieing.
-        /// </value>
         public float RearBalanceMultiplier
         {
             get
@@ -418,11 +415,8 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets An unknown multiplier for front balance that have effects only when stopping. Should be positive.
+        /// Gets or sets a multiplier controlling how strongly the vehicle resists forward pitch when doing a stoppie.
         /// </summary>
-        /// <value>
-        /// An unknown multiplier for front balance that have effects only when stopping.
-        /// </value>
         public float FrontBalanceMultiplier
         {
             get

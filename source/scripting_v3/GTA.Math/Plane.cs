@@ -107,9 +107,9 @@ namespace GTA.Math
                 return false;
             }
 
-            dest = ((Vector3.Cross(normalB, normalC) * a.D) +
-                    (Vector3.Cross(normalC, normalA) * b.D) +
-                    (Vector3.Cross(normalA, normalB) * c.D)) /
+            dest = (Vector3.Cross(normalB, normalC) * a.D +
+                    Vector3.Cross(normalC, normalA) * b.D +
+                    Vector3.Cross(normalA, normalB) * c.D) /
                    det;
 
             return true;
@@ -258,18 +258,18 @@ namespace GTA.Math
         /// <param name="format">
         /// A standard or custom numeric format string that defines the format of individual elements.
         /// </param>
-        /// <param name="provider">
+        /// <param name="formatProvider">
         /// A format provider that supplies culture-specific formatting information.
         /// </param>
         /// <returns>The string representation of the value of this instance.</returns>
-        public readonly string ToString(string format, IFormatProvider provider)
+        public readonly string ToString(string format, IFormatProvider formatProvider)
         {
-            return $"Normal:{Normal.ToString(format, provider)} D:{D.ToString(format, provider)}";
+            return $"Normal:{Normal.ToString(format, formatProvider)} D:{D.ToString(format, formatProvider)}";
         }
 
         public readonly bool Equals(Plane value) => Normal.Equals(value.Normal) && D.Equals(value.D);
 
-        public override readonly bool Equals(object value) => value is Plane other && Equals(other);
+        public override readonly bool Equals(object obj) => obj is Plane other && Equals(other);
 
         public override readonly int GetHashCode()
         {

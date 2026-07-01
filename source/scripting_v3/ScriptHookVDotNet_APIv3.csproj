@@ -11,7 +11,7 @@
     <TargetFramework>net48</TargetFramework>
     <LangVersion>9.0</LangVersion>
     <Platforms>x64</Platforms>
-    <NoWarn>1591</NoWarn>
+    <NoWarn>CS1591</NoWarn>
     <DebugType>full</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

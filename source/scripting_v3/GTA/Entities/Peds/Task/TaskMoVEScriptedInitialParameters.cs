@@ -3,7 +3,6 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using GTA.Native;
 using System;
 using System.Runtime.InteropServices;
 
@@ -268,33 +267,33 @@ namespace GTA
             _disposed = false;
         }
 
-        internal readonly AtHashValue ClipSet0 { get; }
+        internal AtHashValue ClipSet0 { get; }
 
-        internal readonly AtHashValue VarClipSet0 { get; }
+        internal AtHashValue VarClipSet0 { get; }
 
-        internal readonly AtHashValue ClipSet1 { get; }
+        internal AtHashValue ClipSet1 { get; }
 
-        internal readonly AtHashValue VarClipSet1 { get; }
+        internal AtHashValue VarClipSet1 { get; }
 
-        internal readonly IntPtr FloatParamNamePtr0 { get; }
+        internal IntPtr FloatParamNamePtr0 { get; }
 
-        internal readonly float FloatParamValue0 { get; }
+        internal float FloatParamValue0 { get; }
 
-        internal readonly float FloatParamLerpValue0 { get; }
+        internal float FloatParamLerpValue0 { get; }
 
-        internal readonly IntPtr FloatParamNamePtr1 { get; }
+        internal IntPtr FloatParamNamePtr1 { get; }
 
-        internal readonly float FloatParamValue1 { get; }
+        internal float FloatParamValue1 { get; }
 
-        internal readonly float FloatParamLerpValue1 { get; }
+        internal float FloatParamLerpValue1 { get; }
 
-        internal readonly IntPtr BoolParamNamePtr0 { get; }
+        internal IntPtr BoolParamNamePtr0 { get; }
 
-        internal readonly bool BoolParamValue0 { get; }
+        internal bool BoolParamValue0 { get; }
 
-        internal readonly IntPtr BoolParamNamePtr1 { get; }
+        internal IntPtr BoolParamNamePtr1 { get; }
 
-        internal readonly bool BoolParamValue1 { get; }
+        internal bool BoolParamValue1 { get; }
 
         private bool _disposed;
 

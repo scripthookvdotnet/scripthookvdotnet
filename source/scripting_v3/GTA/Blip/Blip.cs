@@ -4,7 +4,6 @@
 //
 
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using GTA.Math;
 using GTA.Native;
@@ -12,10 +11,28 @@ using GTA.UI;
 
 namespace GTA
 {
-    public sealed class Blip : PoolObject
+    public sealed partial class Blip : PoolObject
     {
         public Blip(int handle) : base(handle)
         {
+        }
+
+        /// <summary>
+        /// Creates a <see cref="Blip"/> at the given position on the map.
+        /// </summary>
+        /// <param name="position">The position of the blip on the map.</param>
+        public static Blip Create(Vector3 position)
+        {
+            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z));
+        }
+        /// <summary>
+        /// Creates a <see cref="Blip"/> for a circular area at the given position on the map.
+        /// </summary>
+        /// <param name="position">The position of the blip on the map.</param>
+        /// <param name="radius">The radius of the area on the map.</param>
+        public static Blip Create(Vector3 position, float radius)
+        {
+            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius));
         }
 
         /// <summary>
@@ -79,7 +96,7 @@ namespace GTA
         public int Alpha
         {
             get => Function.Call<int>(Hash.GET_BLIP_ALPHA, Handle);
-            set => Function.Call(Hash.SET_BLIP_ALPHA, Handle, (int)value);
+            set => Function.Call(Hash.SET_BLIP_ALPHA, Handle, value);
         }
 
         /// <summary>
@@ -275,11 +292,9 @@ namespace GTA
                 {
                     return (int)SHVDN.MemDataMarshal.ReadFloat(address + 0x58);
                 }
-                else
-                {
-                    int offset = gameVersion >= ExeVersionConsts.v1_0_463_1 ? 0x58 : 0x54;
-                    return SHVDN.MemDataMarshal.ReadInt16(address + offset);
-                }
+
+                int offset = gameVersion >= ExeVersionConsts.v1_0_463_1 ? 0x58 : 0x54;
+                return SHVDN.MemDataMarshal.ReadInt16(address + offset);
             }
             set => Function.Call(Hash.SET_BLIP_ROTATION, Handle, value);
         }
@@ -303,11 +318,9 @@ namespace GTA
                 {
                     return SHVDN.MemDataMarshal.ReadFloat(address + 0x58);
                 }
-                else
-                {
-                    int offset = gameVersion >= ExeVersionConsts.v1_0_463_1 ? 0x58 : 0x54;
-                    return (float)SHVDN.MemDataMarshal.ReadInt16(address + offset);
-                }
+
+                int offset = gameVersion >= ExeVersionConsts.v1_0_463_1 ? 0x58 : 0x54;
+                return (float)SHVDN.MemDataMarshal.ReadInt16(address + offset);
             }
             set
             {
@@ -326,11 +339,9 @@ namespace GTA
                     SHVDN.MemDataMarshal.WriteFloat(address + 0x58, valueNormalized);
                     return;
                 }
-                else
-                {
-                    int offset = gameVersion >= ExeVersionConsts.v1_0_463_1 ? 0x58 : 0x54;
-                    SHVDN.MemDataMarshal.WriteInt16(address + offset, (short)valueNormalized);
-                }
+
+                int offset = gameVersion >= ExeVersionConsts.v1_0_463_1 ? 0x58 : 0x54;
+                SHVDN.MemDataMarshal.WriteInt16(address + offset, (short)valueNormalized);
             }
         }
 
@@ -455,24 +466,6 @@ namespace GTA
         public bool ShowsTick
         {
             get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.ShowTick);
-            set => Function.Call(Hash.SHOW_TICK_ON_BLIP, Handle, value);
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="Blip"/> shows the dollar sign at the top left corner of the <see cref="Blip"/>.
-        /// </summary>
-        /// <value>
-        ///   <see langword="true" /> to show the dollar sign; otherwise, <see langword="false" />.
-        /// </value>
-        [Obsolete(
-            "`Blip.ShowsDollarSign` is obsolete because the setter changes whether to show the tick, and also " +
-            "because `SHOW_FOR_SALE_ICON_ON_BLIP` was added in b2802, which reveals `ShowsDollarSign` is too " +
-            "different from internal flags for the blip \"for sale\" icon. For what the setter does, use " +
-            "`Blip.ShowsTick` instead."),
-            EditorBrowsable(EditorBrowsableState.Never)]
-        public bool ShowsDollarSign
-        {
-            get => SHVDN.NativeMemory.GetBlipPropertyFlag(MemoryAddress, SHVDN.BlipPropertyFlags.ShowForSale);
             set => Function.Call(Hash.SHOW_TICK_ON_BLIP, Handle, value);
         }
 

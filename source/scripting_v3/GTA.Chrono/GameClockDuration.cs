@@ -23,34 +23,34 @@ namespace GTA.Chrono
         }
 
         /// The number of seconds in a minute.
-        const long SecsPerMinute = 60;
+        private const long SecsPerMinute = 60;
 
         /// The number of seconds in an hour.
-        const long SecsPerHour = 3600;
+        private const long SecsPerHour = 3600;
 
         /// The number of (non-leap) seconds in days.
-        const long SecsPerDay = 86_400;
+        private const long SecsPerDay = 86_400;
 
         /// The number of (non-leap) seconds in a week.
-        const long SecsPerWeek = 604_800;
+        private const long SecsPerWeek = 604_800;
 
-        const long LeapYearCountOfInt32 = 1041529570;
-        const long NonLeapYearCountOfInt32 = 3253437726;
+        private const long LeapYearCountOfInt32 = 1041529570;
+        private const long NonLeapYearCountOfInt32 = 3253437726;
 
         /// <summary>
         /// The number of days elapsed since January 1st, the -2147483648 year until December 31st, the 2147483647 year,
         /// which will result in 1_568_704_592_609 days. Subtracted by 1 because 1 day is taken for the min date value.
         /// </summary>
-        const long DayCountUInt32YearsLaterSinceInt32MinValueYear = (LeapYearCountOfInt32 * 366)
-            + (NonLeapYearCountOfInt32 * 365) - 1;
+        private const long DayCountUInt32YearsLaterSinceInt32MinValueYear = LeapYearCountOfInt32 * 366
+            + NonLeapYearCountOfInt32 * 365 - 1;
 
         /// <summary>
         /// The same value as 135_536_076_801_503_999 seconds.
         /// </summary>
-        const long MaxSecDifference = (DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
+        private const long MaxSecDifference = DayCountUInt32YearsLaterSinceInt32MinValueYear * SecsPerDay
                                       + 23 * SecsPerHour + 59 * SecsPerMinute + 59;
 
-        const long MinSecDifference = -((DayCountUInt32YearsLaterSinceInt32MinValueYear) * SecsPerDay
+        private const long MinSecDifference = -(DayCountUInt32YearsLaterSinceInt32MinValueYear * SecsPerDay
                                         + 23 * SecsPerHour + 59 * SecsPerMinute + 59);
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace GTA.Chrono
         /// The hour component of the current <see cref="GameClockDuration"/> structure.
         /// The return value ranges from -23 through 23.
         /// </value>
-        public int Hours => (int)((_secs / SecsPerHour) % 24);
+        public int Hours => (int)(_secs / SecsPerHour % 24);
 
         /// <summary>
         /// Gets the minutes component of the time interval represented by the current <see cref="GameClockDuration"/>
@@ -90,7 +90,7 @@ namespace GTA.Chrono
         /// The minute component of the current <see cref="GameClockDuration"/> structure.
         /// The return value ranges from -59 through 59.
         /// </value>
-        public int Minutes => (int)((_secs / SecsPerMinute) % 60);
+        public int Minutes => (int)(_secs / SecsPerMinute % 60);
 
         /// <summary>
         /// Gets the seconds component of the time interval represented by the current <see cref="GameClockDuration"/>
@@ -179,22 +179,22 @@ namespace GTA.Chrono
         /// <see cref="GameClockDuration"/> value, and returns an integer that indicates whether this instance is
         /// less than, the same as, or greater than the specified <see cref="GameClockDuration"/> value.
         /// </summary>
-        /// <param name="value">A boxed object to compare, or <see langword="null"/>.</param>
+        /// <param name="obj">A boxed object to compare, or <see langword="null"/>.</param>
         /// <returns>
         /// A signed number indicating the relative values of this instance and the value parameter. Less than zero if
         /// this instance is less than value. Zero if this instance is the same as value. Greater than zero if this
         /// instance is greater than value.
         /// </returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="value"/> is not a <see cref="GameClockDuration"/>.
+        /// <paramref name="obj"/> is not a <see cref="GameClockDuration"/>.
         /// </exception>
-        public int CompareTo(object value)
+        public int CompareTo(object obj)
         {
-            if (value == null) return 1;
-            if (!(value is GameClockDuration otherDuration))
+            if (obj == null) return 1;
+            if (!(obj is GameClockDuration otherDuration))
                 throw new ArgumentException();
 
-            long t = (otherDuration)._secs;
+            long t = otherDuration._secs;
             if (_secs > t) return 1;
             if (_secs < t) return -1;
             return 0;
@@ -312,10 +312,9 @@ namespace GTA.Chrono
             return new GameClockDuration(seconds);
         }
 
-        public static GameClockDuration FromTimeSpan(TimeSpan timeSpan)
-            => new GameClockDuration(timeSpan.Ticks / TimeSpan.TicksPerSecond);
+        public static GameClockDuration FromTimeSpan(TimeSpan timeSpan) => new(timeSpan.Ticks / TimeSpan.TicksPerSecond);
 
-        public GameClockDuration Abs() => (_secs < 0) ? new GameClockDuration(-_secs) : this;
+        public GameClockDuration Abs() => _secs < 0 ? new GameClockDuration(-_secs) : this;
 
         /// <summary>
         /// Returns the specified instance of <see cref="GameClockDuration"/>.
@@ -480,7 +479,7 @@ namespace GTA.Chrono
         /// <paramref name="divisor"/>.
         /// </returns>
         public static GameClockDuration operator /(GameClockDuration duration, long divisor)
-            => new GameClockDuration(duration._secs / divisor);
+            => new(duration._secs / divisor);
 
         /// <summary>
         /// Returns a new TimeSpan object whose value is the result of dividing the specified
@@ -596,15 +595,15 @@ namespace GTA.Chrono
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
-        /// <param name="value">An object to compare with this instance.</param>
+        /// <param name="obj">An object to compare with this instance.</param>
         /// <returns>
-        /// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockDuration"/> object that
+        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockDuration"/> object that
         /// represents the same game clock duration as the current <see cref="GameClockDuration"/> structure;
         /// otherwise, false.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object obj)
         {
-            if (value is GameClockDuration duration)
+            if (obj is GameClockDuration duration)
             {
                 return Equals(duration);
             }

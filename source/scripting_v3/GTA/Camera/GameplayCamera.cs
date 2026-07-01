@@ -6,7 +6,6 @@
 using GTA.Math;
 using GTA.Native;
 using System;
-using System.ComponentModel;
 
 namespace GTA
 {
@@ -14,7 +13,7 @@ namespace GTA
     /// Represents the gameplay camera director.
     /// The gameplay director is responsible for the follow and aim cameras.
     /// </summary>
-    public static class GameplayCamera
+    public static partial class GameplayCamera
     {
         /// <summary>
         /// Gets the memory address of the gameplay camera director.
@@ -397,15 +396,6 @@ namespace GTA
             get => Function.Call<float>(Hash.GET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR);
             set => Function.Call(Hash.SET_FIRST_PERSON_AIM_CAM_ZOOM_FACTOR, value);
         }
-
-        /// <summary>
-        /// Gets the first-person ped aim zoom factor associated with equipped sniper scoped weapon,
-        /// or the mobile phone camera, if active.
-        /// </summary>
-        [Obsolete("GameplayCamera.Zoom is obsolete since it does not suggest the value is relevant only when a first" +
-            "person aim camera is used. Use GameplayCamera.FirstPersonAimCamZoomFactor instead."),
-            EditorBrowsable(EditorBrowsableState.Never)]
-        public static float Zoom => FirstPersonAimCamZoomFactor;
 
         /// <summary>
         /// Gets the field of view of the <see cref="GameplayCamera"/>.

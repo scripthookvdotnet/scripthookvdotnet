@@ -558,15 +558,15 @@ namespace GTA.Chrono
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
-        /// <param name="value">An object to compare with this instance.</param>
+        /// <param name="obj">An object to compare with this instance.</param>
         /// <returns>
-        /// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockDateTime"/> object that
+        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockDateTime"/> object that
         /// represents the same game clock date time as the current <see cref="GameClockDateTime"/> structure;
         /// otherwise, false.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object obj)
         {
-            if (value is GameClockDateTime duration)
+            if (obj is GameClockDateTime duration)
             {
                 return Equals(duration);
             }
@@ -580,19 +580,16 @@ namespace GTA.Chrono
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private unsafe string ToStringInternal()
         {
-            unsafe
-            {
-                // this is the minimum number that is large enough to contain any date time string and is multiple of 4
-                const int BufferLen = 28;
-                char* buffer = stackalloc char[BufferLen];
-                GameClockDateTimeFormat.TryFormatDateS(this._date, buffer, BufferLen, out int charWritten);
-                buffer[charWritten++] = ' ';
-                GameClockDateTimeFormat.TryFormatTimeS(this._time, buffer + charWritten, BufferLen - charWritten,
-                    out int timeWritten);
-                charWritten += timeWritten;
+            // this is the minimum number that is large enough to contain any date time string and is multiple of 4
+            const int BufferLen = 28;
+            char* buffer = stackalloc char[BufferLen];
+            GameClockDateTimeFormat.TryFormatDateS(_date, buffer, BufferLen, out int charWritten);
+            buffer[charWritten++] = ' ';
+            GameClockDateTimeFormat.TryFormatTimeS(_time, buffer + charWritten, BufferLen - charWritten,
+                out int timeWritten);
+            charWritten += timeWritten;
 
-                return new string(buffer, 0, charWritten);
-            }
+            return new string(buffer, 0, charWritten);
         }
 
         /// <summary>
@@ -627,19 +624,19 @@ namespace GTA.Chrono
         /// <see cref="GameClockDateTime"/> value, and returns an integer that indicates whether this instance is
         /// earlier than, the same as, or later than the specified <see cref="GameClockDateTime"/> value.
         /// </summary>
-        /// <param name="value">A boxed object to compare, or <see langword="null"/>.</param>
+        /// <param name="obj">A boxed object to compare, or <see langword="null"/>.</param>
         /// <returns>
         /// A signed number indicating the relative values of this instance and the value parameter. Less than zero if
         /// this instance is earlier than value. Zero if this instance is the same as value. Greater than zero if this
         /// instance is later than value.
         /// </returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="value"/> is not a <see cref="GameClockDateTime"/>.
+        /// <paramref name="obj"/> is not a <see cref="GameClockDateTime"/>.
         /// </exception>
-        public int CompareTo(object value)
+        public int CompareTo(object obj)
         {
-            if (value == null) return 1;
-            if (value is not GameClockDateTime otherDateTime)
+            if (obj == null) return 1;
+            if (obj is not GameClockDateTime otherDateTime)
                 throw new ArgumentException();
 
             return CompareTo(otherDateTime);

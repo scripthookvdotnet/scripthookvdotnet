@@ -10,7 +10,7 @@ namespace GTA
 {
     public struct RelationshipGroup : INativeValue, IEquatable<RelationshipGroup>
     {
-        RelationshipGroup(string name) : this()
+        private RelationshipGroup(string name) : this()
         {
             int hashArg;
             unsafe

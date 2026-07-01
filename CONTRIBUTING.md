@@ -84,6 +84,12 @@ Older parts of the codebase might not strictly adhere to our .editorconfig. When
 
 We try to follow [Conventional Commits][conventional_commits] with our custom change types and scopes to make it easier to generate changelogs. Write meaningful commit messages to make the project history and release notes more understandable. If the change is significant or complex, please include a commit description providing more details.
 
+Here's our custom rules Conventional Commits explicitly mention:
+- Descriptions of subject lines, which are substrings after colons in first lines of commit messages, should be written in the imperative mood when they start with verbs.
+- Descriptions of subject lines should start with lowercase letters, not uppercase ones.
+  - This rule does not apply whe they mention proper nouns as first words, but for words for code such as names of method, properties and fields, it is strongly recommended to wrap them with pairs of backticks.
+  - For example, `feat(core): add support for late script binding` and ``fix(api-v3): `Entity.Model` returning incorrect values`` are considered valid, but `docs(api-v3): Correct grammar errors` is considered invalid.
+
 ### Commit Types
 
 - `feat`

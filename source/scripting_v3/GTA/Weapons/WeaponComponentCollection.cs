@@ -3,21 +3,19 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace GTA
 {
-    public sealed class WeaponComponentCollection
+    public sealed partial class WeaponComponentCollection
     {
         #region Fields
-        readonly Ped _owner;
-        readonly Weapon _weapon;
-        readonly Dictionary<WeaponComponentHash, WeaponComponent> _weaponComponents = new();
-        readonly WeaponComponentHash[] _components;
-        static readonly WeaponComponent _invalidComponent = new(null, null, WeaponComponentHash.Invalid);
+        private readonly Ped _owner;
+        private readonly Weapon _weapon;
+        private readonly Dictionary<WeaponComponentHash, WeaponComponent> _weaponComponents = new();
+        private readonly WeaponComponentHash[] _components;
+        private static readonly WeaponComponent _invalidComponent = new(null, null, WeaponComponentHash.Invalid);
         #endregion
 
         internal WeaponComponentCollection(Ped owner, Weapon weapon)
@@ -44,10 +42,8 @@ namespace GTA
                     _weaponComponents.Add(componentHash, component);
                     return component;
                 }
-                else
-                {
-                    return _invalidComponent;
-                }
+
+                return _invalidComponent;
             }
         }
 
@@ -352,33 +348,10 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets the first component of all the components for <see cref="WeaponAttachmentPoint.GunRoot"/>.
-        /// Despite the method name, return value is not guaranteed to a <see cref="WeaponComponent"/> instance that represents the luxury finish component.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="WeaponComponent"/> instance if the first component of all the components for <see cref="WeaponAttachmentPoint.GunRoot"/> is found;
-        /// otherwise, the <see cref="WeaponComponent"/> instance representing the invalid component.
-        /// </returns>
-        [Obsolete("WeaponComponentCollection.GetLuxuryFinishComponent is wrongly named and cannot necessarily get all of the components for gun_root (e.g. camo components)," +
-                  "use WeaponComponentCollection.GetGunRootComponent instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public WeaponComponent GetLuxuryFinishComponent()
-        {
-            foreach (WeaponComponent component in this)
-            {
-                if (component.AttachmentPoint == WeaponAttachmentPoint.GunRoot)
-                {
-                    return component;
-                }
-            }
-            return _invalidComponent;
-        }
-
-        /// <summary>
         /// Gets all the compatible weapon component hashes for the specified weapon hash.
         /// </summary>
         /// <param name="hash">The weapon hash.</param>
-        static WeaponComponentHash[] GetComponentsFromHash(WeaponHash hash)
+        private static WeaponComponentHash[] GetComponentsFromHash(WeaponHash hash)
         {
             return SHVDN.NativeMemory.GetAllCompatibleWeaponComponentHashes((uint)hash).Select(x => (WeaponComponentHash)x).ToArray();
         }

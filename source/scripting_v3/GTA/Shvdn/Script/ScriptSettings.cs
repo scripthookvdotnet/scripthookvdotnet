@@ -19,11 +19,11 @@ namespace GTA
     public sealed class ScriptSettings
     {
         #region Fields
-        readonly string _fileName;
-        Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
+        private readonly string _fileName;
+        private readonly Dictionary<string, Dictionary<string, List<string>>> _values = new(StringComparer.OrdinalIgnoreCase);
         #endregion
 
-        ScriptSettings(string fileName)
+        private ScriptSettings(string fileName)
         {
             _fileName = fileName;
         }
@@ -44,9 +44,9 @@ namespace GTA
                 return result;
             }
 
-            string line = null;
+            string line;
             string tempSectionName = string.Empty;
-            StreamReader reader = null;
+            StreamReader reader;
 
             try
             {
@@ -73,7 +73,8 @@ namespace GTA
                         tempSectionName = line.Substring(1, line.IndexOf("]", StringComparison.Ordinal) - 1).Trim();
                         continue;
                     }
-                    else if (line.Contains("="))
+
+                    if (line.Contains("="))
                     {
                         int index = line.IndexOf("=", StringComparison.Ordinal);
                         string key = line.Substring(0, index).Trim();
@@ -134,8 +135,7 @@ namespace GTA
                 }
             }
 
-            StreamWriter writer = null;
-
+            StreamWriter writer;
             try
             {
                 writer = File.CreateText(_fileName);
@@ -280,12 +280,12 @@ namespace GTA
         {
             if (!_values.TryGetValue(sectionName, out Dictionary<string, List<string>> keyValuePairs))
             {
-                value = default(T);
+                value = default;
                 return false;
             }
             if (!keyValuePairs.TryGetValue(keyName, out List<string> valueList))
             {
-                value = default(T);
+                value = default;
                 return false;
             }
 
@@ -307,7 +307,7 @@ namespace GTA
             }
             catch (Exception)
             {
-                value = default(T);
+                value = default;
                 return false;
             }
         }

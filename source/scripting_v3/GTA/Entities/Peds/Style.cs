@@ -4,19 +4,17 @@
 //
 
 using GTA.Native;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace GTA
 {
-    public sealed class Style
+    public sealed partial class Style
     {
         #region Fields
 
-        readonly Ped _ped;
-        Dictionary<PedPropAnchorPoint, PedProp> _pedProps = new();
-        Dictionary<PedComponentType, PedComponent> _pedComponents = new();
+        private readonly Ped _ped;
+        private readonly Dictionary<PedPropAnchorPoint, PedProp> _pedProps = new();
+        private readonly Dictionary<PedComponentType, PedComponent> _pedComponents = new();
 
         #endregion
 
@@ -65,10 +63,6 @@ namespace GTA
                 return variation;
             }
         }
-
-        [Obsolete("Use the indexer overload with the type PedPropAnchorPoint instead."),
-         EditorBrowsable(EditorBrowsableState.Never)]
-        public PedProp this[PedPropType propId] => this[(PedPropAnchorPoint)propId];
 
         public PedProp[] GetAllProps()
         {

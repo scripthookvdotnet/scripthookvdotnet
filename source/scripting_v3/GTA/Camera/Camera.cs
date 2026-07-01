@@ -6,14 +6,13 @@
 using GTA.Math;
 using GTA.Native;
 using System;
-using System.ComponentModel;
 
 namespace GTA
 {
     /// <summary>
     /// Represents a scripted camera.
     /// </summary>
-    public sealed class Camera : PoolObject, ISpatial
+    public sealed partial class Camera : PoolObject, ISpatial
     {
         public Camera(int handle) : base(handle)
         {
@@ -110,7 +109,7 @@ namespace GTA
         /// <summary>
         /// Gets the memory address of the matrix for this <see cref="Camera"/>.
         /// </summary>
-        IntPtr MatrixAddress
+        private IntPtr MatrixAddress
         {
             get
             {
@@ -474,15 +473,6 @@ namespace GTA
         {
             Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, destinationCam.Handle, Handle, duration, (int)graphTypePos,
                 (int)graphTypeRot);
-        }
-        /// <summary>
-        /// Sets a cam active which will be interpolated too from this <see cref="Camera"/>.
-        /// </summary>
-        [Obsolete("Use Camera.InterpTo(Camera, int, CamFrameInterpolatorCurveType, CamFrameInterpolatorCurveType) instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public void InterpTo(Camera to, int duration, int easePosition, int easeRotation)
-        {
-            Function.Call(Hash.SET_CAM_ACTIVE_WITH_INTERP, to.Handle, Handle, duration, easePosition, easeRotation);
         }
 
         /// <summary>

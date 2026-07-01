@@ -15,7 +15,7 @@ jobs:
       version_name_for_assemblies: ${{ steps.calc-tag-name.outputs.version_name_for_assemblies }}
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Calculate Version for Assemblies
         id: calc-tag-name
         run: |
@@ -42,9 +42,9 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download artifact from build Workflow
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: ScriptHookVDotNet
           path: bin/Release

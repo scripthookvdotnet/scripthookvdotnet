@@ -55,11 +55,9 @@ namespace GTA.Chrono
                 // Array is indexed from `1 to Internals.MaxOl`, with a `0` index having a meaningless value.
                 return new MonthDayFlags(of.Value + ((uint)Internals.OlToMdl[ol] << 3));
             }
-            else
-            {
-                // throwing an exception here would be reasonable, but we are just going on with a safe value.
-                return new MonthDayFlags(0);
-            }
+
+            // throwing an exception here would be reasonable, but we are just going on with a safe value.
+            return new MonthDayFlags(0);
         }
 
         internal bool IsValid
@@ -105,7 +103,7 @@ namespace GTA.Chrono
             return new MonthDayFlags((_value & ~0b1_1111_0000u) | ((uint)day << 4));
         }
 
-        internal MonthDayFlags WithFlags(YearFlags flags) => new((_value & ~0b1111u) | (flags.Value));
+        internal MonthDayFlags WithFlags(YearFlags flags) => new((_value & ~0b1111u) | flags.Value);
 
         public bool Equals(MonthDayFlags other)
         {

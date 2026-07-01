@@ -15,9 +15,9 @@ namespace GTA
     public sealed class VehicleModCollection
     {
         #region Fields
-        readonly Vehicle _owner;
-        readonly Dictionary<VehicleModType, VehicleMod> _vehicleMods = new();
-        readonly Dictionary<VehicleToggleModType, VehicleToggleMod> _vehicleToggleMods = new();
+        private readonly Vehicle _owner;
+        private readonly Dictionary<VehicleModType, VehicleMod> _vehicleMods = new();
+        private readonly Dictionary<VehicleToggleModType, VehicleToggleMod> _vehicleToggleMods = new();
 
         private static readonly ReadOnlyDictionary<VehicleWheelType, Tuple<string, string>> _wheelNames = new(
             new Dictionary<VehicleWheelType, Tuple<string, string>>
@@ -97,7 +97,7 @@ namespace GTA
             {
                 if (_owner.Model.IsBicycle || _owner.Model.IsBike)
                 {
-                    return new VehicleWheelType[] { VehicleWheelType.BikeWheels };
+                    return new[] { VehicleWheelType.BikeWheels };
                 }
 
                 if (!_owner.Model.IsCar)
@@ -129,7 +129,7 @@ namespace GTA
                     case VehicleHash.Minivan2:
                     case VehicleHash.SlamVan3:
                     case VehicleHash.Faction3:
-                        res.AddRange(new VehicleWheelType[] { VehicleWheelType.BennysOriginals, VehicleWheelType.BennysBespoke });
+                        res.AddRange(new[] { VehicleWheelType.BennysOriginals, VehicleWheelType.BennysBespoke });
                         break;
                     case VehicleHash.SultanRS:
                     case VehicleHash.Banshee2:
@@ -198,10 +198,8 @@ namespace GTA
                 {
                     return this[VehicleModType.Livery].Index;
                 }
-                else
-                {
-                    return Function.Call<int>(Hash.GET_VEHICLE_LIVERY, _owner.Handle);
-                }
+
+                return Function.Call<int>(Hash.GET_VEHICLE_LIVERY, _owner.Handle);
             }
             set
             {
@@ -311,10 +309,7 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(VehicleModCollection), nameof(TrimColor));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_505_2, nameof(VehicleModCollection), nameof(TrimColor));
 
                 int trimColorIndex;
                 unsafe
@@ -326,10 +321,7 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(VehicleModCollection), nameof(TrimColor));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_505_2, nameof(VehicleModCollection), nameof(TrimColor));
 
                 Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_5, _owner.Handle, (int)value);
             }
@@ -338,10 +330,7 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(VehicleModCollection), nameof(DashboardColor));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_505_2, nameof(VehicleModCollection), nameof(DashboardColor));
 
                 int color;
                 unsafe
@@ -353,10 +342,7 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(VehicleModCollection), nameof(DashboardColor));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_505_2, nameof(VehicleModCollection), nameof(DashboardColor));
 
                 Function.Call(Hash.SET_VEHICLE_EXTRA_COLOUR_6, _owner.Handle, (int)value);
             }

@@ -8,109 +8,17 @@ using GTA.Math;
 using GTA.Native;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using Random = System.Random;
 
 namespace GTA
 {
-    public static class World
+    public static partial class World
     {
         #region Fields
 
-        static readonly GregorianCalendar s_calendar = new();
-
-        // removes gang and animal ped models just like CREATE_RANDOM_PED does
-        static readonly Func<Model, bool> s_defaultPredicateForCreateRandomPed = (x => x.IsHumanPed && !x.IsGangPed);
-        #endregion
-
-        #region Time & Day
-
-        /// <inheritdoc cref="GTA.Chrono.GameClock.IsPaused"/>
-        [Obsolete("World.IsClockPaused is obsolete, use GTA.Chrono.IsPaused instead.")]
-        public static bool IsClockPaused
-        {
-            get => SHVDN.NativeMemory.IsClockPaused;
-            set => Function.Call(Hash.PAUSE_CLOCK, value);
-        }
-
-        /// <summary>
-        /// Pauses or resumes the in-game clock.
-        /// </summary>
-        /// <param name="value">Pauses the game clock if set to <see langword="true" />; otherwise, resumes the game clock.</param>
-        [Obsolete("The World.PauseClock is obsolete, use GTA.Chrono.IsPaused instead.")]
-        public static void PauseClock(bool value)
-        {
-            IsClockPaused = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the current date and time in the GTA world.
-        /// </summary>
-        /// <value>
-        /// The current date and time.
-        /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// The internal date is not valid for the Gregorian calendar or the internal time of day is not normalized.
-        /// </exception>
-        [Obsolete("World.CurrentDate is obsolete because DateTime can represent the years only in the range of 1 to 9999, while the game supports wider range of years." +
-            "Use properties or methods of GTA.Chrono.GameClock instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public static DateTime CurrentDate
-        {
-            get
-            {
-                int year = Function.Call<int>(Hash.GET_CLOCK_YEAR);
-                int month = Function.Call<int>(Hash.GET_CLOCK_MONTH) + 1;
-                int day = System.Math.Min(Function.Call<int>(Hash.GET_CLOCK_DAY_OF_MONTH), s_calendar.GetDaysInMonth(year, month));
-                int hour = Function.Call<int>(Hash.GET_CLOCK_HOURS);
-                int minute = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
-                int second = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
-
-                return new DateTime(year, month, day, hour, minute, second);
-            }
-            set
-            {
-                Function.Call(Hash.SET_CLOCK_DATE, value.Day, value.Month - 1, value.Year);
-                Function.Call(Hash.SET_CLOCK_TIME, value.Hour, value.Minute, value.Second);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the current time of day in the GTA world.
-        /// </summary>
-        /// <value>
-        /// The current time of day.
-        /// </value>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// One of the values minutes or seconds are smaller than <c>0</c> or larger than <c>59</c>, or the hour value
-        /// is smaller than <c>0</c> or larger than <c>23</c>.
-        /// </exception>
-        /// <remarks>
-        /// The resolution of the value is 1 second.
-        /// </remarks>
-        [Obsolete("World.CurrentTimeOfDay is obsolete, use GTA.Chrono.GameClock.Today instead.")]
-        public static TimeSpan CurrentTimeOfDay
-        {
-            get
-            {
-                int hours = Function.Call<int>(Hash.GET_CLOCK_HOURS);
-                int minutes = Function.Call<int>(Hash.GET_CLOCK_MINUTES);
-                int seconds = Function.Call<int>(Hash.GET_CLOCK_SECONDS);
-
-                return new TimeSpan(hours, minutes, seconds);
-            }
-            set => Function.Call(Hash.SET_CLOCK_TIME, value.Hours, value.Minutes, value.Seconds);
-        }
-
-        /// <inheritdoc cref="GTA.Chrono.GameClock.MillisecondsPerGameMinute"/>
-        [Obsolete("World.MillisecondsPerGameMinute is obsolete, use GTA.Chrono.GameClock.MillisecondsPerGameMinute instead.")]
-        public static int MillisecondsPerGameMinute
-        {
-            get => Function.Call<int>(Hash.GET_MILLISECONDS_PER_GAME_MINUTE);
-            set => SHVDN.NativeMemory.MillisecondsPerGameMinute = value;
-        }
+        private static readonly GregorianCalendar s_calendar = new();
 
         #endregion
 
@@ -409,24 +317,6 @@ namespace GTA
         {
             int[] blipTypesInt = Array.ConvertAll(blipTypes, blipType => (int)blipType);
             return Array.ConvertAll(SHVDN.NativeMemory.GetNonCriticalRadarBlipHandles(position.ToInternalFVector3(), radius, blipTypesInt), handle => new Blip(handle));
-        }
-
-        /// <summary>
-        /// Creates a <see cref="Blip"/> at the given position on the map.
-        /// </summary>
-        /// <param name="position">The position of the blip on the map.</param>
-        public static Blip CreateBlip(Vector3 position)
-        {
-            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_COORD, position.X, position.Y, position.Z));
-        }
-        /// <summary>
-        /// Creates a <see cref="Blip"/> for a circular area at the given position on the map.
-        /// </summary>
-        /// <param name="position">The position of the blip on the map.</param>
-        /// <param name="radius">The radius of the area on the map.</param>
-        public static Blip CreateBlip(Vector3 position, float radius)
-        {
-            return new Blip(Function.Call<int>(Hash.ADD_BLIP_FOR_RADIUS, position.X, position.Y, position.Z, radius));
         }
 
         #endregion
@@ -1158,208 +1048,6 @@ namespace GTA
         public static void SetAmbientPedDensityMultiplierThisFrame(float densityMult) => Function.Call(Hash.SET_PED_DENSITY_MULTIPLIER_THIS_FRAME, densityMult);
 
         /// <summary>
-        /// Spawns a <see cref="Ped"/> of the given <see cref="Model"/> at the position and heading specified.
-        /// </summary>
-        /// <param name="model">The <see cref="Model"/> of the <see cref="Ped"/>.</param>
-        /// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
-        /// <param name="heading">The heading of the <see cref="Ped"/>.</param>
-        /// <remarks>returns <see langword="null" /> if the <see cref="Ped"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
-        public static Ped CreatePed(Model model, Vector3 position, float heading = 0f)
-        {
-            if (PedCount >= PedCapacity || !model.IsPed || !model.Request(1000))
-            {
-                return null;
-            }
-
-            // The first parameter "PedType" does not have actual effect, the function always eventually uses the "Pedtype"
-            // value for the model (in peds.ymt or peds.meta) instead
-            // Actually the value is read when the function is called but eventually overwritten before getting used in a meaningful way
-            return new Ped(Function.Call<int>(Hash.CREATE_PED, 26, model.Hash, position.X, position.Y, position.Z, heading, false, false));
-        }
-        /// <summary>
-        /// Spawns a <see cref="Ped"/> of a random <see cref="Model"/> at the position specified.
-        /// </summary>
-        /// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
-        /// <remarks>
-        /// This overload picks the least used appropriate model that is not suppressed.
-        /// This overload can pick a gangster and an animal model that do not swim or fly.
-        /// </remarks>
-        public static Ped CreateRandomPed(Vector3 position)
-        {
-            if (PedCount >= PedCapacity)
-            {
-                return null;
-            }
-
-            return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z));
-        }
-        /// <summary>
-        /// Spawns a <see cref="Ped"/> of a random <see cref="Model"/> at the position specified.
-        /// </summary>
-        /// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
-        /// <param name="heading">The heading of the <see cref="Ped"/>.</param>
-        /// <param name="predicate">
-        /// <para>
-        /// The method that determines whether a model should be considered when choosing a random model for
-        /// the <see cref="Ped"/>. If <see langword="null"/> is set, gangster and any animal models will not be chosen,
-        /// including animals that do not swim or fly. Note that <see cref="CreateRandomPed(GTA.Math.Vector3)"/> and
-        /// `<c>CREATE_RANDOM_PED</c>` can pick a gangster and an animal model that do not swim or fly.
-        /// </para>
-        /// <para>
-        /// The default model prohibition was to imitate how `<c>CREATE_RANDOM_PED</c>` pick a ped model, but it turned
-        /// out that the native does not filter out gang ped models or animal <see cref="Ped"/> models that do not swim
-        /// or fly after SHVDN v3.6.0 was released.
-        /// </para>
-        /// </param>
-        public static Ped CreateRandomPed(Vector3 position, float heading, Func<Model, bool> predicate = null)
-        {
-            if (PedCount >= PedCapacity)
-            {
-                return null;
-            }
-
-            IEnumerable<Model> loadedAppropriatePedModels
-                = SHVDN.NativeMemory.GetLoadedAppropriatePedHashes().Select(x => new Model(x));
-            Model[] filteredPedModels = predicate != null
-                ? loadedAppropriatePedModels.Where(predicate).ToArray()
-                : loadedAppropriatePedModels.Where(s_defaultPredicateForCreateRandomPed).ToArray();
-            int filteredModelCount = filteredPedModels.Length;
-            if (filteredModelCount == 0)
-            {
-                return null;
-            }
-
-            Random rand = Math.Random.Instance;
-            Model pickedModel = filteredPedModels.ElementAt(rand.Next(filteredModelCount));
-
-            // the model should be loaded at this moment, so call `CREATE_PED` immediately
-            var createdPed = new Ped(Function.Call<int>(Hash.CREATE_PED, 26, pickedModel, position.X, position.Y,
-                position.Z, heading, false, false));
-
-            // Randomize variation but not ped props, just like `CREATE_RANDOM_PED` does.
-            const int Race = 0; /* same as what `ePVRaceType::PV_RACE_UNIVERSAL` specifies */
-            Function.Call(Hash.SET_PED_RANDOM_COMPONENT_VARIATION, createdPed.Handle, Race);
-
-            return createdPed;
-        }
-
-        /// <summary>
-        /// Spawns a <see cref="Vehicle"/> of the given <see cref="Model"/> at the position and heading specified.
-        /// </summary>
-        /// <param name="model">The <see cref="Model"/> of the <see cref="Vehicle"/>.</param>
-        /// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
-        /// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
-        /// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
-        public static Vehicle CreateVehicle(Model model, Vector3 position, float heading = 0f)
-        {
-            if (VehicleCount >= VehicleCapacity || !model.IsVehicle || !model.Request(1000))
-            {
-                return null;
-            }
-
-            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
-        }
-        /// <summary>
-        /// Spawns a <see cref="Vehicle"/> of a random <see cref="Model"/> at the position specified.
-        /// </summary>
-        /// <param name="position">The position to spawn the <see cref="Vehicle"/> at.</param>
-        /// <param name="heading">The heading of the <see cref="Vehicle"/>.</param>
-        /// <param name="predicate">The method that determines whether a model should be considered when choosing a random model for the <see cref="Vehicle"/>.</param>
-        /// <remarks>returns <see langword="null" /> if the <see cref="Vehicle"/> could not be spawned.</remarks>
-        public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f, Func<Model, bool> predicate = null)
-        {
-            if (VehicleCount >= VehicleCapacity)
-            {
-                return null;
-            }
-
-            IEnumerable<Model> loadedAppropriateVehModels = SHVDN.NativeMemory.GetLoadedAppropriateVehicleHashes().Select(x => new Model(x));
-            Model[] filteredVehModels = predicate != null ? loadedAppropriateVehModels.Where(predicate).ToArray() : loadedAppropriateVehModels.ToArray();
-            int filteredModelCount = filteredVehModels.Length;
-            if (filteredModelCount == 0)
-            {
-                return null;
-            }
-
-            Random rand = Math.Random.Instance;
-            Model pickedModel = filteredVehModels.ElementAt(rand.Next(filteredModelCount));
-
-            // the model should be loaded at this moment, so call CREATE_VEHICLE immediately
-            return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, pickedModel, position.X, position.Y, position.Z, heading, false, false));
-        }
-
-        /// <inheritdoc cref="CreateProp(Model, Vector3, Vector3, bool, bool)"/>
-        public static Prop CreateProp(Model model, Vector3 position, bool dynamic, bool placeOnGround)
-        {
-            if (PropCount >= PropCapacity || !model.Request(1000))
-            {
-                return null;
-            }
-
-            if (placeOnGround)
-            {
-                GetGroundHeight(position, out float groundHeight);
-                position.Z = groundHeight; // will be zero if the test failed since values will be initialized with zero by default in C#
-            }
-
-            return new Prop(Function.Call<int>(Hash.CREATE_OBJECT, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
-        }
-        /// <summary>
-        /// Spawns a <see cref="Prop"/> of the given <see cref="Model"/> at the specified position.
-        /// </summary>
-        /// <param name="model">The <see cref="Model"/> of the <see cref="Prop"/>.</param>
-        /// <param name="position">The position to spawn the <see cref="Prop"/> at.</param>
-        /// <param name="rotation">The rotation of the <see cref="Prop"/>.</param>
-        /// <param name="dynamic">
-        /// <para>
-        /// If <see langword="true"/>, the <see cref="Prop"/> will always be forced to be a regular prop type (<c>CObject</c>). This applies when creating a <see cref="Prop"/> that uses a door <see cref="Model"/>.
-        /// If this is <see langword="false"/>, the <see cref="Prop"/> will be created as a door type (<c>CDoor</c>) and it will work as a door.
-        /// </para>
-        /// <para>Although "dynamic" is an incorrectly named parameter, the name is retained for scripts that use the method with named parameters.</para>
-        /// </param>
-        /// <param name="placeOnGround">if set to <see langword="true" /> place the prop on the ground nearest to the <paramref name="position"/>.</param>
-        /// <remarks>returns <see langword="null" /> if the <see cref="Prop"/> could not be spawned or the model could not be loaded within 1 second.</remarks>
-        public static Prop CreateProp(Model model, Vector3 position, Vector3 rotation, bool dynamic, bool placeOnGround)
-        {
-            Prop prop = CreateProp(model, position, dynamic, placeOnGround);
-
-            if (prop != null)
-            {
-                prop.Rotation = rotation;
-            }
-
-            return prop;
-        }
-        /// <summary>
-        /// Spawns a <see cref="Prop"/> of the given <see cref="Model"/> at the specified position without any offset.
-        /// </summary>
-        /// <inheritdoc cref="CreateProp(Model, Vector3, Vector3, bool, bool)"/>
-        public static Prop CreatePropNoOffset(Model model, Vector3 position, bool dynamic)
-        {
-            if (PropCount >= PropCapacity || !model.Request(1000))
-            {
-                return null;
-            }
-
-            return new Prop(Function.Call<int>(Hash.CREATE_OBJECT_NO_OFFSET, model.Hash, position.X, position.Y, position.Z, 1, 1, dynamic));
-        }
-        /// <summary>
-        /// Spawns a <see cref="Prop"/> of the given <see cref="Model"/> at the specified position without any offset.
-        /// </summary>
-        /// <inheritdoc cref="CreateProp(Model, Vector3, Vector3, bool, bool)"/>
-        public static Prop CreatePropNoOffset(Model model, Vector3 position, Vector3 rotation, bool dynamic)
-        {
-            Prop prop = CreatePropNoOffset(model, position, dynamic);
-
-            if (prop != null)
-            {
-                prop.Rotation = rotation;
-            }
-
-            return prop;
-        }
-
-        /// <summary>
         /// Creates a pickup <see cref="Prop"/> similar to those dropped by dead <see cref="Ped"/>s.
         /// These types of pickups are part of the ambient population and will get removed if the player moves too far away from them.
         /// </summary>
@@ -1403,108 +1091,6 @@ namespace GTA
             return handle == 0 ? null : new Prop(handle);
         }
 
-        /// <summary>
-        /// Creates a pickup <see cref="Prop"/> similar to those dropped by dead <see cref="Ped"/>s.
-        /// These types of pickups are part of the ambient population and will get removed if the player moves too far away from them.
-        /// </summary>
-        [Obsolete("The World.CreateAmbientPickup overload with non-optional custom model and amount (named \"value\") parameters are obsolete since they can lead to confusion in custom model parameter (which is actually not mandatory)." +
-            "Use World.CreateAmbientPickup(PickupType, Vector3, PickupPlacementFlags, int, Model, bool) instead.")]
-        public static Prop CreateAmbientPickup(PickupType type, Vector3 position, Model model, int value)
-            => CreateAmbientPickup(type, position, PickupPlacementFlags.None, value, model, false);
-
-        /// <inheritdoc cref="CreatePickup(PickupType, Vector3, Vector3, PickupPlacementFlags, int, EulerRotationOrder, Model)"/>
-        public static Pickup CreatePickup(
-            PickupType type,
-            Vector3 position,
-            PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
-            int amount = -1,
-            Model customModel = default)
-        {
-            if (customModel.Hash != 0 && !customModel.Request(1000))
-            {
-                return null;
-            }
-
-            // The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
-            int handle = Function.Call<int>(Hash.CREATE_PICKUP,
-                (int)type,
-                position.X,
-                position.Y,
-                position.Z,
-                (int)placementFlags,
-                amount,
-                true,
-                customModel.Hash);
-
-            return handle == 0 ? null : new Pickup(handle);
-        }
-        /// <summary>
-        /// Creates a pickup spawner (a <see cref="Pickup"/> instance) which can be referenced by the script and will spawn a pickup whenever the player gets near.
-        /// This spawner can also regenerate the pickup after it is collected.
-        /// The spawner is removed when the script terminates.
-        /// </summary>
-        /// <param name="type">The pickup type hash.</param>
-        /// <param name="position">The pickup position to place in world space.</param>
-        /// <param name="rotation">The pickup orientation.</param>
-        /// <param name="placementFlags">The pickup placement flags.</param>
-        /// <param name="amount">
-        /// A variable amount that can be specified for some pickups, such as money or ammo.
-        /// Leave this parameter as <c>-1</c> to apply the default amount.
-        /// </param>
-        /// <param name="rotOrder">The rotation order in world space.</param>
-        /// <param name="customModel">
-        /// If set to non-zero value, this model will be used for the pickup instead of the default one.
-        /// </param>
-        public static Pickup CreatePickup(
-            PickupType type,
-            Vector3 position,
-            Vector3 rotation,
-            PickupPlacementFlags placementFlags = PickupPlacementFlags.None,
-            int amount = -1,
-            EulerRotationOrder rotOrder = EulerRotationOrder.YXZ,
-            Model customModel = default
-            )
-        {
-            if (customModel.Hash != 0 && !customModel.Request(1000))
-            {
-                return null;
-            }
-
-            // The 2nd last argument is named ScriptHostObject, so just set to true as most SP scripts do
-            int handle = Function.Call<int>(Hash.CREATE_PICKUP_ROTATE,
-                (int)type,
-                position.X,
-                position.Y,
-                position.Z,
-                rotation.X,
-                rotation.Y,
-                rotation.Z,
-                (int)placementFlags,
-                amount,
-                (int)rotOrder,
-                true,
-                customModel.Hash);
-
-            return handle == 0 ? null : new Pickup(handle);
-        }
-
-        /// <summary>
-        /// Spawns a <see cref="Pickup"/> at the specified position.
-        /// </summary>
-        [Obsolete("The World.CreatePickup overloads with non-optional custom model and amount (named \"value\") parameters are obsolete since they can lead to confusion in custom model parameter (which is actually not mandatory)." +
-            "Use a World.CreatePickup overload with optional placement flags and amount parameters instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public static Pickup CreatePickup(PickupType type, Vector3 position, Model model, int value)
-            => CreatePickup(type, position, PickupPlacementFlags.None, value, model);
-        /// <summary>
-        /// Spawns a <see cref="Pickup"/> at the specified position.
-        /// </summary>
-        [Obsolete("The World.CreatePickup overloads with non-optional custom model and amount (named \"value\") parameters are obsolete since they can lead to confusion in custom model parameter (which is actually not mandatory)." +
-            "Use a World.CreatePickup overload with optional placement flags and amount parameters instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public static Pickup CreatePickup(PickupType type, Vector3 position, Vector3 rotation, Model model, int value)
-            => CreatePickup(type, position, rotation, PickupPlacementFlags.None, value, EulerRotationOrder.YXZ, model);
-
         #endregion
 
         #region Checkpoints
@@ -1515,127 +1101,6 @@ namespace GTA
         public static Checkpoint[] GetAllCheckpoints()
         {
             return Array.ConvertAll(SHVDN.NativeMemory.GetCheckpointHandles(), element => new Checkpoint(element));
-        }
-
-        /// <summary>
-        /// Creates a <see cref="Checkpoint"/> in the world.
-        /// </summary>
-        /// <param name="icon">The <see cref="CheckpointIcon"/> to display inside the <see cref="Checkpoint"/>.</param>
-        /// <param name="position">The position in the World.</param>
-        /// <param name="pointTo">The position in the world where this <see cref="Checkpoint"/> should point.</param>
-        /// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
-        /// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
-        /// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
-        public static Checkpoint CreateCheckpoint(CheckpointIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
-        {
-            int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
-                (int)icon,
-                position.X,
-                position.Y,
-                position.Z,
-                pointTo.X,
-                pointTo.Y,
-                pointTo.Z,
-                radius,
-                color.R,
-                color.G,
-                color.B,
-                color.A,
-                0);
-            return handle != 0 ? new Checkpoint(handle) : null;
-        }
-        /// <summary>
-        /// Creates a <see cref="Checkpoint"/> in the world.
-        /// </summary>
-        /// <param name="icon">The <see cref="CheckpointCustomIcon"/> to display inside the <see cref="Checkpoint"/>.</param>
-        /// <param name="position">The position in the World.</param>
-        /// <param name="pointTo">The position in the world where this <see cref="Checkpoint"/> should point.</param>
-        /// <param name="radius">The radius of the <see cref="Checkpoint"/>.</param>
-        /// <param name="color">The color of the <see cref="Checkpoint"/>.</param>
-        /// <remarks>returns <see langword="null" /> if the <see cref="Checkpoint"/> could not be created</remarks>
-        public static Checkpoint CreateCheckpoint(CheckpointCustomIcon icon, Vector3 position, Vector3 pointTo, float radius, Color color)
-        {
-            int handle = Function.Call<int>(Hash.CREATE_CHECKPOINT,
-                44,
-                position.X,
-                position.Y,
-                position.Z,
-                pointTo.X,
-                pointTo.Y,
-                pointTo.Z,
-                radius,
-                color.R,
-                color.G,
-                color.B,
-                color.A,
-                icon);
-            return handle != 0 ? new Checkpoint(handle) : null;
-        }
-
-        #endregion
-
-        #region Cameras
-
-        /// <summary>
-        /// Destroys all scripted <see cref="Camera"/>s.
-        /// </summary>
-        [Obsolete("World.DestroyAllCameras is obsolete. Use Camera.DeleteAllCameras instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public static void DestroyAllCameras()
-        {
-            Function.Call(Hash.DESTROY_ALL_CAMS, 0);
-        }
-
-        /// <summary>
-        /// Creates a <see cref="Camera"/>, use <see cref="ScriptCameraDirector.StartRendering()"/> to switch to
-        /// this camera.
-        /// </summary>
-        /// <param name="position">The position of the camera.</param>
-        /// <param name="rotation">The rotation of the camera.</param>
-        /// <param name="fov">The field of view of the camera.</param>
-        /// <remarks>
-        /// This overload (<see cref="World.CreateCamera(Vector3, Vector3, float)"/>) does not return <see langword="null"/>
-        /// even if the method fails to create and <c>CREATE_CAM_WITH_PARAMS</c> returns -1 due to the camera pool being full.
-        /// This is done for compatibility for scripts built against v3.6.0 or earlier.
-        /// </remarks>
-        [Obsolete("World.CreateCamera is obsolete. Use Camera.Create instead."),
-         EditorBrowsable(EditorBrowsableState.Never)]
-        public static Camera CreateCamera(Vector3 position, Vector3 rotation, float fov)
-        {
-            return new Camera(Function.Call<int>(Hash.CREATE_CAM_WITH_PARAMS, "DEFAULT_SCRIPTED_CAMERA", position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, fov, 1, 2));
-        }
-
-        /// <summary>
-        /// Gets or sets the rendering camera.
-        /// </summary>
-        /// <value>
-        /// The rendering <see cref="Camera"/>.
-        /// </value>
-        /// <remarks>
-        /// Setting to <see langword="null" /> sets the rendering <see cref="Camera"/> to <see cref="GameplayCamera"/>.
-        /// The getter will return an invalid <see cref="Camera"/> where <see cref="PoolObject.Handle"/> is -1 if the
-        /// rendering camera does not match any scripted cameras the scripted camera director is managing.
-        /// </remarks>
-        [Obsolete("World.RenderingCamera is obsolete. " +
-            "Use ScriptCameraDirector.RenderingCam to get the rendering scripted camera. " +
-            "Use ScriptCameraDirector.StartRendering or ScriptCameraDirector.StopRendering to tell the game to render " +
-            "or stop rendering a scripted camera."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public static Camera RenderingCamera
-        {
-            get => new(Function.Call<int>(Hash.GET_RENDERING_CAM));
-            set
-            {
-                if (value == null)
-                {
-                    Function.Call(Hash.RENDER_SCRIPT_CAMS, false, 0, 3000, 1, 0);
-                }
-                else
-                {
-                    value.IsActive = true;
-                    Function.Call(Hash.RENDER_SCRIPT_CAMS, true, 0, 3000, 1, 0);
-                }
-            }
         }
 
         #endregion
@@ -1968,20 +1433,6 @@ namespace GTA
                 0));
         }
 
-        /// <summary>
-        /// Fires a single bullet in the world.
-        /// </summary>
-        /// <param name="sourcePosition">Where the bullet is fired from.</param>
-        /// <param name="targetPosition">Where the bullet is fired to.</param>
-        /// <param name="owner">The <see cref="Ped"/> who fired the bullet, leave <see langword="null" /> for no one.</param>
-        /// <param name="weaponAsset">The weapon that the bullet is fired from.</param>
-        /// <param name="damage">The damage the bullet will cause.</param>
-        /// <param name="speed">The speed, only affects projectile weapons, leave -1 for default.</param>
-        [Obsolete("Use ShootSingleBullet instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public static void ShootBullet(Vector3 sourcePosition, Vector3 targetPosition, Ped owner, WeaponAsset weaponAsset, int damage, float speed = -1f)
-        {
-            Function.Call(Hash.SHOOT_SINGLE_BULLET_BETWEEN_COORDS, sourcePosition.X, sourcePosition.Y, sourcePosition.Z, targetPosition.X, targetPosition.Y, targetPosition.Z, damage, 1, weaponAsset.Hash, (owner == null ? 0 : owner.Handle), 1, 0, speed);
-        }
         /// <summary>
         /// Fires an instant hit bullet between the two points or a projectile that goes toward
         /// <paramref name="endPosition"/>.
@@ -2485,62 +1936,6 @@ namespace GTA
         }
 
         /// <summary>
-        /// Creates a 3D raycast between 2 points.
-        /// </summary>
-        /// <param name="source">The source of the raycast.</param>
-        /// <param name="target">The target of the raycast.</param>
-        /// <param name="radius">The radius of the raycast.</param>
-        /// <param name="options">What type of objects the raycast should intersect with.</param>
-        /// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-        [Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. " +
-                  "Use ShapeTest.StartTestCapsule instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public static RaycastResult RaycastCapsule(Vector3 source, Vector3 target, float radius, IntersectFlags options, Entity ignoreEntity = null)
-        {
-            return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE,
-                source.X,
-                source.Y,
-                source.Z,
-                target.X,
-                target.Y,
-                target.Z,
-                radius,
-                (int)options,
-                ignoreEntity == null
-                    ? 0
-                    : ignoreEntity.Handle,
-                7));
-        }
-        /// <summary>
-        /// Creates a 3D raycast between 2 points.
-        /// </summary>
-        /// <param name="source">The source of the raycast.</param>
-        /// <param name="direction">The direction of the raycast.</param>
-        /// <param name="radius">The radius of the raycast.</param>
-        /// <param name="maxDistance">How far the raycast should go out to.</param>
-        /// <param name="options">What type of objects the raycast should intersect with.</param>
-        /// <param name="ignoreEntity">Specify an <see cref="Entity"/> that the raycast should ignore, leave null for no entities ignored.</param>
-        [Obsolete("World.RaycastCapsule is obsolete because the result may not be made in the same frame you call the method. " +
-                  "Use ShapeTest.StartTestCapsule instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public static RaycastResult RaycastCapsule(Vector3 source, Vector3 direction, float maxDistance, float radius, IntersectFlags options, Entity ignoreEntity = null)
-        {
-            Vector3 target = source + direction * maxDistance;
-
-            return new RaycastResult(Function.Call<int>(Hash.START_SHAPE_TEST_CAPSULE,
-                source.X,
-                source.Y,
-                source.Z,
-                target.X,
-                target.Y,
-                target.Z,
-                radius,
-                (int)options,
-                ignoreEntity == null
-                    ? 0
-                    : ignoreEntity.Handle,
-                7));
-        }
-
-        /// <summary>
         /// Determines where the crosshair intersects with the world.
         /// </summary>
         /// <returns>A <see cref="RaycastResult"/> containing information about where the crosshair intersects with the world.</returns>
@@ -2563,16 +1958,6 @@ namespace GTA
 
         #region Positioning
 
-        /// <summary>
-        /// Gets the straight line distance between 2 positions.
-        /// </summary>
-        /// <param name="origin">The origin.</param>
-        /// <param name="destination">The destination.</param>
-        /// <returns>The distance.</returns>
-        public static float GetDistance(Vector3 origin, Vector3 destination)
-        {
-            return Function.Call<float>(Hash.GET_DISTANCE_BETWEEN_COORDS, origin.X, origin.Y, origin.Z, destination.X, destination.Y, destination.Z, 1);
-        }
         /// <summary>
         /// Calculates the travel distance using roads and paths between 2 positions.
         /// </summary>
@@ -2687,10 +2072,7 @@ namespace GTA
         /// <exception cref="GameVersionNotSupportedException">Thrown when called in v1.0.463.1 or earlier game versions.</exception>
         public static bool GetGroundHeightExcludingProps(Vector3 position, out float height, GetGroundHeightMode mode = GetGroundHeightMode.Normal)
         {
-            if (Game.FileVersion < ExeVersionConsts.v1_0_505_2)
-            {
-                GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_505_2), nameof(GetGroundHeightExcludingProps), nameof(GetGroundHeightExcludingProps));
-            }
+            GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_505_2, nameof(GetGroundHeightExcludingProps), nameof(GetGroundHeightExcludingProps));
 
             bool foundCollision;
 
@@ -2719,36 +2101,6 @@ namespace GTA
             }
 
             return foundCollision;
-        }
-
-        /// <summary>
-        /// Gets the height of the ground at a given position.
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>The height measured in meters</returns>
-        [Obsolete("Use GetGroundHeight(Vector3, out float, GetGroundHeightMode) instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public static float GetGroundHeight(Vector2 position)
-        {
-            return GetGroundHeight(new Vector3(position.X, position.Y, 1000f));
-        }
-        /// <summary>
-        /// Gets the height of the ground at a given position.
-        /// Note : If the Vector3 is already below the ground, this will return 0.
-        /// You may want to use the other overloaded function to be safe.
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>The height measured in meters</returns>
-        [Obsolete("Use GetGroundHeight(Vector3, out float, GetGroundHeightMode) instead."),
-        EditorBrowsable(EditorBrowsableState.Never)]
-        public static float GetGroundHeight(Vector3 position)
-        {
-            float resultArg;
-            unsafe
-            {
-                Function.Call(Hash.GET_GROUND_Z_FOR_3D_COORD, position.X, position.Y, position.Z, &resultArg, false);
-            }
-            return resultArg;
         }
 
         /// <summary>
@@ -2813,27 +2165,6 @@ namespace GTA
                 safePosition = outPos;
                 return foundSafePos;
             }
-        }
-
-        /// <summary>
-        /// Gets the nearest safe coordinate to position a <see cref="Ped"/>.
-        /// </summary>
-        /// <param name="position">The position to check around.</param>
-        /// <param name="sidewalk">if set to <see langword="true" /> Only find positions on the sidewalk.</param>
-        /// <param name="flags">The flags.</param>
-        [Obsolete("World.GetSafeCoordForPed is obsolete since there is no way to check if the method is failed while GET_SAFE_COORD_FOR_PED provides one." +
-        "Use GetSafePositionForPed instead."), EditorBrowsable(EditorBrowsableState.Never)]
-        public static Vector3 GetSafeCoordForPed(Vector3 position, bool sidewalk = true, int flags = 0)
-        {
-            NativeVector3 outPos;
-            unsafe
-            {
-                if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, sidewalk, &outPos, flags))
-                {
-                    return outPos;
-                }
-            }
-            return Vector3.Zero;
         }
 
         /// <summary>
@@ -2985,7 +2316,8 @@ namespace GTA
                 {
                     return outPos;
                 }
-                else if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
+
+                if (Function.Call<bool>(Hash.GET_SAFE_COORD_FOR_PED, position.X, position.Y, position.Z, false, &outPos, 0))
                 {
                     return outPos;
                 }

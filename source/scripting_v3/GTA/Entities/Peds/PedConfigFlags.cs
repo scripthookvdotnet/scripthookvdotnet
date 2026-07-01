@@ -16,7 +16,7 @@ namespace GTA
     public sealed class PedConfigFlags
     {
         #region Fields
-        readonly Ped _ped;
+        private readonly Ped _ped;
         #endregion
 
         internal PedConfigFlags(Ped ped)
@@ -166,7 +166,7 @@ namespace GTA
                 // While `SET_PED_GROUP_MEMBER_PASSENGER_INDEX` does not set a new value if it's -1 or less,
                 // which is the default value, the native can set the internal value to -1 by passing a positive value
                 // like 31 or 63 as the 2nd argument.
-                if (((int)value < (int)VehicleSeat.Any || (int)value > (int)VehicleSeat.ExtraSeat12))
+                if ((int)value < (int)VehicleSeat.Any || (int)value > (int)VehicleSeat.ExtraSeat12)
                 {
                     ThrowHelper.ThrowArgumentOutOfRangeException(
                         nameof(value),

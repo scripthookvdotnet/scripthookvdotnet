@@ -19,7 +19,7 @@ namespace GTA
         /// <summary>Creates a new <see cref="ScriptFire"/> from an existing handle.</summary>
         /// <param name="handle">The handle of the fire.</param>
         /// <returns>A new <see cref="ScriptFire"/> instance.</returns>
-        public static ScriptFire FromHandle(int handle) => new ScriptFire(handle);
+        public static ScriptFire FromHandle(int handle) => new(handle);
 
         /// <summary>Removes this <see cref="ScriptFire"/> from the game world.</summary>
         public override void Delete() => Function.Call(Hash.REMOVE_SCRIPT_FIRE, Handle);

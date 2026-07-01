@@ -15,9 +15,9 @@ namespace GTA
         public sealed class Enumerator : IEnumerator<Ped>
         {
             #region Fields
-            readonly PedGroup collection;
-            Ped current;
-            int currentIndex = -2;
+            private readonly PedGroup collection;
+            private Ped current;
+            private int currentIndex = -2;
             #endregion
 
             public Enumerator(PedGroup group)
@@ -35,7 +35,7 @@ namespace GTA
 
             public bool MoveNext()
             {
-                if (currentIndex++ < (collection.MemberCount - 1))
+                if (currentIndex++ < collection.MemberCount - 1)
                 {
                     current = currentIndex < 0 ? collection.Leader : collection.GetMember(currentIndex);
 

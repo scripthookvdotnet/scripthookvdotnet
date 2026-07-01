@@ -55,8 +55,8 @@ namespace GTA.Chrono
             _ordFlags = ordFlags;
         }
 
-        private static OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
-        private static OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
+        private static readonly OrdFlags OrdFlagsForMaxDate = new(365, YearFlags.FromYear(int.MaxValue));
+        private static readonly OrdFlags OrdFlagsForMinDate = new(1, YearFlags.FromYear(int.MinValue));
 
         /// <summary>
         /// Represents the largest possible value of a <see cref="GameClockDate"/>.
@@ -140,7 +140,7 @@ namespace GTA.Chrono
 
         internal MonthDayFlags MonthDayFlags => _ordFlags.ToMonthDayFlags();
 
-        static GameClockDate? FromOrdinalAndFlags(int year, int ordinal, YearFlags flags)
+        private static GameClockDate? FromOrdinalAndFlags(int year, int ordinal, YearFlags flags)
         {
             return OrdFlags.New(ordinal, flags) switch
             {
@@ -149,7 +149,7 @@ namespace GTA.Chrono
             };
         }
 
-        static GameClockDate? FromMdf(int year, MonthDayFlags mdf)
+        private static GameClockDate? FromMdf(int year, MonthDayFlags mdf)
         {
             OrdFlags? of = mdf.ToOrdFlags();
 
@@ -160,10 +160,10 @@ namespace GTA.Chrono
 
             return null;
         }
-
-        static GameClockDate FromMdfUnchecked(int year, MonthDayFlags mdf)
-            => new GameClockDate(year, mdf.ToOrdFlags().GetValueOrDefault());
-
+        
+        private static GameClockDate FromMdfUnchecked(int year, MonthDayFlags mdf) =>
+            new(year, mdf.ToOrdFlags().GetValueOrDefault());
+            
         /// <summary>
         /// Makes a new <see cref="GameClockDateTime"/> from the current date and given <see cref="GameClockTime"/>.
         /// </summary>
@@ -349,8 +349,8 @@ namespace GTA.Chrono
             YearFlags flags = YearFlags.FromYear(year);
             uint nWeeks = flags.IsoWeekCount;
 
-            if ((dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek > IsoDayOfWeek.Sunday) ||
-                (week < 1 || week > nWeeks))
+            if (dayOfWeek < IsoDayOfWeek.Monday || dayOfWeek > IsoDayOfWeek.Sunday ||
+                week < 1 || week > nWeeks)
             {
                 date = default;
                 return false;
@@ -429,9 +429,7 @@ namespace GTA.Chrono
         /// </returns>
         public bool TryAdd(GameClockDuration duration, out GameClockDate date)
         {
-            // dividing int64 secs by a float64 value may result in unintended rounding errors when converting secs
-            // into float64.
-            long wholeDays = (long)duration.WholeDays;
+            long wholeDays = duration.WholeDays;
             long newOrdinal = DayOfYear + wholeDays;
 
             if (newOrdinal is > 0 and <= 365)
@@ -511,11 +509,9 @@ namespace GTA.Chrono
                 date = nullableDate.GetValueOrDefault();
                 return true;
             }
-            else
-            {
-                date = default;
-                return false;
-            }
+
+            date = default;
+            return false;
         }
 
         private GameClockDate? DiffMonths(long months)
@@ -525,7 +521,7 @@ namespace GTA.Chrono
 
             // Determine new year (without taking months into account for now). Return null if the new year is not in
             // the range of int32.
-            if ((years > 0 && _year > (int.MaxValue - years)) || (years < 0 && _year < (int.MinValue - years)))
+            if ((years > 0 && _year > int.MaxValue - years) || (years < 0 && _year < int.MinValue - years))
             {
                 return null;
             }
@@ -561,7 +557,7 @@ namespace GTA.Chrono
             if (day > dayMax)
             {
                 day = dayMax;
-            };
+            }
 
             return FromMdfUnchecked(year, new MonthDayFlags(month, day, flags));
         }
@@ -845,8 +841,8 @@ namespace GTA.Chrono
             DivModFloor(year1, 400, out int year1Div400, out int year1Mod400);
             DivModFloor(year2, 400, out int year2Div400, out int year2Mod400);
 
-            long cycle1 = (long)Internals.YearOrdinalToDayCycle(year1Mod400, (int)_ordFlags.Ordinal);
-            long cycle2 = (long)Internals.YearOrdinalToDayCycle(year2Mod400, (int)value._ordFlags.Ordinal);
+            long cycle1 = Internals.YearOrdinalToDayCycle(year1Mod400, (int)_ordFlags.Ordinal);
+            long cycle2 = Internals.YearOrdinalToDayCycle(year2Mod400, (int)value._ordFlags.Ordinal);
             return GameClockDuration.FromDays(((long)year1Div400 - year2Div400) * 146_097 + (cycle1 - cycle2));
         }
 
@@ -903,14 +899,14 @@ namespace GTA.Chrono
         /// <summary>
         /// Returns a value indicating whether this instance is equal to a specified object.
         /// </summary>
-        /// <param name="value">An object to compare with this instance.</param>
+        /// <param name="obj">An object to compare with this instance.</param>
         /// <returns>
-        /// <see langword="true"/> if <paramref name="value"/> is a <see cref="GameClockDate"/> object that represents
+        /// <see langword="true"/> if <paramref name="obj"/> is a <see cref="GameClockDate"/> object that represents
         /// the same game clock date as the current <see cref="GameClockDate"/> structure; otherwise, false.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object obj)
         {
-            if (value is GameClockDate duration)
+            if (obj is GameClockDate duration)
             {
                 return Equals(duration);
             }
@@ -924,14 +920,11 @@ namespace GTA.Chrono
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private unsafe string ToStringInternal()
         {
-            unsafe
-            {
-                // this is the minimum number that is large enough to contain any date string and is multiple of 4
-                const int BufferLen = 20;
-                char* buffer = stackalloc char[BufferLen];
-                GameClockDateTimeFormat.TryFormatDateS(this, buffer, BufferLen, out int written);
-                return new string(buffer, 0, written);
-            }
+            // this is the minimum number that is large enough to contain any date string and is multiple of 4
+            const int BufferLen = 20;
+            char* buffer = stackalloc char[BufferLen];
+            GameClockDateTimeFormat.TryFormatDateS(this, buffer, BufferLen, out int written);
+            return new string(buffer, 0, written);
         }
 
         /// <summary>
@@ -966,19 +959,19 @@ namespace GTA.Chrono
         /// <see cref="GameClockDate"/> value, and returns an integer that indicates whether this instance is earlier
         /// than, the same as, or later than the specified <see cref="GameClockDate"/> value.
         /// </summary>
-        /// <param name="value">A boxed object to compare, or <see langword="null"/>.</param>
+        /// <param name="obj">A boxed object to compare, or <see langword="null"/>.</param>
         /// <returns>
         /// A signed number indicating the relative values of this instance and the value parameter. Less than zero if
         /// this instance is earlier than value. Zero if this instance is the same as value. Greater than zero if this
         /// instance is later than value.
         /// </returns>
         /// <exception cref="ArgumentException">
-        /// <paramref name="value"/> is not a <see cref="GameClockDate"/>.
+        /// <paramref name="obj"/> is not a <see cref="GameClockDate"/>.
         /// </exception>
-        public int CompareTo(object value)
+        public int CompareTo(object obj)
         {
-            if (value == null) return 1;
-            if (value is not GameClockDate otherDuration)
+            if (obj == null) return 1;
+            if (obj is not GameClockDate otherDuration)
                 throw new ArgumentException();
 
             return CompareTo(otherDuration);
@@ -1010,7 +1003,8 @@ namespace GTA.Chrono
             {
                 return 1;
             }
-            else if (thisYear < otherYear)
+
+            if (thisYear < otherYear)
             {
                 return -1;
             }
@@ -1021,7 +1015,8 @@ namespace GTA.Chrono
             {
                 return 1;
             }
-            else if (thisOrdinal < otherOrdinal)
+
+            if (thisOrdinal < otherOrdinal)
             {
                 return -1;
             }
@@ -1086,7 +1081,7 @@ namespace GTA.Chrono
         {
             return month switch
             {
-                2 => (flags.IsLeapYear ? 29 : 28),
+                2 => flags.IsLeapYear ? 29 : 28,
                 4 or 6 or 9 or 11 => 30,
                 _ => 31,
             };

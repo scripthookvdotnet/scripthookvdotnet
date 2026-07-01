@@ -21,9 +21,9 @@ namespace GTA
     /// </remarks>
     public sealed class VehicleWeaponHandlingData : BaseSubHandlingData
     {
-        static readonly int s_elemCountForWeaponPropertyArrays;
+        private static readonly int s_elemCountForWeaponPropertyArrays;
         // Vehicle turret arrays can have up to 12 elements since b1180, but it looks like only 6 element can be actually used
-        static readonly int s_elemCountActuallyUsedForTurretPropertyArrays;
+        private static readonly int s_elemCountActuallyUsedForTurretPropertyArrays;
 
         static VehicleWeaponHandlingData()
         {
@@ -93,7 +93,7 @@ namespace GTA
                 const int MemberOffset = 0x8;
                 for (int i = 0; i < arrayToFill.Length; i++)
                 {
-                    SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + MemberOffset + i * 4, (int)arrayToFill[i]);
+                    SHVDN.MemDataMarshal.WriteInt32(MemoryAddress + MemberOffset + i * 4, arrayToFill[i]);
                 }
             }
         }
@@ -173,10 +173,8 @@ namespace GTA
         {
             get
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1103_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1103_2), nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1103_2, nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
+
                 if (!IsValid)
                 {
                     return Array.Empty<VehicleModType>();
@@ -200,10 +198,8 @@ namespace GTA
             }
             set
             {
-                if (Game.FileVersion < ExeVersionConsts.v1_0_1103_2)
-                {
-                    GameVersionNotSupportedException.ThrowIfNotSupported((ExeVersionConsts.v1_0_1103_2), nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
-                }
+                GameVersionNotSupportedException.ThrowIfNotSupported(ExeVersionConsts.v1_0_1103_2, nameof(VehicleWeaponHandlingData), nameof(WeaponVehicleModType));
+
                 if (value.Length > s_elemCountForWeaponPropertyArrays)
                 {
                     ThrowHelper.ThrowArgumentException($"The amount of {nameof(VehicleModType)} values values must be between 0 and {s_elemCountForWeaponPropertyArrays.ToString()}.", nameof(value));

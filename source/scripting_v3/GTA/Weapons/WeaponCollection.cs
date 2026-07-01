@@ -13,8 +13,8 @@ namespace GTA
     public sealed class WeaponCollection : IEnumerable<Weapon>, IEnumerable
     {
         #region Fields
-        readonly Ped owner;
-        readonly Dictionary<WeaponHash, Weapon> weapons = new();
+        private readonly Ped owner;
+        private readonly Dictionary<WeaponHash, Weapon> weapons = new();
         #endregion
 
         internal WeaponCollection(Ped owner)
@@ -185,7 +185,7 @@ namespace GTA
                     return bestWeapon;
                 }
 
-                var weapon = new Weapon(owner, (WeaponHash)hash);
+                var weapon = new Weapon(owner, hash);
                 weapons.Add(hash, weapon);
 
                 return weapon;

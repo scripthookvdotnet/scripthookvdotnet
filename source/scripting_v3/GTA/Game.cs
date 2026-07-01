@@ -5,19 +5,17 @@
 
 using GTA.Native;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 
 namespace GTA
 {
-    public static class Game
+    public static partial class Game
     {
         #region Fields
-        static Player s_cachedPlayer = null;
-        static Ped s_cachedLocalPlayerPed = null;
+        private static Player s_cachedPlayer = null;
+        private static Ped s_cachedLocalPlayerPed = null;
 
         internal static readonly string[] s_radioNames = {
             "RADIO_01_CLASS_ROCK",
@@ -131,14 +129,6 @@ namespace GTA
         /// <c>getGameVersionInfo</c> retrieves, as a <see cref="System.Version"/> instance.
         /// </summary>
         public static Version FileVersion => SHVDN.NativeMemory.GameFileVersion;
-
-        /// <summary>
-        /// Gets the version of the game.
-        /// </summary>
-        [Obsolete("`Game.Version` is deprecated because Script Hook V is deprecating `getGameVersion`, which " +
-            "the property is based on. Use `Game.FileVersion` instead.")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public static GameVersion Version => (GameVersion)SHVDN.NativeMemory.GetGameVersion();
 
         /// <summary>
         /// Gets the measurement system the game uses to display.
@@ -349,23 +339,6 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets a value indicating whether there is a loading screen being displayed if Script Hook V v1.0.3337.0 or
-        /// older is installed to the game.
-        /// </summary>
-        /// <remarks>
-        /// This property always return <see langword="false"/> since Script Hook V v1.0.3351.0+ This is because
-        /// SHV changed the way SHV scripts start in v1.0.3351.0 (SHV version and not game version) and they will never be
-        /// able to start before the game finished showing the loading screen since SHV v1.0.3351.0+. See
-        /// <see href="https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1549">#1549 on the main GitHub
-        /// repository</see> for details.
-        /// </remarks>
-        [Obsolete("`Game.IsLoading` is obsolete because Script Hook V changed the way SHV scripts start in" +
-            "v1.0.3351.0 (SHV version and not game version) and they never be able to start before the game " +
-            "finished showing the loading screen since SHV v1.0.3351.0+. It is advised not to use `Game.IsLoading`" +
-            "at all.")]
-        public static bool IsLoading => Function.Call<bool>(Hash.GET_IS_LOADING_SCREEN_ACTIVE);
-
-        /// <summary>
         /// Creates an input box for the user to input text using the keyboard.
         /// </summary>
         /// <param name="defaultText">The default text.</param>
@@ -427,13 +400,13 @@ namespace GTA
             foreach (Button button in buttons)
             {
                 hash += (uint)button;
-                hash += (hash << 10);
-                hash ^= (hash >> 6);
+                hash += hash << 10;
+                hash ^= hash >> 6;
             }
 
-            hash += (hash << 3);
-            hash ^= (hash >> 11);
-            hash += (hash << 15);
+            hash += hash << 3;
+            hash ^= hash >> 11;
+            hash += hash << 15;
 
             return Function.Call<bool>(Hash.HAS_CHEAT_WITH_HASH_BEEN_ACTIVATED, hash, buttons.Length);
         }
@@ -458,6 +431,7 @@ namespace GTA
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
         /// <returns>The <see cref="Control"/> value in the range of [0, 255].</returns>
+        [Obsolete("Use GTA.Input.Controls.GetControlValue instead.")]
         public static int GetControlValue(Control control)
         {
             // The 1st parameter is supposed to be the control type index, but the value 1 (for `CAMERA_CONTROL`) works
@@ -481,6 +455,7 @@ namespace GTA
         /// Tests whether the control is disabled before getting an analog value of a given <see cref="Control"/>.
         /// Will return zero if the control is disabled.
         /// </remarks>
+        [Obsolete("Use GTA.Input.Controls.GetControlValueNormalized instead.")]
         public static float GetControlValueNormalized(Control control)
         {
             return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, (int)control);
@@ -491,6 +466,7 @@ namespace GTA
         /// </summary>
         /// <param name="control">The <see cref="Control"/> to check.</param>
         /// <returns>The normalized <see cref="Control"/> value between -1.0f and 1.0f.</returns>
+        [Obsolete("Use GTA.Input.Controls.GetDisabledControlNormal instead.")]
         public static float GetDisabledControlValueNormalized(Control control)
         {
             return Function.Call<float>(Hash.GET_DISABLED_CONTROL_NORMAL, 0, (int)control);
@@ -505,6 +481,7 @@ namespace GTA
         /// Does not return a bool value despite the fact <c>SET_CONTROL_VALUE_NEXT_FRAME</c> returns
         /// <see langword="true"/> if the control is enabled and returns <see langword="false"/> otherwise.
         /// </remarks>
+        [Obsolete("Use GTA.Input.Controls.SetControlNormalNextFrame instead.")]
         public static void SetControlValueNormalized(Control control, float value)
         {
             Function.Call(Hash.SET_CONTROL_VALUE_NEXT_FRAME, 0, (int)control, value);
@@ -541,6 +518,7 @@ namespace GTA
         /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> is currently
         /// pressed like how <c>IS_CONTROL_PRESSED</c> does.
         /// </remarks>
+        [Obsolete("Use GTA.Input.Controls.IsDisabledControlPressed instead.")]
         public static bool IsControlPressed(Control control)
         {
             return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_PRESSED, 0, (int)control);
@@ -564,6 +542,7 @@ namespace GTA
         /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just
         /// pressed this frame like <c>IS_CONTROL_JUST_PRESSED</c> does.
         /// </remarks>
+        [Obsolete("Use GTA.Input.Controls.IsDisabledControlJustPressed instead.")]
         public static bool IsControlJustPressed(Control control)
         {
             return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_PRESSED, 0, (int)control);
@@ -587,6 +566,7 @@ namespace GTA
         /// Does not test whether the control is disabled before checking whether a <see cref="Control"/> was just
         /// released this frame like <c>IS_CONTROL_JUST_RELEASED</c> does.
         /// </remarks>
+        [Obsolete("Use GTA.Input.Controls.IsDisabledControlJustReleased instead.")]
         public static bool IsControlJustReleased(Control control)
         {
             return Function.Call<bool>(Hash.IS_DISABLED_CONTROL_JUST_RELEASED, 0, (int)control);
@@ -605,6 +585,7 @@ namespace GTA
         /// <c>0.5f</c> or more; otherwise, returns <see langword="false"/>.
         /// </para>
         /// </returns>
+        [Obsolete("Use GTA.Input.Controls.IsControlPressed instead.")]
         public static bool IsEnabledControlPressed(Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_PRESSED, 0, (int)control);
@@ -625,6 +606,7 @@ namespace GTA
         /// <see langword="false"/>.
         /// </para>
         /// </returns>
+        [Obsolete("Use GTA.Input.Controls.IsControlJustPressed instead.")]
         public static bool IsEnabledControlJustPressed(Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_JUST_PRESSED, 0, (int)control);
@@ -645,6 +627,7 @@ namespace GTA
         /// <see langword="false"/>.
         /// </para>
         /// </returns>
+        [Obsolete("Use GTA.Input.Controls.IsControlJustReleased instead.")]
         public static bool IsEnabledControlJustReleased(Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_JUST_RELEASED, 0, (int)control);
@@ -657,6 +640,7 @@ namespace GTA
         /// <returns>
         /// <see langword="true"/> if the <see cref="Control"/> is enabled; otherwise, <see langword="false"/>.
         /// </returns>
+        [Obsolete("Use GTA.Input.Controls.IsControlEnabled instead.")]
         public static bool IsControlEnabled(Control control)
         {
             return Function.Call<bool>(Hash.IS_CONTROL_ENABLED, 0, (int)control);
@@ -669,6 +653,7 @@ namespace GTA
         /// <param name="control">
         /// The <see cref="Control"/> to disable. Related action inputs will also be enabled.
         /// </param>
+        [Obsolete("Use GTA.Input.Controls.EnableControlActionThisFrame instead.")]
         public static void EnableControlThisFrame(Control control)
         {
             Function.Call(Hash.ENABLE_CONTROL_ACTION, 0, (int)control, true);
@@ -681,6 +666,7 @@ namespace GTA
         /// <param name="control">
         /// The <see cref="Control"/> to disable. Related action inputs will also be disabled.
         /// </param>
+        [Obsolete("Use GTA.Input.Controls.DisableControlActionThisFrame instead.")]
         public static void DisableControlThisFrame(Control control)
         {
             Function.Call(Hash.DISABLE_CONTROL_ACTION, 0, (int)control, true);
@@ -688,6 +674,7 @@ namespace GTA
         /// <summary>
         /// Enables all <see cref="Control"/>s this frame.
         /// </summary>
+        [Obsolete("Use GTA.Input.Controls.EnableAllControlActionsThisFrame(ControlType.PlayerControl) instead.")]
         public static void EnableAllControlsThisFrame()
         {
             Function.Call(Hash.ENABLE_ALL_CONTROL_ACTIONS, 0);
@@ -695,26 +682,11 @@ namespace GTA
         /// <summary>
         /// Disables all <see cref="Control"/>s this frame.
         /// </summary>
+        [Obsolete("Use GTA.Input.Controls.DisableAllControlActionsThisFrame(ControlType.PlayerControl) instead.")]
         public static void DisableAllControlsThisFrame()
         {
             Function.Call(Hash.DISABLE_ALL_CONTROL_ACTIONS, 0);
         }
-
-        /// <summary>
-        /// Calculates a Jenkins One At A Time hash from the given <see cref="string"/> which can then be used by any native function that takes a hash.
-        /// Can be called in any thread.
-        /// </summary>
-        /// <param name="input">The input <see cref="string"/> to hash.</param>
-        /// <returns>The Jenkins hash of the input <see cref="string"/>.</returns>
-        /// <remarks>
-        /// Converts ASCII uppercase characters to lowercase ones and backslash characters to slash ones before
-        /// converting into a hash. Computes the hash from the substring between two double quotes if the first
-        /// character is a double quote character.
-        /// </remarks>
-        [Obsolete("Use StringHash.AtStringHash(string, uint), StringHash.AtStringHashUtf8(string, uint), " +
-            "AtHashValue.FromString(string, uint), or StringHash.AtStringHashUtf8(string, uint) instead.")]
-        // Use AtStringHashUtf8 for compatibility reasons
-        public static int GenerateHash(string input) => (int)StringHash.AtStringHashUtf8(input);
 
         /// <summary>
         /// Returns a localized <see cref="string"/> from the games language files with a specified GXT key.
@@ -792,7 +764,7 @@ namespace GTA
         {
             unsafe
             {
-                byte* address = (startAddress == IntPtr.Zero ? SHVDN.MemScanner.FindPatternNaive(pattern, mask) : SHVDN.MemScanner.FindPatternNaive(pattern, mask, startAddress));
+                byte* address = startAddress == IntPtr.Zero ? SHVDN.MemScanner.FindPatternNaive(pattern, mask) : SHVDN.MemScanner.FindPatternNaive(pattern, mask, startAddress);
                 return address == null ? IntPtr.Zero : new IntPtr(address);
             }
         }

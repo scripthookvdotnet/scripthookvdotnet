@@ -35,7 +35,7 @@ jobs:
       next_version_name_for_assemblies: ${{ steps.calc-next-tag-name.outputs.next_version_name_for_assemblies }}
     steps:
       - name: Checkout Nightly Release Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ format('{0}/scripthookvdotnet-nightly', github.repository_owner) }}
           path: nightly-repo
@@ -115,7 +115,7 @@ jobs:
       tag_name: ${{ steps.tag-output.outputs.result }}
     steps:
       - name: Generate Access Token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.SHVDN_APP_ID }}
@@ -167,9 +167,9 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download Artifact from Build Workflow
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v8.0.1
         with:
           name: ScriptHookVDotNet
           path: bin/Release
@@ -186,7 +186,7 @@ jobs:
           cd "${GITHUB_WORKSPACE}/bin/Release"
           zip -r "${GITHUB_WORKSPACE}/${artifact_file_name}" *
       - name: Generate Access Token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.SHVDN_APP_ID }}

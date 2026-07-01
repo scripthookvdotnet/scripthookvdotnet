@@ -1,4 +1,3 @@
-using GTA.Math;
 using SHVDN;
 
 namespace GTA
@@ -13,27 +12,27 @@ namespace GTA
         /// <summary>
         /// Weapon damage as displayed in the HUD.
         /// </summary>
-        public int Damage;
+        public int Damage { get; }
 
         /// <summary>
         /// Weapon firing speed as displayed in the HUD.
         /// </summary>
-        public int Speed;
+        public int Speed { get; }
 
         /// <summary>
         /// Weapon clip/magazine capacity as displayed in the HUD.
         /// </summary>
-        public int Capacity;
+        public int Capacity { get; }
 
         /// <summary>
         /// Weapon accuracy as displayed in the HUD.
         /// </summary>
-        public int Accuracy;
+        public int Accuracy { get; }
 
         /// <summary>
         /// Effective range of the weapon as displayed in the HUD.
         /// </summary>
-        public int Range;
+        public int Range { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeaponHudStats"/> struct.

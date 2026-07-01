@@ -1,11 +1,9 @@
-﻿//
+//
 // Copyright (C) 2024 kagikn & contributors
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace GTA.Chrono
@@ -54,7 +52,7 @@ namespace GTA.Chrono
             Debug.Assert(Log2ToPow10ForU64.Length == 64);
             var index = (uint)Log2ToPow10ForU64[BitOperations.Log2(value)];
 
-            Debug.Assert((index + 1) <= PowersOf10.Length);
+            Debug.Assert(index + 1 <= PowersOf10.Length);
             ulong powerOf10 = PowersOf10[BitOperations.Log2(index)];
 
             // Return the number of digits based on the power of 10, shifted by 1 if it falls below the threshold.
@@ -122,7 +120,7 @@ namespace GTA.Chrono
                 while (true)
                 {
                     uint temp = value / 10;
-                    if (value != (temp * 10))
+                    if (value != temp * 10)
                     {
                         break;
                     }
