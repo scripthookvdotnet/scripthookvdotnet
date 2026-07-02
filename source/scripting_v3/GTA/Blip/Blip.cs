@@ -40,10 +40,12 @@ namespace GTA
         /// </summary>
         public IntPtr MemoryAddress => SHVDN.NativeMemory.GetBlipAddress(Handle);
 
+        // We currently cannot name this "Type" because there is already an obsolete member named "Type" that returns an integer.
+        // Therefore, this name is temporary and will be changed to "Type" in v4.
         /// <summary>
-        /// Gets the type of this <see cref="Blip"/>.
+        /// Gets the type of this <see cref="Blip"/> .
         /// </summary>
-        public int Type => Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, Handle);
+        public BlipType BlipType => (BlipType)Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, Handle);
 
         /// <summary>
         /// Gets or sets the display type of this <see cref="Blip"/>.

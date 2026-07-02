@@ -7,6 +7,12 @@ namespace GTA
     public sealed partial class Blip
     {
         /// <summary>
+        /// Gets the type of this <see cref="Blip"/>.
+        /// </summary>
+        [Obsolete("Use Blip.BlipType instead.")]
+        public int Type => Function.Call<int>(Hash.GET_BLIP_INFO_ID_TYPE, Handle);
+
+        /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Blip"/> shows the dollar sign at the top left corner of the <see cref="Blip"/>.
         /// </summary>
         /// <value>
