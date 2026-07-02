@@ -186,7 +186,17 @@ namespace GTA
 
                 return System.Drawing.Color.FromArgb(SHVDN.MemDataMarshal.ReadInt32(address + 0x4C));
             }
-            set => Function.Call(Hash.SET_BLIP_SECONDARY_COLOUR, Handle, value.R, value.G, value.B);
+            set
+            {
+                if (!TryGetMemoryAddress(out IntPtr address))
+                {
+                    //The alpha channel will be ignored here.
+                    Function.Call(Hash.SET_BLIP_SECONDARY_COLOUR, Handle, value.R, value.G, value.B);
+                    return;
+                }
+
+                SHVDN.MemDataMarshal.WriteInt32(address + 0x4C, value.ToArgb());
+            }
         }
 
         /// <summary>
