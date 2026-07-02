@@ -93,6 +93,9 @@ namespace GTA
         /// Gets or sets the alpha of this <see cref="Blip"/> on the map.
         /// The value is up to 255.
         /// </summary>
+        /// <remarks>
+        /// This value will be ignored when using <see cref="SecondaryColor"/>.
+        /// </remarks>
         public int Alpha
         {
             get => Function.Call<int>(Hash.GET_BLIP_ALPHA, Handle);
@@ -165,6 +168,9 @@ namespace GTA
         /// <summary>
         /// Gets or sets the color of this <see cref="Blip"/>.
         /// </summary>
+        /// <remarks>
+        /// If you want to set a custom color, set this to <see cref="BlipColor.UseColor32"/> and use <see cref="SecondaryColor"/> instead.
+        /// </remarks>
         public BlipColor Color
         {
             get => (BlipColor)Function.Call<int>(Hash.GET_BLIP_COLOUR, Handle);
@@ -186,7 +192,17 @@ namespace GTA
 
                 return System.Drawing.Color.FromArgb(SHVDN.MemDataMarshal.ReadInt32(address + 0x4C));
             }
-            set => Function.Call(Hash.SET_BLIP_SECONDARY_COLOUR, Handle, value.R, value.G, value.B);
+            set
+            {
+                if (!TryGetMemoryAddress(out IntPtr address))
+                {
+                    //The alpha channel will be ignored here.
+                    Function.Call(Hash.SET_BLIP_SECONDARY_COLOUR, Handle, value.R, value.G, value.B);
+                    return;
+                }
+
+                SHVDN.MemDataMarshal.WriteInt32(address + 0x4C, value.ToArgb());
+            }
         }
 
         /// <summary>

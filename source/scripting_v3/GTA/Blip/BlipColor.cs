@@ -160,5 +160,7 @@ namespace GTA
         /// This color is always the same as <see cref="BlipColor.Blue"></see>, the only difference is color index.
         /// </summary>
         Blue7,
+
+        UseColor32 = 84,
     }
 }
