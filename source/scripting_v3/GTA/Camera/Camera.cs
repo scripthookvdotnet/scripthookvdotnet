@@ -302,12 +302,11 @@ namespace GTA
         /// <paramref name="duration"/> is zero).
         /// The camera will be deactivated if this method successfully starts a camera interpolation.
         /// </remarks>
-        public void InterpolateToNewCamFrame(Vector3 position, Vector3 rotation, float fov, uint duration,
+        public void InterpolateToNewCamFrame(Vector3 position, Vector3 rotation, float fov, int duration,
             CamFrameInterpolatorCurveType graphTypePos = CamFrameInterpolatorCurveType.SinAccelDecel,
             CamFrameInterpolatorCurveType graphTypeRot = CamFrameInterpolatorCurveType.SinAccelDecel,
             EulerRotationOrder rotOrder = EulerRotationOrder.YXZ)
         {
-            // `camFrameInterpolator` defines the duration field as `u32`
             Function.Call(Hash.SET_CAM_PARAMS, Handle, position.X, position.Y, position.Z, rotation.X, rotation.Y,
                 rotation.Z,
                 fov, duration, (int)graphTypePos, (int)graphTypeRot, (int)rotOrder);
