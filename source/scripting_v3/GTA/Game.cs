@@ -770,37 +770,12 @@ namespace GTA
         }
 
         /// <summary>
-        /// Enables or disables <c>RiotMode</c>.
+        /// Gets or sets whether riot mode is enabled.
         /// </summary>
         /// <remarks>
-        /// Riot mode has several effects:
-        /// <list type="bullet">
-        /// <item>
-        /// <description>Most peds become hostile toward each other, including the player.</description>
-        /// </item>
-        /// <item>
-        /// <description>Random peds are equipped with either a pistol or a Micro SMG.</description>
-        /// </item>
-        /// <item>
-        /// <description>Peds will always select their best available weapon.</description>
-        /// </item>
-        /// <item>
-        /// <description>Peds have infinite ammunition.</description>
-        /// </item>
-        /// </list>
-        /// <para>
-        /// Peds with the <c>Random</c> population type do <b>not</b> attack peds considered friendly to them, even when riot mode is active.
-        /// Friendliness is determined by <c>CPedIntelligence::IsFriendlyWith(CPed*)</c>, which returns <c>true</c> when:
-        /// <list type="bullet">
-        /// <item>
-        /// <description>The relationship from the caller ped’s relationship group to the other ped’s group is either <c>Respect</c> or <c>Like</c>.</description>
-        /// </item>
-        /// <item>
-        /// <description>Both peds belong to the same relationship group.</description>
-        /// </item>
-        /// </list>
-        /// Note that this relationship check is one-directional—the reverse is not always true.
-        /// </para>
+        /// When riot mode is enabled, peds become hostile towards other peds and the player.
+        /// They are equipped with infinite ammunition and either a pistol or a Micro SMG, and they always select their best available weapon.
+        /// Peds will not attack members of their own <see cref="RelationshipGroup"/> and will ignore other groups configured as friendly.
         /// </remarks>
         public static bool IsRiotModeEnabled
         {
