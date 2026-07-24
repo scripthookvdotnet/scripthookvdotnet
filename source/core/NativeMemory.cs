@@ -758,6 +758,12 @@ namespace SHVDN
                 }
             }
 
+            address = MemScanner.FindPatternBmh("\xC0\xE8\x07\xA8\x01\x74\x08\x48\x8b\xCB", "xxxxxxxxxx");
+            if(address != null)
+            {
+                s_cRiotsInstPtr = (ulong**)Rel32(address, -0xF);
+            }
+
             // Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
             address = MemScanner.FindPatternBmh("\x74\x00\x00\x00\x00\x74\x00\xe8\x00\x00\x00\x00\x48\x85\xc0\x75\x00\x38\x00\x00\x0f\x84\x00\x00\x00\x00\x48\x8d\x4d\x00\xe8\x00\x00\x00\x00\x66\x89\x45\x00\x8b\x45\x00\x8b\xc8\x33\x4d", "x????x?x????xxxx?x??xx????xxx?x????xxx?xx?xxxx");
             if (address != null)
@@ -1173,6 +1179,22 @@ namespace SHVDN
         public static bool AreArtificialLightsDisabled
         {
             get => *s_disableArtificialLightsAddress != 0;
+        }
+
+        private static ulong** s_cRiotsInstPtr;
+
+        public static bool IsRiotModeEnabled
+        {
+            get
+            {
+                if(s_cRiotsInstPtr == null)
+                {
+                    return false;
+                }
+
+                // `m_bEnabled` lies at offset 0x00.
+                return *(byte*)*s_cRiotsInstPtr != 0;
+            }
         }
         #endregion
 

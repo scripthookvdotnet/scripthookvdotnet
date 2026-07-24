@@ -804,6 +804,7 @@ namespace GTA
         /// </remarks>
         public static bool IsRiotModeEnabled
         {
+            get => SHVDN.NativeMemory.IsRiotModeEnabled;
             set => Function.Call(Hash.SET_RIOT_MODE_ENABLED, value);
         }
     }
