@@ -591,7 +591,32 @@ static void ScriptHookVDotNet_ManagedInit()
                 }
                 catch (Exception^ ex)
                 {
-                    SHVDN::Log::Message(SHVDN::Log::Level::Error, "Invalid script path specified in config. Falling back to \"" + scriptPath + "\"");
+                    if (ex->GetType() == System::ArgumentException::typeid ||
+                        ex->GetType() == System::NotSupportedException::typeid)
+                    {
+                        SHVDN::Log::Message(
+                            SHVDN::Log::Level::Error,
+                            "The script path specified in the config is invalid. "
+                            "Falling back to \"" + scriptPath + "\"."
+                        );
+                    }
+                    else if (ex->GetType() == System::IO::PathTooLongException::typeid)
+                    {
+                        SHVDN::Log::Message(
+                            SHVDN::Log::Level::Error,
+                            "The script path specified in the config is too long and exceeds the OS limit. "
+                            "Falling back to \"" + scriptPath + "\"."
+                        );
+                    }
+                    else
+                    {
+                        SHVDN::Log::Message(
+                            SHVDN::Log::Level::Error,
+                            "An unexpected error occurred while validating the script path. "
+                            "Please report this at https://github.com/scripthookvdotnet/scripthookvdotnet/issues. "
+                            "Error: " + ex->Message
+                        );
+                    }
                 }
             }
             else if (String::Equals(keyStr, "AutoLoadScripts", StringComparison::OrdinalIgnoreCase))
