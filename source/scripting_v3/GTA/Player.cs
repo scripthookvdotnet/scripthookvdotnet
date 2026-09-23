@@ -550,6 +550,18 @@ namespace GTA
         /// </value>
         public bool CanLeaveParachuteSmokeTrail
         {
+            get
+            {
+                if(!TryGetMemoryAddress(out IntPtr address) || SHVDN.NativeMemory.CPlayerInfoCanLeaveParachuteSmokeTrailOffset == 0)
+                {
+                    return false;
+                }
+
+                unsafe
+                {
+                    return SHVDN.MemDataMarshal.IsBitSet(address + SHVDN.NativeMemory.CPlayerInfoCanLeaveParachuteSmokeTrailOffset, SHVDN.NativeMemory.CPlayerInfoCanLeaveParachuteSmokeTrailBit);
+                }
+            }
             set => Function.Call(Hash.SET_PLAYER_CAN_LEAVE_PARACHUTE_SMOKE_TRAIL, Handle, value);
         }
 
@@ -894,6 +906,17 @@ namespace GTA
         public override int GetHashCode()
         {
             return Handle.GetHashCode();
+        }
+
+        /// <summary>
+        /// Attempts to get the memory address of this object.
+        /// </summary>
+        /// <param name="address">The memory address if successful; otherwise, <see cref="IntPtr.Zero"/>.</param>
+        /// <returns><see langword="true"/> if the memory address is valid; otherwise, <see langword="false"/>.</returns>
+        private bool TryGetMemoryAddress(out IntPtr address)
+        {
+            address = MemoryAddress;
+            return address != IntPtr.Zero;
         }
     }
 }

@@ -747,6 +747,13 @@ namespace SHVDN
                 s_cRiotsInstPtr = (ulong**)Rel32(address, -0xF);
             }
 
+            address = MemScanner.FindPatternBmh("\x48\x8B\x41\x10\x48\x85\xC0\x75\x03", "xxxxxxxxx");
+            if(address != null)
+            {
+                CPlayerInfoCanLeaveParachuteSmokeTrailOffset = *(int*)(address + 0x1A);
+                CPlayerInfoCanLeaveParachuteSmokeTrailBit = *(byte*)(address + 0x20);
+            }
+
             // Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
             address = MemScanner.FindPatternBmh("\x74\x00\x00\x00\x00\x74\x00\xe8\x00\x00\x00\x00\x48\x85\xc0\x75\x00\x38\x00\x00\x0f\x84\x00\x00\x00\x00\x48\x8d\x4d\x00\xe8\x00\x00\x00\x00\x66\x89\x45\x00\x8b\x45\x00\x8b\xc8\x33\x4d", "x????x?x????xxxx?x??xx????xxx?x????xxx?xx?xxxx");
             if (address != null)
@@ -4197,6 +4204,8 @@ namespace SHVDN
         /// The offset for max health of CPlayerInfo, which is stored as an uint16_t.
         /// </summary>
         public static int CPlayerInfoMaxHealthOffset { get; }
+        public static int CPlayerInfoCanLeaveParachuteSmokeTrailOffset { get; }
+        public static int CPlayerInfoCanLeaveParachuteSmokeTrailBit { get; }
 
         public static int PedPlayerInfoOffset { set; get; }
         public static int CWantedOffset { get; }
