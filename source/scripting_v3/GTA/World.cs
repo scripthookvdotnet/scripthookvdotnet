@@ -37,12 +37,15 @@ namespace GTA
         }
 
         /// <summary>
-        /// Gets or sets the previous weather.
+        /// Gets or sets the weather type the game is interpolating from.
         /// </summary>
+        /// <remarks>
+        /// The setter does not preserve the interpolation value and resets it to 0 instead, just like <see cref="NextWeather"/> does.
+        /// </remarks>
         /// <value>
-        /// The previous weather.
+        /// The weather type the game is interpolating from.
         /// </value>
-        public static Weather Weather
+        public static Weather PreviousWeather
         {
             get
             {
@@ -58,17 +61,29 @@ namespace GTA
             }
             set
             {
-                if (Enum.IsDefined(typeof(Weather), value) && value != Weather.Unknown)
+                if (!Enum.IsDefined(typeof(Weather), value) || value == Weather.Unknown)
                 {
-                    Function.Call(Hash.SET_WEATHER_TYPE_NOW, WeatherHelpers.GetInternalName(value));
+                    return;
                 }
+
+                int nextWeatherHash;
+                unsafe
+                {
+                    Function.Call(Hash.GET_CURR_WEATHER_STATE, InputArgument.DiscardPtr64, &nextWeatherHash, InputArgument.DiscardPtr64);
+                }
+
+                Function.Call(Hash.SET_CURR_WEATHER_STATE, nextWeatherHash, value.GetNameHash(), 0.0f);
             }
         }
+
         /// <summary>
-        /// Gets or sets the next weather.
+        /// Gets or sets the weather type the game is interpolating towards.
         /// </summary>
+        /// <remarks>
+        /// The setter does not preserve the interpolation value and resets it to 0 instead.
+        /// </remarks>
         /// <value>
-        /// The next weather.
+        /// The weather type the game is interpolating towards.
         /// </value>
         public static Weather NextWeather
         {
@@ -101,20 +116,107 @@ namespace GTA
         }
 
         /// <summary>
-        /// Transitions to weather.
+        /// Gets or sets the the progress of weather interpolation.
         /// </summary>
-        /// <param name="weather">The weather.</param>
-        /// <param name="duration">The duration in seconds for the weather to persist.</param>
-        public static void TransitionToWeather(Weather weather, float duration)
+        /// <remarks>
+        /// Range <c>0.0-1.0f</c>.
+        /// </remarks>
+        /// <value>
+        /// The progress of weather interpolation.
+        /// </value>
+        public static float WeatherInterpolation
         {
-            if (Enum.IsDefined(typeof(Weather), weather) && weather != Weather.Unknown)
+            get
             {
-                Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, WeatherHelpers.GetInternalName(weather), duration);
+                float weatherInterpolation;
+                unsafe
+                {
+                    Function.Call(Hash.GET_CURR_WEATHER_STATE, InputArgument.DiscardPtr64, InputArgument.DiscardPtr64, &weatherInterpolation);
+                }
+
+                return weatherInterpolation;
+            }
+            set
+            {
+                int nextWeatherHash;
+                int previousWeatherHash;
+                unsafe
+                {
+                    Function.Call(Hash.GET_CURR_WEATHER_STATE, &previousWeatherHash, &nextWeatherHash, InputArgument.DiscardPtr64);
+                }
+
+                Function.Call(Hash.SET_CURR_WEATHER_STATE, previousWeatherHash, nextWeatherHash, value);
             }
         }
 
+        public static void SetWeatherTypeNow(Weather weather)
+        {
+            if (!Enum.IsDefined(typeof(Weather), weather) || weather == Weather.Unknown)
+            {
+                return;
+            }
+
+            string weatherName = WeatherHelpers.GetInternalName((int)weather);
+
+            Function.Call(Hash.SET_WEATHER_TYPE_NOW, weatherName);
+        }
+
+
         /// <summary>
-        /// Transitions the weather to a random state.
+        /// Instantly sets the weather state to the desired weather type that will persist.
+        /// </summary>
+        /// <remarks>
+        /// The weather type will persist until cleared, see <see cref="ClearPersistentWeather"/>.
+        /// </remarks>
+        /// <param name="weather">
+        /// The desired weather type.
+        /// </param>
+        public static void SetPersistentWeatherTypeNow(Weather weather)
+        {
+            if (!Enum.IsDefined(typeof(Weather), weather) || weather == Weather.Unknown)
+            {
+                return;
+            }
+
+            string weatherName = WeatherHelpers.GetInternalName((int)weather);
+
+            Function.Call(Hash.SET_WEATHER_TYPE_NOW_PERSIST, weatherName);
+        }
+
+        /// <summary>
+        /// Transitions towards the desired weather type within the specified duration.
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="ClearPersistentWeather"/> to abort the transition or to enable natural weather cycles after.
+        /// </remarks>
+        /// <param name="weather">
+        /// The weather type that should be interpolated towards.
+        /// </param>
+        /// <param name="duration">
+        /// The duration of the transition in seconds.
+        /// </param>
+        public static void TransitionToPersistentWeather(Weather weather, float duration)
+        {
+            if (!Enum.IsDefined(typeof(Weather), weather) || weather == Weather.Unknown)
+            {
+                return;
+            }
+
+            string weatherName = WeatherHelpers.GetInternalName(weather);
+
+            Function.Call(Hash.SET_WEATHER_TYPE_OVERTIME_PERSIST, weatherName, duration);
+        }
+
+        /// <summary>
+        /// Clears any persistent weather and resumes natural weather cycles.
+        /// </summary>
+        public static void ClearPersistentWeather()
+        {
+            Function.Call(Hash.CLEAR_WEATHER_TYPE_PERSIST);
+        }
+
+        /// <summary>
+        /// Instantly sets the weather state to a randomized weather type.
         /// </summary>
         public static void SetRandomWeather() => Function.Call(Hash.SET_RANDOM_WEATHER_TYPE);
 
