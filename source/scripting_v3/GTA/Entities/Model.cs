@@ -374,6 +374,16 @@ namespace GTA
         public bool IsVehicle => Function.Call<bool>(Native.Hash.IS_MODEL_A_VEHICLE, Hash);
 
         /// <summary>
+        /// Gets a value that indicates whether this <see cref="Model"/> is a ped that spawns in water.
+        /// </summary>
+        public bool IsAquaticPed => SHVDN.NativeMemory.IsAquaticModel(Hash);
+
+        /// <summary>
+        /// Gets a value that indicates whether this <see cref="Model"/> is a ped that spawns in the air.
+        /// </summary>
+        public bool IsFlyingPed => SHVDN.NativeMemory.IsFlyingModel(Hash);
+        
+        /// <summary>
         /// Gets the dimensions of this <see cref="Model"/>.
         /// </summary>
         /// <returns>

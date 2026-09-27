@@ -360,7 +360,24 @@ namespace GTA
             return new Ped(Function.Call<int>(Hash.CREATE_RANDOM_PED, position.X, position.Y, position.Z));
         }
 
-        /// <inheritdoc cref="Ped.CreateRandom(Vector3, float, Func{Model, bool})"/>
+        /// <summary>
+        /// Spawns a <see cref="Ped"/> of a random <see cref="Model"/> at the position specified.
+        /// </summary>
+        /// <param name="position">The position to spawn the <see cref="Ped"/> at.</param>
+        /// <param name="heading">The heading of the <see cref="Ped"/>.</param>
+        /// <param name="predicate">
+        /// <para>
+        /// The method that determines whether a model should be considered when choosing a random model for
+        /// the <see cref="Ped"/>. If <see langword="null"/> is set, gangster and any animal models will not be chosen,
+        /// including animals that do not swim or fly. Note that <see cref="CreateRandomPed(GTA.Math.Vector3)"/> and
+        /// `<c>CREATE_RANDOM_PED</c>` can pick a gangster and an animal model that do not swim or fly.
+        /// </para>
+        /// <para>
+        /// The default model prohibition was to imitate how `<c>CREATE_RANDOM_PED</c>` pick a ped model, but it turned
+        /// out that the native does not filter out gang ped models or animal <see cref="Ped"/> models that do not swim
+        /// or fly after SHVDN v3.6.0 was released.
+        /// </para>
+        /// </param>
         [Obsolete("Use Ped.CreateRandom(Vector3, float, Func<Model, bool>) instead.")]
         public static Ped CreateRandomPed(Vector3 position, float heading, Func<Model, bool> predicate = null)
         {

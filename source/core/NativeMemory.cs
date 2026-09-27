@@ -515,6 +515,12 @@ namespace SHVDN
                 s_cStreamingAppropriatePedIndicesOffset = *(int*)(unkFuncForPedModelIndices + 0x1E);
             }
 
+            address = MemScanner.FindPatternBmh("\x39\x81\x00\x00\x00\x00\x0F\x94\xC0\x48\x83\xC4\x28\xC3", "xx????xxxxxxxx");
+            if(address != null)
+            {
+                s_defaultSpawningPreferenceOffset = *(int*)(address + 2);
+            }
+
             address = MemScanner.FindPatternBmh("\x48\x8B\x05\x00\x00\x00\x00\x41\x8B\x1E", "xxx????xxx");
             if (address != null)
             {
@@ -3148,6 +3154,8 @@ namespace SHVDN
         private static int s_cStreamingAppropriateVehicleIndicesOffset;
         private static int s_cStreamingAppropriatePedIndicesOffset;
 
+        private static int s_defaultSpawningPreferenceOffset;
+
         private static IntPtr FindCModelInfo(int modelHash)
         {
             for (HashNode* cur = ((HashNode**)s_modelHashTable)[(uint)(modelHash) % s_modelHashEntries]; cur != null; cur = cur->Next)
@@ -3354,6 +3362,40 @@ namespace SHVDN
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
             return GetModelInfoType(modelInfo) == ModelInfoType.Mlo;
+        }
+
+        public static bool IsFlyingModel(int modelHash)
+        {
+            if (!IsModelAPed(modelHash))
+            {
+                return false;
+            }
+
+            IntPtr address = FindCModelInfo(modelHash);
+
+            if(address == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            return *(int*)(address + s_defaultSpawningPreferenceOffset) == 0;
+        }
+
+        public static bool IsAquaticModel(int modelHash)
+        {
+            if (!IsModelAPed(modelHash))
+            {
+                return false;
+            }
+
+            IntPtr address = FindCModelInfo(modelHash);
+
+            if (address == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            return *(int*)(address + s_defaultSpawningPreferenceOffset) == 1;
         }
 
         public static string GetVehicleMakeName(int modelHash)
