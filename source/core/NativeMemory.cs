@@ -771,6 +771,20 @@ namespace SHVDN
                 s_getMaterialNameFunc = (delegate* unmanaged[Stdcall]<IntPtr, uint, byte*, int, void>)(*(IntPtr*)(vtable + getMaterialNameFuncOffset));
             }
 
+            address = MemScanner.FindPatternBmh("\x0F\x57\xC0\x0F\x2F\x83\x00\x00\x00\x00\x73\x13\x48\x8B\x93", "xxxxxx????xxxxx");
+            if(address != null)
+            {
+                int sprintEnergyOffset = *(int*)(address + 0x6);
+
+                CPlayerInfoRunSprintSpeedMultiplierOffset = sprintEnergyOffset - 0x4;
+            }
+
+            address = MemScanner.FindPatternBmh("\x48\x8B\x40\x10\x48\x85\xC9\x74\x00\xF3\x0F", "xxxxxxxx?xx");
+            if (address != null)
+            {
+                CPlayerInfoSwimSpeedMultiplierOffset = *(int*)(address + 0xD);
+            }
+
             // Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
             address = MemScanner.FindPatternBmh("\x74\x00\x00\x00\x00\x74\x00\xe8\x00\x00\x00\x00\x48\x85\xc0\x75\x00\x38\x00\x00\x0f\x84\x00\x00\x00\x00\x48\x8d\x4d\x00\xe8\x00\x00\x00\x00\x66\x89\x45\x00\x8b\x45\x00\x8b\xc8\x33\x4d", "x????x?x????xxxx?x??xx????xxx?x????xxx?xx?xxxx");
             if (address != null)
@@ -4281,6 +4295,8 @@ namespace SHVDN
         public static int CPlayerInfoMaxHealthOffset { get; }
         public static int CPlayerInfoCanLeaveParachuteSmokeTrailOffset { get; }
         public static int CPlayerInfoCanLeaveParachuteSmokeTrailBit { get; }
+        public static int CPlayerInfoRunSprintSpeedMultiplierOffset { get; }
+        public static int CPlayerInfoSwimSpeedMultiplierOffset { get; }
 
         public static int PedPlayerInfoOffset { set; get; }
         public static int CWantedOffset { get; }

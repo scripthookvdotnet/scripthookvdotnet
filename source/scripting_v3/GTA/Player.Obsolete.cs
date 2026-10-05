@@ -129,5 +129,36 @@ namespace GTA
             }
             set => Function.Call(Hash.SET_DISPATCH_COPS_FOR_PLAYER, Handle, value);
         }
+
+        /// <summary>
+        /// Sets the run speed multiplier for this <see cref="Player"/> this frame.
+        /// </summary>
+        /// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
+
+        [Obsolete("Use Player.RunSprintSpeedMultiplier instead.")]
+        public void SetRunSpeedMultThisFrame(float mult)
+        {
+            if (mult > 1.499f)
+            {
+                mult = 1.499f;
+            }
+
+            Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Handle, mult);
+        }
+
+        /// <summary>
+        /// Sets the swim speed multiplier for this <see cref="Player"/> this frame.
+        /// </summary>
+        /// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
+        [Obsolete("Use Player.SwimSpeedMultiplier instead.")]
+        public void SetSwimSpeedMultThisFrame(float mult)
+        {
+            if (mult > 1.499f)
+            {
+                mult = 1.499f;
+            }
+
+            Function.Call(Hash.SET_SWIM_MULTIPLIER_FOR_PLAYER, Handle, mult);
+        }
     }
 }

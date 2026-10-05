@@ -775,39 +775,101 @@ namespace GTA
         }
 
         /// <summary>
+        /// Gets or sets a multiplier for the running speed of this <see cref="Player"/>.
+        /// </summary>
+        /// <remarks>
+        /// This does not take into account any active special ability.
+        ///
+        /// Applying any negative value will not have any effects.
+        /// </remarks>
+        public float RunSprintSpeedMultiplier
+        {
+            get
+            {
+                if(!TryGetMemoryAddress(out IntPtr address))
+                {
+                    return 0.0f;
+                }
+
+                if(SHVDN.NativeMemory.CPlayerInfoRunSprintSpeedMultiplierOffset == 0)
+                {
+                    return 0.0f;
+                }
+
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.CPlayerInfoRunSprintSpeedMultiplierOffset);
+            }
+            set
+            {
+                if (value < 0f)
+                {
+                    return;
+                }
+
+                if (value >= 1f && value < 1.5f)
+                {
+                    Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Handle, value);
+                    return;
+                }
+
+                if (!TryGetMemoryAddress(out IntPtr address))
+                {
+                    return;
+                }
+
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.CPlayerInfoRunSprintSpeedMultiplierOffset, value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a multiplier for the swimming speed of this <see cref="Player"/>.
+        /// </summary>
+        /// <remarks>
+        /// Applying any negative value will not have any effects.
+        /// </remarks>
+        public float SwimSpeedMultiplier
+        {
+            get
+            {
+                if (!TryGetMemoryAddress(out IntPtr address))
+                {
+                    return 0.0f;
+                }
+
+                if (SHVDN.NativeMemory.CPlayerInfoSwimSpeedMultiplierOffset == 0)
+                {
+                    return 0.0f;
+                }
+
+                return SHVDN.MemDataMarshal.ReadFloat(address + SHVDN.NativeMemory.CPlayerInfoSwimSpeedMultiplierOffset);
+            }
+            set
+            {
+                if(value < 0f)
+                {
+                    return;
+                }
+
+                if (value >= 1f && value < 1.5f)
+                {
+                    Function.Call(Hash.SET_SWIM_MULTIPLIER_FOR_PLAYER, Handle, value);
+                    return;
+                }
+
+                if (!TryGetMemoryAddress(out IntPtr address))
+                {
+                    return;
+                }
+
+                SHVDN.MemDataMarshal.WriteFloat(address + SHVDN.NativeMemory.CPlayerInfoSwimSpeedMultiplierOffset, value);
+            }
+        }
+
+        /// <summary>
         /// Prevents this <see cref="Player"/> firing this frame.
         /// </summary>
         public void DisableFiringThisFrame()
         {
             Function.Call(Hash.DISABLE_PLAYER_FIRING, Handle, 0);
-        }
-
-        /// <summary>
-        /// Sets the run speed multiplier for this <see cref="Player"/> this frame.
-        /// </summary>
-        /// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
-        public void SetRunSpeedMultThisFrame(float mult)
-        {
-            if (mult > 1.499f)
-            {
-                mult = 1.499f;
-            }
-
-            Function.Call(Hash.SET_RUN_SPRINT_MULTIPLIER_FOR_PLAYER, Handle, mult);
-        }
-
-        /// <summary>
-        /// Sets the swim speed multiplier for this <see cref="Player"/> this frame.
-        /// </summary>
-        /// <param name="mult">The factor - min: <c>0.0f</c>, default: <c>1.0f</c>, max: <c>1.499f</c>.</param>
-        public void SetSwimSpeedMultThisFrame(float mult)
-        {
-            if (mult > 1.499f)
-            {
-                mult = 1.499f;
-            }
-
-            Function.Call(Hash.SET_SWIM_MULTIPLIER_FOR_PLAYER, Handle, mult);
         }
 
         /// <summary>
