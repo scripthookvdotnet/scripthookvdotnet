@@ -17,6 +17,8 @@ namespace GTA
     {
         #region Fields
         private IntPtr _cachedAddress;
+        private int _lastSurfaceMaterialId = -1;
+        private MaterialHash _lastSurfaceMaterialHash;
 
         internal static readonly VehicleWheelBoneId[] vehicleWheelBoneIndexTableForNatives = {
             VehicleWheelBoneId.WheelLeftFront,
@@ -119,6 +121,44 @@ namespace GTA
         public VehicleWheelBoneId BoneId
         {
             get;
+        }
+
+
+        /// <summary>
+        /// Gets the material this <see cref="VehicleWheel"/> is touching.
+        /// </summary>
+        /// <remarks>
+        /// Returns <see cref="MaterialHash.None"/> if this <see cref="VehicleWheel"/> is not touching anything.
+        /// </remarks>
+        public MaterialHash SurfaceMaterial
+        {
+            get
+            {
+                if(!TryGetMemoryAddress(out IntPtr address))
+                {
+                    return MaterialHash.None;
+                }
+
+                int surfaceId = SHVDN.MemDataMarshal.ReadByte(address + SHVDN.NativeMemory.Vehicle.CWheelSurfaceMaterialOffset);
+
+                /*
+                 * Realistically, the surface material will be checked per tick.
+                 * We don't want to allocate and hash the 128-byte array required per tick.
+                 */
+                if (surfaceId == _lastSurfaceMaterialId)
+                {
+                    return _lastSurfaceMaterialHash;
+                }
+
+                string materialName = SHVDN.NativeMemory.GetMaterialNameFromId(surfaceId);
+
+                var hash = (MaterialHash)StringHash.AtStringHashUtf8(materialName);
+
+                _lastSurfaceMaterialId = surfaceId;
+                _lastSurfaceMaterialHash = hash;
+
+                return hash;
+            }
         }
 
         /// <summary>
