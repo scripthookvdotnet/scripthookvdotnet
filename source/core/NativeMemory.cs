@@ -760,6 +760,17 @@ namespace SHVDN
                 CPlayerInfoCanLeaveParachuteSmokeTrailBit = *(byte*)(address + 0x20);
             }
 
+            address = MemScanner.FindPatternBmh("\x41\xB9\x80\x00\x00\x00\x48\x8B\x01\xFF\x50", "xxxxxxxxxxx");
+            if(address != null)
+            {
+                int getMaterialNameFuncOffset = *(byte*)(address + 11);
+
+                s_phMaterialMgrInstance = *(IntPtr*)Rel32(address, -4);
+
+                IntPtr vtable = *(IntPtr*)s_phMaterialMgrInstance;
+                s_getMaterialNameFunc = (delegate* unmanaged[Stdcall]<IntPtr, uint, byte*, int, void>)(*(IntPtr*)(vtable + getMaterialNameFuncOffset));
+            }
+
             // Nopping this enables to spawn some drawable objects without a dedicated collision (e.g. prop_fan_palm_01a)
             address = MemScanner.FindPatternBmh("\x74\x00\x00\x00\x00\x74\x00\xe8\x00\x00\x00\x00\x48\x85\xc0\x75\x00\x38\x00\x00\x0f\x84\x00\x00\x00\x00\x48\x8d\x4d\x00\xe8\x00\x00\x00\x00\x66\x89\x45\x00\x8b\x45\x00\x8b\xc8\x33\x4d", "x????x?x????xxxx?x??xx????xxx?x????xxx?xx?xxxx");
             if (address != null)
@@ -1192,6 +1203,20 @@ namespace SHVDN
                 return *(byte*)*s_cRiotsInstPtr != 0;
             }
         }
+
+        private static IntPtr s_phMaterialMgrInstance;
+
+        private static delegate* unmanaged[Stdcall]<IntPtr, uint, byte*, int, void> s_getMaterialNameFunc;
+
+        public unsafe static string GetMaterialNameFromId(int materialId)
+        {
+            byte* buf = stackalloc byte[128];
+
+            s_getMaterialNameFunc(s_phMaterialMgrInstance, (uint)(materialId & 0xFF), buf, 128);
+
+            return MemDataMarshal.ReadString(new IntPtr(buf));
+        }
+
         #endregion
 
         #region -- Skeleton Data --
@@ -2011,6 +2036,12 @@ namespace SHVDN
                     CWheelDynamicFlagsOffset = *(int*)(address + 6);
                 }
 
+                address = MemScanner.FindPatternBmh("\x89\x43\x70\x8B\x41\x04\x89\x43\x74\x8B\x41\x08\x89\x43\x78\x40\x88\xB3", "xxxxxxxxxxxxxxxxxx");
+                if (address != null)
+                {
+                    CWheelSurfaceMaterialOffset = *(int*)(address + 0x12);
+                }
+
                 address = MemScanner.FindPatternBmh("\x48\x85\xC0\x74\x00\x8B\x00\x48\x8B\x00\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8", "xxxx?x?xx?x????xxxx");
                 if (address != null)
                 {
@@ -2244,6 +2275,8 @@ namespace SHVDN
             /// The offset for the flag on CWheel where the "on fire" flag and "is touching" flag are set.
             /// </summary>
             public static int CWheelDynamicFlagsOffset { get; }
+
+            public static int CWheelSurfaceMaterialOffset { get; }
 
             public static int WheelIdOffset { get; }
 
