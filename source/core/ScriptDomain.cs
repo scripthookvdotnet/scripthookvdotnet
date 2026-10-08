@@ -6,6 +6,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -286,11 +287,120 @@ namespace SHVDN
         private Dictionary<int, List<string>> DeprecatedScriptAssemblyNamesPerApiVersion { get; set; } = new();
 
         /// <summary>
+        /// Repairs the hosted CLR's broken per-culture NLS state. On affected setups the cached sort handles are
+        /// invalid, so culture-sensitive comparisons (String.Compare/IndexOf, and DateTime.Now via TimeZoneInfo)
+        /// throw; forcing a valid culture and clearing the handles makes the CLR fall back to a working code
+        /// path. String casing is repaired separately by a native LCMapStringEx hook. Must run once per
+        /// application domain, as each has its own culture objects.
+        /// See https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1805.
+        /// </summary>
+        internal static void RepairBrokenNlsState()
+        {
+            // Only repair when the environment is actually broken, so healthy systems are left untouched.
+            if (!IsNlsStateBroken())
+            {
+                return;
+            }
+
+            // Force the invariant culture onto this thread and any future thread/domain.
+            try
+            {
+                CultureInfo invariant = CultureInfo.InvariantCulture;
+                Thread.CurrentThread.CurrentCulture = invariant;
+                Thread.CurrentThread.CurrentUICulture = invariant;
+                CultureInfo.DefaultThreadCurrentCulture = invariant;
+                CultureInfo.DefaultThreadCurrentUICulture = invariant;
+            }
+            catch (Exception ex)
+            {
+                Log.Message(Log.Level.Warning, "Failed to force the invariant culture: ", ex.ToString());
+            }
+
+            // Drop any cached (broken) culture data so the objects are rebuilt.
+            try
+            {
+                CultureInfo.CurrentCulture.ClearCachedData();
+            }
+            catch (Exception ex)
+            {
+                Log.Message(Log.Level.Warning, "Failed to clear cached culture data: ", ex.ToString());
+            }
+
+            // Clear the invalid cached NLS handles so comparisons and DateTime fall back to a working path.
+            ClearNlsHandles(CultureInfo.InvariantCulture);
+            ClearNlsHandles(CultureInfo.CurrentCulture);
+            ClearNlsHandles(CultureInfo.InstalledUICulture);
+        }
+
+        private static bool IsNlsStateBroken()
+        {
+            try
+            {
+                // Casing is already repaired by the native LCMapStringEx hook, so probe paths the hook does
+                // not cover and that throw on affected setups: reading the local time zone (DateTime.Now) and
+                // a culture-sensitive comparison.
+                _ = DateTime.Now.ToString(CultureInfo.InvariantCulture);
+                _ = string.Compare("a", "b", StringComparison.InvariantCulture);
+                return false;
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
+        private static void ClearNlsHandles(CultureInfo culture)
+        {
+            if (culture == null)
+            {
+                return;
+            }
+
+            ClearNlsHandlesOnObject(culture.TextInfo);
+            ClearNlsHandlesOnObject(culture.CompareInfo);
+        }
+
+        private static void ClearNlsHandlesOnObject(object nlsObject)
+        {
+            if (nlsObject == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Type type = nlsObject.GetType();
+                BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance;
+
+                // Reflection writes the field storage directly, so the object's read-only flag is irrelevant.
+                // The cached handle lives in different fields on TextInfo vs CompareInfo and across runtime
+                // versions, so clear every known variant that exists.
+                string[] handleFieldNames = { "m_dataHandle", "m_handleOrigin", "_dataHandle", "_handleOrigin", "_sortHandle", "m_sortHandle" };
+                foreach (string fieldName in handleFieldNames)
+                {
+                    FieldInfo field = type.GetField(fieldName, flags);
+                    if (field != null && field.FieldType == typeof(IntPtr))
+                    {
+                        field.SetValue(nlsObject, IntPtr.Zero);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // The internal field layout can differ between runtimes; if so, leave the handles untouched.
+                Log.Message(Log.Level.Warning, "Failed to clear NLS handles: ", ex.ToString());
+            }
+        }
+
+        /// <summary>
         /// Initializes the script domain inside its application domain.
         /// </summary>
         /// <param name="apiBasePath">The path to the root directory containing the scripting API assemblies.</param>
         private ScriptDomain(string apiBasePath)
         {
+            // A new application domain has its own culture objects, so repair their NLS state here too.
+            RepairBrokenNlsState();
+
             // Each application domain has its own copy of this static variable, so only need to set it once
             CurrentDomain = this;
 
@@ -408,6 +518,10 @@ namespace SHVDN
         /// <returns>The script domain or <see langword="null" /> in case of failure.</returns>
         public static ScriptDomain Load(string basePath, string scriptPath)
         {
+            // Repair the broken NLS state before creating the script application domain (CreateDomain
+            // lower-cases strings via remoting).
+            RepairBrokenNlsState();
+
             // Make absolute path to scrips location
             if (!Path.IsPathRooted(scriptPath))
             {
