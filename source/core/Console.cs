@@ -20,6 +20,21 @@ namespace SHVDN
 {
     public sealed class Console : MarshalByRefObject
     {
+        private static class ColorPalette
+        {
+            public static readonly Color Input = Color.White;
+            public static readonly Color InputBusy = Color.DarkGray;
+            public static readonly Color Output = Color.White;
+            public static readonly Color Prefix = Color.FromArgb(255, 52, 152, 219);
+            public static readonly Color Background = Color.FromArgb(200, Color.Black);
+            public static readonly Color AltBackground = Color.FromArgb(200, 52, 73, 94);
+
+            public static readonly Color Candidate = Color.White;
+            public static readonly Color CandidateSelected = Color.Yellow;
+
+            public static readonly Color Cursor = Color.White;
+        }
+
         private int _cursorPos = 0;
         private int _lastCursorPos = 0;
         private string _lastRenderedCursorInput = string.Empty;
@@ -50,13 +65,6 @@ namespace SHVDN
         private const int ConsoleHeight = BaseHeight / 3;
         private const int InputHeight = 20;
         private const int LinesPerPage = 16;
-
-        private static readonly Color s_inputColor = Color.White;
-        private static readonly Color s_inputColorBusy = Color.DarkGray;
-        private static readonly Color s_outputColor = Color.White;
-        private static readonly Color s_prefixColor = Color.FromArgb(255, 52, 152, 219);
-        private static readonly Color s_backgroundColor = Color.FromArgb(200, Color.Black);
-        private static readonly Color s_altBackgroundColor = Color.FromArgb(200, 52, 73, 94);
 
         [DllImport("user32.dll")]
         private static extern int ToUnicode(
@@ -532,16 +540,16 @@ namespace SHVDN
             }
 
             // Draw background
-            DrawRect(0, 0, ConsoleWidth, ConsoleHeight, s_backgroundColor);
+            DrawRect(0, 0, ConsoleWidth, ConsoleHeight, ColorPalette.Background);
             // Draw input field
-            DrawRect(0, ConsoleHeight, ConsoleWidth, InputHeight, s_altBackgroundColor);
-            DrawRect(0, ConsoleHeight + InputHeight, 80, InputHeight, s_altBackgroundColor);
+            DrawRect(0, ConsoleHeight, ConsoleWidth, InputHeight, ColorPalette.AltBackground);
+            DrawRect(0, ConsoleHeight + InputHeight, 80, InputHeight, ColorPalette.AltBackground);
             // Draw input prefix
-            DrawText(0, ConsoleHeight, "$>", s_prefixColor);
+            DrawText(0, ConsoleHeight, "$>", ColorPalette.Prefix);
             // Draw input text
-            DrawText(25, ConsoleHeight, _lastRenderedInput, _compilerTask == null ? s_inputColor : s_inputColorBusy);
+            DrawText(25, ConsoleHeight, _lastRenderedInput, _compilerTask == null ? ColorPalette.Input : ColorPalette.InputBusy);
             // Draw page information
-            DrawText(5, ConsoleHeight + InputHeight, "Page " + _currentPage + "/" + System.Math.Max(1, ((_lineHistory.Count + (LinesPerPage - 1)) / LinesPerPage)), s_inputColor);
+            DrawText(5, ConsoleHeight + InputHeight, "Page " + _currentPage + "/" + System.Math.Max(1, ((_lineHistory.Count + (LinesPerPage - 1)) / LinesPerPage)), ColorPalette.Input);
 
             if (_lastCursorBlinkTick + 500 < nowTickCount)
             {
@@ -552,8 +560,8 @@ namespace SHVDN
             // Draw blinking cursor
             if (_cursorVisible)
             {
-                float lengthBetweenInputStartAndCursor = GetTextLength(_lastRenderedCursorInput) - GetMarginLength();
-                DrawRect(26 + (lengthBetweenInputStartAndCursor * ConsoleWidth), ConsoleHeight + 2, 2, InputHeight - 4, Color.White);
+                float lengthBetweenInputStartAndCursor = TextFormatting.GetTextLength(_lastRenderedCursorInput) - TextFormatting.GetMarginLength();
+                DrawRect(26 + (lengthBetweenInputStartAndCursor * ConsoleWidth), ConsoleHeight + 2, 2, InputHeight - 4, ColorPalette.Cursor);
             }
 
             // Draw console history text
@@ -561,7 +569,7 @@ namespace SHVDN
             int historyLength = historyOffset + LinesPerPage;
             for (int i = System.Math.Max(0, historyOffset); i < historyLength; ++i)
             {
-                DrawText(2, (float)((i - historyOffset) * 14), _lineHistory[i], s_outputColor);
+                DrawText(2, (float)((i - historyOffset) * 14), _lineHistory[i], ColorPalette.Output);
             }
 
             // Draw command candidates
@@ -569,7 +577,7 @@ namespace SHVDN
             {
                 for (int i = 0; i < _commandCandidates.Count && i < 5; i++)
                 {
-                    var color = (i == _selectedCandidateIndex) ? Color.Yellow : Color.White;
+                    var color = (i == _selectedCandidateIndex) ? ColorPalette.CandidateSelected : ColorPalette.Candidate;
                     DrawText(25, ConsoleHeight + InputHeight + 16 + i * 16, _commandCandidates[i], color);
                 }
             }
