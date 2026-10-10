@@ -905,7 +905,7 @@ namespace SHVDN
                 _input = SwapTwoCharacters(_input, _cursorPos - 2);
             }
 
-            string SwapTwoCharacters(string str, int index)
+            static string SwapTwoCharacters(string str, int index)
             {
                 StringBuilder sb = new StringBuilder(str);
                 char tmp = sb[index];
