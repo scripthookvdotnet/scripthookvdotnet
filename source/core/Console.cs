@@ -495,7 +495,7 @@ namespace SHVDN
             if (_input != _lastInput)
             {
                 _lastInput = _input;
-                _lastRenderedInput = EscapeTokens(_input);
+                _lastRenderedInput = TextFormatting.EscapeTokens(_input);
 
                 _lastCursorPos = -1;
 
@@ -505,7 +505,7 @@ namespace SHVDN
             if (_cursorPos != _lastCursorPos)
             {
                 _lastCursorPos = _cursorPos;
-                _lastRenderedCursorInput = EscapeTokens(_input.Substring(0, _cursorPos));
+                _lastRenderedCursorInput = TextFormatting.EscapeTokens(_input.Substring(0, _cursorPos));
 
                 ResetCursorBlinking();
             }
@@ -532,6 +532,7 @@ namespace SHVDN
             if (_cursorVisible)
             {
                 float lengthBetweenInputStartAndCursor = TextFormatting.GetTextLength(_lastRenderedCursorInput) - TextFormatting.GetMarginLength();
+
                 DrawRect(26 + (lengthBetweenInputStartAndCursor * ConsoleWidth), ConsoleHeight + 2, 2, InputHeight - 4, ColorPalette.Cursor);
             }
 
@@ -619,7 +620,7 @@ namespace SHVDN
                         })
                         .ToList();
 
-                    string prefix = LongestCommonPrefix(names, _input);
+                    string prefix = TextFormatting.LongestCommonPrefix(names, _input);
 
                     if (prefix.Length > _input.Length)
                     {
@@ -1032,7 +1033,7 @@ namespace SHVDN
 
                 var errors = new StringBuilder();
 
-                errors.AppendLine($"Couldn't compile input expression: {EscapeTokens(capturedInput)}");
+                errors.AppendLine($"Couldn't compile input expression: {TextFormatting.EscapeTokens(capturedInput)}");
 
                 for (int i = 0; i < compilerResult.Errors.Count; ++i)
                 {
@@ -1092,30 +1093,6 @@ namespace SHVDN
         public override object InitializeLifetimeService()
         {
             return null;
-        }
-
-        private static string EscapeTokens(string str)
-        {
-            StringBuilder sb = new();
-
-            int start = 0;
-
-            for (int i = 0; i < str.Length; i++)
-            {
-                if (str[i] == '~')
-                {
-                    sb.Append(str.Substring(start, i - start));
-
-                    sb.Append('\\');
-                    sb.Append(str[i]);
-
-                    start = i + 1;
-                }
-            }
-
-            sb.Append(str.Substring(start));
-
-            return sb.ToString();
         }
 
         public string GetClipboardContent()
@@ -1189,8 +1166,36 @@ namespace SHVDN
                 NativeFunc.Invoke(0x351220255D64C155 /* ENABLE_CONTROL_ACTION */, 0, i, 0);
             }
         }
+    }
 
-        private static unsafe float GetTextLength(string text)
+    public static class TextFormatting
+    {
+        public static string EscapeTokens(string str)
+        {
+            StringBuilder sb = new();
+
+            int start = 0;
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == '~')
+                {
+                    sb.Append(str.Substring(start, i - start));
+
+                    sb.Append('\\');
+                    sb.Append(str[i]);
+
+                    start = i + 1;
+                }
+            }
+
+            sb.Append(str.Substring(start));
+
+            return sb.ToString();
+        }
+
+
+        public static unsafe float GetTextLength(string text)
         {
             NativeFunc.Invoke(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0);
             NativeFunc.Invoke(0x07C837F9A01C34C9 /* SET_TEXT_SCALE */, 0.35f, 0.35f);
@@ -1199,14 +1204,15 @@ namespace SHVDN
             return *(float*)NativeFunc.Invoke(0x85F061DA64ED2F67 /* END_TEXT_COMMAND_GET_SCREEN_WIDTH_OF_DISPLAY_TEXT */, true);
         }
 
-        private static float GetMarginLength()
+        public static float GetMarginLength()
         {
             float len1 = GetTextLength("A");
             float len2 = GetTextLength("AA");
             return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
         }
 
-        private static string LongestCommonPrefix(List<string> strs, string input)
+
+        public static string LongestCommonPrefix(List<string> strs, string input)
         {
             if (strs == null || strs.Count == 0)
                 return input;
