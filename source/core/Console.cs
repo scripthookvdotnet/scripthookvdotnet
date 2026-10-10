@@ -8,11 +8,11 @@ using System.CodeDom.Compiler;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -85,7 +85,6 @@ namespace SHVDN
             uint virtualKeyCode, uint scanCode, byte[] keyboardState,
             [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
 
-
         public Console()
         {
             // Register Key Actions
@@ -122,7 +121,6 @@ namespace SHVDN
 
                 PreviousCandidate();
             });
-
 
             _keyManager.Register(Keys.Enter, CompileExpression);
 
@@ -206,6 +204,7 @@ namespace SHVDN
 
             _commands[command.Namespace].Add(command);
         }
+
         /// <summary>
         /// Register all methods with a <see cref="ConsoleCommand"/> attribute in the specified type as console commands.
         /// </summary>
@@ -227,6 +226,7 @@ namespace SHVDN
                 }
             }
         }
+
         /// <summary>
         /// Unregister all methods with a <see cref="ConsoleCommand"/> attribute that were previously registered.
         /// </summary>
@@ -259,13 +259,15 @@ namespace SHVDN
         /// <param name="color">The color of those lines.</param>
         private void AddLines(string prefix, string[] messages, string color = "~w~")
         {
-            for (int i = 0; i < messages.Length; i++) // Add proper styling
+            // Add proper styling
+            for (int i = 0; i < messages.Length; i++)
             {
                 messages[i] = $"~c~[{DateTime.Now.ToString("HH:mm:ss")}] ~w~{prefix} {color}{messages[i]}";
             }
 
             _outputQueue.Enqueue(messages);
         }
+
         /// <summary>
         /// Add text to the console input line.
         /// </summary>
@@ -280,6 +282,7 @@ namespace SHVDN
             _input = _input.Insert(_cursorPos, text);
             _cursorPos += text.Length;
         }
+
         /// <summary>
         /// Paste clipboard content into the console input line.
         /// </summary>
@@ -299,6 +302,7 @@ namespace SHVDN
             _input = string.Empty;
             _cursorPos = 0;
         }
+
         /// <summary>
         /// Clears the console output.
         /// </summary>
@@ -329,7 +333,7 @@ namespace SHVDN
                 case Log.Level.Info:
                     header = InfoMessageHeaderStr;
                     break;
-                
+
                 case Log.Level.Warning:
                     header = WarningMessageHeaderStr;
                     break;
@@ -386,6 +390,7 @@ namespace SHVDN
 
             Print(Log.Level.Info, help.ToString());
         }
+
         /// <summary>
         /// Writes the help text for the specified command to the console.
         /// </summary>
@@ -455,7 +460,7 @@ namespace SHVDN
                     ToUnicode((uint)e.KeyCode, 0, keyboardState, buf, 256, 0);
                     AddToInput(buf.ToString());
 
-                    //We only want to show candidates again if the actual input has changed.
+                    // We only want to show candidates again if the actual input has changed.
                     _hideCandidates = false;
                 }
             }
@@ -481,11 +486,13 @@ namespace SHVDN
                         DisableControlsThisFrame();
                     }
                 }
+
                 // The console is not open for more than about 24.9 days, calculating the elapsed time with 2 int tick count vars doesn't do the job
                 else if (_shouldBlockControls)
                 {
                     _shouldBlockControls = false;
                 }
+
                 return; // Nothing more to do here when the console is not open
             }
 
@@ -512,15 +519,19 @@ namespace SHVDN
 
             // Draw background
             DrawRect(0, 0, ConsoleWidth, ConsoleHeight, ColorPalette.Background);
+
             // Draw input field
             DrawRect(0, ConsoleHeight, ConsoleWidth, InputHeight, ColorPalette.AltBackground);
             DrawRect(0, ConsoleHeight + InputHeight, 80, InputHeight, ColorPalette.AltBackground);
+
             // Draw input prefix
             DrawText(0, ConsoleHeight, "$>", ColorPalette.Prefix);
+
             // Draw input text
             DrawText(25, ConsoleHeight, _lastRenderedInput, _compilerTask == null ? ColorPalette.Input : ColorPalette.InputBusy);
+
             // Draw page information
-            DrawText(5, ConsoleHeight + InputHeight, "Page " + _currentPage + "/" + System.Math.Max(1, ((_lineHistory.Count + (LinesPerPage - 1)) / LinesPerPage)), ColorPalette.Input);
+            DrawText(5, ConsoleHeight + InputHeight, "Page " + _currentPage + "/" + System.Math.Max(1, (_lineHistory.Count + (LinesPerPage - 1)) / LinesPerPage), ColorPalette.Input);
 
             if (_lastCursorBlinkTick + 500 < nowTickCount)
             {
@@ -589,7 +600,7 @@ namespace SHVDN
                     string candidate = _commandCandidates[_selectedCandidateIndex];
                     int parenIndex = candidate.IndexOf('(');
                     int closeParenIndex = candidate.IndexOf(')');
-                    bool hasParams = (closeParenIndex - parenIndex > 1);
+                    bool hasParams = closeParenIndex - parenIndex > 1;
 
                     if (parenIndex >= 0)
                     {
@@ -661,6 +672,7 @@ namespace SHVDN
 
             _commandPos++;
             _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
+
             // Reset cursor position to end of input text
             _cursorPos = _input.Length;
         }
@@ -712,6 +724,7 @@ namespace SHVDN
                 }
             }
         }
+
         /// <summary>
         /// Moves back to the start of the current or previous word.
         /// Words are composed of letters and digits.
@@ -746,6 +759,7 @@ namespace SHVDN
                 }
             }
         }
+
         /// <summary>
         /// Deletes the character behind the cursor.
         /// </summary>
@@ -759,6 +773,7 @@ namespace SHVDN
             _input = _input.Remove(_cursorPos - 1, 1);
             _cursorPos--;
         }
+
         /// <summary>
         /// Deletes the character at point.
         /// </summary>
@@ -785,6 +800,7 @@ namespace SHVDN
             KillText(ref _input, 0, _cursorPos);
             _cursorPos = 0;
         }
+
         /// <summary>
         /// Kills backward from the cursor to the beginning of the current line.
         /// </summary>
@@ -797,6 +813,7 @@ namespace SHVDN
 
             KillText(ref _input, _cursorPos, _input.Length - _cursorPos);
         }
+
         /// <summary>
         /// Kills from point to the end of the current word, or if between words, to the end of the next word.
         /// Word boundaries are the same as <see cref="ForwardWord"/>.
@@ -815,6 +832,7 @@ namespace SHVDN
             KillText(ref _input, origCursorPos, _cursorPos - origCursorPos);
             _cursorPos = origCursorPos;
         }
+
         /// <summary>
         /// Kill the word behind the cursor.
         /// Word boundaries are the same as <see cref="BackwardWord"/>.
@@ -832,6 +850,7 @@ namespace SHVDN
 
             KillText(ref _input, _cursorPos, origCursorPos - _cursorPos);
         }
+
         /// <summary>
         /// Kills the word behind the cursor, using white space as a word boundary.
         /// </summary>
@@ -896,6 +915,7 @@ namespace SHVDN
                 return sb.ToString();
             }
         }
+
         /// <summary>
         /// Drags the word before point past the word after point, moving point past that word as well.
         /// If the insertion point is at the end of the line, this transposes the last two words on the line.
@@ -931,7 +951,7 @@ namespace SHVDN
             string word2 = _input.Substring(word2Beg, word2End - word2Beg);
 
             // Prevent reallocation of internal array
-            var stringBuilder = new StringBuilder(_input.Length + Math.Max((word1.Length - word2.Length), 0));
+            var stringBuilder = new StringBuilder(_input.Length + Math.Max(word1.Length - word2.Length, 0));
             stringBuilder.Append(_input);
 
             stringBuilder.Remove(word2Beg, word2.Length);
@@ -1003,6 +1023,7 @@ namespace SHVDN
                 compilerOptions.ReferencedAssemblies.Add("System.Core.dll");
                 compilerOptions.ReferencedAssemblies.Add("System.Drawing.dll");
                 compilerOptions.ReferencedAssemblies.Add("System.Windows.Forms.dll");
+
                 // Reference the newest scripting API
                 compilerOptions.ReferencedAssemblies.Add("ScriptHookVDotNet3.dll");
                 compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
@@ -1061,7 +1082,9 @@ namespace SHVDN
             _commandCandidates.Clear();
             _selectedCandidateIndex = -1;
             if (string.IsNullOrWhiteSpace(input))
+            {
                 return;
+            }
 
             foreach (var space in _commands.Keys)
             {
@@ -1079,14 +1102,16 @@ namespace SHVDN
             }
 
             if (_commandCandidates.Count > 0)
+            {
                 _selectedCandidateIndex = 0;
+            }
         }
 
         private void ResetCursorBlinking()
         {
             _lastCursorBlinkTick = 0;
 
-            //Because we set _lastCursorBlinkTick to 0; the state will be flipped next tick.
+            // Because we set _lastCursorBlinkTick to 0; the state will be flipped next tick.
             _cursorVisible = false;
         }
 
@@ -1117,7 +1142,9 @@ namespace SHVDN
             t.Join();
 
             if (threadEx != null)
+            {
                 return string.Empty;
+            }
 
             return output;
         }
@@ -1136,8 +1163,8 @@ namespace SHVDN
 
         private static unsafe void DrawRect(float x, float y, int width, int height, Color color)
         {
-            float w = (float)(width) / BaseWidth;
-            float h = (float)(height) / BaseHeight;
+            float w = (float)width / BaseWidth;
+            float h = (float)height / BaseHeight;
 
             NativeFunc.Invoke(0x3A618A217E5154F0ul /* DRAW_RECT */,
                 (x / BaseWidth) + w * 0.5f,
@@ -1153,7 +1180,7 @@ namespace SHVDN
             NativeFunc.Invoke(0xBE6B23FFA53FB442 /* SET_TEXT_COLOUR */, color.R, color.G, color.B, color.A);
             NativeFunc.Invoke(0x25FBB336DF1804CB /* BEGIN_TEXT_COMMAND_DISPLAY_TEXT */, NativeMemory.CellEmailBcon);
             NativeFunc.PushLongString(text, 99);
-            NativeFunc.Invoke(0xCD015E5BB0D96A57 /* END_TEXT_COMMAND_DISPLAY_TEXT */, (x / BaseWidth), (y / BaseHeight));
+            NativeFunc.Invoke(0xCD015E5BB0D96A57 /* END_TEXT_COMMAND_DISPLAY_TEXT */, x / BaseWidth, y / BaseHeight);
         }
 
         private static unsafe void DisableControlsThisFrame()
@@ -1194,7 +1221,6 @@ namespace SHVDN
             return sb.ToString();
         }
 
-
         public static unsafe float GetTextLength(string text)
         {
             NativeFunc.Invoke(0x66E0276CC5F6B9DA /* SET_TEXT_FONT */, 0);
@@ -1211,11 +1237,12 @@ namespace SHVDN
             return len1 - (len2 - len1); // [Margin][A] - [A] = [Margin]
         }
 
-
         public static string LongestCommonPrefix(List<string> strs, string input)
         {
             if (strs == null || strs.Count == 0)
+            {
                 return input;
+            }
 
             string prefix = strs[0];
             for (int i = 1; i < strs.Count; i++)
@@ -1225,19 +1252,25 @@ namespace SHVDN
                 {
                     j++;
                 }
+
                 prefix = prefix.Substring(0, j);
                 if (prefix.Length == input.Length)
+                {
                     break;
+                }
             }
+
             return prefix;
         }
     }
 
     public sealed class ConsoleCommand : Attribute
     {
-        public ConsoleCommand() : this(string.Empty)
+        public ConsoleCommand()
+            : this(string.Empty)
         {
         }
+
         public ConsoleCommand(string help)
         {
             Help = help;
@@ -1246,7 +1279,9 @@ namespace SHVDN
         public string Help { get; }
 
         internal string Name => MethodInfo.Name;
+
         internal string Namespace => MethodInfo.DeclaringType.FullName;
+
         internal MethodInfo MethodInfo { get; set; }
     }
 
@@ -1288,7 +1323,9 @@ namespace SHVDN
             var mods = input & ModMask;
 
             if (!_bindings.TryGetValue(key, out var list))
+            {
                 return false;
+            }
 
             KeyBinding best = null;
             int bestScore = -1;
@@ -1298,7 +1335,9 @@ namespace SHVDN
                 var requiredMods = binding.Combined & ModMask;
 
                 if ((mods & requiredMods) != requiredMods)
+                {
                     continue;
+                }
 
                 int score = CountBits((uint)requiredMods);
 
@@ -1326,6 +1365,7 @@ namespace SHVDN
                 value &= value - 1; // clear lowest set bit
                 count++;
             }
+
             return count;
         }
     }
