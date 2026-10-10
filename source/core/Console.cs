@@ -313,75 +313,44 @@ namespace SHVDN
         /// <summary>
         /// Writes a message to the console.
         /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        public void PrintMessage(string headerStr, string msg)
+        public void Print(Log.Level level, string msg, params object[] args)
         {
-            AddLines(headerStr + " ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
-        }
-        /// <summary>
-        /// Writes a message to the console.
-        /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        /// <param name="args">The formatting arguments.</param>
-        public void PrintMessage(string headerStr, string msg, params object[] args)
-        {
-            if (args.Length > 0)
+            const string DebugMessageHeaderStr = "[~b~DEBUG~w~]";
+            const string InfoMessageHeaderStr = "[~b~INFO~w~]";
+            const string ErrorMessageHeaderStr = "[~r~ERROR~w~]";
+            const string WarningMessageHeaderStr = "[~o~WARNING~w~]";
+
+            string header;
+
+            switch (level)
+            {
+                case Log.Level.Debug:
+                    header = DebugMessageHeaderStr;
+                    break;
+
+                case Log.Level.Info:
+                    header = InfoMessageHeaderStr;
+                    break;
+                
+                case Log.Level.Warning:
+                    header = WarningMessageHeaderStr;
+                    break;
+
+                case Log.Level.Error:
+                    header = ErrorMessageHeaderStr;
+                    break;
+
+                default:
+                    return;
+            }
+
+            if (args != null && args.Length > 0)
             {
                 msg = String.Format(msg, args);
             }
 
-            AddLines(headerStr + " ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
+            AddLines(header + " ", msg.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries));
         }
-
-        const string DebugMessageHeaderStr = "[~b~DEBUG~w~]";
-        const string InfoMessageHeaderStr = "[~b~INFO~w~]";
-        const string ErrorMessageHeaderStr = "[~r~ERROR~w~]";
-        const string WarningMessageHeaderStr = "[~o~WARNING~w~]";
-
-        /// <summary>
-        /// Writes a debug message to the console.
-        /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        public void PrintDebug(string msg) => PrintMessage(DebugMessageHeaderStr, msg);
-        /// <summary>
-        /// Writes a debug message to the console.
-        /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        /// <param name="args">The formatting arguments.</param>
-        public void PrintDebug(string msg, params object[] args) => PrintMessage(DebugMessageHeaderStr, msg, args);
-        /// <summary>
-        /// Writes an info message to the console.
-        /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        public void PrintInfo(string msg) => PrintMessage(InfoMessageHeaderStr, msg);
-        /// <summary>
-        /// Writes an info message to the console.
-        /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        /// <param name="args">The formatting arguments.</param>
-        public void PrintInfo(string msg, params object[] args) => PrintMessage(InfoMessageHeaderStr, msg, args);
-        /// <summary>
-        /// Writes an error message to the console.
-        /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        public void PrintError(string msg) => PrintMessage(ErrorMessageHeaderStr, msg);
-        /// <summary>
-        /// Writes an error message to the console.
-        /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        /// <param name="args">The formatting arguments.</param>
-        public void PrintError(string msg, params object[] args) => PrintMessage(ErrorMessageHeaderStr, msg, args);
-        /// <summary>
-        /// Writes a warning message to the console.
-        /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        public void PrintWarning(string msg) => PrintMessage(WarningMessageHeaderStr, msg);
-        /// <summary>
-        /// Writes a warning message to the console.
-        /// </summary>
-        /// <param name="msg">The composite format string.</param>
-        /// <param name="args">The formatting arguments.</param>
-        public void PrintWarning(string msg, params object[] args) => PrintMessage(WarningMessageHeaderStr, msg, args);
 
         /// <summary>
         /// Writes the help text for all commands to the console.
@@ -417,7 +386,7 @@ namespace SHVDN
                 }
             }
 
-            PrintInfo(help.ToString());
+            Print(Log.Level.Info, help.ToString());
         }
         /// <summary>
         /// Writes the help text for the specified command to the console.
@@ -434,7 +403,7 @@ namespace SHVDN
                         continue;
                     }
 
-                    PrintInfo(command.Name + ": " + command.Help);
+                    Print(Log.Level.Info, command.Name + ": " + command.Help);
                     return;
                 }
             }
@@ -457,12 +426,12 @@ namespace SHVDN
                         object result = _compilerTask.Result.Invoke(null, null);
                         if (result != null)
                         {
-                            PrintInfo($"[Return Value]: {result}");
+                            Print(Log.Level.Info, $"[Return Value]: {result}");
                         }
                     }
                     catch (TargetInvocationException ex)
                     {
-                        PrintError($"[Exception]: {ex.InnerException.ToString()}");
+                        Print(Log.Level.Error, $"[Exception]: {ex.InnerException.ToString()}");
                     }
                 }
 
@@ -1114,7 +1083,7 @@ namespace SHVDN
                     }
                 }
 
-                PrintError(errors.ToString());
+                Print(Log.Level.Error, errors.ToString());
                 return null;
             });
 
