@@ -35,30 +35,7 @@ namespace SHVDN
             public static readonly Color Cursor = Color.White;
         }
 
-        private int _cursorPos = 0;
-        private int _lastCursorPos = 0;
-        private string _lastRenderedCursorInput = string.Empty;
-        private int _lastCursorBlinkTick = 0;
-        private bool _cursorVisible = false;
-        private int _commandPos = -1;
-        private int _currentPage = 1;
-        private volatile bool _isOpen = false;
-        private string _input = string.Empty;
-        private string _lastInput = string.Empty;
-        private string _lastRenderedInput = string.Empty;
-        private List<string> _lineHistory = new();
-        private List<string> _commandHistory; // This must be set via CommandHistory property
-        private Queue<string[]> _outputQueue = new();
-        private Dictionary<string, List<ConsoleCommand>> _commands = new();
-        private int _lastClosedTickCount;
-        private bool _shouldBlockControls;
-        private Task<MethodInfo> _compilerTask;
-        private List<string> _commandCandidates = new();
-        private bool _hideCandidates = false;
-        private int _selectedCandidateIndex = -1;
-
-        private ConcurrentQueue<Keys> _keyboardEventQueue = new();
-
+        // Constants
         private const int BaseWidth = 1280;
         private const int BaseHeight = 720;
         private const int ConsoleWidth = BaseWidth;
@@ -66,12 +43,47 @@ namespace SHVDN
         private const int InputHeight = 20;
         private const int LinesPerPage = 16;
 
+        // Cursor
+        private int _cursorPos = 0;
+        private int _lastCursorPos = 0;
+        private int _lastCursorBlinkTick = 0;
+        private bool _cursorVisible = false;
+
+        // Input
+        private string _input = string.Empty;
+        private string _lastInput = string.Empty;
+        private string _lastRenderedInput = string.Empty;
+        private string _lastRenderedCursorInput = string.Empty;
+
+        private KeyManager _keyManager = new();
+        private ConcurrentQueue<Keys> _keyboardEventQueue = new();
+
+        // State
+        private int _lastClosedTickCount;
+        private bool _shouldBlockControls;
+        private volatile bool _isOpen = false;
+
+        private Task<MethodInfo> _compilerTask;
+        private Queue<string[]> _outputQueue = new();
+
+        // Commands
+        private int _selectedCandidateIndex = -1;
+        private bool _hideCandidates = false;
+
+        private Dictionary<string, List<ConsoleCommand>> _commands = new();
+        private List<string> _commandCandidates = new();
+
+        // History
+        private int _currentPage = 1;
+        private int _commandPos = -1;
+
+        private List<string> _lineHistory = new();
+        private List<string> _commandHistory; // This must be set via CommandHistory property
+
         [DllImport("user32.dll")]
         private static extern int ToUnicode(
             uint virtualKeyCode, uint scanCode, byte[] keyboardState,
             [Out, MarshalAs(UnmanagedType.LPWStr, SizeConst = 64)] StringBuilder receivingBuffer, int bufferSize, uint flags);
-
-        private KeyManager _keyManager = new();
 
 
         public Console()
