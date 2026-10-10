@@ -1078,10 +1078,9 @@ namespace SHVDN
 
         private void UpdateCommandCandidates()
         {
-            string input = _input;
             _commandCandidates.Clear();
             _selectedCandidateIndex = -1;
-            if (string.IsNullOrWhiteSpace(input))
+            if (string.IsNullOrWhiteSpace(_input))
             {
                 return;
             }
@@ -1094,7 +1093,7 @@ namespace SHVDN
                     string paramStr = string.Join(", ", paramList.Select(p => p.ParameterType.Name + " " + p.Name));
                     string displayName = $"{cmd.Name}({paramStr})";
 
-                    if (displayName.Contains(input))
+                    if (displayName.Contains(_input))
                     {
                         _commandCandidates.Add(displayName);
                     }
