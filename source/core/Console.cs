@@ -252,21 +252,12 @@ namespace SHVDN
         }
 
         /// <summary>
-        /// Add text lines to the console. This call is thread-safe.
-        /// </summary>
-        /// <param name="prefix">The prefix for each line.</param>
-        /// <param name="messages">The lines to add to the console.</param>
-        private void AddLines(string prefix, string[] messages)
-        {
-            AddLines(prefix, messages, "~w~");
-        }
-        /// <summary>
         /// Add colored text lines to the console. This call is thread-safe.
         /// </summary>
         /// <param name="prefix">The prefix for each line.</param>
         /// <param name="messages">The lines to add to the console.</param>
         /// <param name="color">The color of those lines.</param>
-        private void AddLines(string prefix, string[] messages, string color)
+        private void AddLines(string prefix, string[] messages, string color = "~w~")
         {
             for (int i = 0; i < messages.Length; i++) // Add proper styling
             {
