@@ -279,7 +279,6 @@ namespace SHVDN
 
             _input = _input.Insert(_cursorPos, text);
             _cursorPos += text.Length;
-            UpdateCommandCandidates();
         }
         /// <summary>
         /// Paste clipboard content into the console input line.
@@ -499,6 +498,8 @@ namespace SHVDN
                 _lastRenderedInput = EscapeTokens(_input);
 
                 _lastCursorPos = -1;
+
+                UpdateCommandCandidates();
             }
 
             if (_cursorPos != _lastCursorPos)
@@ -602,13 +603,11 @@ namespace SHVDN
                             _input = candidate.Substring(0, closeParenIndex + 1);
                             _cursorPos = _input.Length;
                         }
-                        UpdateCommandCandidates();
                     }
                     else
                     {
                         _input = candidate;
                         _cursorPos = _input.Length;
-                        UpdateCommandCandidates();
                     }
                 }
                 else if (_commandCandidates.Count > 1)
@@ -626,7 +625,6 @@ namespace SHVDN
                     {
                         _input = prefix;
                         _cursorPos = _input.Length;
-                        UpdateCommandCandidates();
                     }
                 }
             }
@@ -664,7 +662,6 @@ namespace SHVDN
             _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
             // Reset cursor position to end of input text
             _cursorPos = _input.Length;
-            UpdateCommandCandidates();
         }
 
         private void GoDownCommandList()
@@ -677,8 +674,6 @@ namespace SHVDN
             _commandPos--;
             _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
             _cursorPos = _input.Length;
-
-            UpdateCommandCandidates();
         }
 
         /// <summary>
@@ -762,7 +757,6 @@ namespace SHVDN
 
             _input = _input.Remove(_cursorPos - 1, 1);
             _cursorPos--;
-            UpdateCommandCandidates();
         }
         /// <summary>
         /// Deletes the character at point.
@@ -775,7 +769,6 @@ namespace SHVDN
             }
 
             _input = _input.Remove(_cursorPos, 1);
-            UpdateCommandCandidates();
         }
 
         /// <summary>
@@ -892,8 +885,6 @@ namespace SHVDN
                 _input = SwapTwoCharacters(_input, _cursorPos - 2);
             }
 
-            UpdateCommandCandidates();
-
             string SwapTwoCharacters(string str, int index)
             {
                 StringBuilder sb = new StringBuilder(str);
@@ -950,15 +941,12 @@ namespace SHVDN
 
             _input = stringBuilder.ToString();
             _cursorPos = word2End;
-
-            UpdateCommandCandidates();
         }
 
         private void KillText(ref string str, int startIndex, int length)
         {
             SetClipboardContent(str.Substring(startIndex, length));
             str = str.Remove(startIndex, length);
-            UpdateCommandCandidates();
         }
 
         private void MoveCursorLeft()
