@@ -280,8 +280,6 @@ namespace SHVDN
             _input = _input.Insert(_cursorPos, text);
             _cursorPos += text.Length;
             UpdateCommandCandidates();
-
-            ResetCursorBlinking();
         }
         /// <summary>
         /// Paste clipboard content into the console input line.
@@ -301,8 +299,6 @@ namespace SHVDN
         {
             _input = string.Empty;
             _cursorPos = 0;
-
-            ResetCursorBlinking();
         }
         /// <summary>
         /// Clears the console output.
@@ -509,6 +505,8 @@ namespace SHVDN
             {
                 _lastCursorPos = _cursorPos;
                 _lastRenderedCursorInput = EscapeTokens(_input.Substring(0, _cursorPos));
+
+                ResetCursorBlinking();
             }
 
             // Draw background
@@ -605,14 +603,12 @@ namespace SHVDN
                             _cursorPos = _input.Length;
                         }
                         UpdateCommandCandidates();
-                        ResetCursorBlinking();
                     }
                     else
                     {
                         _input = candidate;
                         _cursorPos = _input.Length;
                         UpdateCommandCandidates();
-                        ResetCursorBlinking();
                     }
                 }
                 else if (_commandCandidates.Count > 1)
@@ -631,7 +627,6 @@ namespace SHVDN
                         _input = prefix;
                         _cursorPos = _input.Length;
                         UpdateCommandCandidates();
-                        ResetCursorBlinking();
                     }
                 }
             }
@@ -670,7 +665,6 @@ namespace SHVDN
             // Reset cursor position to end of input text
             _cursorPos = _input.Length;
             UpdateCommandCandidates();
-            ResetCursorBlinking();
         }
 
         private void GoDownCommandList()
@@ -685,7 +679,6 @@ namespace SHVDN
             _cursorPos = _input.Length;
 
             UpdateCommandCandidates();
-            ResetCursorBlinking();
         }
 
         /// <summary>
@@ -722,8 +715,6 @@ namespace SHVDN
                     break;
                 }
             }
-
-            ResetCursorBlinking();
         }
         /// <summary>
         /// Moves back to the start of the current or previous word.
@@ -758,8 +749,6 @@ namespace SHVDN
                     break;
                 }
             }
-
-            ResetCursorBlinking();
         }
         /// <summary>
         /// Deletes the character behind the cursor.
@@ -774,7 +763,6 @@ namespace SHVDN
             _input = _input.Remove(_cursorPos - 1, 1);
             _cursorPos--;
             UpdateCommandCandidates();
-            ResetCursorBlinking();
         }
         /// <summary>
         /// Deletes the character at point.
@@ -802,8 +790,6 @@ namespace SHVDN
 
             KillText(ref _input, 0, _cursorPos);
             _cursorPos = 0;
-
-            ResetCursorBlinking();
         }
         /// <summary>
         /// Kills backward from the cursor to the beginning of the current line.
@@ -834,8 +820,6 @@ namespace SHVDN
 
             KillText(ref _input, origCursorPos, _cursorPos - origCursorPos);
             _cursorPos = origCursorPos;
-
-            ResetCursorBlinking();
         }
         /// <summary>
         /// Kill the word behind the cursor.
@@ -877,7 +861,6 @@ namespace SHVDN
             }
 
             KillText(ref _input, _cursorPos, origCursorPos - _cursorPos);
-            ResetCursorBlinking();
 
             // yields exactly the same result as a internal "whitespace" function in bash
             static bool IsRegularWhiteSpaceOrTab(char ch) => ch == ' ' || ch == '\t';
@@ -910,7 +893,6 @@ namespace SHVDN
             }
 
             UpdateCommandCandidates();
-            ResetCursorBlinking();
 
             string SwapTwoCharacters(string str, int index)
             {
@@ -970,7 +952,6 @@ namespace SHVDN
             _cursorPos = word2End;
 
             UpdateCommandCandidates();
-            ResetCursorBlinking();
         }
 
         private void KillText(ref string str, int startIndex, int length)
@@ -986,8 +967,6 @@ namespace SHVDN
             {
                 _cursorPos--;
             }
-
-            ResetCursorBlinking();
         }
 
         private void MoveCursorRight()
@@ -996,22 +975,16 @@ namespace SHVDN
             {
                 _cursorPos++;
             }
-
-            ResetCursorBlinking();
         }
 
         private void MoveCursorToBegOfLine()
         {
             _cursorPos = 0;
-
-            ResetCursorBlinking();
         }
 
         private void MoveCursorToEndOfLine()
         {
             _cursorPos = _input.Length;
-
-            ResetCursorBlinking();
         }
 
         private void CompileExpression()
