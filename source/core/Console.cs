@@ -1119,7 +1119,7 @@ namespace SHVDN
             return null;
         }
 
-        public string GetClipboardContent()
+        private string GetClipboardContent()
         {
             string output = string.Empty;
             Exception threadEx = null;
@@ -1148,7 +1148,7 @@ namespace SHVDN
             return output;
         }
 
-        public void SetClipboardContent(string str)
+        private void SetClipboardContent(string str)
         {
             var t = new Thread(() =>
             {
