@@ -12,6 +12,9 @@
     <CsCompile Include="MemDataMarshal.cs" />
     <CsCompile Include="MemScanner.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
+    <CsCompile Include="PolyfillAttributes\SkipLocalsInitAttribute.cs">
+      <Filter>PolyfillAttributes</Filter>
+    </CsCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
@@ -48,6 +51,14 @@
     <Filter Include="Enums\Vehicle">
       <UniqueIdentifier>{2115f7f1-65dc-4378-8033-be6a402d5712}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PolyfillAttributes">
+      <UniqueIdentifier>{10221b12-e595-499f-acfc-621e3d2a0016}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="PolyfillAttributes\IsExternalInit.cs">
+      <Filter>PolyfillAttributes</Filter>
+    </CsCompile>
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="Structs\BlipPropertyFlags.cs">

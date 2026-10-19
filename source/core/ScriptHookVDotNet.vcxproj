@@ -133,6 +133,10 @@
     <ClCompile Include="DllMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <CsCompile Include="PolyfillAttributes\IsExternalInit.cs" />
+    <CsCompile Include="PolyfillAttributes\SkipLocalsInitAttribute.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <CsCompile Include="Console.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="Log.cs" />

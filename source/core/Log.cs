@@ -20,14 +20,7 @@ namespace SHVDN
 
         public readonly struct Options
         {
-            public Options(bool forceLogToConsole)
-            {
-                ForceLogToConsole = forceLogToConsole;
-            }
-
-            // We can't use `init` by defining `System.Runtime.CompilerServices.IsExternalInit` because Visual Studio
-            // refuses to load if it's defined in this core project 😭
-            public bool ForceLogToConsole { get; }
+            public bool ForceLogToConsole { get; init; }
         }
 
         private static string FilePath => Path.ChangeExtension(typeof(ScriptDomain).Assembly.Location, ".log");
