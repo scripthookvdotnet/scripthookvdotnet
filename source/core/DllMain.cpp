@@ -79,11 +79,11 @@ public:
             return;
         }
 
-        console->PrintInfo("~c~--- Help ---");
-        console->PrintInfo("The console accepts ~h~C# expressions~h~ as input and has full access to the scripting API. To print the result of an expression, simply add \"return\" in front of it.");
-        console->PrintInfo("You can use \"P\" as a shortcut for the player character and \"V\" for the current vehicle (without the quotes).");
-        console->PrintInfo("Example: \"return P.IsInVehicle()\" will print a boolean value indicating whether the player is currently sitting in a vehicle to the console.");
-        console->PrintInfo("~c~--- Commands ---");
+        console->Print(SHVDN::Log::Level::Info, "~c~--- Help ---");
+        console->Print(SHVDN::Log::Level::Info, "The console accepts ~h~C# expressions~h~ as input and has full access to the scripting API. To print the result of an expression, simply add \"return\" in front of it.");
+        console->Print(SHVDN::Log::Level::Info, "You can use \"P\" as a shortcut for the player character and \"V\" for the current vehicle (without the quotes).");
+        console->Print(SHVDN::Log::Level::Info, "Example: \"return P.IsInVehicle()\" will print a boolean value indicating whether the player is currently sitting in a vehicle to the console.");
+        console->Print(SHVDN::Log::Level::Info, "~c~--- Commands ---");
         console->PrintHelpText();
     }
     [SHVDN::ConsoleCommand("Print the help for a specific command")]
@@ -122,7 +122,7 @@ public:
             return;
         }
 
-        console->PrintInfo("~y~Reloading ...");
+        console->Print(SHVDN::Log::Level::Info, "~y~Reloading ...");
 
         // Force a reload on next tick
         RequestScriptDomainToReload();
@@ -145,7 +145,7 @@ public:
 
         String ^ext = IO::Path::GetExtension(filename)->ToLower();
         if (!IO::File::Exists(filename) || (ext != ".cs" && ext != ".vb" && ext != ".dll")) {
-            console->PrintError(IO::Path::GetFileName(filename) + " is not a script file!");
+            console->Print(SHVDN::Log::Level::Error, IO::Path::GetFileName(filename) + " is not a script file!");
             return;
         }
 
@@ -161,7 +161,7 @@ public:
             return;
         }
 
-        console->PrintInfo("~y~Loading all scripts ...");
+        console->Print(SHVDN::Log::Level::Info, "~y~Loading all scripts ...");
         domain->Start();
     }
     [SHVDN::ConsoleCommand("Abort all scripts from a file")]
@@ -181,7 +181,7 @@ public:
 
         String ^ext = IO::Path::GetExtension(filename)->ToLower();
         if (!IO::File::Exists(filename) || (ext != ".cs" && ext != ".vb" && ext != ".dll")) {
-            console->PrintError(IO::Path::GetFileName(filename) + " is not a script file!");
+            console->Print(SHVDN::Log::Level::Error, IO::Path::GetFileName(filename) + " is not a script file!");
             return;
         }
 
@@ -199,7 +199,7 @@ public:
 
         domain->Abort();
 
-        console->PrintInfo("Stopped all running scripts. Use \"Start(filename)\" to start them again.");
+        console->Print(SHVDN::Log::Level::Info, "Stopped all running scripts. Use \"Start(filename)\" to start them again.");
     }
 
     [SHVDN::ConsoleCommand("List all loaded scripts")]
@@ -212,9 +212,9 @@ public:
             return;
         }
 
-        console->PrintInfo("~c~--- Loaded Scripts ---");
+        console->Print(SHVDN::Log::Level::Info, "~c~--- Loaded Scripts ---");
         for each (auto script in domain->RunningScripts)
-            console->PrintInfo(IO::Path::GetFileName(script->Filename) + " ~h~" + script->Name + (script->IsRunning ? (script->IsPaused ? " ~o~[paused]" : " ~g~[running]") : " ~r~[aborted]"));
+            console->Print(SHVDN::Log::Level::Info, IO::Path::GetFileName(script->Filename) + " ~h~" + script->Name + (script->IsRunning ? (script->IsPaused ? " ~o~[paused]" : " ~g~[running]") : " ~r~[aborted]"));
     }
 
 internal:
@@ -283,10 +283,10 @@ internal:
             switch (messageInfo.level)
             {
             case SHVDN::Log::Level::Error:
-                console->PrintError(messageInfo.message);
+                console->Print(SHVDN::Log::Level::Error, messageInfo.message);
                 break;
             case SHVDN::Log::Level::Warning:
-                console->PrintWarning(messageInfo.message);
+                console->Print(SHVDN::Log::Level::Warning, messageInfo.message);
                 break;
             }
         }
@@ -632,8 +632,8 @@ static void ScriptHookVDotNet_ManagedInit()
         console->CommandHistory = stashedConsoleCommandHistory;
 
         // Print welcome message
-        console->PrintInfo("~c~--- Community Script Hook V .NET " SHVDN_VERSION " ---");
-        console->PrintInfo("~c~--- Type \"Help()\" to print an overview of available commands ---");
+        console->Print(SHVDN::Log::Level::Info, "~c~--- Community Script Hook V .NET " SHVDN_VERSION " ---");
+        console->Print(SHVDN::Log::Level::Info, "~c~--- Type \"Help()\" to print an overview of available commands ---");
 
         ScriptHookVDotNet::SendPendingMessagesToConsole(console, pendingLogMessageInfo);
 

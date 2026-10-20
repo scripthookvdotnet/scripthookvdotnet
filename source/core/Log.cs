@@ -111,27 +111,15 @@ namespace SHVDN
                 return;
             }
 
-            switch (level)
+            if(level == Level.Debug || level == Level.Info)
             {
-                case Level.Debug:
-                    if (opt.ForceLogToConsole)
-                    {
-                        console.PrintDebug(string.Join(string.Empty, message));
-                    }
-                    break;
-                case Level.Info:
-                    if (opt.ForceLogToConsole)
-                    {
-                        console.PrintInfo(string.Join(string.Empty, message));
-                    }
-                    break;
-                case Level.Error:
-                    console.PrintError(string.Join(string.Empty, message));
-                    break;
-                case Level.Warning:
-                    console.PrintWarning(string.Join(string.Empty, message));
-                    break;
+                if (!opt.ForceLogToConsole)
+                {
+                    return;
+                }
             }
+
+            console.Print(level, string.Join(string.Empty, message));
         }
     }
 }
