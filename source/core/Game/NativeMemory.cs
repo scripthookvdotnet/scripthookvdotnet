@@ -3620,7 +3620,8 @@ namespace SHVDN
                 _poolType = type;
                 _poolAddress = poolAddress;
             }
-            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, int[] modelHashes) : this(type, poolAddress)
+            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, int[] modelHashes)
+                : this(type, poolAddress)
             {
                 if (modelHashes == null || modelHashes.Length <= 0)
                 {
@@ -3630,7 +3631,8 @@ namespace SHVDN
                 _doModelCheck = true;
                 _modelHashes = new HashSet<int>(modelHashes);
             }
-            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, Func<IntPtr, bool> predicate) : this(type, poolAddress)
+            internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, Func<IntPtr, bool> predicate)
+                : this(type, poolAddress)
             {
                 _predicate = predicate;
             }
