@@ -4225,10 +4225,10 @@ namespace SHVDN
             return returnHandles.ToArray();
         }
 
-        public static bool BuildingHandleExists(int handle) => s_buildingPoolAddress != null ? ((FwBasePool*)(*s_buildingPoolAddress))->IsHandleValid(handle) : false;
-        public static bool AnimatedBuildingHandleExists(int handle) => s_animatedBuildingPoolAddress != null ? ((FwBasePool*)(*s_animatedBuildingPoolAddress))->IsHandleValid(handle) : false;
-        public static bool InteriorInstHandleExists(int handle) => s_interiorInstPoolAddress != null ? ((FwBasePool*)(*s_interiorInstPoolAddress))->IsHandleValid(handle) : false;
-        public static bool InteriorProxyHandleExists(int handle) => s_interiorProxyPoolAddress != null ? ((FwBasePool*)(*s_interiorProxyPoolAddress))->IsHandleValid(handle) : false;
+        public static bool BuildingHandleExists(int handle) => s_buildingPoolAddress != null && ((FwBasePool*)(*s_buildingPoolAddress))->IsHandleValid(handle);
+        public static bool AnimatedBuildingHandleExists(int handle) => s_animatedBuildingPoolAddress != null && ((FwBasePool*)(*s_animatedBuildingPoolAddress))->IsHandleValid(handle);
+        public static bool InteriorInstHandleExists(int handle) => s_interiorInstPoolAddress != null && ((FwBasePool*)(*s_interiorInstPoolAddress))->IsHandleValid(handle);
+        public static bool InteriorProxyHandleExists(int handle) => s_interiorProxyPoolAddress != null && ((FwBasePool*)(*s_interiorProxyPoolAddress))->IsHandleValid(handle);
 
         private static int[] GetHandlesInFwBasePool(ulong poolAddress)
         {
@@ -6345,7 +6345,7 @@ namespace SHVDN
                     }
                     else if (argType == typeof(bool))
                     {
-                        bool argValueConverted = argValue != 0 ? true : false;
+                        bool argValueConverted = argValue != 0;
                         NativeMemory.s_setNmParameterBool(messageMemory, name, argValueConverted);
                     }
                     else if (argType == typeof(int))

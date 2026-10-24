@@ -1040,8 +1040,7 @@ namespace SHVDN
             }
             else
             {
-                nativeCallResetsTimeout
-                    = (apiVersion < s_FirstApiVerWhereNativeCallDoesntResetTimeoutByDefault) ? true : false;
+                nativeCallResetsTimeout = apiVersion < s_FirstApiVerWhereNativeCallDoesntResetTimeoutByDefault;
             }
 
             return new ScriptInitOption(nativeCallResetsTimeout);
