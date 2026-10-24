@@ -6429,6 +6429,7 @@ namespace SHVDN
         #endregion
 
         static T* Rel32<T>(byte* address, int offset, int instructionTail = 4)
+            where T : unmanaged
         {
             return (T*)(*(int*)(address + offset) + address + offset + instructionTail);
         }
