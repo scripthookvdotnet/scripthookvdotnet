@@ -59,6 +59,9 @@
     <CsCompile Include="PolyfillAttributes\IsExternalInit.cs">
       <Filter>PolyfillAttributes</Filter>
     </CsCompile>
+    <CsCompile Include="PolyfillAttributes\IsUnmanagedAttribute.cs">
+      <Filter>PolyfillAttributes</Filter>
+    </CsCompile>
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="Structs\BlipPropertyFlags.cs">

@@ -135,6 +135,7 @@
   <ItemGroup>
     <CsCompile Include="PolyfillAttributes\IsExternalInit.cs" />
     <CsCompile Include="PolyfillAttributes\SkipLocalsInitAttribute.cs" />
+    <CsCompile Include="PolyfillAttributes\IsUnmanagedAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="Console.cs" />
