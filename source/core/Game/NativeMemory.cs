@@ -3893,7 +3893,7 @@ namespace SHVDN
         public static int GetAnimatedBuildingCapacity() => s_animatedBuildingPoolAddress != null ? GetFwBasePoolCapacity(*s_animatedBuildingPoolAddress) : 0;
         public static int GetInteriorInstCapacity() => s_interiorInstPoolAddress != null ? GetFwBasePoolCapacity(*s_interiorInstPoolAddress) : 0;
         public static int GetInteriorProxyCapacity() => s_interiorProxyPoolAddress != null ? GetFwBasePoolCapacity(*s_interiorProxyPoolAddress) : 0;
-        //the max number of projectile has not been changed from 50
+        // The max number of projectile has not been changed from 50
         public static int GetProjectileCapacity() => 50;
 
         private static int GetFwBasePoolCapacity(ulong address)
