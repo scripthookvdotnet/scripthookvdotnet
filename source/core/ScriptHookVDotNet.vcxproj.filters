@@ -73,7 +73,7 @@
     <CsCompile Include="Game\Structs\WeaponDamageInfo.cs">
       <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Game\Structs\CGameScriptResouce.cs">
+    <CsCompile Include="Game\Structs\CGameScriptResource.cs">
       <Filter>Game\Structs</Filter>
     </CsCompile>
     <CsCompile Include="Game\Structs\CModelList.cs">
@@ -82,7 +82,7 @@
     <CsCompile Include="Game\Structs\CTask.cs">
       <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Game\Structs\DragDrawable.cs">
+    <CsCompile Include="Game\Structs\FragDrawable.cs">
       <Filter>Game\Structs</Filter>
     </CsCompile>
     <CsCompile Include="Game\Structs\EntityDamageRecordForReturnValue.cs">
@@ -103,10 +103,10 @@
     <CsCompile Include="Game\Structs\HashNode.cs">
       <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Game\Structs\ItemInfo.cs">
+    <CsCompile Include="Game\Structs\CItemInfo.cs">
       <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Game\Structs\PedPersonality.cs">
+    <CsCompile Include="Game\Structs\PersonalityData.cs">
       <Filter>Game\Structs</Filter>
     </CsCompile>
     <CsCompile Include="Game\Structs\PgHashMap.cs">
@@ -190,7 +190,7 @@
     <CsCompile Include="Game\Enums\EntityType.cs">
       <Filter>Game\Enums</Filter>
     </CsCompile>
-    <CsCompile Include="Game\Enums\ModelInfoClassType.cs">
+    <CsCompile Include="Game\Enums\ModelInfoType.cs">
       <Filter>Game\Enums</Filter>
     </CsCompile>
     <CsCompile Include="Game\Enums\PoolType.cs">

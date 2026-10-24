@@ -159,7 +159,7 @@
   <ItemGroup>
     <CsCompile Include="Game\Enums\ScriptResourceType.cs" />
     <CsCompile Include="Game\Enums\EntityType.cs" />
-    <CsCompile Include="Game\Enums\ModelInfoClassType.cs" />
+    <CsCompile Include="Game\Enums\ModelInfoType.cs" />
     <CsCompile Include="Game\Enums\PoolType.cs" />
     <CsCompile Include="Game\Enums\Vehicle\VehicleFlags.cs" />
     <CsCompile Include="Game\Enums\Vehicle\VehicleModelInfoFlags.cs" />
@@ -167,10 +167,10 @@
     <CsCompile Include="Game\Enums\Vehicle\VehicleType.cs" />
     <CsCompile Include="Game\Structs\BlipPropertyFlags.cs" />
     <CsCompile Include="Game\Structs\WeaponDamageInfo.cs" />
-    <CsCompile Include="Game\Structs\CGameScriptResouce.cs" />
+    <CsCompile Include="Game\Structs\CGameScriptResource.cs" />
     <CsCompile Include="Game\Structs\CModelList.cs" />
     <CsCompile Include="Game\Structs\CTask.cs" />
-    <CsCompile Include="Game\Structs\DragDrawable.cs" />
+    <CsCompile Include="Game\Structs\FragDrawable.cs" />
     <CsCompile Include="Game\Structs\EntityDamageRecordForReturnValue.cs" />
     <CsCompile Include="Game\Structs\FVector3.cs" />
     <CsCompile Include="Game\Structs\FragCacheEntry.cs" />
@@ -182,11 +182,11 @@
     <CsCompile Include="Game\Structs\FwBasePool.cs" />
     <CsCompile Include="Game\Structs\HashEntry.cs" />
     <CsCompile Include="Game\Structs\HashNode.cs" />
-    <CsCompile Include="Game\Structs\ItemInfo.cs" />
+    <CsCompile Include="Game\Structs\CItemInfo.cs" />
     <CsCompile Include="Game\Structs\Path\CPathNode.cs" />
     <CsCompile Include="Game\Structs\Path\CPathNodeLink.cs" />
     <CsCompile Include="Game\Structs\Path\CPathRegion.cs" />
-    <CsCompile Include="Game\Structs\PedPersonality.cs" />
+    <CsCompile Include="Game\Structs\PersonalityData.cs" />
     <CsCompile Include="Game\Structs\PgHashMap.cs" />
     <CsCompile Include="Game\Structs\RageAtArrayPtr.cs" />
     <CsCompile Include="Game\Structs\RageSysMemPoolAllocator.cs" />
