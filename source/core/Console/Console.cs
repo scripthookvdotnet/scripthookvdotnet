@@ -903,9 +903,7 @@ namespace SHVDN
             static string SwapTwoCharacters(string str, int index)
             {
                 StringBuilder sb = new StringBuilder(str);
-                char tmp = sb[index];
-                sb[index] = sb[index + 1];
-                sb[index + 1] = tmp;
+                (sb[index + 1], sb[index]) = (sb[index], sb[index + 1]);
 
                 return sb.ToString();
             }
