@@ -1456,11 +1456,11 @@ namespace SHVDN
 
             internal SetEntityAngularVelocityTask(IntPtr entityAddress, delegate* unmanaged[Stdcall]<IntPtr, float*, void> vFuncDelegate, float x, float y, float z)
             {
-                this._entityAddress = entityAddress;
-                this._setAngularVelocityDelegate = vFuncDelegate;
-                this._x = x;
-                this._y = y;
-                this._z = z;
+                _entityAddress = entityAddress;
+                _setAngularVelocityDelegate = vFuncDelegate;
+                _x = x;
+                _y = y;
+                _z = z;
             }
 
             public void Run()
@@ -2382,10 +2382,10 @@ namespace SHVDN
 
                 internal VehicleWheelPunctureTask(IntPtr wheelAddress, IntPtr vehicleAddress, bool burstWheelCompletely, float damage = 1000f)
                 {
-                    this._wheelAddress = wheelAddress;
-                    this._vehicleAddress = vehicleAddress;
-                    this._burstWheelCompletely = burstWheelCompletely;
-                    this._damage = damage;
+                    _wheelAddress = wheelAddress;
+                    _vehicleAddress = vehicleAddress;
+                    _burstWheelCompletely = burstWheelCompletely;
+                    _damage = damage;
                 }
 
                 public void Run()
@@ -3635,7 +3635,7 @@ namespace SHVDN
                 }
 
                 _doModelCheck = true;
-                this._modelHashes = new HashSet<int>(modelHashes);
+                _modelHashes = new HashSet<int>(modelHashes);
             }
             internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, Func<IntPtr, bool> predicate) : this(type, poolAddress)
             {
@@ -3645,8 +3645,8 @@ namespace SHVDN
                 int[] modelHashes = null, Func<IntPtr, bool> predicate = null) : this(type, poolAddress)
             {
                 _doPosCheck = true;
-                this._radiusSquared = radiusSquared;
-                this._position = position;
+                _radiusSquared = radiusSquared;
+                _position = position;
 
                 _predicate = predicate;
 
@@ -3656,7 +3656,7 @@ namespace SHVDN
                 }
 
                 _doModelCheck = true;
-                this._modelHashes = new HashSet<int>(modelHashes);
+                _modelHashes = new HashSet<int>(modelHashes);
             }
 
             public void Run()
@@ -3847,7 +3847,7 @@ namespace SHVDN
 
             internal GetEntityHandleTask(IntPtr entityAddress)
             {
-                this._entityAddress = (ulong)entityAddress.ToInt64();
+                _entityAddress = (ulong)entityAddress.ToInt64();
             }
 
             public void Run()
@@ -4530,7 +4530,7 @@ namespace SHVDN
 
             internal ActivateSpecialAbilityTask(IntPtr specialAbilityStructAddress)
             {
-                this._specialAbilityStructAddress = specialAbilityStructAddress;
+                _specialAbilityStructAddress = specialAbilityStructAddress;
             }
 
             public void Run()
@@ -5211,7 +5211,7 @@ namespace SHVDN
 
             internal GetAllCScriptResourceHandlesTask(ScriptResourceType typeNameIndex)
             {
-                this._typeNameIndex = typeNameIndex;
+                _typeNameIndex = typeNameIndex;
             }
 
             public void Run()
@@ -5255,9 +5255,9 @@ namespace SHVDN
 
             internal GetCScriptResourceAddressTask(int handle, ulong* poolAddress, int elementSize)
             {
-                this._targetHandle = handle;
-                this._poolAddress = poolAddress;
-                this._elementSize = elementSize;
+                _targetHandle = handle;
+                _poolAddress = poolAddress;
+                _elementSize = elementSize;
             }
 
             public void Run()
@@ -5293,8 +5293,8 @@ namespace SHVDN
 
             internal GetCScriptResourceByIndexTask(ScriptResourceType resourceType, uint index)
             {
-                this._resourceType = resourceType;
-                this._targetIndex = index;
+                _resourceType = resourceType;
+                _targetIndex = index;
             }
 
             public void Run()
@@ -5657,7 +5657,7 @@ namespace SHVDN
 
             internal ExplodeProjectileTask(IntPtr projectileAddress)
             {
-                this._projectileAddress = projectileAddress;
+                _projectileAddress = projectileAddress;
             }
 
             public void Run()
@@ -6047,8 +6047,8 @@ namespace SHVDN
 
             internal FragInstBreakOffAboveTask(FragInst* fragInst, int componentIndex)
             {
-                this._fragInst = fragInst;
-                this._componentIndex = componentIndex;
+                _fragInst = fragInst;
+                _componentIndex = componentIndex;
             }
 
             public void Run()
@@ -6383,9 +6383,9 @@ namespace SHVDN
             internal NmMessageTask(int target, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
             {
                 _targetHandle = target;
-                this._messageName = messageName;
-                this._boolIntFloatParameters = boolIntFloatParameters;
-                this._stringVector3ArrayParameters = stringVector3ArrayParameters;
+                _messageName = messageName;
+                _boolIntFloatParameters = boolIntFloatParameters;
+                _stringVector3ArrayParameters = stringVector3ArrayParameters;
             }
 
             public void Run()
