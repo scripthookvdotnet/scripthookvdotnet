@@ -5994,12 +5994,13 @@ namespace SHVDN
 
         public static uint GetHumanNameHashOfWeaponInfo(uint weaponHash)
         {
+            const uint WT_INVALID = 0xBFED8500;
+
             CItemInfo* weaponInfo = FindWeaponInfo(weaponHash);
 
             if (weaponInfo == null)
-                // hashed value of WT_INVALID
             {
-                return 0xBFED8500;
+                return WT_INVALID;
             }
 
             return *(uint*)((byte*)weaponInfo + s_weaponInfoHumanNameHashOffset);
@@ -6007,12 +6008,13 @@ namespace SHVDN
 
         public static uint GetHumanNameHashOfWeaponComponentInfo(uint weaponComponentHash)
         {
+            const uint WT_INVALID = 0xBFED8500;
+
             WeaponComponentInfo* weaponComponentInfo = FindWeaponComponentInfo(weaponComponentHash);
 
             if (weaponComponentInfo == null)
-                // hashed value of WCT_INVALID
             {
-                return 0xDE4BE9F8;
+                return WT_INVALID;
             }
 
             return weaponComponentInfo->LocNameHash;
