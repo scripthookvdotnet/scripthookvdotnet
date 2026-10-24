@@ -27,28 +27,31 @@
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Structs">
+    <Filter Include="Game">
+      <UniqueIdentifier>{418dc6aa-778b-4395-846f-bc689697e4a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Structs">
       <UniqueIdentifier>{a4f13c56-d1ce-48d6-aa8a-a16c50e323b3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Structs\Path">
+    <Filter Include="Game\Structs\Path">
       <UniqueIdentifier>{12cd1bf1-85bd-4e97-80ea-fbe1b3816020}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Structs\Frag">
+    <Filter Include="Game\Structs\Frag">
       <UniqueIdentifier>{f5aa51a5-962a-485b-90ca-714d34b11b97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Structs\Skeleton">
+    <Filter Include="Game\Structs\Skeleton">
       <UniqueIdentifier>{0bc9b1f9-9704-430f-bff7-8fadef8b28af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Structs\Weapon">
+    <Filter Include="Game\Structs\Weapon">
       <UniqueIdentifier>{06e15a8d-26fe-4b0a-9a99-898d8b17691d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Structs\Ysc">
+    <Filter Include="Game\Structs\Ysc">
       <UniqueIdentifier>{08285d85-c75a-4315-9c4a-1912c12ca15e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enums">
+    <Filter Include="Game\Enums">
       <UniqueIdentifier>{856d0490-9e97-4e4f-9ca5-5eb54438060c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Enums\Vehicle">
+    <Filter Include="Game\Enums\Vehicle">
       <UniqueIdentifier>{2115f7f1-65dc-4378-8033-be6a402d5712}</UniqueIdentifier>
     </Filter>
     <Filter Include="PolyfillAttributes">
@@ -64,134 +67,134 @@
     </CsCompile>
   </ItemGroup>
   <ItemGroup>
-    <CsCompile Include="Structs\BlipPropertyFlags.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\BlipPropertyFlags.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\WeaponDamageInfo.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\WeaponDamageInfo.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\CGameScriptResouce.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\CGameScriptResouce.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\CModelList.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\CModelList.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\CTask.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\CTask.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\DragDrawable.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\DragDrawable.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\EntityDamageRecordForReturnValue.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\EntityDamageRecordForReturnValue.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\FragCacheEntry.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\FragCacheEntry.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\FVector3.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\FVector3.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\FwBasePool.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\FwBasePool.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\HashEntry.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\HashEntry.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\HashNode.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\HashNode.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\ItemInfo.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\ItemInfo.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\PedPersonality.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\PedPersonality.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\PgHashMap.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\PgHashMap.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\RageAtArrayPtr.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\RageAtArrayPtr.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\RageSysMemPoolAllocator.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\RageSysMemPoolAllocator.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\GridMonitor.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\GridMonitor.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Path\CPathNode.cs">
-      <Filter>Structs\Path</Filter>
+    <CsCompile Include="Game\Structs\Path\CPathNode.cs">
+      <Filter>Game\Structs\Path</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Path\CPathNodeLink.cs">
-      <Filter>Structs\Path</Filter>
+    <CsCompile Include="Game\Structs\Path\CPathNodeLink.cs">
+      <Filter>Game\Structs\Path</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Path\CPathRegion.cs">
-      <Filter>Structs\Path</Filter>
+    <CsCompile Include="Game\Structs\Path\CPathRegion.cs">
+      <Filter>Game\Structs\Path</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Frag\FragInst.cs">
-      <Filter>Structs\Frag</Filter>
+    <CsCompile Include="Game\Structs\Frag\FragInst.cs">
+      <Filter>Game\Structs\Frag</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Frag\FragPhysicsLod.cs">
-      <Filter>Structs\Frag</Filter>
+    <CsCompile Include="Game\Structs\Frag\FragPhysicsLod.cs">
+      <Filter>Game\Structs\Frag</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Frag\FragPhysicsLodGroup.cs">
-      <Filter>Structs\Frag</Filter>
+    <CsCompile Include="Game\Structs\Frag\FragPhysicsLodGroup.cs">
+      <Filter>Game\Structs\Frag</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Frag\FragTypeChild.cs">
-      <Filter>Structs\Frag</Filter>
+    <CsCompile Include="Game\Structs\Frag\FragTypeChild.cs">
+      <Filter>Game\Structs\Frag</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Frag\GtaFragType.cs">
-      <Filter>Structs\Frag</Filter>
+    <CsCompile Include="Game\Structs\Frag\GtaFragType.cs">
+      <Filter>Game\Structs\Frag</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Ysc\YscScriptHeader.cs">
-      <Filter>Structs\Ysc</Filter>
+    <CsCompile Include="Game\Structs\Ysc\YscScriptHeader.cs">
+      <Filter>Game\Structs\Ysc</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Ysc\YscScriptTable.cs">
-      <Filter>Structs\Ysc</Filter>
+    <CsCompile Include="Game\Structs\Ysc\YscScriptTable.cs">
+      <Filter>Game\Structs\Ysc</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Ysc\YscScriptTableItem.cs">
-      <Filter>Structs\Ysc</Filter>
+    <CsCompile Include="Game\Structs\Ysc\YscScriptTableItem.cs">
+      <Filter>Game\Structs\Ysc</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Weapon\WeaponComponentInfo.cs">
-      <Filter>Structs\Weapon</Filter>
+    <CsCompile Include="Game\Structs\Weapon\WeaponComponentInfo.cs">
+      <Filter>Game\Structs\Weapon</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Weapon\WeaponComponentPoint.cs">
-      <Filter>Structs\Weapon</Filter>
+    <CsCompile Include="Game\Structs\Weapon\WeaponComponentPoint.cs">
+      <Filter>Game\Structs\Weapon</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\ScrWeaponHudStats.cs">
-      <Filter>Structs</Filter>
+    <CsCompile Include="Game\Structs\ScrWeaponHudStats.cs">
+      <Filter>Game\Structs</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Skeleton\CrBoneData.cs">
-      <Filter>Structs\Skeleton</Filter>
+    <CsCompile Include="Game\Structs\Skeleton\CrBoneData.cs">
+      <Filter>Game\Structs\Skeleton</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Skeleton\CrSkeleton.cs">
-      <Filter>Structs\Skeleton</Filter>
+    <CsCompile Include="Game\Structs\Skeleton\CrSkeleton.cs">
+      <Filter>Game\Structs\Skeleton</Filter>
     </CsCompile>
-    <CsCompile Include="Structs\Skeleton\CrSkeletonData.cs">
-      <Filter>Structs\Skeleton</Filter>
+    <CsCompile Include="Game\Structs\Skeleton\CrSkeletonData.cs">
+      <Filter>Game\Structs\Skeleton</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\Vehicle\VehicleFlags.cs">
-      <Filter>Enums\Vehicle</Filter>
+    <CsCompile Include="Game\Enums\Vehicle\VehicleFlags.cs">
+      <Filter>Game\Enums\Vehicle</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\Vehicle\VehicleModelInfoFlags.cs">
-      <Filter>Enums\Vehicle</Filter>
+    <CsCompile Include="Game\Enums\Vehicle\VehicleModelInfoFlags.cs">
+      <Filter>Game\Enums\Vehicle</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\Vehicle\VehiclePathNodeProperties.cs">
-      <Filter>Enums\Vehicle</Filter>
+    <CsCompile Include="Game\Enums\Vehicle\VehiclePathNodeProperties.cs">
+      <Filter>Game\Enums\Vehicle</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\Vehicle\VehicleType.cs">
-      <Filter>Enums\Vehicle</Filter>
+    <CsCompile Include="Game\Enums\Vehicle\VehicleType.cs">
+      <Filter>Game\Enums\Vehicle</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\ScriptResourceType.cs">
-      <Filter>Enums</Filter>
+    <CsCompile Include="Game\Enums\ScriptResourceType.cs">
+      <Filter>Game\Enums</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\EntityType.cs">
-      <Filter>Enums</Filter>
+    <CsCompile Include="Game\Enums\EntityType.cs">
+      <Filter>Game\Enums</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\ModelInfoClassType.cs">
-      <Filter>Enums</Filter>
+    <CsCompile Include="Game\Enums\ModelInfoClassType.cs">
+      <Filter>Game\Enums</Filter>
     </CsCompile>
-    <CsCompile Include="Enums\PoolType.cs">
-      <Filter>Enums</Filter>
+    <CsCompile Include="Game\Enums\PoolType.cs">
+      <Filter>Game\Enums</Filter>
     </CsCompile>
   </ItemGroup>
 </Project>
