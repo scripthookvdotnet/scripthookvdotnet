@@ -55,8 +55,8 @@ namespace SHVDN
         private string _lastRenderedInput = string.Empty;
         private string _lastRenderedCursorInput = string.Empty;
 
-        private KeyManager _keyManager = new();
-        private ConcurrentQueue<Keys> _keyboardEventQueue = new();
+        private readonly KeyManager _keyManager = new();
+        private readonly ConcurrentQueue<Keys> _keyboardEventQueue = new();
 
         // State
         private int _lastClosedTickCount;
@@ -64,20 +64,20 @@ namespace SHVDN
         private volatile bool _isOpen = false;
 
         private Task<MethodInfo> _compilerTask;
-        private Queue<string[]> _outputQueue = new();
+        private readonly Queue<string[]> _outputQueue = new();
 
         // Commands
         private int _selectedCandidateIndex = -1;
         private bool _hideCandidates = false;
 
-        private Dictionary<string, List<ConsoleCommand>> _commands = new();
-        private List<string> _commandCandidates = new();
+        private readonly Dictionary<string, List<ConsoleCommand>> _commands = new();
+        private readonly List<string> _commandCandidates = new();
 
         // History
         private int _currentPage = 1;
         private int _commandPos = -1;
 
-        private List<string> _lineHistory = new();
+        private readonly List<string> _lineHistory = new();
 
         [DllImport("user32.dll")]
         private static extern int ToUnicode(

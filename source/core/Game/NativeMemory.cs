@@ -999,8 +999,8 @@ namespace SHVDN
 
         #region -- fwRefAwareBaseImpl Functions --
 
-        private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_fwRefAwareBaseImpl__AddKnownRef;
-        private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_fwRefAwareBaseImpl__RemoveKnownRef;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_fwRefAwareBaseImpl__AddKnownRef;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_fwRefAwareBaseImpl__RemoveKnownRef;
 
         #endregion
 
@@ -1009,8 +1009,8 @@ namespace SHVDN
         internal sealed class ResetFwRegdRefTask : IScriptTask
         {
             #region Fields
-            private IntPtr _lhs;
-            private IntPtr _rhs;
+            private readonly IntPtr _lhs;
+            private readonly IntPtr _rhs;
             #endregion
 
             internal ResetFwRegdRefTask(IntPtr lhs, IntPtr rhs)
@@ -1108,10 +1108,10 @@ namespace SHVDN
 
         #region -- Cameras --
 
-        private static delegate* unmanaged[Stdcall]<byte> s_isCameraInAccurateMode;
+        private static readonly delegate* unmanaged[Stdcall]<byte> s_isCameraInAccurateMode;
 
-        private static ulong* s_cameraPoolAddress;
-        private static ulong* s_gameplayCameraAddress;
+        private static readonly ulong* s_cameraPoolAddress;
+        private static readonly ulong* s_gameplayCameraAddress;
 
         public static bool IsCameraInAccurateMode
             => s_isCameraInAccurateMode() != 0;
@@ -1136,8 +1136,8 @@ namespace SHVDN
 
         #region -- Game Data --
 
-        private static ulong s_getLabelTextByHashAddress;
-        private static delegate* unmanaged[Stdcall]<ulong, int, ulong> s_getLabelTextByHashFunc;
+        private static readonly ulong s_getLabelTextByHashAddress;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, int, ulong> s_getLabelTextByHashFunc;
 
         public static string GetGxtEntryByHash(int entryLabelHash)
         {
@@ -1149,7 +1149,7 @@ namespace SHVDN
 
         #region -- Decorator Data --
 
-        private static byte* s_isDecoratorLocked;
+        private static readonly byte* s_isDecoratorLocked;
 
         public static bool IsDecoratorLocked
         {
@@ -1161,26 +1161,26 @@ namespace SHVDN
 
         #region -- World Data --
 
-        private static int* s_cursorSpriteAddr;
+        private static readonly int* s_cursorSpriteAddr;
 
         public static int CursorSprite => *s_cursorSpriteAddr;
 
-        private static float* s_timeScaleAddress;
+        private static readonly float* s_timeScaleAddress;
 
         public static float TimeScale => *s_timeScaleAddress;
 
-        private static int* s_millisecondsPerGameMinuteAddress;
+        private static readonly int* s_millisecondsPerGameMinuteAddress;
 
         public static int MillisecondsPerGameMinute
         {
             set => *s_millisecondsPerGameMinuteAddress = value;
         }
 
-        private static byte* s_isClockPausedAddress;
+        private static readonly byte* s_isClockPausedAddress;
 
         public static bool IsClockPaused => *s_isClockPausedAddress != 0;
 
-        private static int* s_lastClockTickAddress;
+        private static readonly int* s_lastClockTickAddress;
 
         public static int LastTimeClockTicked
         {
@@ -1188,8 +1188,8 @@ namespace SHVDN
             set => *s_lastClockTickAddress = value;
         }
 
-        private static float* s_readWorldGravityAddress;
-        private static float* s_writeWorldGravityAddress;
+        private static readonly float* s_readWorldGravityAddress;
+        private static readonly float* s_writeWorldGravityAddress;
 
         public static float WorldGravity
         {
@@ -1197,14 +1197,14 @@ namespace SHVDN
             set => *s_writeWorldGravityAddress = value;
         }
 
-        private static byte* s_disableArtificialLightsAddress;
+        private static readonly byte* s_disableArtificialLightsAddress;
 
         public static bool AreArtificialLightsDisabled
         {
             get => *s_disableArtificialLightsAddress != 0;
         }
 
-        private static ulong** s_cRiotsInstPtr;
+        private static readonly ulong** s_cRiotsInstPtr;
 
         public static bool IsRiotModeEnabled
         {
@@ -1220,9 +1220,9 @@ namespace SHVDN
             }
         }
 
-        private static IntPtr s_phMaterialMgrInstance;
+        private static readonly IntPtr s_phMaterialMgrInstance;
 
-        private static delegate* unmanaged[Stdcall]<IntPtr, uint, byte*, int, void> s_getMaterialNameFunc;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, uint, byte*, int, void> s_getMaterialNameFunc;
 
         public static unsafe string GetMaterialNameFromId(int materialId)
         {
@@ -1410,8 +1410,8 @@ namespace SHVDN
 
         #region -- CEntity Functions --
 
-        private static delegate* unmanaged[Stdcall]<float*, ulong, int, float*> s_getRotationFromMatrixFunc;
-        private static delegate* unmanaged[Stdcall]<float*, ulong, int> s_getQuaternionFromMatrixFunc;
+        private static readonly delegate* unmanaged[Stdcall]<float*, ulong, int, float*> s_getRotationFromMatrixFunc;
+        private static readonly delegate* unmanaged[Stdcall]<float*, ulong, int> s_getQuaternionFromMatrixFunc;
 
         public static void GetRotationFromMatrix(float* returnRotationArray, IntPtr matrixAddress, int rotationOrder = 2)
         {
@@ -1446,11 +1446,11 @@ namespace SHVDN
         internal sealed class SetEntityAngularVelocityTask : IScriptTask
         {
             #region Fields
-            private IntPtr _entityAddress;
+            private readonly IntPtr _entityAddress;
 
             // return value will be the address of the temporary 4 float storage
-            private delegate* unmanaged[Stdcall]<IntPtr, float*, void> _setAngularVelocityDelegate;
-            private float _x, _y, _z;
+            private readonly delegate* unmanaged[Stdcall]<IntPtr, float*, void> _setAngularVelocityDelegate;
+            private readonly float _x, _y, _z;
             #endregion
 
             internal SetEntityAngularVelocityTask(IntPtr entityAddress, delegate* unmanaged[Stdcall]<IntPtr, float*, void> vFuncDelegate, float x, float y, float z)
@@ -2263,11 +2263,11 @@ namespace SHVDN
 
             #region -- Vehicle Wheel Data --
 
-            private static delegate* unmanaged[Stdcall]<IntPtr, void> s_fixVehicleWheelFunc;
-            private static delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void> s_punctureVehicleTireNewFunc;
-            private static delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void> s_punctureVehicleTireOldFunc;
-            private static delegate* unmanaged[Stdcall]<IntPtr, void> s_burstVehicleTireOnRimNewFunc;
-            private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_burstVehicleTireOnRimOldFunc;
+            private static readonly delegate* unmanaged[Stdcall]<IntPtr, void> s_fixVehicleWheelFunc;
+            private static readonly delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void> s_punctureVehicleTireNewFunc;
+            private static readonly delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void> s_punctureVehicleTireOldFunc;
+            private static readonly delegate* unmanaged[Stdcall]<IntPtr, void> s_burstVehicleTireOnRimNewFunc;
+            private static readonly delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void> s_burstVehicleTireOnRimOldFunc;
 
             // Although we're sure the name of corresponding field in the exe is `m_fFrontRearSelector`, we don't know
             // what this value exactly affects...
@@ -2373,10 +2373,10 @@ namespace SHVDN
             {
                 #region Fields
 
-                private IntPtr _wheelAddress;
-                private IntPtr _vehicleAddress;
-                private bool _burstWheelCompletely;
-                private float _damage;
+                private readonly IntPtr _wheelAddress;
+                private readonly IntPtr _vehicleAddress;
+                private readonly bool _burstWheelCompletely;
+                private readonly float _damage;
                 #endregion
 
                 internal VehicleWheelPunctureTask(IntPtr wheelAddress, IntPtr vehicleAddress, bool burstWheelCompletely, float damage = 1000f)
@@ -2417,7 +2417,7 @@ namespace SHVDN
 
         #region -- Prop Data --
 
-        private static int s_objParentEntityAddressDetachedFromOffset;
+        private static readonly int s_objParentEntityAddressDetachedFromOffset;
 
         private static IntPtr GetParentEntityOfPropDetachedFrom(int objHandle)
         {
@@ -2445,8 +2445,8 @@ namespace SHVDN
 
         public static unsafe class Ped
         {
-            private static delegate* unmanaged[Stdcall]<IntPtr, uint, bool, void> s_audSpeechAudioEntity__SetAmbientVoiceNameFunc;
-            private static delegate* unmanaged[Stdcall]<IntPtr, uint, IntPtr, uint, int, IntPtr, uint, int, float, bool, int*, FVector3*, int> s_audSpeechAudioEntity__SayFunc;
+            private static readonly delegate* unmanaged[Stdcall]<IntPtr, uint, bool, void> s_audSpeechAudioEntity__SetAmbientVoiceNameFunc;
+            private static readonly delegate* unmanaged[Stdcall]<IntPtr, uint, IntPtr, uint, int, IntPtr, uint, int, float, bool, int*, FVector3*, int> s_audSpeechAudioEntity__SayFunc;
 
             static Ped()
             {
@@ -3138,18 +3138,18 @@ namespace SHVDN
 
         #region -- Screen Data --
 
-        private static int* s_uiWidthAddr;
-        private static int* s_uiHeightAddr;
-        private static IntPtr s_grcDeviceAddr;
+        private static readonly int* s_uiWidthAddr;
+        private static readonly int* s_uiHeightAddr;
+        private static readonly IntPtr s_grcDeviceAddr;
         /// <remarks>
         /// May need to be called in the main thread if the game is using multiple screens.
         /// </remarks>
-        private static delegate* unmanaged[Stdcall]<IntPtr, IntPtr> s_updateMonitorConfigurationFunc;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, IntPtr> s_updateMonitorConfigurationFunc;
         /// <remarks>
         /// Returns only either 0 or 1.
         /// </remarks>
-        private static delegate* unmanaged[Stdcall]<IntPtr, bool> s_isMultiheadFunc;
-        private static delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*> s_getLandscapeMonitorFunc;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, bool> s_isMultiheadFunc;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*> s_getLandscapeMonitorFunc;
 
         internal sealed class GetMainWindowResolutionTask : IScriptTask
         {
@@ -3185,24 +3185,24 @@ namespace SHVDN
 
         #region -- Model Info --
 
-        private static int s_vehicleMakeNameOffsetInModelInfo;
-        private static int s_vehicleTypeOffsetInModelInfo;
-        private static int s_handlingIndexOffsetInModelInfo;
-        private static int s_pedPersonalityIndexOffsetInModelInfo;
-        private static UInt32 s_modelNum1;
-        private static UInt64 s_modelNum2;
-        private static UInt64 s_modelNum3;
-        private static UInt64 s_modelNum4;
-        private static UInt64 s_modelHashTable;
-        private static UInt16 s_modelHashEntries;
-        private static ulong* s_modelInfoArrayPtr;
-        private static ulong* s_pedPersonalitiesArrayAddr;
+        private static readonly int s_vehicleMakeNameOffsetInModelInfo;
+        private static readonly int s_vehicleTypeOffsetInModelInfo;
+        private static readonly int s_handlingIndexOffsetInModelInfo;
+        private static readonly int s_pedPersonalityIndexOffsetInModelInfo;
+        private static readonly UInt32 s_modelNum1;
+        private static readonly UInt64 s_modelNum2;
+        private static readonly UInt64 s_modelNum3;
+        private static readonly UInt64 s_modelNum4;
+        private static readonly UInt64 s_modelHashTable;
+        private static readonly UInt16 s_modelHashEntries;
+        private static readonly ulong* s_modelInfoArrayPtr;
+        private static readonly ulong* s_pedPersonalitiesArrayAddr;
 
-        private static ulong* s_cStreamingAddr;
-        private static int s_cStreamingAppropriateVehicleIndicesOffset;
-        private static int s_cStreamingAppropriatePedIndicesOffset;
+        private static readonly ulong* s_cStreamingAddr;
+        private static readonly int s_cStreamingAppropriateVehicleIndicesOffset;
+        private static readonly int s_cStreamingAppropriatePedIndicesOffset;
 
-        private static int s_defaultSpawningPreferenceOffset;
+        private static readonly int s_defaultSpawningPreferenceOffset;
 
         private static IntPtr FindCModelInfo(int modelHash)
         {
@@ -3484,8 +3484,8 @@ namespace SHVDN
 
         public static ReadOnlyCollection<int> PedModels { get; }
 
-        private static delegate* unmanaged[Stdcall]<IntPtr, ulong> s_getHandlingDataByHash;
-        private static delegate* unmanaged[Stdcall]<int, ulong> s_getHandlingDataByIndex;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, ulong> s_getHandlingDataByHash;
+        private static readonly delegate* unmanaged[Stdcall]<int, ulong> s_getHandlingDataByIndex;
 
         public static IntPtr GetHandlingDataByModelHash(int modelHash)
         {
@@ -3584,35 +3584,35 @@ namespace SHVDN
 
         #region -- Entity Pools --
 
-        private static ulong* s_fwScriptGuidPoolAddress;
-        private static ulong* s_pedPoolAddress;
-        private static ulong* s_objectPoolAddress;
-        private static ulong* s_pickupObjectPoolAddress;
-        private static ulong* s_vehiclePoolAddress;
-        private static ulong* s_buildingPoolAddress;
-        private static ulong* s_animatedBuildingPoolAddress;
-        private static ulong* s_interiorInstPoolAddress;
-        private static ulong* s_interiorProxyPoolAddress;
+        private static readonly ulong* s_fwScriptGuidPoolAddress;
+        private static readonly ulong* s_pedPoolAddress;
+        private static readonly ulong* s_objectPoolAddress;
+        private static readonly ulong* s_pickupObjectPoolAddress;
+        private static readonly ulong* s_vehiclePoolAddress;
+        private static readonly ulong* s_buildingPoolAddress;
+        private static readonly ulong* s_animatedBuildingPoolAddress;
+        private static readonly ulong* s_interiorInstPoolAddress;
+        private static readonly ulong* s_interiorProxyPoolAddress;
 
-        private static ulong* s_projectilePoolAddress;
-        private static int* s_projectileCountAddress;
+        private static readonly ulong* s_projectilePoolAddress;
+        private static readonly int* s_projectileCountAddress;
 
         // if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
-        private static delegate* unmanaged[Stdcall]<ulong, float*, ulong> s_entityPosFunc;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, float*, ulong> s_entityPosFunc;
         // should be rage::fwScriptGuid::CreateGuid
-        private static delegate* unmanaged[Stdcall]<ulong, int> s_createGuid;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, int> s_createGuid;
 
         internal sealed class FwScriptGuidPoolTask : IScriptTask
         {
-            private PoolType _poolType;
-            private IntPtr _poolAddress;
+            private readonly PoolType _poolType;
+            private readonly IntPtr _poolAddress;
 
-            private bool _doPosCheck = false;
-            private bool _doModelCheck = false;
-            private float _radiusSquared;
-            private FVector3? _position;
-            private HashSet<int> _modelHashes;
-            private Func<IntPtr, bool> _predicate;
+            private readonly bool _doPosCheck = false;
+            private readonly bool _doModelCheck = false;
+            private readonly float _radiusSquared;
+            private readonly FVector3? _position;
+            private readonly HashSet<int> _modelHashes;
+            private readonly Func<IntPtr, bool> _predicate;
 
             public int[] ResultHandles = Array.Empty<int>();
 
@@ -4279,9 +4279,9 @@ namespace SHVDN
 
         #region -- CPlayerInfo Data --
 
-        private static delegate* unmanaged[Stdcall]<int, ulong> s_getPlayerPedAddressFunc;
+        private static readonly delegate* unmanaged[Stdcall]<int, ulong> s_getPlayerPedAddressFunc;
 
-        private static bool* s_isGameMultiplayerAddr;
+        private static readonly bool* s_isGameMultiplayerAddr;
 
         /// <summary>
         /// The offset for max health of CPlayerInfo, which is stored as an uint16_t.
@@ -4313,10 +4313,10 @@ namespace SHVDN
         public static int CWantedTimeHiddenEvasionStartedOffset { get; }
         public static int CWantedIgnorePlayerFlagOffset { get; }
 
-        private static delegate* unmanaged[Stdcall]<IntPtr, void> s_activateSpecialAbilityFunc;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, void> s_activateSpecialAbilityFunc;
 
         // The function is for b2060 or later and static offset is for prior to b2060
-        private static delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr> s_getSpecialAbilityAddressFunc;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr> s_getSpecialAbilityAddressFunc;
         public static int PlayerPedSpecialAbilityOffset { get; }
 
         public static IntPtr GetPlayerPedAddress(int playerIndex)
@@ -4539,7 +4539,7 @@ namespace SHVDN
 
         public static unsafe class PathFind
         {
-            private static ulong s_cPathFindInstanceAddress;
+            private static readonly ulong s_cPathFindInstanceAddress;
 
             static PathFind()
             {
@@ -4655,7 +4655,7 @@ namespace SHVDN
             // Use this buffer when we get all loaded path nodes to avoid allocating new large objects for buffer space and costing a significant time, since the number of path node handles can even exceed more than 21250
             // On the other hand, each vanilla ynd file (each ynd file has nodes in an area of 512 meters x 512 meters) contains likely 100 to 1500 nodes, and getting nodes nearby 512 meters will likely get less than 1500 nodes.
             // Therefore, using this buffer won't make much difference in how many CPU cycles will be used when we get nodes in certain area
-            private static List<int> s_pathNodeBuffer = new();
+            private static readonly List<int> s_pathNodeBuffer = new();
             // The buffer can be too big to dispose fast enough (by considering a large object heap), so use a lock
             // instead of using a local variable
             private static readonly object s_pathNodeBufferLock = new();
@@ -4995,7 +4995,7 @@ namespace SHVDN
 
         #region -- HUD Data --
 
-        private static int* s_radarZoomValueAddress;
+        private static readonly int* s_radarZoomValueAddress;
 
         // We should not add a write field for this, we can just use SET_RADAR_ZOOM,
         // which also performs some other checks and sets more values.
@@ -5023,13 +5023,13 @@ namespace SHVDN
 
         #region -- Radar Blip Pool --
 
-        private static ulong* s_radarBlipPoolAddress;
-        private static int* s_possibleRadarBlipCountAddress;
-        private static int* s_unkFirstRadarBlipIndexAddress;
-        private static int* s_northRadarBlipHandleAddress;
-        private static int* s_centerRadarBlipHandleAddress;
+        private static readonly ulong* s_radarBlipPoolAddress;
+        private static readonly int* s_possibleRadarBlipCountAddress;
+        private static readonly int* s_unkFirstRadarBlipIndexAddress;
+        private static readonly int* s_northRadarBlipHandleAddress;
+        private static readonly int* s_centerRadarBlipHandleAddress;
 
-        private static delegate* unmanaged[Stdcall]<int, int, uint, void> s_setBlipParameterFunc_Color32;
+        private static readonly delegate* unmanaged[Stdcall]<int, int, uint, void> s_setBlipParameterFunc_Color32;
 
         private static bool CheckBlip(ulong blipAddress, FVector3? position, float radius, params int[] spriteTypes)
         {
@@ -5316,9 +5316,9 @@ namespace SHVDN
 
         #region -- Checkpoint Pool --
 
-        private static ulong* s_checkpointPoolAddress;
+        private static readonly ulong* s_checkpointPoolAddress;
 
-        private static delegate* unmanaged[Stdcall]<ulong> s_getCGameScriptHandlerAddressFunc;
+        private static readonly delegate* unmanaged[Stdcall]<ulong> s_getCGameScriptHandlerAddressFunc;
 
         public static int[] GetCheckpointHandles()
         {
@@ -5410,9 +5410,9 @@ namespace SHVDN
 
         #region -- Waypoint Info Array --
 
-        private static ulong* s_waypointInfoArrayStartAddress;
-        private static ulong* s_waypointInfoArrayEndAddress;
-        private static delegate* unmanaged[Stdcall]<ulong> s_getLocalPlayerPedAddressFunc;
+        private static readonly ulong* s_waypointInfoArrayStartAddress;
+        private static readonly ulong* s_waypointInfoArrayEndAddress;
+        private static readonly delegate* unmanaged[Stdcall]<ulong> s_getLocalPlayerPedAddressFunc;
 
         public static int GetWaypointBlip()
         {
@@ -5447,9 +5447,9 @@ namespace SHVDN
 
         #region -- Pool Addresses --
 
-        private static delegate* unmanaged[Stdcall]<int, ulong> s_getPtfxAddressFunc;
+        private static readonly delegate* unmanaged[Stdcall]<int, ulong> s_getPtfxAddressFunc;
         // should be CGameScriptHandler::GetScriptEntity
-        private static delegate* unmanaged[Stdcall]<int, ulong> s_getScriptEntity;
+        private static readonly delegate* unmanaged[Stdcall]<int, ulong> s_getScriptEntity;
 
         public static IntPtr GetPtfxAddress(int handle)
         {
@@ -5503,9 +5503,9 @@ namespace SHVDN
 
         // Although there are non-const variants of `GetAsProjectile*`, the vfuncs will use the same function in
         // final/production builds (with the function that returns the `this` argument and one that returns null/zero).
-        private static int s_getAsCProjectileConstVFuncOffset;
-        private static int s_getAsCProjectileRocketConstVFuncOffset;
-        private static int s_getAsCProjectileThrownConstVFuncOffset;
+        private static readonly int s_getAsCProjectileConstVFuncOffset;
+        private static readonly int s_getAsCProjectileRocketConstVFuncOffset;
+        private static readonly int s_getAsCProjectileThrownConstVFuncOffset;
 
         /// <summary>
         /// Returns the same address as the passed <c>CObject</c> address if the instance is a <c>CProjectile</c> or
@@ -5634,7 +5634,7 @@ namespace SHVDN
 
         #region -- Projectile Functions --
 
-        private static delegate* unmanaged[Stdcall]<IntPtr, int, void> s_explodeProjectileFunc;
+        private static readonly delegate* unmanaged[Stdcall]<IntPtr, int, void> s_explodeProjectileFunc;
 
         public static void ExplodeProjectile(IntPtr projectileAddress)
         {
@@ -5644,7 +5644,7 @@ namespace SHVDN
 
         internal sealed class ExplodeProjectileTask : IScriptTask
         {
-            private IntPtr _projectileAddress;
+            private readonly IntPtr _projectileAddress;
 
             internal ExplodeProjectileTask(IntPtr projectileAddress)
             {
@@ -5747,9 +5747,9 @@ namespace SHVDN
 
         #region -- Weapon Info And Ammo Info --
 
-        private static RageAtArrayPtr* s_weaponAndAmmoInfoArrayPtr;
+        private static readonly RageAtArrayPtr* s_weaponAndAmmoInfoArrayPtr;
 
-        private static HashSet<uint> s_disallowWeaponHashSetForHumanPedsOnFoot = new HashSet<uint>()
+        private static readonly HashSet<uint> s_disallowWeaponHashSetForHumanPedsOnFoot = new HashSet<uint>()
         {
             0x1B79F17,  /* weapon_briefcase_02 */
             0x166218FF, /* weapon_passenger_rocket */
@@ -5760,15 +5760,15 @@ namespace SHVDN
             0xFDBADCED, /* weapon_digiscanner */
         };
 
-        private static uint* s_weaponComponentArrayCountAddr;
+        private static readonly uint* s_weaponComponentArrayCountAddr;
         // Store the offset instead of the calculated address for compatibility with mods like Weapon Limits Adjuster by alexguirre (although Weapon Limits Adjuster allocates a new array in the very beginning).
-        private static ulong s_offsetForCWeaponComponentArrayAddr;
-        private static int s_weaponAttachPointsStartOffset;
-        private static int s_weaponAttachPointsArrayCountOffset;
-        private static int s_weaponAttachPointElementComponentCountOffset;
-        private static int s_weaponAttachPointElementSize;
+        private static readonly ulong s_offsetForCWeaponComponentArrayAddr;
+        private static readonly int s_weaponAttachPointsStartOffset;
+        private static readonly int s_weaponAttachPointsArrayCountOffset;
+        private static readonly int s_weaponAttachPointElementComponentCountOffset;
+        private static readonly int s_weaponAttachPointElementSize;
 
-        private static int s_weaponInfoHumanNameHashOffset;
+        private static readonly int s_weaponInfoHumanNameHashOffset;
 
         private static CItemInfo* FindItemInfoFromWeaponAndAmmoInfoArray(uint nameHash)
         {
@@ -6023,16 +6023,16 @@ namespace SHVDN
 
         #region -- Fragment Object for Entity --
 
-        private static int s_getFragInstVFuncOffset;
-        private static delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> s_fragInst__BreakOffAboveFunc;
-        private static ulong** s_phSimulatorInstPtr;
-        private static int s_colliderCapacityOffset;
-        private static int s_colliderCountOffset;
+        private static readonly int s_getFragInstVFuncOffset;
+        private static readonly delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*> s_fragInst__BreakOffAboveFunc;
+        private static readonly ulong** s_phSimulatorInstPtr;
+        private static readonly int s_colliderCapacityOffset;
+        private static readonly int s_colliderCountOffset;
 
         internal sealed class FragInstBreakOffAboveTask : IScriptTask
         {
-            private FragInst* _fragInst;
-            private int _componentIndex;
+            private readonly FragInst* _fragInst;
+            private readonly int _componentIndex;
             public bool WasNewFragInstCreated;
 
             internal FragInstBreakOffAboveTask(FragInst* fragInst, int componentIndex)
@@ -6235,21 +6235,21 @@ namespace SHVDN
         #region -- NaturalMotion Euphoria --
 
         // These CNmParameter functions can also be called as virtual functions for your information
-        private static delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> s_setNmParameterInt;
-        private static delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> s_setNmParameterBool;
-        private static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> s_setNmParameterFloat;
-        private static delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> s_setNmParameterString;
-        private static delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> s_setNmParameterVector;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte> s_setNmParameterInt;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte> s_setNmParameterBool;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte> s_setNmParameterFloat;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte> s_setNmParameterString;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte> s_setNmParameterVector;
 
-        private static delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong> s_initMessageMemoryFunc;
-        private static delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> s_sendNmMessageToPedFunc;
-        private static delegate* unmanaged[Stdcall]<ulong, CTask*> s_getActiveTaskFunc;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong> s_initMessageMemoryFunc;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void> s_sendNmMessageToPedFunc;
+        private static readonly delegate* unmanaged[Stdcall]<ulong, CTask*> s_getActiveTaskFunc;
 
-        private static int s_fragInstNmGtaOffset;
-        private static int s_cTaskNmScriptControlTypeIndex;
-        private static int s_cEventSwitch2NmTypeIndex;
-        private static uint s_getEventTypeIndexVFuncOffset;
-        private static uint s_fragInstNmGtaGetUnkValVFuncOffset;
+        private static readonly int s_fragInstNmGtaOffset;
+        private static readonly int s_cTaskNmScriptControlTypeIndex;
+        private static readonly int s_cEventSwitch2NmTypeIndex;
+        private static readonly uint s_getEventTypeIndexVFuncOffset;
+        private static readonly uint s_fragInstNmGtaGetUnkValVFuncOffset;
 
         public static bool IsTaskNmScriptControlOrEventSwitch2NmActive(IntPtr pedAddress)
         {
@@ -6363,10 +6363,10 @@ namespace SHVDN
 
         internal sealed class NmMessageTask : IScriptTask
         {
-            private int _targetHandle;
-            private string _messageName;
-            private Dictionary<string, (int value, Type type)> _boolIntFloatParameters;
-            private Dictionary<string, object> _stringVector3ArrayParameters;
+            private readonly int _targetHandle;
+            private readonly string _messageName;
+            private readonly Dictionary<string, (int value, Type type)> _boolIntFloatParameters;
+            private readonly Dictionary<string, object> _stringVector3ArrayParameters;
 
             internal NmMessageTask(int target, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
             {
