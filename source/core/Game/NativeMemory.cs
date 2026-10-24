@@ -24,6 +24,7 @@ namespace SHVDN
     public static unsafe class NativeMemory
     {
         #region ScriptHookV Imports
+
         /// <summary>
         /// Creates a texture. Texture deletion is performed automatically when game reloads scripts.
         /// Can be called only in the same thread as natives.
@@ -182,6 +183,7 @@ namespace SHVDN
             {
                 address = MemScanner.FindPatternBmh("\x4C\x8B\x0D\x00\x00\x00\x00\x44\x8B\xC1\x49\x8B\x41\x08", "xxx????xxxxxxx");
             }
+
             if (address != null)
             {
                 s_fwScriptGuidPoolAddress = Rel32<ulong>(address, 3);
@@ -205,11 +207,13 @@ namespace SHVDN
                 s_buildingPoolAddress = Rel32<ulong>(address, 47);
                 s_animatedBuildingPoolAddress = Rel32<ulong>(address, 15);
             }
+
             address = MemScanner.FindPatternBmh("\x83\xBB\x80\x01\x00\x00\x01\x75\x12", "xxxxxxxxx");
             if (address != null)
             {
                 s_interiorInstPoolAddress = Rel32<ulong>(address, 23);
             }
+
             address = MemScanner.FindPatternBmh("\x48\x8B\x0D\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x66\x89\x03", "xxx????x????xxx");
             if (address != null)
             {
@@ -290,11 +294,13 @@ namespace SHVDN
                 // The instruction expects a signed value, but virtual function offsets can't be negative
                 s_getEventTypeIndexVFuncOffset = (uint)*(address + 12);
             }
+
             address = MemScanner.FindPatternBmh("\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x01\x8B\x44\x24\x50", "xxx????xxxxxxx");
             if (address != null)
             {
                 byte* cEventSwitch2NmVfTableArrayAddr = Rel32(address, 0x3);
                 ulong getEventTypeOfcEventSwitch2NmFuncAddr = *(ulong*)(cEventSwitch2NmVfTableArrayAddr + s_getEventTypeIndexVFuncOffset);
+
                 s_cEventSwitch2NmTypeIndex = *(int*)(getEventTypeOfcEventSwitch2NmFuncAddr + 1);
             }
 
@@ -303,6 +309,7 @@ namespace SHVDN
             {
                 s_fragInstNmGtaOffset = *(int*)(address + 16);
             }
+
             address = MemScanner.FindPatternNaive("\xB2\x01\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x80", "xxxxxxx????x");
             if (address != null)
             {
@@ -337,21 +344,25 @@ namespace SHVDN
             {
                 s_radarBlipPoolAddress = Rel32<ulong>(address, -4);
             }
+
             address = MemScanner.FindPatternBmh("\xFF\xC6\x49\x83\xC6\x08\x3B\x35\x00\x00\x00\x00\x7C\x9B", "xxxxxxxx????xx");
             if (address != null)
             {
                 s_possibleRadarBlipCountAddress = Rel32<int>(address, 8);
             }
+
             address = MemScanner.FindPatternBmh("\x8B\x44\x0A\x20\x89\x01\x48\x8D\x49\x04\x49\xFF\xC8\x75\xF1\xF3\xC3\x48\x63\x05", "xxxxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
                 s_unkFirstRadarBlipIndexAddress = Rel32<int>(address, 20);
             }
+
             address = MemScanner.FindPatternBmh("\x41\xB8\x07\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFC", "xxxxxxxxxx????xxxx");
             if (address != null)
             {
                 s_northRadarBlipHandleAddress = Rel32<int>(address, 10);
             }
+
             address = MemScanner.FindPatternBmh("\x41\xB8\x06\x00\x00\x00\x8B\xD0\x89\x05\x00\x00\x00\x00\x41\x8D\x48\xFD", "xxxxxxxxxx????xxxx");
             if (address != null)
             {
@@ -385,6 +396,7 @@ namespace SHVDN
             {
                 s_getRotationFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int, float*>)Rel32(address, -0x14);
             }
+
             address = MemScanner.FindPatternBmh("\xF3\x0F\x11\x4D\x38\xF3\x0F\x11\x45\x3C\xE8\x00\x00\x00\x00\x0F\x28\xC6\x0F\x28\xCE\xB9\x01\x00\x00\x00\xF3\x0F\x11\x73\x10\x66\x44\x03\xE9", "xxxxxxxxxxx????xxxxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
@@ -415,6 +427,7 @@ namespace SHVDN
 
                 startAddressToSearch = new IntPtr(address);
                 address = MemScanner.FindPatternBmh("\x48\x83\xC1\x00\x48\x3B\xC2\x7C\xEF", "xxx?xxxxx", startAddressToSearch);
+
                 // the element size might be 0x10 in older builds (the size is 0x18 at least in b1604 and b2372)
                 NativeMemory.ElementSizeOfCAttackerArrayOfEntity = *(sbyte*)(address + 3);
             }
@@ -436,6 +449,7 @@ namespace SHVDN
             if (address != null)
             {
                 float* timeScaleArrayAddress = Rel32<float>(address, 4);
+
                 // SET_TIME_SCALE changes the 2nd element, so obtain the address of it
                 s_timeScaleAddress = timeScaleArrayAddress + 1;
             }
@@ -574,11 +588,13 @@ namespace SHVDN
                 int pedIntelligenceOffset = *(int*)(address + 0x11);
                 PedPlayerInfoOffset = pedIntelligenceOffset + 0x8;
             }
+
             address = MemScanner.FindPatternBmh("\x66\x0F\x6E\xF0\x0F\x5B\xF6\xE8\x00\x00\x00\x00\x0F\x28\xCE\x41\xB1\x01\x45\x33\xC0\x48\x8B\xC8\xE8", "xxxxxxxx????xxxxxxxxxxxxx");
             if (address != null)
             {
                 CPlayerInfoMaxHealthOffset = *(int*)(address - 4);
             }
+
             // None of fields on `CPlayerPedTargeting` and `CWanted` are accessed with direct offsets from
             // `CPlayerInfo` instances in the game code
             address = MemScanner.FindPatternBmh("\x48\x85\xFF\x74\x23\x48\x85\xDB\x74\x26", "xxxxxxxxxx");
@@ -586,11 +602,13 @@ namespace SHVDN
             {
                 CPlayerPedTargetingOfffset = *(int*)(address - 7);
             }
+
             address = MemScanner.FindPatternBmh("\x48\x85\xFF\x74\x3F\x48\x8B\xCF\xE8", "xxxxxxxxx");
             if (address != null)
             {
                 CWantedOffset = *(int*)(address + 0x1B);
             }
+
             address = MemScanner.FindPatternBmh("\x45\x84\xC9\x74\x32\x8B\x41\x00\x85\xC0\x74\x2B", "xxxxxxx?xxxx");
             if (address != null)
             {
@@ -599,10 +617,12 @@ namespace SHVDN
                 CurrentWantedLevelOffset = *(int*)(address + 0x17);
                 NewCrimeValueOffset = *(int*)(address + 0x1D);
             }
+
             address = MemScanner.FindPatternBmh("\xF6\x87\x00\x00\x00\x00\x02\x44\x8B\x00\x00\x00\x00\x00\x75\x0E", "xx??xxxxx?????xx");
             if (address != null)
             {
                 int isWantedStarFlashingOffset = *(int*)(address + 0x2);
+
                 // Flags for ignoring player are actually read/written as a byte in the game code, but make this value 4-byte aligned because SetBit and IsBitSet reads/writes as an int value
                 CWantedIgnorePlayerFlagOffset = isWantedStarFlashingOffset - 3;
 
@@ -610,6 +630,7 @@ namespace SHVDN
                 CWantedTimeLastSpottedOffset = CWantedTimeSearchLastRefocusedOffset + 0x4;
                 CWantedTimeHiddenEvasionStartedOffset = CWantedTimeSearchLastRefocusedOffset + 0xC;
             }
+
             address = MemScanner.FindPatternBmh("\xEB\x26\x8B\x87\x00\x00\x00\x00\x25\x00\xF8\xFF\xFF\xC1\xE0\x12", "xxxx????xxxxxxxx");
             if (address != null)
             {
@@ -617,6 +638,7 @@ namespace SHVDN
             }
 
             int gameVersion = GetGameVersion();
+
             // Two special ability slots are available in b2060 and later versions
             if (gameVersion >= 59)
             {
@@ -646,22 +668,26 @@ namespace SHVDN
             {
                 s_projectilePoolAddress = Rel32<ulong>(address, 3);
             }
+
             // Find address of the projectile count, just in case the max number of projectile changes from 50
             address = MemScanner.FindPatternBmh("\x44\x8B\x0D\x00\x00\x00\x00\x33\xDB\x45\x8A\xF8", "xxx????xxxxx");
             if (address != null)
             {
                 s_projectileCountAddress = Rel32<int>(address, 3);
             }
+
             address = MemScanner.FindPatternBmh("\x48\x85\xED\x74\x09\x48\x39\xA9\x00\x00\x00\x00\x75\x2D", "xxxxxxxx????xx");
             if (address != null)
             {
                 ProjectileOwnerOffset = *(int*)(address + 8);
             }
+
             address = MemScanner.FindPatternBmh("\x45\x85\xF6\x74\x0D\x48\x8B\x81\x00\x00\x00\x00\x44\x39\x70\x10", "xxxxxxxx????xxxx");
             if (address != null)
             {
                 ProjectileAmmoInfoOffset = *(int*)(address + 8);
             }
+
             address = MemScanner.FindPatternBmh("\x0F\x84\xBE\x00\x00\x00\x48\x8B\x0E\x48\x39\x88\x00\x00\x00\x00\x0F\x85\xAE\x00\x00\x00", "xxxxxxxxxxxx??xxxxxxxx");
             if (address != null)
             {
@@ -669,6 +695,7 @@ namespace SHVDN
                 s_getAsCProjectileConstVFuncOffset = s_getAsCProjectileRocketConstVFuncOffset - 0x10;
                 s_getAsCProjectileThrownConstVFuncOffset = s_getAsCProjectileRocketConstVFuncOffset + 0x10;
             }
+
             address = MemScanner.FindPatternBmh("\x74\x33\x48\x39\x98\x00\x00\x00\x00\x75\x2A\x48\x8B\x0F\x48\x3B\xCB", "xxxxx??xxxxxxxxxx");
             if (address != null)
             {
@@ -700,16 +727,19 @@ namespace SHVDN
                 // The offset is 0x78 in b2944, and one more v func addition before this func makes us have to create another memory pattern/signature
                 s_getFragInstVFuncOffset = *(sbyte*)(address + 0x1D);
             }
+
             address = MemScanner.FindPatternNaive("\x0F\xBE\x5E\x06\x48\x8B\xCF\xFF\x50\x00\x8B\xD3\x48\x8B\xC8\xE8\x00\x00\x00\x00\x8B\x4E", "xxxxxxxxx?xxxxxx????xx");
             if (address != null)
             {
                 s_fragInst__BreakOffAboveFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)Rel32(address, 16);
             }
+
             address = MemScanner.FindPatternBmh("\x74\x56\x48\x8B\x0D\x00\x00\x00\x00\x41\x0F\xB7\xD0\x45\x33\xC9\x45\x33\xC0", "xxxxx????xxxxxxxxxx");
             if (address != null)
             {
                 s_phSimulatorInstPtr = (ulong**)(*(int*)(address + 5) + address + 9);
             }
+
             address = MemScanner.FindPatternBmh("\xC0\xE8\x07\xA8\x01\x74\x57\x0F\xB7\x4E\x18\x85\xC9\x78\x4F", "xxxxxxxxxxxxxxx");
             if (address != null)
             {
@@ -903,6 +933,7 @@ namespace SHVDN
             PedModels = Array.AsReadOnly(pedHashes.ToArray());
 
             #region -- Enable All DLC Vehicles --
+
             // no need to patch the global variable in v1.0.573.1 or older builds
             if (gameVersion <= 15)
             {
@@ -941,6 +972,7 @@ namespace SHVDN
             {
                 enableCarsGlobalPattern = "\x2D\x00\x00\x00\x00\x2C\x01\x00\x00\x56\x04\x00\x6E\x2E\x00\x01\x5F\x00\x00\x00\x00\x04\x00\x6E\x2E\x00\x01";
             }
+
             string enableCarsGlobalMask = gameVersion >= 46 ? "x??xxxx??xxxxx?xx????xxxx?x" : "xx??xxxxxx?xx????xxxx?x";
             int enableCarsGlobalOffset = gameVersion >= 46 ? 17 : 13;
 
@@ -967,7 +999,9 @@ namespace SHVDN
         }
 
         public static IntPtr String { get; private set; } // "~a~"
+
         public static IntPtr NullString { get; private set; } // ""
+
         public static IntPtr CellEmailBcon { get; private set; } // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
 
         // Script Hook V's implementation uses `GetModuleHandleA` and searches the exe image for "FileVersion" info,
@@ -1123,9 +1157,11 @@ namespace SHVDN
             {
                 return new IntPtr(*(long*)poolAddr + (index * *(uint*)(poolAddr + 20)));
             }
+
             return IntPtr.Zero;
 
         }
+
         public static IntPtr GetGameplayCameraAddress()
         {
             return new IntPtr((long)*s_gameplayCameraAddress);
@@ -1250,6 +1286,7 @@ namespace SHVDN
         private static CrSkeleton* GetCrSkeletonOfEntity(IntPtr entityAddress)
         {
             FragInst* fragInst = GetFragInstAddressOfEntity(entityAddress);
+
             // Return value will not be null if the entity is a CVehicle or a CPed
             if (fragInst != null)
             {
@@ -1294,6 +1331,7 @@ namespace SHVDN
 
             return crSkeleton->SkeletonData->GetBoneIdByIndex(boneIndex);
         }
+
         public static void GetNextSiblingBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex, out int nextSiblingBoneIndex, out int nextSiblingBoneTag)
         {
             if (boneIndex < 0)
@@ -1313,6 +1351,7 @@ namespace SHVDN
 
             crSkeleton->SkeletonData->GetNextSiblingBoneIndexAndId(boneIndex, out nextSiblingBoneIndex, out nextSiblingBoneTag);
         }
+
         public static void GetParentBoneIndexAndIdOfEntityBoneIndex(int entityHandle, int boneIndex, out int parentBoneIndex, out int parentBoneTag)
         {
             if (boneIndex < 0)
@@ -1332,6 +1371,7 @@ namespace SHVDN
 
             crSkeleton->SkeletonData->GetParentBoneIndexAndId(boneIndex, out parentBoneIndex, out parentBoneTag);
         }
+
         public static string GetEntityBoneName(int entityHandle, int boneIndex)
         {
             if (boneIndex < 0)
@@ -1347,11 +1387,13 @@ namespace SHVDN
 
             return crSkeleton->SkeletonData->GetBoneName(boneIndex);
         }
+
         public static int GetEntityBoneCount(int handle)
         {
             CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(handle);
             return crSkeleton != null ? crSkeleton->BoneCount : 0;
         }
+
         public static IntPtr GetEntityBoneTransformMatrixAddress(int handle)
         {
             CrSkeleton* crSkeleton = GetCrSkeletonFromEntityHandle(handle);
@@ -1362,6 +1404,7 @@ namespace SHVDN
 
             return crSkeleton->GetTransformMatrixAddress();
         }
+
         public static IntPtr GetEntityBoneObjectMatrixAddress(int handle, int boneIndex)
         {
             // boneIndex cannot be negative
@@ -1383,6 +1426,7 @@ namespace SHVDN
 
             return IntPtr.Zero;
         }
+
         public static IntPtr GetEntityBoneGlobalMatrixAddress(int handle, int boneIndex)
         {
             // boneIndex cannot be negative
@@ -1421,6 +1465,7 @@ namespace SHVDN
             returnRotationArray[1] *= Rad2Deg;
             returnRotationArray[2] *= Rad2Deg;
         }
+
         public static void GetQuaternionFromMatrix(float* returnRotationArray, IntPtr matrixAddress)
         {
             s_getQuaternionFromMatrixFunc(returnRotationArray, (ulong)matrixAddress.ToInt64());
@@ -1431,11 +1476,15 @@ namespace SHVDN
         #region -- CPhysical Offsets --
 
         public static int EntityMaxHealthOffset { get; }
+
         public static int SetAngularVelocityVFuncOfEntityOffset { get; }
+
         public static int GetAngularVelocityVFuncOfEntityOffset { get; }
 
         public static int CAttackerArrayOfEntityOffset { get; }
+
         public static int ElementCountOfCAttackerArrayOfEntityOffset { get; }
+
         public static int ElementSizeOfCAttackerArrayOfEntity { get; }
 
         #endregion
@@ -1525,6 +1574,7 @@ namespace SHVDN
 
             return new EntityDamageRecordForReturnValue(attackerHandle, weaponHash, gameTime);
         }
+
         public static EntityDamageRecordForReturnValue GetEntityDamageRecordEntryAtIndex(IntPtr entityAddress, uint index)
         {
             ulong entityCAttackerArrayAddress = *(ulong*)(entityAddress + NativeMemory.CAttackerArrayOfEntityOffset).ToPointer();
@@ -1704,33 +1754,47 @@ namespace SHVDN
             #region -- Vehicle Offsets --
 
             public static int NextGearOffset { get; }
+
             public static int GearOffset { get; }
+
             public static int HighGearOffset { get; }
 
             public static int CurrentRpmOffset { get; }
+
             public static int ClutchOffset { get; }
+
             public static int AccelerationOffset { get; }
 
             public static int CVehicleEngineOffset { get; }
+
             public static int CVehicleEngineTurboOffset { get; }
 
             public static int FuelLevelOffset { get; }
+
             public static int OilLevelOffset { get; }
 
             public static int VehicleTypeOffset { get; }
 
             public static int WheelPtrArrayOffset { get; }
+
             public static int WheelCountOffset { get; }
+
             public static int WheelBoneIdToPtrArrayIndexOffset { get; }
+
             public static int WheelSpeedOffset { get; }
+
             public static int CanWheelBreakOffset { get; }
 
             public static int SteeringAngleOffset { get; }
+
             public static int SteeringScaleOffset { get; }
+
             public static int ThrottlePowerOffset { get; }
+
             public static int BrakePowerOffset { get; }
 
             public static int EngineTemperatureOffset { get; }
+
             public static int EnginePowerMultiplierOffset { get; }
 
             public static int DisablePretendOccupantOffset { get; }
@@ -1740,6 +1804,7 @@ namespace SHVDN
             public static int LightsMultiplierOffset { get; }
 
             public static int IsInteriorLightOnOffset { get; }
+
             public static int IsEngineStartingOffset { get; }
 
             public static int IsWantedOffset { get; }
@@ -1747,6 +1812,7 @@ namespace SHVDN
             public static int IsHeadlightDamagedOffset { get; }
 
             public static int PreviouslyOwnedByPlayerOffset { get; }
+
             public static int NeedsToBeHotwiredOffset { get; }
 
             public static int AlarmTimeOffset { get; }
@@ -1754,7 +1820,9 @@ namespace SHVDN
             public static int LodMultiplierOffset { get; }
 
             public static int CanUseSirenOffset { get; }
+
             public static int HasMutedSirensOffset { get; }
+
             public static int HasMutedSirensBit { get; }
 
             public static int SirenBufferOffset { get; }
@@ -1764,7 +1832,9 @@ namespace SHVDN
             public static int HeliBladesSpeedOffset { get; }
 
             public static int HeliMainRotorHealthOffset { get; }
+
             public static int HeliTailRotorHealthOffset { get; }
+
             public static int HeliTailBoomHealthOffset { get; }
 
             public static int HandlingDataOffset { get; }
@@ -1778,6 +1848,7 @@ namespace SHVDN
             private static int AudVehicleAudioEntityOffset { get; }
 
             public static int AudVehicleAudioEntity__IsHornEnabledOffset { get; }
+
             public static int AudVehicleAudioEntity__IsHornEnabledBitTest { get; }
 
             static Vehicle()
@@ -1805,6 +1876,7 @@ namespace SHVDN
                 {
                     FuelLevelOffset = *(int*)(address + 8);
                 }
+
                 address = MemScanner.FindPatternBmh("\x74\x2D\x0F\x57\xC0\x0F\x2F\x83", "xxxxxxxx");
                 if (address != null)
                 {
@@ -1949,6 +2021,7 @@ namespace SHVDN
                     HasMutedSirensBit = *(address + 13); // the bit is changed between b372 and b2802
                     CanUseSirenOffset = *(int*)(address + 23);
                 }
+
                 address = MemScanner.FindPatternBmh("\xC1\xE9\x1C\xC0\xE1\x06\x32\xC8\x80\xE1\x40\x32\xC8\x88\x8E", "xxxxxxxxxxxxxxx");
                 if (address != null)
                 {
@@ -2158,6 +2231,7 @@ namespace SHVDN
 
                 return *(float*)(vehEngineStructAddr + CVehicleEngineTurboOffset);
             }
+
             public static void SetTurbo(int handle, float value)
             {
                 if (CVehicleEngineTurboOffset == 0)
@@ -2188,9 +2262,13 @@ namespace SHVDN
             }
 
             public static int SpecialFlightModeAllowedOffset { get; }
+
             public static int SpecialFlightTargetRatioOffset { get; }
+
             public static int SpecialFlightWingRatioOffset { get; }
+
             public static int SpecialFlightCurrentRatioOffset { get; }
+
             public static int SpecialFlightAreWingsDisabledOffset { get; }
 
             public static bool HasMutedSirens(int vehicleHandle)
@@ -2277,11 +2355,13 @@ namespace SHVDN
             public static int CWheelTireHealthOffset { get; }
 
             public static int CWheelTireWearRateOffset { get; }
+
             /// <summary>
             /// This value only affects how fast a vehicle tire health decreases, which is different from
             /// <see cref="CWheelTireWearRateOffset"/>.
             /// </summary>
             public static int CWheelMaxGripDiffFromWearRateOffset { get; }
+
             public static int CWheelWearRateScaleOffset { get; }
 
             /// <summary>
@@ -2423,6 +2503,7 @@ namespace SHVDN
 
             return new IntPtr(*(long*)(entityAddress + s_objParentEntityAddressDetachedFromOffset));
         }
+
         public static int GetParentEntityHandleOfPropDetachedFrom(int objHandle)
         {
             IntPtr parentEntityAddr = GetParentEntityOfPropDetachedFrom(objHandle);
@@ -2433,6 +2514,7 @@ namespace SHVDN
 
             return GetEntityHandleFromAddress(parentEntityAddr);
         }
+
         public static bool HasPropBeenDetachedFromParentEntity(int objHandle) => GetParentEntityOfPropDetachedFrom(objHandle) != IntPtr.Zero;
 
         #endregion -- Prop Data --
@@ -2522,6 +2604,7 @@ namespace SHVDN
                     IsInVehicleOffset = *(int*)(address + 12);
                     LastVehicleOffset = *(int*)(address + 0x1A);
                 }
+
                 address = MemScanner.FindPatternBmh("\x24\x3F\x0F\xB6\xC0\x66\x89\x87", "xxxxxxxx");
                 if (address != null)
                 {
@@ -2707,8 +2790,11 @@ namespace SHVDN
             #region -- Ped Offsets --
 
             public static int LowerWetnessHeightOffset { get; }
+
             public static int UpperWetnessHeightOffset { get; }
+
             public static int LowerWetnessLevelOffset { get; }
+
             public static int UpperWetnessLevelOffset { get; }
 
             public static int IsUsingWetEffectOffset { get; }
@@ -2732,10 +2818,13 @@ namespace SHVDN
             public static int ArmorOffset { get; }
 
             public static int InjuryHealthThresholdOffset { get; }
+
             public static int FatalInjuryHealthThresholdOffset { get; }
 
             public static int IsInVehicleOffset { get; }
+
             public static int LastVehicleOffset { get; }
+
             /// <summary>
             /// Contains the offset of <c>CPed.m_nAttachCarSeatIndex</c>, which is supposed to be <c>int16_t</c>.
             /// </summary>
@@ -2751,7 +2840,9 @@ namespace SHVDN
             public static int GroundPhysicalOffset { get; }
 
             public static int SourceOfDeathOffset { get; }
+
             public static int CauseOfDeathOffset { get; }
+
             public static int TimeOfDeathOffset { get; }
 
             public static int KnockOffVehicleTypeOffset { get; }
@@ -2770,7 +2861,9 @@ namespace SHVDN
             public static int AudSpeechAudioEntity__AmbientVoiceNameHashOffset { get; }
 
             public static int AudSpeechAudioEntity__DisablePainOffset { get; }
+
             public static int AudSpeechAudioEntity__SpeakingDisabledOffset { get; }
+
             public static int AudSpeechAudioEntity__SpeakingDisabledSyncedOffset { get; }
 
             #region -- Ped Intelligence Offsets --
@@ -2782,12 +2875,19 @@ namespace SHVDN
             public static int PedIntelligenceDecisionMakerHashOffset { get; }
 
             public static int SeeingRangeOffset { get; }
+
             public static int HearingRangeOffset { get; }
+
             public static int VisualFieldMinAngleOffset { get; }
+
             public static int VisualFieldMaxAngleOffset { get; }
+
             public static int VisualFieldMinElevationAngleOffset { get; }
+
             public static int VisualFieldMaxElevationAngleOffset { get; }
+
             public static int VisualFieldPeripheralRangeOffset { get; }
+
             public static int VisualFieldCenterAngleOffset { get; }
 
             public static int CTaskTreePedOffset { get; }
@@ -2801,6 +2901,7 @@ namespace SHVDN
             public static int PedIntelligenceCombatTargetPedAddressOffset { get; }
 
             public static int PedIntelligenceCurrentScriptTaskHashOffset { get; }
+
             public static int PedIntelligenceCurrentScriptTaskStatusOffset { get; }
 
             #endregion
@@ -2962,6 +3063,7 @@ namespace SHVDN
 
                         uint slotHashOfCurrentItem = *(uint*)currentItem;
                         CItemInfo* weaponInfo = *(CItemInfo**)(currentItem + 0x8);
+
                         if (slotHashOfCurrentItem == slotHash && weaponInfo != null)
                         {
                             weaponHash = weaponInfo->NameHash;
@@ -3133,10 +3235,12 @@ namespace SHVDN
         private static readonly int* s_uiWidthAddr;
         private static readonly int* s_uiHeightAddr;
         private static readonly IntPtr s_grcDeviceAddr;
+
         /// <remarks>
         /// May need to be called in the main thread if the game is using multiple screens.
         /// </remarks>
         private static readonly delegate* unmanaged[Stdcall]<IntPtr, IntPtr> s_updateMonitorConfigurationFunc;
+
         /// <remarks>
         /// Returns only either 0 or 1.
         /// </remarks>
@@ -3253,6 +3357,7 @@ namespace SHVDN
             return (VehicleType)typeInt;
 
         }
+
         public static int GetVehicleType(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
@@ -3284,6 +3389,7 @@ namespace SHVDN
 
             return 0;
         }
+
         public static int GetModelHashFromEntity(IntPtr entityAddress)
         {
             if (entityAddress == IntPtr.Zero)
@@ -3310,6 +3416,7 @@ namespace SHVDN
 
             return false;
         }
+
         public static bool IsModelAFragment(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
@@ -3332,14 +3439,17 @@ namespace SHVDN
 
             return new IntPtr(*(long*)(modelInfoArrayFirstElemPtr + index * 0x8));
         }
+
         public static List<int> GetLoadedAppropriateVehicleHashes()
         {
             return GetLoadedHashesOfModelList(s_cStreamingAppropriateVehicleIndicesOffset);
         }
+
         public static List<int> GetLoadedAppropriatePedHashes()
         {
             return GetLoadedHashesOfModelList(s_cStreamingAppropriatePedIndicesOffset);
         }
+
         internal static List<int> GetLoadedHashesOfModelList(int startOffsetOfCStreaming)
         {
             if (s_modelInfoArrayPtr == null || s_cStreamingAddr == null)
@@ -3371,31 +3481,37 @@ namespace SHVDN
             IntPtr modelInfo = FindCModelInfo(modelHash);
             return GetModelInfoType(modelInfo) == ModelInfoType.Ped;
         }
+
         public static bool IsModelABlimp(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
             return GetVehicleStructClass(modelInfo) == VehicleType.Blimp;
         }
+
         public static bool IsModelAMotorcycle(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
             return GetVehicleStructClass(modelInfo) == VehicleType.Bike;
         }
+
         public static bool IsModelASubmarine(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
             return GetVehicleStructClass(modelInfo) == VehicleType.Submarine;
         }
+
         public static bool IsModelASubmarineCar(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
             return GetVehicleStructClass(modelInfo) == VehicleType.SubmarineCar;
         }
+
         public static bool IsModelATrailer(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
             return GetVehicleStructClass(modelInfo) == VehicleType.Trailer;
         }
+
         public static bool IsModelAMlo(int modelHash)
         {
             IntPtr modelInfo = FindCModelInfo(modelHash);
@@ -3449,7 +3565,9 @@ namespace SHVDN
         }
 
         public static bool HasVehicleFlag(int modelHash, VehicleFlags flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x0);
+
         public static bool HasVehicleFlag(int modelHash, VehicleModelInfoFlags flag) => HasVehicleFlagInternal(modelHash, (ulong)flag, 0x8);
+
         private static bool HasVehicleFlagInternal(int modelHash, ulong flag, int flagOffset)
         {
             if (Vehicle.FirstVehicleFlagsOffset == 0)
@@ -3469,7 +3587,9 @@ namespace SHVDN
         }
 
         public static ReadOnlyCollection<int> WeaponModels { get; }
+
         public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModels { get; }
+
         public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModelsGroupedByType { get; }
 
         public static ReadOnlyCollection<int> PedModels { get; }
@@ -3488,6 +3608,7 @@ namespace SHVDN
             int handlingIndex = *(int*)(modelInfo + s_handlingIndexOffsetInModelInfo).ToPointer();
             return new IntPtr((long)s_getHandlingDataByIndex(handlingIndex));
         }
+
         public static IntPtr GetHandlingDataByHandlingNameHash(int handlingNameHash)
         {
             return new IntPtr((long)s_getHandlingDataByHash(new IntPtr(&handlingNameHash)));
@@ -3514,6 +3635,7 @@ namespace SHVDN
             ushort indexOfPedPersonality = *(ushort*)(modelInfoAddress + s_pedPersonalityIndexOffsetInModelInfo).ToPointer();
             return (PersonalityData*)(*s_pedPersonalitiesArrayAddr + (uint)(indexOfPedPersonality * PedPersonalityElementSize));
         }
+
         public static bool IsModelAMalePed(int modelHash)
         {
             PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
@@ -3525,6 +3647,7 @@ namespace SHVDN
 
             return pedPersonalityAddress->IsMale;
         }
+
         public static bool IsModelAFemalePed(int modelHash)
         {
             PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
@@ -3536,6 +3659,7 @@ namespace SHVDN
 
             return !pedPersonalityAddress->IsMale;
         }
+
         public static bool IsModelHumanPed(int modelHash)
         {
             PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
@@ -3547,6 +3671,7 @@ namespace SHVDN
 
             return pedPersonalityAddress->IsHuman;
         }
+
         public static bool IsModelAnAnimalPed(int modelHash)
         {
             PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
@@ -3558,6 +3683,7 @@ namespace SHVDN
 
             return !pedPersonalityAddress->IsHuman;
         }
+
         public static bool IsModelAGangPed(int modelHash)
         {
             PersonalityData* pedPersonalityAddress = GetModelPersonalityDataAddress(FindCModelInfo(modelHash));
@@ -3589,6 +3715,7 @@ namespace SHVDN
 
         // if the entity is a ped and they are in a vehicle, the vehicle position will be returned instead (just like GET_ENTITY_COORDS does)
         private static readonly delegate* unmanaged[Stdcall]<ulong, float*, ulong> s_entityPosFunc;
+
         // should be rage::fwScriptGuid::CreateGuid
         private static readonly delegate* unmanaged[Stdcall]<ulong, int> s_createGuid;
 
@@ -3611,6 +3738,7 @@ namespace SHVDN
                 _poolType = type;
                 _poolAddress = poolAddress;
             }
+
             internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, int[] modelHashes)
                 : this(type, poolAddress)
             {
@@ -3622,11 +3750,13 @@ namespace SHVDN
                 _doModelCheck = true;
                 _modelHashes = new HashSet<int>(modelHashes);
             }
+
             internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, Func<IntPtr, bool> predicate)
                 : this(type, poolAddress)
             {
                 _predicate = predicate;
             }
+
             internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress, FVector3 position, float radiusSquared,
                 int[] modelHashes = null, Func<IntPtr, bool> predicate = null) : this(type, poolAddress)
             {
@@ -3854,12 +3984,19 @@ namespace SHVDN
         }
 
         public static int GetPedCount() => s_pedPoolAddress != null ? GetFwBasePoolCount(*s_pedPoolAddress) : 0;
+
         public static int GetObjectCount() => s_objectPoolAddress != null ? GetFwBasePoolCount(*s_objectPoolAddress) : 0;
+
         public static int GetPickupObjectCount() => s_pickupObjectPoolAddress != null ? GetFwBasePoolCount(*s_pickupObjectPoolAddress) : 0;
+
         public static int GetBuildingCount() => s_buildingPoolAddress != null ? GetFwBasePoolCount(*s_buildingPoolAddress) : 0;
+
         public static int GetAnimatedBuildingCount() => s_animatedBuildingPoolAddress != null ? GetFwBasePoolCount(*s_animatedBuildingPoolAddress) : 0;
+
         public static int GetInteriorInstCount() => s_interiorInstPoolAddress != null ? GetFwBasePoolCount(*s_interiorInstPoolAddress) : 0;
+
         public static int GetInteriorProxyCount() => s_interiorProxyPoolAddress != null ? GetFwBasePoolCount(*s_interiorProxyPoolAddress) : 0;
+
         public static int GetProjectileCount() => s_projectileCountAddress != null ? *s_projectileCountAddress : 0;
 
         private static int GetFwBasePoolCount(ulong address)
@@ -3878,13 +4015,21 @@ namespace SHVDN
             RageSysMemPoolAllocator* pool = *(RageSysMemPoolAllocator**)(*s_vehiclePoolAddress);
             return (int)pool->Size;
         }
+
         public static int GetPedCapacity() => s_pedPoolAddress != null ? GetFwBasePoolCapacity(*s_pedPoolAddress) : 0;
+
         public static int GetObjectCapacity() => s_objectPoolAddress != null ? GetFwBasePoolCapacity(*s_objectPoolAddress) : 0;
+
         public static int GetPickupObjectCapacity() => s_pickupObjectPoolAddress != null ? GetFwBasePoolCapacity(*s_pickupObjectPoolAddress) : 0;
+
         public static int GetBuildingCapacity() => s_buildingPoolAddress != null ? GetFwBasePoolCapacity(*s_buildingPoolAddress) : 0;
+
         public static int GetAnimatedBuildingCapacity() => s_animatedBuildingPoolAddress != null ? GetFwBasePoolCapacity(*s_animatedBuildingPoolAddress) : 0;
+
         public static int GetInteriorInstCapacity() => s_interiorInstPoolAddress != null ? GetFwBasePoolCapacity(*s_interiorInstPoolAddress) : 0;
+
         public static int GetInteriorProxyCapacity() => s_interiorProxyPoolAddress != null ? GetFwBasePoolCapacity(*s_interiorProxyPoolAddress) : 0;
+
         // The max number of projectile has not been changed from 50
         public static int GetProjectileCapacity() => 50;
 
@@ -3898,6 +4043,7 @@ namespace SHVDN
         {
             return GetGuidsInFwBasePool(NativeMemory.s_pedPoolAddress, modelHashes);
         }
+
         public static int[] GetPedHandles(FVector3 position, float radius, int[] modelHashes = null)
         {
             return GetGuidsInFwBasePool(NativeMemory.s_pedPoolAddress, position, radius, modelHashes);
@@ -3907,6 +4053,7 @@ namespace SHVDN
         {
             return GetGuidsInFwBasePool(NativeMemory.s_objectPoolAddress, modelHashes);
         }
+
         public static int[] GetPropHandles(FVector3 position, float radius, int[] modelHashes = null)
         {
             return GetGuidsInFwBasePool(NativeMemory.s_objectPoolAddress, position, radius, modelHashes);
@@ -3920,6 +4067,7 @@ namespace SHVDN
 
             return BuildOneArrayFromElementsOfEntityHandleArrays(vehicleHandles, pedHandles, propHandles);
         }
+
         public static int[] GetEntityHandles(FVector3 position, float radius)
         {
             int[] vehicleHandles = GetVehicleHandles(position, radius);
@@ -3955,6 +4103,7 @@ namespace SHVDN
 
             return task.ResultHandles;
         }
+
         public static int[] GetVehicleHandles(FVector3 position, float radius, int[] modelHashes = null)
         {
             if (*NativeMemory.s_vehiclePoolAddress == 0)
@@ -3974,10 +4123,12 @@ namespace SHVDN
         {
             return GetGuidsInFwBasePool(NativeMemory.s_pickupObjectPoolAddress);
         }
+
         public static int[] GetPickupObjectHandles(FVector3 position, float radius)
         {
             return GetGuidsInFwBasePool(NativeMemory.s_pickupObjectPoolAddress, position, radius);
         }
+
         public static int[] GetProjectileHandles()
         {
             if (NativeMemory.s_projectilePoolAddress == null)
@@ -3990,6 +4141,7 @@ namespace SHVDN
 
             return task.ResultHandles;
         }
+
         public static int[] GetProjectileHandles(FVector3 position, float radius)
         {
             if (NativeMemory.s_projectilePoolAddress == null)
@@ -4000,10 +4152,12 @@ namespace SHVDN
             var task = new FwScriptGuidPoolTask(
                 PoolType.Projectile,
                 new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius);
+
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
             return task.ResultHandles;
         }
+
         public static int[] GetRocketProjectileHandles()
         {
             if (NativeMemory.s_projectilePoolAddress == null)
@@ -4018,6 +4172,7 @@ namespace SHVDN
 
             return task.ResultHandles;
         }
+
         public static int[] GetRocketProjectileHandles(FVector3 position, float radius)
         {
             if (NativeMemory.s_projectilePoolAddress == null)
@@ -4032,6 +4187,7 @@ namespace SHVDN
 
             return task.ResultHandles;
         }
+
         public static int[] GetThrownProjectileHandles()
         {
             if (NativeMemory.s_projectilePoolAddress == null)
@@ -4046,6 +4202,7 @@ namespace SHVDN
 
             return task.ResultHandles;
         }
+
         public static int[] GetThrownProjectileHandles(FVector3 position, float radius)
         {
             if (NativeMemory.s_projectilePoolAddress == null)
@@ -4075,6 +4232,7 @@ namespace SHVDN
 
             return task.ResultHandles;
         }
+
         private static int[] GetGuidsInFwBasePool(ulong* ptrOfPoolPtr, int[] modelHashes)
         {
             var fwBasePool = new IntPtr((FwBasePool*)(*ptrOfPoolPtr));
@@ -4089,6 +4247,7 @@ namespace SHVDN
 
             return task.ResultHandles;
         }
+
         private static int[] GetGuidsInFwBasePool(ulong* ptrOfPoolPtr, FVector3 position, float radius, int[] modelHashes = null)
         {
             var fwBasePool = new IntPtr((FwBasePool*)(*ptrOfPoolPtr));
@@ -4213,8 +4372,11 @@ namespace SHVDN
         }
 
         public static bool BuildingHandleExists(int handle) => s_buildingPoolAddress != null && ((FwBasePool*)(*s_buildingPoolAddress))->IsHandleValid(handle);
+
         public static bool AnimatedBuildingHandleExists(int handle) => s_animatedBuildingPoolAddress != null && ((FwBasePool*)(*s_animatedBuildingPoolAddress))->IsHandleValid(handle);
+
         public static bool InteriorInstHandleExists(int handle) => s_interiorInstPoolAddress != null && ((FwBasePool*)(*s_interiorInstPoolAddress))->IsHandleValid(handle);
+
         public static bool InteriorProxyHandleExists(int handle) => s_interiorProxyPoolAddress != null && ((FwBasePool*)(*s_interiorProxyPoolAddress))->IsHandleValid(handle);
 
         private static int[] GetHandlesInFwBasePool(ulong poolAddress)
@@ -4280,46 +4442,62 @@ namespace SHVDN
         /// The offset for max health of CPlayerInfo, which is stored as an uint16_t.
         /// </summary>
         public static int CPlayerInfoMaxHealthOffset { get; }
+
         public static int CPlayerInfoCanLeaveParachuteSmokeTrailOffset { get; }
+
         public static int CPlayerInfoCanLeaveParachuteSmokeTrailBit { get; }
+
         public static int CPlayerInfoRunSprintSpeedMultiplierOffset { get; }
+
         public static int CPlayerInfoSwimSpeedMultiplierOffset { get; }
 
         public static int PedPlayerInfoOffset { set; get; }
+
         public static int CWantedOffset { get; }
+
         public static int CPlayerPedTargetingOfffset { get; }
 
         public static int CurrentWantedLevelOffset { get; }
+
         /// <remarks>
         /// "current crime value" is a name we named. The canonical name of the corresponding name on `CWanted` is
         /// `m_nWantedLevel` (do not confuse with `m_WantedLevel`, which is basically the number of stars).
         /// </remarks>
         public static int CurrentCrimeValueOffset { get; }
+
         /// <remarks>
         /// "pending crime value" is a name we named. The canonical name of the corresponding name on `CWanted` is
         /// `m_nNewWantedLevel`.
         /// </remarks>
         public static int NewCrimeValueOffset { get; }
+
         public static int TimeWhenNewCrimeValueTakesEffectOffset { get; }
+
         public static int CWantedTimeSearchLastRefocusedOffset { get; }
+
         public static int CWantedTimeLastSpottedOffset { get; }
+
         public static int CWantedTimeHiddenEvasionStartedOffset { get; }
+
         public static int CWantedIgnorePlayerFlagOffset { get; }
 
         private static readonly delegate* unmanaged[Stdcall]<IntPtr, void> s_activateSpecialAbilityFunc;
 
         // The function is for b2060 or later and static offset is for prior to b2060
         private static readonly delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr> s_getSpecialAbilityAddressFunc;
+
         public static int PlayerPedSpecialAbilityOffset { get; }
 
         public static IntPtr GetPlayerPedAddress(int playerIndex)
             => s_getPlayerPedAddressFunc != null
                 ? new IntPtr((long)s_getPlayerPedAddressFunc(playerIndex))
                 : IntPtr.Zero;
+
         public static IntPtr GetLocalPlayerPedAddress()
             => s_getLocalPlayerPedAddressFunc != null
                 ? new IntPtr((long)s_getLocalPlayerPedAddressFunc())
                 : IntPtr.Zero;
+
         public static int GetPlayerPedHandle(int handle)
         {
             IntPtr playerPedAddress = GetPlayerPedAddress(handle);
@@ -4327,6 +4505,7 @@ namespace SHVDN
             {
                 return GetPlayerPedHandleViaNativeCall(handle);
             }
+
             return GetEntityHandleFromAddress(playerPedAddress);
 
             static int GetPlayerPedHandleViaNativeCall(int handle)
@@ -4344,6 +4523,7 @@ namespace SHVDN
                 return *(int*)resultAddr;
             }
         }
+
         public static int GetLocalPlayerPedHandle()
         {
             IntPtr localPlayerPedAddress = GetLocalPlayerPedAddress();
@@ -4351,6 +4531,7 @@ namespace SHVDN
             {
                 return GetLocalPlayerPedHandleViaNativeCall();
             }
+
             return GetEntityHandleFromAddress(localPlayerPedAddress);
 
             static int GetLocalPlayerPedHandleViaNativeCall()
@@ -4365,6 +4546,7 @@ namespace SHVDN
                 return *(int*)resultAddr;
             }
         }
+
         public static int GetLocalPlayerIndex()
         {
             if (s_isGameMultiplayerAddr == null || *s_isGameMultiplayerAddr)
@@ -4410,6 +4592,7 @@ namespace SHVDN
 
             return new IntPtr(playerInfoAddr);
         }
+
         public static IntPtr GetCPlayerPedTargetingAddress(int playerIndex)
         {
             if (CPlayerPedTargetingOfffset == 0)
@@ -4425,6 +4608,7 @@ namespace SHVDN
 
             return new IntPtr((long)((ulong)cPlayerInfoAddr + (uint)CPlayerPedTargetingOfffset));
         }
+
         public static IntPtr GetCWantedAddress(int playerIndex)
         {
             if (CWantedOffset == 0)
@@ -4479,6 +4663,7 @@ namespace SHVDN
             var task = new ActivateSpecialAbilityTask(specialAbilityAddr);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
         }
+
         public static IntPtr GetPrimarySpecialAbilityStructAddress(int playerIndex)
         {
             IntPtr playerPedAddress = GetPlayerPedAddress(playerIndex);
@@ -4649,6 +4834,7 @@ namespace SHVDN
             // On the other hand, each vanilla ynd file (each ynd file has nodes in an area of 512 meters x 512 meters) contains likely 100 to 1500 nodes, and getting nodes nearby 512 meters will likely get less than 1500 nodes.
             // Therefore, using this buffer won't make much difference in how many CPU cycles will be used when we get nodes in certain area
             private static readonly List<int> s_pathNodeBuffer = new();
+
             // The buffer can be too big to dispose fast enough (by considering a large object heap), so use a lock
             // instead of using a local variable
             private static readonly object s_pathNodeBufferLock = new();
@@ -4805,6 +4991,7 @@ namespace SHVDN
                 {
                     result[i] = pathNodeLinkStartId + i;
                 }
+
                 return result;
             }
 
@@ -4863,6 +5050,7 @@ namespace SHVDN
                 {
                     return 0;
                 }
+
                 CPathNodeLink* pathNodeLink = pathRegionOfNodeLink->GetPathNodeLink((uint)nodeLinkIndex);
                 if (pathNodeLink == null)
                 {
@@ -4875,6 +5063,7 @@ namespace SHVDN
                 {
                     return 0;
                 }
+
                 CPathNode* targetPathNode = pathRegionOfTargetNode->GetPathNode((uint)targetNodeId);
                 if (targetPathNode == null)
                 {
@@ -4890,6 +5079,7 @@ namespace SHVDN
                 {
                     return false;
                 }
+
                 if (!vehPathNode->IsInCircle(x, y, z, maxDistRadius))
                 {
                     return false;
@@ -4904,6 +5094,7 @@ namespace SHVDN
                 {
                     return false;
                 }
+
                 if (!vehPathNode->IsInArea(minX, minY, minZ, maxX, maxY, maxZ))
                 {
                     return false;
@@ -4969,6 +5160,7 @@ namespace SHVDN
                 int indexUnclamped = (int)((val + 8192f) / 512);
                 return Math.Min(Math.Max(indexUnclamped, 0), 31);
             }
+
             private static uint ComposeAreaIdByIndex(int x, int y) => (uint)(x + y * 0x20);
 
             // Nodes at bound can be included in either area (e.g. a vehicle node at (0, 263, 10) can be included in either of the ynd files for the area IDs 527 (0x20F) or 528 (0x210))
@@ -5063,6 +5255,7 @@ namespace SHVDN
             {
                 return -1;
             }
+
             ushort blipIndex = (ushort)handle;
             ulong blipAddress = *(s_radarBlipPoolAddress + blipIndex);
             if (blipAddress == 0)
@@ -5078,10 +5271,12 @@ namespace SHVDN
 
             return (short)blipIndex;
         }
+
         public static int[] GetNonCriticalRadarBlipHandles(params int[] spriteTypes)
         {
             return GetNonCriticalRadarBlipHandles(null, 0f, spriteTypes);
         }
+
         public static int[] GetNonCriticalRadarBlipHandles(FVector3? position = default, float radius = 0f, params int[] spriteTypes)
         {
             if (s_radarBlipPoolAddress == null)
@@ -5440,6 +5635,7 @@ namespace SHVDN
         #region -- Pool Addresses --
 
         private static readonly delegate* unmanaged[Stdcall]<int, ulong> s_getPtfxAddressFunc;
+
         // should be CGameScriptHandler::GetScriptEntity
         private static readonly delegate* unmanaged[Stdcall]<int, ulong> s_getScriptEntity;
 
@@ -5447,6 +5643,7 @@ namespace SHVDN
         {
             return new IntPtr((long)s_getPtfxAddressFunc(handle));
         }
+
         public static IntPtr GetEntityAddress(int handle)
         {
             return new IntPtr((long)s_getScriptEntity(handle));
@@ -5461,6 +5658,7 @@ namespace SHVDN
 
             return ((FwBasePool*)(*NativeMemory.s_buildingPoolAddress))->GetAddressFromHandle(handle);
         }
+
         public static IntPtr GetAnimatedBuildingAddress(int handle)
         {
             if (s_animatedBuildingPoolAddress == null)
@@ -5470,6 +5668,7 @@ namespace SHVDN
 
             return ((FwBasePool*)(*NativeMemory.s_animatedBuildingPoolAddress))->GetAddressFromHandle(handle);
         }
+
         public static IntPtr GetInteriorInstAddress(int handle)
         {
             if (s_interiorInstPoolAddress == null)
@@ -5479,6 +5678,7 @@ namespace SHVDN
 
             return ((FwBasePool*)(*NativeMemory.s_interiorInstPoolAddress))->GetAddressFromHandle(handle);
         }
+
         public static IntPtr GetInteriorProxyAddress(int handle)
         {
             if (s_interiorProxyPoolAddress == null)
@@ -5520,6 +5720,7 @@ namespace SHVDN
 
             return getAsCProjectileConstVFunc(cObjectAddress);
         }
+
         /// <summary>
         /// Returns the same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>.
         /// </summary>
@@ -5540,6 +5741,7 @@ namespace SHVDN
 
             return getAsCProjectileRocketConstVFunc(cObjectAddress);
         }
+
         /// <summary>
         /// Returns the same address as the passed <c>CObject</c> address if the instance is a <c>CProjectileRocket</c>.
         /// </summary>
@@ -5577,6 +5779,7 @@ namespace SHVDN
         #region -- Projectile Offsets --
 
         public static int ProjectileAmmoInfoOffset { get; }
+
         public static int ProjectileOwnerOffset { get; }
 
         #region -- Projectile Rocket Offsets --
@@ -5584,7 +5787,9 @@ namespace SHVDN
         // `CProjectileRocket` has additional members and the layout of `CProjectileRocket` self hasn't changed
         // between b372 and b3095
         public static int ProjectileRocketCachedTargetPosOffset { get; }
+
         public static int ProjectileRocketLaunchDirOffset { get; }
+
         public static int ProjectileRocketTargetOffset { get; }
 
         // We should provide an option to access individual flight model inputs, as the yaw field may be in a different
@@ -5592,7 +5797,9 @@ namespace SHVDN
         // [`CProjectileRocket` + 0x648] and [`CProjectileRocket` + 0x650] respectively but the first digits are
         // the same in all builds between b372 and b3095.
         public static int ProjectileRocketFlightModelInputPitchOffset { get; }
+
         public static int ProjectileRocketFlightModelInputRollOffset { get; }
+
         public static int ProjectileRocketFlightModelInputYawOffset { get; }
 
         /*
@@ -5601,8 +5808,11 @@ namespace SHVDN
          */
 
         public static int ProjectileRocketTimeBeforeHomingOffset { get; }
+
         public static int ProjectileRocketTimeBeforeHomingAngleBreakOffset { get; }
+
         public static int ProjectileRocketLauncherSpeedOffset { get; }
+
         public static int ProjectileRocketTimeSinceLaunchOffset { get; }
 
         /*
@@ -5617,6 +5827,7 @@ namespace SHVDN
         /// `<c>m_bTorpHasBeenOutOfWater</c>` (in said order).
         /// </summary>
         public static int ProjectileRocketFlagsOffset { get; }
+
         public static int ProjectileRocketCachedDirectionOffset { get; }
 
         #endregion
@@ -5653,6 +5864,7 @@ namespace SHVDN
         #region -- Interior Offsets --
 
         public static ulong* InteriorProxyPtrFromGameplayCamAddress { get; }
+
         public static int InteriorInstPtrInInteriorProxyOffset { get; }
 
         public static int GetAssociatedInteriorInstHandleFromInteriorProxy(int interiorProxyHandle)
@@ -5676,6 +5888,7 @@ namespace SHVDN
 
             return ((FwBasePool*)(*NativeMemory.s_interiorInstPoolAddress))->GetGuidHandleFromAddress(interiorInstAddress);
         }
+
         public static int GetInteriorProxyHandleFromInteriorInst(int interiorInstHandle)
         {
             if (s_interiorProxyPoolAddress == null)
@@ -5697,6 +5910,7 @@ namespace SHVDN
 
             return ((FwBasePool*)(*NativeMemory.s_interiorProxyPoolAddress))->GetGuidHandleFromAddress(interiorProxyAddress);
         }
+
         public static int GetInteriorProxyHandleFromGameplayCam()
         {
             if (InteriorProxyPtrFromGameplayCamAddress == null || s_interiorInstPoolAddress == null)
@@ -5752,6 +5966,7 @@ namespace SHVDN
         };
 
         private static readonly uint* s_weaponComponentArrayCountAddr;
+
         // Store the offset instead of the calculated address for compatibility with mods like Weapon Limits Adjuster by alexguirre (although Weapon Limits Adjuster allocates a new array in the very beginning).
         private static readonly ulong s_offsetForCWeaponComponentArrayAddr;
         private static readonly int s_weaponAttachPointsStartOffset;
@@ -5827,6 +6042,7 @@ namespace SHVDN
         {
             ulong* cWeaponComponentArrayFirstPtr = (ulong*)((byte*)s_offsetForCWeaponComponentArrayAddr + 4 + *(int*)s_offsetForCWeaponComponentArrayAddr);
             uint arrayCount = s_weaponComponentArrayCountAddr != null ? *s_weaponComponentArrayCountAddr : 0;
+
             if (cWeaponComponentArrayFirstPtr == null || arrayCount == 0)
             {
                 return null;
@@ -5963,6 +6179,7 @@ namespace SHVDN
             byte* weaponAttachPointsAddr = (byte*)weaponInfo + s_weaponAttachPointsStartOffset;
             int weaponAttachPointsCount = *(int*)(weaponAttachPointsAddr + s_weaponAttachPointsArrayCountOffset);
             byte* weaponAttachPointElementStartAddr = weaponAttachPointsAddr + 0x8;
+
             for (int i = 0; i < weaponAttachPointsCount; i++)
             {
                 byte* weaponAttachPointElementAddr = weaponAttachPointElementStartAddr + i * s_weaponAttachPointElementSize;
@@ -6184,6 +6401,7 @@ namespace SHVDN
 
             return CEntityHasCrSkeleton(addr);
         }
+
         /// <summary>
         /// Gets whether the CEntity has a CrSkeleton.
         /// Basically does the same thing as what the native DOES_ENTITY_HAVE_SKELETON does but this method takes
