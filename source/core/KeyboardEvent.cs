@@ -1,3 +1,8 @@
+//
+// Copyright (C) 2026 kagikn & contributors
+// License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
+//
+
 using System.Windows.Forms;
 
 namespace SHVDN
