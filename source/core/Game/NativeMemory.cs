@@ -3094,7 +3094,7 @@ namespace SHVDN
                 }
 
                 // We invert the value here!
-                byte byteValue = (byte)(value == false ? 1 : 0);
+                byte byteValue = (byte)(value ? 0 : 1);
 
                 *((byte*)audSpeechAudioEntityAddress + AudSpeechAudioEntity__SpeakingDisabledOffset) = byteValue;
                 *((byte*)audSpeechAudioEntityAddress + AudSpeechAudioEntity__SpeakingDisabledSyncedOffset) = byteValue;
