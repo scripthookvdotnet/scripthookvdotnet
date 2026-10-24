@@ -88,7 +88,7 @@ namespace SHVDN
         }
 
         /// <summary>
-        /// Initializes all known functions and offsets based on pattern searching.
+        /// Initializes static members of the <see cref="NativeMemory"/> class.
         /// </summary>
         static NativeMemory()
         {
