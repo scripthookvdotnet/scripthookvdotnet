@@ -78,7 +78,6 @@ namespace SHVDN
         private int _commandPos = -1;
 
         private List<string> _lineHistory = new();
-        private List<string> _commandHistory; // This must be set via CommandHistory property
 
         [DllImport("user32.dll")]
         private static extern int ToUnicode(
@@ -182,11 +181,7 @@ namespace SHVDN
         /// <summary>
         /// Gets or sets the command history. This is used to avoid losing the command history on SHVDN reloading.
         /// </summary>
-        public List<string> CommandHistory
-        {
-            get => _commandHistory;
-            set => _commandHistory = value;
-        }
+        public List<string> CommandHistory { get; set; }
 
         /// <summary>
         /// Register the specified method as a console command.
@@ -665,13 +660,13 @@ namespace SHVDN
 
         private void GoUpCommandList()
         {
-            if (_commandHistory.Count == 0 || _commandPos >= _commandHistory.Count - 1)
+            if (CommandHistory.Count == 0 || _commandPos >= CommandHistory.Count - 1)
             {
                 return;
             }
 
             _commandPos++;
-            _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
+            _input = CommandHistory[CommandHistory.Count - _commandPos - 1];
 
             // Reset cursor position to end of input text
             _cursorPos = _input.Length;
@@ -679,13 +674,13 @@ namespace SHVDN
 
         private void GoDownCommandList()
         {
-            if (_commandHistory.Count == 0 || _commandPos <= 0)
+            if (CommandHistory.Count == 0 || _commandPos <= 0)
             {
                 return;
             }
 
             _commandPos--;
-            _input = _commandHistory[_commandHistory.Count - _commandPos - 1];
+            _input = CommandHistory[CommandHistory.Count - _commandPos - 1];
             _cursorPos = _input.Length;
         }
 
@@ -1008,9 +1003,9 @@ namespace SHVDN
             }
 
             _commandPos = -1;
-            if (_commandHistory.LastOrDefault() != capturedInput)
+            if (CommandHistory.LastOrDefault() != capturedInput)
             {
-                _commandHistory.Add(capturedInput);
+                CommandHistory.Add(capturedInput);
             }
 
             Task<MethodInfo> newCompilerTask = Task.Factory.StartNew(() =>
