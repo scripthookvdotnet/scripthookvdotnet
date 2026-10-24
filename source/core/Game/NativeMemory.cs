@@ -5152,7 +5152,7 @@ namespace SHVDN
 
             return IntPtr.Zero;
 
-            bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(blipAddress + 8) == ((uint)blipHandle >> 0x10);
+            static bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(blipAddress + 8) == ((uint)blipHandle >> 0x10);
         }
 
 
@@ -5936,7 +5936,7 @@ namespace SHVDN
 
             return resultList;
 
-            bool CanPedEquip(CItemInfo* weaponInfoAddress)
+            static bool CanPedEquip(CItemInfo* weaponInfoAddress)
             {
                 return weaponInfoAddress->ModelHash != 0 && weaponInfoAddress->Slot != 0;
             }
