@@ -102,7 +102,6 @@ namespace SHVDN
             IntPtr startAddressToSearch;
 
             // Get relative address and add it to the instruction address.
-
             address = MemScanner.FindPatternBmh("\x74\x27\x48\x8D\x7E\x18\x48\x8B\x0F\x48\x3B\xCB\x74\x1B", "xxxxxxxxxxxxxx");
             if (address != null)
             {
@@ -1490,8 +1489,6 @@ namespace SHVDN
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
         }
 
-
-
         #endregion
 
         #region -- CPhysical Data --
@@ -1864,7 +1861,6 @@ namespace SHVDN
                 // MODIFY_VEHICLE_TOP_SPEED stores the 2nd argument value to CVehicle in b944 or later, but that's not the case in earlier ones
                 if (gameVersion >= 28)
                 {
-
                     address = MemScanner.FindPatternBmh("\x48\x89\x5C\x24\x28\x44\x0F\x29\x40\xC8\x0F\x28\xF9\x44\x0F\x29\x48\xB8\xF3\x0F\x11\xB9", "xxxxxxxxxxxxxxxxxxxxxx");
                     if (address != null)
                     {
@@ -1902,7 +1898,6 @@ namespace SHVDN
                 address = MemScanner.FindPatternBmh("\x39\x00\x75\x0F\x48\xFF\xC1\x48\x83\xC0\x04\x48\x83\xF9\x02\x7C\xEF\xEB\x08\x48\x8B\xCF", "x?xxxxxxxxxxxxxxxxxxxx");
                 if (address != null)
                 {
-
                     address = MemScanner.FindPatternNaive("\x48\x8D\x8F\x00\x00\x00\x00\xE8\x00\x00\x00\x00\x8A\x87", "xxx????x????xx", new IntPtr(address - 0x50), 0x50u);
                     if (address != null)
                     {
@@ -2414,7 +2409,6 @@ namespace SHVDN
             #endregion
         }
 
-
         #region -- Prop Data --
 
         private static readonly int s_objParentEntityAddressDetachedFromOffset;
@@ -2834,7 +2828,6 @@ namespace SHVDN
                 // Actually, the game tests the value at [CTaskInfo + 0x8] using the AND and shr bitwise operations
                 // and tests if the value at [CTaskInfo + 0xC] is the task index for CTaskCombat before accessing the member of the target ped pointer
                 // In practice, however, it looks like we can use the target address without testing the 2 checks
-
                 var targetPedAddress = new IntPtr(*(long*)(pedIntelligence + PedIntelligenceCombatTargetPedAddressOffset));
                 if (targetPedAddress == IntPtr.Zero)
                 {
@@ -2866,7 +2859,6 @@ namespace SHVDN
                 // Actually, the game tests the value at [CTaskInfo + 0x8] using the AND and shr bitwise operations
                 // and tests if the value at [CTaskInfo + 0xC] is the task index for CTaskCombat before accessing the member of the target ped pointer
                 // In practice, however, it looks like we can use the target address without testing the 2 checks
-
                 var targetPedAddress = new IntPtr(*(long*)(pedIntelligence + PedIntelligenceCombatTargetPedAddressOffset));
                 if (targetPedAddress == IntPtr.Zero)
                 {
@@ -3373,7 +3365,6 @@ namespace SHVDN
 
             return resultList;
         }
-
 
         public static bool IsModelAPed(int modelHash)
         {
@@ -5157,7 +5148,6 @@ namespace SHVDN
             static bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(blipAddress + 8) == ((uint)blipHandle >> 0x10);
         }
 
-
         public static bool GetBlipPropertyFlag(IntPtr address, BlipPropertyFlags flag)
         {
             if (address == IntPtr.Zero)
@@ -5593,7 +5583,6 @@ namespace SHVDN
 
         // `CProjectileRocket` has additional members and the layout of `CProjectileRocket` self hasn't changed
         // between b372 and b3095
-
         public static int ProjectileRocketCachedTargetPosOffset { get; }
         public static int ProjectileRocketLaunchDirOffset { get; }
         public static int ProjectileRocketTargetOffset { get; }
@@ -6107,7 +6096,6 @@ namespace SHVDN
                 return -1;
             }
 
-
             CrSkeletonData* crSkeletonData = fragInst->GtaFragType->FragDrawable->SkeletonData;
             if (crSkeletonData == null)
             {
@@ -6230,7 +6218,6 @@ namespace SHVDN
             FragPhysicsLod* fragPhysicsLod = fragInst->GetAppropriateFragPhysicsLod();
             return fragPhysicsLod != null ? fragPhysicsLod->FragmentGroupCount : 0;
         }
-
 
         #endregion
 

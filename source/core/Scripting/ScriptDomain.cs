@@ -349,8 +349,6 @@ namespace SHVDN
             }
         }
 
-
-
         ~ScriptDomain()
         {
             DisposeUnmanagedResource();
