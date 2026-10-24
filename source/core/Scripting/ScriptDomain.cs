@@ -1922,18 +1922,6 @@ namespace SHVDN
             toWaitOn.Wait();
         }
 
-        private static bool IsSubclassOf(Type type, string baseTypeName)
-        {
-            for (Type t = type.BaseType; t != null; t = t.BaseType)
-            {
-                if (t.FullName == baseTypeName)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
         private static bool IsSubclassOfOneOfTargetTypes(Type typeToTest, Type[] targetBaseTypes)
         {
             for (Type t = typeToTest.BaseType; t != null; t = t.BaseType)
@@ -1965,18 +1953,6 @@ namespace SHVDN
             return false;
         }
 
-        private static Version GetBaseTypeVersion(Type type, string baseTypeName)
-        {
-            for (Type t = type.BaseType; t != null; t = t.BaseType)
-            {
-                if (t.FullName == baseTypeName)
-                {
-                    return t.Assembly.GetName().Version;
-                }
-            }
-
-            return null;
-        }
         private static Version GetBaseTypeVersion(Type typeToTest, Type targetBaseType)
         {
             for (Type t = typeToTest.BaseType; t != null; t = t.BaseType)

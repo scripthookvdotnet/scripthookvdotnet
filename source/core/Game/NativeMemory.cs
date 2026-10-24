@@ -4281,11 +4281,6 @@ namespace SHVDN
             return returnHandles.ToArray();
         }
 
-        private static int CalculateAppropriateExtendedArrayLength(int[] array, int targetElementCount)
-        {
-            return (array.Length * 2 > targetElementCount) ? array.Length * 2 : targetElementCount * 2;
-        }
-
         #endregion
 
         #region -- CPlayerInfo Data --
