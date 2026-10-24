@@ -3153,11 +3153,11 @@ namespace SHVDN
 
         internal sealed class GetMainWindowResolutionTask : IScriptTask
         {
-            internal Size resolutionResult;
+            public Size ResolutionResult { get; private set; }
 
             public void Run()
             {
-                resolutionResult = new Size(*s_uiWidthAddr, *s_uiHeightAddr);
+                ResolutionResult = new Size(*s_uiWidthAddr, *s_uiHeightAddr);
 
                 IntPtr generalScreenInfoAddr = s_updateMonitorConfigurationFunc(s_grcDeviceAddr);
                 if (s_isMultiheadFunc(generalScreenInfoAddr))
@@ -3166,7 +3166,7 @@ namespace SHVDN
                     generalScreenInfoAddr = s_updateMonitorConfigurationFunc(s_grcDeviceAddr);
                     GridMonitor* screenInfoAddr = s_getLandscapeMonitorFunc(generalScreenInfoAddr);
 
-                    resolutionResult = new Size(
+                    ResolutionResult = new Size(
                         (int)(screenInfoAddr->Right - screenInfoAddr->Left),
                         (int)(screenInfoAddr->Bottom - screenInfoAddr->Top)
                         );
@@ -3178,7 +3178,7 @@ namespace SHVDN
         {
             var task = new GetMainWindowResolutionTask();
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
-            return task.resolutionResult;
+            return task.ResolutionResult;
         }
 
         #endregion
@@ -3613,7 +3613,8 @@ namespace SHVDN
             internal FVector3? _position;
             internal HashSet<int> _modelHashes;
             internal Func<IntPtr, bool> _predicate;
-            internal int[] _resultHandles = Array.Empty<int>();
+
+            public int[] ResultHandles = Array.Empty<int>();
 
             internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress)
             {
@@ -3665,12 +3666,12 @@ namespace SHVDN
                 {
                     case PoolType.Generic:
                         var fwBasePool = (FwBasePool*)_poolAddress;
-                        _resultHandles = GetGuidHandlesFromFwBasePool(fwScriptGuidPool, fwBasePool);
+                        ResultHandles = GetGuidHandlesFromFwBasePool(fwScriptGuidPool, fwBasePool);
                         break;
 
                     case PoolType.Vehicle:
                         var poolAllocator = (RageSysMemPoolAllocator*)_poolAddress;
-                        _resultHandles = GetGuidHandlesFromRageSysMemPoolAllocator(fwScriptGuidPool, poolAllocator);
+                        ResultHandles = GetGuidHandlesFromRageSysMemPoolAllocator(fwScriptGuidPool, poolAllocator);
                         break;
 
                     case PoolType.Projectile:
@@ -3678,7 +3679,7 @@ namespace SHVDN
                         int projectileCapacity = NativeMemory.GetProjectileCapacity();
                         ulong* projectilePoolAddress = (ulong*)_poolAddress;
 
-                        _resultHandles = GetGuidHandlesFromProjectilePool(fwScriptGuidPool, projectilePoolAddress, projectilesCount, projectileCapacity, _predicate);
+                        ResultHandles = GetGuidHandlesFromProjectilePool(fwScriptGuidPool, projectilePoolAddress, projectilesCount, projectileCapacity, _predicate);
                         break;
                 }
             }
@@ -3960,7 +3961,7 @@ namespace SHVDN
             var task = new FwScriptGuidPoolTask(PoolType.Vehicle, poolAllocator, modelHashes);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
         public static int[] GetVehicleHandles(FVector3 position, float radius, int[] modelHashes = null)
         {
@@ -3974,7 +3975,7 @@ namespace SHVDN
             var task = new FwScriptGuidPoolTask(PoolType.Vehicle, poolAllocator, position, radius * radius, modelHashes);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
 
         public static int[] GetPickupObjectHandles()
@@ -3995,7 +3996,7 @@ namespace SHVDN
             var task = new FwScriptGuidPoolTask(PoolType.Projectile, new IntPtr(NativeMemory.s_projectilePoolAddress));
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
         public static int[] GetProjectileHandles(FVector3 position, float radius)
         {
@@ -4008,7 +4009,7 @@ namespace SHVDN
                 new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
         public static int[] GetRocketProjectileHandles()
         {
@@ -4022,7 +4023,7 @@ namespace SHVDN
                 address => GetAsCProjectileRocket(address) != IntPtr.Zero);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
         public static int[] GetRocketProjectileHandles(FVector3 position, float radius)
         {
@@ -4036,7 +4037,7 @@ namespace SHVDN
                 predicate: address => GetAsCProjectileRocket(address) != IntPtr.Zero);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
         public static int[] GetThrownProjectileHandles()
         {
@@ -4050,7 +4051,7 @@ namespace SHVDN
                 address => GetAsCProjectileThrown(address) != IntPtr.Zero);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
         public static int[] GetThrownProjectileHandles(FVector3 position, float radius)
         {
@@ -4064,7 +4065,7 @@ namespace SHVDN
                 predicate: address => GetAsCProjectileThrown(address) != IntPtr.Zero);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
 
         private static int[] GetGuidsInFwBasePool(ulong* ptrOfPoolPtr)
@@ -4079,7 +4080,7 @@ namespace SHVDN
             var task = new FwScriptGuidPoolTask(PoolType.Generic, fwBasePool);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
         private static int[] GetGuidsInFwBasePool(ulong* ptrOfPoolPtr, int[] modelHashes)
         {
@@ -4093,7 +4094,7 @@ namespace SHVDN
             var task = new FwScriptGuidPoolTask(PoolType.Generic, fwBasePool, modelHashes);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
         private static int[] GetGuidsInFwBasePool(ulong* ptrOfPoolPtr, FVector3 position, float radius, int[] modelHashes = null)
         {
@@ -4107,7 +4108,7 @@ namespace SHVDN
             var task = new FwScriptGuidPoolTask(PoolType.Generic, fwBasePool, position, radius * radius, modelHashes);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._resultHandles;
+            return task.ResultHandles;
         }
 
         public static int[] GetBuildingHandles()
@@ -6031,7 +6032,7 @@ namespace SHVDN
         {
             internal FragInst* _fragInst;
             internal int _componentIndex;
-            internal bool _wasNewFragInstCreated;
+            public bool WasNewFragInstCreated;
 
             internal FragInstBreakOffAboveTask(FragInst* fragInst, int componentIndex)
             {
@@ -6041,7 +6042,7 @@ namespace SHVDN
 
             public void Run()
             {
-                _wasNewFragInstCreated = s_fragInst__BreakOffAboveFunc(_fragInst, _componentIndex) != null;
+                WasNewFragInstCreated = s_fragInst__BreakOffAboveFunc(_fragInst, _componentIndex) != null;
             }
         }
 
@@ -6086,7 +6087,7 @@ namespace SHVDN
             var task = new FragInstBreakOffAboveTask(fragInst, fragmentGroupIndex);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
-            return task._wasNewFragInstCreated;
+            return task.WasNewFragInstCreated;
         }
 
         public static int GetFragmentGroupIndexByEntityBoneIndex(IntPtr entityAddress, int boneIndex)
