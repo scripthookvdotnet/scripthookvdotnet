@@ -2491,7 +2491,6 @@ namespace SHVDN
                 address = MemScanner.FindPatternNaive("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
                 if (address != null)
                 {
-                    int fragInstNmGtaOffset = *(int*)(address + 0x24);
                     KnockOffVehicleTypeOffset = s_fragInstNmGtaOffset + 0xC;
                 }
 
@@ -5891,11 +5890,10 @@ namespace SHVDN
 
             byte* weaponAttachPointsAddr = (byte*)weaponInfo + s_weaponAttachPointsStartOffset;
             int weaponAttachPointsCount = *(int*)(weaponAttachPointsAddr + s_weaponAttachPointsArrayCountOffset);
-            byte* weaponAttachPointElementStartAddr = (byte*)(weaponAttachPointsAddr);
 
             for (int i = 0; i < weaponAttachPointsCount; i++)
             {
-                byte* weaponAttachPointElementAddr = weaponAttachPointElementStartAddr + (i * s_weaponAttachPointElementSize) + 0x8;
+                byte* weaponAttachPointElementAddr = weaponAttachPointsAddr + (i * s_weaponAttachPointElementSize) + 0x8;
                 int componentItemsCount = *(int*)(weaponAttachPointElementAddr + s_weaponAttachPointElementComponentCountOffset);
 
                 if (componentItemsCount <= 0)
@@ -5908,7 +5906,7 @@ namespace SHVDN
                     uint componentHashInItemArray = *(uint*)(weaponAttachPointElementAddr + j * 0x8);
                     if (componentHashInItemArray == componentHash)
                     {
-                        return ((WeaponComponentPoint*)(weaponAttachPointElementStartAddr + i * s_weaponAttachPointElementSize))->AttachBoneHash;
+                        return ((WeaponComponentPoint*)(weaponAttachPointsAddr + i * s_weaponAttachPointElementSize))->AttachBoneHash;
                     }
                 }
             }
