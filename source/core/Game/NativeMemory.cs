@@ -1224,7 +1224,7 @@ namespace SHVDN
 
         private static delegate* unmanaged[Stdcall]<IntPtr, uint, byte*, int, void> s_getMaterialNameFunc;
 
-        public unsafe static string GetMaterialNameFromId(int materialId)
+        public static unsafe string GetMaterialNameFromId(int materialId)
         {
             byte* buf = stackalloc byte[128];
 
