@@ -1608,7 +1608,9 @@ namespace SHVDN
         /// <summary>
         /// Pauses or resumes handling of keyboard events in this script domain.
         /// </summary>
-        /// <param name="pause"><see langword="true" /> to pause or <see langword="false" /> to resume</param>
+        /// <param name="pause">
+        /// <see langword="true" /> to pause or <see langword="false" /> to resume.
+        /// </param>
         public void PauseKeyEvents(bool pause)
         {
             _rwLock.EnterWriteLock();
