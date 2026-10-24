@@ -5301,15 +5301,14 @@ namespace SHVDN
                 }
 
                 CGameScriptResource* firstItem = *(CGameScriptResource**)(cGameScriptHandlerAddress + 48);
-                for (_result = firstItem;
-                    _result != null && (_result->ResourceTypeNameIndex != _resourceType || _result->IndexOfPool != _targetIndex);
-                    _result = _result->Next
-                    )
-                {
-                    ;
-                }
 
                 // _result should have the result address or null if not found
+                _result = firstItem;
+
+                while (_result != null && (_result->ResourceTypeNameIndex != _resourceType || _result->IndexOfPool != _targetIndex))
+                {
+                    _result = _result->Next;
+                }
             }
         }
 
