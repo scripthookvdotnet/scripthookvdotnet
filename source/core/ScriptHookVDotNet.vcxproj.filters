@@ -10,12 +10,20 @@
     <ClCompile Include="AssemblyInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <CsCompile Include="LockHelper.cs" />
+    <CsCompile Include="ScriptHookVDotNet.cs" />
+    <CsCompile Include="SharedVariables.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="Config">
+      <UniqueIdentifier>{fcfb3be0-bcb9-43b4-a741-08c8c7afb23a}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Console">
       <UniqueIdentifier>{8f99402e-7562-41d4-a0c0-9d8bfcfc13f7}</UniqueIdentifier>
     </Filter>
@@ -71,10 +79,24 @@
     </CsCompile>
   </ItemGroup>
   <ItemGroup>
+    <CsCompile Include="Config\Ini.cs">
+      <Filter>Config</Filter>
+    </CsCompile>
+    <CsCompile Include="Config\InvalidKeysFoundError.cs">
+      <Filter>Config</Filter>
+    </CsCompile>
+    <CsCompile Include="Config\InvalidKeysFoundErrorBuilder.cs">
+      <Filter>Config</Filter>
+    </CsCompile>
+  </ItemGroup>
+  <ItemGroup>
     <CsCompile Include="Console\Console.cs">
       <Filter>Console</Filter>
     </CsCompile>
     <CsCompile Include="Console\ConsoleCommand.cs">
+      <Filter>Console</Filter>
+    </CsCompile>
+    <CsCompile Include="Console\InbuildCommands.cs">
       <Filter>Console</Filter>
     </CsCompile>
     <CsCompile Include="Console\KeyManager.cs">
@@ -225,12 +247,21 @@
     </CsCompile>
   </ItemGroup>
   <ItemGroup>
+    <CsCompile Include="Input\Keyboard.cs">
+      <Filter>Input</Filter>
+    </CsCompile>
     <CsCompile Include="Input\KeyboardEvent.cs">
+      <Filter>Input</Filter>
+    </CsCompile>
+    <CsCompile Include="Input\ModifierKeyState.cs">
       <Filter>Input</Filter>
     </CsCompile>
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="Logging\Log.cs">
+      <Filter>Logging</Filter>
+    </CsCompile>
+    <CsCompile Include="Logging\LogMessageInfo.cs">
       <Filter>Logging</Filter>
     </CsCompile>
   </ItemGroup>

@@ -138,12 +138,22 @@
     <CsCompile Include="PolyfillAttributes\IsUnmanagedAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
+    <CsCompile Include="ScriptHookVDotNet.cs" />
+    <CsCompile Include="LockHelper.cs" />
+    <CsCompile Include="SharedVariables.cs" />
+    <CsCompile Include="Config\Ini.cs" />
+    <CsCompile Include="Config\InvalidKeysFoundError.cs" />
+    <CsCompile Include="Config\InvalidKeysFoundErrorBuilder.cs" />
     <CsCompile Include="Console\Console.cs" />
     <CsCompile Include="Console\ConsoleCommand.cs" />
+    <CsCompile Include="Console\InbuildCommands.cs" />
     <CsCompile Include="Console\KeyManager.cs" />
     <CsCompile Include="Console\TextFormatting.cs" />
+    <CsCompile Include="Input\Keyboard.cs" />
     <CsCompile Include="Input\KeyboardEvent.cs" />
+    <CsCompile Include="Input\ModifierKeyState.cs" />
     <CsCompile Include="Logging\Log.cs" />
+    <CsCompile Include="Logging\LogMessageInfo.cs" />
     <CsCompile Include="Marshals\MemDataMarshal.cs" />
     <CsCompile Include="Game\MemScanner.cs" />
     <CsCompile Include="Game\NativeFunc.cs" />

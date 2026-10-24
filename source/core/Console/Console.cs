@@ -1036,7 +1036,7 @@ namespace SHVDN
                 const string Template =
                     "using System; using System.Linq; using System.Drawing; using System.Windows.Forms; using GTA; using GTA.Math; using GTA.Native; " +
                     // Define some shortcut variables to simplify commands
-                    "public sealed class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ var P = Game.LocalPlayerPed; var V = P.CurrentVehicle; {0}; return null; }} }}";
+                    "public sealed class ConsoleInput : SHVDN.InbuildCommands {{ public static object Execute() {{ var P = Game.LocalPlayerPed; var V = P.CurrentVehicle; {0}; return null; }} }}";
 
                 CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(Template, capturedInput));
 

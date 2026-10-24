@@ -22,6 +22,14 @@ namespace SHVDN
 {
     public sealed class ScriptDomain : MarshalByRefObject, IDisposable
     {
+        private int _reloadRequested;
+
+        internal bool DidRequestReloadResetFlag
+        {
+            get => Interlocked.Exchange(ref _reloadRequested, 0) != 0;
+            set => Interlocked.Exchange(ref _reloadRequested, value ? 1 : 0);
+        }
+
         internal sealed class ScriptAssemblyInfo
         {
             public Assembly Assembly { get; }
@@ -1022,6 +1030,7 @@ namespace SHVDN
                 // The cast will always be successful unless the attribute is not an enum with the underlying
                 // type of `int`.
                 AbortScriptMode AbortModeForNativeCallResetsTimeout = (AbortScriptMode)nativeCallResetsTimeoutAttr;
+
                 // Let the script continue to run after calling a long-blocking native functions only if the API
                 // version is 3.6.0.0 or earlier when `AbortsScriptForBlockingNativeFunc` is set to `Default`.
                 // This is because the script domain didn't stop the script execution after calling a long-blocking
@@ -1599,6 +1608,7 @@ namespace SHVDN
                 return _keyboardState[(int)key];
             }
         }
+
         /// <summary>
         /// Pauses or resumes handling of keyboard events in this script domain.
         /// </summary>
