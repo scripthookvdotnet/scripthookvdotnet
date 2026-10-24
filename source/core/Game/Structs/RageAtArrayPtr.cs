@@ -24,7 +24,7 @@ namespace SHVDN
 
         // rage::atArray always has 4-byte padding at the end
         [FieldOffset(0xC)]
-        private fixed char padding[4];
+        private fixed char _padding[4];
 
         public ulong GetElementAddress(int i)
         {
