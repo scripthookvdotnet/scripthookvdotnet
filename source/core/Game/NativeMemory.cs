@@ -4604,7 +4604,7 @@ namespace SHVDN
             public static FVector3 GetPathNodePosition(int handle)
             {
                 IntPtr pathNode = GetPathNodeAddress(handle);
-                if (pathNode == null)
+                if (pathNode == IntPtr.Zero)
                 {
                     return default;
                 }
@@ -4615,7 +4615,7 @@ namespace SHVDN
             public static int GetVehiclePathNodeDensity(int handle)
             {
                 IntPtr pathNode = GetPathNodeAddress(handle);
-                if (pathNode == null)
+                if (pathNode == IntPtr.Zero)
                 {
                     return 0;
                 }
@@ -4626,7 +4626,7 @@ namespace SHVDN
             public static int GetVehiclePathNodePropertyFlags(int handle)
             {
                 IntPtr pathNode = GetPathNodeAddress(handle);
-                if (pathNode == null)
+                if (pathNode == IntPtr.Zero)
                 {
                     return 0;
                 }
@@ -4637,7 +4637,7 @@ namespace SHVDN
             public static bool GetPathNodeSwitchedOffFlag(int handle)
             {
                 IntPtr pathNode = GetPathNodeAddress(handle);
-                if (pathNode == null)
+                if (pathNode == IntPtr.Zero)
                 {
                     return false;
                 }
@@ -4648,7 +4648,7 @@ namespace SHVDN
             public static void SetPathNodeSwitchedOffFlag(int handle, bool toggle)
             {
                 IntPtr pathNode = GetPathNodeAddress(handle);
-                if (pathNode == null)
+                if (pathNode == IntPtr.Zero)
                 {
                     return;
                 }
@@ -6194,7 +6194,7 @@ namespace SHVDN
         public static bool EntityHasSkeleton(int handle)
         {
             IntPtr addr = GetEntityAddress(handle);
-            if (addr == null)
+            if (addr == IntPtr.Zero)
             {
                 return false;
             }
