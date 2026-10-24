@@ -1045,7 +1045,7 @@ namespace SHVDN
                     // Define some shortcut variables to simplify commands
                     "public sealed class ConsoleInput : ScriptHookVDotNet {{ public static object Execute() {{ var P = Game.LocalPlayerPed; var V = P.CurrentVehicle; {0}; return null; }} }}";
 
-                CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(Template, _input));
+                CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(Template, capturedInput));
 
                 if (!compilerResult.Errors.HasErrors)
                 {
