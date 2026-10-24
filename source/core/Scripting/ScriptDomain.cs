@@ -1256,7 +1256,6 @@ namespace SHVDN
 
                 assemblyFiles.RemoveAt(i);
             }
-
             foreach (string filename in sourceFiles)
             {
                 LoadScriptsFromSource(filename);
@@ -1918,7 +1917,6 @@ namespace SHVDN
             toSignal.Release();
             toWaitOn.Wait();
         }
-
         private static bool IsSubclassOfOneOfTargetTypes(Type typeToTest, Type[] targetBaseTypes)
         {
             for (Type t = typeToTest.BaseType; t != null; t = t.BaseType)
