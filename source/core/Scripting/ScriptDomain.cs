@@ -170,7 +170,7 @@ namespace SHVDN
             }
         }
 
-        internal void InitNativeNemoryMembers()
+        internal void InitNativeMemoryMembers()
         {
             Log.Message(Log.Level.Debug, "Initializing NativeMemory members...");
 

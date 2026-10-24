@@ -615,7 +615,7 @@ static void ScriptHookVDotNet_ManagedInit()
     try
     {
         // Initialize and scan memory at a predictable point
-        domain->InitNativeNemoryMembers();
+        domain->InitNativeMemoryMembers();
     }
     catch (Exception^ ex)
     {
