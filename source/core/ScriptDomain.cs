@@ -1330,7 +1330,7 @@ namespace SHVDN
 
                     string apiVersionString = apiVersion != 0 ? $"{apiVersion.ToString()}.x" : "0.x or 1.x (fallbacked to the v2 API)";
 
-                    Log.Message(Log.Level.Info, new Log.Options(true),
+                    Log.Message(Log.Level.Info, new Log.Options() { ForceLogToConsole = true },
                         $"Found {scriptAssemblyCount.ToString()} script(s) resolved to the deprecated API version " +
                         $"{apiVersionString} (ScriptHookVDotNet2.dll), though the script(s) are currently running. " +
                         $"Although the v2 API is still supported, it is deprecated and no longer actively " +
@@ -1338,7 +1338,7 @@ namespace SHVDN
                         $"a developer, please migrate to v3. The list of script names:");
                     foreach (string scriptName in apiVersionAndScriptNameDict.Value)
                     {
-                        Log.Message(Log.Level.Info, new Log.Options(true), scriptName);
+                        Log.Message(Log.Level.Info, new Log.Options() { ForceLogToConsole = true }, scriptName);
                     }
                 }
             }
