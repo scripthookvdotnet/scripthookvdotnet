@@ -3,8 +3,8 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
-using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SHVDN
 {

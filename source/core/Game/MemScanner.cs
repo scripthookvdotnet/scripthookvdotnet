@@ -3,10 +3,10 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System;
 
 namespace SHVDN
 {
