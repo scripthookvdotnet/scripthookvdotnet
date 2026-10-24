@@ -3481,8 +3481,8 @@ namespace SHVDN
         public static ReadOnlyCollection<int> WeaponModels { get; }
         public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModels { get; }
         public static ReadOnlyCollection<ReadOnlyCollection<int>> VehicleModelsGroupedByType { get; }
-        public static ReadOnlyCollection<int> PedModels { get; }
 
+        public static ReadOnlyCollection<int> PedModels { get; }
 
         private static delegate* unmanaged[Stdcall]<IntPtr, ulong> s_getHandlingDataByHash;
         private static delegate* unmanaged[Stdcall]<int, ulong> s_getHandlingDataByIndex;
