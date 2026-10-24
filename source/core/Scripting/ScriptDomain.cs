@@ -498,7 +498,7 @@ namespace SHVDN
             return CompileScriptsFromAssemblyWithFirstNonDeprecatedApiAndLastDeprecatedApi(filename, compiler,
                 additionalCompilerOptions);
         }
-        private CompilerResults CompileScriptsFromAssembly(string filename, Assembly scriptApi,
+        private static CompilerResults CompileScriptsFromAssembly(string filename, Assembly scriptApi,
             System.CodeDom.Compiler.CodeDomProvider compiler, string additionalCompilerOptions)
         {
             var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
@@ -609,7 +609,7 @@ namespace SHVDN
 
             return false;
         }
-        private void LogCompilerErrorForRawScript(CompilerResults res, string scriptFileName, Assembly scriptApi)
+        private static void LogCompilerErrorForRawScript(CompilerResults res, string scriptFileName, Assembly scriptApi)
         {
             var errors = new System.Text.StringBuilder();
 
@@ -1017,7 +1017,7 @@ namespace SHVDN
             Version apiVersion = GetVersionOfOneOfTargetBaseTypes(scriptType, _scriptingGtaClassTypesCacheArray);
             return BuildScriptInitOptionFromScriptAttribute(scriptType, apiVersion);
         }
-        internal ScriptInitOption BuildScriptInitOptionFromScriptAttribute(Type scriptType, Version apiVersion)
+        internal static ScriptInitOption BuildScriptInitOptionFromScriptAttribute(Type scriptType, Version apiVersion)
         {
             if (apiVersion < new Version(3, 0, 0, 0))
             {

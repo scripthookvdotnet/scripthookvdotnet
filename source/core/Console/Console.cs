@@ -959,7 +959,7 @@ namespace SHVDN
             _cursorPos = word2End;
         }
 
-        private void KillText(ref string str, int startIndex, int length)
+        private static void KillText(ref string str, int startIndex, int length)
         {
             SetClipboardContent(str.Substring(startIndex, length));
             str = str.Remove(startIndex, length);
@@ -1114,7 +1114,7 @@ namespace SHVDN
             return null;
         }
 
-        private string GetClipboardContent()
+        private static string GetClipboardContent()
         {
             string output = string.Empty;
             Exception threadEx = null;
@@ -1143,7 +1143,7 @@ namespace SHVDN
             return output;
         }
 
-        private void SetClipboardContent(string str)
+        private static void SetClipboardContent(string str)
         {
             var t = new Thread(() =>
             {
