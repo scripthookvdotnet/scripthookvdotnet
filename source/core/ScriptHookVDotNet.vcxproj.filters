@@ -48,6 +48,9 @@
     <Filter Include="Game\Enums\Vehicle">
       <UniqueIdentifier>{2115f7f1-65dc-4378-8033-be6a402d5712}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{af080d2f-ef07-478b-9391-78214d3d127c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Marshals">
       <UniqueIdentifier>{7a574b31-d009-4762-a03b-ab95bcd65b93}</UniqueIdentifier>
     </Filter>
@@ -218,6 +221,11 @@
     </CsCompile>
     <CsCompile Include="Game\Enums\PoolType.cs">
       <Filter>Game\Enums</Filter>
+    </CsCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="Input\KeyboardEvent.cs">
+      <Filter>Input</Filter>
     </CsCompile>
   </ItemGroup>
   <ItemGroup>

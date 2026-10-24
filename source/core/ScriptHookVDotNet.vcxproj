@@ -142,7 +142,7 @@
     <CsCompile Include="Console\ConsoleCommand.cs" />
     <CsCompile Include="Console\KeyManager.cs" />
     <CsCompile Include="Console\TextFormatting.cs" />
-    <CsCompile Include="KeyboardEvent.cs" />
+    <CsCompile Include="Input\KeyboardEvent.cs" />
     <CsCompile Include="Log.cs" />
     <CsCompile Include="Marshals\MemDataMarshal.cs" />
     <CsCompile Include="Game\MemScanner.cs" />
