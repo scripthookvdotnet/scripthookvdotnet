@@ -139,8 +139,7 @@ namespace SHVDN
         /// </remarks>
         private static byte[] s_cellEmailBconByteStr = Encoding.ASCII.GetBytes("CELL_EMAIL_BCON\0");
 
-        internal unsafe void InitTlsStuffForTlsContextSwitch(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc,
-            IntPtr tlsAddr, uint threadId)
+        internal unsafe void InitTlsStuffForTlsContextSwitch(IntPtr getTlsContextFunc, IntPtr setTlsContextFunc, IntPtr tlsAddr, uint threadId)
         {
             _tlsVariablesLock.EnterWriteLock();
             try
