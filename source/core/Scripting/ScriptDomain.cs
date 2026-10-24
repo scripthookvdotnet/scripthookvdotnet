@@ -1718,7 +1718,6 @@ namespace SHVDN
 
                 // Wait operation above timed out, which means that the script did not send any task for some time, so abort it
                 script.Abort();
-                continue;
             }
 
             // Clean up any pinned strings of this frame
@@ -2205,7 +2204,6 @@ namespace SHVDN
             }
 
             list.Add(fileName);
-            return;
         }
 
         private static bool IsApiVersionDeprecated(Version apiVersion) => apiVersion.Major < 3;
