@@ -6428,13 +6428,13 @@ namespace SHVDN
 
         #endregion
 
-        static T* Rel32<T>(byte* address, int offset, int instructionTail = 4)
+        private static T* Rel32<T>(byte* address, int offset, int instructionTail = 4)
             where T : unmanaged
         {
             return (T*)(*(int*)(address + offset) + address + offset + instructionTail);
         }
 
-        static byte* Rel32(byte* address, int offset, int instructionTail = 4)
+        private static byte* Rel32(byte* address, int offset, int instructionTail = 4)
         {
             return *(int*)(address + offset) + address + offset + instructionTail;
         }
