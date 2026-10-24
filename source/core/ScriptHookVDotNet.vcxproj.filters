@@ -3,9 +3,6 @@
   <ItemGroup>
     <CsCompile Include="Console.cs" />
     <CsCompile Include="Log.cs" />
-    <CsCompile Include="NativeFunc.cs" />
-    <CsCompile Include="NativeMemory.cs" />
-    <CsCompile Include="MemScanner.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="PolyfillAttributes\SkipLocalsInitAttribute.cs">
       <Filter>PolyfillAttributes</Filter>
@@ -68,6 +65,15 @@
     </CsCompile>
   </ItemGroup>
   <ItemGroup>
+    <CsCompile Include="Game\MemScanner.cs">
+      <Filter>Game</Filter>
+    </CsCompile>
+    <CsCompile Include="Game\NativeFunc.cs">
+      <Filter>Game</Filter>
+    </CsCompile>
+    <CsCompile Include="Game\NativeMemory.cs">
+      <Filter>Game</Filter>
+    </CsCompile>
     <CsCompile Include="Game\Structs\BlipPropertyFlags.cs">
       <Filter>Game\Structs</Filter>
     </CsCompile>

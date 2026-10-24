@@ -142,9 +142,9 @@
     <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="Log.cs" />
     <CsCompile Include="Marshals\MemDataMarshal.cs" />
-    <CsCompile Include="MemScanner.cs" />
-    <CsCompile Include="NativeFunc.cs" />
-    <CsCompile Include="NativeMemory.cs" />
+    <CsCompile Include="Game\MemScanner.cs" />
+    <CsCompile Include="Game\NativeFunc.cs" />
+    <CsCompile Include="Game\NativeMemory.cs" />
     <CsCompile Include="Scripting\Script.cs" />
     <CsCompile Include="Scripting\ScriptDomain.cs" />
     <CsCompile Include="Marshals\StringMarshal.cs" />
