@@ -331,7 +331,7 @@ namespace GTA.UI
                 float u2 = TextureCoordinates.Right;
                 float v2 = TextureCoordinates.Bottom;
 
-                Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, u1, v1, u2, v2, Rotation, Color.R, Color.G, Color.B, Color.A);
+                Function.Call(Hash.DRAW_SPRITE_ARX_WITH_UV, _pinnedDict, _pinnedName, positionX, positionY, scaleX, scaleY, v1, u1, u2, v2, Rotation, Color.R, Color.G, Color.B, Color.A);
 
                 return;
             }
