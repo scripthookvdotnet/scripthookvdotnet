@@ -43,8 +43,7 @@ static DWORD GetGameMainThreadId()
 
 #pragma managed(pop)
 
-// Import C# code base
-#using "ScriptHookVDotNet.netmodule"
+#using "ScriptHookVDotNet.dll"
 
 static void InitializeScriptRuntime()
 {

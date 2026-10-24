@@ -1,0 +1,50 @@
+<Project>
+	<PropertyGroup>
+		<BaseIntermediateOutputPath>..\..\intermediate\ScriptHookVDotNet\</BaseIntermediateOutputPath>
+	</PropertyGroup>
+	<Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<RootNamespace></RootNamespace>
+		<Title>ScriptHookVDotNet</Title>
+		<AssemblyName>ScriptHookVDotNet</AssemblyName>
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>..\loader\PublicKeyToken.snk</AssemblyOriginatorKeyFile>
+		<TargetFramework>net48</TargetFramework>
+		<LangVersion>9.0</LangVersion>
+		<Platforms>x64</Platforms>
+		<NoWarn>CS1591</NoWarn>
+		<DebugType>full</DebugType>
+		<ErrorReport>prompt</ErrorReport>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+		<PathMap>$(MSBuildProjectDirectory)=$(AssemblyName)</PathMap>
+		<UseWindowsForms>true</UseWindowsForms>
+		<RootNamespace>SHVDN</RootNamespace>
+	</PropertyGroup>
+	<PropertyGroup>
+		<SHVDN_VERSION Condition="'$(SHVDN_VERSION)' == ''">3.0.0.0</SHVDN_VERSION>
+		<Version>$(SHVDN_VERSION)</Version>
+		<AssemblyVersion>$(SHVDN_VERSION)</AssemblyVersion>
+		<FileVersion>$(SHVDN_VERSION)</FileVersion>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Authors>crosire &amp; kagikn &amp; contributors</Authors>
+		<AssemblyTitle>ScriptHookVDotNet</AssemblyTitle>
+		<Product>ScriptHookVDotNet</Product>
+		<Company></Company>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<RepositoryUrl>https://github.com/scripthookvdotnet/scripthookvdotnet</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+		<PackageReleaseNotes>https://github.com/scripthookvdotnet/scripthookvdotnet/releases</PackageReleaseNotes>
+		<Description>ScriptHookVDotNet</Description>
+		<Copyright>Copyright © 2026 crosire &amp; kagikn</Copyright>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+	</PropertyGroup>
+	<Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>

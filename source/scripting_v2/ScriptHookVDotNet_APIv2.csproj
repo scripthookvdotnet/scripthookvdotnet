@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
     <PropertyGroup>
       <BaseIntermediateOutputPath>..\..\intermediate\ScriptHookVDotNet2\</BaseIntermediateOutputPath>
     </PropertyGroup>
@@ -60,7 +60,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\core\ScriptHookVDotNet.vcxproj" />
+    <ProjectReference Include="..\core\ScriptHookVDotNet.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />

@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
     <PropertyGroup>
       <BaseIntermediateOutputPath>..\..\intermediate\ScriptHookVDotNet3\</BaseIntermediateOutputPath>
     </PropertyGroup>
@@ -70,15 +70,15 @@
     <PackageReference Include="InlineIL.Fody" Version="1.7.4" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\core\ScriptHookVDotNet.vcxproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>ScriptHookVDotNet_APIv3_Tests</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core\ScriptHookVDotNet.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

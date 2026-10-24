@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -21,6 +21,7 @@
     <WindowsTargetPlatformVersion Condition="'$(VisualStudioVersion)'&gt;='16.0'">10.0</WindowsTargetPlatformVersion>
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>SHVDN</RootNamespace>
+    <ProjectName>ScriptHookVDotNet Loader</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <!-- Global configuration settings -->
@@ -33,7 +34,6 @@
     <IntDir>$(SolutionDir)intermediate\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
     <CharacterSet>Unicode</CharacterSet>
     <CLRSupport>true</CLRSupport>
-    <ExtensionsToDeleteOnClean>*.netmodule;$(ExtensionsToDeleteOnClean)</ExtensionsToDeleteOnClean>
   </PropertyGroup>
   <!-- Specific configuration settings -->
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)'=='Debug'">
@@ -64,13 +64,9 @@
       <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'==''">SHVDN_VERSION="3.0.0.0";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(SHVDN_VERSION)'!=''">SHVDN_VERSION="$(SHVDN_VERSION)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <CsCompile>
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <Utf8Output>true</Utf8Output>
-    </CsCompile>
     <Link>
       <AdditionalLibraryDirectories>sdk\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ScriptHookV.lib;$(IntDir)$(TargetName).netmodule;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ScriptHookV.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <!-- Specific compilation settings -->
@@ -79,15 +75,6 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <CsCompile>
-      <Optimize>false</Optimize>
-      <NoWarn>1591;1668;%(NoWarn)</NoWarn>
-      <WarningLevel>3</WarningLevel>
-      <LangVersion>latest</LangVersion>
-      <DebugType>pdbonly</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-      <DefineConstants>DEBUG</DefineConstants>
-    </CsCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
@@ -99,14 +86,6 @@
       <PreprocessorDefinitions>WIN32;WIN32_LEAN_AND_MEAN;NOSOUND;NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
-    <CsCompile>
-      <Optimize>true</Optimize>
-      <NoWarn>1591;1668;%(NoWarn)</NoWarn>
-      <WarningLevel>3</WarningLevel>
-      <LangVersion>latest</LangVersion>
-      <DebugType>none</DebugType>
-      <DebugSymbols>false</DebugSymbols>
-    </CsCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
@@ -133,92 +112,26 @@
     <ClCompile Include="DllMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CsCompile Include="PolyfillAttributes\IsExternalInit.cs" />
-    <CsCompile Include="PolyfillAttributes\SkipLocalsInitAttribute.cs" />
-    <CsCompile Include="PolyfillAttributes\IsUnmanagedAttribute.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <CsCompile Include="ScriptHookVDotNet.cs" />
-    <CsCompile Include="LockHelper.cs" />
-    <CsCompile Include="SharedVariables.cs" />
-    <CsCompile Include="Config\Ini.cs" />
-    <CsCompile Include="Config\InvalidKeysFoundError.cs" />
-    <CsCompile Include="Config\InvalidKeysFoundErrorBuilder.cs" />
-    <CsCompile Include="Console\Console.cs" />
-    <CsCompile Include="Console\ConsoleCommand.cs" />
-    <CsCompile Include="Console\InbuildCommands.cs" />
-    <CsCompile Include="Console\KeyManager.cs" />
-    <CsCompile Include="Console\TextFormatting.cs" />
-    <CsCompile Include="Input\Keyboard.cs" />
-    <CsCompile Include="Input\KeyboardEvent.cs" />
-    <CsCompile Include="Input\ModifierKeyState.cs" />
-    <CsCompile Include="Logging\Log.cs" />
-    <CsCompile Include="Logging\LogMessageInfo.cs" />
-    <CsCompile Include="Marshals\MemDataMarshal.cs" />
-    <CsCompile Include="Game\MemScanner.cs" />
-    <CsCompile Include="Game\NativeFunc.cs" />
-    <CsCompile Include="Game\NativeMemory.cs" />
-    <CsCompile Include="Scripting\Script.cs" />
-    <CsCompile Include="Scripting\ScriptDomain.cs" />
-    <CsCompile Include="Marshals\StringMarshal.cs" />
-    <CsCompile Include="Scripting\CheapThreadSafeStopwatch.cs" />
-    <CsCompile Include="Scripting\IScriptTask.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
   </ItemGroup>
   <ItemGroup>
-    <CsCompile Include="Game\Enums\ScriptResourceType.cs" />
-    <CsCompile Include="Game\Enums\EntityType.cs" />
-    <CsCompile Include="Game\Enums\ModelInfoType.cs" />
-    <CsCompile Include="Game\Enums\PoolType.cs" />
-    <CsCompile Include="Game\Enums\Vehicle\VehicleFlags.cs" />
-    <CsCompile Include="Game\Enums\Vehicle\VehicleModelInfoFlags.cs" />
-    <CsCompile Include="Game\Enums\Vehicle\VehiclePathNodeProperties.cs" />
-    <CsCompile Include="Game\Enums\Vehicle\VehicleType.cs" />
-    <CsCompile Include="Game\Structs\BlipPropertyFlags.cs" />
-    <CsCompile Include="Game\Structs\WeaponDamageInfo.cs" />
-    <CsCompile Include="Game\Structs\CGameScriptResource.cs" />
-    <CsCompile Include="Game\Structs\CModelList.cs" />
-    <CsCompile Include="Game\Structs\CTask.cs" />
-    <CsCompile Include="Game\Structs\FragDrawable.cs" />
-    <CsCompile Include="Game\Structs\EntityDamageRecordForReturnValue.cs" />
-    <CsCompile Include="Game\Structs\FVector3.cs" />
-    <CsCompile Include="Game\Structs\FragCacheEntry.cs" />
-    <CsCompile Include="Game\Structs\Frag\FragInst.cs" />
-    <CsCompile Include="Game\Structs\Frag\FragPhysicsLod.cs" />
-    <CsCompile Include="Game\Structs\Frag\FragPhysicsLodGroup.cs" />
-    <CsCompile Include="Game\Structs\Frag\FragTypeChild.cs" />
-    <CsCompile Include="Game\Structs\Frag\GtaFragType.cs" />
-    <CsCompile Include="Game\Structs\FwBasePool.cs" />
-    <CsCompile Include="Game\Structs\HashEntry.cs" />
-    <CsCompile Include="Game\Structs\HashNode.cs" />
-    <CsCompile Include="Game\Structs\CItemInfo.cs" />
-    <CsCompile Include="Game\Structs\Path\CPathNode.cs" />
-    <CsCompile Include="Game\Structs\Path\CPathNodeLink.cs" />
-    <CsCompile Include="Game\Structs\Path\CPathRegion.cs" />
-    <CsCompile Include="Game\Structs\PersonalityData.cs" />
-    <CsCompile Include="Game\Structs\PgHashMap.cs" />
-    <CsCompile Include="Game\Structs\RageAtArrayPtr.cs" />
-    <CsCompile Include="Game\Structs\RageSysMemPoolAllocator.cs" />
-    <CsCompile Include="Game\Structs\GridMonitor.cs" />
-    <CsCompile Include="Game\Structs\ScrWeaponHudStats.cs" />
-    <CsCompile Include="Game\Structs\Skeleton\CrBoneData.cs" />
-    <CsCompile Include="Game\Structs\Skeleton\CrSkeleton.cs" />
-    <CsCompile Include="Game\Structs\Skeleton\CrSkeletonData.cs" />
-    <CsCompile Include="Game\Structs\Weapon\WeaponComponentInfo.cs" />
-    <CsCompile Include="Game\Structs\Weapon\WeaponComponentPoint.cs" />
-    <CsCompile Include="Game\Structs\Ysc\YscScriptHeader.cs" />
-    <CsCompile Include="Game\Structs\Ysc\YscScriptTable.cs" />
-    <CsCompile Include="Game\Structs\Ysc\YscScriptTableItem.cs" />
+    <ProjectReference Include="..\core\ScriptHookVDotNet.csproj">
+      <Project>{468A6996-7EA6-4BE3-BC32-169A4484C19B}</Project>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <Private>true</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <!-- Compile C# source files -->
-  <Target Name="CsCompile" BeforeTargets="ClCompile" Inputs="@(CsCompile)" Outputs="$(IntDir)$(TargetName).netmodule">
-    <Csc Sources="@(CsCompile)" AllowUnsafeBlocks="%(CsCompile.AllowUnsafeBlocks)" DebugType="%(CsCompile.DebugType)" DefineConstants="%(CsCompile.DefineConstants)" DisabledWarnings="%(CsCompile.NoWarn)" DocumentationFile="$(IntDir)$(TargetName).xdc" EmitDebugInformation="%(CsCompile.DebugSymbols)" LangVersion="%(CsCompile.LangVersion)" Optimize="%(CsCompile.Optimize)" OutputAssembly="$(IntDir)$(TargetName).netmodule" PdbFile="$(IntDir)$(TargetName).netmodule.pdb" TargetType="Module" TreatWarningsAsErrors="%(CsCompile.TreatWarningsAsErrors)" Utf8Output="%(CsCompile.Utf8Output)" WarningLevel="%(CsCompile.WarningLevel)" WarningsAsErrors="%(CsCompile.WarningsAsErrors)" WarningsNotAsErrors="%(CsCompile.WarningsNotAsErrors)" ToolExe="$(CscToolExe)" ToolPath="$(CscToolPath)" />
+  <!-- Make resolved managed project outputs available to explicit #using directives. -->
+  <Target Name="AddManagedReferenceSearchPaths" BeforeTargets="ClCompile" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <ClCompile>
+        <AdditionalUsingDirectories>@(ReferencePath->'%(RootDir)%(Directory)');%(ClCompile.AdditionalUsingDirectories)</AdditionalUsingDirectories>
+      </ClCompile>
+    </ItemGroup>
   </Target>
   <!-- Verify SDK files exist before generating anything -->
   <Target Name="VerifySDKFiles" BeforeTargets="BeforeBuildGenerateSources">
