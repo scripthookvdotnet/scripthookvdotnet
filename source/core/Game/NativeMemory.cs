@@ -292,7 +292,7 @@ namespace SHVDN
             if (address != null)
             {
                 // The instruction expects a signed value, but virtual function offsets can't be negative
-                s_getEventTypeIndexVFuncOffset = (uint)*(byte*)(address + 12);
+                s_getEventTypeIndexVFuncOffset = (uint)*(address + 12);
             }
             address = MemScanner.FindPatternBmh("\x48\x8D\x05\x00\x00\x00\x00\x48\x89\x01\x8B\x44\x24\x50", "xxx????xxxxxxx");
             if (address != null)
@@ -449,7 +449,7 @@ namespace SHVDN
             {
                 byte* unkClockFunc = Rel32<byte>(address, 19);
                 s_millisecondsPerGameMinuteAddress = Rel32<int>(unkClockFunc, 0x46);
-                s_lastClockTickAddress = (int*)(s_millisecondsPerGameMinuteAddress + 2);
+                s_lastClockTickAddress = s_millisecondsPerGameMinuteAddress + 2;
             }
 
             address = MemScanner.FindPatternBmh("\x75\x2D\x44\x38\x3D\x00\x00\x00\x00\x75\x24", "xxxxx????xx");
@@ -554,9 +554,9 @@ namespace SHVDN
                 address = MemScanner.FindPatternNaive("\x4D\x63\x98", "xxx", new IntPtr(address));
                 s_weaponAttachPointsArrayCountOffset = *(int*)(address + 3);
                 address = MemScanner.FindPatternNaive("\x4C\x63\x50", "xxx", new IntPtr(address));
-                s_weaponAttachPointElementComponentCountOffset = *(byte*)(address + 3);
+                s_weaponAttachPointElementComponentCountOffset = *(address + 3);
                 address = MemScanner.FindPatternNaive("\x48\x83\xC0", "xxx", new IntPtr(address));
-                s_weaponAttachPointElementSize = *(byte*)(address + 3);
+                s_weaponAttachPointElementSize = *(address + 3);
             }
 
             address = MemScanner.FindPatternBmh("\x24\x1F\x3C\x05\x0F\x85\x00\x00\x00\x00\x48\x8D\x82\x00\x00\x00\x00\x48\x8D\xB2\x00\x00\x00\x00\x48\x85\xC0\x74\x09\x80\x38\x00\x74\x04\x8A\xCB", "xxxxxx????xxx????xxx????xxxxxxxxxxxx");
@@ -598,8 +598,8 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\x45\x84\xC9\x74\x32\x8B\x41\x00\x85\xC0\x74\x2B", "xxxxxxx?xxxx");
             if (address != null)
             {
-                CurrentCrimeValueOffset = (int)*(byte*)(address + 0x2A);
-                TimeWhenNewCrimeValueTakesEffectOffset = (int)*(byte*)(address + 0x7);
+                CurrentCrimeValueOffset = (int)*(address + 0x2A);
+                TimeWhenNewCrimeValueTakesEffectOffset = (int)*(address + 0x7);
                 CurrentWantedLevelOffset = *(int*)(address + 0x17);
                 NewCrimeValueOffset = *(int*)(address + 0x1D);
             }
@@ -725,7 +725,7 @@ namespace SHVDN
             if (address != null)
             {
                 InteriorProxyPtrFromGameplayCamAddress = Rel32<ulong>(address, 3);
-                InteriorInstPtrInInteriorProxyOffset = (int)*(byte*)(address + 15);
+                InteriorInstPtrInInteriorProxyOffset = (int)*(address + 15);
             }
 
             address = MemScanner.FindPatternBmh("\x8D\x43\x64\x89\x05\x00\x00\x00\x00", "xxxxx????");
@@ -762,13 +762,13 @@ namespace SHVDN
             if(address != null)
             {
                 CPlayerInfoCanLeaveParachuteSmokeTrailOffset = *(int*)(address + 0x1A);
-                CPlayerInfoCanLeaveParachuteSmokeTrailBit = *(byte*)(address + 0x20);
+                CPlayerInfoCanLeaveParachuteSmokeTrailBit = *(address + 0x20);
             }
 
             address = MemScanner.FindPatternBmh("\x41\xB9\x80\x00\x00\x00\x48\x8B\x01\xFF\x50", "xxxxxxxxxxx");
             if(address != null)
             {
-                int getMaterialNameFuncOffset = *(byte*)(address + 11);
+                int getMaterialNameFuncOffset = *(address + 11);
 
                 s_phMaterialMgrInstance = *(IntPtr*)Rel32(address, -4);
 
@@ -1800,7 +1800,7 @@ namespace SHVDN
                     address = MemScanner.FindPatternBmh("\x0F\x28\xC3\xF3\x0F\x5C\xC2\x0F\x2F\xC8\x76\x2E\x0F\x2F\xDA\x73\x29\xF3\x0F\x10\x44\x24\x58", "xxxxxxxxxxxxxxxxxxxxxxx");
                     if (address != null)
                     {
-                        CVehicleEngineTurboOffset = (int)*(byte*)(address - 1);
+                        CVehicleEngineTurboOffset = (int)*(address - 1);
                     }
                 }
 
@@ -1952,7 +1952,7 @@ namespace SHVDN
                 if (address != null)
                 {
                     HasMutedSirensOffset = *(int*)(address + 7);
-                    HasMutedSirensBit = *(byte*)(address + 13); // the bit is changed between b372 and b2802
+                    HasMutedSirensBit = *(address + 13); // the bit is changed between b372 and b2802
                     CanUseSirenOffset = *(int*)(address + 23);
                 }
                 address = MemScanner.FindPatternBmh("\xC1\xE9\x1C\xC0\xE1\x06\x32\xC8\x80\xE1\x40\x32\xC8\x88\x8E", "xxxxxxxxxxxxxxx");
@@ -2079,7 +2079,7 @@ namespace SHVDN
                 if (address != null)
                 {
                     AudVehicleAudioEntity__IsHornEnabledOffset = *(int*)(address + 0xB);
-                    AudVehicleAudioEntity__IsHornEnabledBitTest = *(byte*)(address + 0xF);
+                    AudVehicleAudioEntity__IsHornEnabledBitTest = *(address + 0xF);
                 }
 
                 // Vehicle Wheels has the owner vehicle pointer and new wheel functions are used since b1365
@@ -2136,7 +2136,7 @@ namespace SHVDN
                         continue;
                     }
 
-                    ulong vFuncAddr = *(ulong*)(*(ulong*)subHandlingDataAddr + (uint)0x10);
+                    ulong vFuncAddr = *(ulong*)(*(ulong*)subHandlingDataAddr + 0x10);
                     var getSubHandlingDataVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)vFuncAddr;
                     int handlingTypeOfCurrentElement = getSubHandlingDataVFunc(subHandlingDataAddr);
                     if (handlingTypeOfCurrentElement == handlingType)
@@ -3078,7 +3078,7 @@ namespace SHVDN
                     return false;
                 }
 
-                return *(byte*)((byte*)audSpeechAudioEntityAddress + AudSpeechAudioEntity__DisablePainOffset) != 0;
+                return *((byte*)audSpeechAudioEntityAddress + AudSpeechAudioEntity__DisablePainOffset) != 0;
             }
 
             public static void SetAmbientSpeechEnabled(IntPtr pedAddress, bool value)
@@ -3511,7 +3511,7 @@ namespace SHVDN
             if (modelInfoAddress == IntPtr.Zero ||
                 s_pedPersonalitiesArrayAddr == null ||
                 s_pedPersonalityIndexOffsetInModelInfo == 0 ||
-                *(ulong*)s_pedPersonalitiesArrayAddr == 0)
+                *s_pedPersonalitiesArrayAddr == 0)
             {
                 return null;
             }
@@ -3525,7 +3525,7 @@ namespace SHVDN
             const int PedPersonalityElementSize = 0xB8;
 
             ushort indexOfPedPersonality = *(ushort*)(modelInfoAddress + s_pedPersonalityIndexOffsetInModelInfo).ToPointer();
-            return (PersonalityData*)(*(ulong*)s_pedPersonalitiesArrayAddr + (uint)(indexOfPedPersonality * PedPersonalityElementSize));
+            return (PersonalityData*)(*s_pedPersonalitiesArrayAddr + (uint)(indexOfPedPersonality * PedPersonalityElementSize));
         }
         public static bool IsModelAMalePed(int modelHash)
         {
@@ -3878,7 +3878,7 @@ namespace SHVDN
         private static int GetFwBasePoolCount(ulong address)
         {
             var pool = (FwBasePool*)address;
-            return (int)pool->SlotsUsed;
+            return pool->SlotsUsed;
         }
 
         public static int GetVehicleCapacity()
@@ -5843,7 +5843,7 @@ namespace SHVDN
         private static WeaponComponentInfo* FindWeaponComponentInfo(uint nameHash)
         {
             ulong* cWeaponComponentArrayFirstPtr = (ulong*)((byte*)s_offsetForCWeaponComponentArrayAddr + 4 + *(int*)s_offsetForCWeaponComponentArrayAddr);
-            uint arrayCount = s_weaponComponentArrayCountAddr != null ? *(uint*)s_weaponComponentArrayCountAddr : 0;
+            uint arrayCount = s_weaponComponentArrayCountAddr != null ? *s_weaponComponentArrayCountAddr : 0;
             if (cWeaponComponentArrayFirstPtr == null || arrayCount == 0)
             {
                 return null;
@@ -5953,7 +5953,7 @@ namespace SHVDN
         public static List<uint> GetAllWeaponComponentHashes()
         {
             ulong* cWeaponComponentArrayFirstPtr = (ulong*)((byte*)s_offsetForCWeaponComponentArrayAddr + 4 + *(int*)s_offsetForCWeaponComponentArrayAddr);
-            uint arrayCount = s_weaponComponentArrayCountAddr != null ? *(uint*)s_weaponComponentArrayCountAddr : 0;
+            uint arrayCount = s_weaponComponentArrayCountAddr != null ? *s_weaponComponentArrayCountAddr : 0;
             var resultList = new List<uint>();
 
             for (uint i = 0; i < arrayCount; i++)
@@ -5979,7 +5979,7 @@ namespace SHVDN
 
             byte* weaponAttachPointsAddr = (byte*)weaponInfo + s_weaponAttachPointsStartOffset;
             int weaponAttachPointsCount = *(int*)(weaponAttachPointsAddr + s_weaponAttachPointsArrayCountOffset);
-            byte* weaponAttachPointElementStartAddr = (byte*)(weaponAttachPointsAddr + 0x8);
+            byte* weaponAttachPointElementStartAddr = weaponAttachPointsAddr + 0x8;
             for (int i = 0; i < weaponAttachPointsCount; i++)
             {
                 byte* weaponAttachPointElementAddr = weaponAttachPointElementStartAddr + i * s_weaponAttachPointElementSize;
@@ -6412,7 +6412,7 @@ namespace SHVDN
 
                 ulong fragInstNmGtaAddress = *(ulong*)(pedAddress + s_fragInstNmGtaOffset);
                 IntPtr messageStringPtr = ScriptDomain.CurrentDomain.PinString(_messageName);
-                s_sendNmMessageToPedFunc((ulong)fragInstNmGtaAddress, messageStringPtr, messageMemory);
+                s_sendNmMessageToPedFunc(fragInstNmGtaAddress, messageStringPtr, messageMemory);
 
                 FreeCoTaskMem(new IntPtr((long)messageMemory));
             }
