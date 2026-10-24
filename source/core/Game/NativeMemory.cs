@@ -96,9 +96,7 @@ namespace SHVDN
             NullString = StringMarshal.StringToCoTaskMemUtf8(string.Empty); // ""
             CellEmailBcon = StringMarshal.StringToCoTaskMemUtf8("CELL_EMAIL_BCON"); // "~a~~a~~a~~a~~a~~a~~a~~a~~a~~a~"
 
-            GameFileVersion = new Version(FileVersionInfo.GetVersionInfo(
-                Process.GetCurrentProcess().MainModule.FileName).FileVersion
-                );
+            GameFileVersion = new Version(FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName).FileVersion);
 
             byte* address;
             IntPtr startAddressToSearch;
@@ -141,8 +139,7 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_createGuid = (delegate* unmanaged[Stdcall]<ulong, int>)
-                    new IntPtr(address - 0x68);
+                s_createGuid = (delegate* unmanaged[Stdcall]<ulong, int>)new IntPtr(address - 0x68);
             }
 
             address = MemScanner.FindPatternBmh("\x40\x53\x48\x83\xEC\x30\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24\x2C\x33\xC9\xF3\x0F\x11\x43\x0C\x48\x89\x0B\x89\x4B\x08\x48\x85\xC0\x74\x2C", "xxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxxxxx");
