@@ -1365,7 +1365,7 @@ namespace SHVDN
         }
         public static IntPtr GetEntityBoneObjectMatrixAddress(int handle, int boneIndex)
         {
-            // boneIndex cant be negative
+            // boneIndex cannot be negative
             if ((boneIndex & 0x80000000) != 0)
             {
                 return IntPtr.Zero;
@@ -1386,7 +1386,7 @@ namespace SHVDN
         }
         public static IntPtr GetEntityBoneGlobalMatrixAddress(int handle, int boneIndex)
         {
-            // boneIndex cant be negative
+            // boneIndex cannot be negative
             if ((boneIndex & 0x80000000) != 0)
             {
                 return IntPtr.Zero;
@@ -6100,7 +6100,7 @@ namespace SHVDN
 
         public static int GetFragmentGroupIndexByEntityBoneIndex(IntPtr entityAddress, int boneIndex)
         {
-            // boneIndex cant be negative
+            // boneIndex cannot be negative
             if ((boneIndex & 0x80000000) != 0)
             {
                 return -1;
