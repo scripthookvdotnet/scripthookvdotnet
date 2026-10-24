@@ -1778,10 +1778,10 @@ namespace SHVDN
 
             public static int FirstVehicleFlagsOffset { get; }
 
-            private static int AudVehicleAudioEntityOffset;
+            private static int AudVehicleAudioEntityOffset { get; }
 
-            public static int AudVehicleAudioEntity__IsHornEnabledOffset;
-            public static int AudVehicleAudioEntity__IsHornEnabledBitTest;
+            public static int AudVehicleAudioEntity__IsHornEnabledOffset { get; }
+            public static int AudVehicleAudioEntity__IsHornEnabledBitTest { get; }
 
             static Vehicle()
             {
