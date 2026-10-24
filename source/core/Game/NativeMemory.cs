@@ -110,26 +110,26 @@ namespace SHVDN
             {
                 // Fetch the address of `AddKnownRef` first, as the offset is at like plus 0xA5 in any builds,
                 // while that of `RemoveKnownRef` is at like plus 0x18EB4.
-                s_fwRefAwareBaseImpl__AddKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(Rel32(address, 0x25));
-                s_fwRefAwareBaseImpl__RemoveKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(Rel32(address, 0x17));
+                s_fwRefAwareBaseImpl__AddKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)Rel32(address, 0x25);
+                s_fwRefAwareBaseImpl__RemoveKnownRef = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)Rel32(address, 0x17);
             }
 
             address = MemScanner.FindPatternBmh("\x74\x21\x48\x8B\x48\x20\x48\x85\xC9\x74\x18\x48\x8B\xD6\xE8", "xxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_getPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(Rel32(address, -0xA));
+                s_getPtfxAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)Rel32(address, -0xA);
             }
 
             address = MemScanner.FindPatternBmh("\x85\xED\x74\x0F\x8B\xCD\xE8\x00\x00\x00\x00\x48\x8B\xF8\x48\x85\xC0\x74\x2E", "xxxxxxx????xxxxxxxx");
             if (address != null)
             {
-                s_getScriptEntity = (delegate* unmanaged[Stdcall]<int, ulong>)(Rel32(address, 0x7));
+                s_getScriptEntity = (delegate* unmanaged[Stdcall]<int, ulong>)Rel32(address, 0x7);
             }
 
             address = MemScanner.FindPatternBmh("\x8B\xC2\xB2\x01\x8B\xC8\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x53\x8A\x88\x00\x00\x00\x00\xF6\xC1\x01\x75\x05\xF6\xC1\x02\x75\x43\x48", "xxxxxxx????xxxxxxx????xxxxxxxxxxx");
             if (address != null)
             {
-                s_getPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)(Rel32(address, 0x7));
+                s_getPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<int, ulong>)Rel32(address, 0x7);
             }
 
             address = MemScanner.FindPatternBmh("\x0F\x84\xA1\x00\x00\x00\x33\xC9\x48\x89\x35", "xxxxxxxxxxx");
@@ -141,28 +141,28 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\x48\xF7\xF9\x49\x8B\x48\x08\x48\x63\xD0\xC1\xE0\x08\x0F\xB6\x1C\x11\x03\xD8", "xxxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_createGuid = (delegate* unmanaged[Stdcall]<ulong, int>)(
-                    new IntPtr(address - 0x68));
+                s_createGuid = (delegate* unmanaged[Stdcall]<ulong, int>)
+                    new IntPtr(address - 0x68);
             }
 
             address = MemScanner.FindPatternBmh("\x40\x53\x48\x83\xEC\x30\x48\x8B\xDA\xE8\x00\x00\x00\x00\xF3\x0F\x10\x44\x24\x2C\x33\xC9\xF3\x0F\x11\x43\x0C\x48\x89\x0B\x89\x4B\x08\x48\x85\xC0\x74\x2C", "xxxxxxxxxx????xxxxxxxxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_entityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)(address);
+                s_entityPosFunc = (delegate* unmanaged[Stdcall]<ulong, float*, ulong>)address;
             }
 
             // Find handling data functions
             address = MemScanner.FindPatternBmh("\x8B\xF7\x83\xF8\x01\x77\x08\x44\x8B\xF7\x8D\x77\xFF\xEB\x06\x41\xBE\x03\x00\x00\x00\x8B\x8B", "xxxxxxxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_getHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)(Rel32(address, 28));
+                s_getHandlingDataByIndex = (delegate* unmanaged[Stdcall]<int, ulong>)Rel32(address, 28);
                 s_handlingIndexOffsetInModelInfo = *(int*)(address + 23);
             }
 
             address = MemScanner.FindPatternBmh("\x75\x5A\xB2\x01\x48\x8B\xCB\xE8\x00\x00\x00\x00\x41\x8B\xF5\x66\x44\x3B\xAB", "xxxxxxxx????xxxxxxx");
             if (address != null)
             {
-                s_getHandlingDataByHash = (delegate* unmanaged[Stdcall]<IntPtr, ulong>)(Rel32(address, -0x7));
+                s_getHandlingDataByHash = (delegate* unmanaged[Stdcall]<IntPtr, ulong>)Rel32(address, -0x7);
             }
 
             // Find entity pools and interior proxy pool
@@ -227,59 +227,59 @@ namespace SHVDN
                 s_uiHeightAddr = Rel32<int>(address, 0x1A);
                 s_grcDeviceAddr = new IntPtr(Rel32(address, 0x2B));
 
-                s_updateMonitorConfigurationFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(Rel32(address, 0x30));
-                s_isMultiheadFunc = (delegate* unmanaged[Stdcall]<IntPtr, bool>)(Rel32(address, 0x38));
-                s_getLandscapeMonitorFunc = (delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*>)(Rel32(address, 0x50));
+                s_updateMonitorConfigurationFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)Rel32(address, 0x30);
+                s_isMultiheadFunc = (delegate* unmanaged[Stdcall]<IntPtr, bool>)Rel32(address, 0x38);
+                s_getLandscapeMonitorFunc = (delegate* unmanaged[Stdcall]<IntPtr, GridMonitor*>)Rel32(address, 0x50);
             }
 
             // Find euphoria functions
             address = MemScanner.FindPatternBmh("\x40\x53\x48\x83\xEC\x20\x83\x61\x0C\x00\x44\x89\x41\x08\x49\x63\xC0", "xxxxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_initMessageMemoryFunc = (delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong>)(new IntPtr(address));
+                s_initMessageMemoryFunc = (delegate* unmanaged[Stdcall]<ulong, ulong, int, ulong>)new IntPtr(address);
             }
 
             address = MemScanner.FindPatternBmh("\x0F\x84\x8B\x00\x00\x00\x48\x8B\x47\x30\x48\x8B\x48\x10\x48\x8B\x51\x20\x80\x7A\x10\x0A", "xxxxxxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
                 s_sendNmMessageToPedFunc =
-                    (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)(Rel32(address, -0x1E));
+                    (delegate* unmanaged[Stdcall]<ulong, IntPtr, ulong, void>)Rel32(address, -0x1E);
             }
 
             address = MemScanner.FindPatternBmh("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8B\xF8", "xxxx?xxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_setNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)(new IntPtr(address));
+                s_setNmParameterInt = (delegate* unmanaged[Stdcall]<ulong, IntPtr, int, byte>)new IntPtr(address);
             }
 
             address = MemScanner.FindPatternBmh("\x48\x89\x5C\x24\x00\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x41\x8A\xF8", "xxxx?xxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_setNmParameterBool = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)(new IntPtr(address));
+                s_setNmParameterBool = (delegate* unmanaged[Stdcall]<ulong, IntPtr, bool, byte>)new IntPtr(address);
             }
 
             address = MemScanner.FindPatternBmh("\x40\x53\x48\x83\xEC\x30\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
             if (address != null)
             {
-                s_setNmParameterFloat = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)(new IntPtr(address));
+                s_setNmParameterFloat = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, byte>)new IntPtr(address);
             }
 
             address = MemScanner.FindPatternBmh("\x57\x48\x83\xEC\x20\x48\x8B\xD9\x48\x63\x49\x0C\x49\x8B\xE8", "xxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_setNmParameterString = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)(new IntPtr(address - 15));
+                s_setNmParameterString = (delegate* unmanaged[Stdcall]<ulong, IntPtr, IntPtr, byte>)new IntPtr(address - 15);
             }
 
             address = MemScanner.FindPatternBmh("\x40\x53\x48\x83\xEC\x40\x48\x8B\xD9\x48\x63\x49\x0C", "xxxxxxxxxxxxx");
             if (address != null)
             {
-                s_setNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)(new IntPtr(address));
+                s_setNmParameterVector = (delegate* unmanaged[Stdcall]<ulong, IntPtr, float, float, float, byte>)new IntPtr(address);
             }
 
             address = MemScanner.FindPatternBmh("\x4D\x8B\xF0\x48\x8B\xF2\xE8\x00\x00\x00\x00\x33\xFF\x48\x85\xC0\x75\x07\x32\xC0\xE9\xD8\x03\x00\x00", "xxxxxxx????xxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_getActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)(Rel32(address, 0x7));
+                s_getActiveTaskFunc = (delegate* unmanaged[Stdcall]<ulong, CTask*>)Rel32(address, 0x7);
             }
 
             address = MemScanner.FindPatternBmh("\x75\xEF\x48\x8B\x5C\x24\x30\xB8", "xxxxxxxx");
@@ -326,14 +326,14 @@ namespace SHVDN
             {
                 byte* doesTextLabelExistFuncAddr = Rel32(address, 17);
                 byte* getLabelTextByHashFuncAddr = Rel32(doesTextLabelExistFuncAddr, 28);
-                s_getLabelTextByHashFunc = (delegate* unmanaged[Stdcall]<ulong, int, ulong>)(getLabelTextByHashFuncAddr);
+                s_getLabelTextByHashFunc = (delegate* unmanaged[Stdcall]<ulong, int, ulong>)getLabelTextByHashFuncAddr;
             }
 
             address = MemScanner.FindPatternBmh("\x8A\x4C\x24\x60\x8B\x50\x10\x44\x8A\xCE", "xxxxxxxxxx");
             if (address != null)
             {
                 s_checkpointPoolAddress = Rel32<ulong>(address, 17);
-                s_getCGameScriptHandlerAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(Rel32(address, -19));
+                s_getCGameScriptHandlerAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)Rel32(address, -19);
             }
 
             address = MemScanner.FindPatternBmh("\x3B\x35\x00\x00\x00\x00\x74\x00\x48\x81\xFD", "xx????x?xxx");
@@ -365,7 +365,7 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\x33\xDB\xE8\x00\x00\x00\x00\x48\x85\xC0\x74\x07\x48\x8B\x40\x20\x8B\x58\x18", "xxx????xxxxxxxxxxxx");
             if (address != null)
             {
-                s_getLocalPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)(Rel32(address, 3));
+                s_getLocalPlayerPedAddressFunc = (delegate* unmanaged[Stdcall]<ulong>)Rel32(address, 3);
             }
 
             address = MemScanner.FindPatternBmh("\x4C\x8D\x05\x00\x00\x00\x00\x74\x07\xB8\x00\x00\x00\x00\xEB\x2D\x33\xC0", "xxx????xxx????xxxx");
@@ -387,12 +387,12 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\xF3\x0F\x10\x5C\x24\x20\xF3\x0F\x10\x54\x24\x24\xF3\x0F\x59\xD9\xF3\x0F\x59\xD1\xF3\x0F\x10\x44\x24\x28\xF3\x0F\x11\x1F", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_getRotationFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int, float*>)(Rel32(address, -0x14));
+                s_getRotationFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int, float*>)Rel32(address, -0x14);
             }
             address = MemScanner.FindPatternBmh("\xF3\x0F\x11\x4D\x38\xF3\x0F\x11\x45\x3C\xE8\x00\x00\x00\x00\x0F\x28\xC6\x0F\x28\xCE\xB9\x01\x00\x00\x00\xF3\x0F\x11\x73\x10\x66\x44\x03\xE9", "xxxxxxxxxxx????xxxxxxxxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_getQuaternionFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int>)(Rel32(address, 11));
+                s_getQuaternionFromMatrixFunc = (delegate* unmanaged[Stdcall]<float*, ulong, int>)Rel32(address, 11);
             }
 
             address = MemScanner.FindPatternBmh("\x48\x8B\x42\x20\x48\x85\xC0\x74\x09\xF3\x0F\x10\x80", "xxxxxxxxxxxxx");
@@ -415,12 +415,12 @@ namespace SHVDN
 
                 startAddressToSearch = new IntPtr(address);
                 address = MemScanner.FindPatternBmh("\x48\x63\x51\x00\x48\x85\xD2", "xxx?xxx", startAddressToSearch);
-                NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset = (*(sbyte*)(address + 3));
+                NativeMemory.ElementCountOfCAttackerArrayOfEntityOffset = *(sbyte*)(address + 3);
 
                 startAddressToSearch = new IntPtr(address);
                 address = MemScanner.FindPatternBmh("\x48\x83\xC1\x00\x48\x3B\xC2\x7C\xEF", "xxx?xxxxx", startAddressToSearch);
                 // the element size might be 0x10 in older builds (the size is 0x18 at least in b1604 and b2372)
-                NativeMemory.ElementSizeOfCAttackerArrayOfEntity = (*(sbyte*)(address + 3));
+                NativeMemory.ElementSizeOfCAttackerArrayOfEntity = *(sbyte*)(address + 3);
             }
 
             address = MemScanner.FindPatternBmh("\x74\x11\x8B\xD1\x48\x8D\x0D\x00\x00\x00\x00\x45\x33\xC0", "xxxxxxx????xxx");
@@ -617,7 +617,7 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\xEB\x26\x8B\x87\x00\x00\x00\x00\x25\x00\xF8\xFF\xFF\xC1\xE0\x12", "xxxx????xxxxxxxx");
             if (address != null)
             {
-                s_activateSpecialAbilityFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(Rel32(address, 0x24));
+                s_activateSpecialAbilityFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)Rel32(address, 0x24);
             }
 
             int gameVersion = GetGameVersion();
@@ -627,7 +627,7 @@ namespace SHVDN
                 address = MemScanner.FindPatternBmh("\x0F\x84\x49\x01\x00\x00\x33\xD2\xE8", "xxxxxxxxx");
                 if (address != null)
                 {
-                    s_getSpecialAbilityAddressFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr>)(Rel32(address, 0x9));
+                    s_getSpecialAbilityAddressFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr>)Rel32(address, 0x9);
                 }
             }
             else
@@ -695,7 +695,7 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\x39\x70\x10\x75\x17\x40\x84\xED\x74\x09\x33\xD2\xE8", "xxxxxxxxxxxxx");
             if (address != null)
             {
-                s_explodeProjectileFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, void>)(Rel32(address, 13));
+                s_explodeProjectileFunc = (delegate* unmanaged[Stdcall]<IntPtr, int, void>)Rel32(address, 13);
             }
 
             address = MemScanner.FindPatternBmh("\x0F\x84\x8F\x00\x00\x00\x8A\x48\x28\x80\xE9\x02\x80\xF9\x03\x0F\x87\x80\x00\x00\x00\x48\x8B\x10\x48\x8B\xC8\xFF\x52", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
@@ -707,7 +707,7 @@ namespace SHVDN
             address = MemScanner.FindPatternNaive("\x0F\xBE\x5E\x06\x48\x8B\xCF\xFF\x50\x00\x8B\xD3\x48\x8B\xC8\xE8\x00\x00\x00\x00\x8B\x4E", "xxxxxxxxx?xxxxxx????xx");
             if (address != null)
             {
-                s_fragInst__BreakOffAboveFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)(Rel32(address, 16));
+                s_fragInst__BreakOffAboveFunc = (delegate* unmanaged[Stdcall]<FragInst*, int, FragInst*>)Rel32(address, 16);
             }
             address = MemScanner.FindPatternBmh("\x74\x56\x48\x8B\x0D\x00\x00\x00\x00\x41\x0F\xB7\xD0\x45\x33\xC9\x45\x33\xC0", "xxxxx????xxxxxxxxxx");
             if (address != null)
@@ -737,13 +737,13 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\x84\x00\x74\x00\x49\x8B\x00\xE8\x00\x00\x00\x00\x80\x00\x00\x00\x0F", "x?x?xx?x????x??xx");
             if (address != null)
             {
-                s_isCameraInAccurateMode = (delegate* unmanaged[Stdcall]<byte>)(new IntPtr(*(int*)(address + 0x17) + address + 0x1B));
+                s_isCameraInAccurateMode = (delegate* unmanaged[Stdcall]<byte>)new IntPtr(*(int*)(address + 0x17) + address + 0x1B);
             }
 
             address = MemScanner.FindPatternBmh("\x8D\x4F\x07\x44\x0B\xC0\x41\x81\xC8\x00\x00\x00\xFF\xE8", "xxxxxxxxxxxxxx");
             if (address != null)
             {
-                s_setBlipParameterFunc_Color32 = (delegate* unmanaged[Stdcall]<int, int, uint, void>)(Rel32(address, 0xE));
+                s_setBlipParameterFunc_Color32 = (delegate* unmanaged[Stdcall]<int, int, uint, void>)Rel32(address, 0xE);
             }
 
             address = MemScanner.FindPatternBmh("\x48\x83\xEC\x28\x33\xC0\x38\x05\x00\x00\x00\x00\x74\x47\x38\x05", "xxxxxxxx????xxxx");
@@ -850,7 +850,7 @@ namespace SHVDN
                             continue;
                         }
 
-                        ulong addr2 = *(ulong*)(addr1);
+                        ulong addr2 = *(ulong*)addr1;
                         if (addr2 != 0)
                         {
                             switch ((ModelInfoType)(*(byte*)(addr2 + 157) & 0x1F))
@@ -1057,7 +1057,7 @@ namespace SHVDN
                 return;
             }
 
-            IntPtr oldFwRegdRef = (IntPtr)(*(long*)(lhs));
+            IntPtr oldFwRegdRef = (IntPtr)(*(long*)lhs);
             if (oldFwRegdRef == rhs)
             {
                 return;
@@ -1070,7 +1070,7 @@ namespace SHVDN
 
             *(ulong*)lhs = (ulong)rhs;
 
-            IntPtr newFwRegdRef = (IntPtr)(*(long*)(lhs));
+            IntPtr newFwRegdRef = (IntPtr)(*(long*)lhs);
             if (newFwRegdRef != IntPtr.Zero)
             {
                 s_fwRefAwareBaseImpl__AddKnownRef(newFwRegdRef, lhs);
@@ -1093,14 +1093,14 @@ namespace SHVDN
             {
                 // The function is for the game version b2802 or later ones.
                 // This one directly returns a hash value (not a pointer value) unlike the previous function.
-                var getClassNameHashFunc = (delegate* unmanaged[Stdcall]<uint>)(vTable[2]);
+                var getClassNameHashFunc = (delegate* unmanaged[Stdcall]<uint>)vTable[2];
                 return getClassNameHashFunc();
             }
 
             // The function is for game versions prior to b2802.
             // The function uses rax and rdx registers in newer versions prior to b2802 (probably since b2189), and it uses only rax register in older versions.
             // The function returns the address where the class name hash is in all versions prior to (the address will be the outVal address in newer versions).
-            var getClassNameAddressHashFunc = (delegate* unmanaged[Stdcall]<ulong, uint*, uint*>)(vTable[2]);
+            var getClassNameAddressHashFunc = (delegate* unmanaged[Stdcall]<ulong, uint*, uint*>)vTable[2];
 
             uint outVal = 0;
             uint* returnValueAddress = getClassNameAddressHashFunc(0, &outVal);
@@ -1381,7 +1381,7 @@ namespace SHVDN
 
             if (boneIndex < crSkeleton->BoneCount)
             {
-                return crSkeleton->GetBoneObjectMatrixAddress((boneIndex));
+                return crSkeleton->GetBoneObjectMatrixAddress(boneIndex);
             }
 
             return IntPtr.Zero;
@@ -1477,7 +1477,7 @@ namespace SHVDN
         public static float* GetEntityAngularVelocity(IntPtr entityAddress)
         {
             ulong vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)GetAngularVelocityVFuncOfEntityOffset);
-            var getEntityAngularVelocity = (delegate* unmanaged[Stdcall]<IntPtr, float*>)(vFuncAddr);
+            var getEntityAngularVelocity = (delegate* unmanaged[Stdcall]<IntPtr, float*>)vFuncAddr;
 
             return getEntityAngularVelocity(entityAddress);
         }
@@ -1485,7 +1485,7 @@ namespace SHVDN
         public static void SetEntityAngularVelocity(IntPtr entityAddress, float x, float y, float z)
         {
             ulong vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)SetAngularVelocityVFuncOfEntityOffset);
-            var setEntityAngularVelocityDelegate = (delegate* unmanaged[Stdcall]<IntPtr, float*, void>)(vFuncAddr);
+            var setEntityAngularVelocityDelegate = (delegate* unmanaged[Stdcall]<IntPtr, float*, void>)vFuncAddr;
 
             var task = new SetEntityAngularVelocityTask(entityAddress, setEntityAngularVelocityDelegate, x, y, z);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
@@ -1997,7 +1997,7 @@ namespace SHVDN
                 address = MemScanner.FindPatternBmh("\x45\x33\xF6\x8B\xEA\x48\x8B\xF1\x41\x8B\xFE", "xxxxxxxxxxx");
                 if (address != null)
                 {
-                    SubHandlingDataArrayOffset = (*(int*)(address + 15) - 8);
+                    SubHandlingDataArrayOffset = *(int*)(address + 15) - 8;
                 }
 
                 address = MemScanner.FindPatternNaive("\x48\x85\xC0\x74\x3C\x8B\x80\x00\x00\x00\x00\xC1\xE8\x0F", "xxxxxxx????xxx");
@@ -2064,7 +2064,7 @@ namespace SHVDN
                 address = MemScanner.FindPatternBmh("\x48\x85\xC0\x74\x00\x8B\x00\x48\x8B\x00\xE8\x00\x00\x00\x00\x48\x8B\xC8\xE8", "xxxx?x?xx?x????xxxx");
                 if (address != null)
                 {
-                    s_fixVehicleWheelFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(Rel32(address, 19));
+                    s_fixVehicleWheelFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)Rel32(address, 19);
                     address = MemScanner.FindPatternNaive("\x80\xA1\x00\x00\x00\x00\xFD", "xx????x", new IntPtr(address + 23));
                     ShouldShowOnlyVehicleTiresWithPositiveHealthOffset = *(int*)(address + 2);
                 }
@@ -2086,16 +2086,16 @@ namespace SHVDN
                 if (gameVersion >= 40)
                 {
                     address = MemScanner.FindPatternBmh("\x4C\x8B\x81\x28\x01\x00\x00\x0F\x29\x70\xE8\x0F\x29\x78\xD8", "xxxxxxxxxxxxxxx");
-                    s_punctureVehicleTireNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x10)));
+                    s_punctureVehicleTireNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, ulong, ulong, int, byte, bool, void>)new IntPtr((long)(address - 0x10));
                     address = MemScanner.FindPatternBmh("\x48\x83\xEC\x50\x48\x8B\x81\x00\x00\x00\x00\x48\x8B\x00\xF6\x80", "xxxxxxx????xx?xx");
-                    s_burstVehicleTireOnRimNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)(new IntPtr((long)(address - 0xB)));
+                    s_burstVehicleTireOnRimNewFunc = (delegate* unmanaged[Stdcall]<IntPtr, void>)new IntPtr((long)(address - 0xB));
                 }
                 else
                 {
                     address = MemScanner.FindPatternBmh("\x41\xF6\x81\x00\x00\x00\x00\x20\x0F\x29\x70\xE8\x0F\x29\x78\xD8\x49\x8B\xF9", "xxx????xxxxxxxxxxxx");
-                    s_punctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)(new IntPtr((long)(address - 0x14)));
+                    s_punctureVehicleTireOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, ulong, float, IntPtr, ulong, ulong, int, byte, bool, void>)new IntPtr((long)(address - 0x14));
                     address = MemScanner.FindPatternBmh("\x48\x83\xEC\x50\xF6\x82\x00\x00\x00\x00\x20\x48\x8B\xF2\x48\x8B\xE9", "xxxxxx????xxxxxxx");
-                    s_burstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)(new IntPtr((long)(address - 0x10)));
+                    s_burstVehicleTireOnRimOldFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr, void>)new IntPtr((long)(address - 0x10));
                 }
 
                 // The values for special flight mode (e.g. Deluxo) are present only in b1290 or later versions
@@ -2137,7 +2137,7 @@ namespace SHVDN
                     }
 
                     ulong vFuncAddr = *(ulong*)(*(ulong*)subHandlingDataAddr + (uint)0x10);
-                    var getSubHandlingDataVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(vFuncAddr);
+                    var getSubHandlingDataVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)vFuncAddr;
                     int handlingTypeOfCurrentElement = getSubHandlingDataVFunc(subHandlingDataAddr);
                     if (handlingTypeOfCurrentElement == handlingType)
                     {
@@ -2620,14 +2620,14 @@ namespace SHVDN
                 address = MemScanner.FindPatternBmh("\x48\x8B\x88\x00\x00\x00\x00\x41\xB0\x01\xE8", "xxx????xxxx");
                 if (address != null)
                 {
-                    s_audSpeechAudioEntity__SetAmbientVoiceNameFunc = (delegate* unmanaged[Stdcall]<IntPtr, uint, bool, void>)(Rel32(address, 0xB));
+                    s_audSpeechAudioEntity__SetAmbientVoiceNameFunc = (delegate* unmanaged[Stdcall]<IntPtr, uint, bool, void>)Rel32(address, 0xB);
                     AudSpeechAudioEntityOffset = *(int*)(address + 0x3);
                 }
 
                 address = MemScanner.FindPatternBmh("\x83\x4C\x24\x38\xFF\x44\x89\x44\x24\x30\x4C\x89\x44\x24\x28\x89\x7C\x24\x20\x48\x8B", "xxxxxxxxxxxxxxxxxxxxx");
                 if (address != null)
                 {
-                    s_audSpeechAudioEntity__SayFunc = (delegate* unmanaged[Stdcall]<IntPtr, uint, IntPtr, uint, int, IntPtr, uint, int, float, bool, int*, FVector3*, int>)(Rel32(address, 0x21));
+                    s_audSpeechAudioEntity__SayFunc = (delegate* unmanaged[Stdcall]<IntPtr, uint, IntPtr, uint, int, IntPtr, uint, int, float, bool, int*, FVector3*, int>)Rel32(address, 0x21);
                 }
 
                 address = MemScanner.FindPatternBmh("\x0F\x85\xFF\xFF\xFF\xFF\x83\xF9\x0E\x0F\x84\xFF\xFF\xFF\xFF\x44\x38\x0D\xFF\xFF\xFF\xFF\x41\xBD\x02\x00\x00\x00", "xx????xxxxx????xxx????xxxxxx");
@@ -2686,7 +2686,7 @@ namespace SHVDN
                 }
 
                 uint bitFlags = *(uint*)(pedAddress + IsInVehicleOffset);
-                bool isPedInVehicle = ((bitFlags & (1 << 0x1E)) != 0);
+                bool isPedInVehicle = (bitFlags & (1 << 0x1E)) != 0;
                 if (!isPedInVehicle)
                 {
                     return 0;
@@ -2970,7 +2970,7 @@ namespace SHVDN
                         int indexToRead = (low + high) >> 1;
                         ulong currentItem = weaponInventoryArray->GetElementAddress(indexToRead);
 
-                        uint slotHashOfCurrentItem = *(uint*)(currentItem);
+                        uint slotHashOfCurrentItem = *(uint*)currentItem;
                         CItemInfo* weaponInfo = *(CItemInfo**)(currentItem + 0x8);
                         if (slotHashOfCurrentItem == slotHash && weaponInfo != null)
                         {
@@ -3210,7 +3210,7 @@ namespace SHVDN
 
         private static IntPtr FindCModelInfo(int modelHash)
         {
-            for (HashNode* cur = ((HashNode**)s_modelHashTable)[(uint)(modelHash) % s_modelHashEntries]; cur != null; cur = cur->Next)
+            for (HashNode* cur = ((HashNode**)s_modelHashTable)[(uint)modelHash % s_modelHashEntries]; cur != null; cur = cur->Next)
             {
                 if (cur->Hash != modelHash)
                 {
@@ -3230,7 +3230,7 @@ namespace SHVDN
                     continue;
                 }
 
-                long* address = (long*)(*(ulong*)(addr1));
+                long* address = (long*)(*(ulong*)addr1);
                 return new IntPtr(address);
             }
 
@@ -3241,7 +3241,7 @@ namespace SHVDN
         {
             if (address != IntPtr.Zero)
             {
-                return ((ModelInfoType)((*(byte*)((ulong)address.ToInt64() + 157) & 0x1F)));
+                return (ModelInfoType)(*(byte*)((ulong)address.ToInt64() + 157) & 0x1F);
             }
 
             return ModelInfoType.Invalid;
@@ -3254,7 +3254,7 @@ namespace SHVDN
                 return VehicleType.None;
             }
 
-            int typeInt = (*(int*)((byte*)modelInfoAddress.ToPointer() + s_vehicleTypeOffsetInModelInfo));
+            int typeInt = *(int*)((byte*)modelInfoAddress.ToPointer() + s_vehicleTypeOffsetInModelInfo);
 
             // Normalize the value to vehicle type range for b944 or later versions if current game version is earlier than b944.
             // The values for CAmphibiousAutomobile and CAmphibiousQuadBike were inserted between those for CSubmarineCar and CHeli in b944.
@@ -3292,7 +3292,7 @@ namespace SHVDN
         {
             if (fwArcheTypeAddress != IntPtr.Zero)
             {
-                return (*(int*)((ulong)fwArcheTypeAddress.ToInt64() + 0x18));
+                return *(int*)((ulong)fwArcheTypeAddress.ToInt64() + 0x18);
             }
 
             return 0;
@@ -3318,7 +3318,7 @@ namespace SHVDN
             if (fwArcheTypeAddress != IntPtr.Zero)
             {
                 // The game can't draw fragment entities properly if this value is not 1
-                return (*(byte*)((ulong)fwArcheTypeAddress.ToInt64() + 0x60) == 1);
+                return *(byte*)((ulong)fwArcheTypeAddress.ToInt64() + 0x60) == 1;
             }
 
             return false;
@@ -3770,7 +3770,7 @@ namespace SHVDN
 
                 var resultList = new List<int>(itemCount);
 
-                for (uint i = 0; (projectilesLeft > 0 && i < projectileCapacity); i++)
+                for (uint i = 0; projectilesLeft > 0 && i < projectileCapacity; i++)
                 {
                     if (fwScriptGuidPool->IsFull())
                     {
@@ -3878,7 +3878,7 @@ namespace SHVDN
 
         private static int GetFwBasePoolCount(ulong address)
         {
-            var pool = (FwBasePool*)(address);
+            var pool = (FwBasePool*)address;
             return (int)pool->SlotsUsed;
         }
 
@@ -3904,7 +3904,7 @@ namespace SHVDN
 
         private static int GetFwBasePoolCapacity(ulong address)
         {
-            var pool = (FwBasePool*)(address);
+            var pool = (FwBasePool*)address;
             return (int)pool->Capacity;
         }
 
@@ -5083,7 +5083,7 @@ namespace SHVDN
                 return -1;
             }
 
-            int blipCreationIncrement = (handle >> 0x10);
+            int blipCreationIncrement = handle >> 0x10;
             if (blipCreationIncrement != *(int*)(blipAddress + 0x8))
             {
                 return -1;
@@ -5158,7 +5158,7 @@ namespace SHVDN
 
             return IntPtr.Zero;
 
-            bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(blipAddress + 8) == (((uint)blipHandle >> 0x10));
+            bool IsBlipCreationIncrementValid(ulong blipAddress, int blipHandle) => *(ushort*)(blipAddress + 8) == ((uint)blipHandle >> 0x10);
         }
 
 
@@ -5277,7 +5277,7 @@ namespace SHVDN
                         continue;
                     }
 
-                    _returnAddress = new IntPtr((long)((byte*)(_poolAddress) + item->IndexOfPool * _elementSize));
+                    _returnAddress = new IntPtr((long)((byte*)_poolAddress + item->IndexOfPool * _elementSize));
                     break;
                 }
             }
@@ -5531,7 +5531,7 @@ namespace SHVDN
             }
 
             ulong vFuncAddr = *(ulong*)(*(ulong*)cObjectAddress + (uint)s_getAsCProjectileConstVFuncOffset);
-            var getAsCProjectileConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(vFuncAddr);
+            var getAsCProjectileConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)vFuncAddr;
 
             return getAsCProjectileConstVFunc(cObjectAddress);
         }
@@ -5551,7 +5551,7 @@ namespace SHVDN
             }
 
             ulong vFuncAddr = *(ulong*)(*(ulong*)cObjectAddress + (uint)s_getAsCProjectileRocketConstVFuncOffset);
-            var getAsCProjectileRocketConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(vFuncAddr);
+            var getAsCProjectileRocketConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)vFuncAddr;
 
             return getAsCProjectileRocketConstVFunc(cObjectAddress);
         }
@@ -5571,7 +5571,7 @@ namespace SHVDN
             }
 
             ulong vFuncAddr = *(ulong*)(*(ulong*)cObjectAddress + (uint)s_getAsCProjectileThrownConstVFuncOffset);
-            var getAsCProjectileThrownConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)(vFuncAddr);
+            var getAsCProjectileThrownConstVFunc = (delegate* unmanaged[Stdcall]<IntPtr, IntPtr>)vFuncAddr;
 
             return getAsCProjectileThrownConstVFunc(cObjectAddress);
         }
@@ -6182,7 +6182,7 @@ namespace SHVDN
         private static FragInst* GetFragInstAddressOfEntity(IntPtr entityAddress)
         {
             ulong vFuncAddr = *(ulong*)(*(ulong*)entityAddress.ToPointer() + (uint)s_getFragInstVFuncOffset);
-            var getFragInstFunc = (delegate* unmanaged[Stdcall]<IntPtr, FragInst*>)(vFuncAddr);
+            var getFragInstFunc = (delegate* unmanaged[Stdcall]<IntPtr, FragInst*>)vFuncAddr;
 
             return getFragInstFunc(entityAddress);
         }
@@ -6277,7 +6277,7 @@ namespace SHVDN
             }
 
             // This virtual function will return -1 if phInstGta is not a NM one
-            var fragInstNmGtaGetUnkValVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)(new IntPtr((long)*(ulong*)(*(ulong*)fragInstNmGtaAddress + s_fragInstNmGtaGetUnkValVFuncOffset)));
+            var fragInstNmGtaGetUnkValVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)new IntPtr((long)*(ulong*)(*(ulong*)fragInstNmGtaAddress + s_fragInstNmGtaGetUnkValVFuncOffset));
             if (fragInstNmGtaGetUnkValVFunc(fragInstNmGtaAddress) == -1)
             {
                 return false;
@@ -6350,7 +6350,7 @@ namespace SHVDN
                 }
             }
 
-            if ((stringVector3ArrayParameters != null))
+            if (stringVector3ArrayParameters != null)
             {
                 foreach (KeyValuePair<string, object> arg in stringVector3ArrayParameters)
                 {
