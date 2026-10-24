@@ -3168,8 +3168,7 @@ namespace SHVDN
 
                     ResolutionResult = new Size(
                         (int)(screenInfoAddr->Right - screenInfoAddr->Left),
-                        (int)(screenInfoAddr->Bottom - screenInfoAddr->Top)
-                        );
+                        (int)(screenInfoAddr->Bottom - screenInfoAddr->Top));
                 }
             }
         }
@@ -3756,8 +3755,8 @@ namespace SHVDN
                 return resultList.ToArray();
             }
 
-            private int[] GetGuidHandlesFromProjectilePool(FwBasePool* fwScriptGuidPool,
-                ulong* projectilePool, int itemCount, int maxItemCount, Func<IntPtr, bool> predicate)
+            private int[] GetGuidHandlesFromProjectilePool(
+                FwBasePool* fwScriptGuidPool, ulong* projectilePool, int itemCount, int maxItemCount, Func<IntPtr, bool> predicate)
             {
                 int projectilesLeft = itemCount;
                 int projectileCapacity = maxItemCount;
@@ -4005,7 +4004,8 @@ namespace SHVDN
                 return Array.Empty<int>();
             }
 
-            var task = new FwScriptGuidPoolTask(PoolType.Projectile,
+            var task = new FwScriptGuidPoolTask(
+                PoolType.Projectile,
                 new IntPtr(NativeMemory.s_projectilePoolAddress), position, radius * radius);
             ScriptDomain.CurrentDomain.ExecuteTaskWithGameThreadTlsContext(task);
 
