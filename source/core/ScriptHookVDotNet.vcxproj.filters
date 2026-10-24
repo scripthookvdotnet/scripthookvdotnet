@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CsCompile Include="Console.cs" />
     <CsCompile Include="Log.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="PolyfillAttributes\SkipLocalsInitAttribute.cs">
@@ -19,6 +18,9 @@
     <ResourceCompile Include="ScriptHookVDotNet.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="Console">
+      <UniqueIdentifier>{8f99402e-7562-41d4-a0c0-9d8bfcfc13f7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{418dc6aa-778b-4395-846f-bc689697e4a9}</UniqueIdentifier>
     </Filter>
@@ -62,6 +64,11 @@
     </CsCompile>
     <CsCompile Include="PolyfillAttributes\IsUnmanagedAttribute.cs">
       <Filter>PolyfillAttributes</Filter>
+    </CsCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="Console\Console.cs">
+      <Filter>Console</Filter>
     </CsCompile>
   </ItemGroup>
   <ItemGroup>
