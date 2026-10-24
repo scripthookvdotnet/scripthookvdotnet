@@ -145,10 +145,10 @@
     <CsCompile Include="MemScanner.cs" />
     <CsCompile Include="NativeFunc.cs" />
     <CsCompile Include="NativeMemory.cs" />
-    <CsCompile Include="Script.cs" />
-    <CsCompile Include="ScriptDomain.cs" />
+    <CsCompile Include="Scripting\Script.cs" />
+    <CsCompile Include="Scripting\ScriptDomain.cs" />
     <CsCompile Include="StringMarshal.cs" />
-    <CsCompile Include="CheapThreadSafeStopwatch.cs" />
+    <CsCompile Include="Scripting\CheapThreadSafeStopwatch.cs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />

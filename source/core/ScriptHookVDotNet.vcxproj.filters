@@ -5,10 +5,7 @@
     <CsCompile Include="Log.cs" />
     <CsCompile Include="NativeFunc.cs" />
     <CsCompile Include="NativeMemory.cs" />
-    <CsCompile Include="Script.cs" />
-    <CsCompile Include="ScriptDomain.cs" />
     <CsCompile Include="StringMarshal.cs" />
-    <CsCompile Include="CheapThreadSafeStopwatch.cs" />
     <CsCompile Include="MemDataMarshal.cs" />
     <CsCompile Include="MemScanner.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
@@ -56,6 +53,9 @@
     </Filter>
     <Filter Include="PolyfillAttributes">
       <UniqueIdentifier>{10221b12-e595-499f-acfc-621e3d2a0016}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripting">
+      <UniqueIdentifier>{8a8de3ae-e402-4c21-8554-3f52cc6840d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +195,17 @@
     </CsCompile>
     <CsCompile Include="Game\Enums\PoolType.cs">
       <Filter>Game\Enums</Filter>
+    </CsCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="Scripting\CheapThreadSafeStopwatch.cs">
+      <Filter>Scripting</Filter>
+    </CsCompile>
+    <CsCompile Include="Scripting\Script.cs">
+      <Filter>Scripting</Filter>
+    </CsCompile>
+    <CsCompile Include="Scripting\ScriptDomain.cs">
+      <Filter>Scripting</Filter>
     </CsCompile>
   </ItemGroup>
 </Project>
