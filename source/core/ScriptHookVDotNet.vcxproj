@@ -141,13 +141,13 @@
     <CsCompile Include="Console.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="Log.cs" />
-    <CsCompile Include="MemDataMarshal.cs" />
+    <CsCompile Include="Marshals\MemDataMarshal.cs" />
     <CsCompile Include="MemScanner.cs" />
     <CsCompile Include="NativeFunc.cs" />
     <CsCompile Include="NativeMemory.cs" />
     <CsCompile Include="Scripting\Script.cs" />
     <CsCompile Include="Scripting\ScriptDomain.cs" />
-    <CsCompile Include="StringMarshal.cs" />
+    <CsCompile Include="Marshals\StringMarshal.cs" />
     <CsCompile Include="Scripting\CheapThreadSafeStopwatch.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,8 +5,6 @@
     <CsCompile Include="Log.cs" />
     <CsCompile Include="NativeFunc.cs" />
     <CsCompile Include="NativeMemory.cs" />
-    <CsCompile Include="StringMarshal.cs" />
-    <CsCompile Include="MemDataMarshal.cs" />
     <CsCompile Include="MemScanner.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="PolyfillAttributes\SkipLocalsInitAttribute.cs">
@@ -50,6 +48,9 @@
     </Filter>
     <Filter Include="Game\Enums\Vehicle">
       <UniqueIdentifier>{2115f7f1-65dc-4378-8033-be6a402d5712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Marshals">
+      <UniqueIdentifier>{7a574b31-d009-4762-a03b-ab95bcd65b93}</UniqueIdentifier>
     </Filter>
     <Filter Include="PolyfillAttributes">
       <UniqueIdentifier>{10221b12-e595-499f-acfc-621e3d2a0016}</UniqueIdentifier>
@@ -195,6 +196,14 @@
     </CsCompile>
     <CsCompile Include="Game\Enums\PoolType.cs">
       <Filter>Game\Enums</Filter>
+    </CsCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="Marshals\MemDataMarshal.cs">
+      <Filter>Marshals</Filter>
+    </CsCompile>
+    <CsCompile Include="Marshals\StringMarshal.cs">
+      <Filter>Marshals</Filter>
     </CsCompile>
   </ItemGroup>
   <ItemGroup>
