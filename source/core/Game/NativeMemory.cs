@@ -3604,15 +3604,15 @@ namespace SHVDN
 
         internal sealed class FwScriptGuidPoolTask : IScriptTask
         {
-            internal PoolType _poolType;
-            internal IntPtr _poolAddress;
+            private PoolType _poolType;
+            private IntPtr _poolAddress;
 
-            internal bool _doPosCheck = false;
-            internal bool _doModelCheck = false;
-            internal float _radiusSquared;
-            internal FVector3? _position;
-            internal HashSet<int> _modelHashes;
-            internal Func<IntPtr, bool> _predicate;
+            private bool _doPosCheck = false;
+            private bool _doModelCheck = false;
+            private float _radiusSquared;
+            private FVector3? _position;
+            private HashSet<int> _modelHashes;
+            private Func<IntPtr, bool> _predicate;
 
             public int[] ResultHandles = Array.Empty<int>();
 
@@ -5645,7 +5645,7 @@ namespace SHVDN
 
         internal sealed class ExplodeProjectileTask : IScriptTask
         {
-            internal IntPtr _projectileAddress;
+            private IntPtr _projectileAddress;
 
             internal ExplodeProjectileTask(IntPtr projectileAddress)
             {
@@ -6030,8 +6030,8 @@ namespace SHVDN
 
         internal sealed class FragInstBreakOffAboveTask : IScriptTask
         {
-            internal FragInst* _fragInst;
-            internal int _componentIndex;
+            private FragInst* _fragInst;
+            private int _componentIndex;
             public bool WasNewFragInstCreated;
 
             internal FragInstBreakOffAboveTask(FragInst* fragInst, int componentIndex)
