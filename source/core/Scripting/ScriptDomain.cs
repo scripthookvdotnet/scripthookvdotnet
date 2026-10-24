@@ -1237,7 +1237,9 @@ namespace SHVDN
             }
 
             // Filter out non-script assemblies
-            for (int i = 0; i < assemblyFiles.Count; i++)
+            int i = 0;
+
+            while(i < assemblyFiles.Count)
             {
                 try
                 {
@@ -1245,20 +1247,19 @@ namespace SHVDN
 
                     if (!assemblyName.Name.StartsWith("ScriptHookVDotNet", StringComparison.OrdinalIgnoreCase))
                     {
+                        i++;
                         continue;
                     }
 
                     // Delete copies of SHVDN, since these can cause issues with the assembly binder loading multiple copies
                     File.Delete(assemblyFiles[i]);
-
-                    assemblyFiles.RemoveAt(i--);
                 }
                 catch (Exception ex)
                 {
                     Log.Message(Log.Level.Warning, "Ignoring assembly file ", Path.GetFileName(assemblyFiles[i]), " because of exception: ", ex.ToString());
-
-                    assemblyFiles.RemoveAt(i--);
                 }
+
+                assemblyFiles.RemoveAt(i);
             }
 
             foreach (string filename in sourceFiles)
