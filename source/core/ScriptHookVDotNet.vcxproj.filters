@@ -70,6 +70,15 @@
     <CsCompile Include="Console\Console.cs">
       <Filter>Console</Filter>
     </CsCompile>
+    <CsCompile Include="Console\ConsoleCommand.cs">
+      <Filter>Console</Filter>
+    </CsCompile>
+    <CsCompile Include="Console\KeyManager.cs">
+      <Filter>Console</Filter>
+    </CsCompile>
+    <CsCompile Include="Console\TextFormatting.cs">
+      <Filter>Console</Filter>
+    </CsCompile>
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="Game\MemScanner.cs">

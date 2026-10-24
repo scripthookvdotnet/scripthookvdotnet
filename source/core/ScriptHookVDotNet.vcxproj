@@ -139,6 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <CsCompile Include="Console\Console.cs" />
+    <CsCompile Include="Console\ConsoleCommand.cs" />
+    <CsCompile Include="Console\KeyManager.cs" />
+    <CsCompile Include="Console\TextFormatting.cs" />
     <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="Log.cs" />
     <CsCompile Include="Marshals\MemDataMarshal.cs" />
