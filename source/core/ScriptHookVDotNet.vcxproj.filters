@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CsCompile Include="Log.cs" />
-    <CsCompile Include="KeyboardEvent.cs" />
     <CsCompile Include="PolyfillAttributes\SkipLocalsInitAttribute.cs">
       <Filter>PolyfillAttributes</Filter>
     </CsCompile>
@@ -50,6 +48,9 @@
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{af080d2f-ef07-478b-9391-78214d3d127c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Logging">
+      <UniqueIdentifier>{c4f069fc-a000-4c8d-a987-f6ac433d66a9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Marshals">
       <UniqueIdentifier>{7a574b31-d009-4762-a03b-ab95bcd65b93}</UniqueIdentifier>
@@ -226,6 +227,11 @@
   <ItemGroup>
     <CsCompile Include="Input\KeyboardEvent.cs">
       <Filter>Input</Filter>
+    </CsCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CsCompile Include="Logging\Log.cs">
+      <Filter>Logging</Filter>
     </CsCompile>
   </ItemGroup>
   <ItemGroup>
