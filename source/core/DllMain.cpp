@@ -9,6 +9,91 @@
 #include <atomic>
 #include <mutex>
 
+// The hosted .NET Framework CLR can end up with invalid per-culture NLS sort handles (seen on GTA V
+// b1.0.3889.0 under Windows 11 25H2), so culture-sensitive String.ToLower/ToUpper fail with E_INVALIDARG
+// (via TextInfo.InternalChangeCaseString -> LCMapStringEx). That breaks AppDomain.CreateDomain (its remoting
+// Identity type initializer lower-cases a string) and prevents SHVDN from starting. The same call without
+// the sort handle and the LCMAP_LINGUISTIC_CASING flag succeeds, so we hook LCMapStringEx and retry failed
+// case-mappings that way. The CLR resolves the function dynamically, so we patch the function itself rather
+// than an import table entry. See https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1805
+typedef int (WINAPI *LCMapStringExFunc)(LPCWSTR, DWORD, LPCWSTR, int, LPWSTR, int, LPNLSVERSIONINFO, LPVOID, LPARAM);
+static LCMapStringExFunc sRealLCMapStringEx = nullptr;
+static std::atomic_bool sLCMapStringExHookInstalled(false);
+
+static int WINAPI HookedLCMapStringEx(LPCWSTR locale, DWORD flags, LPCWSTR src, int cchSrc,
+    LPWSTR dst, int cchDst, LPNLSVERSIONINFO ver, LPVOID reserved, LPARAM sortHandle)
+{
+    int result = sRealLCMapStringEx(locale, flags, src, cchSrc, dst, cchDst, ver, reserved, sortHandle);
+    if (result != 0 || (flags & (LCMAP_LOWERCASE | LCMAP_UPPERCASE)) == 0)
+        return result; // succeeded, or not a case-mapping call we need to repair
+
+    // Retry with the known-good parameters: no linguistic casing, no version info, no sort handle.
+    LPCWSTR retryLocale = (locale != nullptr && locale[0] != L'\0') ? locale : LOCALE_NAME_INVARIANT;
+    DWORD retryFlags = flags & ~static_cast<DWORD>(LCMAP_LINGUISTIC_CASING);
+    result = sRealLCMapStringEx(retryLocale, retryFlags, src, cchSrc, dst, cchDst, nullptr, nullptr, 0);
+    if (result != 0)
+        return result;
+    return sRealLCMapStringEx(LOCALE_NAME_INVARIANT, retryFlags, src, cchSrc, dst, cchDst, nullptr, nullptr, 0);
+}
+
+static void InstallLCMapStringExHook()
+{
+    if (sLCMapStringExHookInstalled.exchange(true))
+        return;
+
+    HMODULE kernelBase = GetModuleHandleW(L"kernelbase.dll");
+    if (kernelBase == nullptr)
+        return;
+    unsigned char* target = reinterpret_cast<unsigned char*>(GetProcAddress(kernelBase, "LCMapStringEx"));
+    if (target == nullptr)
+        return;
+
+    // Only hook if the prologue matches the known 15-byte, position-independent sequence, so relocating it
+    // into the trampoline is safe. Otherwise leave the function untouched (the workaround simply no-ops).
+    //   48 89 5C 24 08  mov [rsp+8],rbx
+    //   48 89 74 24 10  mov [rsp+10h],rsi
+    //   57              push rdi
+    //   48 83 EC 50     sub rsp,50h
+    static const unsigned char expectedPrologue[15] = {
+        0x48, 0x89, 0x5C, 0x24, 0x08, 0x48, 0x89, 0x74, 0x24, 0x10, 0x57, 0x48, 0x83, 0xEC, 0x50 };
+    for (int i = 0; i < 15; i++)
+        if (target[i] != expectedPrologue[i])
+            return;
+
+    const int relocSize = 15;
+    unsigned char* trampoline = reinterpret_cast<unsigned char*>(
+        VirtualAlloc(nullptr, 64, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE));
+    if (trampoline == nullptr)
+        return;
+
+    // trampoline = [original 15 bytes] + [absolute jump back to target + 15]
+    for (int i = 0; i < relocSize; i++)
+        trampoline[i] = target[i];
+    trampoline[relocSize + 0] = 0xFF; trampoline[relocSize + 1] = 0x25; // jmp qword ptr [rip+0]
+    trampoline[relocSize + 2] = 0x00; trampoline[relocSize + 3] = 0x00;
+    trampoline[relocSize + 4] = 0x00; trampoline[relocSize + 5] = 0x00;
+    *reinterpret_cast<unsigned long long*>(trampoline + relocSize + 6) =
+        reinterpret_cast<unsigned long long>(target + relocSize);
+    FlushInstructionCache(GetCurrentProcess(), trampoline, 64);
+    sRealLCMapStringEx = reinterpret_cast<LCMapStringExFunc>(trampoline);
+
+    // Patch the target with an absolute jump to our hook (14 bytes, padded to 15 with a nop). This runs
+    // during early managed init, before SHVDN starts any script threads, so the brief window in which the
+    // prologue is half-written is not worth suspending threads over.
+    DWORD oldProtect = 0;
+    if (!VirtualProtect(target, relocSize, PAGE_EXECUTE_READWRITE, &oldProtect))
+        return;
+    unsigned char patch[15];
+    patch[0] = 0xFF; patch[1] = 0x25; patch[2] = 0x00; patch[3] = 0x00; patch[4] = 0x00; patch[5] = 0x00;
+    *reinterpret_cast<unsigned long long*>(patch + 6) =
+        reinterpret_cast<unsigned long long>(reinterpret_cast<void*>(&HookedLCMapStringEx));
+    patch[14] = 0x90;
+    for (int i = 0; i < relocSize; i++)
+        target[i] = patch[i];
+    VirtualProtect(target, relocSize, oldProtect, &oldProtect);
+    FlushInstructionCache(GetCurrentProcess(), target, relocSize);
+}
+
 LPVOID sTlsContextAddrOfGameMainThread = nullptr;
 DWORD sGameMainThreadId = 0;
 std::mutex sGameMainThreadVarsMutex;
@@ -490,7 +575,12 @@ static void LogKeyBindingParseError(String^ rawInput, InvalidKeysFoundError^ inv
 
 static void ScriptHookVDotNet_ManagedInit()
 {
-    SHVDN::ScriptDomain^ domain = nullptr; 
+    // Repair the broken NLS state (see the LCMapStringEx hook above) before any culture-sensitive
+    // operation - String.ToLower, AppDomain.CreateDomain or DateTime.Now - is performed.
+    InstallLCMapStringExHook();
+    SHVDN::ScriptDomain::RepairBrokenNlsState();
+
+    SHVDN::ScriptDomain^ domain = nullptr;
     SHVDN::Console^ console = nullptr;
     List<String^>^ stashedConsoleCommandHistory = gcnew List<String^>();
     List<ScriptHookVDotNet::LogMessageInfo>^ pendingLogMessageInfo = gcnew List<ScriptHookVDotNet::LogMessageInfo>();
