@@ -1446,8 +1446,8 @@ namespace SHVDN
         internal sealed class SetEntityAngularVelocityTask : IScriptTask
         {
             #region Fields
-
             private IntPtr _entityAddress;
+
             // return value will be the address of the temporary 4 float storage
             private delegate* unmanaged[Stdcall]<IntPtr, float*, void> _setAngularVelocityDelegate;
             private float _x, _y, _z;
