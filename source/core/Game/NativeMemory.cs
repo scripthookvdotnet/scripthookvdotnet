@@ -9,12 +9,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Text;
 using static System.Runtime.InteropServices.Marshal;
-using static SHVDN.NativeMemory;
 
 namespace SHVDN
 {
