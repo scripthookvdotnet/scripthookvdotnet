@@ -4655,7 +4655,7 @@ namespace SHVDN
             // Use this buffer when we get all loaded path nodes to avoid allocating new large objects for buffer space and costing a significant time, since the number of path node handles can even exceed more than 21250
             // On the other hand, each vanilla ynd file (each ynd file has nodes in an area of 512 meters x 512 meters) contains likely 100 to 1500 nodes, and getting nodes nearby 512 meters will likely get less than 1500 nodes.
             // Therefore, using this buffer won't make much difference in how many CPU cycles will be used when we get nodes in certain area
-            private static List<int> s_pathNodeBuffer = new List<int>();
+            private static List<int> s_pathNodeBuffer = new();
             // The buffer can be too big to dispose fast enough (by considering a large object heap), so use a lock
             // instead of using a local variable
             private static readonly object s_pathNodeBufferLock = new();
