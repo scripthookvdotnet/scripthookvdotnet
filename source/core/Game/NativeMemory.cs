@@ -518,7 +518,7 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x39\x81\x00\x00\x00\x00\x0F\x94\xC0\x48\x83\xC4\x28\xC3", "xx????xxxxxxxx");
-            if(address != null)
+            if (address != null)
             {
                 s_defaultSpawningPreferenceOffset = *(int*)(address + 2);
             }
@@ -744,7 +744,7 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x48\x83\xEC\x28\x33\xC0\x38\x05\x00\x00\x00\x00\x74\x47\x38\x05", "xxxxxxxx????xxxx");
-            if(address != null)
+            if (address != null)
             {
                 s_disableArtificialLightsAddress = Rel32<byte>(address, 0x10);
             }
@@ -756,14 +756,14 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x48\x8B\x41\x10\x48\x85\xC0\x75\x03", "xxxxxxxxx");
-            if(address != null)
+            if (address != null)
             {
                 CPlayerInfoCanLeaveParachuteSmokeTrailOffset = *(int*)(address + 0x1A);
                 CPlayerInfoCanLeaveParachuteSmokeTrailBit = *(address + 0x20);
             }
 
             address = MemScanner.FindPatternBmh("\x41\xB9\x80\x00\x00\x00\x48\x8B\x01\xFF\x50", "xxxxxxxxxxx");
-            if(address != null)
+            if (address != null)
             {
                 int getMaterialNameFuncOffset = *(address + 11);
 
@@ -774,7 +774,7 @@ namespace SHVDN
             }
 
             address = MemScanner.FindPatternBmh("\x0F\x57\xC0\x0F\x2F\x83\x00\x00\x00\x00\x73\x13\x48\x8B\x93", "xxxxxx????xxxxx");
-            if(address != null)
+            if (address != null)
             {
                 int sprintEnergyOffset = *(int*)(address + 0x6);
 
@@ -2100,7 +2100,7 @@ namespace SHVDN
                 {
                     address = MemScanner.FindPatternBmh("\x40\x38\xb8\x00\x00\x00\x00\x74\x00\x48\x8b\xc8\xe8\x00\x00\x00\x00\x0f\x2e\x05", "xxx????x?xxxx????xxx");
 
-                    if(address != null)
+                    if (address != null)
                     {
                         SpecialFlightModeAllowedOffset = *(int*)(address + 3);
                     }     
@@ -2246,7 +2246,7 @@ namespace SHVDN
                     return false;
                 }
 
-                if(AudVehicleAudioEntityOffset == 0 || AudVehicleAudioEntity__IsHornEnabledBitTest == 0 || AudVehicleAudioEntity__IsHornEnabledOffset == 0)
+                if (AudVehicleAudioEntityOffset == 0 || AudVehicleAudioEntity__IsHornEnabledBitTest == 0 || AudVehicleAudioEntity__IsHornEnabledOffset == 0)
                 {
                     return false;
                 }
@@ -2608,7 +2608,7 @@ namespace SHVDN
                 }
 
                 address = MemScanner.FindPatternBmh("\x7C\x00\x41\xb8\x65\x07\x9D\xA4", "x?xxxxxx");
-                if(address != null)
+                if (address != null)
                 {
                     MoneyCarriedOffset = *(int*)(address - 0x5);
                 }
@@ -2627,7 +2627,7 @@ namespace SHVDN
                 }
 
                 address = MemScanner.FindPatternBmh("\x0F\x85\xFF\xFF\xFF\xFF\x83\xF9\x0E\x0F\x84\xFF\xFF\xFF\xFF\x44\x38\x0D\xFF\xFF\xFF\xFF\x41\xBD\x02\x00\x00\x00", "xx????xxxxx????xxx????xxxxxx");
-                if(address != null)
+                if (address != null)
                 {
                     AudSpeechAudioEntity__DisablePainOffset = *(int*)(address - 0x4);
 
@@ -3064,7 +3064,7 @@ namespace SHVDN
 
             public static bool GetIsPainAudioDisabled(IntPtr pedAddress)
             {
-                if(AudSpeechAudioEntity__DisablePainOffset == 0)
+                if (AudSpeechAudioEntity__DisablePainOffset == 0)
                 {
                     return false;
                 }
@@ -3421,7 +3421,7 @@ namespace SHVDN
 
             IntPtr address = FindCModelInfo(modelHash);
 
-            if(address == IntPtr.Zero)
+            if (address == IntPtr.Zero)
             {
                 return false;
             }
@@ -5160,7 +5160,7 @@ namespace SHVDN
 
         public static bool GetBlipPropertyFlag(IntPtr address, BlipPropertyFlags flag)
         {
-            if(address == IntPtr.Zero)
+            if (address == IntPtr.Zero)
             {
                 return false;
             }
@@ -5174,13 +5174,13 @@ namespace SHVDN
         {
             int value = (int)flag;
 
-            if(value >= (int)BlipPropertyFlags.ShowGoldTick)
+            if (value >= (int)BlipPropertyFlags.ShowGoldTick)
             {
-                if(GameFileVersion >= new Version(1, 0, 2699, 0))
+                if (GameFileVersion >= new Version(1, 0, 2699, 0))
                 {
                     value--;
                 }
-                else if(flag == BlipPropertyFlags.ShowGoldTick)
+                else if (flag == BlipPropertyFlags.ShowGoldTick)
                 {
                     return -1;
                 }
