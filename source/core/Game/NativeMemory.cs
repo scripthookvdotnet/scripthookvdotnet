@@ -3153,9 +3153,7 @@ namespace SHVDN
 
         internal sealed class GetMainWindowResolutionTask : IScriptTask
         {
-            #region Fields
             internal Size resolutionResult;
-            #endregion
 
             public void Run()
             {
@@ -3606,7 +3604,6 @@ namespace SHVDN
 
         internal sealed class FwScriptGuidPoolTask : IScriptTask
         {
-            #region Fields
             internal PoolType _poolType;
             internal IntPtr _poolAddress;
 
@@ -3617,8 +3614,6 @@ namespace SHVDN
             internal HashSet<int> _modelHashes;
             internal Func<IntPtr, bool> _predicate;
             internal int[] _resultHandles = Array.Empty<int>();
-
-            #endregion
 
             internal FwScriptGuidPoolTask(PoolType type, IntPtr poolAddress)
             {
@@ -5649,9 +5644,7 @@ namespace SHVDN
 
         internal sealed class ExplodeProjectileTask : IScriptTask
         {
-            #region Fields
             internal IntPtr _projectileAddress;
-            #endregion
 
             internal ExplodeProjectileTask(IntPtr projectileAddress)
             {
@@ -6036,11 +6029,9 @@ namespace SHVDN
 
         internal sealed class FragInstBreakOffAboveTask : IScriptTask
         {
-            #region Fields
             internal FragInst* _fragInst;
             internal int _componentIndex;
             internal bool _wasNewFragInstCreated;
-            #endregion
 
             internal FragInstBreakOffAboveTask(FragInst* fragInst, int componentIndex)
             {
@@ -6370,13 +6361,10 @@ namespace SHVDN
 
         internal sealed class NmMessageTask : IScriptTask
         {
-            #region Fields
-
             private int _targetHandle;
             private string _messageName;
             private Dictionary<string, (int value, Type type)> _boolIntFloatParameters;
             private Dictionary<string, object> _stringVector3ArrayParameters;
-            #endregion
 
             internal NmMessageTask(int target, string messageName, Dictionary<string, (int value, Type type)> boolIntFloatParameters, Dictionary<string, object> stringVector3ArrayParameters)
             {
