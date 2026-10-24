@@ -2487,7 +2487,7 @@ namespace SHVDN
                     PedIntelligenceCurrentScriptTaskStatusOffset = PedIntelligenceCTaskInfoOffset + 0x24;
                 }
 
-                address = MemScanner.FindPatternNaive("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
+                address = MemScanner.FindPatternBmh("\x48\x83\xEC\x28\x48\x8B\x42\x00\x48\x85\xC0\x74\x09\x48\x3B\x82\x00\x00\x00\x00\x74\x21", "xxxxxxx?xxxxxxxx????xx");
                 if (address != null)
                 {
                     KnockOffVehicleTypeOffset = s_fragInstNmGtaOffset + 0xC;
