@@ -22,14 +22,6 @@ using System.Runtime.CompilerServices;
 
 namespace SHVDN
 {
-    /// <summary>
-    /// The interface for tasks that must be run on the main thread (e.g. calling native functions) because of thread local storage (TLS).
-    /// </summary>
-    public interface IScriptTask
-    {
-        void Run();
-    }
-
     public sealed class ScriptDomain : MarshalByRefObject, IDisposable
     {
         internal sealed class ScriptAssemblyInfo

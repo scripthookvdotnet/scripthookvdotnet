@@ -232,6 +232,9 @@
     <CsCompile Include="Scripting\CheapThreadSafeStopwatch.cs">
       <Filter>Scripting</Filter>
     </CsCompile>
+    <CsCompile Include="Scripting\IScriptTask.cs">
+      <Filter>Scripting</Filter>
+    </CsCompile>
     <CsCompile Include="Scripting\Script.cs">
       <Filter>Scripting</Filter>
     </CsCompile>

@@ -152,6 +152,7 @@
     <CsCompile Include="Scripting\ScriptDomain.cs" />
     <CsCompile Include="Marshals\StringMarshal.cs" />
     <CsCompile Include="Scripting\CheapThreadSafeStopwatch.cs" />
+    <CsCompile Include="Scripting\IScriptTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
