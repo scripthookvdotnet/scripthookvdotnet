@@ -2105,7 +2105,7 @@ namespace SHVDN
                     if (address != null)
                     {
                         SpecialFlightModeAllowedOffset = *(int*)(address + 3);
-                    }     
+                    }
 
                     address = MemScanner.FindPatternBmh("\x41\x0F\x2F\xC1\x72\x2E\xF6\x83", "xxxxxxxx");
                     if (address != null)
@@ -5164,7 +5164,7 @@ namespace SHVDN
             }
 
             int bit = GetBitForBlipPropertyFlag(flag);
-            
+
             return bit != -1 && MemDataMarshal.IsBitSet(address + 0x20, bit);
         }
 
