@@ -38,6 +38,7 @@ Even if no stable versions of SHVDN work in any game versions, you can build aga
     * The XML files in the `Docs` folder are provided solely as API documentation for script developers.
 * When you update, **always make sure to update at least all the asi and the .dll files together! No support will be provided if you cherry-pick them and that causes problems!** The following files are the ones you must update together:
     * `ScriptHookVDotNet.asi`
+    * `ScriptHookVDotNet.dll`
     * `ScriptHookVDotNet2.dll`
     * `ScriptHookVDotNet3.dll`
 
