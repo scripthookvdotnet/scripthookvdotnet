@@ -47,4 +47,7 @@
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 	</PropertyGroup>
 	<Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" PrivateAssets="all" />
+	</ItemGroup>
 </Project>
