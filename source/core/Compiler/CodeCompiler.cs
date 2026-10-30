@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.VisualBasic;
+using LanguageVersion = Microsoft.CodeAnalysis.VisualBasic.LanguageVersion;
 
 namespace SHVDN.Compiler
 {
@@ -53,7 +54,7 @@ namespace SHVDN.Compiler
 
             if (preset.Options is CSharpCompilationOptions csharpCompileOptions)
             {
-                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source);
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(source, new CSharpParseOptions(Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp14));
 
                 return CSharpCompilation.Create(
                     assemblyName: Guid.NewGuid().ToString("N"),
@@ -64,7 +65,7 @@ namespace SHVDN.Compiler
 
             if (preset.Options is VisualBasicCompilationOptions vbCompileOptions)
             {
-                SyntaxTree syntaxTree = VisualBasicSyntaxTree.ParseText(source);
+                SyntaxTree syntaxTree = VisualBasicSyntaxTree.ParseText(source, new VisualBasicParseOptions(LanguageVersion.VisualBasic17_13));
 
                 return VisualBasicCompilation.Create(
                     assemblyName: Guid.NewGuid().ToString("N"),
