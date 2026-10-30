@@ -1,3 +1,4 @@
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -8,7 +9,9 @@ namespace SHVDN.Compiler.Presets
     /// </summary>
     public class ConsoleCompilerPreset : CompilerPreset
     {
-        private static ConsoleCompilerPreset _instance;
+        private static ConsoleCompilerPreset s_instance;
+
+        private static int s_initializationStarted;
 
         private ConsoleCompilerPreset()
         {
@@ -28,9 +31,31 @@ namespace SHVDN.Compiler.Presets
                 optimizationLevel: OptimizationLevel.Debug);
         }
 
+        /// <remarks>
+        /// Returns <see langword="null"/> until <see cref="TryCreateOnNewThread"/> has been called.
+        /// </remarks>
         public static ConsoleCompilerPreset Instance
         {
-            get => _instance ??= new ConsoleCompilerPreset();
+            get => Volatile.Read(ref s_instance);
+            private set => Volatile.Write(ref s_instance, value);
+        }
+
+        public static void TryCreateOnNewThread()
+        {
+            if (Instance != null || Interlocked.CompareExchange(ref s_initializationStarted, 1, 0) != 0)
+            {
+                return;
+            }
+
+            var thread = new Thread(() =>
+            {
+                Instance = new ConsoleCompilerPreset();
+            })
+            {
+                IsBackground = true
+            };
+
+            thread.Start();
         }
     }
 }

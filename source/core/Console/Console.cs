@@ -87,6 +87,10 @@ namespace SHVDN
 
         public Console()
         {
+            // If we call this only once we compile any expression,
+            // the first compilation might have a noticeable delay of about 2-3s.
+            ConsoleCompilerPreset.TryCreateOnNewThread();
+
             // Register Key Actions
             _keyManager.Register(Keys.PageUp, PageUp);
             _keyManager.Register(Keys.PageDown, PageDown);
