@@ -19,6 +19,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>..\..\bin\$(Configuration)\</OutputPath>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
 		<PathMap>$(MSBuildProjectDirectory)=$(AssemblyName)</PathMap>
 		<UseWindowsForms>true</UseWindowsForms>
