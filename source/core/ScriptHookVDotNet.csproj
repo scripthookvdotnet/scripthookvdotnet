@@ -49,5 +49,6 @@
 	<Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" PrivateAssets="all" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.9.0" PrivateAssets="all" />
 	</ItemGroup>
 </Project>
