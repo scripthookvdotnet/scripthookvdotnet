@@ -4,7 +4,6 @@
 //
 
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +16,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.CodeAnalysis;
+using SHVDN.Compiler;
+using SHVDN.Compiler.Presets;
 
 namespace SHVDN
 {
@@ -453,17 +455,15 @@ namespace SHVDN
         private bool LoadScriptsFromSource(string filename)
         {
             string extension = Path.GetExtension(filename);
-            System.CodeDom.Compiler.CodeDomProvider compiler = null;
 
-            string additionalCompilerOptions = string.Empty;
+            CompilerPreset compilerPreset;
             if (extension.Equals(".cs", StringComparison.OrdinalIgnoreCase))
             {
-                compiler = new Microsoft.CSharp.CSharpCodeProvider();
-                additionalCompilerOptions = " /unsafe";
+                compilerPreset = CsharpSourceFileCompilerPreset.Instance;
             }
             else if (extension.Equals(".vb", StringComparison.OrdinalIgnoreCase))
             {
-                compiler = new Microsoft.VisualBasic.VBCodeProvider();
+                compilerPreset = VbSourceFileCompilerPreset.Instance;
             }
             else
             {
@@ -486,39 +486,26 @@ namespace SHVDN
                     return false;
                 }
 
-                return CompileScriptsFromAssemblyVersionWithNotatedApi(filename, scriptApi, compiler,
-                    additionalCompilerOptions);
+                return CompileScriptsFromAssemblyVersionWithNotatedApi(filename, scriptApi, compilerPreset);
             }
 
-            return CompileScriptsFromAssemblyWithFirstNonDeprecatedApiAndLastDeprecatedApi(filename, compiler,
-                additionalCompilerOptions);
+            return CompileScriptsFromAssemblyWithFirstNonDeprecatedApiAndLastDeprecatedApi(filename, compilerPreset);
         }
-        private static CompilerResults CompileScriptsFromAssembly(string filename, Assembly scriptApi,
-            System.CodeDom.Compiler.CodeDomProvider compiler, string additionalCompilerOptions)
+        
+        private static CompilerResult CompileScriptsFromAssembly(string filename, Assembly scriptApi, CompilerPreset compilerPreset)
         {
-            var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
-            compilerOptions.CompilerOptions = "/optimize";
-            compilerOptions.CompilerOptions += additionalCompilerOptions;
-            compilerOptions.GenerateInMemory = true;
-            compilerOptions.IncludeDebugInformation = true;
-            compilerOptions.ReferencedAssemblies.Add("System.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.Core.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.Drawing.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.Windows.Forms.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.XML.dll");
-            compilerOptions.ReferencedAssemblies.Add("System.XML.Linq.dll");
-            compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
-            compilerOptions.ReferencedAssemblies.Add(scriptApi.Location);
+            string source = File.ReadAllText(filename);
 
-            return compiler.CompileAssemblyFromFile(compilerOptions, filename);
+            Compilation compilation = CodeCompiler.Compile(compilerPreset, source).AddReferences(MetadataReference.CreateFromFile(scriptApi.Location));
+
+            return CodeCompiler.CreateAssembly(compilation);
         }
-        private bool CompileScriptsFromAssemblyVersionWithNotatedApi(string filename, Assembly scriptApi,
-            System.CodeDom.Compiler.CodeDomProvider compiler, string additionalCompilerOptions)
-        {
-            CompilerResults compilerResults = CompileScriptsFromAssembly(filename, scriptApi, compiler,
-                additionalCompilerOptions);
 
-            if (!compilerResults.Errors.HasErrors)
+        private bool CompileScriptsFromAssemblyVersionWithNotatedApi(string filename, Assembly scriptApi, CompilerPreset compilerPreset)
+        {
+            CompilerResult compilerResults = CompileScriptsFromAssembly(filename, scriptApi, compilerPreset);
+
+            if (!compilerResults.HasErrors)
             {
                 Log.Message(Log.Level.Debug, "Successfully compiled ", Path.GetFileName(filename), ".");
                 return LoadScriptsFromAssembly(compilerResults.CompiledAssembly, filename);
@@ -527,8 +514,8 @@ namespace SHVDN
             LogCompilerErrorForRawScript(compilerResults, filename, scriptApi);
             return false;
         }
-        private bool CompileScriptsFromAssemblyWithFirstNonDeprecatedApiAndLastDeprecatedApi(string filename,
-            System.CodeDom.Compiler.CodeDomProvider compiler, string additionalCompilerOptions)
+
+        private bool CompileScriptsFromAssemblyWithFirstNonDeprecatedApiAndLastDeprecatedApi(string filename, CompilerPreset compilerPreset)
         {
             // Reference the oldest scripting API that is not deprecated by default to stay compatible with existing scripts
             Assembly firstNonDeprecatedScriptApi = _scriptingApiAsms.FirstOrDefault(x => !IsApiVersionDeprecated(x.GetName().Version));
@@ -548,11 +535,10 @@ namespace SHVDN
 
             if (foundfirstNonDeprecatedScriptApi)
             {
-                CompilerResults compilerResultsWithFirstNonDeprecatedApi
-                    = CompileScriptsFromAssembly(filename, firstNonDeprecatedScriptApi, compiler,
-                    additionalCompilerOptions);
+                CompilerResult compilerResultsWithFirstNonDeprecatedApi
+                    = CompileScriptsFromAssembly(filename, firstNonDeprecatedScriptApi, compilerPreset);
 
-                if (!compilerResultsWithFirstNonDeprecatedApi.Errors.HasErrors)
+                if (!compilerResultsWithFirstNonDeprecatedApi.HasErrors)
                 {
                     string scriptFileNameWithoutExt = Path.GetFileNameWithoutExtension(filename);
                     string extensionStrOfScriptFileName = Path.GetExtension(filename);
@@ -583,10 +569,8 @@ namespace SHVDN
 
             if (foundLastDeprecatedScriptApi)
             {
-                CompilerResults compilerResultsWithLastDeprecatedApi
-                    = CompileScriptsFromAssembly(filename, lastDeprecatedScriptApi, compiler,
-                    additionalCompilerOptions);
-                if (!compilerResultsWithLastDeprecatedApi.Errors.HasErrors)
+                CompilerResult compilerResultsWithLastDeprecatedApi = CompileScriptsFromAssembly(filename, lastDeprecatedScriptApi, compilerPreset);
+                if (!compilerResultsWithLastDeprecatedApi.HasErrors)
                 {
                     lastDeprecatedScriptApi.GetName().Version.ToString(3);
                     Log.Message(Log.Level.Debug, "Successfully compiled ", Path.GetFileName(filename),
@@ -604,22 +588,11 @@ namespace SHVDN
 
             return false;
         }
-        private static void LogCompilerErrorForRawScript(CompilerResults res, string scriptFileName, Assembly scriptApi)
+        private static void LogCompilerErrorForRawScript(CompilerResult res, string scriptFileName, Assembly scriptApi)
         {
-            var errors = new System.Text.StringBuilder();
-
-            foreach (System.CodeDom.Compiler.CompilerError error in res.Errors)
-            {
-                errors.Append("   at line ");
-                errors.Append(error.Line);
-                errors.Append(": ");
-                errors.Append(error.ErrorText);
-                errors.AppendLine();
-            }
-
             Log.Message(Log.Level.Error, "Failed to compile ", Path.GetFileName(scriptFileName), " using API version ",
-                scriptApi.GetName().Version.ToString(3), " with ", res.Errors.Count.ToString(),
-                " error(s):", Environment.NewLine, errors.ToString());
+                scriptApi.GetName().Version.ToString(3), " with ", res.ErrorCount.ToString(),
+                " error(s):", Environment.NewLine, res.ErrorMessage);
         }
 
         /// <summary>
