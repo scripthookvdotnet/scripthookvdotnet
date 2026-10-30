@@ -1013,6 +1013,20 @@ namespace SHVDN
 
             Task<MethodInfo> newCompilerTask = Task.Factory.StartNew(() =>
             {
+                // While very unlikely, it can happen that the compiler preset is still being created on another thread.
+                // Give it some extra time and log a failure otherwise.
+                int timeoutEnd = Environment.TickCount + 5000;
+                
+                while (ConsoleCompilerPreset.Instance == null && timeoutEnd < Environment.TickCount)
+                { }
+
+                if (ConsoleCompilerPreset.Instance == null)
+                {
+                    Print(Log.Level.Error, "Console compilation is not ready. Try again in a few seconds. If this message persists, report this issue here: https://github.com/scripthookvdotnet/scripthookvdotnet/issues/");
+
+                    return null;
+                }
+
                 const string Template =
                     "using System; using System.Linq; using System.Drawing; using System.Windows.Forms; using GTA; using GTA.Math; using GTA.Native; " +
                     // Define some shortcut variables to simplify commands
