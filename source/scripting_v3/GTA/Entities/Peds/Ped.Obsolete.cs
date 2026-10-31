@@ -186,6 +186,7 @@ namespace GTA
             set => Function.Call(Hash.SET_PED_MONEY, Handle, value);
         }
 
+        /// <summary>
         /// Sets the ambient voice to use when this <see cref="Ped"/> speaks.
         /// </summary>
         /// <remarks>

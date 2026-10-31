@@ -423,7 +423,7 @@ namespace GTA
             return new Vehicle(Function.Call<int>(Hash.CREATE_VEHICLE, model.Hash, position.X, position.Y, position.Z, heading, false, false));
         }
 
-        /// <inheritdoc cref="Vehicle.CreateRandom(Vector3, float, Func{Model, bool}"/>
+        /// <inheritdoc cref="Vehicle.CreateRandom(Vector3, float, Func{Model, bool})"/>
         [Obsolete("Use Vehicle.CreateRandom(Vector3, float, Func<Model, bool>) instead.")]
         public static Vehicle CreateRandomVehicle(Vector3 position, float heading = 0f, Func<Model, bool> predicate = null)
         {
