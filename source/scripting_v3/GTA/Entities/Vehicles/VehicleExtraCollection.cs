@@ -64,7 +64,7 @@ namespace GTA
             var res = new VehicleExtra[_vehicleExtras.Count];
 
             int i = 0;
-            
+
             foreach (KeyValuePair<VehicleExtraIndex, VehicleExtra> extraPair in _vehicleExtras)
             {
                 res[i++] = extraPair.Value;

@@ -11,7 +11,7 @@ namespace GTA.Input
         PlayerControl,
 
         /// <summary>
-        /// Camera input controls. 
+        /// Camera input controls.
         /// </summary>
         /// <remarks>
         /// Behaves the same as <see cref="PlayerControl"/> in all public versions of the game.

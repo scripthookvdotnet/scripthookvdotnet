@@ -382,7 +382,7 @@ namespace GTA
         /// Gets a value that indicates whether this <see cref="Model"/> is a ped that spawns in the air.
         /// </summary>
         public bool IsFlyingPed => SHVDN.NativeMemory.IsFlyingModel(Hash);
-        
+
         /// <summary>
         /// Gets the dimensions of this <see cref="Model"/>.
         /// </summary>

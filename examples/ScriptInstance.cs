@@ -7,7 +7,7 @@ namespace ScriptInstance
     // Main script is auto-started and creates AI scripts using key presses.
     // T key to spawn AIone
     // Y key to spawn AItwo
-    // G key to change AIone animation 
+    // G key to change AIone animation
     // H key to SetWait(6) for AItwo
     // J key to pause AIone
 

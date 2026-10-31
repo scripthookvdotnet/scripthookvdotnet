@@ -12,7 +12,7 @@ namespace GTA
         EditorBrowsable(EditorBrowsableState.Never)]
         public int Index => (int)ScriptIndex;
 
-        /// <summary>                              
+        /// <summary>
         /// Sets a value indicating whether this <see cref="VehicleWheel"/> is burst.
         /// </summary>
         [Obsolete("Use VehicleWheel.IsBurst instead.")]

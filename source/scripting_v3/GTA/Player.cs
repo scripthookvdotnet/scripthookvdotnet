@@ -610,7 +610,7 @@ namespace GTA
         public bool IsAiming => Function.Call<bool>(Hash.IS_PLAYER_FREE_AIMING, Handle);
 
         /// <summary>
-        /// Gets a value that indicates whether this <see cref="Player"/> is aiming with the weapon "AccurateModeAccuracyModifier" applied. 
+        /// Gets a value that indicates whether this <see cref="Player"/> is aiming with the weapon "AccurateModeAccuracyModifier" applied.
         /// </summary>
         /// <value>
         ///   <see langword="true" /> if this <see cref="Player"/> is aiming; otherwise, <see langword="false" />.

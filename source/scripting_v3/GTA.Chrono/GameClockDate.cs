@@ -160,10 +160,10 @@ namespace GTA.Chrono
 
             return null;
         }
-        
+
         private static GameClockDate FromMdfUnchecked(int year, MonthDayFlags mdf) =>
             new(year, mdf.ToOrdFlags().GetValueOrDefault());
-            
+
         /// <summary>
         /// Makes a new <see cref="GameClockDateTime"/> from the current date and given <see cref="GameClockTime"/>.
         /// </summary>

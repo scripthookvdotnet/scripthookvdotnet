@@ -19,7 +19,7 @@ namespace SHVDN
         NotinPools,
         ParticalSystem,
         Light,
-        Composite, 
+        Composite,
         InstanceList,
         GrassInstanceList,
         VehicleGlassComponent

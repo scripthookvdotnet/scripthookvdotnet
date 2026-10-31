@@ -193,7 +193,7 @@ namespace GTA
                     valToPass = PassengerIndexToSetToDriver;
                 }
 
-                Function.Call(Hash.SET_PED_GROUP_MEMBER_PASSENGER_INDEX, _ped.Handle, valToPass);               
+                Function.Call(Hash.SET_PED_GROUP_MEMBER_PASSENGER_INDEX, _ped.Handle, valToPass);
             }
         }
 

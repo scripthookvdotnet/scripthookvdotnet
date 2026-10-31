@@ -9,23 +9,23 @@ namespace GTA
     public enum WeaponCheckFlags
     {
         /// <summary>
-        /// Checks only for melee weapons (e.g., bat, knife).  
+        /// Checks only for melee weapons (e.g., bat, knife).
         /// True only when equipped with a melee weapon.
         /// </summary>
         IncludeMelee = 1,
 
         /// <summary>
-        /// Checks only for explosive/projectile weapons (e.g., RPG, grenade launcher).  
+        /// Checks only for explosive/projectile weapons (e.g., RPG, grenade launcher).
         /// </summary>
         IncludeProjectile = 2,
 
         /// <summary>
-        /// Checks only for firearms (e.g., pistol, rifle).  
+        /// Checks only for firearms (e.g., pistol, rifle).
         /// </summary>
         IncludeGun = 4,
 
         /// <summary>
-        /// Checks for any weapon except fists.  
+        /// Checks for any weapon except fists.
         /// </summary>
         All = IncludeMelee | IncludeProjectile | IncludeGun
     }

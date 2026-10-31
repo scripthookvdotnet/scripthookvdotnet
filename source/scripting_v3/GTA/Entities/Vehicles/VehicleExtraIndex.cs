@@ -32,7 +32,7 @@ namespace GTA
         /// <returns>
         /// The bone name for the specified <see cref="VehicleExtraIndex"/>.
         /// <para>
-        /// Special case: <see cref="VehicleExtraIndex.Extra10"/> returns <c>extra_ten</c>.  
+        /// Special case: <see cref="VehicleExtraIndex.Extra10"/> returns <c>extra_ten</c>.
         /// All other values return <c>extra_{index}</c>.
         /// </para>
         /// </returns>
@@ -48,7 +48,7 @@ namespace GTA
         /// <returns>
         /// The bone name for the specified <see cref="VehicleExtraIndex"/>.
         /// <para>
-        /// Special case: <see cref="VehicleExtraIndex.Extra10"/> returns <c>extra_ten</c>.  
+        /// Special case: <see cref="VehicleExtraIndex.Extra10"/> returns <c>extra_ten</c>.
         /// All other values return <c>extra_{index}</c>.
         /// </para>
         /// </returns>

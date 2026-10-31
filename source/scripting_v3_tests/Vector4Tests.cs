@@ -250,7 +250,7 @@ namespace ScriptHookVDotNet_APIv3_Tests.Math
                     new CultureInfo("en-US"),
                     new CultureInfo("fr-FR")
                 };
-                
+
                 foreach (Vector4 vector in vectors)
                 {
                     foreach (string format in formats)

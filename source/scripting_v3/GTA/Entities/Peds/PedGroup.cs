@@ -137,18 +137,18 @@ namespace GTA
         /// </summary>
         /// <param name="spacing">The distance between <see cref="Ped"/>s in the group.</param>
         /// <param name="adjustSpeedMinDistance">
-        /// The distance from <paramref name="spacing"/> at which <see cref="Ped"/>s will start to slow down. 
+        /// The distance from <paramref name="spacing"/> at which <see cref="Ped"/>s will start to slow down.
         /// Defaults to -1 (no change) unless auto-calculated (see remarks).
         /// </param>
         /// <param name="adjustSpeedMaxDistance">
-        /// The distance from <paramref name="spacing"/> at which <see cref="Ped"/>s will start to speed up. 
+        /// The distance from <paramref name="spacing"/> at which <see cref="Ped"/>s will start to speed up.
         /// Defaults to -1 (no change) unless auto-calculated (see remarks).
         /// </param>
         /// <remarks>
-        /// If both <paramref name="adjustSpeedMinDistance"/> and <paramref name="adjustSpeedMaxDistance"/> are less than 0 
+        /// If both <paramref name="adjustSpeedMinDistance"/> and <paramref name="adjustSpeedMaxDistance"/> are less than 0
         /// and <see cref="Formation"/> is set to <see cref="Formation.Loose"/>, their values are calculated automatically.
         ///
-        /// If only one of <paramref name="adjustSpeedMinDistance"/> or <paramref name="adjustSpeedMaxDistance"/> is less than 0, 
+        /// If only one of <paramref name="adjustSpeedMinDistance"/> or <paramref name="adjustSpeedMaxDistance"/> is less than 0,
         /// its internal value remains unchanged.
         /// </remarks>
         public void SetFormationSpacing(float spacing, float adjustSpeedMinDistance = -1, float adjustSpeedMaxDistance = -1)

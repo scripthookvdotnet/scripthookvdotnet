@@ -15,7 +15,7 @@ namespace GTA
     /// Decorator names are hashed in the same way as <see cref="StringHash.AtStringHashUtf8(string, uint)"/> before being used.
     /// </para>
     /// <para>
-    /// Despite get/set methods only accepts <see cref="Entity"/>s at the moment in this class, the relevant native functions 
+    /// Despite get/set methods only accepts <see cref="Entity"/>s at the moment in this class, the relevant native functions
     /// take any values associated to guids (e.g. entity handles).
     /// </para>
     /// </remarks>
