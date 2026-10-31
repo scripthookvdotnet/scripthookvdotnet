@@ -6,6 +6,9 @@ intermediate/
 Debug/
 Release/
 
+# Generated Fody schema
+FodyWeavers.xsd
+
 # Visual Studio cache files
 .vs/
 ipch/

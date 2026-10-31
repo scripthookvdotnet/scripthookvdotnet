@@ -19,6 +19,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>..\..\bin\$(Configuration)\</OutputPath>
 		<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
 		<PathMap>$(MSBuildProjectDirectory)=$(AssemblyName)</PathMap>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -47,4 +48,14 @@
 		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 	</PropertyGroup>
 	<Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+	<ItemGroup>
+	  <PackageReference Include="Costura.Fody" Version="6.2.0">
+	    <PrivateAssets>all</PrivateAssets>
+	  </PackageReference>
+	  <PackageReference Include="Fody" Version="6.9.3">
+	    <PrivateAssets>all</PrivateAssets>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" PrivateAssets="all" />
+	  <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="5.9.0" PrivateAssets="all" />
+	</ItemGroup>
 </Project>

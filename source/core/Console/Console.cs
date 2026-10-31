@@ -4,7 +4,6 @@
 //
 
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,6 +14,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SHVDN.Compiler;
+using SHVDN.Compiler.Presets;
 
 namespace SHVDN
 {
@@ -86,6 +87,10 @@ namespace SHVDN
 
         public Console()
         {
+            // If we call this only once we compile any expression,
+            // the first compilation might have a noticeable delay of about 2-3s.
+            ConsoleCompilerPreset.TryCreateOnNewThread();
+
             // Register Key Actions
             _keyManager.Register(Keys.PageUp, PageUp);
             _keyManager.Register(Keys.PageDown, PageDown);
@@ -1008,29 +1013,18 @@ namespace SHVDN
 
             Task<MethodInfo> newCompilerTask = Task.Factory.StartNew(() =>
             {
-                var compiler = new Microsoft.CSharp.CSharpCodeProvider();
-                var compilerOptions = new System.CodeDom.Compiler.CompilerParameters();
-                compilerOptions.GenerateInMemory = true;
-                compilerOptions.IncludeDebugInformation = true;
-                compilerOptions.ReferencedAssemblies.Add("System.dll");
-                compilerOptions.ReferencedAssemblies.Add("System.Core.dll");
-                compilerOptions.ReferencedAssemblies.Add("System.Drawing.dll");
-                compilerOptions.ReferencedAssemblies.Add("System.Windows.Forms.dll");
+                // While very unlikely, it can happen that the compiler preset is still being created on another thread.
+                // Give it some extra time and log a failure otherwise.
+                int timeoutEnd = Environment.TickCount + 5000;
+                
+                while (ConsoleCompilerPreset.Instance == null && timeoutEnd < Environment.TickCount)
+                { }
 
-                // Reference the newest scripting API
-                compilerOptions.ReferencedAssemblies.Add("ScriptHookVDotNet3.dll");
-                compilerOptions.ReferencedAssemblies.Add(typeof(ScriptDomain).Assembly.Location);
-
-                // With this parameter, you can use natives that require accessible addresses without having to use
-                // members of the Marshall class (e.g. SET_SCALEFORM_MOVIE_AS_NO_LONGER_NEEDED)
-                compilerOptions.CompilerOptions += " /unsafe";
-
-                foreach (Script script in ScriptDomain.CurrentDomain.RunningScripts.Where(x => x.IsRunning))
+                if (ConsoleCompilerPreset.Instance == null)
                 {
-                    if (System.IO.File.Exists(script.Filename) && System.IO.Path.GetExtension(script.Filename) == ".dll")
-                    {
-                        compilerOptions.ReferencedAssemblies.Add(script.Filename);
-                    }
+                    Print(Log.Level.Error, "Console compilation is not ready. Try again in a few seconds. If this message persists, report this issue here: https://github.com/scripthookvdotnet/scripthookvdotnet/issues/");
+
+                    return null;
                 }
 
                 const string Template =
@@ -1038,31 +1032,18 @@ namespace SHVDN
                     // Define some shortcut variables to simplify commands
                     "public sealed class ConsoleInput : SHVDN.InbuildCommands {{ public static object Execute() {{ var P = Game.LocalPlayerPed; var V = P.CurrentVehicle; {0}; return null; }} }}";
 
-                CompilerResults compilerResult = compiler.CompileAssemblyFromSource(compilerOptions, string.Format(Template, capturedInput));
+                string source = string.Format(Template, capturedInput);
 
-                if (!compilerResult.Errors.HasErrors)
+                CompilerResult result = CodeCompiler.CompileToAssembly(ConsoleCompilerPreset.Instance, source);
+
+                if (!result.HasErrors)
                 {
-                    return compilerResult.CompiledAssembly.GetType("ConsoleInput").GetMethod("Execute");
+                    return result.CompiledAssembly.GetType("ConsoleInput").GetMethod("Execute");
                 }
 
-                var errors = new StringBuilder();
+                Print(Log.Level.Error, $"Couldn't compile input expression: {TextFormatting.EscapeTokens(capturedInput)}");
+                Print(Log.Level.Error, result.ErrorMessage);
 
-                errors.AppendLine($"Couldn't compile input expression: {TextFormatting.EscapeTokens(capturedInput)}");
-
-                for (int i = 0; i < compilerResult.Errors.Count; ++i)
-                {
-                    errors.Append("   at line ");
-                    errors.Append(compilerResult.Errors[i].Line);
-                    errors.Append(": ");
-                    errors.Append(compilerResult.Errors[i].ErrorText);
-
-                    if (i < compilerResult.Errors.Count - 1)
-                    {
-                        errors.AppendLine();
-                    }
-                }
-
-                Print(Log.Level.Error, errors.ToString());
                 return null;
             });
 
