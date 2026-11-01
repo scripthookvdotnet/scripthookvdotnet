@@ -37,7 +37,7 @@ Even if no stable versions of SHVDN work in any game versions, you can build aga
 * Extract all the files in the root folder from the zip file into your game folder (where `GTA5.exe` is) except for `README.txt` and the 2 folders.
     * The XML files in the `Docs` folder are provided solely as API documentation for script developers.
 * When you update, **always make sure to update at least all the asi and the .dll files together! No support will be provided if you cherry-pick them and that causes problems!** The following files are the ones you must update together:
-    * `ScriptHookVDotNet.asi`
+    * `ScriptHookVDotNet-Loader.asi`
     * `ScriptHookVDotNet.dll`
     * `ScriptHookVDotNet2.dll`
     * `ScriptHookVDotNet3.dll`
