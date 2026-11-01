@@ -52,7 +52,7 @@
   <!-- Global compilation settings -->
   <PropertyGroup>
     <TargetExt>.asi</TargetExt>
-    <TargetName>ScriptHookVDotNet</TargetName>
+    <TargetName>ScriptHookVDotNet-Loader</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
