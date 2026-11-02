@@ -7,6 +7,8 @@ indent_size = 4
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
+# Visual Studio doesn't respect this setting unfortunately
+max_line_length = 120
 
 [*.{csproj,json,props,targets,yaml,yml}]
 indent_size = 2
