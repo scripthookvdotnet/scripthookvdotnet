@@ -301,7 +301,10 @@ namespace GTA
         /// <value>
         /// <see langword="true" /> if this <see cref="Model"/> is a pedestrian; otherwise, <see langword="false" />.
         /// </value>
-        public bool IsPed => SHVDN.NativeMemory.IsModelAPed(Hash);
+        public bool IsPed
+            => Game.FileVersion >= ExeVersions.b1103_2
+                ? Function.Call<bool>(Native.Hash.IS_MODEL_A_PED, Hash)
+                : SHVDN.NativeMemory.IsModelAPed(Hash);
         /// <summary>
         /// Gets a value indicating whether this <see cref="Model"/> is a plane.
         /// </summary>

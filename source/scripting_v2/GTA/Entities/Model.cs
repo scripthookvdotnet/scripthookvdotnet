@@ -37,6 +37,8 @@ namespace GTA
             get; private set;
         }
 
+        const Native.Hash NATIVE_IS_MODEL_A_PED = (Native.Hash)0x75816577FEA6DAD5;
+
         /// <summary>
         /// Gets a value that indicates whether this <see cref="Model"/> exists.
         /// This property is practically the same as <see cref="IsInCdImage"/> since an additional check this method does does not work in practice.
@@ -128,7 +130,10 @@ namespace GTA
         /// <value>
         /// <see langword="true" /> if this <see cref="Model"/> is a pedestrian; otherwise, <see langword="false" />.
         /// </value>
-        public bool IsPed => SHVDN.NativeMemory.IsModelAPed(Hash);
+        public bool IsPed
+            => Game.Version >= GameVersion.VER_1_0_1103_2_STEAM
+                ? Function.Call<bool>(NATIVE_IS_MODEL_A_PED, Hash)
+                : SHVDN.NativeMemory.IsModelAPed(Hash);
         /// <summary>
         /// Gets a value indicating whether this <see cref="Model"/> is a plane.
         /// </summary>
