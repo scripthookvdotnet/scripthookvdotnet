@@ -310,7 +310,7 @@ namespace SHVDN
             address = MemScanner.FindPatternNaive("\xB2\x01\x48\x8B\x01\xFF\x90\x00\x00\x00\x00\x80", "xxxxxxx????x");
             if (address != null)
             {
-                s_fragInstNmGtaGetUnkValVFuncOffset = (uint)*(int*)(address + 7);
+                s_fragInstGetNmAgentIdFuncOffset = (uint)*(int*)(address + 7);
             }
 
             address = MemScanner.FindPatternBmh("\x84\xC0\x74\x34\x48\x8D\x0D\x00\x00\x00\x00\x48\x8B\xD3", "xxxxxxx????xxx");
@@ -6453,7 +6453,7 @@ namespace SHVDN
         private static readonly int s_cTaskNmScriptControlTypeIndex;
         private static readonly int s_cEventSwitch2NmTypeIndex;
         private static readonly uint s_getEventTypeIndexVFuncOffset;
-        private static readonly uint s_fragInstNmGtaGetUnkValVFuncOffset;
+        private static readonly uint s_fragInstGetNmAgentIdFuncOffset;
 
         public static bool IsTaskNmScriptControlOrEventSwitch2NmActive(IntPtr pedAddress)
         {
@@ -6472,8 +6472,8 @@ namespace SHVDN
             }
 
             // This virtual function will return -1 if phInstGta is not a NM one
-            var fragInstNmGtaGetUnkValVFunc = (delegate* unmanaged[Stdcall]<ulong, int>)new IntPtr((long)*(ulong*)(*(ulong*)fragInstNmGtaAddress + s_fragInstNmGtaGetUnkValVFuncOffset));
-            if (fragInstNmGtaGetUnkValVFunc(fragInstNmGtaAddress) == -1)
+            var fragInstGetNmAgentIdFunc = (delegate* unmanaged[Stdcall]<ulong, int>)new IntPtr((long)*(ulong*)(*(ulong*)fragInstNmGtaAddress + s_fragInstGetNmAgentIdFuncOffset));
+            if (fragInstGetNmAgentIdFunc(fragInstNmGtaAddress) == -1)
             {
                 return false;
             }
