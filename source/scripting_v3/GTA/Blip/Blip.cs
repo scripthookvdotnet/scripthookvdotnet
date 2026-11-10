@@ -296,7 +296,7 @@ namespace GTA
                     return 0;
 
                 Version gameVersion = Game.FileVersion;
-                if (gameVersion >= ExeVersions.b944_2)
+                if (gameVersion >= ExeVersions.b877_1)
                 {
                     return (int)SHVDN.MemDataMarshal.ReadFloat(address + 0x58);
                 }
@@ -322,7 +322,7 @@ namespace GTA
                     return 0;
 
                 Version gameVersion = Game.FileVersion;
-                if (gameVersion >= ExeVersions.b944_2)
+                if (gameVersion >= ExeVersions.b877_1)
                 {
                     return SHVDN.MemDataMarshal.ReadFloat(address + 0x58);
                 }
@@ -342,7 +342,7 @@ namespace GTA
                 }
 
                 Version gameVersion = Game.FileVersion;
-                if (gameVersion >= ExeVersions.b944_2)
+                if (gameVersion >= ExeVersions.b877_1)
                 {
                     SHVDN.MemDataMarshal.WriteFloat(address + 0x58, valueNormalized);
                     return;
