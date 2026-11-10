@@ -41,10 +41,16 @@ namespace GTA
         /// Creates the pickup non-networked.
         /// </summary>
         LocalOnly = 32,
-        /// <summary>
-        /// Intended to give the pickup a simple blip, but does not seem to work.
-        /// </summary>
-        BlippedSimple = 64,
+
+        /*
+         *  `BlippedSimple` is removed from here because a `CPickupPlacement` cause a game crash if created with
+         *  the placement flags having `PLACEMENT_CREATION_FLAG_BLIPPED_SIMPLE` (which represents 64). Thus,
+         *  the native functions `CREATE_PICKUP` and `CREATE_PICKUP_ROTATE` can't create pickups with the placement
+         *  flags `PLACEMENT_CREATION_FLAG_BLIPPED_SIMPLE`.
+         *  
+         *  See: https://github.com/scripthookvdotnet/scripthookvdotnet/issues/1817
+         */
+
         /// <summary>
         /// Gives the pickup a complex blip.
         /// </summary>
