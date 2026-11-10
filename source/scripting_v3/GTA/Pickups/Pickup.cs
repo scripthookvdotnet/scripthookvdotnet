@@ -3,6 +3,7 @@
 // License: https://github.com/scripthookvdotnet/scripthookvdotnet#license
 //
 
+using System;
 using GTA.Math;
 using GTA.Native;
 
@@ -25,6 +26,8 @@ namespace GTA
             int amount = -1,
             Model customModel = default)
         {
+            ThrowArgumentExceptionIfBlippedSimpleFlagIsSet(placementFlags);
+
             if (customModel.Hash != 0 && !customModel.Request(1000))
             {
                 return null;
@@ -61,6 +64,10 @@ namespace GTA
         /// <param name="customModel">
         /// If set to non-zero value, this model will be used for the pickup instead of the default one.
         /// </param>
+        /// <exception cref="ArgumentException">
+        /// Thrown if the <paramref name="placementFlags"/> has the <see cref="PickupPlacementFlags"/> flag for
+        /// a simple blip, which is <c>64</c>.
+        /// </exception>
         public static Pickup Create(
             PickupType type,
             Vector3 position,
@@ -71,6 +78,8 @@ namespace GTA
             Model customModel = default
         )
         {
+            ThrowArgumentExceptionIfBlippedSimpleFlagIsSet(placementFlags);
+
             if (customModel.Hash != 0 && !customModel.Request(1000))
             {
                 return null;
@@ -191,6 +200,19 @@ namespace GTA
         public override int GetHashCode()
         {
             return Handle.GetHashCode();
+        }
+
+        private static void ThrowArgumentExceptionIfBlippedSimpleFlagIsSet(PickupPlacementFlags placementFlags)
+        {
+            const PickupPlacementFlags BlippedSimpleFlag = (PickupPlacementFlags)64;
+            if ((placementFlags & BlippedSimpleFlag) == BlippedSimpleFlag)
+            {
+                ThrowHelper.ThrowArgumentException(
+                    "The `PickupPlacementFlags` flag for a simple blip, which specifies `64`, is not supported for " +
+                    "`Pickup.Create`. Attempting to create a pickup placement with a simple flag will cause a game " +
+                    "crash.",
+                    nameof(placementFlags));
+            }
         }
     }
 }
