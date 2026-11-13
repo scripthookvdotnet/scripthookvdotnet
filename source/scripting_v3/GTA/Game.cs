@@ -470,7 +470,7 @@ namespace GTA
         /// Tests whether the control is disabled before getting an analog value of a given <see cref="Control"/>.
         /// Will return zero if the control is disabled.
         /// </remarks>
-        [Obsolete("Use GTA.Input.Controls.GetControlValueNormalized instead.")]
+        [Obsolete("Use GTA.Input.Controls.GetControlNormal instead.")]
         public static float GetControlValueNormalized(Control control)
         {
             return Function.Call<float>(Hash.GET_CONTROL_NORMAL, 0, (int)control);
