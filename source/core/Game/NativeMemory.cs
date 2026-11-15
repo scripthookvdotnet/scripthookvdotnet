@@ -385,7 +385,7 @@ namespace SHVDN
             address = MemScanner.FindPatternBmh("\x80\x3D\x00\x00\x00\x00\x00\x8B\xDA\x75\x29\x48\x8B\xD1\x33\xC9\xE8", "xx????xxxxxxxxxxx");
             if (address != null)
             {
-                s_isDecoratorLocked = Rel32<byte>(address, 3, instructionTail: 5);
+                s_isDecoratorLocked = Rel32<byte>(address, 2, instructionTail: 5);
             }
 
             address = MemScanner.FindPatternBmh("\xF3\x0F\x10\x5C\x24\x20\xF3\x0F\x10\x54\x24\x24\xF3\x0F\x59\xD9\xF3\x0F\x59\xD1\xF3\x0F\x10\x44\x24\x28\xF3\x0F\x11\x1F", "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
